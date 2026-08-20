@@ -290,6 +290,140 @@ export const listCampusInbox = createServerFn({ method: "GET" })
     };
   });
 
+export const listCampusStudents = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireFaculty(context.userId);
+    const sql = await getSql();
+    // Every signed-in account (except the dean themselves) so the office can
+    // start a thread with anyone, not only students who messaged first.
+    const students = await sql<{
+      id: string;
+      name: string;
+      email: string;
+      created_at: string;
+    }>`
+      select id, name, email, "createdAt" as created_at
+      from "user"
+      where id <> ${context.userId}
+      order by "createdAt" asc
+    `;
+    const latest = await sql<{
+      student_id: string;
+      body: string;
+      created_at: string;
+    }>`
+      select m.student_id, m.body, m.created_at
+      from campus_messages m
+      inner join (
+        select student_id, max(created_at) as last_at
+        from campus_messages
+        group by student_id
+      ) t on t.student_id = m.student_id and t.last_at = m.created_at
+    `;
+    const lastByStudent = new Map(
+      latest.map((row) => [row.student_id, { body: row.body, at: row.created_at }]),
+    );
+    const unreadRows = await sql<{ student_id: string; n: number }>`
+      select student_id, count(*)::int as n
+      from campus_messages
+      where author_role = ${"student"} and read_at is null
+      group by student_id
+    `;
+    const unreadByStudent = new Map(
+      unreadRows.map((row) => [row.student_id, Number(row.n)]),
+    );
+    return students.map((student) => {
+      const last = lastByStudent.get(student.id);
+      return {
+        studentId: student.id,
+        name: student.name || "Student",
+        email: student.email || "",
+        lastBody: last?.body ?? "",
+        lastAt: last?.at ?? null,
+        hasThread: Boolean(last),
+        unread: unreadByStudent.get(student.id) ?? 0,
+      };
+    });
+  });
+
+const TEST_STUDENTS = [
+  { id: "test-student-ada", name: "Ada Lovelace", email: "ada@campus.test" },
+  { id: "test-student-alan", name: "Alan Turing", email: "alan@campus.test" },
+  { id: "test-student-grace", name: "Grace Hopper", email: "grace@campus.test" },
+  { id: "test-student-katherine", name: "Katherine Johnson", email: "katherine@campus.test" },
+  { id: "test-student-linus", name: "Linus Torvalds", email: "linus@campus.test" },
+];
+
+const TEST_INTROS: Record<string, string> = {
+  "test-student-ada":
+    "Hi! I'm stuck on the exam — is a retake allowed if I miss by one question?",
+  "test-student-grace":
+    "The clip timestamps on station 2 don't match my video. Can you check?",
+};
+
+export const seedTestStudents = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireFaculty(context.userId);
+    const sql = await getSql();
+    await ensureSeeded(sql);
+
+    let created = 0;
+    for (const s of TEST_STUDENTS) {
+      const inserted = await sql<{ id: string }>`
+        insert into "user" (id, name, email, "emailVerified")
+        values (${s.id}, ${s.name}, ${s.email}, ${true})
+        on conflict (id) do nothing
+        returning id
+      `;
+      if (inserted[0]) created += 1;
+    }
+
+    // A couple of inbound questions so the inbox has real threads to open.
+    for (const [studentId, body] of Object.entries(TEST_INTROS)) {
+      const existing = await sql<{ id: number }>`
+        select id from campus_messages where student_id = ${studentId} limit 1
+      `;
+      if (!existing[0]) {
+        await sql`
+          insert into campus_messages (student_id, author_id, author_role, body)
+          values (${studentId}, ${studentId}, ${"student"}, ${body})
+        `;
+      }
+    }
+
+    // Give the first few test students some visible progress on the first
+    // published course so the progress board isn't all zeros.
+    const firstCourse = (
+      await sql<{ slug: string }>`
+        select slug from courses where published = true order by updated_at asc limit 1
+      `
+    )[0];
+    if (firstCourse) {
+      const mods = await sql<{ slug: string }>`
+        select slug from course_modules where course_slug = ${firstCourse.slug}
+        order by sort_order asc limit 2
+      `;
+      for (const studentId of [
+        "test-student-ada",
+        "test-student-alan",
+        "test-student-grace",
+      ]) {
+        for (const m of mods) {
+          await sql`
+            insert into enrollment_progress
+              (user_id, course_slug, module_slug, watched, quiz_passed, passed)
+            values (${studentId}, ${firstCourse.slug}, ${m.slug}, ${true}, ${true}, ${true})
+            on conflict (user_id, course_slug, module_slug) do nothing
+          `;
+        }
+      }
+    }
+
+    return { ok: true as const, created, total: TEST_STUDENTS.length };
+  });
+
 export const listCampusThread = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .validator((d: { studentId?: string }) => d)

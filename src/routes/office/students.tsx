@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { RedirectToSignIn } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { SiteHeader } from "@/components/site-header";
-import { getAdminProgressBoard } from "@/lib/course/campus";
+import { getAdminProgressBoard, seedTestStudents } from "@/lib/course/campus";
 
 export const Route = createFileRoute("/office/students")({
   component: StudentsPage,
@@ -14,13 +14,30 @@ type Board = Awaited<ReturnType<typeof getAdminProgressBoard>>;
 function StudentsPage() {
   const { user, isPending } = useCurrentUserState();
   const [board, setBoard] = useState<Board | null | "denied">(null);
+  const [seeding, setSeeding] = useState(false);
 
-  useEffect(() => {
-    if (isPending || !user) return;
+  function refresh() {
     getAdminProgressBoard()
       .then(setBoard)
       .catch(() => setBoard("denied"));
+  }
+
+  useEffect(() => {
+    if (isPending || !user) return;
+    refresh();
   }, [user, isPending]);
+
+  async function onSeed() {
+    setSeeding(true);
+    try {
+      await seedTestStudents();
+      refresh();
+    } catch {
+      // Non-fatal: the board simply won't gain the sample rows.
+    } finally {
+      setSeeding(false);
+    }
+  }
 
   if (isPending) {
     return (
@@ -36,7 +53,7 @@ function StudentsPage() {
     <div className="min-h-dvh">
       <SiteHeader />
       <main className="mx-auto max-w-6xl px-4 py-10">
-        <p className="text-xs uppercase tracking-[0.16em] text-muted">Dean’s office</p>
+        <p className="text-xs uppercase tracking-[0.16em] text-muted">Admin</p>
         <h1 className="mt-2 font-display text-4xl tracking-tight">Student progress</h1>
         <p className="mt-4 max-w-2xl leading-relaxed text-muted">
           Everyone who signed in with Google, X, or a campus account appears
@@ -55,6 +72,14 @@ function StudentsPage() {
           >
             Back to catalog
           </Link>
+          <button
+            type="button"
+            onClick={() => void onSeed()}
+            disabled={seeding}
+            className="md-interactive inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm disabled:opacity-50"
+          >
+            {seeding ? "Creating…" : "Create test students"}
+          </button>
         </div>
 
         {board === null ? (

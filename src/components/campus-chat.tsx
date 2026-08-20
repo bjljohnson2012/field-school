@@ -13,9 +13,11 @@ type ThreadMessage = {
 export function CampusChat({
   studentId,
   emptyHint,
+  onSent,
 }: {
   studentId?: string;
   emptyHint: string;
+  onSent?: () => void;
 }) {
   const [messages, setMessages] = useState<ThreadMessage[] | null>(null);
   const [title, setTitle] = useState("Campus office");
@@ -63,6 +65,7 @@ export function CampusChat({
       await sendCampusMessage({ data: { body: draft, studentId } });
       setDraft("");
       await refresh();
+      onSent?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Message did not send.");
     } finally {
