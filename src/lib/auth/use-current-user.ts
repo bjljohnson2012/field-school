@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { authClient, authEnabled } from "./client";
 
 /** Normalized user shape used across the app, auth on or off. */
@@ -59,18 +60,24 @@ export function useCurrentUserState(): CurrentUserState {
   // eslint-disable-next-line react-hooks/rules-of-hooks -- authEnabled is constant for the app's lifetime
   const { data, isPending } = authClient.useSession();
   const user = data?.user;
-  return {
-    user: user
-      ? {
-          id: user.id,
-          displayName: user.name ?? null,
-          primaryEmail: user.email ?? null,
-          profileImageUrl: user.image ?? null,
-          isDevFallback: false,
-        }
-      : null,
-    isPending,
-  };
+  const id = user?.id ?? null;
+  const displayName = user?.name ?? null;
+  const primaryEmail = user?.email ?? null;
+  const profileImageUrl = user?.image ?? null;
+  // Memoize so the returned `user` keeps a STABLE reference across renders while
+  // the identity is unchanged. Consumers use `user` in effect dependency arrays
+  // (e.g. `[user, isPending]`); a fresh object each render would re-run those
+  // effects every render, and any setState in them would loop — flooding server
+  // functions until the browser aborts with ERR_INSUFFICIENT_RESOURCES.
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- authEnabled is constant for the app's lifetime
+  const stableUser = useMemo<AppUser | null>(
+    () =>
+      id
+        ? { id, displayName, primaryEmail, profileImageUrl, isDevFallback: false }
+        : null,
+    [id, displayName, primaryEmail, profileImageUrl],
+  );
+  return { user: stableUser, isPending };
 }
 
 /**
