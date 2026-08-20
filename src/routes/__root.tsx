@@ -6,7 +6,8 @@ import {
 } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
-import { THEME_BOOT_SCRIPT, ThemeProvider } from "@/lib/theme";
+import { THEME_BOOT_SCRIPT } from "@/lib/theme-boot";
+import { ThemeProvider } from "@/lib/theme";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "Johnson Field School University";

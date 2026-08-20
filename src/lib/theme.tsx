@@ -8,10 +8,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { THEME_STORAGE_KEY } from "@/lib/theme-boot";
 
 export type ThemeMode = "light" | "dark";
 
-const STORAGE_KEY = "jfsu-theme";
+const STORAGE_KEY = THEME_STORAGE_KEY;
 
 function readTheme(): ThemeMode {
   if (typeof window === "undefined") return "light";
@@ -67,7 +68,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
-export function useTheme() {
+function useTheme() {
   return useContext(ThemeContext);
 }
 
@@ -84,5 +85,3 @@ export function ThemeToggle() {
     </button>
   );
 }
-
-export const THEME_BOOT_SCRIPT = `(function(){try{var k='jfsu-theme';var s=localStorage.getItem(k);var d=s==='dark'||(s!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);document.documentElement.style.colorScheme=d?'dark':'light';}catch(e){}})();`;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { listCampusThread, sendCampusMessage } from "@/lib/course/campus";
 
 type ThreadMessage = {
@@ -24,7 +24,7 @@ export function CampusChat({
   const [busy, setBusy] = useState(false);
   const scroller = useRef<HTMLDivElement>(null);
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
     const thread = await listCampusThread({ data: { studentId } });
     setTitle(
       thread.faculty
@@ -32,28 +32,15 @@ export function CampusChat({
         : "Message the dean",
     );
     setMessages(thread.messages);
-  }
+  }, [studentId]);
 
   useEffect(() => {
     let cancelled = false;
-    async function load() {
-      try {
-        const thread = await listCampusThread({ data: { studentId } });
-        if (cancelled) return;
-        setTitle(
-          thread.faculty
-            ? `${thread.student.name}${thread.student.email ? ` · ${thread.student.email}` : ""}`
-            : "Message the dean",
-        );
-        setMessages(thread.messages);
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Could not open the thread.");
-          setMessages([]);
-        }
-      }
-    }
-    void load();
+    refresh().catch((err: unknown) => {
+      if (cancelled) return;
+      setError(err instanceof Error ? err.message : "Could not open the thread.");
+      setMessages([]);
+    });
     const timer = window.setInterval(() => {
       void refresh().catch(() => undefined);
     }, 12000);
@@ -61,7 +48,7 @@ export function CampusChat({
       cancelled = true;
       window.clearInterval(timer);
     };
-  }, [studentId]);
+  }, [refresh]);
 
   useEffect(() => {
     const node = scroller.current;

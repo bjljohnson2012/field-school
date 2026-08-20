@@ -73,7 +73,8 @@ test("source files keep the share, guest, theme, and campus contracts", () => {
   assert.match(styles, /\.md-interactive/);
   const theme = readFileSync(join(root, "src/lib/theme.tsx"), "utf8");
   assert.match(theme, /ThemeToggle/);
-  assert.match(theme, /jfsu-theme/);
+  const themeBoot = readFileSync(join(root, "src/lib/theme-boot.ts"), "utf8");
+  assert.match(themeBoot, /jfsu-theme/);
   const header = readFileSync(join(root, "src/components/site-header.tsx"), "utf8");
   assert.match(header, /ThemeToggle/);
   assert.match(header, /\/dashboard/);

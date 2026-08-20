@@ -7,9 +7,10 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { listCampusInbox } from "@/lib/course/campus";
 
 export const Route = createFileRoute("/inbox")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    student: typeof s.student === "string" ? s.student : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): { student?: string } => {
+    const student = typeof s.student === "string" ? s.student : undefined;
+    return student ? { student } : {};
+  },
   component: InboxPage,
 });
 
