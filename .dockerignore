@@ -1,0 +1,17 @@
+node_modules
+.git
+.tanstack
+.output
+.vercel
+.nitro
+screenshots
+artifacts
+attachments
+*.log
+.DS_Store
+deploy/.vps.env
+.env
+.env.*
+.grok
+coverage
+dist
