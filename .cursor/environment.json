@@ -1,0 +1,17 @@
+{
+  "name": "Johnson Field School University",
+  "install": "npm ci",
+  "terminals": [
+    {
+      "name": "dev",
+      "command": "npm run dev",
+      "description": "Vite dev server for the app on http://localhost:8080 (embedded PGLite database, no secrets required)."
+    }
+  ],
+  "ports": [
+    {
+      "name": "app",
+      "port": 8080
+    }
+  ]
+}
