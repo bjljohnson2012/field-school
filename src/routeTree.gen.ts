@@ -11,17 +11,19 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CertificateRouteImport } from './routes/certificate'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DeskRouteImport } from './routes/desk'
 import { Route as ExamRouteImport } from './routes/exam'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as InboxRouteImport } from './routes/inbox'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as CCourseSlugRouteImport } from './routes/c/$courseSlug'
 import { Route as CourseSlugRouteImport } from './routes/course/$slug'
 import { Route as OfficeIndexRouteImport } from './routes/office/index'
 import { Route as OfficeSlugRouteImport } from './routes/office/$slug'
+import { Route as OfficeFeedbackRouteImport } from './routes/office/feedback'
 import { Route as OfficeNewRouteImport } from './routes/office/new'
 import { Route as OfficeStudentsRouteImport } from './routes/office/students'
+import { Route as OfficeUsersRouteImport } from './routes/office/users'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as CCourseSlugIndexRouteImport } from './routes/c/$courseSlug/index'
 import { Route as CCourseSlugCertificateRouteImport } from './routes/c/$courseSlug/certificate'
@@ -39,6 +41,11 @@ const CertificateRoute = CertificateRouteImport.update({
   path: '/certificate',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DeskRoute = DeskRouteImport.update({
   id: '/desk',
   path: '/desk',
@@ -49,19 +56,14 @@ const ExamRoute = ExamRouteImport.update({
   path: '/exam',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const InboxRoute = InboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CCourseSlugRoute = CCourseSlugRouteImport.update({
@@ -84,6 +86,11 @@ const OfficeSlugRoute = OfficeSlugRouteImport.update({
   path: '/office/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OfficeFeedbackRoute = OfficeFeedbackRouteImport.update({
+  id: '/office/feedback',
+  path: '/office/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OfficeNewRoute = OfficeNewRouteImport.update({
   id: '/office/new',
   path: '/office/new',
@@ -92,6 +99,11 @@ const OfficeNewRoute = OfficeNewRouteImport.update({
 const OfficeStudentsRoute = OfficeStudentsRouteImport.update({
   id: '/office/students',
   path: '/office/students',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfficeUsersRoute = OfficeUsersRouteImport.update({
+  id: '/office/users',
+  path: '/office/users',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -128,16 +140,18 @@ const CCourseSlugSSlugRoute = CCourseSlugSSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
+  '/dashboard': typeof DashboardRoute
   '/desk': typeof DeskRoute
   '/exam': typeof ExamRoute
-  '/login': typeof LoginRoute
-  '/dashboard': typeof DashboardRoute
   '/inbox': typeof InboxRoute
+  '/login': typeof LoginRoute
   '/c/$courseSlug': typeof CCourseSlugRouteWithChildren
   '/course/$slug': typeof CourseSlugRoute
   '/office/$slug': typeof OfficeSlugRoute
+  '/office/feedback': typeof OfficeFeedbackRoute
   '/office/new': typeof OfficeNewRoute
   '/office/students': typeof OfficeStudentsRoute
+  '/office/users': typeof OfficeUsersRoute
   '/office/': typeof OfficeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
@@ -149,15 +163,17 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
+  '/dashboard': typeof DashboardRoute
   '/desk': typeof DeskRoute
   '/exam': typeof ExamRoute
-  '/login': typeof LoginRoute
-  '/dashboard': typeof DashboardRoute
   '/inbox': typeof InboxRoute
+  '/login': typeof LoginRoute
   '/course/$slug': typeof CourseSlugRoute
   '/office/$slug': typeof OfficeSlugRoute
+  '/office/feedback': typeof OfficeFeedbackRoute
   '/office/new': typeof OfficeNewRoute
   '/office/students': typeof OfficeStudentsRoute
+  '/office/users': typeof OfficeUsersRoute
   '/office': typeof OfficeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
@@ -170,16 +186,18 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
+  '/dashboard': typeof DashboardRoute
   '/desk': typeof DeskRoute
   '/exam': typeof ExamRoute
-  '/login': typeof LoginRoute
-  '/dashboard': typeof DashboardRoute
   '/inbox': typeof InboxRoute
+  '/login': typeof LoginRoute
   '/c/$courseSlug': typeof CCourseSlugRouteWithChildren
   '/course/$slug': typeof CourseSlugRoute
   '/office/$slug': typeof OfficeSlugRoute
+  '/office/feedback': typeof OfficeFeedbackRoute
   '/office/new': typeof OfficeNewRoute
   '/office/students': typeof OfficeStudentsRoute
+  '/office/users': typeof OfficeUsersRoute
   '/office/': typeof OfficeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
@@ -193,16 +211,18 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/certificate'
+    | '/dashboard'
     | '/desk'
     | '/exam'
-    | '/login'
-    | '/dashboard'
     | '/inbox'
+    | '/login'
     | '/c/$courseSlug'
     | '/course/$slug'
     | '/office/$slug'
+    | '/office/feedback'
     | '/office/new'
     | '/office/students'
+    | '/office/users'
     | '/office/'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
@@ -214,15 +234,17 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/certificate'
+    | '/dashboard'
     | '/desk'
     | '/exam'
-    | '/login'
-    | '/dashboard'
     | '/inbox'
+    | '/login'
     | '/course/$slug'
     | '/office/$slug'
+    | '/office/feedback'
     | '/office/new'
     | '/office/students'
+    | '/office/users'
     | '/office'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
@@ -234,16 +256,18 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/certificate'
+    | '/dashboard'
     | '/desk'
     | '/exam'
-    | '/login'
-    | '/dashboard'
     | '/inbox'
+    | '/login'
     | '/c/$courseSlug'
     | '/course/$slug'
     | '/office/$slug'
+    | '/office/feedback'
     | '/office/new'
     | '/office/students'
+    | '/office/users'
     | '/office/'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
@@ -256,16 +280,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CertificateRoute: typeof CertificateRoute
+  DashboardRoute: typeof DashboardRoute
   DeskRoute: typeof DeskRoute
   ExamRoute: typeof ExamRoute
-  LoginRoute: typeof LoginRoute
-  DashboardRoute: typeof DashboardRoute
   InboxRoute: typeof InboxRoute
+  LoginRoute: typeof LoginRoute
   CCourseSlugRoute: typeof CCourseSlugRouteWithChildren
   CourseSlugRoute: typeof CourseSlugRoute
   OfficeSlugRoute: typeof OfficeSlugRoute
+  OfficeFeedbackRoute: typeof OfficeFeedbackRoute
   OfficeNewRoute: typeof OfficeNewRoute
   OfficeStudentsRoute: typeof OfficeStudentsRoute
+  OfficeUsersRoute: typeof OfficeUsersRoute
   OfficeIndexRoute: typeof OfficeIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -286,6 +312,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CertificateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/desk': {
       id: '/desk'
       path: '/desk'
@@ -300,25 +333,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExamRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/inbox': {
       id: '/inbox'
       path: '/inbox'
       fullPath: '/inbox'
       preLoaderRoute: typeof InboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/c/$courseSlug': {
@@ -349,6 +375,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OfficeSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/office/feedback': {
+      id: '/office/feedback'
+      path: '/office/feedback'
+      fullPath: '/office/feedback'
+      preLoaderRoute: typeof OfficeFeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/office/new': {
       id: '/office/new'
       path: '/office/new'
@@ -361,6 +394,13 @@ declare module '@tanstack/react-router' {
       path: '/office/students'
       fullPath: '/office/students'
       preLoaderRoute: typeof OfficeStudentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/office/users': {
+      id: '/office/users'
+      path: '/office/users'
+      fullPath: '/office/users'
+      preLoaderRoute: typeof OfficeUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -431,16 +471,18 @@ const CCourseSlugRouteWithChildren = CCourseSlugRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CertificateRoute: CertificateRoute,
+  DashboardRoute: DashboardRoute,
   DeskRoute: DeskRoute,
   ExamRoute: ExamRoute,
-  LoginRoute: LoginRoute,
-  DashboardRoute: DashboardRoute,
   InboxRoute: InboxRoute,
+  LoginRoute: LoginRoute,
   CCourseSlugRoute: CCourseSlugRouteWithChildren,
   CourseSlugRoute: CourseSlugRoute,
   OfficeSlugRoute: OfficeSlugRoute,
+  OfficeFeedbackRoute: OfficeFeedbackRoute,
   OfficeNewRoute: OfficeNewRoute,
   OfficeStudentsRoute: OfficeStudentsRoute,
+  OfficeUsersRoute: OfficeUsersRoute,
   OfficeIndexRoute: OfficeIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

@@ -86,6 +86,18 @@ function OfficePage() {
               >
                 Student inbox
               </Link>
+              <Link
+                to="/office/users"
+                className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm"
+              >
+                Users &amp; status
+              </Link>
+              <Link
+                to="/office/feedback"
+                className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm"
+              >
+                Course feedback
+              </Link>
             </div>
             <ol className="mt-8 grid gap-3">
               {state.courses.map((c) => (
