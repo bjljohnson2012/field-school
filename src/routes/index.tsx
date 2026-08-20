@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { CampusHeroArt } from "@/components/campus-hero-art";
+import { GuestContinueDialog } from "@/components/guest-continue-dialog";
 import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
 import { listPublishedCourses } from "@/lib/course/catalog";
@@ -12,6 +14,7 @@ export const Route = createFileRoute("/")({ component: Campus });
 
 function Campus() {
   const [courses, setCourses] = useState<CourseSummary[] | null>(null);
+  const [guestOpen, setGuestOpen] = useState(false);
 
   useEffect(() => {
     listPublishedCourses()
@@ -35,7 +38,7 @@ function Campus() {
               <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
                 Pull in a source tape and a briefing. The office builds stations,
                 clips, field work, and an exam. Walk any published course as a
-                guest, or sign in to keep progress.
+                guest, or sign in with Google, X, or email to keep a dashboard.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
@@ -45,13 +48,13 @@ function Campus() {
                   Open the catalog
                   <ArrowRight className="size-4" />
                 </a>
-                <a
-                  href="#catalog"
+                <button
+                  type="button"
                   className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm text-fg"
-                  onClick={() => markGuest()}
+                  onClick={() => setGuestOpen(true)}
                 >
                   Continue as guest
-                </a>
+                </button>
                 <Link
                   to="/office"
                   className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm text-fg"
@@ -60,13 +63,7 @@ function Campus() {
                 </Link>
               </div>
             </div>
-            <div className="md-interactive md-card relative overflow-hidden rounded-xl border border-border">
-              <img
-                src="/hero.jpg"
-                alt="Operations desk for Johnson Field School University"
-                className="aspect-[16/10] w-full object-cover"
-              />
-            </div>
+            <CampusHeroArt />
           </div>
         </section>
 
@@ -158,6 +155,16 @@ function Campus() {
           </div>
         </section>
       </main>
+      <GuestContinueDialog
+        open={guestOpen}
+        nextPath="/"
+        onCancel={() => setGuestOpen(false)}
+        onConfirm={() => {
+          markGuest();
+          setGuestOpen(false);
+          document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
+        }}
+      />
     </div>
   );
 }

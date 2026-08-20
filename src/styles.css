@@ -1,20 +1,35 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Sanctuary palette — https://github.com/bjljohnson2012/sanctuary-palette
-   Mapped to Material Design 3 color roles. */
 :root {
-  --void: #120a07;
-  --wood-deep: #2a150c;
-  --wood-mid: #5c3d2a;
-  --wood-warm: #8b6548;
-  --stone: #b89b7e;
-  --stone-light: #d4bda5;
-  --ember: #b35c2e;
-  --ash: #7a6b5f;
-  --lantern: #e8e2d9;
   --md-ease: cubic-bezier(0.2, 0, 0, 1);
   --md-duration: 180ms;
+
+  --bg: #f6f3ec;
+  --surface: #ffffff;
+  --raised: #efeae1;
+  --fg: #1a1916;
+  --muted: #5c5850;
+  --faint: #8a847a;
+  --border: #d8d2c6;
+  --accent: #1f5eff;
+  --accent-fg: #ffffff;
+  --pass: #1f7a4d;
+  --warn: #c05621;
+}
+
+html.dark {
+  --bg: #101218;
+  --surface: #181b22;
+  --raised: #232833;
+  --fg: #f3f1ec;
+  --muted: #a8a399;
+  --faint: #6f6b64;
+  --border: #343844;
+  --accent: #6b93ff;
+  --accent-fg: #101218;
+  --pass: #5dca8c;
+  --warn: #f0a36a;
 }
 
 @theme {
@@ -22,17 +37,17 @@
   --font-display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --color-bg: #120a07;
-  --color-surface: #2a150c;
-  --color-raised: #5c3d2a;
-  --color-fg: #d4bda5;
-  --color-muted: #b89b7e;
-  --color-faint: #7a6b5f;
-  --color-border: #8b6548;
-  --color-accent: #b35c2e;
-  --color-accent-fg: #e8e2d9;
-  --color-pass: #c4b38a;
-  --color-warn: #e08a4a;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-pass: var(--pass);
+  --color-warn: var(--warn);
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -44,12 +59,17 @@
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   html,
   body {
-    background: var(--color-bg);
-    color: var(--color-fg);
+    background: var(--bg);
+    color: var(--fg);
   }
 
   button:not(:disabled),
@@ -68,7 +88,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid color-mix(in srgb, var(--color-accent) 70%, var(--color-fg));
+    outline: 2px solid color-mix(in srgb, var(--accent) 70%, var(--fg));
     outline-offset: 2px;
   }
 
@@ -84,20 +104,19 @@
   input:hover,
   textarea:hover,
   select:hover {
-    border-color: color-mix(in srgb, var(--color-border) 70%, var(--color-fg));
+    border-color: color-mix(in srgb, var(--border) 55%, var(--fg));
   }
 
   input:focus,
   textarea:focus,
   select:focus {
     outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 28%, transparent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
   }
 }
 
 @layer components {
-  /* Material Design 3 state layer — hover / focus / press feel different. */
   .md-interactive {
     position: relative;
     isolation: isolate;
@@ -114,7 +133,7 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: var(--color-fg);
+    background: currentColor;
     opacity: 0;
     pointer-events: none;
     z-index: 1;
@@ -122,27 +141,37 @@
   }
 
   .md-interactive:hover::before {
-    opacity: 0.08;
+    opacity: 0.06;
   }
 
   .md-interactive:focus-visible::before {
-    opacity: 0.12;
+    opacity: 0.1;
   }
 
   .md-interactive:active::before {
-    opacity: 0.16;
+    opacity: 0.14;
   }
 
   .md-card {
-    box-shadow: 0 1px 2px rgb(18 10 7 / 0.35);
+    box-shadow: 0 1px 2px rgb(26 25 22 / 0.06);
+  }
+
+  html.dark .md-card {
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
   }
 
   .md-card:hover {
     transform: translateY(-3px);
     box-shadow:
-      0 2px 4px rgb(18 10 7 / 0.35),
-      0 12px 28px rgb(18 10 7 / 0.5);
-    border-color: color-mix(in srgb, var(--color-border) 55%, var(--color-accent));
+      0 2px 6px rgb(26 25 22 / 0.06),
+      0 14px 32px rgb(26 25 22 / 0.08);
+    border-color: color-mix(in srgb, var(--border) 50%, var(--accent));
+  }
+
+  html.dark .md-card:hover {
+    box-shadow:
+      0 2px 4px rgb(0 0 0 / 0.35),
+      0 12px 28px rgb(0 0 0 / 0.4);
   }
 
   .md-card:active {
@@ -154,7 +183,7 @@
   }
 
   .md-nav:hover {
-    color: var(--color-fg);
+    color: var(--fg);
   }
 
   .md-field {

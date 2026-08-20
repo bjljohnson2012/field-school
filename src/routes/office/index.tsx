@@ -52,9 +52,9 @@ function OfficePage() {
           Manage the catalog
         </h1>
         <p className="mt-4 max-w-2xl leading-relaxed text-muted">
-          Catalog edits stay with the dean account. Students can walk any
-          published course as a guest, or sign up to save progress. Share a
-          course link with anyone.
+          Catalog edits stay with the dean account. Signed-in students keep a
+          dashboard and can message this desk. Guests can still walk a published
+          course, then lose that progress when they leave.
         </p>
 
         {state === null ? (
@@ -73,6 +73,18 @@ function OfficePage() {
               >
                 New course from a tape
                 <ArrowRight className="size-4" />
+              </Link>
+              <Link
+                to="/office/students"
+                className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm"
+              >
+                Student progress
+              </Link>
+              <Link
+                to="/inbox"
+                className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm"
+              >
+                Student inbox
               </Link>
             </div>
             <ol className="mt-8 grid gap-3">

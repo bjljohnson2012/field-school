@@ -1,9 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { UserRound } from "lucide-react";
+import { useEffect, useState } from "react";
 import { ShareCourseButton } from "@/components/share-course-button";
 import { UserButton } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { getCampusNav } from "@/lib/course/campus";
 import { UNI_SHORT, type CourseRecord } from "@/lib/course/types";
+import { ThemeToggle } from "@/lib/theme";
 
 export function SiteHeader({
   course,
@@ -16,6 +19,17 @@ export function SiteHeader({
 }) {
   const { user, isPending } = useCurrentUserState();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [nav, setNav] = useState<{ faculty: boolean; unread: number } | null>(null);
+
+  useEffect(() => {
+    if (!user) {
+      setNav(null);
+      return;
+    }
+    getCampusNav()
+      .then(setNav)
+      .catch(() => setNav({ faculty: false, unread: 0 }));
+  }, [user]);
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-bg/88 backdrop-blur-md">
@@ -42,6 +56,35 @@ export function SiteHeader({
           )}
         </div>
         <nav className="flex items-center gap-1 text-sm">
+          {user ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="md-interactive md-nav flex h-11 items-center px-3 text-muted"
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/inbox"
+                className="md-interactive md-nav relative flex h-11 items-center px-3 text-muted"
+              >
+                Inbox
+                {nav && nav.unread > 0 ? (
+                  <span className="ml-1 grid min-w-5 place-items-center rounded-full bg-accent px-1 text-[10px] font-medium text-accent-fg">
+                    {nav.unread}
+                  </span>
+                ) : null}
+              </Link>
+              {nav?.faculty ? (
+                <Link
+                  to="/office/students"
+                  className="md-interactive md-nav hidden h-11 items-center px-3 text-muted sm:flex"
+                >
+                  Students
+                </Link>
+              ) : null}
+            </>
+          ) : null}
           <Link
             to="/office"
             className="md-interactive md-nav flex h-11 items-center px-3 text-muted"
@@ -53,14 +96,14 @@ export function SiteHeader({
               <Link
                 to="/c/$courseSlug/desk"
                 params={{ courseSlug: course.slug }}
-                className="md-interactive md-nav flex h-11 items-center px-3 text-muted"
+                className="md-interactive md-nav hidden h-11 items-center px-3 text-muted md:flex"
               >
                 Desk
               </Link>
               <Link
                 to="/c/$courseSlug/exam"
                 params={{ courseSlug: course.slug }}
-                className="md-interactive md-nav flex h-11 items-center px-3 text-muted"
+                className="md-interactive md-nav hidden h-11 items-center px-3 text-muted md:flex"
               >
                 Exam
               </Link>
@@ -77,6 +120,7 @@ export function SiteHeader({
               {passed}/{total}
             </span>
           ) : null}
+          <ThemeToggle />
           {isPending ? (
             <div className="h-8 w-8 animate-pulse rounded-full bg-raised" />
           ) : user ? (

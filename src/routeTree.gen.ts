@@ -14,11 +14,14 @@ import { Route as CertificateRouteImport } from './routes/certificate'
 import { Route as DeskRouteImport } from './routes/desk'
 import { Route as ExamRouteImport } from './routes/exam'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as CCourseSlugRouteImport } from './routes/c/$courseSlug'
 import { Route as CourseSlugRouteImport } from './routes/course/$slug'
 import { Route as OfficeIndexRouteImport } from './routes/office/index'
 import { Route as OfficeSlugRouteImport } from './routes/office/$slug'
 import { Route as OfficeNewRouteImport } from './routes/office/new'
+import { Route as OfficeStudentsRouteImport } from './routes/office/students'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as CCourseSlugIndexRouteImport } from './routes/c/$courseSlug/index'
 import { Route as CCourseSlugCertificateRouteImport } from './routes/c/$courseSlug/certificate'
@@ -51,6 +54,16 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InboxRoute = InboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CCourseSlugRoute = CCourseSlugRouteImport.update({
   id: '/c/$courseSlug',
   path: '/c/$courseSlug',
@@ -74,6 +87,11 @@ const OfficeSlugRoute = OfficeSlugRouteImport.update({
 const OfficeNewRoute = OfficeNewRouteImport.update({
   id: '/office/new',
   path: '/office/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfficeStudentsRoute = OfficeStudentsRouteImport.update({
+  id: '/office/students',
+  path: '/office/students',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -113,10 +131,13 @@ export interface FileRoutesByFullPath {
   '/desk': typeof DeskRoute
   '/exam': typeof ExamRoute
   '/login': typeof LoginRoute
+  '/dashboard': typeof DashboardRoute
+  '/inbox': typeof InboxRoute
   '/c/$courseSlug': typeof CCourseSlugRouteWithChildren
   '/course/$slug': typeof CourseSlugRoute
   '/office/$slug': typeof OfficeSlugRoute
   '/office/new': typeof OfficeNewRoute
+  '/office/students': typeof OfficeStudentsRoute
   '/office/': typeof OfficeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
@@ -131,9 +152,12 @@ export interface FileRoutesByTo {
   '/desk': typeof DeskRoute
   '/exam': typeof ExamRoute
   '/login': typeof LoginRoute
+  '/dashboard': typeof DashboardRoute
+  '/inbox': typeof InboxRoute
   '/course/$slug': typeof CourseSlugRoute
   '/office/$slug': typeof OfficeSlugRoute
   '/office/new': typeof OfficeNewRoute
+  '/office/students': typeof OfficeStudentsRoute
   '/office': typeof OfficeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
@@ -149,10 +173,13 @@ export interface FileRoutesById {
   '/desk': typeof DeskRoute
   '/exam': typeof ExamRoute
   '/login': typeof LoginRoute
+  '/dashboard': typeof DashboardRoute
+  '/inbox': typeof InboxRoute
   '/c/$courseSlug': typeof CCourseSlugRouteWithChildren
   '/course/$slug': typeof CourseSlugRoute
   '/office/$slug': typeof OfficeSlugRoute
   '/office/new': typeof OfficeNewRoute
+  '/office/students': typeof OfficeStudentsRoute
   '/office/': typeof OfficeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
@@ -169,10 +196,13 @@ export interface FileRouteTypes {
     | '/desk'
     | '/exam'
     | '/login'
+    | '/dashboard'
+    | '/inbox'
     | '/c/$courseSlug'
     | '/course/$slug'
     | '/office/$slug'
     | '/office/new'
+    | '/office/students'
     | '/office/'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
@@ -187,9 +217,12 @@ export interface FileRouteTypes {
     | '/desk'
     | '/exam'
     | '/login'
+    | '/dashboard'
+    | '/inbox'
     | '/course/$slug'
     | '/office/$slug'
     | '/office/new'
+    | '/office/students'
     | '/office'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
@@ -204,10 +237,13 @@ export interface FileRouteTypes {
     | '/desk'
     | '/exam'
     | '/login'
+    | '/dashboard'
+    | '/inbox'
     | '/c/$courseSlug'
     | '/course/$slug'
     | '/office/$slug'
     | '/office/new'
+    | '/office/students'
     | '/office/'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
@@ -223,10 +259,13 @@ export interface RootRouteChildren {
   DeskRoute: typeof DeskRoute
   ExamRoute: typeof ExamRoute
   LoginRoute: typeof LoginRoute
+  DashboardRoute: typeof DashboardRoute
+  InboxRoute: typeof InboxRoute
   CCourseSlugRoute: typeof CCourseSlugRouteWithChildren
   CourseSlugRoute: typeof CourseSlugRoute
   OfficeSlugRoute: typeof OfficeSlugRoute
   OfficeNewRoute: typeof OfficeNewRoute
+  OfficeStudentsRoute: typeof OfficeStudentsRoute
   OfficeIndexRoute: typeof OfficeIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -268,6 +307,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbox': {
+      id: '/inbox'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof InboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/c/$courseSlug': {
       id: '/c/$courseSlug'
       path: '/c/$courseSlug'
@@ -301,6 +354,13 @@ declare module '@tanstack/react-router' {
       path: '/office/new'
       fullPath: '/office/new'
       preLoaderRoute: typeof OfficeNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/office/students': {
+      id: '/office/students'
+      path: '/office/students'
+      fullPath: '/office/students'
+      preLoaderRoute: typeof OfficeStudentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -374,10 +434,13 @@ const rootRouteChildren: RootRouteChildren = {
   DeskRoute: DeskRoute,
   ExamRoute: ExamRoute,
   LoginRoute: LoginRoute,
+  DashboardRoute: DashboardRoute,
+  InboxRoute: InboxRoute,
   CCourseSlugRoute: CCourseSlugRouteWithChildren,
   CourseSlugRoute: CourseSlugRoute,
   OfficeSlugRoute: OfficeSlugRoute,
   OfficeNewRoute: OfficeNewRoute,
+  OfficeStudentsRoute: OfficeStudentsRoute,
   OfficeIndexRoute: OfficeIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

@@ -263,6 +263,15 @@ export async function requireFaculty(userId: string) {
   return { role: me[0].role, first: false };
 }
 
+export async function isFacultyUser(userId: string) {
+  try {
+    await requireFaculty(userId);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function toSummary(c: CourseRecord): CourseSummary {
   return {
     slug: c.slug,

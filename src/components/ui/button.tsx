@@ -7,7 +7,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-accent text-accent-fg shadow-[0_1px_2px_rgb(18_10_7_/_0.35)]",
+        primary: "bg-accent text-accent-fg shadow-[0_1px_2px_rgb(26_25_22_/_0.12)]",
         secondary: "border border-border bg-raised text-fg",
         ghost: "text-muted",
         link: "text-accent underline-offset-4 hover:underline px-0",

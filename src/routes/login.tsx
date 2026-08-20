@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import {
   GROK_PROVIDERS,
   authClient,
   authEnabled,
   signIn,
 } from "@/lib/auth/client";
+import { GuestContinueDialog } from "@/components/guest-continue-dialog";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { UNI_SHORT } from "@/lib/course/types";
@@ -27,8 +28,9 @@ function Login() {
   const [mode, setMode] = useState<"in" | "up">("up");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [guestOpen, setGuestOpen] = useState(false);
 
-  async function onEmail(e: React.FormEvent) {
+  async function onEmail(e: FormEvent) {
     e.preventDefault();
     setError(null);
     setBusy(true);
@@ -70,8 +72,9 @@ function Login() {
             Campus account
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Create an email and password to save progress across devices. Or
-            continue as a guest — the catalog, stations, and exam stay open.
+            Sign in with Google, X, or email to keep a dashboard across devices.
+            Guests can still open the catalog — progress stays in this browser
+            until you leave the page.
           </p>
 
           <form className="mt-6 space-y-3" onSubmit={(e) => void onEmail(e)}>
@@ -123,13 +126,13 @@ function Login() {
             type="button"
             variant="secondary"
             className="w-full"
-            onClick={continueAsGuest}
+            onClick={() => setGuestOpen(true)}
           >
             Continue as guest
           </Button>
           <p className="mt-2 text-center text-xs text-faint">
-            Guest progress stays on this browser. You can share any course
-            without an account.
+            Guest progress is saved here while you stay. Exit the page and it is
+            gone. Share any course without an account.
           </p>
 
           {authEnabled ? (
@@ -158,6 +161,12 @@ function Login() {
           </Link>
         </div>
       </main>
+      <GuestContinueDialog
+        open={guestOpen}
+        showSignIn={false}
+        onCancel={() => setGuestOpen(false)}
+        onConfirm={continueAsGuest}
+      />
     </div>
   );
 }

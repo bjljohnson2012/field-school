@@ -14,8 +14,9 @@ export function GuestBanner() {
         <p className="flex items-start gap-2 text-sm text-muted">
           <UserRound className="mt-0.5 size-4 shrink-0 text-accent" />
           <span>
-            You’re here as a guest. Progress stays on this device. Sign in if
-            you want it saved to your campus account.
+            You’re here as a guest. Progress is saved in this browser while you
+            stay. Exit the page and it is gone. Sign in with Google, X, or email
+            to keep a dashboard.
           </span>
         </p>
         <Link
