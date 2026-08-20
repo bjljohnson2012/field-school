@@ -89,7 +89,7 @@ export function SiteHeader({
             to="/office"
             className="md-interactive md-nav flex h-11 items-center px-3 text-muted"
           >
-            Office
+            Admin
           </Link>
           {course ? (
             <>

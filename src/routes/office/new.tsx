@@ -69,7 +69,7 @@ function NewCourse() {
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-4 py-10">
         <p className="text-xs uppercase tracking-[0.16em] text-muted">
-          Dean’s office
+          Admin
         </p>
         <h1 className="mt-2 font-display text-4xl tracking-tight">
           Build a course from a tape

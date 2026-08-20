@@ -5,6 +5,7 @@ import { requireFaculty, writeCourse } from "./catalog";
 import {
   PASS_RATIO,
   EXAM_PASS_RATIO,
+  normalizeBannerStyle,
   type CourseRecord,
   type Module,
   type QuizQuestion,
@@ -235,6 +236,14 @@ Rules: 6–10 stations. Clip start/end are integer seconds from the video. Quiz 
       const clash = await sql<{ slug: string }>`select slug from courses where slug = ${slug}`;
       if (clash[0]) slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
     }
+    // Preserve the admin's chosen banner when rebuilding an existing course.
+    const existingBanner = data.slug
+      ? (
+          await sql<{ banner_style: string; banner_color: string }>`
+            select banner_style, banner_color from courses where slug = ${slug}
+          `
+        )[0]
+      : undefined;
     const course: CourseRecord = {
       slug,
       title: asString(parsed.title, data.title || "Untitled course").trim() || "Untitled course",
@@ -248,6 +257,8 @@ Rules: 6–10 stations. Clip start/end are integer seconds from the video. Quiz 
       createdBy: context.userId,
       passRatio: PASS_RATIO,
       examPassRatio: EXAM_PASS_RATIO,
+      bannerStyle: normalizeBannerStyle(existingBanner?.banner_style),
+      bannerColor: existingBanner?.banner_color ?? "",
       modules: mods,
       examQuestions: exam.slice(0, 12),
       updatedAt: new Date().toISOString(),

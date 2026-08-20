@@ -9,6 +9,7 @@ import {
   VIDEO_URL,
   PASS_RATIO,
   EXAM_PASS_RATIO,
+  normalizeBannerStyle,
   type CourseRecord,
   type CourseSummary,
   type Module,
@@ -35,6 +36,8 @@ function grokBotSeed(): CourseRecord {
     createdBy: "system",
     passRatio: PASS_RATIO,
     examPassRatio: EXAM_PASS_RATIO,
+    bannerStyle: "video",
+    bannerColor: "",
     modules,
     examQuestions,
     updatedAt: new Date().toISOString(),
@@ -90,10 +93,13 @@ async function loadCourse(sql: Sql, slug: string): Promise<CourseRecord | null> 
     created_by: string;
     pass_ratio: number;
     exam_pass_ratio: number;
+    banner_style: string;
+    banner_color: string;
     updated_at: string;
   }>`
     select slug, title, tagline, kicker, video_id, video_url, video_title,
-           context_notes, published, created_by, pass_ratio, exam_pass_ratio, updated_at
+           context_notes, published, created_by, pass_ratio, exam_pass_ratio,
+           banner_style, banner_color, updated_at
     from courses where slug = ${slug}
   `;
   const row = rows[0];
@@ -135,6 +141,8 @@ async function loadCourse(sql: Sql, slug: string): Promise<CourseRecord | null> 
     createdBy: row.created_by,
     passRatio: Number(row.pass_ratio) || PASS_RATIO,
     examPassRatio: Number(row.exam_pass_ratio) || EXAM_PASS_RATIO,
+    bannerStyle: normalizeBannerStyle(row.banner_style),
+    bannerColor: row.banner_color ?? "",
     updatedAt: row.updated_at,
     modules: mods.map((m) => {
       const body = parseBody(m.body_json);
@@ -163,11 +171,12 @@ export async function writeCourse(sql: Sql, course: CourseRecord) {
   await sql`
     insert into courses (
       slug, title, tagline, kicker, video_id, video_url, video_title, context_notes,
-      published, created_by, pass_ratio, exam_pass_ratio, updated_at
+      published, created_by, pass_ratio, exam_pass_ratio, banner_style, banner_color, updated_at
     ) values (
       ${course.slug}, ${course.title}, ${course.tagline}, ${course.kicker},
       ${course.videoId}, ${course.videoUrl}, ${course.videoTitle}, ${course.contextNotes},
-      ${course.published}, ${course.createdBy}, ${course.passRatio}, ${course.examPassRatio}, now()
+      ${course.published}, ${course.createdBy}, ${course.passRatio}, ${course.examPassRatio},
+      ${course.bannerStyle}, ${course.bannerColor}, now()
     )
     on conflict (slug) do update set
       title = excluded.title,
@@ -180,6 +189,8 @@ export async function writeCourse(sql: Sql, course: CourseRecord) {
       published = excluded.published,
       pass_ratio = excluded.pass_ratio,
       exam_pass_ratio = excluded.exam_pass_ratio,
+      banner_style = excluded.banner_style,
+      banner_color = excluded.banner_color,
       updated_at = now()
   `;
   await sql`delete from course_modules where course_slug = ${course.slug}`;
@@ -281,6 +292,8 @@ function toSummary(c: CourseRecord): CourseSummary {
     videoId: c.videoId,
     published: c.published,
     stationCount: c.modules.length,
+    bannerStyle: c.bannerStyle,
+    bannerColor: c.bannerColor,
     updatedAt: c.updatedAt,
   };
 }
@@ -296,10 +309,13 @@ export const listPublishedCourses = createServerFn({ method: "GET" }).handler(
       kicker: string;
       video_id: string;
       published: boolean;
+      banner_style: string;
+      banner_color: string;
       updated_at: string;
       station_count: number;
     }>`
-      select c.slug, c.title, c.tagline, c.kicker, c.video_id, c.published, c.updated_at,
+      select c.slug, c.title, c.tagline, c.kicker, c.video_id, c.published,
+             c.banner_style, c.banner_color, c.updated_at,
              (select count(*)::int from course_modules m where m.course_slug = c.slug) as station_count
       from courses c
       where c.published = true
@@ -313,6 +329,8 @@ export const listPublishedCourses = createServerFn({ method: "GET" }).handler(
       videoId: r.video_id,
       published: Boolean(r.published),
       stationCount: Number(r.station_count) || 0,
+      bannerStyle: normalizeBannerStyle(r.banner_style),
+      bannerColor: r.banner_color ?? "",
       updatedAt: r.updated_at,
     })) satisfies CourseSummary[];
   },
@@ -347,10 +365,13 @@ export const getOfficeState = createServerFn({ method: "GET" })
       kicker: string;
       video_id: string;
       published: boolean;
+      banner_style: string;
+      banner_color: string;
       updated_at: string;
       station_count: number;
     }>`
-      select c.slug, c.title, c.tagline, c.kicker, c.video_id, c.published, c.updated_at,
+      select c.slug, c.title, c.tagline, c.kicker, c.video_id, c.published,
+             c.banner_style, c.banner_color, c.updated_at,
              (select count(*)::int from course_modules m where m.course_slug = c.slug) as station_count
       from courses c
       order by c.updated_at desc
@@ -367,6 +388,8 @@ export const getOfficeState = createServerFn({ method: "GET" })
         videoId: r.video_id,
         published: Boolean(r.published),
         stationCount: Number(r.station_count) || 0,
+        bannerStyle: normalizeBannerStyle(r.banner_style),
+        bannerColor: r.banner_color ?? "",
         updatedAt: r.updated_at,
       })) satisfies CourseSummary[],
     };
@@ -398,6 +421,8 @@ export const saveCourse = createServerFn({ method: "POST" })
       ...data,
       slug: slugify(data.slug),
       createdBy: existing?.createdBy ?? context.userId,
+      bannerStyle: normalizeBannerStyle(data.bannerStyle),
+      bannerColor: (data.bannerColor ?? "").slice(0, 40),
       modules: data.modules ?? [],
       examQuestions: data.examQuestions ?? [],
     };
@@ -442,6 +467,8 @@ export const createBlankCourse = createServerFn({ method: "POST" })
       createdBy: context.userId,
       passRatio: PASS_RATIO,
       examPassRatio: EXAM_PASS_RATIO,
+      bannerStyle: "video",
+      bannerColor: "",
       modules: [],
       examQuestions: [],
       updatedAt: new Date().toISOString(),

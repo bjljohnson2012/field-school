@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { getOfficeCourse, saveCourse, setPublished } from "@/lib/course/catalog";
 import { generateCourse } from "@/lib/course/generate";
-import type { CourseRecord } from "@/lib/course/types";
+import { BANNER_STYLES, type CourseRecord } from "@/lib/course/types";
 
 export const Route = createFileRoute("/office/$slug")({ component: EditCourse });
 
@@ -44,7 +44,7 @@ function EditCourse() {
         <main className="mx-auto max-w-3xl px-4 py-16">
           <h1 className="font-display text-3xl">Not found</h1>
           <Link to="/office" className="mt-4 inline-flex h-11 items-center text-sm">
-            Back to office
+            Back to admin
           </Link>
         </main>
       </div>
@@ -154,6 +154,53 @@ function EditCourse() {
               onChange={(e) => patch("videoUrl", e.target.value)}
             />
           </label>
+          <div className="rounded-xl border border-border bg-surface p-4">
+            <p className="text-xs uppercase tracking-[0.16em] text-muted">
+              Catalog card banner
+            </p>
+            <p className="mt-1 text-xs text-muted">
+              Choose how this course looks in the catalog — the video thumbnail,
+              a plain accent strip, or a compact card with no banner.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {BANNER_STYLES.map((style) => (
+                <button
+                  key={style}
+                  type="button"
+                  onClick={() => patch("bannerStyle", style)}
+                  className={`md-interactive h-9 rounded-lg border px-3 text-sm capitalize ${
+                    course.bannerStyle === style
+                      ? "border-accent bg-accent text-accent-fg"
+                      : "border-border text-fg"
+                  }`}
+                >
+                  {style === "video"
+                    ? "Video thumbnail"
+                    : style === "gradient"
+                      ? "Accent strip"
+                      : "No banner"}
+                </button>
+              ))}
+            </div>
+            {course.bannerStyle === "gradient" ? (
+              <label className="mt-3 flex items-center gap-3 text-xs uppercase tracking-[0.16em] text-muted">
+                Accent color
+                <input
+                  type="color"
+                  className="h-9 w-14 cursor-pointer rounded border border-border bg-surface"
+                  value={/^#[0-9a-fA-F]{6}$/.test(course.bannerColor) ? course.bannerColor : "#4f46e5"}
+                  onChange={(e) => patch("bannerColor", e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="md-interactive rounded-lg border border-border px-2 py-1 text-xs normal-case"
+                  onClick={() => patch("bannerColor", "")}
+                >
+                  Use theme accent
+                </button>
+              </label>
+            ) : null}
+          </div>
           <label className="block text-xs uppercase tracking-[0.16em] text-muted">
             Source context
             <textarea

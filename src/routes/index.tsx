@@ -10,6 +10,35 @@ import { UNI_NAME, type CourseSummary } from "@/lib/course/types";
 import { youtubePoster } from "@/lib/course/youtube";
 import { markGuest } from "@/lib/guest";
 
+/**
+ * Course-card banner. Admins pick the style per course in the edit page:
+ * a video poster ("video"), an accent strip ("gradient"), or nothing ("none").
+ */
+function CourseCardBanner({ course }: { course: CourseSummary }) {
+  if (course.bannerStyle === "none") return null;
+  if (course.bannerStyle === "gradient" || !course.videoId) {
+    const from = course.bannerColor || "var(--color-accent)";
+    return (
+      <div
+        className="h-14 w-full"
+        style={{
+          backgroundImage: `linear-gradient(120deg, ${from}, color-mix(in oklab, ${from} 55%, transparent))`,
+        }}
+      />
+    );
+  }
+  return (
+    <div className="relative aspect-[16/6] overflow-hidden bg-raised">
+      <img
+        src={youtubePoster(course.videoId)}
+        alt=""
+        className="h-full w-full object-cover opacity-80 transition-transform duration-300 group-hover:scale-[1.03]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/10 to-transparent" />
+    </div>
+  );
+}
+
 export const Route = createFileRoute("/")({ component: Campus });
 
 function Campus() {
@@ -59,7 +88,7 @@ function Campus() {
                   to="/office"
                   className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm text-fg"
                 >
-                  Dean’s office
+                  Admin
                 </Link>
               </div>
             </div>
@@ -99,49 +128,40 @@ function Campus() {
             exam. Share the link with anyone — they can start as a guest.
           </p>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {courses === null ? (
-              <div className="h-40 animate-pulse rounded-xl border border-border bg-surface" />
+              <div className="h-28 animate-pulse rounded-xl border border-border bg-surface" />
             ) : courses.length === 0 ? (
               <p className="text-sm text-muted">No published courses yet.</p>
             ) : (
               courses.map((c) => (
                 <article
                   key={c.slug}
-                  className="md-interactive md-card group relative overflow-hidden rounded-xl border border-border bg-surface"
+                  className="md-interactive md-card group relative flex flex-col overflow-hidden rounded-xl border border-border bg-surface"
                 >
                   <Link
                     to="/c/$courseSlug"
                     params={{ courseSlug: c.slug }}
-                    className="block"
+                    className="flex flex-1 flex-col"
                   >
-                    <div className="relative aspect-[16/8] bg-raised">
-                      {c.videoId ? (
-                        <img
-                          src={youtubePoster(c.videoId)}
-                          alt=""
-                          className="h-full w-full object-cover opacity-80 transition-transform duration-300 group-hover:scale-[1.03]"
-                        />
-                      ) : null}
-                      <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
-                    </div>
-                    <div className="px-4 py-4">
-                      <p className="text-xs uppercase tracking-[0.16em] text-muted">
+                    <CourseCardBanner course={c} />
+                    <div className="flex flex-1 flex-col px-4 py-3">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted">
                         {c.kicker || `${c.stationCount} stations`}
                       </p>
-                      <h3 className="mt-1 font-display text-2xl tracking-tight">
+                      <h3 className="mt-1 font-display text-lg leading-snug tracking-tight">
                         {c.title}
                       </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-muted">
+                      <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted">
                         {c.tagline}
                       </p>
-                      <p className="mt-4 inline-flex h-11 items-center gap-2 text-sm">
+                      <p className="mt-3 inline-flex items-center gap-1.5 text-sm text-fg">
                         Enter
                         <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                       </p>
                     </div>
                   </Link>
-                  <div className="absolute top-3 right-3 z-10">
+                  <div className="absolute top-2.5 right-2.5 z-10">
                     <ShareCourseButton
                       slug={c.slug}
                       title={c.title}

@@ -78,6 +78,20 @@ export type StaffDesk = {
   overnightBrief: string;
 };
 
+/**
+ * How a course card renders its top strip:
+ *   'video'    – YouTube poster image (default)
+ *   'gradient' – accent gradient strip, no video thumbnail
+ *   'none'     – no banner; a compact text-only card
+ */
+export type BannerStyle = "video" | "gradient" | "none";
+
+export const BANNER_STYLES: BannerStyle[] = ["video", "gradient", "none"];
+
+export function normalizeBannerStyle(v: unknown): BannerStyle {
+  return v === "gradient" || v === "none" ? v : "video";
+}
+
 export type CourseRecord = {
   slug: string;
   title: string;
@@ -91,6 +105,8 @@ export type CourseRecord = {
   createdBy: string;
   passRatio: number;
   examPassRatio: number;
+  bannerStyle: BannerStyle;
+  bannerColor: string;
   modules: Module[];
   examQuestions: QuizQuestion[];
   updatedAt: string;
@@ -104,6 +120,8 @@ export type CourseSummary = {
   videoId: string;
   published: boolean;
   stationCount: number;
+  bannerStyle: BannerStyle;
+  bannerColor: string;
   updatedAt: string;
 };
 
