@@ -11,13 +11,19 @@ type Dashboard = Awaited<ReturnType<typeof getStudentDashboard>>;
 
 function DashboardPage() {
   const { user, isPending } = useCurrentUserState();
-  const [board, setBoard] = useState<Dashboard | null | "error">(null);
+  const [board, setBoard] = useState<Dashboard | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isPending || !user) return;
     getStudentDashboard()
-      .then(setBoard)
-      .catch(() => setBoard("error"));
+      .then((next) => {
+        setBoard(next);
+        setError(null);
+      })
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : "Could not load progress.");
+      });
   }, [user, isPending]);
 
   if (isPending) {
@@ -47,7 +53,7 @@ function DashboardPage() {
           >
             Chat the dean
           </Link>
-          {board && board !== "error" && board.faculty ? (
+          {board?.faculty ? (
             <Link
               to="/office/students"
               className="md-interactive inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm"
@@ -57,10 +63,10 @@ function DashboardPage() {
           ) : null}
         </div>
 
-        {board === null ? (
+        {error ? (
+          <p className="mt-8 text-sm text-warn">{error}</p>
+        ) : board === null ? (
           <p className="mt-8 text-sm text-muted">Reading enrollments…</p>
-        ) : board === "error" ? (
-          <p className="mt-8 text-sm text-warn">Could not load progress.</p>
         ) : board.courses.length === 0 ? (
           <p className="mt-8 text-sm text-muted">No published courses yet.</p>
         ) : (

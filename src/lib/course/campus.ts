@@ -54,13 +54,16 @@ async function publishedCourses() {
 
 async function peopleByIds(ids: string[]) {
   const unique = [...new Set(ids.filter(Boolean))];
-  if (unique.length === 0) return new Map<string, PersonRow>();
+  const people = new Map<string, PersonRow>();
+  if (unique.length === 0) return people;
   const sql = await getSql();
-  const rows = await sql.query<PersonRow>(
-    `select id, name, email from "user" where id = any($1::text[])`,
-    [unique],
-  );
-  return new Map(rows.map((row) => [row.id, row]));
+  for (const id of unique) {
+    const rows = await sql<PersonRow>`
+      select id, name, email from "user" where id = ${id}
+    `;
+    if (rows[0]) people.set(id, rows[0]);
+  }
+  return people;
 }
 
 function latestExamByCourse(rows: ExamRow[]) {
@@ -102,26 +105,22 @@ export const getStudentDashboard = createServerFn({ method: "GET" })
     const sql = await getSql();
     const faculty = await isFacultyUser(context.userId);
     const courses = await publishedCourses();
-    const slugs = courses.map((course) => course.slug);
-    const progress =
-      slugs.length === 0
-        ? []
-        : await sql.query<ProgressRow>(
-            `select user_id, course_slug, module_slug, passed
-             from enrollment_progress
-             where user_id = $1 and course_slug = any($2::text[])`,
-            [context.userId, slugs],
-          );
-    const exams =
-      slugs.length === 0
-        ? []
-        : await sql.query<ExamRow>(
-            `select user_id, course_slug, score, passed, created_at
-             from enrollment_exams
-             where user_id = $1 and course_slug = any($2::text[])
-             order by created_at desc`,
-            [context.userId, slugs],
-          );
+    const slugSet = new Set(courses.map((course) => course.slug));
+    const progress = (
+      await sql<ProgressRow>`
+        select user_id, course_slug, module_slug, passed
+        from enrollment_progress
+        where user_id = ${context.userId}
+      `
+    ).filter((row) => slugSet.has(row.course_slug));
+    const exams = (
+      await sql<ExamRow>`
+        select user_id, course_slug, score, passed, created_at
+        from enrollment_exams
+        where user_id = ${context.userId}
+        order by created_at desc
+      `
+    ).filter((row) => slugSet.has(row.course_slug));
     const passedByCourse = new Map<string, number>();
     for (const row of progress) {
       if (!row.passed) continue;
@@ -155,7 +154,7 @@ export const getAdminProgressBoard = createServerFn({ method: "GET" })
     await requireFaculty(context.userId);
     const sql = await getSql();
     const courses = await publishedCourses();
-    const slugs = courses.map((course) => course.slug);
+    const slugSet = new Set(courses.map((course) => course.slug));
     const students = await sql<{
       id: string;
       name: string;
@@ -164,25 +163,19 @@ export const getAdminProgressBoard = createServerFn({ method: "GET" })
     }>`
       select id, name, email, "createdAt" from "user" order by "createdAt" asc
     `;
-    const progress =
-      slugs.length === 0
-        ? []
-        : await sql.query<ProgressRow>(
-            `select user_id, course_slug, module_slug, passed
-             from enrollment_progress
-             where course_slug = any($1::text[])`,
-            [slugs],
-          );
-    const exams =
-      slugs.length === 0
-        ? []
-        : await sql.query<ExamRow>(
-            `select user_id, course_slug, score, passed, created_at
-             from enrollment_exams
-             where course_slug = any($1::text[])
-             order by created_at desc`,
-            [slugs],
-          );
+    const progress = (
+      await sql<ProgressRow>`
+        select user_id, course_slug, module_slug, passed
+        from enrollment_progress
+      `
+    ).filter((row) => slugSet.has(row.course_slug));
+    const exams = (
+      await sql<ExamRow>`
+        select user_id, course_slug, score, passed, created_at
+        from enrollment_exams
+        order by created_at desc
+      `
+    ).filter((row) => slugSet.has(row.course_slug));
     const passedByKey = new Map<string, number>();
     for (const row of progress) {
       if (!row.passed) continue;

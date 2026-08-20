@@ -19,13 +19,19 @@ type Inbox = Awaited<ReturnType<typeof listCampusInbox>>;
 function InboxPage() {
   const { user, isPending } = useCurrentUserState();
   const { student } = Route.useSearch();
-  const [inbox, setInbox] = useState<Inbox | null | "error">(null);
+  const [inbox, setInbox] = useState<Inbox | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isPending || !user) return;
     listCampusInbox()
-      .then(setInbox)
-      .catch(() => setInbox("error"));
+      .then((next) => {
+        setInbox(next);
+        setError(null);
+      })
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : "Could not load inbox.");
+      });
   }, [user, isPending, student]);
 
   if (isPending) {
@@ -38,10 +44,9 @@ function InboxPage() {
   }
   if (!user) return <RedirectToSignIn />;
 
-  const faculty = inbox && inbox !== "error" ? inbox.faculty : false;
+  const faculty = inbox?.faculty ?? false;
   const selected =
-    student ??
-    (inbox && inbox !== "error" && inbox.faculty ? inbox.threads[0]?.studentId : user.id);
+    student ?? (inbox?.faculty ? inbox.threads[0]?.studentId : user.id);
 
   return (
     <div className="min-h-dvh">
@@ -57,8 +62,8 @@ function InboxPage() {
             : "Questions about a station, quiz, or certificate land on the dean’s desk."}
         </p>
 
-        {inbox === "error" ? (
-          <p className="mt-8 text-sm text-warn">Could not load inbox.</p>
+        {error ? (
+          <p className="mt-8 text-sm text-warn">{error}</p>
         ) : (
           <div className={`mt-8 grid gap-4 ${faculty ? "lg:grid-cols-[16rem_1fr]" : ""}`}>
             {faculty ? (
