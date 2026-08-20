@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
+import { GuestBanner } from "@/components/guest-banner";
+import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
 import { YoutubeClip } from "@/components/youtube-clip";
 import { usePublishedCourse } from "@/lib/course/use-course";
@@ -36,7 +38,10 @@ function CourseHome() {
           <p className="mt-3 text-muted">
             It may still be a draft in the office, or the slug is wrong.
           </p>
-          <Link to="/" className="mt-6 inline-flex h-11 items-center text-sm">
+          <Link
+            to="/"
+            className="md-interactive mt-6 inline-flex h-11 items-center rounded-xl px-2 text-sm"
+          >
             Back to campus
           </Link>
         </main>
@@ -49,6 +54,7 @@ function CourseHome() {
   return (
     <div className="min-h-dvh">
       <SiteHeader course={course} passed={passedCount} total={total} />
+      <GuestBanner />
       <main>
         <section className="border-b border-border">
           <div className="mx-auto max-w-6xl px-4 py-10 lg:py-14">
@@ -66,7 +72,7 @@ function CourseHome() {
                 <Link
                   to="/c/$courseSlug/s/$slug"
                   params={{ courseSlug: course.slug, slug: first.slug }}
-                  className="inline-flex h-12 items-center gap-2 rounded-md bg-accent px-5 text-sm font-medium text-accent-fg"
+                  className="md-interactive inline-flex h-12 items-center gap-2 rounded-xl bg-accent px-5 text-sm font-medium text-accent-fg"
                 >
                   Start station 01
                   <ArrowRight className="size-4" />
@@ -74,10 +80,11 @@ function CourseHome() {
               ) : null}
               <a
                 href="#ladder"
-                className="inline-flex h-12 items-center rounded-md border border-border px-5 text-sm"
+                className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm"
               >
                 See the ladder
               </a>
+              <ShareCourseButton slug={course.slug} title={course.title} />
             </div>
           </div>
         </section>
@@ -117,8 +124,8 @@ function CourseHome() {
                     to="/c/$courseSlug/s/$slug"
                     params={{ courseSlug: course.slug, slug: mod.slug }}
                     className={cn(
-                      "flex flex-col gap-2 rounded-lg border border-border bg-surface px-4 py-4 transition-colors hover:bg-raised sm:flex-row sm:items-center sm:justify-between",
-                      p?.passed && "border-pass/30",
+                      "md-interactive md-card flex flex-col gap-2 rounded-xl border border-border bg-surface px-4 py-4 sm:flex-row sm:items-center sm:justify-between",
+                      p?.passed && "border-pass/40",
                     )}
                   >
                     <div className="min-w-0">
@@ -152,14 +159,14 @@ function CourseHome() {
             <Link
               to="/c/$courseSlug/desk"
               params={{ courseSlug: course.slug }}
-              className="inline-flex h-12 items-center rounded-md border border-border px-5 text-sm"
+              className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm"
             >
               Build your share desk
             </Link>
             <Link
               to="/c/$courseSlug/exam"
               params={{ courseSlug: course.slug }}
-              className="inline-flex h-12 items-center rounded-md bg-accent px-5 text-sm font-medium text-accent-fg"
+              className="md-interactive inline-flex h-12 items-center rounded-xl bg-accent px-5 text-sm font-medium text-accent-fg"
             >
               {exam?.passed ? "Exam passed" : "Take the exam"}
             </Link>
@@ -167,7 +174,7 @@ function CourseHome() {
               <Link
                 to="/c/$courseSlug/certificate"
                 params={{ courseSlug: course.slug }}
-                className="inline-flex h-12 items-center rounded-md border border-pass/40 px-5 text-sm text-pass"
+                className="md-interactive inline-flex h-12 items-center rounded-xl border border-pass/40 px-5 text-sm text-pass"
               >
                 View certificate
               </Link>

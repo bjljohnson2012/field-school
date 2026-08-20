@@ -21,7 +21,7 @@ export const Route = createRootRoute({
         content:
           "Johnson Field School University — bottom-up courses from a source tape. Watch the clip, do the field work, pass the exam.",
       },
-      { name: "theme-color", content: "#0a0b0c" },
+      { name: "theme-color", content: "#120a07" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },

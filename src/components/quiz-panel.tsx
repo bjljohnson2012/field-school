@@ -46,7 +46,7 @@ export function QuizPanel({
   }
 
   return (
-    <section className="rounded-xl border border-border bg-surface p-5 sm:p-6">
+    <section className="rounded-xl border border-border bg-surface p-5 sm:p-6 md-card">
       <div className="mb-5 flex items-end justify-between gap-3">
         <div>
           <h2 className="font-display text-2xl tracking-tight">Station quiz</h2>
@@ -83,10 +83,10 @@ export function QuizPanel({
                   <label
                     key={choice}
                     className={cn(
-                      "flex min-h-11 cursor-pointer items-start gap-3 rounded-md border px-3 py-2.5 text-sm",
+                      "md-interactive flex min-h-11 cursor-pointer items-start gap-3 rounded-md border px-3 py-2.5 text-sm",
                       selected
                         ? "border-accent bg-raised"
-                        : "border-border hover:bg-raised/60",
+                        : "border-border",
                       reveal && isCorrect && "border-pass/50",
                       reveal && selected && !isCorrect && "border-warn/50",
                     )}

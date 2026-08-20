@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
 import { listPublishedCourses } from "@/lib/course/catalog";
 import { UNI_NAME, type CourseSummary } from "@/lib/course/types";
 import { youtubePoster } from "@/lib/course/youtube";
+import { markGuest } from "@/lib/guest";
 
 export const Route = createFileRoute("/")({ component: Campus });
 
@@ -32,25 +34,33 @@ function Campus() {
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
                 Pull in a source tape and a briefing. The office builds stations,
-                clips, field work, and an exam. Students pass from the bottom up.
+                clips, field work, and an exam. Walk any published course as a
+                guest, or sign in to keep progress.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
                   href="#catalog"
-                  className="inline-flex h-12 items-center gap-2 rounded-md bg-accent px-5 text-sm font-medium text-accent-fg"
+                  className="md-interactive inline-flex h-12 items-center gap-2 rounded-xl bg-accent px-5 text-sm font-medium text-accent-fg"
                 >
                   Open the catalog
                   <ArrowRight className="size-4" />
                 </a>
+                <a
+                  href="#catalog"
+                  className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm text-fg"
+                  onClick={() => markGuest()}
+                >
+                  Continue as guest
+                </a>
                 <Link
                   to="/office"
-                  className="inline-flex h-12 items-center rounded-md border border-border px-5 text-sm text-fg"
+                  className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm text-fg"
                 >
                   Dean’s office
                 </Link>
               </div>
             </div>
-            <div className="relative overflow-hidden rounded-xl border border-border">
+            <div className="md-interactive md-card relative overflow-hidden rounded-xl border border-border">
               <img
                 src="/hero.jpg"
                 alt="Operations desk for Johnson Field School University"
@@ -61,7 +71,7 @@ function Campus() {
         </section>
 
         <section className="border-b border-border bg-surface/40">
-          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-3">
+          <div className="mx-auto grid max-w-6xl gap-4 px-4 py-12 md:grid-cols-3">
             <PassCard
               n="01"
               title="Watch the clip"
@@ -89,8 +99,7 @@ function Campus() {
           </h2>
           <p className="mt-3 max-w-2xl text-muted">
             Each course is a staff you can actually run: tape, stations, desk,
-            exam. New ones are built in the office from a YouTube URL and
-            context.
+            exam. Share the link with anyone — they can start as a guest.
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -100,38 +109,50 @@ function Campus() {
               <p className="text-sm text-muted">No published courses yet.</p>
             ) : (
               courses.map((c) => (
-                <Link
+                <article
                   key={c.slug}
-                  to="/c/$courseSlug"
-                  params={{ courseSlug: c.slug }}
-                  className="group overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:bg-raised"
+                  className="md-interactive md-card group relative overflow-hidden rounded-xl border border-border bg-surface"
                 >
-                  <div className="relative aspect-[16/8] bg-raised">
-                    {c.videoId ? (
-                      <img
-                        src={youtubePoster(c.videoId)}
-                        alt=""
-                        className="h-full w-full object-cover opacity-80"
-                      />
-                    ) : null}
-                    <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
+                  <Link
+                    to="/c/$courseSlug"
+                    params={{ courseSlug: c.slug }}
+                    className="block"
+                  >
+                    <div className="relative aspect-[16/8] bg-raised">
+                      {c.videoId ? (
+                        <img
+                          src={youtubePoster(c.videoId)}
+                          alt=""
+                          className="h-full w-full object-cover opacity-80 transition-transform duration-300 group-hover:scale-[1.03]"
+                        />
+                      ) : null}
+                      <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
+                    </div>
+                    <div className="px-4 py-4">
+                      <p className="text-xs uppercase tracking-[0.16em] text-muted">
+                        {c.kicker || `${c.stationCount} stations`}
+                      </p>
+                      <h3 className="mt-1 font-display text-2xl tracking-tight">
+                        {c.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted">
+                        {c.tagline}
+                      </p>
+                      <p className="mt-4 inline-flex h-11 items-center gap-2 text-sm">
+                        Enter
+                        <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                      </p>
+                    </div>
+                  </Link>
+                  <div className="absolute top-3 right-3 z-10">
+                    <ShareCourseButton
+                      slug={c.slug}
+                      title={c.title}
+                      compact
+                      className="bg-bg/80"
+                    />
                   </div>
-                  <div className="px-4 py-4">
-                    <p className="text-xs uppercase tracking-[0.16em] text-muted">
-                      {c.kicker || `${c.stationCount} stations`}
-                    </p>
-                    <h3 className="mt-1 font-display text-2xl tracking-tight">
-                      {c.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted">
-                      {c.tagline}
-                    </p>
-                    <p className="mt-4 inline-flex h-11 items-center gap-2 text-sm">
-                      Enter
-                      <ArrowRight className="size-4" />
-                    </p>
-                  </div>
-                </Link>
+                </article>
               ))
             )}
           </div>
@@ -151,7 +172,7 @@ function PassCard({
   body: string;
 }) {
   return (
-    <article>
+    <article className="md-interactive md-card rounded-xl border border-border bg-surface px-5 py-5">
       <p className="font-mono text-xs text-muted">{n}</p>
       <h3 className="mt-2 font-display text-2xl tracking-tight">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>

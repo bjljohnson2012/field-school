@@ -1,4 +1,6 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { UserRound } from "lucide-react";
+import { ShareCourseButton } from "@/components/share-course-button";
 import { UserButton } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { UNI_SHORT, type CourseRecord } from "@/lib/course/types";
@@ -13,19 +15,23 @@ export function SiteHeader({
   total?: number;
 }) {
   const { user, isPending } = useCurrentUserState();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-bg/90 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-border bg-bg/88 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
         <div className="flex min-w-0 items-baseline gap-2">
-          <Link to="/" className="font-display text-lg tracking-tight">
+          <Link
+            to="/"
+            className="md-interactive rounded-lg px-1.5 py-0.5 font-display text-lg tracking-tight"
+          >
             {UNI_SHORT}
           </Link>
           {course ? (
             <Link
               to="/c/$courseSlug"
               params={{ courseSlug: course.slug }}
-              className="hidden truncate text-xs uppercase tracking-[0.16em] text-muted sm:inline"
+              className="md-interactive hidden truncate rounded-lg px-1.5 py-0.5 text-xs uppercase tracking-[0.16em] text-muted sm:inline"
             >
               {course.kicker || course.title}
             </Link>
@@ -38,7 +44,7 @@ export function SiteHeader({
         <nav className="flex items-center gap-1 text-sm">
           <Link
             to="/office"
-            className="flex h-11 items-center px-3 text-muted hover:text-fg"
+            className="md-interactive md-nav flex h-11 items-center px-3 text-muted"
           >
             Office
           </Link>
@@ -47,21 +53,27 @@ export function SiteHeader({
               <Link
                 to="/c/$courseSlug/desk"
                 params={{ courseSlug: course.slug }}
-                className="flex h-11 items-center px-3 text-muted hover:text-fg"
+                className="md-interactive md-nav flex h-11 items-center px-3 text-muted"
               >
                 Desk
               </Link>
               <Link
                 to="/c/$courseSlug/exam"
                 params={{ courseSlug: course.slug }}
-                className="flex h-11 items-center px-3 text-muted hover:text-fg"
+                className="md-interactive md-nav flex h-11 items-center px-3 text-muted"
               >
                 Exam
               </Link>
+              <ShareCourseButton
+                slug={course.slug}
+                title={course.title}
+                compact
+                className="ml-1 hidden sm:inline-flex"
+              />
             </>
           ) : null}
           {typeof passed === "number" && typeof total === "number" ? (
-            <span className="hidden h-8 items-center rounded-sm border border-border px-2 font-mono text-xs tabular-nums text-muted md:inline-flex">
+            <span className="hidden h-8 items-center rounded-lg border border-border px-2 font-mono text-xs tabular-nums text-muted md:inline-flex">
               {passed}/{total}
             </span>
           ) : null}
@@ -70,12 +82,19 @@ export function SiteHeader({
           ) : user ? (
             <UserButton />
           ) : (
-            <Link
-              to="/login"
-              className="ml-1 flex h-9 items-center rounded-sm bg-accent px-3 text-sm font-medium text-accent-fg"
-            >
-              Sign in
-            </Link>
+            <div className="ml-1 flex items-center gap-1">
+              <span className="hidden items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs text-muted sm:inline-flex">
+                <UserRound className="size-3.5" />
+                Guest
+              </span>
+              <Link
+                to="/login"
+                search={{ next: pathname }}
+                className="md-interactive flex h-9 items-center rounded-xl bg-accent px-3 text-sm font-medium text-accent-fg"
+              >
+                Sign in
+              </Link>
+            </div>
           )}
         </nav>
       </div>

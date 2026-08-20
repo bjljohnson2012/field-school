@@ -51,6 +51,12 @@ export type ModuleProgress = {
 
 export type ProgressMap = Record<string, ModuleProgress>;
 
+export type ExamState = {
+  score: number;
+  passed: boolean;
+  at?: string;
+} | null;
+
 export type DeskBot = {
   name: string;
   job: string;

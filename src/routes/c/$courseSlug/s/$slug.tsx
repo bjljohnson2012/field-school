@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { AssignmentPanel } from "@/components/assignment-panel";
+import { GuestBanner } from "@/components/guest-banner";
 import { QuizPanel } from "@/components/quiz-panel";
 import { SiteHeader } from "@/components/site-header";
 import { YoutubeClip } from "@/components/youtube-clip";
@@ -44,6 +45,7 @@ function StationPage() {
   return (
     <div className="min-h-dvh">
       <SiteHeader course={course} passed={passedCount} total={total} />
+      <GuestBanner />
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[220px_minmax(0,1fr)]">
         <aside className="hidden lg:block">
           <p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted">
@@ -58,10 +60,10 @@ function StationPage() {
                     to="/c/$courseSlug/s/$slug"
                     params={{ courseSlug: course.slug, slug: m.slug }}
                     className={cn(
-                      "flex h-10 items-center justify-between rounded-sm px-2 text-sm",
+                      "md-interactive flex h-10 items-center justify-between rounded-lg px-2 text-sm",
                       m.slug === mod.slug
                         ? "bg-raised text-fg"
-                        : "text-muted hover:text-fg",
+                        : "text-muted",
                     )}
                   >
                     <span className="truncate">
@@ -128,7 +130,7 @@ function StationPage() {
                 {mod.quotes.map((q) => (
                   <figure
                     key={`${q.t}-${q.text.slice(0, 24)}`}
-                    className="rounded-md border border-border bg-raised/40 px-4 py-3"
+                    className="md-interactive rounded-md border border-border bg-raised/40 px-4 py-3"
                   >
                     <blockquote className="text-sm leading-relaxed">
                       “{q.text}”
@@ -168,7 +170,7 @@ function StationPage() {
               <Link
                 to="/c/$courseSlug/s/$slug"
                 params={{ courseSlug: course.slug, slug: prev.slug }}
-                className="inline-flex h-11 items-center gap-2 text-sm text-muted hover:text-fg"
+                className="md-interactive inline-flex h-11 items-center gap-2 rounded-xl px-2 text-sm text-muted"
               >
                 <ArrowLeft className="size-4" />
                 {prev.title}
@@ -177,7 +179,7 @@ function StationPage() {
               <Link
                 to="/c/$courseSlug"
                 params={{ courseSlug: course.slug }}
-                className="inline-flex h-11 items-center text-sm text-muted"
+                className="md-interactive inline-flex h-11 items-center rounded-xl px-2 text-sm text-muted"
               >
                 Course home
               </Link>
@@ -186,7 +188,7 @@ function StationPage() {
               <Link
                 to="/c/$courseSlug/s/$slug"
                 params={{ courseSlug: course.slug, slug: next.slug }}
-                className="inline-flex h-11 items-center gap-2 text-sm"
+                className="md-interactive inline-flex h-11 items-center gap-2 rounded-xl px-2 text-sm"
               >
                 {next.title}
                 <ArrowRight className="size-4" />
@@ -195,7 +197,7 @@ function StationPage() {
               <Link
                 to="/c/$courseSlug/exam"
                 params={{ courseSlug: course.slug }}
-                className="inline-flex h-11 items-center gap-2 text-sm"
+                className="md-interactive inline-flex h-11 items-center gap-2 rounded-xl px-2 text-sm"
               >
                 Field exam
                 <ArrowRight className="size-4" />

@@ -38,7 +38,7 @@ export function AssignmentPanel({
   }
 
   return (
-    <section className="rounded-xl border border-border bg-surface p-5 sm:p-6">
+    <section className="rounded-xl border border-border bg-surface p-5 sm:p-6 md-card">
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.16em] text-muted">Field work</p>
@@ -56,7 +56,7 @@ export function AssignmentPanel({
       <ul className="space-y-3">
         {module.assignment.items.map((item) => (
           <li key={item.id}>
-            <label className="flex min-h-11 cursor-pointer items-start gap-3 rounded-md border border-border bg-raised/50 px-3 py-3">
+            <label className="md-interactive flex min-h-11 cursor-pointer items-start gap-3 rounded-md border border-border bg-raised/50 px-3 py-3">
               <input
                 type="checkbox"
                 className="mt-1 size-4"
@@ -93,7 +93,7 @@ export function AssignmentPanel({
           }}
           rows={8}
           placeholder={module.assignment.notesPlaceholder}
-          className="w-full resize-y rounded-md border border-border bg-bg px-3 py-3 font-mono text-sm leading-relaxed text-fg placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-accent/50"
+          className="md-field w-full resize-y rounded-md border border-border bg-bg px-3 py-3 font-mono text-sm leading-relaxed text-fg placeholder:text-faint"
         />
       </label>
       <div className="mt-4 flex items-center gap-3">

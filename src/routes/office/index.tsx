@@ -52,9 +52,9 @@ function OfficePage() {
           Manage the catalog
         </h1>
         <p className="mt-4 max-w-2xl leading-relaxed text-muted">
-          Catalog edits stay with the dean account. Students sign up with any
-          email to save progress. Anyone can walk a published course without an
-          account.
+          Catalog edits stay with the dean account. Students can walk any
+          published course as a guest, or sign up to save progress. Share a
+          course link with anyone.
         </p>
 
         {state === null ? (
@@ -69,7 +69,7 @@ function OfficePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/office/new"
-                className="inline-flex h-12 items-center gap-2 rounded-md bg-accent px-5 text-sm font-medium text-accent-fg"
+                className="md-interactive inline-flex h-12 items-center gap-2 rounded-xl bg-accent px-5 text-sm font-medium text-accent-fg"
               >
                 New course from a tape
                 <ArrowRight className="size-4" />
@@ -81,7 +81,7 @@ function OfficePage() {
                   <Link
                     to="/office/$slug"
                     params={{ slug: c.slug }}
-                    className="flex flex-col gap-1 rounded-lg border border-border bg-surface px-4 py-4 hover:bg-raised sm:flex-row sm:items-center sm:justify-between"
+                    className="md-interactive md-card flex flex-col gap-1 rounded-xl border border-border bg-surface px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
                       <p className="text-xs uppercase tracking-[0.16em] text-muted">

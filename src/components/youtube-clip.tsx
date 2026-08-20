@@ -34,7 +34,7 @@ export function YoutubeClip({
         : null;
 
   return (
-    <figure className="overflow-hidden rounded-xl border border-border bg-surface">
+    <figure className="md-interactive md-card overflow-hidden rounded-xl border border-border bg-surface">
       <div className="relative aspect-video bg-raised">
         {inline ? (
           <iframe
@@ -58,7 +58,7 @@ export function YoutubeClip({
                 href={watch}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-12 items-center gap-2 rounded-md bg-accent px-5 text-sm font-medium text-accent-fg"
+                className="md-interactive inline-flex h-12 items-center gap-2 rounded-xl bg-accent px-5 text-sm font-medium text-accent-fg"
               >
                 <Play className="size-4" />
                 Watch on YouTube
@@ -66,7 +66,7 @@ export function YoutubeClip({
               <button
                 type="button"
                 onClick={() => setInline(true)}
-                className="h-11 text-sm text-fg underline-offset-4 hover:underline"
+                className="md-interactive h-11 rounded-xl px-3 text-sm text-fg underline-offset-4 hover:underline"
               >
                 Try inline player
               </button>
@@ -89,7 +89,7 @@ export function YoutubeClip({
           href={watch}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-11 shrink-0 items-center gap-2 text-sm text-accent hover:underline"
+          className="md-interactive inline-flex h-11 shrink-0 items-center gap-2 rounded-xl px-2 text-sm text-accent"
         >
           <ExternalLink className="size-4" />
           Open clip

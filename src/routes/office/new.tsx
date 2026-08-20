@@ -90,7 +90,7 @@ function NewCourse() {
           <label className="block text-xs uppercase tracking-[0.16em] text-muted">
             Working title
             <input
-              className="mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm text-fg"
+              className="md-field mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm text-fg"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Grok Bot vs OpenClaw"
@@ -99,7 +99,7 @@ function NewCourse() {
           <label className="block text-xs uppercase tracking-[0.16em] text-muted">
             YouTube URL
             <input
-              className="mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm text-fg"
+              className="md-field mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm text-fg"
               value={youtubeUrl}
               onChange={(e) => setYoutubeUrl(e.target.value)}
               placeholder="https://www.youtube.com/watch?v=…"
@@ -109,7 +109,7 @@ function NewCourse() {
           <label className="block text-xs uppercase tracking-[0.16em] text-muted">
             Context — transcript, outline, or notes
             <textarea
-              className="mt-2 min-h-56 w-full rounded-md border border-border bg-surface px-3 py-3 text-sm leading-relaxed text-fg"
+              className="md-field mt-2 min-h-56 w-full rounded-md border border-border bg-surface px-3 py-3 text-sm leading-relaxed text-fg"
               value={context}
               onChange={(e) => setContext(e.target.value)}
               placeholder="Paste the parts that matter. Timestamps help. Say what students must be able to do when they pass."
@@ -130,7 +130,7 @@ function NewCourse() {
             </Button>
             <Link
               to="/office"
-              className="inline-flex h-11 items-center text-sm text-muted"
+              className="md-interactive inline-flex h-11 items-center rounded-xl px-2 text-sm text-muted"
             >
               Cancel
             </Link>

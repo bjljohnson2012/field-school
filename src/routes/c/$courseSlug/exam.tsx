@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { GuestBanner } from "@/components/guest-banner";
 import { SiteHeader } from "@/components/site-header";
 import { QuizPanel } from "@/components/quiz-panel";
 import { usePublishedCourse } from "@/lib/course/use-course";
@@ -32,6 +33,7 @@ function ExamPage() {
   return (
     <div className="min-h-dvh">
       <SiteHeader course={course} passed={passedCount} total={total} />
+      <GuestBanner />
       <main className="mx-auto max-w-3xl px-4 py-10">
         <p className="text-xs uppercase tracking-[0.16em] text-muted">Capstone</p>
         <h1 className="mt-2 font-display text-4xl tracking-tight">Field exam</h1>
@@ -61,7 +63,7 @@ function ExamPage() {
           <Link
             to="/c/$courseSlug/desk"
             params={{ courseSlug: course.slug }}
-            className="inline-flex h-11 items-center rounded-md border border-border px-4 text-sm"
+            className="md-interactive inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm"
           >
             Share desk
           </Link>
@@ -69,7 +71,7 @@ function ExamPage() {
             <Link
               to="/c/$courseSlug/certificate"
               params={{ courseSlug: course.slug }}
-              className="inline-flex h-11 items-center rounded-md bg-accent px-4 text-sm font-medium text-accent-fg"
+              className="md-interactive inline-flex h-11 items-center rounded-xl bg-accent px-4 text-sm font-medium text-accent-fg"
             >
               Certificate
             </Link>
@@ -77,7 +79,7 @@ function ExamPage() {
             <Link
               to="/c/$courseSlug/s/$slug"
               params={{ courseSlug: course.slug, slug: course.modules[0].slug }}
-              className="inline-flex h-11 items-center text-sm text-muted"
+              className="md-interactive inline-flex h-11 items-center rounded-xl px-2 text-sm text-muted"
             >
               Back to station 01
             </Link>

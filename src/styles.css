@@ -1,27 +1,43 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Sanctuary palette — https://github.com/bjljohnson2012/sanctuary-palette
+   Mapped to Material Design 3 color roles. */
+:root {
+  --void: #120a07;
+  --wood-deep: #2a150c;
+  --wood-mid: #5c3d2a;
+  --wood-warm: #8b6548;
+  --stone: #b89b7e;
+  --stone-light: #d4bda5;
+  --ember: #b35c2e;
+  --ash: #7a6b5f;
+  --lantern: #e8e2d9;
+  --md-ease: cubic-bezier(0.2, 0, 0, 1);
+  --md-duration: 180ms;
+}
+
 @theme {
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --color-bg: #0a0b0c;
-  --color-surface: #13151a;
-  --color-raised: #1b1e25;
-  --color-fg: #eceef1;
-  --color-muted: #8b919a;
-  --color-faint: #5c636c;
-  --color-border: #2a2e36;
-  --color-accent: #c5cdd8;
-  --color-accent-fg: #0a0b0c;
-  --color-pass: #8fad93;
-  --color-warn: #c4b38a;
+  --color-bg: #120a07;
+  --color-surface: #2a150c;
+  --color-raised: #5c3d2a;
+  --color-fg: #d4bda5;
+  --color-muted: #b89b7e;
+  --color-faint: #7a6b5f;
+  --color-border: #8b6548;
+  --color-accent: #b35c2e;
+  --color-accent-fg: #e8e2d9;
+  --color-pass: #c4b38a;
+  --color-warn: #e08a4a;
 
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-xl: 28px;
 }
 
 @layer base {
@@ -50,6 +66,108 @@
   p {
     text-wrap: pretty;
   }
+
+  :focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-accent) 70%, var(--color-fg));
+    outline-offset: 2px;
+  }
+
+  input,
+  textarea,
+  select {
+    transition:
+      border-color var(--md-duration) var(--md-ease),
+      box-shadow var(--md-duration) var(--md-ease),
+      background-color var(--md-duration) var(--md-ease);
+  }
+
+  input:hover,
+  textarea:hover,
+  select:hover {
+    border-color: color-mix(in srgb, var(--color-border) 70%, var(--color-fg));
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 28%, transparent);
+  }
+}
+
+@layer components {
+  /* Material Design 3 state layer — hover / focus / press feel different. */
+  .md-interactive {
+    position: relative;
+    isolation: isolate;
+    transition:
+      transform var(--md-duration) var(--md-ease),
+      box-shadow var(--md-duration) var(--md-ease),
+      background-color var(--md-duration) var(--md-ease),
+      border-color var(--md-duration) var(--md-ease),
+      color var(--md-duration) var(--md-ease);
+  }
+
+  .md-interactive::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--color-fg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity var(--md-duration) var(--md-ease);
+  }
+
+  .md-interactive:hover::before {
+    opacity: 0.08;
+  }
+
+  .md-interactive:focus-visible::before {
+    opacity: 0.12;
+  }
+
+  .md-interactive:active::before {
+    opacity: 0.16;
+  }
+
+  .md-interactive > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  .md-card {
+    box-shadow: 0 1px 2px rgb(18 10 7 / 0.35);
+  }
+
+  .md-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 2px 4px rgb(18 10 7 / 0.35),
+      0 12px 28px rgb(18 10 7 / 0.5);
+    border-color: color-mix(in srgb, var(--color-border) 55%, var(--color-accent));
+  }
+
+  .md-card:active {
+    transform: translateY(-1px);
+  }
+
+  .md-nav {
+    border-radius: 20px;
+  }
+
+  .md-nav:hover {
+    color: var(--color-fg);
+  }
+
+  .md-field {
+    transition:
+      border-color var(--md-duration) var(--md-ease),
+      background-color var(--md-duration) var(--md-ease),
+      box-shadow var(--md-duration) var(--md-ease);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -59,5 +177,10 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .md-card:hover,
+  .md-card:active {
+    transform: none;
   }
 }

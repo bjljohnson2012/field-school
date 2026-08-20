@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { RedirectToSignIn } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { getOfficeCourse, saveCourse, setPublished } from "@/lib/course/catalog";
@@ -124,7 +125,7 @@ function EditCourse() {
           <label className="block text-xs uppercase tracking-[0.16em] text-muted">
             Title
             <input
-              className="mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
+              className="md-field mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
               value={course.title}
               onChange={(e) => patch("title", e.target.value)}
             />
@@ -132,7 +133,7 @@ function EditCourse() {
           <label className="block text-xs uppercase tracking-[0.16em] text-muted">
             Tagline
             <input
-              className="mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
+              className="md-field mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
               value={course.tagline}
               onChange={(e) => patch("tagline", e.target.value)}
             />
@@ -140,7 +141,7 @@ function EditCourse() {
           <label className="block text-xs uppercase tracking-[0.16em] text-muted">
             Kicker
             <input
-              className="mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
+              className="md-field mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
               value={course.kicker}
               onChange={(e) => patch("kicker", e.target.value)}
             />
@@ -148,7 +149,7 @@ function EditCourse() {
           <label className="block text-xs uppercase tracking-[0.16em] text-muted">
             YouTube URL
             <input
-              className="mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
+              className="md-field mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
               value={course.videoUrl}
               onChange={(e) => patch("videoUrl", e.target.value)}
             />
@@ -156,7 +157,7 @@ function EditCourse() {
           <label className="block text-xs uppercase tracking-[0.16em] text-muted">
             Source context
             <textarea
-              className="mt-2 min-h-40 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
+              className="md-field mt-2 min-h-40 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
               value={course.contextNotes}
               onChange={(e) => patch("contextNotes", e.target.value)}
             />
@@ -183,13 +184,16 @@ function EditCourse() {
           >
             {busy === "gen" ? "Rebuilding…" : "Rebuild stations from context"}
           </Button>
+          {course.published ? (
+            <ShareCourseButton slug={course.slug} title={course.title} />
+          ) : null}
         </div>
 
         <ol className="mt-10 space-y-3">
           {course.modules.map((m) => (
             <li
               key={m.slug}
-              className="rounded-lg border border-border bg-surface px-4 py-3"
+              className="md-interactive md-card rounded-xl border border-border bg-surface px-4 py-3"
             >
               <p className="font-mono text-xs text-muted">
                 Station {m.station} · {m.clips.length} clips · {m.quiz.length} quiz
@@ -204,11 +208,14 @@ function EditCourse() {
           <Link
             to="/c/$courseSlug"
             params={{ courseSlug: course.slug }}
-            className="h-11 text-muted hover:text-fg"
+            className="md-interactive inline-flex h-11 items-center rounded-xl px-2 text-muted"
           >
             Preview as student
           </Link>
-          <Link to="/office" className="h-11 text-muted hover:text-fg">
+          <Link
+            to="/office"
+            className="md-interactive inline-flex h-11 items-center rounded-xl px-2 text-muted"
+          >
             All courses
           </Link>
         </div>

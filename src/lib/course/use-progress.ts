@@ -8,36 +8,15 @@ import {
   saveWatched,
 } from "./progress";
 import { allStationsPassed, computePassed, emptyProgress } from "./content";
-import type { CourseRecord, ModuleProgress, ProgressMap } from "./types";
+import {
+  readLocalExam,
+  readLocalProgress,
+  writeLocalExam,
+  writeLocalProgress,
+} from "./local-store";
+import type { CourseRecord, ExamState, ModuleProgress, ProgressMap } from "./types";
 
-function storageKey(slug: string) {
-  return `jfsu-progress:${slug}`;
-}
-
-function readLocal(slug: string): ProgressMap {
-  if (typeof window === "undefined" || !slug) return {};
-  try {
-    const raw = localStorage.getItem(storageKey(slug));
-    if (!raw) return {};
-    return JSON.parse(raw) as ProgressMap;
-  } catch {
-    return {};
-  }
-}
-
-function writeLocal(slug: string, map: ProgressMap) {
-  try {
-    localStorage.setItem(storageKey(slug), JSON.stringify(map));
-  } catch {
-    /* ignore */
-  }
-}
-
-export type ExamState = {
-  score: number;
-  passed: boolean;
-  at?: string;
-} | null;
+export type { ExamState };
 
 export function useCourseProgress(course: CourseRecord | null | undefined) {
   const { user, isPending } = useCurrentUserState();
@@ -48,7 +27,8 @@ export function useCourseProgress(course: CourseRecord | null | undefined) {
 
   useEffect(() => {
     if (!slug) return;
-    setMap(readLocal(slug));
+    setMap(readLocalProgress(slug));
+    setExam(readLocalExam(slug));
     setReady(true);
   }, [slug]);
 
@@ -60,10 +40,13 @@ export function useCourseProgress(course: CourseRecord | null | undefined) {
         if (cancelled) return;
         setMap((local) => {
           const merged: ProgressMap = { ...local, ...res.progress };
-          writeLocal(slug, merged);
+          writeLocalProgress(slug, merged);
           return merged;
         });
-        setExam(res.exam);
+        if (res.exam) {
+          setExam(res.exam);
+          writeLocalExam(slug, res.exam);
+        }
       })
       .catch(() => {
         /* guest / network */
@@ -78,7 +61,7 @@ export function useCourseProgress(course: CourseRecord | null | undefined) {
       if (!slug) return;
       setMap((prev) => {
         const merged = { ...prev, [moduleSlug]: next };
-        writeLocal(slug, merged);
+        writeLocalProgress(slug, merged);
         return merged;
       });
     },
@@ -172,16 +155,26 @@ export function useCourseProgress(course: CourseRecord | null | undefined) {
       if (!course) {
         return { score: 0, total: 0, passed: false, need: 0 };
       }
+      const finish = (res: {
+        score: number;
+        total: number;
+        passed: boolean;
+        need: number;
+      }) => {
+        const next: ExamState = {
+          score: res.score,
+          passed: res.passed,
+          at: new Date().toISOString(),
+        };
+        setExam(next);
+        writeLocalExam(course.slug, next);
+        return res;
+      };
       if (user) {
         const res = await saveExam({
           data: { courseSlug: course.slug, answers },
         });
-        setExam({
-          score: res.score,
-          passed: res.passed,
-          at: new Date().toISOString(),
-        });
-        return res;
+        return finish(res);
       }
       let correct = 0;
       for (const q of course.examQuestions) {
@@ -189,18 +182,12 @@ export function useCourseProgress(course: CourseRecord | null | undefined) {
       }
       const total = course.examQuestions.length;
       const need = Math.ceil(total * course.examPassRatio);
-      const res = {
+      return finish({
         score: correct,
         total,
         passed: correct >= need,
         need,
-      };
-      setExam({
-        score: res.score,
-        passed: res.passed,
-        at: new Date().toISOString(),
       });
-      return res;
     },
     [course, user],
   );

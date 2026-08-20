@@ -14,7 +14,7 @@ function CertificatePage() {
   const course = usePublishedCourse(courseSlug);
   const user = useCurrentUser();
   const { certified, passedCount, total, exam } = useCourseProgress(course ?? null);
-  const name = user?.displayName ?? user?.primaryEmail ?? "Field operator";
+  const name = user?.displayName ?? user?.primaryEmail ?? "Guest";
 
   if (course === undefined) {
     return (
@@ -37,7 +37,7 @@ function CertificatePage() {
     <div className="min-h-dvh">
       <SiteHeader course={course} passed={passedCount} total={total} />
       <main className="mx-auto max-w-3xl px-4 py-12">
-        <div className="rounded-xl border border-border bg-surface px-6 py-10 sm:px-12">
+        <div className="md-card rounded-xl border border-border bg-surface px-6 py-10 sm:px-12">
           <p className="text-center text-xs uppercase tracking-[0.22em] text-muted">
             {UNI_NAME}
           </p>
@@ -49,6 +49,9 @@ function CertificatePage() {
             {course.title}
             {exam ? ` · exam ${exam.score}/${course.examQuestions.length}` : ""}.
             Study credential from this campus — not a vendor certification.
+            {!user
+              ? " Signed in later, this name becomes your account name."
+              : null}
           </p>
           <p className="mt-8 text-center font-mono text-xs text-faint">
             {new Date().toISOString().slice(0, 10)} · {course.kicker || course.slug}
@@ -58,11 +61,14 @@ function CertificatePage() {
           <Link
             to="/c/$courseSlug/desk"
             params={{ courseSlug: course.slug }}
-            className="h-11 text-sm text-muted hover:text-fg"
+            className="md-interactive inline-flex h-11 items-center rounded-xl px-2 text-sm text-muted"
           >
             Export share desk
           </Link>
-          <Link to="/" className="h-11 text-sm text-muted hover:text-fg">
+          <Link
+            to="/"
+            className="md-interactive inline-flex h-11 items-center rounded-xl px-2 text-sm text-muted"
+          >
             Campus
           </Link>
         </div>

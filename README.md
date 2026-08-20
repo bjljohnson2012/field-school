@@ -8,7 +8,9 @@ The first published course is **Field School — Grok Bot vs OpenClaw and Hermes
 
 ## For students
 
-Anyone can open the catalog and walk a course. Sign up with email + password if you want progress, the desk, and a certificate saved.
+Anyone can open a course link as a guest — no account required. Progress, the desk, and the exam stay on that browser. Sign up with email + password if you want them saved to a campus account and a named certificate.
+
+Each published course has a **Share** button. It copies a public link (`/c/{slug}`) you can send to anyone.
 
 ## For the dean
 

@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { GuestBanner } from "@/components/guest-banner";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { deskToMarkdown } from "@/lib/course/desk-md";
+import { readLocalDesk, writeLocalDesk } from "@/lib/course/local-store";
 import { loadDesk, saveDesk } from "@/lib/course/progress";
 import { usePublishedCourse } from "@/lib/course/use-course";
 import { useCourseProgress } from "@/lib/course/use-progress";
@@ -47,7 +49,17 @@ function DeskPage() {
   const md = useMemo(() => deskToMarkdown(desk), [desk]);
 
   useEffect(() => {
-    if (isPending || !user || !course) return;
+    if (!course) return;
+    const local = readLocalDesk(course.slug);
+    if (local) {
+      setDesk({
+        ...blankDesk(),
+        ...local,
+        bots: local.bots?.length ? local.bots : blankDesk().bots,
+        routines: local.routines?.length ? local.routines : blankDesk().routines,
+      });
+    }
+    if (isPending || !user) return;
     loadDesk({ data: { courseSlug: course.slug } })
       .then((d) => {
         if (d)
@@ -94,17 +106,17 @@ function DeskPage() {
 
   async function persist() {
     if (!course) return;
-    if (!user) {
-      setSaved(true);
-      return;
+    writeLocalDesk(course.slug, desk);
+    if (user) {
+      await saveDesk({ data: { courseSlug: course.slug, data: desk } });
     }
-    await saveDesk({ data: { courseSlug: course.slug, data: desk } });
     setSaved(true);
   }
 
   return (
     <div className="min-h-dvh">
       <SiteHeader course={course ?? undefined} passed={passedCount} total={total} />
+      <GuestBanner />
       <main className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-xs uppercase tracking-[0.16em] text-muted">
           Share-desk skill
@@ -130,7 +142,7 @@ function DeskPage() {
               <label className="block text-xs uppercase tracking-[0.16em] text-muted">
                 Operator
                 <input
-                  className="mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
+                  className="md-field mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
                   value={desk.operator}
                   onChange={(e) => {
                     setDesk((d) => ({ ...d, operator: e.target.value }));
@@ -142,7 +154,7 @@ function DeskPage() {
               <label className="block text-xs uppercase tracking-[0.16em] text-muted">
                 Business / context
                 <input
-                  className="mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
+                  className="md-field mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
                   value={desk.business}
                   onChange={(e) => {
                     setDesk((d) => ({ ...d, business: e.target.value }));
@@ -156,25 +168,25 @@ function DeskPage() {
             {desk.bots.map((bot, i) => (
               <fieldset
                 key={i}
-                className="rounded-xl border border-border bg-surface p-4"
+                className="md-interactive md-card rounded-xl border border-border bg-surface p-4"
               >
                 <legend className="px-1 text-xs uppercase tracking-[0.16em] text-muted">
                   Bot {i + 1}
                 </legend>
                 <input
-                  className="mt-2 h-11 w-full rounded-md border border-border bg-bg px-3 text-sm"
+                  className="md-field mt-2 h-11 w-full rounded-md border border-border bg-bg px-3 text-sm"
                   placeholder="Name (coworker, not Assistant)"
                   value={bot.name}
                   onChange={(e) => updateBot(i, { name: e.target.value })}
                 />
                 <textarea
-                  className="mt-2 min-h-24 w-full rounded-md border border-border bg-bg px-3 py-2 text-sm"
+                  className="md-field mt-2 min-h-24 w-full rounded-md border border-border bg-bg px-3 py-2 text-sm"
                   placeholder="One job. What done looks like. What they never do."
                   value={bot.job}
                   onChange={(e) => updateBot(i, { job: e.target.value })}
                 />
                 <input
-                  className="mt-2 h-11 w-full rounded-md border border-border bg-bg px-3 text-sm"
+                  className="md-field mt-2 h-11 w-full rounded-md border border-border bg-bg px-3 text-sm"
                   placeholder="Voice"
                   value={bot.voice}
                   onChange={(e) => updateBot(i, { voice: e.target.value })}
@@ -189,8 +201,8 @@ function DeskPage() {
                         onClick={() => togglePlugin(i, p)}
                         className={
                           on
-                            ? "h-9 rounded-sm bg-accent px-3 text-xs font-medium text-accent-fg"
-                            : "h-9 rounded-sm border border-border px-3 text-xs text-muted"
+                            ? "md-interactive h-9 rounded-lg bg-accent px-3 text-xs font-medium text-accent-fg"
+                            : "md-interactive h-9 rounded-lg border border-border px-3 text-xs text-muted"
                         }
                       >
                         {p}
@@ -204,13 +216,13 @@ function DeskPage() {
             {desk.routines.map((r, i) => (
               <fieldset
                 key={`r-${i}`}
-                className="rounded-xl border border-border bg-surface p-4"
+                className="md-interactive md-card rounded-xl border border-border bg-surface p-4"
               >
                 <legend className="px-1 text-xs uppercase tracking-[0.16em] text-muted">
                   Routine {i + 1}
                 </legend>
                 <input
-                  className="mt-2 h-11 w-full rounded-md border border-border bg-bg px-3 text-sm"
+                  className="md-field mt-2 h-11 w-full rounded-md border border-border bg-bg px-3 text-sm"
                   placeholder="Name"
                   value={r.name}
                   onChange={(e) => {
@@ -224,7 +236,7 @@ function DeskPage() {
                   }}
                 />
                 <input
-                  className="mt-2 h-11 w-full rounded-md border border-border bg-bg px-3 text-sm"
+                  className="md-field mt-2 h-11 w-full rounded-md border border-border bg-bg px-3 text-sm"
                   placeholder="When"
                   value={r.when}
                   onChange={(e) => {
@@ -238,7 +250,7 @@ function DeskPage() {
                   }}
                 />
                 <textarea
-                  className="mt-2 min-h-20 w-full rounded-md border border-border bg-bg px-3 py-2 text-sm"
+                  className="md-field mt-2 min-h-20 w-full rounded-md border border-border bg-bg px-3 py-2 text-sm"
                   placeholder="Does / done / nag message"
                   value={r.does}
                   onChange={(e) => {
@@ -259,7 +271,7 @@ function DeskPage() {
                 Overnight potato brief
               </span>
               <textarea
-                className="mt-2 min-h-32 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
+                className="md-field mt-2 min-h-32 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
                 placeholder="I'm going to bed. Follow this desk. Quality bar."
                 value={desk.overnightBrief}
                 onChange={(e) => {
@@ -270,7 +282,13 @@ function DeskPage() {
             </label>
 
             <div className="flex flex-wrap gap-3">
-              <Button type="submit">{saved ? "Saved" : "Save desk"}</Button>
+              <Button type="submit">
+                {saved
+                  ? user
+                    ? "Saved"
+                    : "Saved on this device"
+                  : "Save desk"}
+              </Button>
               <Button type="button" variant="secondary" onClick={() => void copyMd()}>
                 {copied ? "Copied" : "Copy markdown"}
               </Button>
