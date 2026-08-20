@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
+import { CourseFeedback } from "@/components/course-feedback";
 import { GuestBanner } from "@/components/guest-banner";
 import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
 import { YoutubeClip } from "@/components/youtube-clip";
+import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { usePublishedCourse } from "@/lib/course/use-course";
 import { useCourseProgress } from "@/lib/course/use-progress";
 import { cn } from "@/lib/utils";
@@ -15,6 +17,7 @@ export const Route = createFileRoute("/c/$courseSlug/")({
 function CourseHome() {
   const { courseSlug } = Route.useParams();
   const course = usePublishedCourse(courseSlug);
+  const user = useCurrentUser();
   const { map, passedCount, total, exam, certified } = useCourseProgress(
     course ?? null,
   );
@@ -180,6 +183,12 @@ function CourseHome() {
               </Link>
             ) : null}
           </div>
+
+          {certified && user ? (
+            <div className="mt-8">
+              <CourseFeedback courseSlug={course.slug} />
+            </div>
+          ) : null}
         </section>
       </main>
     </div>

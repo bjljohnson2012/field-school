@@ -1,4 +1,5 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
+import { CourseFeedback } from "@/components/course-feedback";
 import { SiteHeader } from "@/components/site-header";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { usePublishedCourse } from "@/lib/course/use-course";
@@ -72,6 +73,15 @@ function CertificatePage() {
             Campus
           </Link>
         </div>
+        {user ? (
+          <div className="mt-6">
+            <CourseFeedback courseSlug={course.slug} />
+          </div>
+        ) : (
+          <p className="mt-6 text-center text-sm text-muted">
+            Sign in to leave feedback the campus admins can see.
+          </p>
+        )}
       </main>
     </div>
   );

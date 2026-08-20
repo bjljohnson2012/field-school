@@ -5,10 +5,14 @@ import { CampusHeroArt } from "@/components/campus-hero-art";
 import { GuestContinueDialog } from "@/components/guest-continue-dialog";
 import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
+import { useCurrentUser } from "@/lib/auth/use-current-user";
+import { getMyLearning } from "@/lib/course/campus";
 import { listPublishedCourses } from "@/lib/course/catalog";
 import { UNI_NAME, type CourseSummary } from "@/lib/course/types";
 import { youtubePoster } from "@/lib/course/youtube";
 import { markGuest } from "@/lib/guest";
+
+type Learning = Awaited<ReturnType<typeof getMyLearning>>;
 
 /**
  * Course-card banner. Admins pick the style per course in the edit page:
@@ -42,7 +46,9 @@ function CourseCardBanner({ course }: { course: CourseSummary }) {
 export const Route = createFileRoute("/")({ component: Campus });
 
 function Campus() {
+  const user = useCurrentUser();
   const [courses, setCourses] = useState<CourseSummary[] | null>(null);
+  const [learning, setLearning] = useState<Learning | null>(null);
   const [guestOpen, setGuestOpen] = useState(false);
 
   useEffect(() => {
@@ -50,6 +56,18 @@ function Campus() {
       .then(setCourses)
       .catch(() => setCourses([]));
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setLearning(null);
+      return;
+    }
+    getMyLearning()
+      .then(setLearning)
+      .catch(() => setLearning([]));
+  }, [user]);
+
+  const resume = (learning ?? []).slice(0, 3);
 
   return (
     <div className="min-h-dvh">
@@ -115,6 +133,63 @@ function Campus() {
             />
           </div>
         </section>
+
+        {user && resume.length > 0 ? (
+          <section className="border-b border-border bg-surface/40">
+            <div className="mx-auto max-w-6xl px-4 py-10">
+              <div className="flex items-baseline justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.16em] text-muted">
+                    Resume learning
+                  </p>
+                  <h2 className="mt-1 font-display text-2xl tracking-tight">
+                    What’s next for you
+                  </h2>
+                </div>
+                <Link
+                  to="/dashboard"
+                  className="md-interactive inline-flex h-9 items-center gap-1 rounded-lg px-2 text-sm text-muted"
+                >
+                  All enrolled
+                  <ArrowRight className="size-4" />
+                </Link>
+              </div>
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                {resume.map((c) => (
+                  <Link
+                    key={c.slug}
+                    to="/c/$courseSlug"
+                    params={{ courseSlug: c.slug }}
+                    className="md-interactive md-card rounded-xl border border-border bg-surface px-4 py-4"
+                  >
+                    <div className="flex items-baseline justify-between gap-2">
+                      <h3 className="truncate font-display text-lg tracking-tight">
+                        {c.title}
+                      </h3>
+                      <span className="shrink-0 text-xs uppercase tracking-[0.12em] text-muted">
+                        {c.certified
+                          ? "Certified"
+                          : c.examPassed
+                            ? "Exam cleared"
+                            : `${c.percent}%`}
+                      </span>
+                    </div>
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-raised">
+                      <div
+                        className="h-full bg-accent"
+                        style={{ width: `${c.percent}%` }}
+                      />
+                    </div>
+                    <p className="mt-2 text-sm text-muted">
+                      {c.completedStations}/{c.requiredStations} stations ·{" "}
+                      {c.certified ? "done" : "resume"}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section id="catalog" className="mx-auto max-w-6xl px-4 py-14">
           <p className="text-xs uppercase tracking-[0.16em] text-muted">

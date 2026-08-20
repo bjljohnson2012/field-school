@@ -290,6 +290,218 @@ export const listCampusInbox = createServerFn({ method: "GET" })
     };
   });
 
+export const getMyLearning = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const sql = await getSql();
+    const courses = await publishedCourses();
+    const bySlug = new Map(courses.map((c) => [c.slug, c]));
+    const progress = (
+      await sql<ProgressRow & { updated_at: string }>`
+        select user_id, course_slug, module_slug, passed, updated_at
+        from enrollment_progress
+        where user_id = ${context.userId}
+      `
+    ).filter((row) => bySlug.has(row.course_slug));
+    const exams = (
+      await sql<ExamRow>`
+        select user_id, course_slug, score, passed, created_at
+        from enrollment_exams
+        where user_id = ${context.userId}
+        order by created_at desc
+      `
+    ).filter((row) => bySlug.has(row.course_slug));
+
+    const passedByCourse = new Map<string, number>();
+    const lastActivity = new Map<string, string>();
+    const bump = (slug: string, at: string) => {
+      const cur = lastActivity.get(slug);
+      if (!cur || at > cur) lastActivity.set(slug, at);
+    };
+    for (const row of progress) {
+      if (row.passed) {
+        passedByCourse.set(row.course_slug, (passedByCourse.get(row.course_slug) ?? 0) + 1);
+      }
+      bump(row.course_slug, row.updated_at);
+    }
+    const examByCourse = latestExamByCourse(exams);
+    for (const row of exams) bump(row.course_slug, row.created_at);
+
+    const engaged = new Set<string>([...lastActivity.keys()]);
+    return [...engaged]
+      .map((slug) => {
+        const course = bySlug.get(slug)!;
+        const required = Number(course.station_count) || 0;
+        const completed = passedByCourse.get(slug) ?? 0;
+        const exam = examByCourse.get(`${context.userId}:${slug}`);
+        return {
+          slug,
+          title: course.title,
+          requiredStations: required,
+          completedStations: completed,
+          percent: required === 0 ? 0 : Math.round((completed / required) * 100),
+          examPassed: Boolean(exam?.passed),
+          examScore: exam?.score ?? null,
+          certified: Boolean(exam?.passed && completed >= required && required > 0),
+          lastActivity: lastActivity.get(slug) ?? "",
+        };
+      })
+      .sort((a, b) => (a.lastActivity < b.lastActivity ? 1 : -1));
+  });
+
+export const submitCourseFeedback = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((d: { courseSlug: string; rating: number; comment: string }) => d)
+  .handler(async ({ context, data }) => {
+    const rating = Math.min(5, Math.max(1, Math.round(Number(data.rating) || 0)));
+    const comment = (data.comment ?? "").trim().slice(0, 4000);
+    if (!data.courseSlug) throw new Error("Missing course.");
+    const sql = await getSql();
+    // One feedback per (user, course); a re-submit replaces the earlier one.
+    await sql`
+      delete from course_feedback
+      where user_id = ${context.userId} and course_slug = ${data.courseSlug}
+    `;
+    await sql`
+      insert into course_feedback (user_id, course_slug, rating, comment)
+      values (${context.userId}, ${data.courseSlug}, ${rating}, ${comment})
+    `;
+    return { ok: true as const, rating, comment };
+  });
+
+export const getMyCourseFeedback = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .validator((d: { courseSlug: string }) => d)
+  .handler(async ({ context, data }) => {
+    const sql = await getSql();
+    const rows = await sql<{ rating: number; comment: string }>`
+      select rating, comment from course_feedback
+      where user_id = ${context.userId} and course_slug = ${data.courseSlug}
+      limit 1
+    `;
+    return rows[0] ? { rating: Number(rows[0].rating), comment: rows[0].comment } : null;
+  });
+
+export const listAllFeedback = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireFaculty(context.userId);
+    const sql = await getSql();
+    const rows = await sql<{
+      id: number;
+      user_id: string;
+      course_slug: string;
+      rating: number;
+      comment: string;
+      created_at: string;
+    }>`
+      select id, user_id, course_slug, rating, comment, created_at
+      from course_feedback
+      order by created_at desc
+    `;
+    const titleRows = await sql<{ slug: string; title: string }>`
+      select slug, title from courses
+    `;
+    const titleBySlug = new Map(titleRows.map((r) => [r.slug, r.title]));
+    const people = await peopleByIds(rows.map((r) => r.user_id));
+    return rows.map((r) => {
+      const person = people.get(r.user_id);
+      return {
+        id: r.id,
+        courseSlug: r.course_slug,
+        courseTitle: titleBySlug.get(r.course_slug) ?? r.course_slug,
+        rating: Number(r.rating),
+        comment: r.comment,
+        studentName: person?.name ?? "Student",
+        studentEmail: person?.email ?? "",
+        createdAt: r.created_at,
+      };
+    });
+  });
+
+export const getUsersStatus = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireFaculty(context.userId);
+    const sql = await getSql();
+    const courses = await publishedCourses();
+    const slugSet = new Set(courses.map((c) => c.slug));
+    const requiredBySlug = new Map(
+      courses.map((c) => [c.slug, Number(c.station_count) || 0]),
+    );
+    const users = await sql<{
+      id: string;
+      name: string;
+      email: string;
+      created_at: string;
+    }>`
+      select id, name, email, "createdAt" as created_at from "user" order by "createdAt" asc
+    `;
+    const roleRows = await sql<{ user_id: string; role: string }>`
+      select user_id, role from faculty
+    `;
+    const roleByUser = new Map(roleRows.map((r) => [r.user_id, r.role]));
+    const progress = (
+      await sql<ProgressRow & { updated_at: string }>`
+        select user_id, course_slug, module_slug, passed, updated_at
+        from enrollment_progress
+      `
+    ).filter((row) => slugSet.has(row.course_slug));
+    const exams = (
+      await sql<ExamRow>`
+        select user_id, course_slug, score, passed, created_at
+        from enrollment_exams
+        order by created_at desc
+      `
+    ).filter((row) => slugSet.has(row.course_slug));
+
+    const engagedByUser = new Map<string, Set<string>>();
+    const passedByKey = new Map<string, number>();
+    const lastByUser = new Map<string, string>();
+    const bump = (userId: string, at: string) => {
+      const cur = lastByUser.get(userId);
+      if (!cur || at > cur) lastByUser.set(userId, at);
+    };
+    const engage = (userId: string, slug: string) => {
+      if (!engagedByUser.has(userId)) engagedByUser.set(userId, new Set());
+      engagedByUser.get(userId)!.add(slug);
+    };
+    for (const row of progress) {
+      engage(row.user_id, row.course_slug);
+      bump(row.user_id, row.updated_at);
+      if (row.passed) {
+        const key = `${row.user_id}:${row.course_slug}`;
+        passedByKey.set(key, (passedByKey.get(key) ?? 0) + 1);
+      }
+    }
+    for (const row of exams) {
+      engage(row.user_id, row.course_slug);
+      bump(row.user_id, row.created_at);
+    }
+    const examByKey = latestExamByCourse(exams);
+
+    return users.map((u) => {
+      const engaged = engagedByUser.get(u.id) ?? new Set<string>();
+      let certified = 0;
+      for (const slug of engaged) {
+        const required = requiredBySlug.get(slug) ?? 0;
+        const completed = passedByKey.get(`${u.id}:${slug}`) ?? 0;
+        const exam = examByKey.get(`${u.id}:${slug}`);
+        if (exam?.passed && required > 0 && completed >= required) certified += 1;
+      }
+      return {
+        id: u.id,
+        name: u.name || "Student",
+        email: u.email || "",
+        role: roleByUser.get(u.id) ?? "student",
+        joinedAt: u.created_at,
+        enrolledCount: engaged.size,
+        certifiedCount: certified,
+        lastActivity: lastByUser.get(u.id) ?? null,
+      };
+    });
+  });
+
 export const listCampusStudents = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {

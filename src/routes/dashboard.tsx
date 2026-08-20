@@ -3,15 +3,17 @@ import { useEffect, useState } from "react";
 import { RedirectToSignIn } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { SiteHeader } from "@/components/site-header";
-import { getStudentDashboard } from "@/lib/course/campus";
+import { getMyLearning, getStudentDashboard } from "@/lib/course/campus";
 
 export const Route = createFileRoute("/dashboard")({ component: DashboardPage });
 
 type Dashboard = Awaited<ReturnType<typeof getStudentDashboard>>;
+type Learning = Awaited<ReturnType<typeof getMyLearning>>;
 
 function DashboardPage() {
   const { user, isPending } = useCurrentUserState();
   const [board, setBoard] = useState<Dashboard | null>(null);
+  const [learning, setLearning] = useState<Learning | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -24,6 +26,9 @@ function DashboardPage() {
       .catch((err: unknown) => {
         setError(err instanceof Error ? err.message : "Could not load progress.");
       });
+    getMyLearning()
+      .then(setLearning)
+      .catch(() => setLearning([]));
   }, [user, isPending]);
 
   if (isPending) {
@@ -63,14 +68,60 @@ function DashboardPage() {
           ) : null}
         </div>
 
+        {learning && learning.length > 0 ? (
+          <section className="mt-8">
+            <h2 className="font-display text-2xl tracking-tight">Enrolled</h2>
+            <p className="mt-1 text-sm text-muted">
+              Courses you’ve started, most recent first.
+            </p>
+            <ol className="mt-4 grid gap-3">
+              {learning.map((course) => (
+                <li key={course.slug}>
+                  <Link
+                    to="/c/$courseSlug"
+                    params={{ courseSlug: course.slug }}
+                    className="md-interactive md-card block rounded-xl border border-border bg-surface px-4 py-4"
+                  >
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <h3 className="font-display text-xl tracking-tight">
+                        {course.title}
+                      </h3>
+                      <p className="text-xs uppercase tracking-[0.14em] text-muted">
+                        {course.certified
+                          ? "Certified"
+                          : course.examPassed
+                            ? "Exam cleared"
+                            : "In progress"}
+                      </p>
+                    </div>
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-raised">
+                      <div
+                        className="h-full bg-accent"
+                        style={{ width: `${course.percent}%` }}
+                      />
+                    </div>
+                    <p className="mt-2 text-sm text-muted">
+                      {course.completedStations}/{course.requiredStations} stations
+                      {course.examScore !== null
+                        ? ` · latest exam ${course.examScore}`
+                        : ""}
+                    </p>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
+
+        <h2 className="mt-10 font-display text-2xl tracking-tight">All courses</h2>
         {error ? (
-          <p className="mt-8 text-sm text-warn">{error}</p>
+          <p className="mt-4 text-sm text-warn">{error}</p>
         ) : board === null ? (
-          <p className="mt-8 text-sm text-muted">Reading enrollments…</p>
+          <p className="mt-4 text-sm text-muted">Reading enrollments…</p>
         ) : board.courses.length === 0 ? (
-          <p className="mt-8 text-sm text-muted">No published courses yet.</p>
+          <p className="mt-4 text-sm text-muted">No published courses yet.</p>
         ) : (
-          <ol className="mt-8 grid gap-3">
+          <ol className="mt-4 grid gap-3">
             {board.courses.map((course) => (
               <li key={course.slug}>
                 <Link
