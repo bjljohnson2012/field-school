@@ -10,7 +10,7 @@ import { GuestContinueDialog } from "@/components/guest-continue-dialog";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { UNI_SHORT } from "@/lib/course/types";
-import { safeReturnPath } from "@/lib/course/share";
+import { safeReturnPath, signedInReturnPath } from "@/lib/course/share";
 import { clearGuest, markGuest } from "@/lib/guest";
 
 export const Route = createFileRoute("/login")({
@@ -23,6 +23,7 @@ export const Route = createFileRoute("/login")({
 function Login() {
   const { next } = Route.useSearch();
   const dest = safeReturnPath(next);
+  const signedInDest = signedInReturnPath(next);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"in" | "up">("up");
@@ -47,7 +48,7 @@ function Login() {
         if (err) throw new Error(err.message);
       }
       clearGuest();
-      window.location.href = dest;
+      window.location.href = signedInDest;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sign-in failed");
     } finally {
@@ -143,7 +144,7 @@ function Login() {
                   type="button"
                   onClick={() => {
                     clearGuest();
-                    void signIn(p.providerId, { callbackURL: dest });
+                    void signIn(p.providerId, { callbackURL: signedInDest });
                   }}
                   className="md-interactive flex h-12 w-full items-center justify-center rounded-xl border border-border bg-raised text-sm font-medium"
                 >

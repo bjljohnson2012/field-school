@@ -26,6 +26,11 @@ function safeReturnPath(next) {
   return next;
 }
 
+function signedInReturnPath(next) {
+  const dest = safeReturnPath(next);
+  return dest === "/" ? "/dashboard" : dest;
+}
+
 test("course share links are public student URLs", () => {
   assert.equal(
     courseShareUrl("https://university.benjohnson.ai", "grok-bot"),
@@ -48,10 +53,28 @@ test("guest return paths stay on student pages", () => {
   assert.equal(safeReturnPath(undefined), "/");
 });
 
+test("every campus sign-in lands on the dashboard by default", () => {
+  assert.equal(signedInReturnPath(undefined), "/dashboard");
+  assert.equal(signedInReturnPath("/"), "/dashboard");
+  assert.equal(signedInReturnPath("/c/grok-bot"), "/c/grok-bot");
+  const providers = readFileSync(join(root, "src/lib/auth/providers.ts"), "utf8");
+  assert.match(providers, /providerId: "grok-google"/);
+  assert.match(providers, /idp: "google"/);
+  assert.match(providers, /providerId: "grok-x"/);
+  assert.match(providers, /idp: "twitter"/);
+  const login = readFileSync(join(root, "src/routes/login.tsx"), "utf8");
+  assert.match(login, /GROK_PROVIDERS/);
+  assert.match(login, /signedInReturnPath/);
+  const campus = readFileSync(join(root, "src/lib/course/campus.ts"), "utf8");
+  assert.match(campus, /authMiddleware/);
+  assert.doesNotMatch(campus, /grok-google|grok-x|providerId/);
+});
+
 test("source files keep the share, guest, theme, and campus contracts", () => {
   const share = readFileSync(join(root, "src/lib/course/share.ts"), "utf8");
   assert.match(share, /export function courseShareUrl/);
   assert.match(share, /export function safeReturnPath/);
+  assert.match(share, /export function signedInReturnPath/);
   const login = readFileSync(join(root, "src/routes/login.tsx"), "utf8");
   assert.match(login, /Continue as guest/);
   assert.match(login, /GuestContinueDialog/);

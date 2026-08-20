@@ -19,3 +19,9 @@ export function safeReturnPath(next: string | null | undefined) {
   }
   return next;
 }
+
+/** After Google, X, or email sign-in, keep them on a campus account page. */
+export function signedInReturnPath(next: string | null | undefined) {
+  const dest = safeReturnPath(next);
+  return dest === "/" ? "/dashboard" : dest;
+}
