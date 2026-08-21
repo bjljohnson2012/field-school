@@ -266,3 +266,81 @@ Rules: 6–10 stations. Clip start/end are integer seconds from the video. Quiz 
     await writeCourse(sql, course);
     return { ok: true as const, course };
   });
+
+/**
+ * Draft multiple-choice questions with AI from a title + source text. Used by
+ * the "Suggest with AI" buttons in the course editor for station quizzes and the
+ * exam. Standardized JSON shape so results drop straight into the editor.
+ */
+export const suggestQuestions = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator(
+    (d: { title: string; context: string; count?: number; kind?: "quiz" | "exam" }) => d,
+  )
+  .handler(async ({ context, data }) => {
+    await requireFaculty(context.userId);
+    const apiKey = process.env.XAI_API_KEY;
+    if (!apiKey) {
+      return {
+        ok: false as const,
+        error: "Question generation needs the xAI key on this host.",
+      };
+    }
+    const count = Math.min(8, Math.max(1, Math.floor(data.count ?? 3)));
+    const title = (data.title || "this topic").trim().slice(0, 300);
+    const source = (data.context || "").trim().slice(0, 12000);
+    const kind = data.kind === "exam" ? "exam" : "quiz";
+
+    const res = await fetch("https://api.x.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "grok-4.5",
+        temperature: 0.4,
+        max_tokens: 2000,
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "You write clear multiple-choice questions for a field-work course. Each question has exactly 4 choices with one correct answer and a one-line explanation. Return JSON only.",
+          },
+          {
+            role: "user",
+            content: `Write ${count} ${kind} multiple-choice questions that test real understanding of "${title}".
+Base them on this material (do not invent facts that contradict it):
+---
+${source || "(no extra material — use the title)"}
+---
+JSON shape:
+{"questions":[{"prompt":"","choices":["a","b","c","d"],"answer":0,"why":""}]}
+answer is the 0-based index of the correct choice.`,
+          },
+        ],
+      }),
+    });
+    if (!res.ok) {
+      return { ok: false as const, error: `xAI API error ${res.status}` };
+    }
+    const body = (await res.json()) as {
+      choices?: { message?: { content?: string } }[];
+    };
+    const text = body.choices?.[0]?.message?.content ?? "";
+    let parsed: { questions?: unknown };
+    try {
+      parsed = JSON.parse(text) as { questions?: unknown };
+    } catch {
+      return { ok: false as const, error: "The model did not return usable JSON. Try again." };
+    }
+    const rawQuestions = Array.isArray(parsed.questions) ? parsed.questions : [];
+    const questions = (normalizeModule({ title: "q", quiz: rawQuestions }, 0)?.quiz ?? [])
+      .slice(0, count)
+      .map((q, i) => ({ ...q, id: `ai-${Date.now().toString(36)}-${i}` }));
+    if (questions.length === 0) {
+      return { ok: false as const, error: "No usable questions came back. Try again." };
+    }
+    return { ok: true as const, questions };
+  });

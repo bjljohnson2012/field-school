@@ -1,4 +1,6 @@
-import { Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Plus, Sparkles, Trash2 } from "lucide-react";
+import { suggestQuestions } from "@/lib/course/generate";
 import type { CourseRecord, Module, QuizQuestion } from "@/lib/course/types";
 
 /** Short unique id for new stations / questions. */
@@ -134,6 +136,9 @@ export function CourseContentEditor({
   course: CourseRecord;
   onChange: (next: CourseRecord) => void;
 }) {
+  const [aiBusy, setAiBusy] = useState<string | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
+
   const setModules = (modules: Module[]) => onChange({ ...course, modules });
   const setExam = (examQuestions: QuizQuestion[]) =>
     onChange({ ...course, examQuestions });
@@ -141,8 +146,70 @@ export function CourseContentEditor({
   const patchModule = (idx: number, p: Partial<Module>) =>
     setModules(course.modules.map((m, i) => (i === idx ? { ...m, ...p } : m)));
 
+  async function suggestForStation(mIdx: number) {
+    const mod = course.modules[mIdx];
+    setAiBusy(`m${mIdx}`);
+    setAiError(null);
+    try {
+      const res = await suggestQuestions({
+        data: {
+          title: mod.title,
+          context: [mod.summary, mod.thesis, ...mod.bullets]
+            .filter((s) => s && s.trim())
+            .join("\n"),
+          count: 3,
+          kind: "quiz",
+        },
+      });
+      if (!res.ok) {
+        setAiError(res.error);
+        return;
+      }
+      setModules(
+        course.modules.map((m, i) =>
+          i === mIdx ? { ...m, quiz: [...m.quiz, ...res.questions] } : m,
+        ),
+      );
+    } catch (e) {
+      setAiError(e instanceof Error ? e.message : "Could not suggest questions.");
+    } finally {
+      setAiBusy(null);
+    }
+  }
+
+  async function suggestForExam() {
+    setAiBusy("exam");
+    setAiError(null);
+    try {
+      const res = await suggestQuestions({
+        data: {
+          title: course.title,
+          context:
+            course.contextNotes ||
+            course.modules.map((m) => `${m.title}: ${m.summary}`).join("\n"),
+          count: 5,
+          kind: "exam",
+        },
+      });
+      if (!res.ok) {
+        setAiError(res.error);
+        return;
+      }
+      setExam([...course.examQuestions, ...res.questions]);
+    } catch (e) {
+      setAiError(e instanceof Error ? e.message : "Could not suggest questions.");
+    } finally {
+      setAiBusy(null);
+    }
+  }
+
   return (
     <div className="space-y-8">
+      {aiError ? (
+        <p className="rounded-lg border border-warn/40 bg-warn/10 px-3 py-2 text-sm text-warn">
+          {aiError}
+        </p>
+      ) : null}
       <section>
         <div className="flex items-center justify-between">
           <h2 className="font-display text-2xl tracking-tight">Stations</h2>
@@ -231,17 +298,28 @@ export function CourseContentEditor({
               </label>
 
               <div className="mt-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-medium">Quiz questions</p>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      patchModule(mIdx, { quiz: [...mod.quiz, blankQuestion()] })
-                    }
-                    className="md-interactive inline-flex h-8 items-center gap-1 rounded-md border border-border px-2 text-xs"
-                  >
-                    <Plus className="size-3.5" /> Add question
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={aiBusy !== null}
+                      onClick={() => void suggestForStation(mIdx)}
+                      className="md-interactive inline-flex h-8 items-center gap-1 rounded-md border border-accent/50 px-2 text-xs text-accent disabled:opacity-50"
+                    >
+                      <Sparkles className="size-3.5" />
+                      {aiBusy === `m${mIdx}` ? "Drafting…" : "Suggest with AI"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        patchModule(mIdx, { quiz: [...mod.quiz, blankQuestion()] })
+                      }
+                      className="md-interactive inline-flex h-8 items-center gap-1 rounded-md border border-border px-2 text-xs"
+                    >
+                      <Plus className="size-3.5" /> Add question
+                    </button>
+                  </div>
                 </div>
                 <div className="mt-2 space-y-3">
                   {mod.quiz.length === 0 ? (
@@ -273,15 +351,26 @@ export function CourseContentEditor({
       </section>
 
       <section>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <h2 className="font-display text-2xl tracking-tight">Exam questions</h2>
-          <button
-            type="button"
-            onClick={() => setExam([...course.examQuestions, blankQuestion()])}
-            className="md-interactive inline-flex h-10 items-center gap-1 rounded-xl border border-border px-3 text-sm"
-          >
-            <Plus className="size-4" /> Add exam question
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={aiBusy !== null}
+              onClick={() => void suggestForExam()}
+              className="md-interactive inline-flex h-10 items-center gap-1 rounded-xl border border-accent/50 px-3 text-sm text-accent disabled:opacity-50"
+            >
+              <Sparkles className="size-4" />
+              {aiBusy === "exam" ? "Drafting…" : "Suggest with AI"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setExam([...course.examQuestions, blankQuestion()])}
+              className="md-interactive inline-flex h-10 items-center gap-1 rounded-xl border border-border px-3 text-sm"
+            >
+              <Plus className="size-4" /> Add exam question
+            </button>
+          </div>
         </div>
         <div className="mt-4 space-y-3">
           {course.examQuestions.length === 0 ? (
