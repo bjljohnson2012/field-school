@@ -4,7 +4,7 @@ import { CourseFeedback } from "@/components/course-feedback";
 import { GuestBanner } from "@/components/guest-banner";
 import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
-import { YoutubeClip } from "@/components/youtube-clip";
+import { VideoEmbed } from "@/components/video-embed";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { usePublishedCourse } from "@/lib/course/use-course";
 import { useCourseProgress } from "@/lib/course/use-progress";
@@ -92,7 +92,7 @@ function CourseHome() {
           </div>
         </section>
 
-        {course.videoId ? (
+        {course.videoUrl ? (
           <section className="mx-auto max-w-6xl px-4 py-12">
             <p className="text-xs uppercase tracking-[0.16em] text-muted">
               Source tape
@@ -101,8 +101,8 @@ function CourseHome() {
               The full stream
             </h2>
             <div className="mt-6">
-              <YoutubeClip
-                videoId={course.videoId}
+              <VideoEmbed
+                url={course.videoUrl}
                 full
                 label={course.videoTitle || course.title}
                 why={course.kicker}

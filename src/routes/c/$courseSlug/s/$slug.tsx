@@ -4,7 +4,7 @@ import { AssignmentPanel } from "@/components/assignment-panel";
 import { GuestBanner } from "@/components/guest-banner";
 import { QuizPanel } from "@/components/quiz-panel";
 import { SiteHeader } from "@/components/site-header";
-import { YoutubeClip } from "@/components/youtube-clip";
+import { VideoEmbed } from "@/components/video-embed";
 import { emptyProgress } from "@/lib/course/content";
 import { usePublishedCourse } from "@/lib/course/use-course";
 import { useCourseProgress } from "@/lib/course/use-progress";
@@ -95,9 +95,9 @@ function StationPage() {
 
           <div className="mt-10 space-y-6">
             {mod.clips.map((clip) => (
-              <YoutubeClip
+              <VideoEmbed
                 key={`${clip.start}-${clip.end}-${clip.label}`}
-                videoId={course.videoId}
+                url={course.videoUrl || course.videoId}
                 start={clip.start}
                 end={clip.end}
                 label={clip.label}

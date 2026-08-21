@@ -15,7 +15,7 @@ import {
   type Module,
   type QuizQuestion,
 } from "./types";
-import { parseYoutubeId, slugify, youtubeWatchUrlFor } from "./youtube";
+import { parseYoutubeId, slugify } from "./youtube";
 
 type ModuleBody = Pick<
   Module,
@@ -421,6 +421,9 @@ export const saveCourse = createServerFn({ method: "POST" })
       ...data,
       slug: slugify(data.slug),
       createdBy: existing?.createdBy ?? context.userId,
+      // Re-derive the YouTube id from the (possibly changed) video URL so
+      // switching between YouTube/Loom/X keeps videoId correct.
+      videoId: parseYoutubeId((data.videoUrl ?? "").trim()) ?? "",
       bannerStyle: normalizeBannerStyle(data.bannerStyle),
       bannerColor: (data.bannerColor ?? "").slice(0, 40),
       modules: data.modules ?? [],
@@ -428,6 +431,18 @@ export const saveCourse = createServerFn({ method: "POST" })
     };
     await writeCourse(sql, course);
     return { ok: true as const, slug: course.slug };
+  });
+
+export const deleteCourse = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((d: { slug: string }) => d)
+  .handler(async ({ context, data }) => {
+    await requireFaculty(context.userId);
+    const sql = await getSql();
+    await sql`delete from course_modules where course_slug = ${data.slug}`;
+    await sql`delete from course_exam where course_slug = ${data.slug}`;
+    await sql`delete from courses where slug = ${data.slug}`;
+    return { ok: true as const };
   });
 
 export const setPublished = createServerFn({ method: "POST" })
@@ -449,9 +464,11 @@ export const createBlankCourse = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await requireFaculty(context.userId);
     const sql = await getSql();
-    const videoId = parseYoutubeId(data.youtubeUrl);
-    if (!videoId) throw new Error("Need a YouTube URL or 11-character video id.");
-    let slug = slugify(data.title || "new-course");
+    // A video is optional and may be YouTube, Loom, or X — store the raw URL and
+    // derive the YouTube id only when it is one.
+    const rawUrl = (data.youtubeUrl ?? "").trim();
+    const videoId = parseYoutubeId(rawUrl) ?? "";
+    let slug = slugify(data.title || "new-course") || "new-course";
     const clash = await sql<{ slug: string }>`select slug from courses where slug = ${slug}`;
     if (clash[0]) slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
     const course: CourseRecord = {
@@ -460,7 +477,7 @@ export const createBlankCourse = createServerFn({ method: "POST" })
       tagline: "",
       kicker: "",
       videoId,
-      videoUrl: youtubeWatchUrlFor(videoId),
+      videoUrl: rawUrl,
       videoTitle: data.title.trim() || "Untitled course",
       contextNotes: data.context,
       published: false,

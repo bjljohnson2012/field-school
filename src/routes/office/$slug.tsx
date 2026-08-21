@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { RedirectToSignIn } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
@@ -6,7 +6,12 @@ import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { CourseContentEditor } from "@/components/course-content-editor";
-import { getOfficeCourse, saveCourse, setPublished } from "@/lib/course/catalog";
+import {
+  deleteCourse,
+  getOfficeCourse,
+  saveCourse,
+  setPublished,
+} from "@/lib/course/catalog";
 import { generateCourse } from "@/lib/course/generate";
 import { BANNER_STYLES, type CourseRecord } from "@/lib/course/types";
 
@@ -14,6 +19,7 @@ export const Route = createFileRoute("/office/$slug")({ component: EditCourse })
 
 function EditCourse() {
   const { slug } = Route.useParams();
+  const navigate = useNavigate();
   const { user, isPending } = useCurrentUserState();
   const [course, setCourse] = useState<CourseRecord | null | undefined>(undefined);
   const [busy, setBusy] = useState<string | null>(null);
@@ -78,6 +84,25 @@ function EditCourse() {
     } catch (e) {
       setError(e instanceof Error ? e.message : "Save failed");
     } finally {
+      setBusy(null);
+    }
+  }
+
+  async function remove() {
+    if (!course) return;
+    if (
+      typeof window !== "undefined" &&
+      !window.confirm(`Delete “${course.title}”? This cannot be undone.`)
+    ) {
+      return;
+    }
+    setBusy("del");
+    setError(null);
+    try {
+      await deleteCourse({ data: { slug: course.slug } });
+      await navigate({ to: "/office" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Delete failed");
       setBusy(null);
     }
   }
@@ -159,10 +184,11 @@ function EditCourse() {
             />
           </label>
           <label className="block text-xs uppercase tracking-[0.16em] text-muted">
-            YouTube URL
+            Video URL (YouTube, Loom, or X)
             <input
               className="md-field mt-2 h-11 w-full rounded-md border border-border bg-surface px-3 text-sm"
               value={course.videoUrl}
+              placeholder="https://youtube.com/… · loom.com/share/… · x.com/…/status/…"
               onChange={(e) => patch("videoUrl", e.target.value)}
             />
           </label>
@@ -246,6 +272,14 @@ function EditCourse() {
           {course.published ? (
             <ShareCourseButton slug={course.slug} title={course.title} />
           ) : null}
+          <button
+            type="button"
+            disabled={busy !== null}
+            onClick={() => void remove()}
+            className="md-interactive inline-flex h-11 items-center rounded-xl border border-warn/40 px-4 text-sm text-warn disabled:opacity-50"
+          >
+            {busy === "del" ? "Deleting…" : "Delete course"}
+          </button>
         </div>
 
         <div className="mt-12 border-t border-border pt-8">
