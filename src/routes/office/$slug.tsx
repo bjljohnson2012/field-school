@@ -5,6 +5,7 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
+import { CourseContentEditor } from "@/components/course-content-editor";
 import { getOfficeCourse, saveCourse, setPublished } from "@/lib/course/catalog";
 import { generateCourse } from "@/lib/course/generate";
 import { BANNER_STYLES, type CourseRecord } from "@/lib/course/types";
@@ -61,7 +62,18 @@ function EditCourse() {
     setBusy("save");
     setError(null);
     try {
-      await saveCourse({ data: course });
+      // Keep station numbers sequential and drop blank key-point lines that the
+      // textarea editor can leave behind.
+      const normalized: CourseRecord = {
+        ...course,
+        modules: course.modules.map((m, i) => ({
+          ...m,
+          station: String(i + 1).padStart(2, "0"),
+          bullets: m.bullets.filter((b) => b.trim().length > 0),
+        })),
+      };
+      await saveCourse({ data: normalized });
+      setCourse(normalized);
       setSaved(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Save failed");
@@ -215,7 +227,7 @@ function EditCourse() {
 
         <div className="mt-6 flex flex-wrap gap-3">
           <Button disabled={busy !== null} onClick={() => void persist()}>
-            {saved && !busy ? "Saved" : "Save metadata"}
+            {saved && !busy ? "Saved" : "Save course"}
           </Button>
           <Button
             variant="secondary"
@@ -236,20 +248,27 @@ function EditCourse() {
           ) : null}
         </div>
 
-        <ol className="mt-10 space-y-3">
-          {course.modules.map((m) => (
-            <li
-              key={m.slug}
-              className="md-interactive md-card rounded-xl border border-border bg-surface px-4 py-3"
-            >
-              <p className="font-mono text-xs text-muted">
-                Station {m.station} · {m.clips.length} clips · {m.quiz.length} quiz
-              </p>
-              <h2 className="mt-1 font-display text-xl">{m.title}</h2>
-              <p className="mt-1 text-sm text-muted">{m.kicker || m.summary}</p>
-            </li>
-          ))}
-        </ol>
+        <div className="mt-12 border-t border-border pt-8">
+          <p className="text-xs uppercase tracking-[0.16em] text-muted">
+            Course content
+          </p>
+          <p className="mt-1 mb-6 text-sm text-muted">
+            Edit station text, key points, and quiz/exam questions. Changes save
+            when you press “Save course”.
+          </p>
+          <CourseContentEditor
+            course={course}
+            onChange={(next) => {
+              setCourse(next);
+              setSaved(false);
+            }}
+          />
+          <div className="mt-6">
+            <Button disabled={busy !== null} onClick={() => void persist()}>
+              {saved && !busy ? "Saved" : "Save course"}
+            </Button>
+          </div>
+        </div>
 
         <div className="mt-8 flex flex-wrap gap-4 text-sm">
           <Link
