@@ -8,7 +8,7 @@ import {
 } from "@/lib/auth/client";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
-import { UNI_SHORT } from "@/lib/course/types";
+import { UNI_NAME } from "@/lib/course/types";
 
 export const Route = createFileRoute("/login")({ component: Login });
 
@@ -49,12 +49,12 @@ function Login() {
       <main className="mx-auto grid min-h-[calc(100dvh-3.5rem)] max-w-md place-items-center px-4 py-12">
         <div className="w-full rounded-xl border border-border bg-surface p-6">
           <p className="text-xs uppercase tracking-[0.16em] text-muted">
-            {UNI_SHORT}
+            {UNI_NAME}
           </p>
           <h1 className="mt-2 font-display text-3xl tracking-tight">Sign in</h1>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Create an email and password to save progress, the desk, and a
-            certificate. The catalog is open without an account.
+            Create an email and password to save progress, tool results, the
+            desk, and a certificate. The catalog is open without an account.
           </p>
 
           <form className="mt-6 space-y-3" onSubmit={(e) => void onEmail(e)}>

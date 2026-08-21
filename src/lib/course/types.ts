@@ -101,7 +101,11 @@ export type CourseSummary = {
   updatedAt: string;
 };
 
-export const UNI_NAME = "Johnson Field School University";
+/** The company. Courses, tools, and the product brand live here. */
+export const COMPANY_NAME = "Field School";
+/** The course portal — certificates and campus copy use this name. */
+export const UNI_NAME = "Field School University";
+/** Short label in the header and share text. */
 export const UNI_SHORT = "Field School";
 export const GROK_BOT_SLUG = "grok-bot";
 

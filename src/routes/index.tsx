@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { CampusHeroArt } from "@/components/campus-hero-art";
 import { SiteHeader } from "@/components/site-header";
 import { listPublishedCourses } from "@/lib/course/catalog";
-import { UNI_NAME, type CourseSummary } from "@/lib/course/types";
+import { COMPANY_NAME, UNI_NAME, type CourseSummary } from "@/lib/course/types";
 import { youtubePoster } from "@/lib/course/youtube";
 
 export const Route = createFileRoute("/")({ component: Campus });
@@ -28,11 +29,12 @@ function Campus() {
                 {UNI_NAME}
               </p>
               <h1 className="mt-4 font-display text-4xl leading-[1.1] tracking-tight sm:text-5xl">
-                One campus. Many courses. Same ladder.
+                {COMPANY_NAME}
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-                Pull in a source tape and a briefing. The office builds stations,
-                clips, field work, and an exam. Students pass from the bottom up.
+                Upskill for the future with AI, self-paced courses, and
+                consistent tracking. {UNI_NAME} is the portal — watch the clip,
+                do the field work, clear the exam.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
@@ -43,20 +45,14 @@ function Campus() {
                   <ArrowRight className="size-4" />
                 </a>
                 <Link
-                  to="/office"
+                  to="/about"
                   className="inline-flex h-12 items-center rounded-md border border-border px-5 text-sm text-fg"
                 >
-                  Dean’s office
+                  About us
                 </Link>
               </div>
             </div>
-            <div className="relative overflow-hidden rounded-xl border border-border">
-              <img
-                src="/hero.jpg"
-                alt="Operations desk for Johnson Field School University"
-                className="aspect-[16/10] w-full object-cover"
-              />
-            </div>
+            <CampusHeroArt />
           </div>
         </section>
 

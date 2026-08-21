@@ -8,7 +8,7 @@ import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "Johnson Field School University";
+const APP_NAME = "Field School University";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -19,7 +19,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Johnson Field School University — bottom-up courses from a source tape. Watch the clip, do the field work, pass the exam.",
+          "Field School University — the course portal from Field School. Upskill with AI, self-paced learning, and consistent tracking.",
       },
       { name: "theme-color", content: "#0a0b0c" },
     ],

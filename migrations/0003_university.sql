@@ -1,4 +1,4 @@
--- Johnson Field School University: multi-course catalog + per-course progress.
+-- Field School University: multi-course catalog + per-course progress.
 
 create table if not exists faculty (
   user_id text primary key,

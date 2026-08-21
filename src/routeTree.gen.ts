@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as CertificateRouteImport } from './routes/certificate'
 import { Route as DeskRouteImport } from './routes/desk'
 import { Route as ExamRouteImport } from './routes/exam'
@@ -19,6 +20,8 @@ import { Route as CourseSlugRouteImport } from './routes/course/$slug'
 import { Route as OfficeIndexRouteImport } from './routes/office/index'
 import { Route as OfficeSlugRouteImport } from './routes/office/$slug'
 import { Route as OfficeNewRouteImport } from './routes/office/new'
+import { Route as ToolsIndexRouteImport } from './routes/tools/index'
+import { Route as ToolsToolSlugRouteImport } from './routes/tools/$toolSlug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as CCourseSlugIndexRouteImport } from './routes/c/$courseSlug/index'
 import { Route as CCourseSlugCertificateRouteImport } from './routes/c/$courseSlug/certificate'
@@ -29,6 +32,11 @@ import { Route as CCourseSlugSSlugRouteImport } from './routes/c/$courseSlug/s/$
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CertificateRoute = CertificateRouteImport.update({
@@ -76,6 +84,16 @@ const OfficeNewRoute = OfficeNewRouteImport.update({
   path: '/office/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsIndexRoute = ToolsIndexRouteImport.update({
+  id: '/tools/',
+  path: '/tools/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsToolSlugRoute = ToolsToolSlugRouteImport.update({
+  id: '/tools/$toolSlug',
+  path: '/tools/$toolSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -109,6 +127,7 @@ const CCourseSlugSSlugRoute = CCourseSlugSSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/certificate': typeof CertificateRoute
   '/desk': typeof DeskRoute
   '/exam': typeof ExamRoute
@@ -117,7 +136,9 @@ export interface FileRoutesByFullPath {
   '/course/$slug': typeof CourseSlugRoute
   '/office/$slug': typeof OfficeSlugRoute
   '/office/new': typeof OfficeNewRoute
+  '/tools/$toolSlug': typeof ToolsToolSlugRoute
   '/office/': typeof OfficeIndexRoute
+  '/tools/': typeof ToolsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
   '/c/$courseSlug/desk': typeof CCourseSlugDeskRoute
@@ -127,6 +148,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/certificate': typeof CertificateRoute
   '/desk': typeof DeskRoute
   '/exam': typeof ExamRoute
@@ -134,7 +156,9 @@ export interface FileRoutesByTo {
   '/course/$slug': typeof CourseSlugRoute
   '/office/$slug': typeof OfficeSlugRoute
   '/office/new': typeof OfficeNewRoute
+  '/tools/$toolSlug': typeof ToolsToolSlugRoute
   '/office': typeof OfficeIndexRoute
+  '/tools': typeof ToolsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
   '/c/$courseSlug/desk': typeof CCourseSlugDeskRoute
@@ -145,6 +169,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/certificate': typeof CertificateRoute
   '/desk': typeof DeskRoute
   '/exam': typeof ExamRoute
@@ -153,7 +178,9 @@ export interface FileRoutesById {
   '/course/$slug': typeof CourseSlugRoute
   '/office/$slug': typeof OfficeSlugRoute
   '/office/new': typeof OfficeNewRoute
+  '/tools/$toolSlug': typeof ToolsToolSlugRoute
   '/office/': typeof OfficeIndexRoute
+  '/tools/': typeof ToolsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
   '/c/$courseSlug/desk': typeof CCourseSlugDeskRoute
@@ -165,6 +192,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/certificate'
     | '/desk'
     | '/exam'
@@ -173,7 +201,9 @@ export interface FileRouteTypes {
     | '/course/$slug'
     | '/office/$slug'
     | '/office/new'
+    | '/tools/$toolSlug'
     | '/office/'
+    | '/tools/'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
     | '/c/$courseSlug/desk'
@@ -183,6 +213,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/certificate'
     | '/desk'
     | '/exam'
@@ -190,7 +221,9 @@ export interface FileRouteTypes {
     | '/course/$slug'
     | '/office/$slug'
     | '/office/new'
+    | '/tools/$toolSlug'
     | '/office'
+    | '/tools'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
     | '/c/$courseSlug/desk'
@@ -200,6 +233,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/certificate'
     | '/desk'
     | '/exam'
@@ -208,7 +242,9 @@ export interface FileRouteTypes {
     | '/course/$slug'
     | '/office/$slug'
     | '/office/new'
+    | '/tools/$toolSlug'
     | '/office/'
+    | '/tools/'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
     | '/c/$courseSlug/desk'
@@ -219,6 +255,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   CertificateRoute: typeof CertificateRoute
   DeskRoute: typeof DeskRoute
   ExamRoute: typeof ExamRoute
@@ -227,7 +264,9 @@ export interface RootRouteChildren {
   CourseSlugRoute: typeof CourseSlugRoute
   OfficeSlugRoute: typeof OfficeSlugRoute
   OfficeNewRoute: typeof OfficeNewRoute
+  ToolsToolSlugRoute: typeof ToolsToolSlugRoute
   OfficeIndexRoute: typeof OfficeIndexRoute
+  ToolsIndexRoute: typeof ToolsIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -238,6 +277,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/certificate': {
@@ -301,6 +347,20 @@ declare module '@tanstack/react-router' {
       path: '/office/new'
       fullPath: '/office/new'
       preLoaderRoute: typeof OfficeNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/': {
+      id: '/tools/'
+      path: '/tools'
+      fullPath: '/tools/'
+      preLoaderRoute: typeof ToolsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/$toolSlug': {
+      id: '/tools/$toolSlug'
+      path: '/tools/$toolSlug'
+      fullPath: '/tools/$toolSlug'
+      preLoaderRoute: typeof ToolsToolSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -370,6 +430,7 @@ const CCourseSlugRouteWithChildren = CCourseSlugRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   CertificateRoute: CertificateRoute,
   DeskRoute: DeskRoute,
   ExamRoute: ExamRoute,
@@ -378,7 +439,9 @@ const rootRouteChildren: RootRouteChildren = {
   CourseSlugRoute: CourseSlugRoute,
   OfficeSlugRoute: OfficeSlugRoute,
   OfficeNewRoute: OfficeNewRoute,
+  ToolsToolSlugRoute: ToolsToolSlugRoute,
   OfficeIndexRoute: OfficeIndexRoute,
+  ToolsIndexRoute: ToolsIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

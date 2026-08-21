@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { UserButton } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import { UNI_SHORT, type CourseRecord } from "@/lib/course/types";
+import { COMPANY_NAME, UNI_NAME, type CourseRecord } from "@/lib/course/types";
 
 export function SiteHeader({
   course,
@@ -19,7 +19,7 @@ export function SiteHeader({
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
         <div className="flex min-w-0 items-baseline gap-2">
           <Link to="/" className="font-display text-lg tracking-tight">
-            {UNI_SHORT}
+            {COMPANY_NAME}
           </Link>
           {course ? (
             <Link
@@ -31,14 +31,26 @@ export function SiteHeader({
             </Link>
           ) : (
             <span className="hidden text-xs uppercase tracking-[0.16em] text-muted sm:inline">
-              University
+              {UNI_NAME.replace(COMPANY_NAME, "").trim() || "University"}
             </span>
           )}
         </div>
         <nav className="flex items-center gap-1 text-sm">
           <Link
-            to="/office"
+            to="/about"
             className="flex h-11 items-center px-3 text-muted hover:text-fg"
+          >
+            About
+          </Link>
+          <Link
+            to="/tools"
+            className="flex h-11 items-center px-3 text-muted hover:text-fg"
+          >
+            Tools
+          </Link>
+          <Link
+            to="/office"
+            className="hidden h-11 items-center px-3 text-muted hover:text-fg sm:flex"
           >
             Office
           </Link>

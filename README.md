@@ -1,6 +1,8 @@
-# Johnson Field School University
+# Field School University
 
-Multi-course campus at [university.benjohnson.ai](https://university.benjohnson.ai).
+Course portal for [Field School](https://university.benjohnson.ai) at [university.benjohnson.ai](https://university.benjohnson.ai).
+
+**Field School** is the company. **Field School University** is the portal where people take courses, earn certificates, and (soon) run assessment tools.
 
 Each course is the same ladder: source tape, stations with timestamped clips, field work, quiz, exam, share desk.
 

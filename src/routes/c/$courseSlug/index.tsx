@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
+import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
 import { YoutubeClip } from "@/components/youtube-clip";
 import { usePublishedCourse } from "@/lib/course/use-course";
@@ -78,6 +79,7 @@ function CourseHome() {
               >
                 See the ladder
               </a>
+              <ShareCourseButton slug={course.slug} title={course.title} />
             </div>
           </div>
         </section>
