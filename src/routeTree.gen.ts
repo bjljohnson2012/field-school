@@ -22,13 +22,19 @@ import { Route as OfficeIndexRouteImport } from './routes/office/index'
 import { Route as OfficeSlugRouteImport } from './routes/office/$slug'
 import { Route as OfficeFeedbackRouteImport } from './routes/office/feedback'
 import { Route as OfficeNewRouteImport } from './routes/office/new'
+import { Route as OfficeSettingsRouteImport } from './routes/office/settings'
 import { Route as OfficeStudentsRouteImport } from './routes/office/students'
 import { Route as OfficeUsersRouteImport } from './routes/office/users'
+import { Route as TrackSlugRouteImport } from './routes/track/$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as CCourseSlugIndexRouteImport } from './routes/c/$courseSlug/index'
 import { Route as CCourseSlugCertificateRouteImport } from './routes/c/$courseSlug/certificate'
 import { Route as CCourseSlugDeskRouteImport } from './routes/c/$courseSlug/desk'
 import { Route as CCourseSlugExamRouteImport } from './routes/c/$courseSlug/exam'
+import { Route as OfficeCertificationsIndexRouteImport } from './routes/office/certifications/index'
+import { Route as OfficeCertificationsSlugRouteImport } from './routes/office/certifications/$slug'
+import { Route as TrackSlugIndexRouteImport } from './routes/track/$slug/index'
+import { Route as TrackSlugCertificateRouteImport } from './routes/track/$slug/certificate'
 import { Route as CCourseSlugSSlugRouteImport } from './routes/c/$courseSlug/s/$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -96,6 +102,11 @@ const OfficeNewRoute = OfficeNewRouteImport.update({
   path: '/office/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OfficeSettingsRoute = OfficeSettingsRouteImport.update({
+  id: '/office/settings',
+  path: '/office/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OfficeStudentsRoute = OfficeStudentsRouteImport.update({
   id: '/office/students',
   path: '/office/students',
@@ -104,6 +115,11 @@ const OfficeStudentsRoute = OfficeStudentsRouteImport.update({
 const OfficeUsersRoute = OfficeUsersRouteImport.update({
   id: '/office/users',
   path: '/office/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrackSlugRoute = TrackSlugRouteImport.update({
+  id: '/track/$slug',
+  path: '/track/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -131,6 +147,28 @@ const CCourseSlugExamRoute = CCourseSlugExamRouteImport.update({
   path: '/exam',
   getParentRoute: () => CCourseSlugRoute,
 } as any)
+const OfficeCertificationsIndexRoute =
+  OfficeCertificationsIndexRouteImport.update({
+    id: '/office/certifications/',
+    path: '/office/certifications/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OfficeCertificationsSlugRoute =
+  OfficeCertificationsSlugRouteImport.update({
+    id: '/office/certifications/$slug',
+    path: '/office/certifications/$slug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TrackSlugIndexRoute = TrackSlugIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TrackSlugRoute,
+} as any)
+const TrackSlugCertificateRoute = TrackSlugCertificateRouteImport.update({
+  id: '/certificate',
+  path: '/certificate',
+  getParentRoute: () => TrackSlugRoute,
+} as any)
 const CCourseSlugSSlugRoute = CCourseSlugSSlugRouteImport.update({
   id: '/s/$slug',
   path: '/s/$slug',
@@ -150,14 +188,20 @@ export interface FileRoutesByFullPath {
   '/office/$slug': typeof OfficeSlugRoute
   '/office/feedback': typeof OfficeFeedbackRoute
   '/office/new': typeof OfficeNewRoute
+  '/office/settings': typeof OfficeSettingsRoute
   '/office/students': typeof OfficeStudentsRoute
   '/office/users': typeof OfficeUsersRoute
+  '/track/$slug': typeof TrackSlugRouteWithChildren
   '/office/': typeof OfficeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
   '/c/$courseSlug/desk': typeof CCourseSlugDeskRoute
   '/c/$courseSlug/exam': typeof CCourseSlugExamRoute
+  '/office/certifications/$slug': typeof OfficeCertificationsSlugRoute
+  '/track/$slug/certificate': typeof TrackSlugCertificateRoute
   '/c/$courseSlug/': typeof CCourseSlugIndexRoute
+  '/office/certifications/': typeof OfficeCertificationsIndexRoute
+  '/track/$slug/': typeof TrackSlugIndexRoute
   '/c/$courseSlug/s/$slug': typeof CCourseSlugSSlugRoute
 }
 export interface FileRoutesByTo {
@@ -172,6 +216,7 @@ export interface FileRoutesByTo {
   '/office/$slug': typeof OfficeSlugRoute
   '/office/feedback': typeof OfficeFeedbackRoute
   '/office/new': typeof OfficeNewRoute
+  '/office/settings': typeof OfficeSettingsRoute
   '/office/students': typeof OfficeStudentsRoute
   '/office/users': typeof OfficeUsersRoute
   '/office': typeof OfficeIndexRoute
@@ -179,7 +224,11 @@ export interface FileRoutesByTo {
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
   '/c/$courseSlug/desk': typeof CCourseSlugDeskRoute
   '/c/$courseSlug/exam': typeof CCourseSlugExamRoute
+  '/office/certifications/$slug': typeof OfficeCertificationsSlugRoute
+  '/track/$slug/certificate': typeof TrackSlugCertificateRoute
   '/c/$courseSlug': typeof CCourseSlugIndexRoute
+  '/office/certifications': typeof OfficeCertificationsIndexRoute
+  '/track/$slug': typeof TrackSlugIndexRoute
   '/c/$courseSlug/s/$slug': typeof CCourseSlugSSlugRoute
 }
 export interface FileRoutesById {
@@ -196,14 +245,20 @@ export interface FileRoutesById {
   '/office/$slug': typeof OfficeSlugRoute
   '/office/feedback': typeof OfficeFeedbackRoute
   '/office/new': typeof OfficeNewRoute
+  '/office/settings': typeof OfficeSettingsRoute
   '/office/students': typeof OfficeStudentsRoute
   '/office/users': typeof OfficeUsersRoute
+  '/track/$slug': typeof TrackSlugRouteWithChildren
   '/office/': typeof OfficeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/c/$courseSlug/certificate': typeof CCourseSlugCertificateRoute
   '/c/$courseSlug/desk': typeof CCourseSlugDeskRoute
   '/c/$courseSlug/exam': typeof CCourseSlugExamRoute
+  '/office/certifications/$slug': typeof OfficeCertificationsSlugRoute
+  '/track/$slug/certificate': typeof TrackSlugCertificateRoute
   '/c/$courseSlug/': typeof CCourseSlugIndexRoute
+  '/office/certifications/': typeof OfficeCertificationsIndexRoute
+  '/track/$slug/': typeof TrackSlugIndexRoute
   '/c/$courseSlug/s/$slug': typeof CCourseSlugSSlugRoute
 }
 export interface FileRouteTypes {
@@ -221,14 +276,20 @@ export interface FileRouteTypes {
     | '/office/$slug'
     | '/office/feedback'
     | '/office/new'
+    | '/office/settings'
     | '/office/students'
     | '/office/users'
+    | '/track/$slug'
     | '/office/'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
     | '/c/$courseSlug/desk'
     | '/c/$courseSlug/exam'
+    | '/office/certifications/$slug'
+    | '/track/$slug/certificate'
     | '/c/$courseSlug/'
+    | '/office/certifications/'
+    | '/track/$slug/'
     | '/c/$courseSlug/s/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -243,6 +304,7 @@ export interface FileRouteTypes {
     | '/office/$slug'
     | '/office/feedback'
     | '/office/new'
+    | '/office/settings'
     | '/office/students'
     | '/office/users'
     | '/office'
@@ -250,7 +312,11 @@ export interface FileRouteTypes {
     | '/c/$courseSlug/certificate'
     | '/c/$courseSlug/desk'
     | '/c/$courseSlug/exam'
+    | '/office/certifications/$slug'
+    | '/track/$slug/certificate'
     | '/c/$courseSlug'
+    | '/office/certifications'
+    | '/track/$slug'
     | '/c/$courseSlug/s/$slug'
   id:
     | '__root__'
@@ -266,14 +332,20 @@ export interface FileRouteTypes {
     | '/office/$slug'
     | '/office/feedback'
     | '/office/new'
+    | '/office/settings'
     | '/office/students'
     | '/office/users'
+    | '/track/$slug'
     | '/office/'
     | '/api/auth/$'
     | '/c/$courseSlug/certificate'
     | '/c/$courseSlug/desk'
     | '/c/$courseSlug/exam'
+    | '/office/certifications/$slug'
+    | '/track/$slug/certificate'
     | '/c/$courseSlug/'
+    | '/office/certifications/'
+    | '/track/$slug/'
     | '/c/$courseSlug/s/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -290,10 +362,14 @@ export interface RootRouteChildren {
   OfficeSlugRoute: typeof OfficeSlugRoute
   OfficeFeedbackRoute: typeof OfficeFeedbackRoute
   OfficeNewRoute: typeof OfficeNewRoute
+  OfficeSettingsRoute: typeof OfficeSettingsRoute
   OfficeStudentsRoute: typeof OfficeStudentsRoute
   OfficeUsersRoute: typeof OfficeUsersRoute
+  TrackSlugRoute: typeof TrackSlugRouteWithChildren
   OfficeIndexRoute: typeof OfficeIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  OfficeCertificationsSlugRoute: typeof OfficeCertificationsSlugRoute
+  OfficeCertificationsIndexRoute: typeof OfficeCertificationsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -389,6 +465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OfficeNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/office/settings': {
+      id: '/office/settings'
+      path: '/office/settings'
+      fullPath: '/office/settings'
+      preLoaderRoute: typeof OfficeSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/office/students': {
       id: '/office/students'
       path: '/office/students'
@@ -401,6 +484,13 @@ declare module '@tanstack/react-router' {
       path: '/office/users'
       fullPath: '/office/users'
       preLoaderRoute: typeof OfficeUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/track/$slug': {
+      id: '/track/$slug'
+      path: '/track/$slug'
+      fullPath: '/track/$slug'
+      preLoaderRoute: typeof TrackSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -438,6 +528,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CCourseSlugExamRouteImport
       parentRoute: typeof CCourseSlugRoute
     }
+    '/office/certifications/': {
+      id: '/office/certifications/'
+      path: '/office/certifications'
+      fullPath: '/office/certifications/'
+      preLoaderRoute: typeof OfficeCertificationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/office/certifications/$slug': {
+      id: '/office/certifications/$slug'
+      path: '/office/certifications/$slug'
+      fullPath: '/office/certifications/$slug'
+      preLoaderRoute: typeof OfficeCertificationsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/track/$slug/': {
+      id: '/track/$slug/'
+      path: '/'
+      fullPath: '/track/$slug/'
+      preLoaderRoute: typeof TrackSlugIndexRouteImport
+      parentRoute: typeof TrackSlugRoute
+    }
+    '/track/$slug/certificate': {
+      id: '/track/$slug/certificate'
+      path: '/certificate'
+      fullPath: '/track/$slug/certificate'
+      preLoaderRoute: typeof TrackSlugCertificateRouteImport
+      parentRoute: typeof TrackSlugRoute
+    }
     '/c/$courseSlug/s/$slug': {
       id: '/c/$courseSlug/s/$slug'
       path: '/s/$slug'
@@ -468,6 +586,20 @@ const CCourseSlugRouteWithChildren = CCourseSlugRoute._addFileChildren(
   CCourseSlugRouteChildren,
 )
 
+interface TrackSlugRouteChildren {
+  TrackSlugCertificateRoute: typeof TrackSlugCertificateRoute
+  TrackSlugIndexRoute: typeof TrackSlugIndexRoute
+}
+
+const TrackSlugRouteChildren: TrackSlugRouteChildren = {
+  TrackSlugCertificateRoute: TrackSlugCertificateRoute,
+  TrackSlugIndexRoute: TrackSlugIndexRoute,
+}
+
+const TrackSlugRouteWithChildren = TrackSlugRoute._addFileChildren(
+  TrackSlugRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CertificateRoute: CertificateRoute,
@@ -481,10 +613,14 @@ const rootRouteChildren: RootRouteChildren = {
   OfficeSlugRoute: OfficeSlugRoute,
   OfficeFeedbackRoute: OfficeFeedbackRoute,
   OfficeNewRoute: OfficeNewRoute,
+  OfficeSettingsRoute: OfficeSettingsRoute,
   OfficeStudentsRoute: OfficeStudentsRoute,
   OfficeUsersRoute: OfficeUsersRoute,
+  TrackSlugRoute: TrackSlugRouteWithChildren,
   OfficeIndexRoute: OfficeIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  OfficeCertificationsSlugRoute: OfficeCertificationsSlugRoute,
+  OfficeCertificationsIndexRoute: OfficeCertificationsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

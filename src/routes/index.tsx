@@ -7,12 +7,14 @@ import { ShareCourseButton } from "@/components/share-course-button";
 import { SiteHeader } from "@/components/site-header";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { getMyLearning } from "@/lib/course/campus";
+import { listPublishedCertifications } from "@/lib/course/certifications";
 import { listPublishedCourses } from "@/lib/course/catalog";
 import { UNI_NAME, type CourseSummary } from "@/lib/course/types";
 import { youtubePoster } from "@/lib/course/youtube";
 import { markGuest } from "@/lib/guest";
 
 type Learning = Awaited<ReturnType<typeof getMyLearning>>;
+type Tracks = Awaited<ReturnType<typeof listPublishedCertifications>>;
 
 /**
  * Course-card banner. Admins pick the style per course in the edit page:
@@ -49,12 +51,16 @@ function Campus() {
   const user = useCurrentUser();
   const [courses, setCourses] = useState<CourseSummary[] | null>(null);
   const [learning, setLearning] = useState<Learning | null>(null);
+  const [tracks, setTracks] = useState<Tracks>([]);
   const [guestOpen, setGuestOpen] = useState(false);
 
   useEffect(() => {
     listPublishedCourses()
       .then(setCourses)
       .catch(() => setCourses([]));
+    listPublishedCertifications()
+      .then(setTracks)
+      .catch(() => setTracks([]));
   }, []);
 
   useEffect(() => {
@@ -249,6 +255,48 @@ function Campus() {
             )}
           </div>
         </section>
+
+        {tracks.length > 0 ? (
+          <section className="border-t border-border bg-surface/40">
+            <div className="mx-auto max-w-6xl px-4 py-14">
+              <p className="text-xs uppercase tracking-[0.16em] text-muted">
+                Certifications
+              </p>
+              <h2 className="mt-2 font-display text-3xl tracking-tight">
+                Course tracks
+              </h2>
+              <p className="mt-3 max-w-2xl text-muted">
+                Finish every course in a track to earn a downloadable certificate.
+              </p>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {tracks.map((t) => (
+                  <Link
+                    key={t.slug}
+                    to="/track/$slug"
+                    params={{ slug: t.slug }}
+                    className="md-interactive md-card flex flex-col rounded-xl border border-border bg-surface px-4 py-4"
+                  >
+                    <p className="text-[11px] uppercase tracking-[0.16em] text-muted">
+                      {t.courseCount} course{t.courseCount === 1 ? "" : "s"}
+                    </p>
+                    <h3 className="mt-1 font-display text-lg leading-snug tracking-tight">
+                      {t.title}
+                    </h3>
+                    {t.description ? (
+                      <p className="mt-1.5 line-clamp-2 text-sm text-muted">
+                        {t.description}
+                      </p>
+                    ) : null}
+                    <p className="mt-3 inline-flex items-center gap-1.5 text-sm text-fg">
+                      View track
+                      <ArrowRight className="size-4" />
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
       </main>
       <GuestContinueDialog
         open={guestOpen}

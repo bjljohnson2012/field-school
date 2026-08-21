@@ -1,14 +1,18 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Certificate } from "@/components/certificate";
 import { CourseFeedback } from "@/components/course-feedback";
 import { SiteHeader } from "@/components/site-header";
 import { useCurrentUser } from "@/lib/auth/use-current-user";
 import { usePublishedCourse } from "@/lib/course/use-course";
 import { useCourseProgress } from "@/lib/course/use-progress";
-import { UNI_NAME } from "@/lib/course/types";
+import { getPublicSignature } from "@/lib/course/certifications";
 
 export const Route = createFileRoute("/c/$courseSlug/certificate")({
   component: CertificatePage,
 });
+
+type Signature = Awaited<ReturnType<typeof getPublicSignature>>;
 
 function CertificatePage() {
   const { courseSlug } = Route.useParams();
@@ -16,6 +20,17 @@ function CertificatePage() {
   const user = useCurrentUser();
   const { certified, passedCount, total, exam } = useCourseProgress(course ?? null);
   const name = user?.displayName ?? user?.primaryEmail ?? "Guest";
+  const [signature, setSignature] = useState<Signature>({
+    founderName: "",
+    signatureText: "",
+    signatureImage: "",
+  });
+
+  useEffect(() => {
+    getPublicSignature()
+      .then(setSignature)
+      .catch(() => undefined);
+  }, []);
 
   if (course === undefined) {
     return (
@@ -34,31 +49,20 @@ function CertificatePage() {
     );
   }
 
+  const examNote = exam ? ` · exam ${exam.score}/${course.examQuestions.length}` : "";
+
   return (
     <div className="min-h-dvh">
       <SiteHeader course={course} passed={passedCount} total={total} />
       <main className="mx-auto max-w-3xl px-4 py-12">
-        <div className="md-card rounded-xl border border-border bg-surface px-6 py-10 sm:px-12">
-          <p className="text-center text-xs uppercase tracking-[0.22em] text-muted">
-            {UNI_NAME}
-          </p>
-          <h1 className="mt-6 text-center font-display text-4xl tracking-tight">
-            Passed the ladder
-          </h1>
-          <p className="mt-6 text-center text-lg">{name}</p>
-          <p className="mx-auto mt-4 max-w-md text-center text-sm leading-relaxed text-muted">
-            {course.title}
-            {exam ? ` · exam ${exam.score}/${course.examQuestions.length}` : ""}.
-            Study credential from this campus — not a vendor certification.
-            {!user
-              ? " Signed in later, this name becomes your account name."
-              : null}
-          </p>
-          <p className="mt-8 text-center font-mono text-xs text-faint">
-            {new Date().toISOString().slice(0, 10)} · {course.kicker || course.slug}
-          </p>
-        </div>
-        <div className="mt-6 flex justify-center gap-4">
+        <Certificate
+          recipientName={name}
+          headline="Passed the ladder"
+          subtitle={`has completed ${course.title}${examNote}. A study credential from this campus — not a vendor certification.`}
+          signature={signature}
+          dateStr={new Date().toISOString().slice(0, 10)}
+        />
+        <div data-noprint className="mt-6 flex justify-center gap-4">
           <Link
             to="/c/$courseSlug/desk"
             params={{ courseSlug: course.slug }}
@@ -74,14 +78,10 @@ function CertificatePage() {
           </Link>
         </div>
         {user ? (
-          <div className="mt-6">
+          <div data-noprint className="mt-6">
             <CourseFeedback courseSlug={course.slug} />
           </div>
-        ) : (
-          <p className="mt-6 text-center text-sm text-muted">
-            Sign in to leave feedback the campus admins can see.
-          </p>
-        )}
+        ) : null}
       </main>
     </div>
   );

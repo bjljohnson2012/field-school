@@ -4,16 +4,19 @@ import { RedirectToSignIn } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { SiteHeader } from "@/components/site-header";
 import { getMyLearning, getStudentDashboard } from "@/lib/course/campus";
+import { getMyCertifications } from "@/lib/course/certifications";
 
 export const Route = createFileRoute("/dashboard")({ component: DashboardPage });
 
 type Dashboard = Awaited<ReturnType<typeof getStudentDashboard>>;
 type Learning = Awaited<ReturnType<typeof getMyLearning>>;
+type Certs = Awaited<ReturnType<typeof getMyCertifications>>;
 
 function DashboardPage() {
   const { user, isPending } = useCurrentUserState();
   const [board, setBoard] = useState<Dashboard | null>(null);
   const [learning, setLearning] = useState<Learning | null>(null);
+  const [certs, setCerts] = useState<Certs>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -29,6 +32,9 @@ function DashboardPage() {
     getMyLearning()
       .then(setLearning)
       .catch(() => setLearning([]));
+    getMyCertifications()
+      .then(setCerts)
+      .catch(() => setCerts([]));
   }, [user, isPending]);
 
   if (isPending) {
@@ -67,6 +73,48 @@ function DashboardPage() {
             </Link>
           ) : null}
         </div>
+
+        {certs.length > 0 ? (
+          <section className="mt-8">
+            <h2 className="font-display text-2xl tracking-tight">Certifications</h2>
+            <p className="mt-1 text-sm text-muted">
+              Finish every course in a track to earn a downloadable certificate.
+            </p>
+            <ol className="mt-4 grid gap-3">
+              {certs.map((c) => (
+                <li key={c.slug}>
+                  <Link
+                    to="/track/$slug"
+                    params={{ slug: c.slug }}
+                    className="md-interactive md-card block rounded-xl border border-border bg-surface px-4 py-4"
+                  >
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <h3 className="font-display text-xl tracking-tight">{c.title}</h3>
+                      <p className="text-xs uppercase tracking-[0.14em] text-muted">
+                        {c.complete ? "Certificate ready" : "In progress"}
+                      </p>
+                    </div>
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-raised">
+                      <div
+                        className="h-full bg-accent"
+                        style={{
+                          width: `${
+                            c.totalCourses === 0
+                              ? 0
+                              : Math.round((c.completedCourses / c.totalCourses) * 100)
+                          }%`,
+                        }}
+                      />
+                    </div>
+                    <p className="mt-2 text-sm text-muted">
+                      {c.completedCourses}/{c.totalCourses} courses certified
+                    </p>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
 
         {learning && learning.length > 0 ? (
           <section className="mt-8">

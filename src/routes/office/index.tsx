@@ -98,6 +98,18 @@ function OfficePage() {
               >
                 Course feedback
               </Link>
+              <Link
+                to="/office/certifications"
+                className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm"
+              >
+                Certifications
+              </Link>
+              <Link
+                to="/office/settings"
+                className="md-interactive inline-flex h-12 items-center rounded-xl border border-border px-5 text-sm"
+              >
+                Profile settings
+              </Link>
             </div>
             <ol className="mt-8 grid gap-3">
               {state.courses.map((c) => (
