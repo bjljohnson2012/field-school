@@ -1,8 +1,8 @@
 import type { Module, QuizQuestion } from "./types";
 
-export const COURSE_NAME = "Field School";
+export const COURSE_NAME = "Grok Bot vs OpenClaw and Hermes";
 export const COURSE_TAGLINE =
-  "A bottom-up mini-course on Grok Bot, from one job to a staff that ships while you sleep.";
+	"A bottom-up mini-course on Grok Bot, from one job to a staff that ships while you sleep.";
 export const modules: Module[] = [
 	{
 		slug: "briefing",
