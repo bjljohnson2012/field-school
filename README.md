@@ -13,7 +13,7 @@ Field School is the company. Field School University is where people walk course
 - Share normal paths: `/c/grok-bot`, `/share/field-school`, `/share/hire-a-staff`, `/share/desk`
 - **Admin** hub: student demo, users (edit + impersonate), feedback notifications, how to add tools
 
-Progress is stored in this browser. Sign in on `/login` with Google as `bjljohnson2012@gmail.com` for the dean seat. Name the portal if you want certificates labeled.
+Progress is stored in this browser. Join the free beta on `/signup` (Google, X, or email + password). Staff admin is invite-only: sign in on `/login` with Google or X as an allowlisted email (dean: `bjljohnson2012@gmail.com`). Name the portal if you want certificates labeled. See [AUTH.md](AUTH.md).
 
 ## Run locally
 

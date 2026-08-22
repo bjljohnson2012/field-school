@@ -37,44 +37,52 @@ export default function PrivacyPage() {
           body={
             <>
               <strong className="text-foreground">Staff sign-in.</strong> If you
-              use Auth.js Google (and later X) sign-in, we receive the name and
+              use Auth.js Google or X sign-in, we receive the name and
               email your provider shares so we can confirm you are on the staff
               allowlist and open admin tools. Guest, local name, and the Jordan
-              demo never grant admin.
+              demo never grant admin. Staff is invite-only.
+              <br />
+              <br />
+              <strong className="text-foreground">Member accounts.</strong> Free
+              beta members may join with Google, X, or email and password. We
+              store the name, email, provider, and a password hash (never the
+              raw password) on the campus server. Staff access requests include
+              name, email, provider, time, and an optional note.
               <br />
               <br />
               <strong className="text-foreground">Optional certificate label.</strong>{" "}
               If you type a name and optional email on sign-in to keep a
               dashboard, those values stay in this browser so certificates and
-              progress can show your name. They are not a full account.
+              progress can show your name.
               <br />
               <br />
               <strong className="text-foreground">Usage on this device.</strong>{" "}
               Course progress, quiz answers, tool results, and guest walks are
-              stored in browser localStorage on this device. We do not yet run a
-              multi-device student account system.
+              stored in browser localStorage on this device. Member login is a
+              server account. Course progress is still per browser until we
+              sync it.
             </>
           }
         />
         <Block
           kicker="02"
           title="How we use it"
-          body="We use this information to operate the educational portal, grant staff admin access to allowlisted people, remember what you finished on this device, issue Field School University certificates with the name you typed, and improve courses and campus tools. We do not use it to sell ads or sell your data."
+          body="We use this information to operate the educational portal, grant staff admin access to allowlisted people, run free beta member sign-in, review staff access requests, remember what you finished on this device, issue Field School University certificates with the name you typed, and improve courses and campus tools. We do not use it to sell ads or sell your data."
         />
         <Block
           kicker="03"
           title="Processors and hosting"
-          body="If you choose staff Google sign-in, Google is the identity processor for that OAuth handshake. X may be added the same way later. The live campus is hosted on our server at university.benjohnson.ai. Those processors see only what is needed to authenticate or serve the site."
+          body="If you choose Google or X sign-in, that provider is the identity processor for the OAuth handshake. Optional request-notify email uses SMTP only when those host settings are present. The live campus is hosted on our server at university.benjohnson.ai. Those processors see only what is needed to authenticate, notify, or serve the site."
         />
         <Block
           kicker="04"
           title="Cookies and localStorage"
-          body="Staff OAuth uses session cookies so Auth.js can keep you signed in. The campus also writes localStorage keys for theme, guest or local progress, and a staff gate marker after a real staff session. Clearing site data on this browser removes guest progress. That is expected: guest progress is not a cloud account yet."
+          body="Auth.js uses session cookies so Google, X, and email-password members stay signed in. The campus also writes localStorage keys for theme, guest or local progress, and a staff gate marker after a real staff session. Passwords are not stored in localStorage. Clearing site data on this browser removes guest progress."
         />
         <Block
           kicker="05"
           title="Retention"
-          body="Guest and local labels live in this browser until you clear them or sign out of the local session. Staff OAuth session data lasts as long as the Auth.js session and provider token rules require. We keep operational logs only as long as needed to run and secure the campus. There is no separate student data warehouse."
+          body="Guest and local labels live in this browser until you clear them or sign out of the local session. Member accounts and access requests live in the campus store on the server until we delete them at your request. Staff OAuth session data lasts as long as the Auth.js session and provider token rules require. We keep operational logs only as long as needed to run and secure the campus."
         />
         <Block
           kicker="06"
@@ -89,7 +97,7 @@ export default function PrivacyPage() {
         <Block
           kicker="08"
           title="Your choices"
-          body="You can keep walking as a guest without a staff login. You can skip the optional email on the certificate form. You can clear this site’s cookies and localStorage in your browser. Staff can sign out to end the OAuth session. To ask us to delete staff-related records we control, email the contact below."
+          body="You can keep walking as a guest without a login. You can skip the optional email on the certificate form. You can clear this site’s cookies and localStorage in your browser. Members and staff can sign out to end the Auth.js session. To ask us to delete member or staff records we control, email the contact below."
         />
       </section>
 

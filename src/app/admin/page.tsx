@@ -22,6 +22,11 @@ const areas = [
     body: "Unread feedback and messages from the campus. This is the staff inbox.",
   },
   {
+    href: "/admin/access-requests",
+    title: "Access requests",
+    body: "Members who signed in and asked for the staff desk. Adding them is still an allowlist change.",
+  },
+  {
     href: "/admin/tools",
     title: "Add tools",
     body: "How to register a new assessment so it shows on /tools and saves to each portal.",

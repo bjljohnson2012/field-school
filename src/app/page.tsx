@@ -39,6 +39,12 @@ export default function Campus() {
                 Open the catalog
                 <ArrowRight className="size-4" />
               </a>
+              <Link
+                href="/signup"
+                className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-5 text-sm"
+              >
+                Join free beta
+              </Link>
               <button
                 type="button"
                 onClick={() => {

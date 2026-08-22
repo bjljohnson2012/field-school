@@ -112,10 +112,14 @@ test("privacy and terms pages are public, real policies linked from chrome", () 
   assert.match(footer, /href="\/privacy"/);
   assert.match(footer, /href="\/terms"/);
   assert.match(footer, /href="\/about"/);
+  assert.match(footer, /href="\/pricing"/);
+  assert.match(footer, /href="\/signup"/);
 
   assert.match(proxy, /matcher:\s*\[\s*"\/admin"/);
   assert.doesNotMatch(proxy, /\/privacy/);
   assert.doesNotMatch(proxy, /\/terms/);
+  assert.doesNotMatch(proxy, /\/pricing/);
+  assert.doesNotMatch(proxy, /\/signup/);
 });
 
 test("proxy and admin layout redirect guests away from staff HTML", () => {
@@ -123,8 +127,13 @@ test("proxy and admin layout redirect guests away from staff HTML", () => {
   assert.match(proxy, /signedOutAdminAccess/);
   assert.match(proxy, /loginRedirectForAdmin/);
   assert.match(proxy, /authIsConfigured/);
+  assert.match(proxy, /isStaffSession/);
+  assert.match(proxy, /request-access/);
+  assert.match(proxy, /edgeAuth/);
   assert.match(proxy, /matcher:\s*\[\s*"\/admin"/);
   assert.match(proxy, /export async function proxy/);
+  assert.doesNotMatch(proxy, /from \"@\/auth\"/);
+  assert.doesNotMatch(proxy, /from \"@\/lib\/members\/store\"/);
 
   const layout = readSrc("src/app/admin/layout.tsx");
   assert.match(layout, /loginRedirectForAdmin/);
@@ -151,6 +160,9 @@ test("OAuth scaffolding exists but fake localStorage dean shortcut does not", ()
   assert.match(login, /Continue as guest/);
   assert.match(login, /signInLocal/);
   assert.match(login, /never grants admin/);
+  assert.match(login, /href="\/signup"/);
+  assert.match(login, /Join the free beta/);
+  assert.match(login, /signIn\("credentials"/);
   assert.doesNotMatch(login, /GoogleSignInButton/);
   assert.doesNotMatch(login, /signInWithGoogleAccount/);
   assert.doesNotMatch(login, /DEAN_EMAIL/);
@@ -184,6 +196,7 @@ test("OAuth scaffolding exists but fake localStorage dean shortcut does not", ()
 
   const home = readSrc("src/app/page.tsx");
   assert.match(home, /Continue as guest/);
+  assert.match(home, /Join free beta/);
   const gateIdx = home.indexOf("ready && isStaff");
   const adminIdx = home.indexOf('href="/admin"');
   assert.ok(gateIdx >= 0 && adminIdx > gateIdx, "home Admin CTA is staff-only");
@@ -201,6 +214,15 @@ test("Auth.js wiring is present and env-gated", () => {
   assert.match(oauthButtons, /signIn\("google"/);
   assert.match(oauthButtons, /signIn\("twitter"/);
   assert.match(oauthButtons, /not configured on this campus yet/);
+  assert.match(oauthButtons, /nextPath = "\/dashboard"/);
+
+  const config = readSrc("src/lib/auth/config.ts");
+  assert.match(config, /error:\s*"\/signup"/);
+  assert.match(config, /roleForAuth/);
+  assert.doesNotMatch(config, /return isStaffEmail\(email\)/);
+  assert.match(readSrc("src/auth.ts"), /Credentials/);
+  assert.match(readSrc("src/auth.ts"), /verifyMemberLogin/);
+  assert.match(readSrc("src/lib/auth/env.ts"), /authCanMintSessions/);
 });
 
 test("local name/email sign-in cannot attach the dean seat", () => {
@@ -221,4 +243,142 @@ test("local name/email sign-in cannot attach the dean seat", () => {
   assert.equal(canReuseUserForLocalSignIn(dean, "bjljohnson2012@gmail.com"), false);
   assert.equal(canReuseUserForLocalSignIn(dean, "jordan@field.school"), false);
   assert.equal(canReuseUserForLocalSignIn(jordan, "jordan@field.school"), true);
+});
+
+function normalizeEmail(email) {
+  return (email ?? "").trim().toLowerCase();
+}
+
+function isValidEmail(email) {
+  const mail = normalizeEmail(email);
+  return Boolean(mail) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+}
+
+function passwordError(password) {
+  const value = password ?? "";
+  if (value.length < 8) return "Password must be at least 8 characters.";
+  if (value.length > 200) return "Password must be at most 200 characters.";
+  return null;
+}
+
+function roleForAuth(provider, email) {
+  if (provider === "credentials") return "member";
+  return isDeanEmail(email) ? "admin" : "member";
+}
+
+function isStaffOAuthProvider(provider) {
+  return provider === "google" || provider === "twitter";
+}
+
+function isStaffSession(session) {
+  const email = session?.user?.email;
+  if (!isDeanEmail(email)) return false;
+  const provider = session?.user?.provider;
+  if (provider === "credentials") return false;
+  if (isStaffOAuthProvider(provider)) return true;
+  if (!provider && session?.user?.role !== "member") return true;
+  return false;
+}
+
+test("credentials never grant staff even for the dean email", () => {
+  assert.equal(roleForAuth("credentials", "bjljohnson2012@gmail.com"), "member");
+  assert.equal(roleForAuth("google", "bjljohnson2012@gmail.com"), "admin");
+  assert.equal(roleForAuth("twitter", "maya@field.school"), "member");
+  assert.equal(roleForAuth("google", "maya@field.school"), "member");
+});
+
+test("staff session requires allowlisted Google or X", () => {
+  assert.equal(
+    isStaffSession({
+      user: { email: "bjljohnson2012@gmail.com", provider: "google" },
+    }),
+    true,
+  );
+  assert.equal(
+    isStaffSession({
+      user: { email: "bjljohnson2012@gmail.com", provider: "twitter" },
+    }),
+    true,
+  );
+  assert.equal(
+    isStaffSession({
+      user: { email: "bjljohnson2012@gmail.com", provider: "credentials" },
+    }),
+    false,
+  );
+  assert.equal(
+    isStaffSession({
+      user: { email: "maya@field.school", provider: "google" },
+    }),
+    false,
+  );
+  assert.equal(
+    isStaffSession({
+      user: { email: "bjljohnson2012@gmail.com" },
+    }),
+    true,
+  );
+});
+
+test("password and email rules for member signup", () => {
+  assert.equal(isValidEmail("jordan@field.school"), true);
+  assert.equal(isValidEmail("not-an-email"), false);
+  assert.equal(normalizeEmail("  BJL@Field.School "), "bjl@field.school");
+  assert.equal(passwordError("short"), "Password must be at least 8 characters.");
+  assert.equal(passwordError("longenough"), null);
+});
+
+test("free beta signup, pricing, and request-access pages exist", () => {
+  const signupPage = readSrc("src/app/signup/page.tsx");
+  const signup = readSrc("src/app/signup/signup-form.tsx");
+  const pricing = readSrc("src/app/pricing/page.tsx");
+  const request = readSrc("src/app/request-access/request-access-form.tsx");
+  const complete = readSrc("src/app/login/complete/oauth-complete-client.tsx");
+  const store = readSrc("src/lib/members/store.ts");
+  const notify = readSrc("src/lib/members/notify.ts");
+  const compose = readSrc("deploy/docker-compose.yml");
+  const authMd = readSrc("AUTH.md");
+
+  assert.match(signupPage, /export const dynamic = "force-dynamic"/);
+  assert.match(signup, /Join the free beta/);
+  assert.match(signup, /Continue as guest/);
+  assert.match(signup, /\/api\/members\/register/);
+  assert.match(signup, /signIn\("credentials"/);
+  assert.match(signup, /authErrorMessage/);
+  assert.doesNotMatch(signup, /lorem ipsum/i);
+
+  assert.match(pricing, /\$100/);
+  assert.match(pricing, /\$200/);
+  assert.match(pricing, /\$1,000/);
+  assert.match(pricing, /Cohort meetings online/);
+  assert.match(pricing, /Cohort meetings in person/);
+  assert.match(pricing, /One-on-one AI \+ business coaching/);
+  assert.match(pricing, /Join free now/);
+  assert.match(pricing, /invoiced later/i);
+  assert.match(pricing, /no checkout/i);
+  assert.doesNotMatch(pricing, /stripe/i);
+  assert.doesNotMatch(pricing, /<form/);
+  assert.doesNotMatch(pricing, /lorem ipsum/i);
+
+  assert.match(request, /\/api\/access-requests/);
+  assert.match(request, /Request access/);
+  assert.match(complete, /request-access/);
+  assert.match(complete, /activateMemberFromAuth/);
+  assert.match(complete, /\/signup\?error=/);
+
+  assert.match(store, /bcryptjs/);
+  assert.match(store, /passwordHash/);
+  assert.match(store, /campus-store\.json/);
+  assert.doesNotMatch(store, /localStorage/);
+  assert.match(notify, /ACCESS_REQUEST_NOTIFY_EMAIL|accessRequestNotifyEmail/);
+  assert.match(notify, /SMTP_HOST/);
+
+  assert.match(compose, /field-school-data/);
+  assert.match(compose, /MEMBER_STORE_PATH/);
+  assert.doesNotMatch(compose, /field-school-db/);
+
+  assert.match(authMd, /MEMBER_STORE_PATH/);
+  assert.match(authMd, /ACCESS_REQUEST_NOTIFY_EMAIL/);
+  assert.match(authMd, /forever-free beta|Free beta/i);
+  assert.match(readSrc("src/app/admin/access-requests/page.tsx"), /Access requests/);
 });

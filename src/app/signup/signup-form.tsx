@@ -1,63 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 import { OAuthSignInButtons } from "@/components/oauth-sign-in-buttons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { usePortal } from "@/hooks/use-portal";
-import { isAdminRoute } from "@/lib/admin-gate";
 import type { OAuthProviderStatus } from "@/lib/auth/env";
 import { STUDENT_ID } from "@/lib/campus";
-import { authErrorMessage, isStaffSession } from "@/lib/members/policy";
-import { continueAsGuest, enterAs, signInLocal } from "@/lib/portal";
+import { authErrorMessage } from "@/lib/members/policy";
+import { continueAsGuest, enterAs } from "@/lib/portal";
 
 type Props = {
   oauth: OAuthProviderStatus;
 };
 
-export function LoginForm({ oauth }: Props) {
+export function SignupForm({ oauth }: Props) {
   const router = useRouter();
-  const { data: authSession, status } = useSession();
-  const { ready, isStaff } = usePortal();
+  const searchParams = useSearchParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    searchParams.get("error")
+      ? authErrorMessage(searchParams.get("error"))
+      : null,
+  );
   const [pending, setPending] = useState(false);
-
-  const next =
-    typeof window !== "undefined"
-      ? new URLSearchParams(window.location.search).get("next") || ""
-      : "";
-  const oauthNext = isAdminRoute(next) ? next : "/dashboard";
-
-  useEffect(() => {
-    if (status === "authenticated" && isAdminRoute(next) && !isStaffSession(authSession)) {
-      router.replace("/request-access?from=admin");
-      return;
-    }
-    if (!ready || !isStaff) return;
-    if (isAdminRoute(next)) router.replace(next);
-  }, [ready, isStaff, router, next, status, authSession]);
 
   return (
     <main className="mx-auto max-w-md px-4 py-16">
       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Portal
+        Free beta
       </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Sign in</h1>
+      <h1 className="mt-2 font-display text-4xl tracking-tight">
+        Join Field School University
+      </h1>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Members use Google, X, or email and password. Staff admin still needs an
-        allowlisted Google or X account. Local name sign-in never grants admin.
-      </p>
-      <p className="mt-3 text-sm">
-        New here?{" "}
-        <Link href="/signup" className="underline underline-offset-2">
-          Join the free beta
+        Beta members walk the campus for free. No card. Paid cohort and coaching
+        plans will be invoiced later. See{" "}
+        <Link href="/pricing" className="underline underline-offset-2">
+          pricing
         </Link>
         .
       </p>
@@ -68,11 +53,7 @@ export function LoginForm({ oauth }: Props) {
       ) : null}
 
       <div className="mt-8">
-        <OAuthSignInButtons
-          oauth={oauth}
-          nextPath={oauthNext}
-          tone={isAdminRoute(next) ? "staff" : "member"}
-        />
+        <OAuthSignInButtons oauth={oauth} nextPath="/dashboard" tone="member" />
       </div>
 
       <form
@@ -82,6 +63,16 @@ export function LoginForm({ oauth }: Props) {
           setPending(true);
           setError(null);
           try {
+            const res = await fetch("/api/members/register", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name, email, password }),
+            });
+            const data = (await res.json()) as { error?: string };
+            if (!res.ok) {
+              setError(data.error || "Could not create that account.");
+              return;
+            }
             const signed = await signIn("credentials", {
               email,
               password,
@@ -91,7 +82,7 @@ export function LoginForm({ oauth }: Props) {
               setError(authErrorMessage(signed.error));
               return;
             }
-            router.push(isAdminRoute(next) ? "/request-access?from=admin" : "/dashboard");
+            router.push("/dashboard");
           } catch {
             setError("Could not reach the campus. Try again.");
           } finally {
@@ -100,9 +91,20 @@ export function LoginForm({ oauth }: Props) {
         }}
       >
         <div className="space-y-2">
-          <Label htmlFor="login-email">Email</Label>
+          <Label htmlFor="signup-name">Name</Label>
           <Input
-            id="login-email"
+            id="signup-name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            required
+            className="h-11 rounded-xl"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="signup-email">Email</Label>
+          <Input
+            id="signup-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -112,20 +114,30 @@ export function LoginForm({ oauth }: Props) {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="login-password">Password</Label>
+          <Label htmlFor="signup-password">Password</Label>
           <Input
-            id="login-password"
+            id="signup-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="At least 8 characters"
             required
+            minLength={8}
             className="h-11 rounded-xl"
           />
         </div>
         <Button className="h-12 w-full rounded-xl" type="submit" disabled={pending}>
-          {pending ? "Signing in…" : "Sign in"}
+          {pending ? "Joining…" : "Join the free beta"}
         </Button>
       </form>
+
+      <p className="mt-4 text-sm text-muted-foreground">
+        Already on campus?{" "}
+        <Link href="/login" className="underline underline-offset-2">
+          Sign in
+        </Link>
+        .
+      </p>
 
       <div className="mt-10 space-y-3">
         <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
@@ -141,29 +153,6 @@ export function LoginForm({ oauth }: Props) {
         >
           Enter as Jordan · student demo
         </button>
-        <form
-          className="space-y-3"
-          onSubmit={(e) => {
-            e.preventDefault();
-            signInLocal(name, email);
-            router.push("/dashboard");
-          }}
-        >
-          <div className="space-y-2">
-            <Label htmlFor="name">Name on the certificate</Label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-              required
-              className="h-11 rounded-xl"
-            />
-          </div>
-          <Button className="h-12 w-full rounded-xl" variant="outline" type="submit">
-            Keep a dashboard
-          </Button>
-        </form>
         <button
           type="button"
           className="h-12 w-full rounded-xl border border-border text-sm"

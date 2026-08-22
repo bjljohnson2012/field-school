@@ -1,10 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { activateStaffFromOAuth } from "@/lib/auth/portal-bridge";
+import {
+  activateMemberFromAuth,
+  activateStaffFromOAuth,
+} from "@/lib/auth/portal-bridge";
 import { isAdminRoute } from "@/lib/admin-gate";
+import { isStaffSession } from "@/lib/members/policy";
 
 export function OAuthCompleteClient() {
   const { data: session, status } = useSession();
@@ -15,42 +20,49 @@ export function OAuthCompleteClient() {
   useEffect(() => {
     if (status === "loading") return;
 
-    const next = searchParams.get("next") || "/admin";
-    const safeNext = isAdminRoute(next) ? next : "/admin";
+    const next = searchParams.get("next") || "/dashboard";
 
-    if (status !== "authenticated" || !session?.user?.email) {
-      setError("Staff sign-in did not complete. Try again from the login page.");
+    if (status !== "authenticated" || !session?.user) {
+      router.replace("/signup?error=Callback");
       return;
     }
 
-    const ok = activateStaffFromOAuth(
-      session.user.email,
-      session.user.name ?? undefined,
-    );
-    if (!ok) {
-      setError(
-        "That account is not on the staff allowlist for this campus.",
+    if (isStaffSession(session) && session.user.email) {
+      const ok = activateStaffFromOAuth(
+        session.user.email,
+        session.user.name ?? undefined,
       );
+      if (!ok) {
+        setError("Staff seat could not be attached. Try Google or X again.");
+        return;
+      }
+      const safeNext = isAdminRoute(next) ? next : "/admin";
+      router.replace(safeNext);
       return;
     }
 
-    router.replace(safeNext);
+    activateMemberFromAuth(session.user.email, session.user.name);
+    if (isAdminRoute(next)) {
+      router.replace("/request-access?from=admin");
+      return;
+    }
+    router.replace(next.startsWith("/") ? next : "/dashboard");
   }, [status, session, router, searchParams]);
 
   if (error) {
     return (
       <main className="mx-auto max-w-md px-4 py-16">
         <p className="text-sm text-destructive">{error}</p>
-        <a href="/login" className="mt-4 inline-block text-sm underline">
-          Back to sign in
-        </a>
+        <Link href="/signup" className="mt-4 inline-block text-sm underline">
+          Back to join
+        </Link>
       </main>
     );
   }
 
   return (
     <main className="mx-auto max-w-md px-4 py-16">
-      <p className="text-sm text-muted-foreground">Finishing staff sign-in…</p>
+      <p className="text-sm text-muted-foreground">Finishing sign-in…</p>
     </main>
   );
 }
