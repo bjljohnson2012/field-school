@@ -7,6 +7,8 @@ services:
       dockerfile: deploy/Dockerfile
     container_name: field-school-app
     restart: unless-stopped
+    env_file:
+      - /opt/field-school.env
     environment:
       PORT: "3000"
       HOSTNAME: 0.0.0.0
