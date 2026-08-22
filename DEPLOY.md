@@ -33,6 +33,8 @@ Member passwords and staff access requests live in a Docker named volume (`field
 
 Optional notify email: set `ACCESS_REQUEST_NOTIFY_EMAIL` (defaults to the dean) and `SMTP_HOST` (plus `SMTP_USER` / `SMTP_PASS` if the relay needs auth) in `/opt/field-school.env`.
 
+Optional shareable Jordan walk: set `DEMO_LINK_TOKEN` in `/opt/field-school.env`, then copy the full URL from `/admin/demo` (“Copy demo link”). The public path is `/demo?token=…`. Login never shows a Jordan button. If the env is unset, the campus still mints a token from `AUTH_SECRET` so staff can copy a working link. See [AUTH.md](AUTH.md).
+
 ## After it is up
 
 Check:
@@ -45,6 +47,8 @@ Check:
 - `/signup` — free beta join (Google, X, email + password)
 - `/pricing` — display-only plans (invoice later, no checkout)
 - `/admin` — demo, users, notifications, access requests, add tools
+- `/admin/demo` — staff Jordan walk + Copy demo link
+- `/demo?token=…` — shareable Jordan walk (token required; not linked from login)
 - `/c/grok-bot` — ladder
 - `/share/field-school` — normal share path
 

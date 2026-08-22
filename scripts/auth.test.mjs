@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash, timingSafeEqual } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -163,6 +164,8 @@ test("OAuth scaffolding exists but fake localStorage dean shortcut does not", ()
   assert.match(login, /href="\/signup"/);
   assert.match(login, /Join the free beta/);
   assert.match(login, /signIn\("credentials"/);
+  assert.doesNotMatch(login, /Enter as Jordan/);
+  assert.doesNotMatch(login, /STUDENT_ID/);
   assert.doesNotMatch(login, /GoogleSignInButton/);
   assert.doesNotMatch(login, /signInWithGoogleAccount/);
   assert.doesNotMatch(login, /DEAN_EMAIL/);
@@ -345,6 +348,8 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(signup, /\/api\/members\/register/);
   assert.match(signup, /signIn\("credentials"/);
   assert.match(signup, /authErrorMessage/);
+  assert.doesNotMatch(signup, /Enter as Jordan/);
+  assert.doesNotMatch(signup, /STUDENT_ID/);
   assert.doesNotMatch(signup, /lorem ipsum/i);
 
   assert.match(pricing, /\$100/);
@@ -381,4 +386,131 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(authMd, /ACCESS_REQUEST_NOTIFY_EMAIL/);
   assert.match(authMd, /forever-free beta|Free beta/i);
   assert.match(readSrc("src/app/admin/access-requests/page.tsx"), /Access requests/);
+});
+
+function resolveDemoLinkToken(env) {
+  const explicit = env.DEMO_LINK_TOKEN?.trim();
+  if (explicit) return explicit;
+  const secret = (env.AUTH_SECRET ?? env.NEXTAUTH_SECRET ?? "").trim();
+  if (!secret) return null;
+  return createHash("sha256")
+    .update(`field-school-university:demo-link:${secret}`)
+    .digest("hex")
+    .slice(0, 32);
+}
+
+function tokensMatch(provided, expected) {
+  if (!provided || !expected) return false;
+  const a = Buffer.from(provided);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
+
+function isValidDemoLinkToken(provided, env) {
+  return tokensMatch(provided, resolveDemoLinkToken(env));
+}
+
+function demoWalkPath(token) {
+  return `/demo?token=${encodeURIComponent(token)}`;
+}
+
+test("login and signup never show the Jordan student-demo button", () => {
+  const login = readSrc("src/app/login/login-form.tsx");
+  const signup = readSrc("src/app/signup/signup-form.tsx");
+  const home = readSrc("src/app/page.tsx");
+
+  assert.match(login, /Continue as guest/);
+  assert.match(login, /Join the free beta/);
+  assert.doesNotMatch(login, /Enter as Jordan/);
+  assert.doesNotMatch(login, /student demo/i);
+  assert.doesNotMatch(login, /enterAs\(/);
+
+  assert.match(signup, /Continue as guest/);
+  assert.match(signup, /Join the free beta/);
+  assert.doesNotMatch(signup, /Enter as Jordan/);
+  assert.doesNotMatch(signup, /student demo/i);
+  assert.doesNotMatch(signup, /enterAs\(/);
+
+  assert.doesNotMatch(home, /Enter as Jordan/);
+  const gateIdx = home.indexOf("ready && isStaff");
+  const demoIdx = home.indexOf('href="/admin/demo"');
+  assert.ok(gateIdx >= 0 && demoIdx > gateIdx, "home student demo CTA is staff-only");
+});
+
+test("staff can still reach the admin student demo", () => {
+  assert.equal(isAdminRoute("/admin/demo"), true);
+  assert.equal(isAdminRoute("/demo"), false);
+
+  const proxy = readSrc("src/proxy.ts");
+  assert.match(proxy, /matcher:\s*\[\s*"\/admin"/);
+  assert.match(proxy, /\/admin\/:path\*/);
+
+  const layout = readSrc("src/app/admin/layout.tsx");
+  assert.match(layout, /if \(!ready \|\| !isStaff\)/);
+  assert.ok(
+    layout.indexOf("if (!ready || !isStaff)") < layout.indexOf("<AdminNav"),
+    "AdminNav must not render until a staff session is confirmed",
+  );
+
+  const page = readSrc("src/app/admin/demo/page.tsx");
+  const client = readSrc("src/app/admin/demo/student-demo-client.tsx");
+  const nav = readSrc("src/components/admin-nav.tsx");
+
+  assert.match(page, /resolveDemoLinkToken/);
+  assert.match(page, /StudentDemoClient/);
+  assert.match(client, /if \(!ready \|\| !isStaff\) return null/);
+  assert.match(client, /Impersonate Jordan/);
+  assert.match(client, /Copy demo link/);
+  assert.match(client, /enterAs\(ADMIN_ID\)/);
+  assert.match(client, /impersonate\(STUDENT_ID\)/);
+  assert.doesNotMatch(client, /signInWithGoogleAccount/);
+  assert.match(nav, /href:\s*"\/admin\/demo"/);
+  assert.match(nav, /Student demo/);
+});
+
+test("shareable demo link accepts a matching token and rejects without", () => {
+  const env = { DEMO_LINK_TOKEN: "campus-walk-secret-token" };
+  const derivedEnv = { AUTH_SECRET: "dev-only-change-me" };
+
+  assert.equal(resolveDemoLinkToken(env), "campus-walk-secret-token");
+  assert.equal(isValidDemoLinkToken("campus-walk-secret-token", env), true);
+  assert.equal(isValidDemoLinkToken("wrong-token", env), false);
+  assert.equal(isValidDemoLinkToken("", env), false);
+  assert.equal(isValidDemoLinkToken(null, env), false);
+  assert.equal(isValidDemoLinkToken("campus-walk-secret-token", {}), false);
+  assert.equal(
+    demoWalkPath("campus-walk-secret-token"),
+    "/demo?token=campus-walk-secret-token",
+  );
+
+  const derived = resolveDemoLinkToken(derivedEnv);
+  assert.equal(typeof derived, "string");
+  assert.equal(derived.length, 32);
+  assert.equal(isValidDemoLinkToken(derived, derivedEnv), true);
+  assert.equal(isValidDemoLinkToken("campus-walk-secret-token", derivedEnv), false);
+  assert.notEqual(derived, "dev-only-change-me");
+
+  const lib = readSrc("src/lib/demo-link.ts");
+  assert.match(lib, /export function resolveDemoLinkToken/);
+  assert.match(lib, /export function isValidDemoLinkToken/);
+  assert.match(lib, /timingSafeEqual/);
+  assert.match(lib, /DEMO_LINK_TOKEN/);
+  assert.match(lib, /field-school-university:demo-link:/);
+
+  const page = readSrc("src/app/demo/page.tsx");
+  const start = readSrc("src/app/demo/start-jordan-walk.tsx");
+  assert.match(page, /isValidDemoLinkToken/);
+  assert.match(page, /StartJordanWalk/);
+  assert.match(page, /This walk is not on the public catalog/);
+  assert.match(page, /export const dynamic = "force-dynamic"/);
+  assert.match(start, /enterAs\(STUDENT_ID\)/);
+  assert.match(start, /\/c\/grok-bot/);
+  assert.doesNotMatch(start, /signInWithGoogleAccount/);
+
+  const authMd = readSrc("AUTH.md");
+  assert.match(authMd, /DEMO_LINK_TOKEN/);
+  assert.match(authMd, /\/demo\?token=/);
+  assert.match(authMd, /Copy demo link/);
+  assert.match(readSrc("DEPLOY.md"), /DEMO_LINK_TOKEN/);
 });

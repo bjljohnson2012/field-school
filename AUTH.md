@@ -8,7 +8,8 @@ This campus uses [Auth.js / NextAuth v5](https://authjs.dev) for Google, X (Twit
 |-----|-----------------|---------------|
 | Staff / admin | Google or X, and the email must be on `STAFF_ADMIN_EMAILS` (dean email by default) | `/admin*` |
 | Student / member | Google, X, or email + password (any email) | Dashboard and campus. Forever-free beta. No paywall. |
-| Guest / Jordan demo | Local browser paths on `/login` and `/signup` | Walk the catalog. Never admin. |
+| Guest | Local browser paths on `/login` and `/signup` | Walk the catalog. Never admin. |
+| Jordan student demo | Staff `/admin/demo`, or a token link on `/demo` | Walk as Jordan Hale. Never admin. Login never shows this button. |
 
 Random Google or X users are **never** auto-elevated to admin. A staff email used with email + password is still a member. Credentials cannot open `/admin`.
 
@@ -27,6 +28,7 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | `AUTH_TWITTER_ID` or `X_CLIENT_ID` | X sign-in | X developer app OAuth 2.0 client ID. |
 | `AUTH_TWITTER_SECRET` or `X_CLIENT_SECRET` | X sign-in | Paired client secret. |
 | `STAFF_ADMIN_EMAILS` | Optional | Comma-separated staff allowlist. Defaults to the dean email baked into `src/lib/campus.ts`. |
+| `DEMO_LINK_TOKEN` | Optional | Secret for the shareable Jordan walk. `/demo?token=` must match this value. If unset, the campus derives a stable token from `AUTH_SECRET`. Staff copy the full URL from `/admin/demo` (“Copy demo link”). Do not put this button on `/login`. |
 | `MEMBER_STORE_PATH` | Optional | JSON file for member password hashes and access requests. Defaults to `.data/campus-store.json` in development and `/app/data/campus-store.json` in production. |
 | `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests are emailed. Defaults to `bjljohnson2012@gmail.com`. |
 | `SMTP_HOST` | Optional email notify | If unset, requests are still stored; email is skipped. |
@@ -52,7 +54,7 @@ The `/opt/field-school` source wipe in `deploy/deploy.sh` does **not** remove Do
 If `AUTH_SECRET` is missing:
 
 - Auth.js stays inactive. Email/password and OAuth do not mint sessions.
-- Login and signup still offer guest / Jordan / local name labels.
+- Login and signup still offer guest and local name labels. The Jordan walk is not on those pages.
 - **No one is elevated to admin** via OAuth or localStorage shortcuts.
 - `/admin*` remains hard-gated (middleware proxy redirects unsigned browsers to `/login`).
 
@@ -67,6 +69,24 @@ If OAuth credentials are missing but `AUTH_SECRET` is set, email + password stil
 5. The admin proxy allows `/admin*` only when a valid Auth.js **staff** session exists (when OAuth is configured). Members are redirected to Request Access.
 
 Local **Keep a dashboard** and **Continue as guest** paths are unchanged and cannot attach the dean seat.
+
+## Shareable Jordan walk
+
+The public `/login` and `/signup` pages do **not** show “Enter as Jordan · student demo.” Staff still run that walk from `/admin/demo` (same staff gate as every `/admin*` path).
+
+To send the walk to someone without putting a button on login:
+
+1. Set `DEMO_LINK_TOKEN` to a long random string in the host env (recommended), **or** leave it unset and let the campus derive a token from `AUTH_SECRET`.
+2. Sign in as staff, open `/admin/demo`, and use **Copy demo link**.
+3. That copies `{AUTH_URL}/demo?token=…`. The token must match. `/demo` without a token, or with the wrong token, stays closed.
+
+Example (after you set the env):
+
+```
+https://university.benjohnson.ai/demo?token=YOUR_DEMO_LINK_TOKEN
+```
+
+Random visitors do not see this URL on the homepage. It is not a staff login and never grants `/admin`.
 
 Failed OAuth or Auth.js errors use `pages.error` → `/signup?error=…` (never a bare Auth.js error page).
 
@@ -96,6 +116,7 @@ AUTH_TWITTER_ID=
 AUTH_TWITTER_SECRET=
 MEMBER_STORE_PATH=.data/campus-store.json
 ACCESS_REQUEST_NOTIFY_EMAIL=bjljohnson2012@gmail.com
+# DEMO_LINK_TOKEN=  # optional; staff copy /demo?token=… from /admin/demo
 # SMTP_HOST=
 ```
 
