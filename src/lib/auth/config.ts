@@ -59,7 +59,8 @@ export function buildAuthConfig(): NextAuthConfig {
           if (token.email) session.user.email = token.email;
           if (token.name) session.user.name = token.name as string;
           session.user.role = token.role === "admin" ? "admin" : "member";
-          session.user.provider = token.provider;
+          session.user.provider =
+            typeof token.provider === "string" ? token.provider : undefined;
         }
         return session;
       },

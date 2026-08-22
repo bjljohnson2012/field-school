@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import type { Account, Profile, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { inactiveAuthConfig, resolveAuthConfig } from "@/lib/auth/config";
 import { authCanMintSessions } from "@/lib/auth/env";
@@ -10,7 +11,11 @@ function buildNodeAuthConfig() {
     ...base,
     callbacks: {
       ...base.callbacks,
-      async signIn(args) {
+      async signIn(args: {
+        user: User;
+        account?: Account | null;
+        profile?: Profile;
+      }) {
         const allowed = edgeSignIn ? await edgeSignIn(args) : true;
         if (!allowed) return false;
         if (args.account?.provider && args.account.provider !== "credentials") {
