@@ -465,7 +465,7 @@ test("staff can still reach the admin student demo", () => {
   assert.match(client, /enterAs\(ADMIN_ID\)/);
   assert.match(client, /impersonate\(STUDENT_ID\)/);
   assert.doesNotMatch(client, /signInWithGoogleAccount/);
-  assert.match(nav, /href="\/admin\/demo"/);
+  assert.match(nav, /href:\s*"\/admin\/demo"/);
   assert.match(nav, /Student demo/);
 });
 

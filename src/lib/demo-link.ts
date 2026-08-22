@@ -3,11 +3,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 export const DEMO_WALK_PATH = "/demo";
 export const DEMO_TOKEN_QUERY = "token";
 
-type DemoEnv = {
-  DEMO_LINK_TOKEN?: string;
-  AUTH_SECRET?: string;
-  NEXTAUTH_SECRET?: string;
-};
+type DemoEnv = Record<string, string | undefined>;
 
 /** Secret that unlocks `/demo?token=`. Prefer `DEMO_LINK_TOKEN`. */
 export function resolveDemoLinkToken(env: DemoEnv = process.env): string | null {
