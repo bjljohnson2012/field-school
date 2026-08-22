@@ -7,7 +7,7 @@ import {
   signedOutAdminAccess,
 } from "@/lib/admin-gate";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (!isAdminRoute(pathname)) return NextResponse.next();
 

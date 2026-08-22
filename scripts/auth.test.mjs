@@ -78,11 +78,12 @@ test("signed-out admin access is blocked without a staff cookie", () => {
   assert.equal(isAdminRoute("/login"), false);
 });
 
-test("middleware and admin layout redirect guests away from staff HTML", () => {
-  const middleware = readSrc("src/middleware.ts");
-  assert.match(middleware, /signedOutAdminAccess/);
-  assert.match(middleware, /loginRedirectForAdmin/);
-  assert.match(middleware, /matcher:\s*\[\s*"\/admin"/);
+test("proxy and admin layout redirect guests away from staff HTML", () => {
+  const proxy = readSrc("src/proxy.ts");
+  assert.match(proxy, /signedOutAdminAccess/);
+  assert.match(proxy, /loginRedirectForAdmin/);
+  assert.match(proxy, /matcher:\s*\[\s*"\/admin"/);
+  assert.match(proxy, /export function proxy/);
 
   const layout = readSrc("src/app/admin/layout.tsx");
   assert.match(layout, /loginRedirectForAdmin/);

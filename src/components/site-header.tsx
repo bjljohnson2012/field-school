@@ -20,7 +20,16 @@ export function SiteHeader() {
     { href: inboxHref, label: "Inbox", compact: true, badge: inboxCount },
     { href: "/tools", label: "Tools", compact: true },
     { href: "/about", label: "About", compact: false },
-    { href: "/admin", label: "Admin", compact: true, badge: isAdmin ? unreadNotices : 0 },
+    ...(isStaff
+      ? [
+          {
+            href: "/admin",
+            label: "Admin",
+            compact: true,
+            badge: isAdmin ? unreadNotices : 0,
+          },
+        ]
+      : []),
   ];
 
   return (

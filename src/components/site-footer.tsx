@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StaffFooterLinks } from "@/components/staff-footer-links";
 import { COMPANY_NAME, UNI_NAME } from "@/lib/brand";
 
 export function SiteFooter() {
@@ -22,12 +23,7 @@ export function SiteFooter() {
           <Link href="/c/grok-bot" className="hover:text-foreground">
             Catalog
           </Link>
-          <Link href="/admin" className="hover:text-foreground">
-            Admin
-          </Link>
-          <Link href="/admin/demo" className="hover:text-foreground">
-            Student demo
-          </Link>
+          <StaffFooterLinks />
         </div>
       </div>
     </footer>
