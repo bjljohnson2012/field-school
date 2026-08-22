@@ -11,9 +11,8 @@ import { Label } from "@/components/ui/label";
 import { usePortal } from "@/hooks/use-portal";
 import { isAdminRoute } from "@/lib/admin-gate";
 import type { OAuthProviderStatus } from "@/lib/auth/env";
-import { STUDENT_ID } from "@/lib/campus";
 import { authErrorMessage, isStaffSession } from "@/lib/members/policy";
-import { continueAsGuest, enterAs, signInLocal } from "@/lib/portal";
+import { continueAsGuest, signInLocal } from "@/lib/portal";
 
 type Props = {
   oauth: OAuthProviderStatus;
@@ -131,16 +130,6 @@ export function LoginForm({ oauth }: Props) {
         <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
           Other ways in
         </p>
-        <button
-          type="button"
-          className="h-12 w-full rounded-xl border border-border px-5 text-sm"
-          onClick={() => {
-            enterAs(STUDENT_ID);
-            router.push("/c/grok-bot");
-          }}
-        >
-          Enter as Jordan · student demo
-        </button>
         <form
           className="space-y-3"
           onSubmit={(e) => {

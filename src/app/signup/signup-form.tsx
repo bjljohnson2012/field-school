@@ -9,9 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { OAuthProviderStatus } from "@/lib/auth/env";
-import { STUDENT_ID } from "@/lib/campus";
 import { authErrorMessage } from "@/lib/members/policy";
-import { continueAsGuest, enterAs } from "@/lib/portal";
+import { continueAsGuest } from "@/lib/portal";
 
 type Props = {
   oauth: OAuthProviderStatus;
@@ -143,16 +142,6 @@ export function SignupForm({ oauth }: Props) {
         <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
           Other ways in
         </p>
-        <button
-          type="button"
-          className="h-12 w-full rounded-xl border border-border px-5 text-sm"
-          onClick={() => {
-            enterAs(STUDENT_ID);
-            router.push("/c/grok-bot");
-          }}
-        >
-          Enter as Jordan · student demo
-        </button>
         <button
           type="button"
           className="h-12 w-full rounded-xl border border-border text-sm"
