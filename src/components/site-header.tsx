@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOutLocal } from "@/lib/portal";
+import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,16 @@ export function SiteHeader() {
     { href: inboxHref, label: "Inbox", compact: true, badge: inboxCount },
     { href: "/tools", label: "Tools", compact: true },
     { href: "/about", label: "About", compact: false },
-    { href: "/admin", label: "Admin", compact: true, badge: isAdmin ? unreadNotices : 0 },
+    ...(isStaff
+      ? [
+          {
+            href: "/admin",
+            label: "Admin",
+            compact: true,
+            badge: isAdmin ? unreadNotices : 0,
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -80,7 +89,7 @@ export function SiteHeader() {
               </span>
               <button
                 type="button"
-                onClick={() => signOutLocal("/login")}
+                onClick={() => signOutPortal("/login")}
                 className="h-11 text-sm text-muted-foreground hover:text-foreground"
               >
                 Sign out

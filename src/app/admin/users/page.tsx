@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { GoogleSignInButton } from "@/components/google-sign-in-button";
 import { courseTally, impersonate, workspaceFor } from "@/lib/portal";
 import { usePortal } from "@/hooks/use-portal";
 
 export default function UsersPage() {
-  const { users, user, isAdmin, impersonating } = usePortal();
+  const { users, user, isAdmin, impersonating, ready, isStaff } = usePortal();
   const router = useRouter();
+
+  if (!ready || !isStaff) return null;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
@@ -20,12 +21,6 @@ export default function UsersPage() {
         Impersonate to see their portal. Edit to change the name on a
         certificate, the email on the header, or the notes staff keep.
       </p>
-      {!isAdmin ? (
-        <div className="mt-6 max-w-sm">
-          <GoogleSignInButton next="/admin/users" />
-        </div>
-      ) : null}
-
       <ul className="mt-8 grid gap-3">
         {users.map((person) => {
           const ws = workspaceFor(person.id);
