@@ -111,15 +111,11 @@ test("Google button no longer creates dean via localStorage alone", () => {
   assert.match(login, /never grants\s+admin/);
 
   const portal = readSrc("src/lib/portal.ts");
-  const fn = portal.slice(portal.indexOf("export function signInWithGoogleAccount"));
-  assert.match(fn, /return signInLocal\(/);
-  assert.doesNotMatch(
-    fn.slice(0, fn.indexOf("export function signOutLocal")),
-    /role:\s*dean\s*\?\s*"admin"/,
-  );
+  assert.doesNotMatch(portal, /export function signInWithGoogleAccount/);
 
   const ui = [
     "src/app/login/page.tsx",
+    "src/app/page.tsx",
     "src/app/admin/page.tsx",
     "src/app/admin/demo/page.tsx",
     "src/app/admin/users/page.tsx",
@@ -127,12 +123,20 @@ test("Google button no longer creates dean via localStorage alone", () => {
     "src/app/admin/users/[id]/page.tsx",
   ];
   for (const file of ui) {
+    const src = readSrc(file);
     assert.doesNotMatch(
-      readSrc(file),
+      src,
       /signInWithGoogleAccount/,
       `${file} must not call the old Google dean shortcut`,
     );
+    assert.doesNotMatch(src, /Continue with Google/);
   }
+
+  const home = readSrc("src/app/page.tsx");
+  assert.match(home, /Continue as guest/);
+  const gateIdx = home.indexOf("ready && isStaff");
+  const adminIdx = home.indexOf('href="/admin"');
+  assert.ok(gateIdx >= 0 && adminIdx > gateIdx, "home Admin CTA is staff-only");
 });
 
 test("local name/email sign-in cannot attach the dean seat", () => {

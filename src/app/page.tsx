@@ -13,7 +13,7 @@ const courses = listPublishedCourses();
 
 export default function Campus() {
   const router = useRouter();
-  const { guest } = usePortal();
+  const { guest, ready, isStaff } = usePortal();
 
   return (
     <main>
@@ -49,18 +49,22 @@ export default function Campus() {
               >
                 Continue as guest
               </button>
-              <Link
-                href="/admin"
-                className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-5 text-sm"
-              >
-                Admin
-              </Link>
-              <Link
-                href="/admin/demo"
-                className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-5 text-sm"
-              >
-                Student demo
-              </Link>
+              {ready && isStaff ? (
+                <>
+                  <Link
+                    href="/admin"
+                    className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-5 text-sm"
+                  >
+                    Admin
+                  </Link>
+                  <Link
+                    href="/admin/demo"
+                    className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-5 text-sm"
+                  >
+                    Student demo
+                  </Link>
+                </>
+              ) : null}
             </div>
           </div>
           <CampusLadder />

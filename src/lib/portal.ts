@@ -456,17 +456,6 @@ export function signInLocal(name: string, email?: string) {
   return next;
 }
 
-export function signInWithGoogleAccount(input: {
-  email: string;
-  name?: string;
-}) {
-  // Google SSO is not wired. A client-supplied email must never mint the dean seat.
-  return signInLocal(
-    input.name?.trim() || input.email.split("@")[0] || "Field operator",
-    input.email,
-  );
-}
-
 export function signOutLocal(redirectTo = "/login") {
   const state = read();
   write({ ...state, activeUserId: null, impersonatorId: null });
