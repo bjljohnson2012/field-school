@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { AuthSessionProvider } from "@/components/auth-session-provider";
 import { ImpersonationBanner } from "@/components/impersonation-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -46,10 +47,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeScript />
       </head>
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <SiteHeader />
-        <ImpersonationBanner />
-        <div className="flex-1">{children}</div>
-        <SiteFooter />
+        <AuthSessionProvider>
+          <SiteHeader />
+          <ImpersonationBanner />
+          <div className="flex-1">{children}</div>
+          <SiteFooter />
+        </AuthSessionProvider>
       </body>
     </html>
   );

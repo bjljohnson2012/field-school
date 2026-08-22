@@ -1,97 +1,18 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { usePortal } from "@/hooks/use-portal";
-import { isAdminRoute } from "@/lib/admin-gate";
-import { STUDENT_ID } from "@/lib/campus";
-import { continueAsGuest, enterAs, signInLocal } from "@/lib/portal";
+import { Suspense } from "react";
+import { getOAuthProviderStatus } from "@/lib/auth/env";
+import { LoginForm } from "./login-form";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const { ready, isStaff } = usePortal();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    if (!ready || !isStaff) return;
-    const next = new URLSearchParams(window.location.search).get("next") || "";
-    if (isAdminRoute(next)) router.replace(next);
-  }, [ready, isStaff, router]);
-
+  const oauth = getOAuthProviderStatus();
   return (
-    <main className="mx-auto max-w-md px-4 py-16">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Portal
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Sign in</h1>
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Students can label this browser or keep walking as a guest. Staff Google
-        sign-in is not available on this campus yet — this form never grants
-        admin.
-      </p>
-
-      <div className="mt-8 grid gap-3">
-        <button
-          type="button"
-          className="h-12 rounded-xl border border-border px-5 text-sm"
-          onClick={() => {
-            enterAs(STUDENT_ID);
-            router.push("/c/grok-bot");
-          }}
-        >
-          Enter as Jordan · student demo
-        </button>
-      </div>
-
-      <form
-        className="mt-10 space-y-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          signInLocal(name, email);
-          router.push("/dashboard");
-        }}
-      >
-        <div className="space-y-2">
-          <Label htmlFor="name">Name on the certificate</Label>
-          <Input
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
-            required
-            className="h-11 rounded-xl"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="email">Email (optional)</Label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@work.com"
-            className="h-11 rounded-xl"
-          />
-        </div>
-        <Button className="h-12 w-full rounded-xl" type="submit">
-          Keep a dashboard
-        </Button>
-      </form>
-
-      <button
-        type="button"
-        className="mt-4 h-12 w-full rounded-xl border border-border text-sm"
-        onClick={() => {
-          continueAsGuest();
-          router.push("/c/grok-bot");
-        }}
-      >
-        Continue as guest
-      </button>
-    </main>
+    <Suspense
+      fallback={
+        <main className="mx-auto max-w-md px-4 py-16">
+          <p className="text-sm text-muted-foreground">Loading sign in…</p>
+        </main>
+      }
+    >
+      <LoginForm oauth={oauth} />
+    </Suspense>
   );
 }
