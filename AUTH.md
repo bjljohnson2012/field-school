@@ -34,6 +34,13 @@ If `AUTH_SECRET` or provider credentials are missing:
 
 Local **Keep a dashboard** and **Continue as guest** paths are unchanged and cannot attach the dean seat.
 
+## Google Cloud consent screen
+
+Public policy URLs (must stay reachable without a login):
+
+- Privacy Policy: `https://university.benjohnson.ai/privacy`
+- Terms of Service: `https://university.benjohnson.ai/terms`
+
 ## Callback URLs
 
 Register these redirect URIs with each provider (replace origin with yours):

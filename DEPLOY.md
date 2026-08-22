@@ -33,6 +33,8 @@ Check:
 
 - `https://university.benjohnson.ai` — kicker **Field School University**, cream/blue campus
 - `/about` — company vs portal
+- `/privacy` — public Privacy Policy (Google OAuth consent)
+- `/terms` — public Terms of Service (Google OAuth consent)
 - `/tools` — skill + intelligence live
 - `/admin` — demo, users, notifications, add tools
 - `/c/grok-bot` — ladder
