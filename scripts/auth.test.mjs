@@ -87,24 +87,26 @@ test("privacy and terms pages are public, real policies linked from chrome", () 
   const proxy = readSrc("src/proxy.ts");
 
   assert.match(privacy, /title:\s*"Privacy Policy"/);
-  assert.match(privacy, /Last updated 2026-08-22/);
+  assert.match(privacy, /LAST_UPDATED = "2026-08-22"/);
+  assert.match(privacy, /Last updated \{LAST_UPDATED\}/);
   assert.match(privacy, /do not sell personal data/i);
   assert.match(privacy, /localStorage/);
   assert.match(privacy, /under 13/);
-  assert.match(privacy, /bjljohnson2012@gmail.com/);
+  assert.match(privacy, /DEAN_EMAIL/);
   assert.match(privacy, /COMPANY_NAME/);
   assert.match(privacy, /UNI_NAME/);
-  assert.match(privacy, /staff allowlist/);
+  assert.match(privacy, /staff[\s\S]+allowlist/);
   assert.doesNotMatch(privacy, /lorem ipsum/i);
 
   assert.match(terms, /title:\s*"Terms of Service"/);
-  assert.match(terms, /Last updated 2026-08-22/);
+  assert.match(terms, /LAST_UPDATED = "2026-08-22"/);
+  assert.match(terms, /Last updated \{LAST_UPDATED\}/);
   assert.match(terms, /Educational and demo nature/);
   assert.match(terms, /staff allowlist/);
   assert.match(terms, /Disclaimer of warranties/);
   assert.match(terms, /Limitation of liability/);
   assert.match(terms, /Ohio/);
-  assert.match(terms, /bjljohnson2012@gmail.com/);
+  assert.match(terms, /DEAN_EMAIL/);
   assert.doesNotMatch(terms, /lorem ipsum/i);
 
   assert.match(footer, /href="\/privacy"/);
