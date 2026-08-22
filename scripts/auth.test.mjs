@@ -82,8 +82,9 @@ test("proxy and admin layout redirect guests away from staff HTML", () => {
   const proxy = readSrc("src/proxy.ts");
   assert.match(proxy, /signedOutAdminAccess/);
   assert.match(proxy, /loginRedirectForAdmin/);
+  assert.match(proxy, /authIsConfigured/);
   assert.match(proxy, /matcher:\s*\[\s*"\/admin"/);
-  assert.match(proxy, /export function proxy/);
+  assert.match(proxy, /export async function proxy/);
 
   const layout = readSrc("src/app/admin/layout.tsx");
   assert.match(layout, /loginRedirectForAdmin/);
@@ -100,21 +101,26 @@ test("proxy and admin layout redirect guests away from staff HTML", () => {
   assert.doesNotMatch(overview, /signInWithGoogleAccount/);
 });
 
-test("Google button no longer creates dean via localStorage alone", () => {
-  const login = readSrc("src/app/login/page.tsx");
-  assert.doesNotMatch(login, /Continue with Google/);
+test("OAuth scaffolding exists but fake localStorage dean shortcut does not", () => {
+  const login = readSrc("src/app/login/login-form.tsx");
+  assert.match(login, /OAuthSignInButtons/);
+  assert.match(login, /Continue as guest/);
+  assert.match(login, /signInLocal/);
+  assert.match(login, /never grants admin/);
   assert.doesNotMatch(login, /GoogleSignInButton/);
   assert.doesNotMatch(login, /signInWithGoogleAccount/);
   assert.doesNotMatch(login, /DEAN_EMAIL/);
-  assert.match(login, /Continue as guest/);
-  assert.match(login, /signInLocal/);
-  assert.match(login, /never grants\s+admin/);
 
   const portal = readSrc("src/lib/portal.ts");
   assert.doesNotMatch(portal, /export function signInWithGoogleAccount/);
 
+  const bridge = readSrc("src/lib/auth/portal-bridge.ts");
+  assert.match(bridge, /activateStaffFromOAuth/);
+  assert.match(bridge, /isStaffEmail/);
+  assert.doesNotMatch(bridge, /signInWithGoogleAccount/);
+
   const ui = [
-    "src/app/login/page.tsx",
+    "src/app/login/login-form.tsx",
     "src/app/page.tsx",
     "src/app/admin/page.tsx",
     "src/app/admin/demo/page.tsx",
@@ -129,7 +135,7 @@ test("Google button no longer creates dean via localStorage alone", () => {
       /signInWithGoogleAccount/,
       `${file} must not call the old Google dean shortcut`,
     );
-    assert.doesNotMatch(src, /Continue with Google/);
+    assert.doesNotMatch(src, /GoogleSignInButton/);
   }
 
   const home = readSrc("src/app/page.tsx");
@@ -137,6 +143,20 @@ test("Google button no longer creates dean via localStorage alone", () => {
   const gateIdx = home.indexOf("ready && isStaff");
   const adminIdx = home.indexOf('href="/admin"');
   assert.ok(gateIdx >= 0 && adminIdx > gateIdx, "home Admin CTA is staff-only");
+});
+
+test("Auth.js wiring is present and env-gated", () => {
+  assert.ok(readSrc("AUTH.md").includes("GOOGLE_CLIENT_ID"));
+  assert.ok(readSrc("AUTH.md").includes("AUTH_SECRET"));
+  assert.match(readSrc("src/auth.ts"), /NextAuth/);
+  assert.match(readSrc("src/lib/auth/env.ts"), /authIsConfigured/);
+  assert.match(readSrc("src/lib/auth/config.ts"), /buildAuthConfig/);
+  assert.match(readSrc("src/components/oauth-sign-in-buttons.tsx"), /oauth\.configured/);
+
+  const oauthButtons = readSrc("src/components/oauth-sign-in-buttons.tsx");
+  assert.match(oauthButtons, /signIn\("google"/);
+  assert.match(oauthButtons, /signIn\("twitter"/);
+  assert.match(oauthButtons, /not configured on this campus yet/);
 });
 
 test("local name/email sign-in cannot attach the dean seat", () => {
