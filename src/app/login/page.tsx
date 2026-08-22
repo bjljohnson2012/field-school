@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { getOAuthProviderStatus } from "@/lib/auth/env";
 import { LoginForm } from "./login-form";
 
+export const dynamic = "force-dynamic";
+
 export default function LoginPage() {
   const oauth = getOAuthProviderStatus();
   return (
