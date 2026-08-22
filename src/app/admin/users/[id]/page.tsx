@@ -8,14 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { Role } from "@/lib/campus";
-import { GoogleSignInButton } from "@/components/google-sign-in-button";
 import { courseTally, impersonate, updateUser, workspaceFor } from "@/lib/portal";
 import { usePortal } from "@/hooks/use-portal";
 import { formatDay } from "@/lib/utils";
 
 export default function EditUserPage() {
   const { id } = useParams<{ id: string }>();
-  const { users, isAdmin, ready } = usePortal();
+  const { users, isAdmin, isStaff, ready } = usePortal();
   const person = users.find((u) => u.id === id);
   const router = useRouter();
   const [saved, setSaved] = useState(false);
@@ -35,6 +34,8 @@ export default function EditUserPage() {
     setNotes(person.notes);
     setSaved(false);
   }
+
+  if (ready && !isStaff) return null;
 
   if (ready && !person) {
     return (
@@ -62,12 +63,6 @@ export default function EditUserPage() {
         Changes apply to this campus record — header, certificate name, and
         staff notes.
       </p>
-      {!isAdmin ? (
-        <div className="mt-6 max-w-sm">
-          <GoogleSignInButton next={`/admin/users/${id}`} />
-        </div>
-      ) : null}
-
       <form
         className="mt-8 space-y-4"
         onSubmit={(e) => {

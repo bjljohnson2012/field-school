@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
+import { usePortal } from "@/hooks/use-portal";
 import { assessmentTools } from "@/lib/tools/registry";
 
-export const metadata: Metadata = {
-  title: "Add tools",
-};
-
 export default function AdminToolsPage() {
+  const { ready, isStaff } = usePortal();
+
+  if (!ready || !isStaff) return null;
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { usePortal } from "@/hooks/use-portal";
-import { GoogleSignInButton } from "@/components/google-sign-in-button";
 import { resetDemo } from "@/lib/portal";
 
 const areas = [
@@ -35,7 +34,9 @@ const areas = [
 ];
 
 export default function AdminPage() {
-  const { user, isAdmin, unreadNotices, users, ready } = usePortal();
+  const { isStaff, unreadNotices, users, ready } = usePortal();
+
+  if (!ready || !isStaff) return null;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
@@ -47,18 +48,6 @@ export default function AdminPage() {
         Every staff job lives under this nav: demo the student path, read
         feedback, edit people, and add tools. Nothing here is a scavenger hunt.
       </p>
-
-      {ready && !isAdmin ? (
-        <div className="mt-6 rounded-xl border border-border bg-card px-5 py-5">
-          <p className="text-sm text-muted-foreground">
-            You are {user?.name ?? "signed out"}. Sign in with the dean Google
-            account to impersonate and edit users.
-          </p>
-          <div className="mt-4 max-w-sm">
-            <GoogleSignInButton next="/admin" />
-          </div>
-        </div>
-      ) : null}
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {areas.map((area) => (

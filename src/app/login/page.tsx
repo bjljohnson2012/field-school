@@ -1,18 +1,26 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { GoogleSignInButton } from "@/components/google-sign-in-button";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DEAN_EMAIL, STUDENT_ID } from "@/lib/campus";
+import { usePortal } from "@/hooks/use-portal";
+import { isAdminRoute } from "@/lib/admin-gate";
+import { STUDENT_ID } from "@/lib/campus";
 import { continueAsGuest, enterAs, signInLocal } from "@/lib/portal";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { ready, isStaff } = usePortal();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    if (!ready || !isStaff) return;
+    const next = new URLSearchParams(window.location.search).get("next") || "";
+    if (isAdminRoute(next)) router.replace(next);
+  }, [ready, isStaff, router]);
 
   return (
     <main className="mx-auto max-w-md px-4 py-16">
@@ -21,13 +29,12 @@ export default function LoginPage() {
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">Sign in</h1>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Staff: continue with Google as{" "}
-        <span className="text-foreground">{DEAN_EMAIL}</span>. Students can
-        label this browser or keep walking as a guest.
+        Students can label this browser or keep walking as a guest. Staff Google
+        sign-in is not available on this campus yet — this form never grants
+        admin.
       </p>
 
       <div className="mt-8 grid gap-3">
-        <GoogleSignInButton next="/admin" />
         <button
           type="button"
           className="h-12 rounded-xl border border-border px-5 text-sm"

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { GoogleSignInButton } from "@/components/google-sign-in-button";
 import {
   markAllNoticesRead,
   markNoticeRead,
@@ -10,7 +9,9 @@ import { usePortal } from "@/hooks/use-portal";
 import { formatDay } from "@/lib/utils";
 
 export default function NotificationsPage() {
-  const { notices, unreadNotices, users, isAdmin, feedback } = usePortal();
+  const { notices, unreadNotices, users, isStaff, feedback, ready } = usePortal();
+
+  if (!ready || !isStaff) return null;
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
@@ -24,12 +25,6 @@ export default function NotificationsPage() {
         Feedback and messages from students. The badge on Admin is this list’s
         unread count.
       </p>
-      {!isAdmin ? (
-        <div className="mt-6 max-w-sm">
-          <GoogleSignInButton next="/admin/notifications" />
-        </div>
-      ) : null}
-
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <p className="text-sm text-muted-foreground">
           {unreadNotices} unread · {feedback.length} notes on file

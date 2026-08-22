@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { DEAN_EMAIL, DEAN_NAME, STUDENT_ID } from "@/lib/campus";
-import { impersonate, signInWithGoogleAccount, stopImpersonating } from "@/lib/portal";
+import { ADMIN_ID, STUDENT_ID } from "@/lib/campus";
+import { enterAs, impersonate, stopImpersonating } from "@/lib/portal";
 import { usePortal } from "@/hooks/use-portal";
 
 export default function StudentDemoPage() {
   const router = useRouter();
-  const { user, impersonating, unreadNotices } = usePortal();
+  const { user, impersonating, unreadNotices, ready, isStaff } = usePortal();
   const asJordan = user?.id === STUDENT_ID;
+
+  if (!ready || !isStaff) return null;
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
@@ -33,10 +35,7 @@ export default function StudentDemoPage() {
               type="button"
               className="inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
               onClick={() => {
-                signInWithGoogleAccount({
-                  email: DEAN_EMAIL,
-                  name: DEAN_NAME,
-                });
+                enterAs(ADMIN_ID);
                 impersonate(STUDENT_ID);
               }}
             >
@@ -76,12 +75,7 @@ export default function StudentDemoPage() {
               className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm"
               onClick={() => {
                 if (impersonating) stopImpersonating();
-                else {
-                  signInWithGoogleAccount({
-                    email: DEAN_EMAIL,
-                    name: DEAN_NAME,
-                  });
-                }
+                else enterAs(ADMIN_ID);
                 router.push("/admin/notifications");
               }}
             >

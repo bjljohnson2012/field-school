@@ -1,3 +1,8 @@
+import {
+  adminGateCookieWrite,
+  canReuseUserForLocalSignIn,
+  sanitizeLocalSignInEmail,
+} from "@/lib/admin-gate";
 import { PORTAL_KEY } from "@/lib/brand";
 import {
   ADMIN_ID,
@@ -418,9 +423,9 @@ export function continueAsGuest() {
 export function signInLocal(name: string, email?: string) {
   const state = read();
   const trimmed = name.trim() || "Field operator";
-  const mail = email?.trim() || "";
+  const mail = sanitizeLocalSignInEmail(email);
   const existing = mail
-    ? state.users.find((u) => u.email && u.email.toLowerCase() === mail.toLowerCase())
+    ? state.users.find((u) => canReuseUserForLocalSignIn(u, mail))
     : null;
   if (existing) {
     write({ ...state, activeUserId: existing.id, impersonatorId: null });
@@ -455,49 +460,17 @@ export function signInWithGoogleAccount(input: {
   email: string;
   name?: string;
 }) {
-  let state = ensureDean(read());
-  const mail = input.email.trim().toLowerCase();
-  if (!mail) return state;
-  const dean = isDeanEmail(mail);
-  let user = state.users.find((u) => u.email.trim().toLowerCase() === mail);
-  if (!user) {
-    user = {
-      id: dean ? ADMIN_ID : newId("user"),
-      name:
-        input.name?.trim() ||
-        (dean ? DEAN_NAME : mail.split("@")[0] || "Student"),
-      email: mail,
-      role: dean ? "admin" : "student",
-      title: dean ? "Campus admin" : "Student",
-      notes: dean ? "Signed in with Google." : "",
-      createdAt: new Date().toISOString(),
-    };
-    state = {
-      ...state,
-      users: dean
-        ? [user, ...state.users.filter((u) => u.id !== ADMIN_ID)]
-        : [...state.users, user],
-      workspaces: {
-        ...state.workspaces,
-        [user.id]: state.workspaces[user.id] ?? emptyWorkspace(),
-      },
-    };
-  } else if (dean && user.role !== "admin") {
-    const id = user.id;
-    state = {
-      ...state,
-      users: state.users.map((u) =>
-        u.id === id ? { ...u, role: "admin", name: input.name?.trim() || u.name } : u,
-      ),
-    };
-  }
-  write({ ...state, activeUserId: user.id, impersonatorId: null });
-  return read();
+  // Google SSO is not wired. A client-supplied email must never mint the dean seat.
+  return signInLocal(
+    input.name?.trim() || input.email.split("@")[0] || "Field operator",
+    input.email,
+  );
 }
 
 export function signOutLocal(redirectTo = "/login") {
   const state = read();
   write({ ...state, activeUserId: null, impersonatorId: null });
+  adminGateCookieWrite(false);
   if (typeof window !== "undefined" && redirectTo) {
     window.location.assign(redirectTo);
   }

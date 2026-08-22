@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
+import { usePortal } from "@/hooks/use-portal";
 import { listPublishedCourses } from "@/lib/course/catalog";
 import { sharePages } from "@/lib/share";
 
-export const metadata: Metadata = {
-  title: "Catalog",
-};
-
 export default function AdminCatalogPage() {
+  const { ready, isStaff } = usePortal();
   const courses = listPublishedCourses();
+
+  if (!ready || !isStaff) return null;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { adminGateCookieWrite } from "@/lib/admin-gate";
 import {
   activeUser,
   activeWorkspace,
@@ -19,7 +20,11 @@ export function usePortal() {
   const [state, setState] = useState<PortalState | null>(null);
 
   useEffect(() => {
-    const sync = () => setState(loadPortal());
+    const sync = () => {
+      const next = loadPortal();
+      setState(next);
+      adminGateCookieWrite(isAdminView(next));
+    };
     sync();
     return subscribePortal(sync);
   }, []);
