@@ -16,6 +16,8 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | `AUTH_TWITTER_SECRET` or `X_CLIENT_SECRET` | X staff sign-in | Paired client secret. |
 | `STAFF_ADMIN_EMAILS` | Optional | Comma-separated allowlist. Defaults to the dean email baked into `src/lib/campus.ts`. |
 
+`/login` is `force-dynamic` so production reads host OAuth env on each request (static prerender would hide Google/X).
+
 ## Inert without configuration
 
 If `AUTH_SECRET` or provider credentials are missing:

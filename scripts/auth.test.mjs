@@ -142,6 +142,10 @@ test("proxy and admin layout redirect guests away from staff HTML", () => {
 });
 
 test("OAuth scaffolding exists but fake localStorage dean shortcut does not", () => {
+  const loginPage = readSrc("src/app/login/page.tsx");
+  assert.match(loginPage, /export const dynamic = "force-dynamic"/);
+  assert.match(loginPage, /getOAuthProviderStatus/);
+
   const login = readSrc("src/app/login/login-form.tsx");
   assert.match(login, /OAuthSignInButtons/);
   assert.match(login, /Continue as guest/);
