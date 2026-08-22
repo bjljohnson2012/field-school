@@ -43,7 +43,7 @@ export default function TermsPage() {
         <Block
           kicker="03"
           title="Accounts"
-          body="Staff admin access requires Auth.js Google (and later X) sign-in with an email on the staff allowlist. Guest progress, local name/email labels, and the Jordan demo stay on this device and never grant admin. There is not yet a full multi-device student account. You are responsible for the browser and accounts you use to reach staff tools."
+          body="Free beta members may join with Google, X, or email and password. That membership does not include staff admin. Staff admin access requires Auth.js Google or X sign-in with an email on the staff allowlist. Guest progress, local name labels, and the Jordan demo stay on this device and never grant admin. You are responsible for the browser and accounts you use to reach staff tools."
         />
         <Block
           kicker="04"
@@ -68,7 +68,7 @@ export default function TermsPage() {
         <Block
           kicker="08"
           title="Changes"
-          body="We may update these terms as the campus grows (for example when multi-device accounts or additional sign-in providers ship). The last-updated date at the top will change. Continued use after a change means you accept the new terms."
+          body="We may update these terms as the campus grows (for example when paid invoices or synced course progress ship). The last-updated date at the top will change. Continued use after a change means you accept the new terms."
         />
         <Block
           kicker="09"

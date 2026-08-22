@@ -1,23 +1,28 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
   ADMIN_GATE_COOKIE,
   isAdminRoute,
   loginRedirectForAdmin,
   signedOutAdminAccess,
 } from "@/lib/admin-gate";
+import { edgeAuth } from "@/lib/auth/edge-auth";
 import { authIsConfigured } from "@/lib/auth/env";
-import { isStaffEmail } from "@/lib/auth/staff";
+import { isStaffSession } from "@/lib/members/policy";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (!isAdminRoute(pathname)) return NextResponse.next();
 
   if (authIsConfigured()) {
-    const session = await auth();
-    if (session?.user?.email && isStaffEmail(session.user.email)) {
+    const session = await edgeAuth();
+    if (isStaffSession(session)) {
       return NextResponse.next();
+    }
+    if (session?.user) {
+      const access = new URL("/request-access", request.url);
+      access.searchParams.set("from", "admin");
+      return NextResponse.redirect(access);
     }
     return NextResponse.redirect(
       new URL(loginRedirectForAdmin(pathname), request.url),

@@ -8,7 +8,7 @@ export default function OAuthCompletePage() {
     <Suspense
       fallback={
         <main className="mx-auto max-w-md px-4 py-16">
-          <p className="text-sm text-muted-foreground">Finishing staff sign-in…</p>
+          <p className="text-sm text-muted-foreground">Finishing sign-in…</p>
         </main>
       }
     >

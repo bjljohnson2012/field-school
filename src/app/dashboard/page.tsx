@@ -19,8 +19,8 @@ export default function DashboardPage() {
       <h1 className="mt-2 font-display text-4xl tracking-tight">Dashboard</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">
         {session
-          ? `Signed in as ${session.name}${session.role === "guest" ? " (guest)" : session.role === "admin" ? " (admin)" : ""}${impersonating ? " — impersonating" : ""}. Courses and tools stay on this portal.`
-          : "Continue as a guest or sign in to label the portal. Progress still saves on this device."}
+          ? `Signed in as ${session.name}${session.role === "guest" ? " (guest)" : session.role === "admin" ? " (admin)" : " (free beta)"}${impersonating ? " — impersonating" : ""}. Courses and tools stay on this portal.`
+          : "Join the free beta, continue as a guest, or sign in. Progress still saves on this device."}
       </p>
       {isStaff && !impersonating ? (
         <Link
@@ -33,8 +33,14 @@ export default function DashboardPage() {
       {!session ? (
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
-            href="/login"
+            href="/signup"
             className="inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+          >
+            Join free beta
+          </Link>
+          <Link
+            href="/login"
+            className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm"
           >
             Sign in
           </Link>

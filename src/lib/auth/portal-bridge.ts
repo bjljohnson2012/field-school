@@ -2,7 +2,7 @@ import { ADMIN_ID, DEAN_NAME, isDeanEmail } from "@/lib/campus";
 import { adminGateCookieWrite } from "@/lib/admin-gate";
 import { PORTAL_KEY } from "@/lib/brand";
 import { isStaffEmail } from "@/lib/auth/staff";
-import { loadPortal, type PortalState } from "@/lib/portal";
+import { loadPortal, signInLocal, type PortalState } from "@/lib/portal";
 
 /**
  * Attach the dean seat after a verified OAuth session (never from a bare button).
@@ -36,5 +36,18 @@ export function activateStaffFromOAuth(
   localStorage.setItem(PORTAL_KEY, JSON.stringify(next));
   window.dispatchEvent(new Event("fsu-portal"));
   adminGateCookieWrite(true);
+  return true;
+}
+
+/**
+ * Label the local portal as a student/member. Never attaches the dean seat.
+ */
+export function activateMemberFromAuth(
+  email?: string | null,
+  name?: string | null,
+): boolean {
+  if (typeof window === "undefined") return false;
+  const display = name?.trim() || email?.trim() || "Field member";
+  signInLocal(display, email ?? undefined);
   return true;
 }

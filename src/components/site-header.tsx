@@ -96,12 +96,20 @@ export function SiteHeader() {
               </button>
             </div>
           ) : (
-            <Link
-              href="/login"
-              className="ml-1 flex h-9 items-center rounded-xl bg-primary px-3 text-sm font-medium text-primary-foreground"
-            >
-              Sign in
-            </Link>
+            <div className="ml-1 flex items-center gap-2">
+              <Link
+                href="/login"
+                className="hidden h-11 items-center text-sm text-muted-foreground hover:text-foreground sm:flex"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="flex h-9 items-center rounded-xl bg-primary px-3 text-sm font-medium text-primary-foreground"
+              >
+                Join free
+              </Link>
+            </div>
           )}
         </nav>
       </div>

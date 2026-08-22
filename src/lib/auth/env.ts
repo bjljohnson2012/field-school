@@ -22,11 +22,16 @@ export function hasTwitterOAuthEnv() {
   return Boolean(id && secret);
 }
 
-/** Any configured OAuth provider plus AUTH_SECRET. */
+/** Any configured OAuth provider plus AUTH_SECRET. Used by the admin proxy. */
 export function authIsConfigured() {
   return (
     hasAuthSecret() && (hasGoogleOAuthEnv() || hasTwitterOAuthEnv())
   );
+}
+
+/** AUTH_SECRET is enough to mint member sessions (credentials and/or OAuth). */
+export function authCanMintSessions() {
+  return hasAuthSecret();
 }
 
 export type OAuthProviderStatus = {

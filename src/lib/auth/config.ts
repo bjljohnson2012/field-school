@@ -2,11 +2,11 @@ import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Twitter from "next-auth/providers/twitter";
 import {
-  authIsConfigured,
+  authCanMintSessions,
   hasGoogleOAuthEnv,
   hasTwitterOAuthEnv,
 } from "@/lib/auth/env";
-import { isStaffEmail } from "@/lib/auth/staff";
+import { roleForAuth } from "@/lib/members/policy";
 
 function buildProviders() {
   const providers: NonNullable<NextAuthConfig["providers"]> = [];
@@ -45,21 +45,32 @@ export function buildAuthConfig(): NextAuthConfig {
     providers: buildProviders(),
     pages: {
       signIn: "/login",
+      error: "/signup",
     },
     callbacks: {
-      signIn({ profile, user }) {
-        const email = profile?.email ?? user.email;
-        return isStaffEmail(email);
+      signIn({ account, profile, user }) {
+        if (account?.provider === "credentials") {
+          return Boolean(user?.email);
+        }
+        return Boolean(user?.id || user?.email || profile?.email);
       },
       session({ session, token }) {
-        if (session.user && token.email) {
-          session.user.email = token.email;
+        if (session.user) {
+          if (token.email) session.user.email = token.email;
+          if (token.name) session.user.name = token.name as string;
+          session.user.role = token.role === "admin" ? "admin" : "member";
+          session.user.provider = token.provider;
         }
         return session;
       },
-      jwt({ token, profile, user }) {
+      jwt({ token, profile, user, account }) {
         const email = profile?.email ?? user?.email;
         if (email) token.email = email;
+        if (user?.name) token.name = user.name;
+        if (account?.provider) token.provider = account.provider;
+        if (account || user) {
+          token.role = roleForAuth(account?.provider, email ?? token.email);
+        }
         return token;
       },
     },
@@ -73,5 +84,5 @@ export const inactiveAuthConfig: NextAuthConfig = {
 };
 
 export function resolveAuthConfig(): NextAuthConfig {
-  return authIsConfigured() ? buildAuthConfig() : inactiveAuthConfig;
+  return authCanMintSessions() ? buildAuthConfig() : inactiveAuthConfig;
 }
