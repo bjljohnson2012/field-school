@@ -77,8 +77,10 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
   const adminPage = readSrc("src/app/admin/forms/page.tsx");
   const nav = readSrc("src/components/admin-nav.tsx");
   const home = readSrc("marketing-site/index.html");
+  const newsletter = readSrc("marketing-site/newsletter.html");
   const tools = readSrc("marketing-site/tools.html");
   const shop = readSrc("marketing-site/shop.html");
+  const pricing = readSrc("marketing-site/pricing.html");
   const js = readSrc("marketing-site/js/forms.js");
 
   assert.match(types, /saturday_note/);
@@ -99,11 +101,17 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
   assert.match(adminPage, /shop waitlist/);
   assert.match(nav, /href:\s*"\/admin\/forms"/);
 
-  assert.match(home, /data-form="saturday_note"/);
-  assert.match(home, /One email each Saturday/);
+  assert.doesNotMatch(home, /data-form="saturday_note"/);
+  assert.match(home, /Join a community dedicated to learning/);
+  assert.match(home, /Join our Newsletter/);
+  assert.match(home, /Enroll/);
   assert.doesNotMatch(home, /mailto:ben@fieldschool.ai/);
+  assert.match(newsletter, /data-form="saturday_note"/);
+  assert.match(newsletter, /One email each Saturday/);
   assert.match(tools, /data-form="topic_request"/);
-  assert.match(tools, /What you get when you join Field School Community/);
+  assert.match(tools, /login\?next=\/tools\/skill/);
+  assert.match(pricing, /\$10/);
+  assert.match(pricing, /\$1,059/);
   assert.match(shop, /data-form="shop_waitlist"/);
   assert.match(js, /portal\.fieldschool\.ai\/api\/forms/);
 });

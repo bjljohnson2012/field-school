@@ -183,6 +183,10 @@ summary:focus-visible {
   padding: 0 0.85rem;
 }
 
+.btn-newsletter {
+  display: none;
+}
+
 .nav-mobile {
   position: static;
 }
@@ -429,6 +433,8 @@ h2.section-title {
 
 .expect-grid article,
 .tool {
+  display: flex;
+  flex-direction: column;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -450,6 +456,12 @@ h2.section-title {
   color: var(--muted-foreground);
   font-size: 0.975rem;
   line-height: 1.55;
+}
+
+.tool .btn {
+  margin-top: 1rem;
+  width: auto;
+  align-self: flex-start;
 }
 
 .tool-kicker {
@@ -654,10 +666,18 @@ h2.section-title {
   color: var(--foreground);
 }
 
+@media (min-width: 720px) {
+  .btn-newsletter { display: inline-flex; }
+}
+
 @media (min-width: 800px) {
   .plan-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: stretch;
+  }
+
+  .plan-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .plan .btn { width: auto; align-self: flex-start; }
@@ -676,6 +696,12 @@ h2.section-title {
     grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 22rem);
     gap: 2.5rem;
     align-items: start;
+  }
+}
+
+@media (min-width: 1100px) {
+  .plan-grid-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 

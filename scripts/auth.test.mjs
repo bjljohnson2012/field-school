@@ -174,7 +174,7 @@ test("OAuth scaffolding exists but fake localStorage dean shortcut does not", ()
   assert.match(login, /Continue as guest/);
   assert.match(login, /signInLocal/);
   assert.match(login, /never grants admin/);
-  assert.match(login, /href="\/signup"/);
+  assert.match(login, /\/signup/);
   assert.match(login, /Join the free beta/);
   assert.match(login, /signIn\("credentials"/);
   assert.doesNotMatch(login, /Enter as Jordan/);
@@ -365,13 +365,16 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.doesNotMatch(signup, /STUDENT_ID/);
   assert.doesNotMatch(signup, /lorem ipsum/i);
 
+  assert.match(pricing, /\$10/);
+  assert.match(pricing, /\$50/);
+  assert.match(pricing, /\$1,059/);
   assert.match(pricing, /\$100/);
   assert.match(pricing, /\$200/);
   assert.match(pricing, /\$1,000/);
-  assert.match(pricing, /Cohort meetings online/);
-  assert.match(pricing, /Cohort meetings in person/);
-  assert.match(pricing, /One-on-one AI \+ business coaching/);
-  assert.match(pricing, /Join free now/);
+  assert.match(pricing, /Online cohort/);
+  assert.match(pricing, /In the room/);
+  assert.match(pricing, /One-on-one hour/);
+  assert.match(pricing, /Start free/);
   assert.match(pricing, /invoiced later/i);
   assert.match(pricing, /no checkout/i);
   assert.doesNotMatch(pricing, /stripe/i);
@@ -403,6 +406,9 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(readSrc("src/app/admin/forms/page.tsx"), /Saturday list/);
   assert.match(readSrc("src/app/admin/forms/page.tsx"), /Topic requests/);
   assert.match(readSrc("src/lib/members/store.ts"), /formSubmissions/);
+  assert.match(readSrc("src/lib/admin-gate.ts"), /export function safeMemberNext/);
+  assert.match(readSrc("src/app/login/login-form.tsx"), /safeMemberNext/);
+  assert.match(readSrc("src/app/tools/page.tsx"), /login\?next=/);
 });
 
 function resolveDemoLinkToken(env) {

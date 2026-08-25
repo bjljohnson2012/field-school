@@ -14,11 +14,12 @@ Field School is a weekly Saturday hour. Directors come. So do people on the floo
 
 ## Public site
 
-Pages: Home (Saturday note), About, Pricing, Tools (community tools + topic request), 12 Presuppositions, Shop (waitlist), Founder.  
-The Saturday list, topic requests, and shop waitlist post to `https://portal.fieldschool.ai/api/forms` and show under Admin → Forms.  
-Login goes to https://portal.fieldschool.ai  
-Paid seats go to Pricing, then portal signup (`/signup?plan=100|200|1000`).  
-SKUs: $100 online cohort / $200 in the room / $1,000 weekday hour. Invoice later.  
+Pages: Home (Field School University), Newsletter, About, Pricing, Tools, 12 Presuppositions, Shop, Founder.  
+Header: Join our Newsletter, Enroll.  
+The newsletter, topic requests, and shop waitlist post to `https://portal.fieldschool.ai/api/forms` and show under Admin → Forms.  
+Enroll goes to https://portal.fieldschool.ai/signup  
+University: one course free, $10 up to three courses, $50 more than three, $1,059 certification.  
+Coaching: $100 online / $200 in the room / $1,000 one-on-one. Invoice later.  
 Privacy and terms stay at `/privacy` and `/terms`.
 
 ## App (Field School University)

@@ -8,7 +8,7 @@ import {
   activateMemberFromAuth,
   activateStaffFromOAuth,
 } from "@/lib/auth/portal-bridge";
-import { isAdminRoute } from "@/lib/admin-gate";
+import { isAdminRoute, safeMemberNext } from "@/lib/admin-gate";
 import { isStaffSession } from "@/lib/members/policy";
 
 export function OAuthCompleteClient() {
@@ -46,7 +46,7 @@ export function OAuthCompleteClient() {
       router.replace("/request-access?from=admin");
       return;
     }
-    router.replace(next.startsWith("/") ? next : "/dashboard");
+    router.replace(safeMemberNext(next));
   }, [status, session, router, searchParams]);
 
   if (error) {

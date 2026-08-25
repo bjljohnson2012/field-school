@@ -42,10 +42,10 @@ export default function ToolsPage() {
             </p>
             {tool.status === "live" ? (
               <Link
-                href={`/tools/${tool.slug}`}
+                href={`/login?next=${encodeURIComponent(`/tools/${tool.slug}`)}`}
                 className="mt-6 inline-flex h-11 items-center gap-2 text-sm"
               >
-                Start
+                Sign in to start
                 <ArrowRight className="size-4" />
               </Link>
             ) : (
