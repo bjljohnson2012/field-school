@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="A staffed shop that still coaches after the laptop shuts.">
+  <title>Field School</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #F4EFE6;
+      --ink: #1C1612;
+      --mute: #5C534C;
+      --line: #D4C7B6;
+      --rust: #9A3412;
+      --rust-press: #7C2A0E;
+      --on-rust: #FFF7F1;
+      --secondary: #E8DDD0;
+      --pad: clamp(1.4rem, 4.4vw, 4.75rem);
+      --measure: 70rem;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--paper); color-scheme: light; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Source Sans 3", "Liberation Sans", sans-serif;
+      font-size: 1.125rem;
+      font-weight: 400;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: inherit; }
+    a:focus-visible, .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+    .page { width: min(100%, var(--measure)); margin: 0 auto; padding: calc(3.1rem + env(safe-area-inset-top)) var(--pad) 3.5rem; }
+    .wordmark { margin: 0 0 1.35rem; font-family: Fraunces, "Liberation Serif", Georgia, serif; font-optical-sizing: auto; font-size: clamp(3.75rem, 13.2vw, 5.85rem); font-weight: 700; letter-spacing: -0.036em; line-height: 0.9; }
+    .dek { margin: 0 0 1.55rem; max-width: 21em; color: var(--ink); font-size: clamp(1.2rem, 2.3vw, 1.4rem); line-height: 1.4; }
+    .lead { margin: 0 0 2rem; max-width: 14em; font-family: Fraunces, "Liberation Serif", Georgia, serif; font-optical-sizing: auto; font-size: clamp(2rem, 5.2vw, 2.85rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.06; }
+    .hero-actions { display: flex; flex-direction: column; align-items: stretch; gap: 0.45rem; max-width: 26.5rem; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 4rem; padding: 0.9rem 1.7rem; border: 0; border-radius: 999px; background: var(--rust); color: var(--on-rust); font-family: "Source Sans 3", "Liberation Sans", sans-serif; font-size: 1.125rem; font-weight: 700; letter-spacing: 0.01em; text-decoration: none; box-shadow: 0 1px 0 rgba(28, 22, 18, 0.08), 0 14px 28px -14px rgba(154, 52, 18, 0.62); }
+    .btn:hover, .btn:active { background: var(--rust-press); }
+    .btn-sm { min-height: 3.25rem; padding: 0.75rem 1.4rem; font-size: 1.05rem; box-shadow: 0 1px 0 rgba(28, 22, 18, 0.08), 0 10px 22px -12px rgba(154, 52, 18, 0.5); }
+    .text-link { display: inline-flex; align-items: center; align-self: flex-start; min-height: 3rem; padding: 0.4rem 0.1rem; color: var(--mute); font-size: 1.0625rem; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+    .text-link:hover { color: var(--ink); }
+    .jobs { display: flex; flex-direction: column; gap: 1.65rem; margin: 3.35rem 0 0; }
+    .job h2 { margin: 0 0 0.5rem; font-family: Fraunces, "Liberation Serif", Georgia, serif; font-optical-sizing: auto; font-weight: 700; letter-spacing: -0.03em; line-height: 0.95; text-wrap: balance; }
+    .job p { margin: 0; max-width: 30em; color: var(--ink); font-size: 1.0625rem; line-height: 1.5; }
+    .job-learn h2 { font-size: clamp(3.15rem, 8.4vw, 4.85rem); }
+    .job-learn p { font-size: 1.125rem; }
+    .job-community { padding: 1.4rem 1.35rem 1.5rem; background: var(--secondary); border-radius: 2.2rem; }
+    .job-community h2 { font-size: clamp(2.2rem, 6.1vw, 3.05rem); }
+    .job-coach { padding: 1.4rem 1.35rem 1.5rem; border: 2px solid var(--line); border-radius: 1.05rem; }
+    .job-coach h2 { font-size: clamp(2.55rem, 6.8vw, 3.45rem); }
+    .job-employment { padding: 1.35rem 0 0.1rem; border-top: 2px solid var(--line); }
+    .job-employment h2 { font-size: clamp(2.05rem, 5.6vw, 2.9rem); max-width: 9em; }
+    .campus { margin: 3rem 0 0; padding: 1.65rem 1.4rem 1.75rem; background: var(--secondary); border-radius: 2.4rem; scroll-margin-top: 1.2rem; scroll-margin-bottom: 6.75rem; }
+    .campus h2 { margin: 0 0 0.8rem; font-family: Fraunces, "Liberation Serif", Georgia, serif; font-optical-sizing: auto; font-size: clamp(2.15rem, 5vw, 3rem); font-weight: 700; letter-spacing: -0.03em; line-height: 0.96; }
+    .prices { margin: 0 0 0.9rem; font-family: Fraunces, "Liberation Serif", Georgia, serif; font-optical-sizing: auto; font-size: clamp(1.7rem, 5.1vw, 3rem); font-weight: 600; letter-spacing: -0.028em; line-height: 1.12; text-wrap: balance; }
+    .prices .unit { font-family: "Source Sans 3", "Liberation Sans", sans-serif; font-size: 0.46em; font-weight: 600; letter-spacing: 0; color: var(--mute); }
+    .invoice { display: inline-flex; align-items: center; min-height: 2.5rem; margin: 0 0 1.3rem; padding: 0.35rem 0.95rem; border-radius: 999px; background: var(--paper); color: var(--ink); font-size: 1rem; font-weight: 600; }
+    .campus .btn { width: 100%; }
+    footer { margin: 2.35rem 0 0; max-width: 28em; }
+    .refuse { margin: 0 0 0.8rem; color: var(--mute); font-size: 0.95rem; line-height: 1.45; }
+    .close { margin: 0; color: var(--mute); font-size: 0.9rem; font-weight: 600; }
+    @media (min-width: 800px) {
+      .page { padding-top: 4.6rem; padding-bottom: 4.4rem; }
+      .hero-actions { flex-direction: row; align-items: center; gap: 1.15rem; max-width: none; }
+      .hero-actions .btn { width: auto; min-width: 16rem; }
+      .jobs { display: grid; grid-template-columns: 1.28fr 0.72fr; grid-template-areas: "learn community" "coach coach" "employment employment"; gap: 2.6rem 2.8rem; margin-top: 4.4rem; align-items: start; }
+      .job-learn { grid-area: learn; padding-top: 0.35rem; }
+      .job-community { grid-area: community; align-self: stretch; padding: 1.7rem 1.65rem 1.8rem; }
+      .job-coach { grid-area: coach; display: grid; grid-template-columns: minmax(11rem, 18rem) 1fr; gap: 1.25rem 2rem; align-items: center; padding: 1.55rem 1.8rem 1.65rem; }
+      .job-coach h2 { margin: 0; }
+      .job-coach p { max-width: 36em; }
+      .job-employment { grid-area: employment; display: grid; grid-template-columns: minmax(14rem, 22rem) 1fr; gap: 1.25rem 2rem; align-items: center; padding: 0.35rem 0 0; border-top: 0; }
+      .job-employment h2 { margin: 0; }
+      .job-employment p { max-width: 34em; }
+      .campus { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto auto; column-gap: 2.2rem; align-items: start; margin-top: 4.1rem; padding: 2.2rem 2.25rem 2.25rem; }
+      .campus h2 { grid-column: 1; }
+      .prices { grid-column: 1; max-width: 22ch; }
+      .invoice { grid-column: 1; margin-bottom: 0; }
+      .campus .btn { grid-column: 2; grid-row: 1 / span 3; align-self: center; width: auto; min-width: 15rem; }
+      footer { display: flex; align-items: baseline; justify-content: space-between; gap: 2rem; max-width: none; margin-top: 2.7rem; }
+      .refuse { margin: 0; max-width: 38em; }
+      .close { flex: 0 0 auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1 class="wordmark">Field School</h1>
+      <p class="dek">A staffed shop that still coaches after the laptop shuts.</p>
+      <p class="lead">Four jobs. Then the portal.</p>
+      <div class="hero-actions">
+        <a class="btn" href="https://portal.fieldschool.ai">Enter the portal</a>
+        <a class="text-link" href="#campus">See campus pricing</a>
+      </div>
+    </header>
+    <div class="jobs">
+      <article class="job job-learn">
+        <h2>Learn</h2>
+        <p>Campus. Tape, stations, field work, a quiz, a certificate. A guest can start this week.</p>
+      </article>
+      <article class="job job-community">
+        <h2>Community</h2>
+        <p>Saturday group. People running the same kind of week. A cohort, not a feed.</p>
+      </article>
+      <article class="job job-coach">
+        <h2>Coach</h2>
+        <p>The shop reviews pipeline and runs GTM plays when the lid is closed. Not a content library.</p>
+      </article>
+      <article class="job job-employment">
+        <h2>Employment tools</h2>
+        <p>Share Desk, staff packs, and assessments. Tools that run the shop. Not a job board. Not a Gong clone.</p>
+      </article>
+    </div>
+    <section class="campus" id="campus">
+      <h2>Campus</h2>
+      <p class="prices">$100 / $200 / $1,000 <span class="unit">a month.</span></p>
+      <p class="invoice">Invoice later.</p>
+      <a class="btn btn-sm" href="https://portal.fieldschool.ai">Enter the portal</a>
+    </section>
+    <footer>
+      <p class="refuse">Not an agency. Not a parking page. Employer tapes stay off this cart.</p>
+      <p class="close">The next click is the portal.</p>
+    </footer>
+  </div>
+</body>
+</html>
