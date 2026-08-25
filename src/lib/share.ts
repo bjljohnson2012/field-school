@@ -12,7 +12,7 @@ export const sharePages: SharePage[] = [
     slug: "field-school",
     title: "Field School",
     kicker: "Company",
-    lede: "Field School is the training portal. It helps you learn AI, sales, go-to-market, and leadership at your own pace, plus small moves you can make with your family.",
+    lede: "Field School is the organization. Under it: the training portal, the Saturday newsletter, the community, and coaching. Learn AI, sales, go-to-market, and leadership at your own pace, plus small moves you can make with your family.",
     sections: [
       {
         heading: "AI as a teammate",

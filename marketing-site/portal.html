@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Shop · Field School</title>
-  <meta name="description" content="The Field School shop is not open yet. Leave your email and we will write when it is.">
+  <title>Training portal · Field School</title>
+  <meta name="description" content="The Field School training portal. Learn AI, sales, go-to-market, and leadership at your own pace.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
       <a class="wordmark" href="/">Field School</a>
       <nav class="nav-desktop" aria-label="Site">
         <a class="nav-link" href="/about">About</a>
-        <a class="nav-link" href="/portal">Portal</a>
+        <a class="nav-link" href="/portal" aria-current="page">Portal</a>
         <a class="nav-link" href="/newsletter">Newsletter</a>
         <a class="nav-link" href="/community">Community</a>
         <a class="nav-link" href="/coaching">Coaching</a>
@@ -30,13 +30,13 @@
           <summary aria-label="Open menu"><span class="burger" aria-hidden="true"></span></summary>
           <nav class="nav-panel" aria-label="Site">
             <a class="nav-link" href="/about">About</a>
-            <a class="nav-link" href="/portal">Portal</a>
+            <a class="nav-link" href="/portal" aria-current="page">Portal</a>
             <a class="nav-link" href="/newsletter">Join our Newsletter</a>
             <a class="nav-link" href="/community">Community</a>
             <a class="nav-link" href="/coaching">Coaching</a>
             <a class="nav-link" href="/pricing">Pricing</a>
             <a class="nav-link" href="/tools">Tools</a>
-            <a class="nav-link" href="/shop" aria-current="page">Shop</a>
+            <a class="nav-link" href="/shop">Shop</a>
             <a class="nav-link" href="/founder">Founder</a>
             <a class="nav-link" href="https://portal.fieldschool.ai/signup">Enroll</a>
             <a class="nav-link" href="https://portal.fieldschool.ai/login">Login</a>
@@ -47,27 +47,39 @@
   </header>
   <main id="main" class="main">
     <div class="wrap">
-      <p class="kicker">Shop</p>
-      <h1 class="page-title">The shop is not open yet.</h1>
-      <p class="lede-inline">Print, kits, and the physical version of the work will land here. If you want a note when the shop opens, leave an email. The newsletter is still the better first step.</p>
-      <section class="card card-note">
-        <h2>Tell me when the shop opens</h2>
-        <form data-form="shop_waitlist" data-source="/shop" data-success="You are on the shop list. We will write when it opens.">
-          <div class="hp" aria-hidden="true">
-            <label for="website">Company</label>
-            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required>
-          </div>
-          <button class="btn btn-primary" type="submit">Put me on the shop list</button>
-          <p class="form-status" data-form-status></p>
-        </form>
-      </section>
+      <p class="kicker">Under Field School</p>
+      <h1 class="page-title">The Field School training portal</h1>
+      <p class="lede-inline">This is the school you log into. Courses. Assessments. Certificates. Learn at your own pace. AI. Sales. Go-to-market. Leadership. Small moves you can make with your family.</p>
       <div class="actions">
-        <a class="btn btn-outline" href="/newsletter">Join our Newsletter instead</a>
+        <a class="btn btn-primary" href="https://portal.fieldschool.ai/signup">Enroll</a>
+        <a class="btn btn-outline" href="https://portal.fieldschool.ai/tools/skill">Take an assessment</a>
       </div>
+
+      <section class="expect" aria-labelledby="portal-get">
+        <h2 id="portal-get" class="section-title">What you do here</h2>
+        <div class="expect-grid">
+          <article>
+            <h3>Take a course</h3>
+            <p>Watch the minutes that teach the station. Do the field work. Clear the quiz. One course is free.</p>
+            <a class="btn btn-outline" href="https://portal.fieldschool.ai/c/grok-bot">Open the first course</a>
+          </article>
+          <article>
+            <h3>Take an assessment</h3>
+            <p>Free. See the results on the page. Export a PDF or email them. Login only if you want them on your profile.</p>
+            <a class="btn btn-outline" href="/tools">See the tools</a>
+          </article>
+          <article>
+            <h3>Keep a login</h3>
+            <p>Progress and certificates stay on one portal. Paid seats are invoiced later. No card to start.</p>
+            <a class="btn btn-outline" href="/pricing">See pricing</a>
+          </article>
+          <article>
+            <h3>Need a person</h3>
+            <p>Coaching sits next to the portal, not instead of it. Same organization. More time with Ben.</p>
+            <a class="btn btn-outline" href="/coaching">See coaching</a>
+          </article>
+        </div>
+      </section>
     </div>
   </main>
   <footer class="site-footer">
@@ -86,6 +98,5 @@
       </nav>
     </div>
   </footer>
-  <script src="/js/forms.js"></script>
 </body>
 </html>

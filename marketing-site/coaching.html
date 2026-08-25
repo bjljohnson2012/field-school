@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Shop · Field School</title>
-  <meta name="description" content="The Field School shop is not open yet. Leave your email and we will write when it is.">
+  <title>Coaching · Field School</title>
+  <meta name="description" content="Field School coaching. Online, in the room, or one hour a week with Ben. Includes the newsletter and the training portal.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
         <a class="nav-link" href="/portal">Portal</a>
         <a class="nav-link" href="/newsletter">Newsletter</a>
         <a class="nav-link" href="/community">Community</a>
-        <a class="nav-link" href="/coaching">Coaching</a>
+        <a class="nav-link" href="/coaching" aria-current="page">Coaching</a>
         <a class="nav-link" href="/pricing">Pricing</a>
       </nav>
       <div class="header-actions">
@@ -33,10 +33,10 @@
             <a class="nav-link" href="/portal">Portal</a>
             <a class="nav-link" href="/newsletter">Join our Newsletter</a>
             <a class="nav-link" href="/community">Community</a>
-            <a class="nav-link" href="/coaching">Coaching</a>
+            <a class="nav-link" href="/coaching" aria-current="page">Coaching</a>
             <a class="nav-link" href="/pricing">Pricing</a>
             <a class="nav-link" href="/tools">Tools</a>
-            <a class="nav-link" href="/shop" aria-current="page">Shop</a>
+            <a class="nav-link" href="/shop">Shop</a>
             <a class="nav-link" href="/founder">Founder</a>
             <a class="nav-link" href="https://portal.fieldschool.ai/signup">Enroll</a>
             <a class="nav-link" href="https://portal.fieldschool.ai/login">Login</a>
@@ -47,27 +47,31 @@
   </header>
   <main id="main" class="main">
     <div class="wrap">
-      <p class="kicker">Shop</p>
-      <h1 class="page-title">The shop is not open yet.</h1>
-      <p class="lede-inline">Print, kits, and the physical version of the work will land here. If you want a note when the shop opens, leave an email. The newsletter is still the better first step.</p>
-      <section class="card card-note">
-        <h2>Tell me when the shop opens</h2>
-        <form data-form="shop_waitlist" data-source="/shop" data-success="You are on the shop list. We will write when it opens.">
-          <div class="hp" aria-hidden="true">
-            <label for="website">Company</label>
-            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required>
-          </div>
-          <button class="btn btn-primary" type="submit">Put me on the shop list</button>
-          <p class="form-status" data-form-status></p>
-        </form>
-      </section>
-      <div class="actions">
-        <a class="btn btn-outline" href="/newsletter">Join our Newsletter instead</a>
+      <p class="kicker">Under Field School</p>
+      <h1 class="page-title">Field School coaching</h1>
+      <p class="lede-inline">Time with Ben. Coaching, direct feedback, and help getting better. Each seat includes the newsletter and unlimited access to the training portal.</p>
+
+      <div class="plan-grid">
+        <article class="plan">
+          <h2>Online cohort</h2>
+          <p class="plan-price">$100 <span>a month</span></p>
+          <p>One hour a week online. Coaching and direct feedback from wherever you already sit.</p>
+          <a class="btn btn-outline" href="https://portal.fieldschool.ai/signup?plan=100">Enroll $100</a>
+        </article>
+        <article class="plan">
+          <h2>In the room</h2>
+          <p class="plan-price">$200 <span>a month</span></p>
+          <p>The same hour, in person. Coaching and the talk after class.</p>
+          <a class="btn btn-outline" href="https://portal.fieldschool.ai/signup?plan=200">Enroll $200</a>
+        </article>
+        <article class="plan plan-focus">
+          <h2>One-on-one hour</h2>
+          <p class="plan-price">$1,000 <span>a month</span></p>
+          <p>One hour a week with Ben. Help on the work you are actually doing.</p>
+          <a class="btn btn-primary" href="https://portal.fieldschool.ai/signup?plan=1000">Enroll $1,000</a>
+        </article>
       </div>
+      <p class="invoice">Invoice later. Enroll starts the seat. It does not take a card. All seats and portal prices live on <a href="/pricing">Pricing</a>.</p>
     </div>
   </main>
   <footer class="site-footer">
@@ -86,6 +90,5 @@
       </nav>
     </div>
   </footer>
-  <script src="/js/forms.js"></script>
 </body>
 </html>

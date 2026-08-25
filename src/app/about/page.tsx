@@ -5,7 +5,7 @@ import { COMPANY_NAME } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "The Field School training portal helps people learn AI, sales, go-to-market, and leadership at their own pace.",
+    "Field School is the organization. This site is the training portal.",
 };
 
 export default function AboutPage() {
@@ -15,11 +15,16 @@ export default function AboutPage() {
         About us
       </p>
       <h1 className="mt-3 font-display text-4xl tracking-tight sm:text-5xl">
-        {COMPANY_NAME} is the training portal.
+        This is the {COMPANY_NAME} training portal.
       </h1>
       <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+        {COMPANY_NAME} is the organization. The portal, the Saturday newsletter,
+        the community, and coaching sit under it. This site is the portal:
+        courses, assessments, and certificates on one login.
+      </p>
+      <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
         Most people do not need another feed of videos. They need a way to get
-        better at the work that is arriving — without quitting their job, buying
+        better at the work that is arriving, without quitting their job, buying
         every tool on day one, or losing the plot by Sunday. That is what we
         build.
       </p>

@@ -8,8 +8,8 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <p>
           <span className="text-foreground">{COMPANY_NAME}</span> is the
-          training portal. Learn AI, sales, go-to-market, and leadership at
-          your pace.
+          organization. This site is the training portal. Learn AI, sales,
+          go-to-market, and leadership at your pace.
         </p>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           <Link href="/about" className="hover:text-foreground">

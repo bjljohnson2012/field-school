@@ -14,7 +14,7 @@ Field School is a weekly Saturday hour. Directors come. So do people on the floo
 
 ## Public site
 
-Pages: Home (training portal), Newsletter, About, Pricing, Tools, 12 Presuppositions, Shop, Founder.  
+Pages: Home (organization umbrella), Portal, Newsletter, Community, Coaching, About, Pricing, Tools, 12 Presuppositions, Shop, Founder.  
 Header: Join our Newsletter, Enroll.  
 The newsletter, topic requests, and shop waitlist post to `https://portal.fieldschool.ai/api/forms` and show under Admin → Forms.  
 Enroll goes to https://portal.fieldschool.ai/signup  

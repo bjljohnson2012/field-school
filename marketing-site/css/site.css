@@ -458,6 +458,7 @@ h2.section-title {
   line-height: 1.55;
 }
 
+.expect-grid .btn,
 .tool .btn {
   margin-top: 1rem;
   width: auto;

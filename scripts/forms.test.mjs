@@ -101,15 +101,28 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
   assert.match(adminPage, /shop waitlist/);
   assert.match(nav, /href:\s*"\/admin\/forms"/);
 
+  const portal = readSrc("marketing-site/portal.html");
+  const community = readSrc("marketing-site/community.html");
+  const coaching = readSrc("marketing-site/coaching.html");
+  const about = readSrc("marketing-site/about.html");
+
   assert.doesNotMatch(home, /data-form="saturday_note"/);
   assert.doesNotMatch(home, /University/);
+  assert.match(home, /Field School is the organization/);
   assert.match(home, /training portal/);
-  assert.match(home, /Join a community dedicated to learning/);
+  assert.match(home, /href="\/portal"/);
+  assert.match(home, /href="\/community"/);
+  assert.match(home, /href="\/coaching"/);
   assert.match(home, /Join our Newsletter/);
   assert.match(home, /Enroll/);
   assert.doesNotMatch(home, /mailto:ben@fieldschool.ai/);
+  assert.match(about, /Field School is the organization/);
+  assert.match(portal, /The Field School training portal/);
+  assert.match(community, /The Field School community/);
+  assert.match(coaching, /Field School coaching/);
   assert.match(newsletter, /data-form="saturday_note"/);
   assert.match(newsletter, /One email each Saturday/);
+  assert.match(newsletter, /Under Field School/);
   assert.match(tools, /data-form="topic_request"/);
   assert.match(tools, /portal\.fieldschool\.ai\/tools\/skill/);
   assert.doesNotMatch(tools, /login\?next=\/tools\/skill/);

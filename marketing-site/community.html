@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Shop · Field School</title>
-  <meta name="description" content="The Field School shop is not open yet. Leave your email and we will write when it is.">
+  <title>Community · Field School</title>
+  <meta name="description" content="The Field School community. People dedicated to learning. Build things that last. Stay ready.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
         <a class="nav-link" href="/about">About</a>
         <a class="nav-link" href="/portal">Portal</a>
         <a class="nav-link" href="/newsletter">Newsletter</a>
-        <a class="nav-link" href="/community">Community</a>
+        <a class="nav-link" href="/community" aria-current="page">Community</a>
         <a class="nav-link" href="/coaching">Coaching</a>
         <a class="nav-link" href="/pricing">Pricing</a>
       </nav>
@@ -32,11 +32,11 @@
             <a class="nav-link" href="/about">About</a>
             <a class="nav-link" href="/portal">Portal</a>
             <a class="nav-link" href="/newsletter">Join our Newsletter</a>
-            <a class="nav-link" href="/community">Community</a>
+            <a class="nav-link" href="/community" aria-current="page">Community</a>
             <a class="nav-link" href="/coaching">Coaching</a>
             <a class="nav-link" href="/pricing">Pricing</a>
             <a class="nav-link" href="/tools">Tools</a>
-            <a class="nav-link" href="/shop" aria-current="page">Shop</a>
+            <a class="nav-link" href="/shop">Shop</a>
             <a class="nav-link" href="/founder">Founder</a>
             <a class="nav-link" href="https://portal.fieldschool.ai/signup">Enroll</a>
             <a class="nav-link" href="https://portal.fieldschool.ai/login">Login</a>
@@ -47,27 +47,45 @@
   </header>
   <main id="main" class="main">
     <div class="wrap">
-      <p class="kicker">Shop</p>
-      <h1 class="page-title">The shop is not open yet.</h1>
-      <p class="lede-inline">Print, kits, and the physical version of the work will land here. If you want a note when the shop opens, leave an email. The newsletter is still the better first step.</p>
-      <section class="card card-note">
-        <h2>Tell me when the shop opens</h2>
-        <form data-form="shop_waitlist" data-source="/shop" data-success="You are on the shop list. We will write when it opens.">
-          <div class="hp" aria-hidden="true">
-            <label for="website">Company</label>
-            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required>
-          </div>
-          <button class="btn btn-primary" type="submit">Put me on the shop list</button>
-          <p class="form-status" data-form-status></p>
-        </form>
-      </section>
+      <p class="kicker">Under Field School</p>
+      <h1 class="page-title">The Field School community</h1>
+      <p class="lede-inline">You join people who want to get better at the work in front of them, and stay ready. Not a feed. Not a pile of videos.</p>
       <div class="actions">
-        <a class="btn btn-outline" href="/newsletter">Join our Newsletter instead</a>
+        <a class="btn btn-primary" href="/newsletter">Join our Newsletter</a>
+        <a class="btn btn-outline" href="/portal">Open the portal</a>
       </div>
+
+      <section class="expect" aria-labelledby="culture-title">
+        <h2 id="culture-title" class="section-title">What this community is about</h2>
+        <div class="expect-grid">
+          <article>
+            <h3>Build things that last</h3>
+            <p>We care about work that still matters next year. Not a trick that dies on Sunday.</p>
+          </article>
+          <article>
+            <h3>Master AI. Do not let it master you.</h3>
+            <p>Use the tools. Keep a human on send and pay. Be ready when the work changes.</p>
+          </article>
+          <article>
+            <h3>Sales and go-to-market that close</h3>
+            <p>Learn the skills that win the meeting and the week after it. Not a slide about strategy.</p>
+          </article>
+          <article>
+            <h3>Leadership that builds for the future</h3>
+            <p>Lead a team, a family, or yourself with the same judgment. Build people up. Do not just hit a number.</p>
+          </article>
+          <article>
+            <h3>Put the tactics into practice</h3>
+            <p>Read less. Try more. Each course and each Saturday note should give you something you can do this week.</p>
+          </article>
+          <article>
+            <h3>Learn at your own pace</h3>
+            <p>On things that change your day. Your business. Your family. Your career.</p>
+          </article>
+        </div>
+      </section>
+
+      <p class="quiet">Want a topic covered? <a href="/tools">Request one</a>. The twelve rules we refuse to treat as optional live on <a href="/twelve">Presuppositions</a>.</p>
     </div>
   </main>
   <footer class="site-footer">
@@ -86,6 +104,5 @@
       </nav>
     </div>
   </footer>
-  <script src="/js/forms.js"></script>
 </body>
 </html>

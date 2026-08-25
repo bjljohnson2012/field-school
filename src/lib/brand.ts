@@ -11,5 +11,5 @@ export const brand = {
   short: UNI_SHORT,
   tagline: "Learn at your pace. Use it this week.",
   promise:
-    "The Field School training portal helps people learn AI, sales, go-to-market, and leadership at their own pace. Plus small moves you can make with your family.",
+    "Field School is the organization. The training portal, newsletter, community, and coaching sit under it. Learn AI, sales, go-to-market, and leadership at your own pace. Plus small moves you can make with your family.",
 };
