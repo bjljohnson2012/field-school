@@ -29,7 +29,9 @@ bash deploy/deploy.sh
 
 OAuth secrets live at durable `/opt/field-school.env` **outside** that wipe. Compose mounts that file via `env_file`. Do not delete it. After a wipe, confirm the live compose still has `env_file: /opt/field-school.env` on the app service.
 
-Member passwords and staff access requests live in a Docker named volume (`field-school-data` → `/app/data/campus-store.json`). That volume is **not** inside `/opt/field-school`, so the source wipe does not delete it. There is no `field-school-db` Postgres service on this compose file.
+Member passwords, staff access requests, and public form submissions live in a Docker named volume (`field-school-data` → `/app/data/campus-store.json`). That volume is **not** inside `/opt/field-school`, so the source wipe does not delete it. There is no `field-school-db` Postgres service on this compose file.
+
+Ship the public site with `bash deploy/deploy-site.sh`. That writes `marketing-site/` to `/var/www/fieldschool.ai` and keeps Caddy `try_files` so `/about` serves `about.html`. Staff read those forms at `/admin/forms`.
 
 Optional notify email: set `ACCESS_REQUEST_NOTIFY_EMAIL` (defaults to the dean) and `SMTP_HOST` (plus `SMTP_USER` / `SMTP_PASS` if the relay needs auth) in `/opt/field-school.env`.
 
@@ -46,7 +48,8 @@ Check:
 - `/tools` — skill + intelligence live
 - `/signup` — free beta join (Google, X, email + password)
 - `/pricing` — display-only plans (invoice later, no checkout)
-- `/admin` — demo, users, notifications, access requests, add tools
+- `/admin` — demo, users, notifications, access requests, forms, add tools
+- `/admin/forms` — Saturday list, topic requests, shop waitlist
 - `/admin/demo` — staff Jordan walk + Copy demo link
 - `/demo?token=…` — shareable Jordan walk (token required; not linked from login)
 - `/c/grok-bot` — ladder

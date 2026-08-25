@@ -27,6 +27,11 @@ const areas = [
     body: "Members who signed in and asked for the staff desk. Adding them is still an allowlist change.",
   },
   {
+    href: "/admin/forms",
+    title: "Forms",
+    body: "Saturday list, topic requests, and shop waitlist from fieldschool.ai. Tabs per form.",
+  },
+  {
     href: "/admin/tools",
     title: "Add tools",
     body: "How to register a new assessment so it shows on /tools and saves to each portal.",

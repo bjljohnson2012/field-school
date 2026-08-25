@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { TopicRequestForm } from "@/components/topic-request-form";
 import { assessmentTools } from "@/lib/tools/registry";
 
 export const metadata: Metadata = {
@@ -53,6 +54,20 @@ export default function ToolsPage() {
           </article>
         ))}
       </div>
+
+      <section className="mt-16 max-w-2xl rounded-xl border border-border bg-card px-5 py-6">
+        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          Community
+        </p>
+        <h2 className="mt-2 font-display text-2xl tracking-tight">
+          Request a topic
+        </h2>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          Community members steer what Saturday covers next. Name the job, the
+          tool, or the conversation you want walked.
+        </p>
+        <TopicRequestForm source="/tools" />
+      </section>
     </main>
   );
 }

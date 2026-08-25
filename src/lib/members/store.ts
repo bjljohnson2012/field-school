@@ -7,9 +7,12 @@ import {
   normalizeEmail,
   passwordError,
 } from "@/lib/members/policy";
+import { sortFormSubmissions } from "@/lib/members/forms";
 import type {
   AccessRequest,
   CampusStoreFile,
+  FormKind,
+  FormSubmission,
   MemberProvider,
   StoredMember,
 } from "@/lib/members/types";
@@ -29,7 +32,7 @@ export function resolveStorePath() {
 }
 
 function emptyStore(): CampusStoreFile {
-  return { members: [], accessRequests: [] };
+  return { members: [], accessRequests: [], formSubmissions: [] };
 }
 
 async function readStore(path: string): Promise<CampusStoreFile> {
@@ -40,6 +43,9 @@ async function readStore(path: string): Promise<CampusStoreFile> {
       members: Array.isArray(parsed.members) ? parsed.members : [],
       accessRequests: Array.isArray(parsed.accessRequests)
         ? parsed.accessRequests
+        : [],
+      formSubmissions: Array.isArray(parsed.formSubmissions)
+        ? parsed.formSubmissions
         : [],
     };
   } catch (error) {
@@ -210,4 +216,61 @@ export async function listAccessRequests() {
   return [...store.accessRequests].sort((a, b) =>
     a.createdAt < b.createdAt ? 1 : -1,
   );
+}
+
+function upsertSameEmail(
+  kind: FormKind,
+): kind is "saturday_note" | "shop_waitlist" {
+  return kind === "saturday_note" || kind === "shop_waitlist";
+}
+
+export async function createFormSubmission(input: {
+  kind: FormKind;
+  name: string;
+  email: string;
+  message: string;
+  source: string;
+}): Promise<{ ok: true; submission: FormSubmission }> {
+  return withLock(async () => {
+    const path = resolveStorePath();
+    const store = await readStore(path);
+    const now = new Date().toISOString();
+    const existing = upsertSameEmail(input.kind)
+      ? store.formSubmissions.find(
+          (row) => row.kind === input.kind && row.email === input.email,
+        )
+      : undefined;
+    const submission: FormSubmission = existing
+      ? {
+          ...existing,
+          name: input.name || existing.name,
+          message: input.message || existing.message,
+          source: input.source || existing.source,
+          updatedAt: now,
+        }
+      : {
+          id: `form-${randomUUID()}`,
+          kind: input.kind,
+          name: input.name,
+          email: input.email,
+          message: input.message,
+          source: input.source,
+          createdAt: now,
+          updatedAt: now,
+        };
+    if (existing) {
+      store.formSubmissions = store.formSubmissions.map((row) =>
+        row.id === existing.id ? submission : row,
+      );
+    } else {
+      store.formSubmissions.unshift(submission);
+    }
+    await writeStore(path, store);
+    return { ok: true, submission };
+  });
+}
+
+export async function listFormSubmissions() {
+  const store = await readStore(resolveStorePath());
+  return sortFormSubmissions(store.formSubmissions);
 }

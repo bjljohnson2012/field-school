@@ -399,6 +399,10 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(authMd, /ACCESS_REQUEST_NOTIFY_EMAIL/);
   assert.match(authMd, /forever-free beta|Free beta/i);
   assert.match(readSrc("src/app/admin/access-requests/page.tsx"), /Access requests/);
+  assert.match(readSrc("src/components/admin-nav.tsx"), /href:\s*"\/admin\/forms"/);
+  assert.match(readSrc("src/app/admin/forms/page.tsx"), /Saturday list/);
+  assert.match(readSrc("src/app/admin/forms/page.tsx"), /Topic requests/);
+  assert.match(readSrc("src/lib/members/store.ts"), /formSubmissions/);
 });
 
 function resolveDemoLinkToken(env) {

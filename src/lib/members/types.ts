@@ -21,7 +21,27 @@ export type AccessRequest = {
   status: AccessRequestStatus;
 };
 
+export const FORM_KINDS = [
+  "saturday_note",
+  "topic_request",
+  "shop_waitlist",
+] as const;
+
+export type FormKind = (typeof FORM_KINDS)[number];
+
+export type FormSubmission = {
+  id: string;
+  kind: FormKind;
+  name: string;
+  email: string;
+  message: string;
+  source: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type CampusStoreFile = {
   members: StoredMember[];
   accessRequests: AccessRequest[];
+  formSubmissions: FormSubmission[];
 };

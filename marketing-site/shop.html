@@ -4,56 +4,79 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Shop · Field School</title>
+  <meta name="description" content="The Field School shop is not open yet. Leave your email and we will write when it is.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="header-bar">
-      <a class="wordmark" href="index.html">Field School</a>
+      <a class="wordmark" href="/">Field School</a>
       <nav class="nav-desktop" aria-label="Site">
-      <a class="nav-link" href="about.html">About</a>
-      <a class="nav-link" href="pricing.html">Pricing</a>
-      <a class="nav-link" href="tools.html">Tools</a>
-      <a class="nav-link" href="twelve.html">12 Presuppositions</a>
-      <a class="nav-link" href="shop.html" aria-current="page">Shop</a>
-      <a class="nav-link" href="founder.html">Founder</a>
+        <a class="nav-link" href="/about">About</a>
+        <a class="nav-link" href="/pricing">Pricing</a>
+        <a class="nav-link" href="/tools">Tools</a>
+        <a class="nav-link" href="/twelve">Presuppositions</a>
+        <a class="nav-link" href="/shop" aria-current="page">Shop</a>
+        <a class="nav-link" href="/founder">Founder</a>
       </nav>
       <div class="header-actions">
-        <a class="btn btn-primary btn-header" href="pricing.html">Join</a>
+        <a class="btn btn-primary btn-header" href="/#saturday-note">Saturday note</a>
         <a class="btn btn-outline btn-header" href="https://portal.fieldschool.ai">Login</a>
         <details class="nav-mobile">
           <summary aria-label="Open menu"><span class="burger" aria-hidden="true"></span></summary>
           <nav class="nav-panel" aria-label="Site">
-      <a class="nav-link" href="about.html">About</a>
-      <a class="nav-link" href="pricing.html">Pricing</a>
-      <a class="nav-link" href="tools.html">Tools</a>
-      <a class="nav-link" href="twelve.html">12 Presuppositions</a>
-      <a class="nav-link" href="shop.html" aria-current="page">Shop</a>
-      <a class="nav-link" href="founder.html">Founder</a>
+            <a class="nav-link" href="/about">About</a>
+            <a class="nav-link" href="/pricing">Pricing</a>
+            <a class="nav-link" href="/tools">Tools</a>
+            <a class="nav-link" href="/twelve">Presuppositions</a>
+            <a class="nav-link" href="/shop" aria-current="page">Shop</a>
+            <a class="nav-link" href="/founder">Founder</a>
           </nav>
         </details>
       </div>
     </div>
   </header>
   <main id="main" class="main">
-    <div class="wrap prose">
-      <h1 class="page-title">The shop is coming soon.</h1>
+    <div class="wrap">
+      <p class="kicker">Shop</p>
+      <h1 class="page-title">The shop is not open yet.</h1>
+      <p class="lede-inline">Print, kits, and the physical version of the work will land here. If you want a note when that shelf exists, leave an email. The Saturday list is still the better first step.</p>
+      <section class="card card-note">
+        <h2>Tell me when the shop opens</h2>
+        <form data-form="shop_waitlist" data-source="/shop" data-success="You are on the shop list. We will write when it opens.">
+          <div class="hp" aria-hidden="true">
+            <label for="website">Company</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <button class="btn btn-primary" type="submit">Put me on the shop list</button>
+          <p class="form-status" data-form-status></p>
+        </form>
+      </section>
+      <div class="actions">
+        <a class="btn btn-outline" href="/#saturday-note">Join the Saturday list instead</a>
+      </div>
     </div>
   </main>
   <footer class="site-footer">
     <div class="footer-bar">
       <p class="footer-brand">Field School</p>
       <nav class="footer-links" aria-label="Footer">
-        <a href="about.html">About</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="https://fieldschool.ai/privacy">Privacy</a>
-        <a href="https://fieldschool.ai/terms">Terms</a>
+        <a href="/about">About</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/tools">Tools</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
       </nav>
     </div>
   </footer>
+  <script src="/js/forms.js"></script>
 </body>
 </html>

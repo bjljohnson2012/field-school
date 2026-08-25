@@ -11,6 +11,7 @@ const items = [
   { href: "/admin/users", label: "Users" },
   { href: "/admin/notifications", label: "Notifications" },
   { href: "/admin/access-requests", label: "Access requests" },
+  { href: "/admin/forms", label: "Forms" },
   { href: "/admin/tools", label: "Add tools" },
   { href: "/admin/catalog", label: "Catalog" },
 ];

@@ -29,7 +29,7 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | `AUTH_TWITTER_SECRET` or `X_CLIENT_SECRET` | X sign-in | Paired client secret. |
 | `STAFF_ADMIN_EMAILS` | Optional | Comma-separated staff allowlist. Defaults to the dean email baked into `src/lib/campus.ts`. |
 | `DEMO_LINK_TOKEN` | Optional | Secret for the shareable Jordan walk. `/demo?token=` must match this value. If unset, the campus derives a stable token from `AUTH_SECRET`. Staff copy the full URL from `/admin/demo` (“Copy demo link”). Do not put this button on `/login`. |
-| `MEMBER_STORE_PATH` | Optional | JSON file for member password hashes and access requests. Defaults to `.data/campus-store.json` in development and `/app/data/campus-store.json` in production. |
+| `MEMBER_STORE_PATH` | Optional | JSON file for member password hashes, access requests, and public form submissions. Defaults to `.data/campus-store.json` in development and `/app/data/campus-store.json` in production. |
 | `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests are emailed. Defaults to `bjljohnson2012@gmail.com`. |
 | `SMTP_HOST` | Optional email notify | If unset, requests are still stored; email is skipped. |
 | `SMTP_PORT` | Optional | Defaults to `587`. |
@@ -41,7 +41,9 @@ Set these in your host environment or `.env.local` (never commit secrets).
 
 ## Member store (survives deploy wipe)
 
-`deploy/docker-compose.yml` does **not** include a `field-school-db` Postgres service. Members and access requests persist in a JSON file on a Docker named volume:
+Public Saturday-list, topic-request, and shop-waitlist posts land in the same store. Staff read them on `/admin/forms` (one tab per form). `POST /api/forms` accepts JSON from `fieldschool.ai` and the portal.
+
+`deploy/docker-compose.yml` does **not** include a `field-school-db` Postgres service. Members, access requests, and form submissions persist in a JSON file on a Docker named volume:
 
 - Compose volume: `field-school-data` mounted at `/app/data`
 - File: `/app/data/campus-store.json` (`MEMBER_STORE_PATH`)
