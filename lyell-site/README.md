@@ -1,6 +1,6 @@
 # LyellX
 
-Official site for LyellX LLC, a management and holding company. Field School is the first operating company.
+Official site for LyellX LLC, a management and holding company. We build, we expand, and we live by first principles.
 
 Domain: `lyellx.com`
 
