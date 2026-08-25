@@ -9,7 +9,7 @@ Field School is a weekly Saturday hour. Directors come. So do people on the floo
 ## Domains
 
 - `fieldschool.ai` is the public multi-page site. Source in this repo: `marketing-site/` (the live VPS tree from `/workspace/field-school/site/`).
-- `lilux.com` is Lyell, the holding company over Field School. Source: `lyell-site/`. Not the Field School brand.
+- `lyellx.com` is LyellX, the holding company over Field School. Source: `lyell-site/`. Not the Field School brand.
 - `portal.fieldschool.ai` is the Next.js campus app. Same app as `university.benjohnson.ai` until the university 301 is lifted.
 - `AUTH_URL` still points at university.benjohnson.ai. Do not flip it until the four portal Google/X OAuth callback rows exist. Do not 301 university until then.
 

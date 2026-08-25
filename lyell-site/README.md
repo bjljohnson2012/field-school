@@ -1,17 +1,17 @@
-# Lyell
+# LyellX
 
-Public site for Lyell, the holding company over Field School.
+Official site for LyellX LLC, the management and holding company that owns and operates Field School.
 
-Legal name: LyellX LLC. On the site we call it Lyell. Intended domain: `lilux.com`.
+Domain: `lyellx.com`
 
 ## Pages
 
 - Home
 - Companies (Field School, Ben Johnson)
-- Vision
+- Community
 - Contact
 
-Static HTML. Material 3 Expressive tokens, Roboto Flex, no build step.
+Static HTML. Material 3 Expressive tokens. No build step.
 
 ## Local
 
@@ -21,17 +21,20 @@ python3 -m http.server 4173 --directory lyell-site
 
 Open http://127.0.0.1:4173
 
-## Point lilux.com from Squarespace
+## Squarespace DNS
 
-The files here are the site. Squarespace is the registrar, not the page builder.
+`lyellx.com` is registered through Squarespace (Google Domains nameservers). The site files live on Hostinger. Point the domain in Squarespace DNS. Do not switch nameservers unless you also want Hostinger to own email DNS.
 
-1. Host this folder on Hostinger (or any static host).
-2. In Squarespace Domains, open `lilux.com` → DNS.
-3. Add an A record for `@` to the host IP, and a CNAME for `www` to the host, or switch nameservers to the host.
-4. Wait for DNS. Then `https://lilux.com` serves these files.
+1. Squarespace → Domains → `lyellx.com` → DNS.
+2. Delete the existing A records on `@` that point at Squarespace (`23.21.157.88` and `23.21.234.173`).
+3. Add these custom records:
 
-`lilux.com` currently parks on Sedo. If Squarespace does not list the domain, the registrar is not connected yet. `lyellx.com` is the 2022 placeholder. This site can serve either name.
+| Type | Host | Data | TTL |
+| --- | --- | --- | --- |
+| A | `@` | `145.79.4.8` | 1 hour |
+| CNAME | `www` | `lyellx.com` | 1 hour |
 
-## Preview
+4. Do not touch MX or TXT. This domain already uses Google mail (`aspmx.l.google.com` and `v=spf1 include:_spf.google.com`). Changing those breaks email.
+5. Save. Wait for DNS. Then `https://lyellx.com` serves this folder.
 
-A Hostinger preview can live at `lyell.benjohnson.ai` once that subdomain is created and this folder is deployed to it.
+Preview while DNS is still on Squarespace: `http://lyell.benjohnson.ai`

@@ -362,11 +362,11 @@ summary:focus-visible {
 
 .display {
   margin: 0 0 1.25rem;
-  font-size: clamp(4.25rem, 16vw, 10.5rem);
+  font-size: clamp(3.4rem, 13vw, 8.25rem);
   font-weight: 750;
   line-height: 0.88;
   letter-spacing: -0.06em;
-  font-variation-settings: "opsz" 144, "wdth" 115, "slnt" 0;
+  font-variation-settings: "opsz" 144, "wdth" 110, "slnt" 0;
 }
 
 .lede {
@@ -560,6 +560,35 @@ summary:focus-visible {
 
 .card-tall {
   min-height: 22rem;
+}
+
+.logo-plate {
+  margin: -0.15rem 0 1.25rem;
+  padding: 0.85rem;
+  background: #fdf9f5;
+  border-radius: 22px;
+}
+
+.logo-plate picture,
+.logo-plate img {
+  display: block;
+  width: 100%;
+  max-width: 18rem;
+  margin: 0 auto;
+}
+
+.logo-plate img {
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.profile .logo-plate {
+  margin: 0;
+  padding: 1rem;
+}
+
+.profile .logo-plate img {
+  max-width: 100%;
 }
 
 .band {
