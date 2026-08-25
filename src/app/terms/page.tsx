@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { COMPANY_NAME, UNI_NAME } from "@/lib/brand";
 import { DEAN_EMAIL, DEAN_NAME } from "@/lib/campus";
 
 const LAST_UPDATED = "2026-08-22";
-const SITE_ORIGIN = "https://university.benjohnson.ai";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: `Terms for using ${UNI_NAME}, the educational portal operated by ${COMPANY_NAME}.`,
+  description:
+    "Terms for using the Field School campus at fieldschool.ai and portal.fieldschool.ai.",
 };
 
 export default function TermsPage() {
@@ -21,9 +20,19 @@ export default function TermsPage() {
         Terms of Service
       </h1>
       <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-        These terms govern your use of {UNI_NAME} at {SITE_ORIGIN}, operated by{" "}
-        {COMPANY_NAME} ({DEAN_NAME}). By using the campus you accept them. If
-        you do not, do not use the site.
+        These terms govern your use of the Field School campus at{" "}
+        <a href="https://fieldschool.ai" className="underline underline-offset-2">
+          https://fieldschool.ai
+        </a>{" "}
+        and{" "}
+        <a
+          href="https://portal.fieldschool.ai"
+          className="underline underline-offset-2"
+        >
+          https://portal.fieldschool.ai
+        </a>
+        , operated by Field School ({DEAN_NAME}). By using the campus you accept
+        them. If you do not, do not use the site.
       </p>
       <p className="mt-3 text-sm text-muted-foreground">
         Last updated {LAST_UPDATED}.
@@ -33,12 +42,12 @@ export default function TermsPage() {
         <Block
           kicker="01"
           title="Acceptance"
-          body={`Using ${UNI_NAME} — including walking a course as a guest, labeling a local dashboard, or signing in as staff — means you agree to these terms and to the Privacy Policy.`}
+          body="Using the campus, including walking a course as a guest, labeling a local dashboard, or signing in as staff, means you agree to these terms and to the Privacy Policy."
         />
         <Block
           kicker="02"
           title="Educational and demo nature"
-          body={`${UNI_NAME} is an educational portal and working campus. Some paths are demos (including the Jordan student walk). Course material, certificates, and tools are for learning and practice. They are not professional, legal, financial, or medical advice, and they are not a degree-granting program.`}
+          body="The campus is an educational portal and working campus. Some paths are demos (including the Jordan student walk). Course material, certificates, and tools are for learning and practice. They are not professional, legal, financial, or medical advice, and they are not a degree-granting program."
         />
         <Block
           kicker="03"
@@ -53,17 +62,17 @@ export default function TermsPage() {
         <Block
           kicker="05"
           title="Intellectual property"
-          body={`Course text, videos, assessments, branding, and campus software belong to ${COMPANY_NAME} or its licensors. You may use them to learn on this portal. You may not copy the catalog wholesale, resell the courses, or present the campus as your own product without written permission.`}
+          body="Course text, videos, assessments, branding, and campus software belong to Field School or its licensors. You may use them to learn on this portal. You may not copy the catalog wholesale, resell the courses, or present the campus as your own product without written permission."
         />
         <Block
           kicker="06"
           title="Disclaimer of warranties"
-          body={`${UNI_NAME} is provided “as is” and “as available.” ${COMPANY_NAME} does not warrant that the campus will be uninterrupted, error-free, or fit for a particular purpose. Progress stored only in this browser can be lost if you clear site data.`}
+          body="The campus is provided “as is” and “as available.” Field School does not warrant that the campus will be uninterrupted, error-free, or fit for a particular purpose. Progress stored only in this browser can be lost if you clear site data."
         />
         <Block
           kicker="07"
           title="Limitation of liability"
-          body={`To the fullest extent permitted by law, ${COMPANY_NAME} and ${DEAN_NAME} are not liable for indirect, incidental, special, consequential, or punitive damages, or for lost progress, lost certificates, or lost profits, arising from your use of the campus. Our total liability for a claim relating to the site will not exceed the amount you paid us for it in the prior twelve months (currently $0 for the public campus).`}
+          body="To the fullest extent permitted by law, Field School and Benjamin Johnson are not liable for indirect, incidental, special, consequential, or punitive damages, or for lost progress, lost certificates, or lost profits, arising from your use of the campus. Our total liability for a claim relating to the site will not exceed the amount you paid us for it in the prior twelve months (currently $0 for the public campus)."
         />
         <Block
           kicker="08"
@@ -87,10 +96,6 @@ export default function TermsPage() {
           . Related:{" "}
           <Link href="/privacy" className="underline underline-offset-2">
             Privacy Policy
-          </Link>{" "}
-          and{" "}
-          <Link href="/about" className="underline underline-offset-2">
-            About
           </Link>
           .
         </p>

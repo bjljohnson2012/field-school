@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { COMPANY_NAME, UNI_NAME } from "@/lib/brand";
 import { DEAN_EMAIL, DEAN_NAME } from "@/lib/campus";
 
 const LAST_UPDATED = "2026-08-22";
-const SITE_ORIGIN = "https://university.benjohnson.ai";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: `How ${COMPANY_NAME} collects, uses, and stores information on ${UNI_NAME}.`,
+  description:
+    "How Field School collects, uses, and stores information on fieldschool.ai and portal.fieldschool.ai.",
 };
 
 export default function PrivacyPage() {
@@ -22,9 +21,19 @@ export default function PrivacyPage() {
         Privacy Policy
       </h1>
       <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-        {COMPANY_NAME} operates {UNI_NAME} at {SITE_ORIGIN}. This policy
-        explains what we collect when you walk the campus, how we use it, and
-        how to reach us. We do not sell personal data.
+        Field School operates the campus at{" "}
+        <a href="https://fieldschool.ai" className="underline underline-offset-2">
+          https://fieldschool.ai
+        </a>{" "}
+        and{" "}
+        <a
+          href="https://portal.fieldschool.ai"
+          className="underline underline-offset-2"
+        >
+          https://portal.fieldschool.ai
+        </a>
+        . This policy explains what we collect when you walk the campus, how we
+        use it, and how to reach us. We do not sell personal data.
       </p>
       <p className="mt-3 text-sm text-muted-foreground">
         Last updated {LAST_UPDATED}. Operator: {DEAN_NAME}.
@@ -37,8 +46,8 @@ export default function PrivacyPage() {
           body={
             <>
               <strong className="text-foreground">Staff sign-in.</strong> If you
-              use Auth.js Google or X sign-in, we receive the name and
-              email your provider shares so we can confirm you are on the staff
+              use Auth.js Google or X sign-in, we receive the name and email
+              your provider shares so we can confirm you are on the staff
               allowlist and open admin tools. Guest, local name, and the Jordan
               demo never grant admin. Staff is invite-only.
               <br />
@@ -50,7 +59,9 @@ export default function PrivacyPage() {
               name, email, provider, time, and an optional note.
               <br />
               <br />
-              <strong className="text-foreground">Optional certificate label.</strong>{" "}
+              <strong className="text-foreground">
+                Optional certificate label.
+              </strong>{" "}
               If you type a name and optional email on sign-in to keep a
               dashboard, those values stay in this browser so certificates and
               progress can show your name.
@@ -67,12 +78,12 @@ export default function PrivacyPage() {
         <Block
           kicker="02"
           title="How we use it"
-          body="We use this information to operate the educational portal, grant staff admin access to allowlisted people, run free beta member sign-in, review staff access requests, remember what you finished on this device, issue Field School University certificates with the name you typed, and improve courses and campus tools. We do not use it to sell ads or sell your data."
+          body="We use this information to operate the educational portal, grant staff admin access to allowlisted people, run free beta member sign-in, review staff access requests, remember what you finished on this device, issue certificates with the name you typed, and improve courses and campus tools. We do not use it to sell ads or sell your data."
         />
         <Block
           kicker="03"
           title="Processors and hosting"
-          body="If you choose Google or X sign-in, that provider is the identity processor for the OAuth handshake. Optional request-notify email uses SMTP only when those host settings are present. The live campus is hosted on our server at university.benjohnson.ai. Those processors see only what is needed to authenticate, notify, or serve the site."
+          body="If you choose Google or X sign-in, that provider is the identity processor for the OAuth handshake. Optional request-notify email uses SMTP only when those host settings are present. The live campus is hosted on our servers at fieldschool.ai and portal.fieldschool.ai. Those processors see only what is needed to authenticate, notify, or serve the site."
         />
         <Block
           kicker="04"
@@ -87,7 +98,7 @@ export default function PrivacyPage() {
         <Block
           kicker="06"
           title="We do not sell personal data"
-          body={`${UNI_NAME} is an educational portal. ${COMPANY_NAME} does not sell personal information, does not rent mailing lists, and does not share your name or email with advertisers.`}
+          body="The campus is an educational portal. Field School does not sell personal information, does not rent mailing lists, and does not share your name or email with advertisers."
         />
         <Block
           kicker="07"
@@ -111,10 +122,6 @@ export default function PrivacyPage() {
           . Related:{" "}
           <Link href="/terms" className="underline underline-offset-2">
             Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link href="/about" className="underline underline-offset-2">
-            About
           </Link>
           .
         </p>
