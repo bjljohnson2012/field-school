@@ -1,0 +1,16 @@
+{
+  "name": "Lyell",
+  "short_name": "Lyell",
+  "description": "Lyell is the holding company over Field School.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#131313",
+  "theme_color": "#131313",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
