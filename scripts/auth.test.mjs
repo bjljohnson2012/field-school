@@ -94,9 +94,10 @@ test("privacy and terms pages are public, real policies linked from chrome", () 
   assert.match(privacy, /localStorage/);
   assert.match(privacy, /under 13/);
   assert.match(privacy, /DEAN_EMAIL/);
-  assert.match(privacy, /COMPANY_NAME/);
-  assert.match(privacy, /UNI_NAME/);
+  assert.match(privacy, /https:\/\/fieldschool\.ai/);
+  assert.match(privacy, /https:\/\/portal\.fieldschool\.ai/);
   assert.match(privacy, /staff[\s\S]+allowlist/);
+  assert.doesNotMatch(privacy, /university\.benjohnson\.ai/);
   assert.doesNotMatch(privacy, /lorem ipsum/i);
 
   assert.match(terms, /title:\s*"Terms of Service"/);
@@ -108,7 +109,19 @@ test("privacy and terms pages are public, real policies linked from chrome", () 
   assert.match(terms, /Limitation of liability/);
   assert.match(terms, /Ohio/);
   assert.match(terms, /DEAN_EMAIL/);
+  assert.match(terms, /https:\/\/fieldschool\.ai/);
+  assert.match(terms, /https:\/\/portal\.fieldschool\.ai/);
+  assert.doesNotMatch(terms, /university\.benjohnson\.ai/);
   assert.doesNotMatch(terms, /lorem ipsum/i);
+
+  const apexPrivacy = readSrc("marketing-site/privacy.html");
+  const apexTerms = readSrc("marketing-site/terms.html");
+  assert.match(apexPrivacy, /We do not sell personal data/);
+  assert.match(apexTerms, /State of Ohio/);
+  assert.match(apexPrivacy, /href="\/terms"/);
+  assert.match(apexTerms, /href="\/privacy"/);
+  assert.doesNotMatch(apexPrivacy, /university\.benjohnson\.ai/);
+  assert.doesNotMatch(apexTerms, /university\.benjohnson\.ai/);
 
   assert.match(footer, /href="\/privacy"/);
   assert.match(footer, /href="\/terms"/);
