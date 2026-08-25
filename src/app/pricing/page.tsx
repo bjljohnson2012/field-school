@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { checkoutPath } from "@/lib/billing/plans";
 import { PORTAL_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: `Newsletter is free. One course is free. Paid ${PORTAL_NAME} seats and coaching. Invoice later.`,
+  description: `Newsletter is free. One course is free. Paid ${PORTAL_NAME} seats and coaching. Pay with a card.`,
 };
 
 const portalPlans = [
@@ -21,7 +22,7 @@ const portalPlans = [
     price: "$10",
     cadence: "per month",
     body: "Keep up to three courses open on your portal.",
-    href: "/signup?plan=10",
+    href: checkoutPath("10"),
     label: "Enroll $10",
   },
   {
@@ -29,7 +30,7 @@ const portalPlans = [
     price: "$50",
     cadence: "per month",
     body: "Open as many courses as you want.",
-    href: "/signup?plan=50",
+    href: checkoutPath("50"),
     label: "Enroll $50",
   },
   {
@@ -37,7 +38,7 @@ const portalPlans = [
     price: "$1,059",
     cadence: "one time",
     body: "Earn a Field School certificate. Take as long as you need.",
-    href: "/signup?plan=1059",
+    href: checkoutPath("1059"),
     label: "Enroll $1,059",
   },
 ];
@@ -48,21 +49,21 @@ const coaching = [
     price: "$100",
     cadence: "per month",
     body: "One hour a week online. Coaching, direct feedback, and a room you can join from anywhere. Includes the newsletter and unlimited access to the training portal.",
-    href: "/signup?plan=100",
+    href: checkoutPath("100"),
   },
   {
     name: "In the room",
     price: "$200",
     cadence: "per month",
     body: "The same hour, in person. Coaching and direct feedback after class. Includes the newsletter and unlimited access to the training portal.",
-    href: "/signup?plan=200",
+    href: checkoutPath("200"),
   },
   {
     name: "One-on-one hour",
     price: "$1,000",
     cadence: "per month",
     body: "One hour a week with Ben. Coaching, direct feedback, and help on the work you are actually doing. Includes the newsletter and unlimited access to the training portal.",
-    href: "/signup?plan=1000",
+    href: checkoutPath("1000"),
   },
 ];
 
@@ -73,11 +74,11 @@ export default function PricingPage() {
         Pricing
       </p>
       <h1 className="mt-3 font-display text-4xl tracking-tight sm:text-5xl">
-        Start free. Paid seats are invoiced later.
+        Start free. Pay when you want more.
       </h1>
       <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-        The newsletter is free. One course is free. There is no checkout on this
-        page.
+        The newsletter is free. One course is free. Paid seats take a card on
+        Stripe.
       </p>
 
       <section className="mt-10 rounded-xl border border-border bg-card px-5 py-6">
@@ -153,9 +154,6 @@ export default function PricingPage() {
             >
               Enroll {plan.price}
             </Link>
-            <p className="mt-3 text-xs uppercase tracking-[0.16em] text-muted-foreground">
-              Invoice later
-            </p>
           </article>
         ))}
       </div>

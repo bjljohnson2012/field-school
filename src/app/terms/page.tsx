@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { DEAN_EMAIL, DEAN_NAME } from "@/lib/campus";
 
-const LAST_UPDATED = "2026-08-22";
+const LAST_UPDATED = "2026-08-25";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -72,12 +72,12 @@ export default function TermsPage() {
         <Block
           kicker="07"
           title="Limitation of liability"
-          body="To the fullest extent permitted by law, Field School and Benjamin Johnson are not liable for indirect, incidental, special, consequential, or punitive damages, or for lost progress, lost certificates, or lost profits, arising from your use of the campus. Our total liability for a claim relating to the site will not exceed the amount you paid us for it in the prior twelve months (currently $0 for the public campus)."
+          body="To the fullest extent permitted by law, Field School and Benjamin Johnson are not liable for indirect, incidental, special, consequential, or punitive damages, or for lost progress, lost certificates, or lost profits, arising from your use of the campus. Our total liability for a claim relating to the site will not exceed the amount you paid us for it in the prior twelve months."
         />
         <Block
           kicker="08"
           title="Changes"
-          body="We may update these terms as the campus grows (for example when paid invoices or synced course progress ship). The last-updated date at the top will change. Continued use after a change means you accept the new terms."
+          body="We may update these terms as the campus grows, including when we add paid seats or sync course progress. The last-updated date at the top will change. Continued use after a change means you accept the new terms."
         />
         <Block
           kicker="09"

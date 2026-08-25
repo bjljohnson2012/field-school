@@ -131,6 +131,8 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
   assert.match(pricing, /\$1,059/);
   assert.doesNotMatch(pricing, /University/);
   assert.match(pricing, /Training portal/);
+  assert.match(pricing, /checkout\?plan=10/);
+  assert.doesNotMatch(pricing, /Invoice later/);
   assert.match(shop, /data-form="shop_waitlist"/);
   assert.match(js, /portal\.fieldschool\.ai\/api\/forms/);
 });

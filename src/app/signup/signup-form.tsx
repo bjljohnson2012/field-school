@@ -41,8 +41,8 @@ export function SignupForm({ oauth }: Props) {
         Join the Field School training portal
       </h1>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Enroll in the training portal. Learn at your pace. No card on this
-        page. Paid seats are invoiced later. See{" "}
+        Enroll in the training portal. Learn at your pace. The first course
+        is free. Paid seats take a card on{" "}
         <Link href="/pricing" className="underline underline-offset-2">
           pricing
         </Link>

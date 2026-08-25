@@ -17,9 +17,10 @@ Field School is a weekly Saturday hour. Directors come. So do people on the floo
 Pages: Home (organization umbrella), Portal, Newsletter, Community, Coaching, About, Pricing, Tools, 12 Presuppositions, Shop, Founder.  
 Header: Join our Newsletter, Enroll.  
 The newsletter, topic requests, and shop waitlist post to `https://portal.fieldschool.ai/api/forms` and show under Admin → Forms.  
-Enroll goes to https://portal.fieldschool.ai/signup  
+Enroll (free) goes to https://portal.fieldschool.ai/signup  
+Paid seats go to https://portal.fieldschool.ai/checkout?plan=… and open Stripe.  
 Training portal: one course free, $10 up to three courses, $50 more than three, $1,059 certification.  
-Coaching: $100 online / $200 in the room / $1,000 one-on-one. Invoice later.  
+Coaching: $100 online / $200 in the room / $1,000 one-on-one.  
 Privacy and terms stay at `/privacy` and `/terms`.
 
 ## App (Field School training portal)

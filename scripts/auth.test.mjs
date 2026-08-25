@@ -88,7 +88,7 @@ test("privacy and terms pages are public, real policies linked from chrome", () 
   const proxy = readSrc("src/proxy.ts");
 
   assert.match(privacy, /title:\s*"Privacy Policy"/);
-  assert.match(privacy, /LAST_UPDATED = "2026-08-22"/);
+  assert.match(privacy, /LAST_UPDATED = "2026-08-25"/);
   assert.match(privacy, /Last updated \{LAST_UPDATED\}/);
   assert.match(privacy, /do not sell personal data/i);
   assert.match(privacy, /localStorage/);
@@ -101,7 +101,7 @@ test("privacy and terms pages are public, real policies linked from chrome", () 
   assert.doesNotMatch(privacy, /lorem ipsum/i);
 
   assert.match(terms, /title:\s*"Terms of Service"/);
-  assert.match(terms, /LAST_UPDATED = "2026-08-22"/);
+  assert.match(terms, /LAST_UPDATED = "2026-08-25"/);
   assert.match(terms, /Last updated \{LAST_UPDATED\}/);
   assert.match(terms, /Educational and demo nature/);
   assert.match(terms, /staff allowlist/);
@@ -375,12 +375,13 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(pricing, /In the room/);
   assert.match(pricing, /One-on-one hour/);
   assert.match(pricing, /Start free/);
-  assert.match(pricing, /invoiced later/i);
-  assert.match(pricing, /no checkout/i);
+  assert.match(pricing, /Stripe/);
+  assert.match(pricing, /checkoutPath\("10"\)/);
+  assert.match(pricing, /checkoutPath\("1000"\)/);
+  assert.doesNotMatch(pricing, /invoice/i);
   assert.doesNotMatch(pricing, /University/);
   assert.doesNotMatch(readSrc("src/lib/brand.ts"), /University/);
   assert.doesNotMatch(readSrc("src/components/site-header.tsx"), /University/);
-  assert.doesNotMatch(pricing, /stripe/i);
   assert.doesNotMatch(pricing, /<form/);
   assert.doesNotMatch(pricing, /lorem ipsum/i);
 

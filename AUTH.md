@@ -126,11 +126,16 @@ Run `npm run dev` and open `/signup`. Without real client IDs, Google/X stay dis
 
 ## Pricing
 
-`/pricing` is display-only. No Stripe and no card form. Invoice-based paid plans later:
+Paid seats use live Stripe Payment Links on the `fieldschool.ai` account. `/checkout?plan=` redirects to the matching link. After pay, Stripe sends people to `/checkout/success`.
 
-- Cohort meetings online: $100/month
-- Cohort meetings in person: $200/month
-- One-on-one AI + business coaching: $1,000/month
+| Plan | Price | Stripe price |
+|------|-------|--------------|
+| Up to three courses | $10/month | `price_1U8SWWABZCvmsACo5Dg1IOF1` |
+| More than three courses | $50/month | `price_1U8SWXABZCvmsACoE5CBz6lg` |
+| Certification | $1,059 one time | `price_1U8SWYABZCvmsACotpOTvlJ5` |
+| Online cohort | $100/month | `price_1U8SWYABZCvmsACoqlz5hgWP` |
+| In the room | $200/month | `price_1U8SWYABZCvmsACo83J0YNYs` |
+| One-on-one hour | $1,000/month | `price_1U8SWZABZCvmsACo6SLipTTi` |
 
 ## What we deliberately removed
 

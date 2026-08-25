@@ -47,7 +47,7 @@ Check:
 - `/terms` — public Terms of Service (Google OAuth consent)
 - `/tools` — skill + intelligence live
 - `/signup` — free beta join (Google, X, email + password)
-- `/pricing` — display-only plans (invoice later, no checkout)
+- `/pricing` — plans. Paid enroll opens Stripe Checkout via `/checkout?plan=`
 - `/admin` — demo, users, notifications, access requests, forms, add tools
 - `/admin/forms` — Saturday list, topic requests, shop waitlist
 - `/admin/demo` — staff Jordan walk + Copy demo link
