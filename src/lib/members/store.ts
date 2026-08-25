@@ -1,7 +1,14 @@
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { compare, hash } from "bcryptjs";
+import {
+  getSeat,
+  seatForPlan,
+  shouldReplaceSeat,
+  type SeatKind,
+} from "@/lib/billing/seats";
+import { isPaidPlanId } from "@/lib/billing/plans";
 import {
   isValidEmail,
   normalizeEmail,
@@ -15,6 +22,7 @@ import type {
   FormSubmission,
   MemberProvider,
   StoredMember,
+  StoredPurchase,
 } from "@/lib/members/types";
 
 const BCRYPT_ROUNDS = 12;
@@ -32,7 +40,7 @@ export function resolveStorePath() {
 }
 
 function emptyStore(): CampusStoreFile {
-  return { members: [], accessRequests: [], formSubmissions: [] };
+  return { members: [], accessRequests: [], formSubmissions: [], purchases: [] };
 }
 
 async function readStore(path: string): Promise<CampusStoreFile> {
@@ -47,6 +55,7 @@ async function readStore(path: string): Promise<CampusStoreFile> {
       formSubmissions: Array.isArray(parsed.formSubmissions)
         ? parsed.formSubmissions
         : [],
+      purchases: Array.isArray(parsed.purchases) ? parsed.purchases : [],
     };
   } catch (error) {
     const code = (error as NodeJS.ErrnoException).code;
@@ -93,16 +102,30 @@ export async function registerMember(input: {
   return withLock(async () => {
     const path = resolveStorePath();
     const store = await readStore(path);
-    if (store.members.some((m) => m.email === email)) {
+    const existing = store.members.find((m) => m.email === email);
+    if (existing?.passwordHash) {
       return { ok: false, error: "An account with that email already exists. Sign in instead." };
+    }
+    const passwordHash = await hash(input.password, BCRYPT_ROUNDS);
+    if (existing) {
+      existing.name = name;
+      existing.passwordHash = passwordHash;
+      existing.provider = "credentials";
+      delete existing.claimToken;
+      delete existing.claimTokenExpiresAt;
+      await writeStore(path, store);
+      const { passwordHash: _omit, ...safe } = existing;
+      return { ok: true, member: safe as StoredMember };
     }
     const member: StoredMember = {
       id: `member-${randomUUID()}`,
       email,
       name,
-      passwordHash: await hash(input.password, BCRYPT_ROUNDS),
+      passwordHash,
       provider: "credentials",
       createdAt: new Date().toISOString(),
+      seatKind: "course",
+      courseCap: 1,
     };
     store.members.push(member);
     await writeStore(path, store);
@@ -154,6 +177,8 @@ export async function upsertOAuthMember(input: {
       name: input.name?.trim() || email,
       provider,
       createdAt: new Date().toISOString(),
+      seatKind: "course",
+      courseCap: 1,
     };
     store.members.push(member);
     await writeStore(path, store);
@@ -273,4 +298,228 @@ export async function createFormSubmission(input: {
 export async function listFormSubmissions() {
   const store = await readStore(resolveStorePath());
   return sortFormSubmissions(store.formSubmissions);
+}
+
+function generateClaimToken() {
+  return randomBytes(24).toString("hex");
+}
+
+function claimExpiry(now: Date) {
+  return new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
+}
+
+export async function applyPaidSeat(input: {
+  email: string;
+  planId: string;
+  stripeSessionId: string;
+  stripeCustomerId?: string | null;
+  stripeSubscriptionId?: string | null;
+  amountTotal?: number | null;
+}): Promise<{
+  member: StoredMember;
+  purchase: StoredPurchase;
+  created: boolean;
+  claimToken: string | null;
+}> {
+  const planId = input.planId;
+  if (!isPaidPlanId(planId)) {
+    throw new Error("Unknown paid plan.");
+  }
+  const email = normalizeEmail(input.email);
+  if (!isValidEmail(email)) {
+    throw new Error("Paid seat is missing a valid email.");
+  }
+
+  return withLock(async () => {
+    const path = resolveStorePath();
+    const store = await readStore(path);
+    const existingPurchase = store.purchases.find(
+      (purchase) => purchase.stripeSessionId === input.stripeSessionId,
+    );
+    if (existingPurchase) {
+      const member = store.members.find((item) => item.email === email);
+      if (!member) {
+        throw new Error("Paid seat exists without a member.");
+      }
+      return {
+        member,
+        purchase: existingPurchase,
+        created: false,
+        claimToken: member.passwordHash ? null : member.claimToken ?? null,
+      };
+    }
+
+    const seat = seatForPlan(planId);
+    const now = new Date();
+    let member = store.members.find((item) => item.email === email);
+    let claimToken: string | null = null;
+
+    if (!member) {
+      claimToken = generateClaimToken();
+      member = {
+        id: `member-${randomUUID()}`,
+        email,
+        name: email.split("@")[0] || email,
+        provider: "credentials",
+        createdAt: now.toISOString(),
+        seatKind: seat.kind,
+        courseCap: seat.courseCap,
+        stripeCustomerId: input.stripeCustomerId ?? undefined,
+        stripeSubscriptionId: input.stripeSubscriptionId ?? null,
+        claimToken,
+        claimTokenExpiresAt: claimExpiry(now),
+      };
+      store.members.push(member);
+    } else {
+      const current = member.seatKind ?? "free";
+      if (shouldReplaceSeat(current, seat.kind)) {
+        member.seatKind = seat.kind;
+        member.courseCap = seat.courseCap;
+      }
+      if (input.stripeCustomerId) {
+        member.stripeCustomerId = input.stripeCustomerId;
+      }
+      if (input.stripeSubscriptionId !== undefined) {
+        member.stripeSubscriptionId = input.stripeSubscriptionId;
+      }
+      if (!member.passwordHash) {
+        claimToken = member.claimToken ?? generateClaimToken();
+        member.claimToken = claimToken;
+        member.claimTokenExpiresAt = claimExpiry(now);
+      }
+    }
+
+    const purchase: StoredPurchase = {
+      stripeSessionId: input.stripeSessionId,
+      email,
+      planId,
+      seatKind: seat.kind,
+      amountTotal: input.amountTotal ?? null,
+      createdAt: now.toISOString(),
+    };
+    store.purchases.push(purchase);
+    await writeStore(path, store);
+    return { member, purchase, created: true, claimToken };
+  });
+}
+
+export async function findPurchaseBySession(sessionId: string) {
+  const id = sessionId.trim();
+  if (!id) return null;
+  const store = await readStore(resolveStorePath());
+  const purchase = store.purchases.find((item) => item.stripeSessionId === id);
+  if (!purchase) return null;
+  const member = store.members.find((item) => item.email === purchase.email) ?? null;
+  return { purchase, member };
+}
+
+export async function findMemberByClaimToken(token: string) {
+  const value = token.trim();
+  if (!value) return null;
+  const store = await readStore(resolveStorePath());
+  const member = store.members.find((item) => item.claimToken === value);
+  if (!member) return null;
+  if (member.claimTokenExpiresAt && Date.parse(member.claimTokenExpiresAt) < Date.now()) {
+    return null;
+  }
+  return member;
+}
+
+async function setMemberPassword(
+  store: CampusStoreFile,
+  member: StoredMember,
+  name: string,
+  password: string,
+) {
+  const pwdError = passwordError(password);
+  if (pwdError) throw new Error(pwdError);
+  member.name = name.trim() || member.name;
+  member.passwordHash = await hash(password, BCRYPT_ROUNDS);
+  member.provider = "credentials";
+  delete member.claimToken;
+  delete member.claimTokenExpiresAt;
+}
+
+export async function setPasswordFromClaim(input: {
+  token: string;
+  name: string;
+  password: string;
+}): Promise<{ ok: true; member: StoredMember } | { ok: false; error: string }> {
+  const token = input.token.trim();
+  if (!token) return { ok: false, error: "That set-password link is invalid or already used." };
+  const name = input.name.trim();
+  const pwdError = passwordError(input.password);
+  if (!name) return { ok: false, error: "Name is required." };
+  if (pwdError) return { ok: false, error: pwdError };
+
+  return withLock(async () => {
+    const path = resolveStorePath();
+    const store = await readStore(path);
+    const member = store.members.find((item) => item.claimToken === token);
+    if (!member) {
+      return { ok: false, error: "That set-password link is invalid or already used." };
+    }
+    if (member.claimTokenExpiresAt && Date.parse(member.claimTokenExpiresAt) < Date.now()) {
+      return { ok: false, error: "That set-password link has expired." };
+    }
+    await setMemberPassword(store, member, name, input.password);
+    await writeStore(path, store);
+    const { passwordHash: _omit, ...safe } = member;
+    return { ok: true, member: safe as StoredMember };
+  });
+}
+
+export async function setPasswordFromSession(input: {
+  sessionId: string;
+  name: string;
+  password: string;
+}): Promise<{ ok: true; member: StoredMember } | { ok: false; error: string }> {
+  const sessionId = input.sessionId.trim();
+  const name = input.name.trim();
+  const pwdError = passwordError(input.password);
+  if (!sessionId) return { ok: false, error: "Missing checkout session." };
+  if (!name) return { ok: false, error: "Name is required." };
+  if (pwdError) return { ok: false, error: pwdError };
+
+  return withLock(async () => {
+    const path = resolveStorePath();
+    const store = await readStore(path);
+    const purchase = store.purchases.find((item) => item.stripeSessionId === sessionId);
+    if (!purchase) {
+      return { ok: false, error: "That payment is still landing. Refresh and try again." };
+    }
+    const member = store.members.find((item) => item.email === purchase.email);
+    if (!member) {
+      return { ok: false, error: "That payment is still landing. Refresh and try again." };
+    }
+    if (member.passwordHash) {
+      return { ok: false, error: "This email already has a password. Sign in instead." };
+    }
+    await setMemberPassword(store, member, name, input.password);
+    await writeStore(path, store);
+    const { passwordHash: _omit, ...safe } = member;
+    return { ok: true, member: safe as StoredMember };
+  });
+}
+
+export async function downgradeExpiredSubscription(stripeSubscriptionId: string) {
+  const id = stripeSubscriptionId.trim();
+  if (!id) return null;
+
+  return withLock(async () => {
+    const path = resolveStorePath();
+    const store = await readStore(path);
+    const member = store.members.find((item) => item.stripeSubscriptionId === id);
+    if (!member) return null;
+    const keepCert = store.purchases.some(
+      (purchase) => purchase.email === member.email && purchase.seatKind === "certification",
+    );
+    const next: SeatKind = keepCert ? "certification" : "course";
+    const seat = getSeat(next);
+    member.seatKind = seat.kind;
+    member.courseCap = seat.courseCap;
+    member.stripeSubscriptionId = null;
+    await writeStore(path, store);
+    return member;
+  });
 }

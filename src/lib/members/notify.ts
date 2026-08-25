@@ -102,3 +102,43 @@ export async function emailAssessmentResult(input: {
   });
   return { emailed: true, to };
 }
+
+export async function emailSeatConfirmation(input: {
+  email: string;
+  subject: string;
+  text: string;
+}) {
+  const to = input.email;
+  const from =
+    process.env.SMTP_FROM?.trim() ||
+    "ben@fieldschool.ai";
+  if (!smtpConfigured()) {
+    console.info(
+      "[seat-email] seat granted; email skipped (set SMTP_HOST to send)",
+      { to, subject: input.subject },
+    );
+    return { emailed: false, to };
+  }
+
+  const nodemailer = await import("nodemailer");
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: process.env.SMTP_SECURE === "true",
+    auth:
+      process.env.SMTP_USER && process.env.SMTP_PASS
+        ? {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          }
+        : undefined,
+  });
+
+  await transporter.sendMail({
+    from,
+    to,
+    subject: input.subject,
+    text: input.text,
+  });
+  return { emailed: true, to };
+}

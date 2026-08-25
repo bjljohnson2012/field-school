@@ -1,8 +1,11 @@
 import NextAuth from "next-auth";
 import type { Account, Profile, User } from "next-auth";
+import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { inactiveAuthConfig, resolveAuthConfig } from "@/lib/auth/config";
 import { authCanMintSessions } from "@/lib/auth/env";
+
+type JwtArgs = Parameters<NonNullable<NonNullable<NextAuthConfig["callbacks"]>["jwt"]>>[0];
 
 function buildNodeAuthConfig() {
   const base = resolveAuthConfig();
@@ -27,6 +30,21 @@ function buildNodeAuthConfig() {
           });
         }
         return true;
+      },
+      async jwt(args: JwtArgs) {
+        const token =
+          (base.callbacks?.jwt ? await base.callbacks.jwt(args) : args.token) ??
+          args.token;
+        const email = typeof token.email === "string" ? token.email : "";
+        if (email) {
+          const { findMemberByEmail } = await import("@/lib/members/store");
+          const { getSeat } = await import("@/lib/billing/seats");
+          const member = await findMemberByEmail(email);
+          const seat = getSeat(member?.seatKind);
+          token.seatKind = seat.kind;
+          token.seatLabel = seat.label;
+        }
+        return token;
       },
     },
     providers: [

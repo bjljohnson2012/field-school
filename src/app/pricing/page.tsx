@@ -55,7 +55,7 @@ const coaching = [
     name: "In the room",
     price: "$200",
     cadence: "per month",
-    body: "The same hour, in person. Coaching and direct feedback after class. Includes the newsletter and unlimited access to the training portal.",
+    body: "The same hour, in person in Dayton, Ohio and the towns around it. If you live farther away, you cover your own travel and stay. Includes the newsletter and unlimited access to the training portal.",
     href: checkoutPath("200"),
   },
   {

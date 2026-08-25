@@ -7,7 +7,7 @@ This campus uses [Auth.js / NextAuth v5](https://authjs.dev) for Google, X (Twit
 | Who | How they get in | What they get |
 |-----|-----------------|---------------|
 | Staff / admin | Google or X, and the email must be on `STAFF_ADMIN_EMAILS` (dean email by default) | `/admin*` |
-| Student / member | Google, X, or email + password (any email) | Dashboard and campus. Forever-free beta. No paywall. |
+| Student / member | Google, X, or email + password (any email) | Dashboard and campus. Free beta is one course. A paid Stripe seat raises that level. |
 | Guest | Local browser paths on `/login` and `/signup` | Walk the catalog. Never admin. |
 | Jordan student demo | Staff `/admin/demo`, or a token link on `/demo` | Walk as Jordan Hale. Never admin. Login never shows this button. |
 
@@ -126,7 +126,27 @@ Run `npm run dev` and open `/signup`. Without real client IDs, Google/X stay dis
 
 ## Pricing
 
-Paid seats use live Stripe Payment Links on the `fieldschool.ai` account. `/checkout?plan=` redirects to the matching link. After pay, Stripe sends people to `/checkout/success`.
+Paid seats use live Stripe Payment Links on the `fieldschool.ai` account. `/checkout?plan=` redirects to the matching link. After pay, Stripe sends people to `/checkout/success?session_id={CHECKOUT_SESSION_ID}`.
+
+The webhook at `/api/stripe/webhook` grants the matching seat on that email, stores the purchase, and emails a confirmation when SMTP is set. Online cohort and in-the-room seats also say a second email is coming. In the room is Dayton, Ohio and the towns around it. Farther away, the buyer covers travel and stay.
+
+A new paid email can set a password on the success page or from `/login/claim?token=`. That email can then sign in. Coaching seats include unlimited portal access.
+
+| Variable | Required for | Notes |
+|----------|--------------|-------|
+| `STRIPE_WEBHOOK_SECRET` | Paid seat fulfillment | Signing secret for `/api/stripe/webhook`. Lives in `/opt/field-school.env`. Never commit it. |
+| `PORTAL_PUBLIC_URL` | Optional claim links | Defaults to `https://portal.fieldschool.ai`. |
+
+Seat after pay:
+
+| Plan | Seat |
+|------|------|
+| Up to three courses | 3 courses |
+| More than three courses | Unlimited portal |
+| Certification | Unlimited portal + certificate |
+| Online cohort | Unlimited portal + weekly online hour |
+| In the room | Unlimited portal + Dayton room |
+| One-on-one hour | Unlimited portal + weekly hour with Ben |
 
 | Plan | Price | Stripe price |
 |------|-------|--------------|
