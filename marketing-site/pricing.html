@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Field School</title>
+  <title>Pricing · Field School</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,10 +13,10 @@
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="header-bar">
-      <a class="wordmark" href="index.html" aria-current="page">Field School</a>
+      <a class="wordmark" href="index.html">Field School</a>
       <nav class="nav-desktop" aria-label="Site">
       <a class="nav-link" href="about.html">About</a>
-      <a class="nav-link" href="pricing.html">Pricing</a>
+      <a class="nav-link" href="pricing.html" aria-current="page">Pricing</a>
       <a class="nav-link" href="tools.html">Tools</a>
       <a class="nav-link" href="twelve.html">12 Presuppositions</a>
       <a class="nav-link" href="shop.html">Shop</a>
@@ -29,7 +29,7 @@
           <summary aria-label="Open menu"><span class="burger" aria-hidden="true"></span></summary>
           <nav class="nav-panel" aria-label="Site">
       <a class="nav-link" href="about.html">About</a>
-      <a class="nav-link" href="pricing.html">Pricing</a>
+      <a class="nav-link" href="pricing.html" aria-current="page">Pricing</a>
       <a class="nav-link" href="tools.html">Tools</a>
       <a class="nav-link" href="twelve.html">12 Presuppositions</a>
       <a class="nav-link" href="shop.html">Shop</a>
@@ -41,25 +41,25 @@
   </header>
   <main id="main" class="main">
     <div class="wrap">
-      <section class="lede">
-        <h1 class="lede-display">Field School is a weekly Saturday hour. Directors come. So do people on the floor, founders building the first team, young men starting, and people switching in.</h1>
-        <p>You start on Saturday. If you want closer help after Saturday is working, you add a weekday hour.</p>
-      </section>
-      <section class="card card-note" aria-labelledby="saturday-note">
-        <h2 id="saturday-note">Saturday note.</h2>
-        <form method="post" action="mailto:ben@fieldschool.ai" enctype="text/plain">
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required>
-          </div>
-          <button class="btn btn-primary" type="submit">Put this email on the Saturday list.</button>
-        </form>
-      </section>
-      <div class="actions">
-        <a class="btn btn-outline" href="pricing.html">Join</a>
-        <a class="btn btn-outline" href="https://portal.fieldschool.ai">Login</a>
+      <h1 class="page-title">Three plans. Invoice later. Join starts a portal signup on that plan.</h1>
+      <div class="plan-grid">
+        <article class="plan">
+          <h2>$100 a month</h2>
+          <p>You pay $100 so Saturday is a room you can join from the chair you already have, which is the cheapest way to find out the week will use the help.</p>
+          <a class="btn btn-outline" href="https://portal.fieldschool.ai/signup?plan=100">Join $100</a>
+        </article>
+        <article class="plan">
+          <h2>$200 a month</h2>
+          <p>You pay $200 so Saturday happens in a room you have to enter, which is the version of the hour that sticks.</p>
+          <a class="btn btn-outline" href="https://portal.fieldschool.ai/signup?plan=200">Join $200</a>
+        </article>
+        <article class="plan plan-focus">
+          <h2>$1,000 a month</h2>
+          <p>You pay $1,000 so the hour sits on your actual week, after Saturday has already proved you will use the help.</p>
+          <a class="btn btn-primary" href="https://portal.fieldschool.ai/signup?plan=1000">Join $1,000</a>
+        </article>
       </div>
-      <p class="quiet">Three plans sit on <a href="pricing.html">Pricing</a>. Invoice later.</p>
+      <p class="invoice">Invoice later.</p>
     </div>
   </main>
   <footer class="site-footer">
