@@ -1,19 +1,28 @@
-# Field School University
+# Field School
 
-The course portal for **Field School**.
+Public site: https://fieldschool.ai  
+App: https://portal.fieldschool.ai  
+Legacy campus (still live, 301 held): https://university.benjohnson.ai
 
-Field School is the company. Field School University is where people walk courses, take assessments, and keep a portal. The cream-and-blue campus from [university.benjohnson.ai](https://university.benjohnson.ai) is the visual source; this repo continues that UI without the “Johnson” prefix.
+Field School is a weekly Saturday hour. Directors come. So do people on the floor, founders building the first team, young men starting, and people switching in.
 
-## What you can do
+## Domains
 
-- Walk the published **Grok Bot** ladder as a guest: clip, field work, quiz, exam
-- Earn a **Field School University** certificate when every station and the exam clear
-- Take live **skill** and **intelligence** assessments; results stay on the dashboard
-- Leave reserved slots for a **tool checklist** and a **personality checklist**
-- Share normal paths: `/c/grok-bot`, `/share/field-school`, `/share/hire-a-staff`, `/share/desk`
-- **Admin** hub: student demo, users (edit + impersonate), feedback notifications, how to add tools
+- `fieldschool.ai` is the public multi-page site. Source in this repo: `marketing-site/` (the live VPS tree from `/workspace/field-school/site/`).
+- `portal.fieldschool.ai` is the Next.js campus app. Same app as `university.benjohnson.ai` until the university 301 is lifted.
+- `AUTH_URL` still points at university.benjohnson.ai. Do not flip it until the four portal Google/X OAuth callback rows exist. Do not 301 university until then.
 
-Progress is stored in this browser. Join the free beta on `/signup` (Google, X, or email + password). Staff admin is invite-only: sign in on `/login` with Google or X as an allowlisted email (dean: `bjljohnson2012@gmail.com`). Name the portal if you want certificates labeled. See [AUTH.md](AUTH.md).
+## Public site
+
+Pages: Home (newsletter CTA), About, Pricing, Tools (lead form to ben@fieldschool.ai), 12 Presuppositions, Shop (coming soon), Founder.  
+Login goes to https://portal.fieldschool.ai  
+Join goes to Pricing, then portal signup on the chosen plan (`/signup?plan=100|200|1000`).  
+SKUs: $100 / $200 / $1,000. Foundry is off the cart.  
+Privacy and terms stay at `/privacy` and `/terms`.
+
+## App (Field School University)
+
+Next.js campus: courses, assessments, dashboard, admin. Guest paths: `/c/grok-bot`, `/share/field-school`. Free beta on `/signup`. Staff admin is allowlist-only. See AUTH.md and DEPLOY.md.
 
 ## Run locally
 
@@ -22,14 +31,13 @@ npm install
 npm run dev
 ```
 
-App: [http://127.0.0.1:43141](http://127.0.0.1:43141)
+App: http://127.0.0.1:43141
 
 ## Deploy
 
-Production: [https://university.benjohnson.ai](https://university.benjohnson.ai)
-
-Deploy from this tree with `bash deploy/deploy.sh` (see [DEPLOY.md](DEPLOY.md)). Do not clone the older GitHub `field-school` repo into this workspace.
+Ship via Cursor Cloud Agent to the Hostinger VPS (`2.24.70.248`). Apex static files go to the fieldschool.ai docroot. Next app is the portal. Do not merge to main as the live path. Do not use the shared Grok box for SSH.
 
 ## Stack
 
-Next.js, TypeScript, Tailwind, shadcn/ui. Course tape and stations come from Ray Fernando’s [Grok Bot walkthrough](https://www.youtube.com/watch?v=sAoTrUijP4g).
+Public site: static HTML, IBM Plex + Fraunces.  
+App: Next.js, TypeScript, Tailwind, shadcn/ui.
