@@ -1,42 +1,43 @@
-# Johnson Field School University
+# Field School
 
-Multi-course campus at [university.benjohnson.ai](https://university.benjohnson.ai).
+Public site: https://fieldschool.ai  
+App: https://portal.fieldschool.ai  
+Legacy campus (still live, 301 held): https://university.benjohnson.ai
 
-Each course is the same ladder: source tape, stations with timestamped clips, field work, quiz, exam, share desk.
+Field School is a weekly Saturday hour. Directors come. So do people on the floor, founders building the first team, young men starting, and people switching in.
 
-The first published course is **Field School — Grok Bot vs OpenClaw and Hermes**, from [Ray Fernando’s walkthrough](https://www.youtube.com/watch?v=sAoTrUijP4g).
+## Domains
 
-## For students
+- `fieldschool.ai` is the public multi-page site. Source in this repo: `marketing-site/` (the live VPS tree from `/workspace/field-school/site/`).
+- `portal.fieldschool.ai` is the Next.js campus app. Same app as `university.benjohnson.ai` until the university 301 is lifted.
+- `AUTH_URL` still points at university.benjohnson.ai. Do not flip it until the four portal Google/X OAuth callback rows exist. Do not 301 university until then.
 
-Anyone can open the catalog and walk a course. Sign up with email + password if you want progress, the desk, and a certificate saved.
+## Public site
 
-## For the dean
+Pages: Home (newsletter CTA), About, Pricing, Tools (lead form to ben@fieldschool.ai), 12 Presuppositions, Shop (coming soon), Founder.  
+Login goes to https://portal.fieldschool.ai  
+Join goes to Pricing, then portal signup on the chosen plan (`/signup?plan=100|200|1000`).  
+SKUs: $100 / $200 / $1,000. Foundry is off the cart.  
+Privacy and terms stay at `/privacy` and `/terms`.
 
-Sign in as `bjljohnson2012@gmail.com`. Open **Office** → **New course from a tape**. Paste a YouTube URL and transcript/notes. Review stations, then publish.
+## App (Field School University)
 
-## Run locally (Cursor)
+Next.js campus: courses, assessments, dashboard, admin. Guest paths: `/c/grok-bot`, `/share/field-school`. Free beta on `/signup`. Staff admin is allowlist-only. See AUTH.md and DEPLOY.md.
+
+## Run locally
 
 ```bash
-git clone https://github.com/bjljohnson2012/field-school.git
-cd field-school
 npm install
 npm run dev
 ```
 
-App: http://localhost:8080
-
-Optional env (VPS already has these):
-
-```
-DATABASE_URL=postgres://…
-BETTER_AUTH_URL=https://university.benjohnson.ai
-BETTER_AUTH_SECRET=…
-DEAN_EMAILS=bjljohnson2012@gmail.com
-XAI_API_KEY=…   # needed to generate a course from a tape
-```
-
-Without `DATABASE_URL` the app uses embedded PGLite (fine for local work).
+App: http://127.0.0.1:43141
 
 ## Deploy
 
-See `deploy/`. Production host is the Hostinger VPS behind Caddy at `university.benjohnson.ai`.
+Ship via Cursor Cloud Agent to the Hostinger VPS (`2.24.70.248`). Apex static files go to the fieldschool.ai docroot. Next app is the portal. Do not merge to main as the live path. Do not use the shared Grok box for SSH.
+
+## Stack
+
+Public site: static HTML, IBM Plex + Fraunces.  
+App: Next.js, TypeScript, Tailwind, shadcn/ui.
