@@ -2,22 +2,29 @@
 
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { ToolResultActions } from "@/components/tool-result-actions";
 import { Button } from "@/components/ui/button";
 import { usePortal } from "@/hooks/use-portal";
-import { saveToolResult } from "@/lib/portal";
+import { saveToolResult, type ToolResult } from "@/lib/portal";
+import {
+  intelligenceQuestions,
+  scoreIntelligence,
+} from "@/lib/tools/intelligence";
+import { takePendingTool } from "@/lib/tools/pending";
 import { getTool } from "@/lib/tools/registry";
-import { intelligenceQuestions, scoreIntelligence } from "@/lib/tools/intelligence";
 import { skillQuestions, scoreSkill } from "@/lib/tools/skill";
+import type { AssessmentShare } from "@/lib/tools/share";
 import { cn } from "@/lib/utils";
 
 export default function ToolPage() {
   const { slug } = useParams<{ slug: string }>();
   const tool = getTool(slug);
-  const { tools } = usePortal();
+  const { tools, session } = usePortal();
   if (!tool) return notFound();
 
   const prior = tools[tool.slug];
+  const signedIn = session?.mode === "signed";
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
@@ -26,14 +33,18 @@ export default function ToolPage() {
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">{tool.title}</h1>
       <p className="mt-4 text-muted-foreground">{tool.summary}</p>
+      <p className="mt-3 text-sm text-muted-foreground">
+        Take it free. Save to your profile if you want to keep it. Export a PDF
+        or email the results. Email also puts you on the Saturday newsletter.
+      </p>
       {tool.status === "coming" ? (
         <p className="mt-8 rounded-xl border border-border bg-card px-5 py-5 text-sm text-muted-foreground">
           {tool.comingNote}
         </p>
       ) : tool.slug === "skill" ? (
-        <SkillForm priorSummary={prior?.summary} />
+        <SkillForm signedIn={signedIn} priorSummary={prior?.summary} />
       ) : tool.slug === "intelligence" ? (
-        <IntelForm priorSummary={prior?.summary} />
+        <IntelForm signedIn={signedIn} priorSummary={prior?.summary} />
       ) : null}
       {prior ? (
         <p className="mt-6 text-sm text-pass">
@@ -47,27 +58,33 @@ export default function ToolPage() {
   );
 }
 
-function SkillForm({ priorSummary }: { priorSummary?: string }) {
+function usePendingSave(slug: string, signedIn: boolean) {
+  const [note, setNote] = useState<string | null>(null);
+  useEffect(() => {
+    if (!signedIn) return;
+    const pending = takePendingTool(slug);
+    if (!pending) return;
+    saveToolResult(pending);
+    setNote(pending.summary);
+  }, [signedIn, slug]);
+  return note;
+}
+
+function SkillForm({
+  signedIn,
+  priorSummary,
+}: {
+  signedIn: boolean;
+  priorSummary?: string;
+}) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [saved, setSaved] = useState<string | null>(priorSummary ?? null);
+  const [share, setShare] = useState<AssessmentShare | null>(null);
+  const [result, setResult] = useState<ToolResult | null>(null);
+  const pendingNote = usePendingSave("skill", signedIn);
   const all = skillQuestions.every((q) => answers[q.id] != null);
 
   return (
-    <form
-      className="mt-8 space-y-6"
-      onSubmit={(e) => {
-        e.preventDefault();
-        const scored = scoreSkill(answers);
-        saveToolResult({
-          toolSlug: "skill",
-          completedAt: new Date().toISOString(),
-          summary: scored.summary,
-          scores: { total: scored.total, ...Object.fromEntries(skillQuestions.map((q) => [q.id, answers[q.id]])) },
-          labels: { band: scored.label },
-        });
-        setSaved(scored.summary);
-      }}
-    >
+    <div className="mt-8 space-y-6">
       {skillQuestions.map((q, i) => (
         <fieldset key={q.id} className="rounded-xl border border-border bg-card px-4 py-4">
           <legend className="px-1 text-sm font-medium">
@@ -90,7 +107,11 @@ function SkillForm({ priorSummary }: { priorSummary?: string }) {
                   name={q.id}
                   className="mt-1 accent-[var(--primary)]"
                   checked={answers[q.id] === c.value}
-                  onChange={() => setAnswers((a) => ({ ...a, [q.id]: c.value }))}
+                  onChange={() => {
+                    setAnswers((current) => ({ ...current, [q.id]: c.value }));
+                    setShare(null);
+                    setResult(null);
+                  }}
                 />
                 {c.label}
               </label>
@@ -98,17 +119,65 @@ function SkillForm({ priorSummary }: { priorSummary?: string }) {
           </div>
         </fieldset>
       ))}
-      <Button className="h-11 rounded-xl px-5" disabled={!all} type="submit">
-        Save to portal
+      <Button
+        className="h-11 rounded-xl px-5"
+        disabled={!all}
+        type="button"
+        onClick={() => {
+          const scored = scoreSkill(answers);
+          const completedAt = new Date().toISOString();
+          const nextResult: ToolResult = {
+            toolSlug: "skill",
+            completedAt,
+            summary: scored.summary,
+            scores: {
+              total: scored.total,
+              ...Object.fromEntries(
+                skillQuestions.map((q) => [q.id, answers[q.id] ?? 0]),
+              ),
+            },
+            labels: { band: scored.label },
+          };
+          setResult(nextResult);
+          setShare({
+            toolSlug: "skill",
+            title: "Skill assessment",
+            summary: scored.summary,
+            completedAt,
+            lines: [
+              `${scored.label} · ${scored.total}/${scored.max}`,
+              scored.next,
+            ],
+          });
+        }}
+      >
+        See results
       </Button>
-      {saved ? <p className="text-sm text-pass">{saved}</p> : null}
-    </form>
+      {pendingNote ? (
+        <p className="text-sm text-pass">Saved to your profile: {pendingNote}</p>
+      ) : null}
+      {share && result ? (
+        <ToolResultActions share={share} result={result} signedIn={signedIn} />
+      ) : priorSummary && !share ? (
+        <p className="text-sm text-muted-foreground">
+          You can retake, or export after you see new results.
+        </p>
+      ) : null}
+    </div>
   );
 }
 
-function IntelForm({ priorSummary }: { priorSummary?: string }) {
+function IntelForm({
+  signedIn,
+  priorSummary,
+}: {
+  signedIn: boolean;
+  priorSummary?: string;
+}) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [saved, setSaved] = useState<string | null>(priorSummary ?? null);
+  const [share, setShare] = useState<AssessmentShare | null>(null);
+  const [result, setResult] = useState<ToolResult | null>(null);
+  const pendingNote = usePendingSave("intelligence", signedIn);
   const all = intelligenceQuestions.every((q) => answers[q.id] != null);
   const preview = useMemo(
     () => (all ? scoreIntelligence(answers) : null),
@@ -116,21 +185,7 @@ function IntelForm({ priorSummary }: { priorSummary?: string }) {
   );
 
   return (
-    <form
-      className="mt-8 space-y-6"
-      onSubmit={(e) => {
-        e.preventDefault();
-        const scored = scoreIntelligence(answers);
-        saveToolResult({
-          toolSlug: "intelligence",
-          completedAt: new Date().toISOString(),
-          summary: scored.summary,
-          scores: scored.axes,
-          labels: scored.labels,
-        });
-        setSaved(scored.summary);
-      }}
-    >
+    <div className="mt-8 space-y-6">
       {intelligenceQuestions.map((q, i) => (
         <fieldset key={q.id} className="rounded-xl border border-border bg-card px-4 py-4">
           <legend className="px-1 text-sm font-medium">
@@ -153,7 +208,11 @@ function IntelForm({ priorSummary }: { priorSummary?: string }) {
                   name={q.id}
                   className="mt-1 accent-[var(--primary)]"
                   checked={answers[q.id] === c.value}
-                  onChange={() => setAnswers((a) => ({ ...a, [q.id]: c.value }))}
+                  onChange={() => {
+                    setAnswers((current) => ({ ...current, [q.id]: c.value }));
+                    setShare(null);
+                    setResult(null);
+                  }}
                 />
                 {c.label}
               </label>
@@ -161,16 +220,53 @@ function IntelForm({ priorSummary }: { priorSummary?: string }) {
           </div>
         </fieldset>
       ))}
-      <Button className="h-11 rounded-xl px-5" disabled={!all} type="submit">
-        Save to portal
+      <Button
+        className="h-11 rounded-xl px-5"
+        disabled={!all}
+        type="button"
+        onClick={() => {
+          const scored = scoreIntelligence(answers);
+          const completedAt = new Date().toISOString();
+          const nextResult: ToolResult = {
+            toolSlug: "intelligence",
+            completedAt,
+            summary: scored.summary,
+            scores: scored.axes,
+            labels: scored.labels,
+          };
+          setResult(nextResult);
+          setShare({
+            toolSlug: "intelligence",
+            title: "Intelligence assessment",
+            summary: scored.summary,
+            completedAt,
+            lines: [
+              `Lead with ${scored.lead.toLowerCase()}`,
+              `Notice ${scored.axes.notice}/8`,
+              `Decide ${scored.axes.decide}/8`,
+              `Learn ${scored.axes.learn}/8`,
+            ],
+          });
+        }}
+      >
+        See results
       </Button>
-      {saved ? <p className="text-sm text-pass">{saved}</p> : null}
-      {preview ? (
+      {pendingNote ? (
+        <p className="text-sm text-pass">Saved to your profile: {pendingNote}</p>
+      ) : null}
+      {preview && !share ? (
         <p className="text-xs text-muted-foreground">
-          Lead with {preview.lead.toLowerCase()} — you can still change answers
-          and save again.
+          Lead with {preview.lead.toLowerCase()}. Answer every question, then
+          see results.
         </p>
       ) : null}
-    </form>
+      {share && result ? (
+        <ToolResultActions share={share} result={result} signedIn={signedIn} />
+      ) : priorSummary && !share ? (
+        <p className="text-sm text-muted-foreground">
+          You can retake, or export after you see new results.
+        </p>
+      ) : null}
+    </div>
   );
 }

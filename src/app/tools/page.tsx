@@ -20,9 +20,9 @@ export default function ToolsPage() {
         Assessments you can keep on the portal
       </h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
-        Take a live assessment now. Results save next to your courses. The
-        registry already has slots for a tool checklist and a personality
-        checklist — those land later without a new shelf.
+        Take a live assessment now, free. Login only if you want the score on
+        your profile. Export a PDF, or email it and join the Saturday
+        newsletter. Tool and personality checklists land later.
       </p>
 
       <div className="mt-10 grid gap-4 md:grid-cols-2">
@@ -42,10 +42,10 @@ export default function ToolsPage() {
             </p>
             {tool.status === "live" ? (
               <Link
-                href={`/login?next=${encodeURIComponent(`/tools/${tool.slug}`)}`}
+                href={`/tools/${tool.slug}`}
                 className="mt-6 inline-flex h-11 items-center gap-2 text-sm"
               >
-                Sign in to start
+                Start this assessment
                 <ArrowRight className="size-4" />
               </Link>
             ) : (

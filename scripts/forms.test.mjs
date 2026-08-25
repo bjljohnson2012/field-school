@@ -111,7 +111,9 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
   assert.match(newsletter, /data-form="saturday_note"/);
   assert.match(newsletter, /One email each Saturday/);
   assert.match(tools, /data-form="topic_request"/);
-  assert.match(tools, /login\?next=\/tools\/skill/);
+  assert.match(tools, /portal\.fieldschool\.ai\/tools\/skill/);
+  assert.doesNotMatch(tools, /login\?next=\/tools\/skill/);
+  assert.match(tools, /Take an assessment free/);
   assert.match(pricing, /\$10/);
   assert.match(pricing, /\$1,059/);
   assert.doesNotMatch(pricing, /University/);

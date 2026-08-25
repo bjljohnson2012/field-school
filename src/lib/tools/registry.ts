@@ -25,7 +25,7 @@ export const assessmentTools: AssessmentTool[] = [
     kicker: "What you can already run",
     minutes: "8 min",
     summary:
-      "Rate the work you can actually do today — briefs, tools, shipping, and keeping a human on the risky clicks. Results stay on your portal.",
+      "Rate the work you can actually do today. Briefs, tools, shipping, and who stays on the risky clicks. Take it free. Save, export, or email the results.",
   },
   {
     slug: "intelligence",
@@ -35,7 +35,7 @@ export const assessmentTools: AssessmentTool[] = [
     kicker: "How you take in work",
     minutes: "7 min",
     summary:
-      "A working-intelligence profile: how you notice, decide, and learn. Not a vendor IQ score. Saved next to your courses so the next ladder fits.",
+      "How you notice, decide, and learn. Not a vendor IQ score. Take it free. Save it to your profile, export a PDF, or email it.",
   },
   {
     slug: "tool-checklist",

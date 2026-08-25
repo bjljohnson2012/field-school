@@ -42,6 +42,7 @@ export default function ExamPage() {
           ratio={course.examPassRatio}
           priorScore={tally.exam?.score ?? null}
           priorPassed={Boolean(tally.exam?.passed)}
+          shareTitle={`${course.title} exam`}
           onSubmit={(answers) => saveExamAnswers(course.slug, answers)}
         />
       </div>

@@ -134,6 +134,7 @@ export default function StationPage() {
           ratio={course.passRatio}
           priorScore={progress.quizScore}
           priorPassed={progress.quizPassed}
+          shareTitle={`${course.title} · ${mod.title}`}
           onSubmit={(answers) => saveQuizAnswers(course.slug, mod.slug, answers)}
         />
 

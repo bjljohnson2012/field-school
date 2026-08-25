@@ -37,7 +37,7 @@ export default function AdminToolsPage() {
         <How
           n="03"
           title="Mount the form"
-          body="In src/app/tools/[slug]/page.tsx, branch on the slug and render the form. On submit, call saveToolResult. That writes to the active user’s portal and drops an inbox note. No new dashboard code is required."
+          body="In src/app/tools/[slug]/page.tsx, branch on the slug and render the form. People can take it without login. Save to profile calls saveToolResult after they sign in. Export and email live on ToolResultActions."
         />
         <How
           n="04"

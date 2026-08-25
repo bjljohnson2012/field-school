@@ -411,7 +411,11 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(readSrc("src/lib/members/store.ts"), /formSubmissions/);
   assert.match(readSrc("src/lib/admin-gate.ts"), /export function safeMemberNext/);
   assert.match(readSrc("src/app/login/login-form.tsx"), /safeMemberNext/);
-  assert.match(readSrc("src/app/tools/page.tsx"), /login\?next=/);
+  assert.match(readSrc("src/app/tools/page.tsx"), /href=\{`\/tools\/\$\{tool\.slug\}`\}/);
+  assert.doesNotMatch(readSrc("src/app/tools/page.tsx"), /login\?next=/);
+  assert.match(readSrc("src/app/tools/[slug]/page.tsx"), /See results/);
+  assert.match(readSrc("src/components/tool-result-actions.tsx"), /Export PDF/);
+  assert.match(readSrc("src/app/api/tools/email/route.ts"), /saturday_note/);
 });
 
 function resolveDemoLinkToken(env) {
