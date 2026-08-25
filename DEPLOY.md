@@ -2,6 +2,8 @@
 
 Production campus: [https://university.benjohnson.ai](https://university.benjohnson.ai)
 
+Portal hostname (`portal.fieldschool.ai`) is planned only. See [deploy/PORTAL_CUTOVER.md](PORTAL_CUTOVER.md). Do not add a university 301 from this tree.
+
 This Next.js portal **replaces** the older TanStack “Johnson Field School University” container. Caddy on the VPS already sends `university.benjohnson.ai` to `field-school-app:3000` on Docker network `ae-coach_default`. Keep that container name.
 
 ## Source of truth

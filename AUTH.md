@@ -104,6 +104,8 @@ Register these redirect URIs with each provider (replace origin with yours):
 - Google: `{AUTH_URL}/api/auth/callback/google`
 - X: `{AUTH_URL}/api/auth/callback/twitter`
 
+A later ship may set `AUTH_URL` to `https://portal.fieldschool.ai` and register matching Google/X URIs. Until Lyell opens that ticket, university stays the live origin. Plan: [deploy/PORTAL_CUTOVER.md](deploy/PORTAL_CUTOVER.md). No university 301 in this tree.
+
 ## Local development
 
 ```bash
