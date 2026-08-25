@@ -1,0 +1,9 @@
+# INERT. Not loaded by deploy/deploy.sh or docker-compose.yml.
+# Do not copy this onto the VPS until Lyell opens the portal ship ticket.
+# Do not add a university.benjohnson.ai 301 in this file or next to it.
+
+portal.fieldschool.ai {
+	# Copy the reverse_proxy target from the live university.benjohnson.ai block.
+	# DEPLOY.md says that target is field-school-app:3000 on ae-coach_default.
+	reverse_proxy field-school-app:3000
+}

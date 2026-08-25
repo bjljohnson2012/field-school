@@ -514,3 +514,34 @@ test("shareable demo link accepts a matching token and rejects without", () => {
   assert.match(authMd, /Copy demo link/);
   assert.match(readSrc("DEPLOY.md"), /DEMO_LINK_TOKEN/);
 });
+
+test("portal cutover plan is inert and forbids a university 301", () => {
+  const plan = readSrc("deploy/PORTAL_CUTOVER.md");
+  const snippet = readSrc("deploy/caddy/portal.fieldschool.ai.caddy");
+  const deploy = readSrc("deploy/deploy.sh");
+  const compose = readSrc("deploy/docker-compose.yml");
+
+  assert.match(plan, /portal\.fieldschool\.ai/);
+  assert.match(plan, /Do not add a `university\.benjohnson\.ai` 301/);
+  assert.match(plan, /\/api\/auth\/callback\/google/);
+  assert.match(plan, /\/api\/auth\/callback\/twitter/);
+  assert.match(plan, /AUTH_URL/);
+  assert.match(plan, /That is the later ticket/);
+
+  const snippetActive = snippet
+    .split("\n")
+    .filter((line) => line.trim() && !line.trim().startsWith("#"))
+    .join("\n");
+  assert.match(snippet, /^# INERT/m);
+  assert.match(snippetActive, /portal\.fieldschool\.ai \{/);
+  assert.match(snippetActive, /reverse_proxy field-school-app:3000/);
+  assert.doesNotMatch(snippetActive, /university\.benjohnson\.ai/);
+  assert.doesNotMatch(snippetActive, /\bredir\b/);
+  assert.doesNotMatch(snippetActive, /\b301\b/);
+
+  assert.doesNotMatch(deploy, /PORTAL_CUTOVER/);
+  assert.doesNotMatch(deploy, /portal\.fieldschool\.ai\.caddy/);
+  assert.doesNotMatch(compose, /caddy/i);
+  assert.match(readSrc("DEPLOY.md"), /PORTAL_CUTOVER\.md/);
+  assert.match(readSrc("AUTH.md"), /PORTAL_CUTOVER\.md/);
+});
