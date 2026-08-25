@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { StaffFooterLinks } from "@/components/staff-footer-links";
-import { COMPANY_NAME, UNI_NAME } from "@/lib/brand";
+import { COMPANY_NAME } from "@/lib/brand";
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-border">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <p>
-          <span className="text-foreground">{COMPANY_NAME}</span> builds the
-          practice. {UNI_NAME} is the portal.
+          <span className="text-foreground">{COMPANY_NAME}</span> is the
+          training portal. Learn AI, sales, go-to-market, and leadership at
+          your pace.
         </p>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           <Link href="/about" className="hover:text-foreground">

@@ -1,8 +1,8 @@
-# Deploy Field School University
+# Deploy the Field School training portal
 
 Production campus: [https://university.benjohnson.ai](https://university.benjohnson.ai)
 
-This Next.js portal **replaces** the older TanStack “Johnson Field School University” container. Caddy on the VPS already sends `university.benjohnson.ai` to `field-school-app:3000` on Docker network `ae-coach_default`. Keep that container name.
+This Next.js portal **replaces** the older TanStack container. Caddy on the VPS already sends `university.benjohnson.ai` to `field-school-app:3000` on Docker network `ae-coach_default`. Keep that container name.
 
 ## Source of truth
 
@@ -11,9 +11,9 @@ This Next.js portal **replaces** the older TanStack “Johnson Field School Univ
 | Remote | `https://origin.cursor.com/git/benjamin-johnson/tmp-9593eb749baaa7f3.git` |
 | Branch | `main` |
 | Company | Field School |
-| Portal | Field School University |
+| Portal | Field School training portal |
 
-Do not ship a hero or certificate that says “Johnson Field School University”.
+Do not ship a hero or certificate that uses the old school name.
 
 ## Deploy from this tree
 
@@ -41,8 +41,8 @@ Optional shareable Jordan walk: set `DEMO_LINK_TOKEN` in `/opt/field-school.env`
 
 Check:
 
-- `https://university.benjohnson.ai` — kicker **Field School University**, cream/blue campus
-- `/about` — company vs portal
+- `https://university.benjohnson.ai` — kicker **Field School training portal**, cream/blue campus
+- `/about` — training portal
 - `/privacy` — public Privacy Policy (Google OAuth consent)
 - `/terms` — public Terms of Service (Google OAuth consent)
 - `/tools` — skill + intelligence live

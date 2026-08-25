@@ -7,7 +7,7 @@ import { assessmentTools } from "@/lib/tools/registry";
 export const metadata: Metadata = {
   title: "Tools",
   description:
-    "Skill and intelligence assessments that stay on your Field School University portal. Tool and personality checklists come later.",
+    "Skill and intelligence assessments that stay on the Field School training portal. Tool and personality checklists come later.",
 };
 
 export default function ToolsPage() {

@@ -46,7 +46,7 @@ export function SiteHeader() {
             href="/"
             className="hidden text-xs uppercase tracking-[0.16em] text-muted-foreground sm:inline"
           >
-            University
+            Training portal
           </Link>
         </div>
         <nav className="flex items-center gap-0.5 text-sm">

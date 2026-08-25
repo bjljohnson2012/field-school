@@ -23,14 +23,14 @@ export default function ExamPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
       <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-        Exam · Field School University
+        Exam · Field School
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">{course.title}</h1>
       <p className="mt-4 text-sm text-muted-foreground">
         {course.examQuestions.length} questions. Pass at{" "}
         {Math.ceil(course.examQuestions.length * course.examPassRatio)}/
-        {course.examQuestions.length}. The Field School University certificate
-        also needs every station cleared.
+        {course.examQuestions.length}. The Field School certificate also needs
+        every station cleared.
       </p>
       <p className="mt-2 text-sm text-muted-foreground">
         Stations passed {tally.passed}/{tally.total}.

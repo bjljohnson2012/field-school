@@ -38,10 +38,10 @@ export function SignupForm({ oauth }: Props) {
         Free beta
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">
-        Join Field School University
+        Join the Field School training portal
       </h1>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Enroll in Field School University. Learn at your pace. No card on this
+        Enroll in the training portal. Learn at your pace. No card on this
         page. Paid seats are invoiced later. See{" "}
         <Link href="/pricing" className="underline underline-offset-2">
           pricing

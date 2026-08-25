@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: `%s · ${UNI_NAME}`,
   },
   description:
-    "Field School University is the course portal for Field School. Watch the clip, do the field work, clear the quiz. Track skills and assessments on your portal.",
+    "The Field School training portal helps you learn AI, sales, go-to-market, and leadership at your own pace. Watch the clip, do the field work, clear the quiz.",
   icons: { icon: "/favicon.svg" },
 };
 

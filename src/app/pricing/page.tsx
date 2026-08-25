@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { UNI_NAME } from "@/lib/brand";
+import { PORTAL_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: `Newsletter is free. One course is free. Paid Field School University seats and coaching at ${UNI_NAME}. Invoice later.`,
+  description: `Newsletter is free. One course is free. Paid ${PORTAL_NAME} seats and coaching. Invoice later.`,
 };
 
-const university = [
+const portalPlans = [
   {
     name: "One course",
     price: "Free",
     cadence: "",
-    body: "Enroll and take one Field School University course at your pace.",
+    body: "Enroll and take one training portal course at your pace.",
     href: "/signup?plan=course",
     label: "Enroll free",
   },
@@ -36,7 +36,7 @@ const university = [
     name: "Certification",
     price: "$1,059",
     cadence: "one time",
-    body: "Earn a Field School University certificate. Take as long as you need.",
+    body: "Earn a Field School certificate. Take as long as you need.",
     href: "/signup?plan=1059",
     label: "Enroll $1,059",
   },
@@ -47,21 +47,21 @@ const coaching = [
     name: "Online cohort",
     price: "$100",
     cadence: "per month",
-    body: "One hour a week online. Coaching, direct feedback, and a room you can join from anywhere. Includes the newsletter and unlimited Field School University.",
+    body: "One hour a week online. Coaching, direct feedback, and a room you can join from anywhere. Includes the newsletter and unlimited access to the training portal.",
     href: "/signup?plan=100",
   },
   {
     name: "In the room",
     price: "$200",
     cadence: "per month",
-    body: "The same hour, in person. Coaching and direct feedback after class. Includes the newsletter and unlimited Field School University.",
+    body: "The same hour, in person. Coaching and direct feedback after class. Includes the newsletter and unlimited access to the training portal.",
     href: "/signup?plan=200",
   },
   {
     name: "One-on-one hour",
     price: "$1,000",
     cadence: "per month",
-    body: "One hour a week with Ben. Coaching, direct feedback, and help on the work you are actually doing. Includes the newsletter and unlimited Field School University.",
+    body: "One hour a week with Ben. Coaching, direct feedback, and help on the work you are actually doing. Includes the newsletter and unlimited access to the training portal.",
     href: "/signup?plan=1000",
   },
 ];
@@ -94,10 +94,10 @@ export default function PricingPage() {
       </section>
 
       <h2 className="mt-12 font-display text-2xl tracking-tight">
-        Field School University
+        Training portal
       </h2>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
-        {university.map((plan) => (
+        {portalPlans.map((plan) => (
           <article
             key={plan.name}
             className="flex flex-col rounded-xl border border-border bg-card px-5 py-6"
@@ -128,8 +128,8 @@ export default function PricingPage() {
         Learn with Ben
       </h2>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-        Each of these seats includes the newsletter, unlimited Field School
-        University, coaching, direct feedback, and help getting better.
+        Each of these seats includes the newsletter, unlimited access to the
+        training portal, coaching, direct feedback, and help getting better.
       </p>
       <div className="mt-4 grid gap-4 md:grid-cols-3">
         {coaching.map((plan) => (

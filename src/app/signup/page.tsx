@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Join the free beta",
   description:
-    "Join Field School University for free. Google, X, or email and password. No card.",
+    "Join the Field School training portal for free. Google, X, or email and password. No card.",
 };
 
 export default function SignupPage() {

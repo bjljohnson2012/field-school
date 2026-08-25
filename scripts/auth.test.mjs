@@ -377,6 +377,9 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(pricing, /Start free/);
   assert.match(pricing, /invoiced later/i);
   assert.match(pricing, /no checkout/i);
+  assert.doesNotMatch(pricing, /University/);
+  assert.doesNotMatch(readSrc("src/lib/brand.ts"), /University/);
+  assert.doesNotMatch(readSrc("src/components/site-header.tsx"), /University/);
   assert.doesNotMatch(pricing, /stripe/i);
   assert.doesNotMatch(pricing, /<form/);
   assert.doesNotMatch(pricing, /lorem ipsum/i);

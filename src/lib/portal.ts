@@ -602,7 +602,7 @@ export function saveExamAnswers(
   if (passed) {
     next = pushUserInbox(next, userId, {
       title: certified
-        ? "Field School University certificate unlocked"
+        ? "Field School certificate unlocked"
         : "Exam passed",
       body: certified
         ? `${course.title} is complete. Open the certificate.`

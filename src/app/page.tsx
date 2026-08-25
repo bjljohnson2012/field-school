@@ -21,15 +21,16 @@ export default function Campus() {
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:py-16">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              Field School University
+              Field School training portal
             </p>
             <h1 className="mt-4 font-display text-4xl leading-[1.1] tracking-tight sm:text-5xl">
-              One campus. Many courses. Same ladder.
+              Learn at your pace. Use it this week.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Field School is the company. This university is the portal for the
-              courses. Pull in a tape, walk the stations, keep a dashboard —
-              or start as a guest and share a normal link.
+              This is the Field School training portal. AI. Sales. Go-to-market.
+              Leadership. Small moves you can make with your family. Pull in a
+              tape, walk the stations, keep a dashboard, or start as a guest
+              and share a normal link.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
@@ -92,7 +93,7 @@ export default function Campus() {
           <PassCard
             n="03"
             title="Clear the quiz"
-            body="75% on each station, 80% on the exam. A Field School University certificate needs the whole ladder plus the exam."
+            body="75% on each station, 80% on the exam. A Field School certificate needs the whole ladder plus the exam."
           />
         </div>
       </section>

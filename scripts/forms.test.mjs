@@ -102,6 +102,8 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
   assert.match(nav, /href:\s*"\/admin\/forms"/);
 
   assert.doesNotMatch(home, /data-form="saturday_note"/);
+  assert.doesNotMatch(home, /University/);
+  assert.match(home, /training portal/);
   assert.match(home, /Join a community dedicated to learning/);
   assert.match(home, /Join our Newsletter/);
   assert.match(home, /Enroll/);
@@ -112,6 +114,8 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
   assert.match(tools, /login\?next=\/tools\/skill/);
   assert.match(pricing, /\$10/);
   assert.match(pricing, /\$1,059/);
+  assert.doesNotMatch(pricing, /University/);
+  assert.match(pricing, /Training portal/);
   assert.match(shop, /data-form="shop_waitlist"/);
   assert.match(js, /portal\.fieldschool\.ai\/api\/forms/);
 });

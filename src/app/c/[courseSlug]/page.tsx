@@ -89,7 +89,7 @@ export default function CourseHome() {
         <p className="mt-3 max-w-2xl text-muted-foreground">
           Watch the clip, finish the required field work, score 75% on the
           station quiz. Then {need}/{course.examQuestions.length} on the exam
-          for a Field School University certificate.
+          for a Field School certificate.
         </p>
         <ol className="mt-8 grid gap-3">
           {course.modules.map((mod) => {

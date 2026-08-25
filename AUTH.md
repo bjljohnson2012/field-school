@@ -1,4 +1,4 @@
-# Authentication (Field School University portal)
+# Authentication (Field School training portal)
 
 This campus uses [Auth.js / NextAuth v5](https://authjs.dev) for Google, X (Twitter), and optional email + password. **Staff admin is invite-only.** Everyone else who signs in is a **free beta member**.
 

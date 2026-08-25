@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { COMPANY_NAME, UNI_NAME } from "@/lib/brand";
+import { COMPANY_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Field School helps normal people upskill for the future with AI, self-paced learning, and consistent tracking.",
+    "The Field School training portal helps people learn AI, sales, go-to-market, and leadership at their own pace.",
 };
 
 export default function AboutPage() {
@@ -15,7 +15,7 @@ export default function AboutPage() {
         About us
       </p>
       <h1 className="mt-3 font-display text-4xl tracking-tight sm:text-5xl">
-        {COMPANY_NAME} is the company. {UNI_NAME} is the portal.
+        {COMPANY_NAME} is the training portal.
       </h1>
       <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
         Most people do not need another feed of videos. They need a way to get
@@ -38,7 +38,7 @@ export default function AboutPage() {
         <Block
           kicker="03"
           title="Consistent tracking"
-          body="Progress, Field School University certificates, and assessment tools live on one portal. Skill and intelligence assessments you take today stay next to the courses you walk tomorrow. Checklists for tools and personality will plug into the same shelf."
+          body="Progress, Field School certificates, and assessment tools live on one portal. Skill and intelligence assessments you take today stay next to the courses you walk tomorrow. Checklists for tools and personality will plug into the same shelf."
         />
       </section>
 

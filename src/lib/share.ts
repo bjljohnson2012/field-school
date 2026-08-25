@@ -12,7 +12,7 @@ export const sharePages: SharePage[] = [
     slug: "field-school",
     title: "Field School",
     kicker: "Company",
-    lede: "Field School is the company. Field School University is the course portal. We help normal people upskill for the future with AI, self-paced learning, and consistent tracking.",
+    lede: "Field School is the training portal. It helps you learn AI, sales, go-to-market, and leadership at your own pace, plus small moves you can make with your family.",
     sections: [
       {
         heading: "AI as a teammate",
@@ -27,7 +27,7 @@ export const sharePages: SharePage[] = [
         body: "Progress, certificates, and assessment tools stay on your portal — one place to see what you can do next.",
       },
     ],
-    next: { label: "Open the university", href: "/" },
+    next: { label: "Open the training portal", href: "/" },
   },
   {
     slug: "hire-a-staff",

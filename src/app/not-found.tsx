@@ -17,7 +17,7 @@ export default function NotFound() {
         href="/"
         className="mt-8 inline-flex h-12 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
       >
-        Back to Field School University
+        Back to Field School
       </Link>
     </main>
   );
