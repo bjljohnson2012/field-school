@@ -81,6 +81,8 @@ test("paid seats, webhook, and claim login are wired", () => {
   assert.match(store, /stripeSessionId/);
   assert.match(fulfill, /emailSeatConfirmation/);
   assert.match(notify, /emailSeatConfirmation/);
+  assert.match(notify, /RESEND_API_KEY/);
+  assert.match(notify, /api\.resend\.com\/emails/);
   assert.match(successClient, /Set password and enter/);
   assert.match(claimPage, /Set your password/);
   assert.match(dashboard, /seatLabel/);

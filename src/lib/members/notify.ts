@@ -5,6 +5,98 @@ function smtpConfigured() {
   return Boolean(process.env.SMTP_HOST?.trim());
 }
 
+function resendConfigured() {
+  return Boolean(process.env.RESEND_API_KEY?.trim());
+}
+
+function mailFrom(fallback: string) {
+  return (
+    process.env.RESEND_FROM?.trim() ||
+    process.env.SMTP_FROM?.trim() ||
+    fallback
+  );
+}
+
+async function sendWithResend(input: {
+  from: string;
+  to: string;
+  subject: string;
+  text: string;
+}) {
+  const key = process.env.RESEND_API_KEY?.trim();
+  if (!key) return { emailed: false as const };
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: input.from,
+      to: [input.to],
+      subject: input.subject,
+      text: input.text,
+    }),
+  });
+
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(`Resend rejected the send (${response.status}): ${detail}`);
+  }
+  return { emailed: true as const };
+}
+
+async function sendWithSmtp(input: {
+  from: string;
+  to: string;
+  subject: string;
+  text: string;
+}) {
+  if (!smtpConfigured()) return { emailed: false as const };
+
+  const nodemailer = await import("nodemailer");
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: process.env.SMTP_SECURE === "true",
+    auth:
+      process.env.SMTP_USER && process.env.SMTP_PASS
+        ? {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          }
+        : undefined,
+  });
+
+  await transporter.sendMail({
+    from: input.from,
+    to: input.to,
+    subject: input.subject,
+    text: input.text,
+  });
+  return { emailed: true as const };
+}
+
+async function sendTextMail(input: {
+  to: string;
+  subject: string;
+  text: string;
+  from: string;
+  skipLog: string;
+}) {
+  if (resendConfigured()) {
+    await sendWithResend(input);
+    return { emailed: true, to: input.to };
+  }
+  if (smtpConfigured()) {
+    await sendWithSmtp(input);
+    return { emailed: true, to: input.to };
+  }
+  console.info(input.skipLog, { to: input.to, subject: input.subject });
+  return { emailed: false, to: input.to };
+}
+
 export async function notifyAccessRequest(request: AccessRequest) {
   const to = accessRequestNotifyEmail();
   const subject = `Staff access request: ${request.name}`;
@@ -20,35 +112,14 @@ export async function notifyAccessRequest(request: AccessRequest) {
     "Review pending requests at /admin/access-requests.",
   ].join("\n");
 
-  if (!smtpConfigured()) {
-    console.info(
-      "[access-request] stored; email skipped (set SMTP_HOST to notify)",
-      { to, subject, email: request.email },
-    );
-    return { emailed: false, to };
-  }
-
-  const nodemailer = await import("nodemailer");
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SECURE === "true",
-    auth:
-      process.env.SMTP_USER && process.env.SMTP_PASS
-        ? {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-          }
-        : undefined,
-  });
-
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM?.trim() || to,
+  return sendTextMail({
     to,
     subject,
     text: body,
+    from: mailFrom(to),
+    skipLog:
+      "[access-request] stored; email skipped (set RESEND_API_KEY or SMTP_HOST to notify)",
   });
-  return { emailed: true, to };
 }
 
 export async function emailAssessmentResult(input: {
@@ -58,8 +129,6 @@ export async function emailAssessmentResult(input: {
   summary: string;
 }) {
   const to = input.email;
-  const from =
-    process.env.SMTP_FROM?.trim() || accessRequestNotifyEmail();
   const subject = `Your Field School ${input.title}`;
   const text = [
     input.title,
@@ -72,35 +141,14 @@ export async function emailAssessmentResult(input: {
     "https://fieldschool.ai/newsletter",
   ].join("\n");
 
-  if (!smtpConfigured()) {
-    console.info(
-      "[assessment-email] newsletter saved; email skipped (set SMTP_HOST to send)",
-      { to, subject },
-    );
-    return { emailed: false, to };
-  }
-
-  const nodemailer = await import("nodemailer");
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SECURE === "true",
-    auth:
-      process.env.SMTP_USER && process.env.SMTP_PASS
-        ? {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-          }
-        : undefined,
-  });
-
-  await transporter.sendMail({
-    from,
+  return sendTextMail({
     to,
     subject,
     text,
+    from: mailFrom(accessRequestNotifyEmail()),
+    skipLog:
+      "[assessment-email] newsletter saved; email skipped (set RESEND_API_KEY or SMTP_HOST to send)",
   });
-  return { emailed: true, to };
 }
 
 export async function emailSeatConfirmation(input: {
@@ -108,37 +156,12 @@ export async function emailSeatConfirmation(input: {
   subject: string;
   text: string;
 }) {
-  const to = input.email;
-  const from =
-    process.env.SMTP_FROM?.trim() ||
-    "ben@fieldschool.ai";
-  if (!smtpConfigured()) {
-    console.info(
-      "[seat-email] seat granted; email skipped (set SMTP_HOST to send)",
-      { to, subject: input.subject },
-    );
-    return { emailed: false, to };
-  }
-
-  const nodemailer = await import("nodemailer");
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SECURE === "true",
-    auth:
-      process.env.SMTP_USER && process.env.SMTP_PASS
-        ? {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-          }
-        : undefined,
-  });
-
-  await transporter.sendMail({
-    from,
-    to,
+  return sendTextMail({
+    to: input.email,
     subject: input.subject,
     text: input.text,
+    from: mailFrom("Field School <ben@fieldschool.ai>"),
+    skipLog:
+      "[seat-email] seat granted; email skipped (set RESEND_API_KEY or SMTP_HOST to send)",
   });
-  return { emailed: true, to };
 }

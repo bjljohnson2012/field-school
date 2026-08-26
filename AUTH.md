@@ -31,7 +31,9 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | `DEMO_LINK_TOKEN` | Optional | Secret for the shareable Jordan walk. `/demo?token=` must match this value. If unset, the campus derives a stable token from `AUTH_SECRET`. Staff copy the full URL from `/admin/demo` (“Copy demo link”). Do not put this button on `/login`. |
 | `MEMBER_STORE_PATH` | Optional | JSON file for member password hashes, access requests, and public form submissions. Defaults to `.data/campus-store.json` in development and `/app/data/campus-store.json` in production. |
 | `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests are emailed. Defaults to `bjljohnson2012@gmail.com`. |
-| `SMTP_HOST` | Optional email notify | If unset, requests are still stored; email is skipped. |
+| `RESEND_API_KEY` | Optional email send | Preferred. Sends checkout confirmations and other transactional mail. Lives in `/opt/field-school.env`. Never commit it. |
+| `RESEND_FROM` | Optional | Defaults to `Field School <ben@fieldschool.ai>`. Domain must be verified in Resend. |
+| `SMTP_HOST` | Optional email notify | Fallback if Resend is unset. If both are unset, requests are still stored; email is skipped. |
 | `SMTP_PORT` | Optional | Defaults to `587`. |
 | `SMTP_SECURE` | Optional | Set `true` for implicit TLS. |
 | `SMTP_USER` / `SMTP_PASS` | Optional | SMTP auth. |
