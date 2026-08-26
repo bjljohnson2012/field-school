@@ -95,6 +95,9 @@ summary:focus-visible {
 
 .wordmark {
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 600;
@@ -103,6 +106,12 @@ summary:focus-visible {
   text-decoration: none;
   color: var(--foreground);
   padding: 0.35rem 0.25rem;
+}
+
+.wordmark-mark {
+  display: block;
+  width: 1.55rem;
+  height: 1.24rem;
 }
 
 .wordmark[aria-current="page"] {
