@@ -36,6 +36,9 @@ const REQUIRED = [
   "marketing-site/img/field-school-lockup.png",
   "public/brand/mark-color.svg",
   "public/favicon.svg",
+  "public/favicon.ico",
+  "src/app/favicon.ico",
+  "marketing-site/favicon.ico",
   "public/apple-touch-icon.png",
 ];
 
@@ -64,6 +67,9 @@ test("Field School logo set exists and never says University", () => {
   const mark = read("marketing-site/brand/mark-color.svg");
   assert.match(mark, /#1f5eff/);
   assert.doesNotMatch(mark, /University/);
+  assert.match(read("marketing-site/index.html"), /favicon\.ico\?v=20260826/);
+  assert.match(read("marketing-site/brand/index.html"), /Lead yourself\. Learn yourself\. Do the Work\./);
+  assert.match(read("marketing-site/brand/index.html"), /lockup-wide-slogan-cream\.png/);
   assert.match(read("marketing-site/index.html"), /brand\/mark-color\.svg/);
   assert.match(read("src/components/site-header.tsx"), /brand\/mark-color\.svg/);
   assert.match(read("src/app/layout.tsx"), /og-1200x630\.png/);

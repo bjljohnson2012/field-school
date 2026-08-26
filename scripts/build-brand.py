@@ -191,6 +191,7 @@ def build() -> None:
     fraunces = load_fraunces(fraunces_path)
     plex = load_plex(plex_path)
 
+    brand_page = (BRAND / "index.html").read_text() if (BRAND / "index.html").exists() else None
     if BRAND.exists():
         shutil.rmtree(BRAND)
     PNG.mkdir(parents=True)
@@ -293,10 +294,18 @@ def build() -> None:
         svg_doc(1080, 1080, mark_svg(WHITE, BLUE, "#9db4ff", 246, 300, 14.7), BLUE),
     )
 
-    # Favicon (same geometry as icon-color, kept at /public/favicon.svg)
+    # Favicon (same geometry as icon-color). ICO wins in Chrome if it is stale.
     favicon = svg_doc(32, 32, mark_svg(BLUE, WHITE, BAR_DIM, 6, 8, 0.5), CREAM)
     write(ROOT / "public" / "favicon.svg", favicon)
     write(ROOT / "marketing-site" / "favicon.svg", favicon)
+    ico_src = raster_icon(256, CREAM, BLUE, WHITE, BAR_DIM)
+    for dest in (
+        ROOT / "src" / "app" / "favicon.ico",
+        ROOT / "public" / "favicon.ico",
+        ROOT / "marketing-site" / "favicon.ico",
+    ):
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        ico_src.save(dest, format="ICO", sizes=[(16, 16), (32, 32), (48, 48)])
 
     # Raster marks. Large masters first. Standard sizes come from those.
     for size in (512, 1024, 2048, 4096):
@@ -490,7 +499,7 @@ def build() -> None:
         shutil.rmtree(PUBLIC_BRAND)
     shutil.copytree(BRAND, PUBLIC_BRAND)
 
-    write(BRAND / "index.html", preview_html())
+    write(BRAND / "index.html", brand_page or preview_html())
     shutil.copy2(BRAND / "index.html", PUBLIC_BRAND / "index.html")
     print(f"wrote {BRAND}")
 

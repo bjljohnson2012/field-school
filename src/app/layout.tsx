@@ -35,6 +35,7 @@ export const metadata: Metadata = {
     "The Field School training portal helps you learn AI, sales, go-to-market, and leadership at your own pace. Watch the clip, do the field work, clear the quiz.",
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
       { url: "/favicon.svg", type: "image/svg+xml" },
       { url: "/brand/png/favicon-32.png", sizes: "32x32", type: "image/png" },
     ],

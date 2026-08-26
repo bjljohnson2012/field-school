@@ -639,6 +639,104 @@ h2.section-title {
   color: var(--foreground);
 }
 
+.brand-kicker {
+  margin: 0 0 0.75rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.brand-hero h1 {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 5vw, 3.25rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.brand-hero p {
+  max-width: 38rem;
+  color: var(--muted-foreground);
+}
+
+.brand-feature {
+  margin: 2rem 0 0;
+  padding: 1.75rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.brand-feature img {
+  display: block;
+  width: min(100%, 52rem);
+  height: auto;
+}
+
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.brand-card {
+  margin: 0;
+  padding: 1.25rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.brand-card.ink {
+  background: #1a1916;
+}
+
+.brand-card.blue {
+  background: #1f5eff;
+}
+
+.brand-card img {
+  display: block;
+  width: 100%;
+  max-height: 14rem;
+  height: auto;
+  object-fit: contain;
+}
+
+.brand-card figcaption {
+  margin-top: 0.75rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+.brand-card.ink figcaption,
+.brand-card.blue figcaption {
+  color: #d8d2c6;
+}
+
+.brand-dl {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.brand-dl li {
+  border-top: 1px solid var(--border);
+}
+
+.brand-dl a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  text-decoration: none;
+}
+
+.brand-dl a:hover {
+  color: var(--primary);
+}
+
 .site-footer {
   border-top: 1px solid var(--border);
   color: var(--muted-foreground);

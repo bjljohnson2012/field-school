@@ -16,7 +16,7 @@ trap 'rm -f "$TMP_TAR"' EXIT
 tar -C "$SITE" -czf "$TMP_TAR" --exclude '*.bak*' .
 
 echo "==> uploading to $VPS_HOST:/var/www/fieldschool.ai"
-"${SSH[@]}" "$VPS_HOST" "mkdir -p /var/www/fieldschool.ai"
+"${SSH[@]}" "$VPS_HOST" "rm -rf /var/www/fieldschool.ai/brand && mkdir -p /var/www/fieldschool.ai"
 cat "$TMP_TAR" | "${SSH[@]}" "$VPS_HOST" "tar -xzf - -C /var/www/fieldschool.ai"
 
 echo "==> keeping Caddy try_files for clean URLs"
