@@ -22,6 +22,15 @@ export function loginRedirectForAdmin(pathname: string) {
   return `/login?next=${encodeURIComponent(next)}`;
 }
 
+/** Member sign-in can return to a campus path such as an assessment. */
+export function safeMemberNext(next?: string | null) {
+  const value = (next ?? "").trim();
+  if (!value.startsWith("/") || value.startsWith("//")) return "/dashboard";
+  if (value.includes("\\") || value.includes("://")) return "/dashboard";
+  if (isAdminRoute(value)) return "/dashboard";
+  return value;
+}
+
 /** Local name/email sign-in must never attach or mint the dean seat. */
 export function sanitizeLocalSignInEmail(email?: string | null) {
   const mail = (email ?? "").trim();

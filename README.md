@@ -9,18 +9,21 @@ Field School is a weekly Saturday hour. Directors come. So do people on the floo
 ## Domains
 
 - `fieldschool.ai` is the public multi-page site. Source in this repo: `marketing-site/` (the live VPS tree from `/workspace/field-school/site/`).
-- `portal.fieldschool.ai` is the Next.js campus app. Same app as `university.benjohnson.ai` until the university 301 is lifted.
-- `AUTH_URL` still points at university.benjohnson.ai. Do not flip it until the four portal Google/X OAuth callback rows exist. Do not 301 university until then.
+- `portal.fieldschool.ai` is the Next.js training portal. Same app as the legacy host `university.benjohnson.ai` until that 301 is lifted.
+- `AUTH_URL` still points at that legacy host. Do not flip it until the four portal Google/X OAuth callback rows exist. Do not 301 that host until then.
 
 ## Public site
 
-Pages: Home (newsletter CTA), About, Pricing, Tools (lead form to ben@fieldschool.ai), 12 Presuppositions, Shop (coming soon), Founder.  
-Login goes to https://portal.fieldschool.ai  
-Join goes to Pricing, then portal signup on the chosen plan (`/signup?plan=100|200|1000`).  
-SKUs: $100 / $200 / $1,000. Foundry is off the cart.  
+Pages: Home (organization umbrella), Portal, Newsletter, Community, Coaching, About, Pricing, Tools, 12 Presuppositions, Shop, Founder.  
+Header: Join our Newsletter, Enroll.  
+The newsletter, topic requests, and shop waitlist post to `https://portal.fieldschool.ai/api/forms` and show under Admin → Forms.  
+Enroll (free) goes to https://portal.fieldschool.ai/signup  
+Paid seats go to https://portal.fieldschool.ai/checkout?plan=… and open Stripe.  
+Training portal: one course free, $10 up to three courses, $50 more than three, $1,059 certification.  
+Coaching: $100 online / $200 in the room / $1,000 one-on-one.  
 Privacy and terms stay at `/privacy` and `/terms`.
 
-## App (Field School University)
+## App (Field School training portal)
 
 Next.js campus: courses, assessments, dashboard, admin. Guest paths: `/c/grok-bot`, `/share/field-school`. Free beta on `/signup`. Staff admin is allowlist-only. See AUTH.md and DEPLOY.md.
 

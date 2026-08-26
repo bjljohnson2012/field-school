@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { OAuthProviderStatus } from "@/lib/auth/env";
+import { safeMemberNext } from "@/lib/admin-gate";
 import { authErrorMessage } from "@/lib/members/policy";
 import { continueAsGuest } from "@/lib/portal";
 
@@ -19,6 +20,8 @@ type Props = {
 export function SignupForm({ oauth }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const next = safeMemberNext(searchParams.get("next"));
+  const plan = searchParams.get("plan") || "";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,15 +38,16 @@ export function SignupForm({ oauth }: Props) {
         Free beta
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">
-        Join Field School University
+        Join the Field School training portal
       </h1>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Beta members walk the campus for free. No card. Paid cohort and coaching
-        plans will be invoiced later. See{" "}
+        Enroll in the training portal. Learn at your pace. The first course
+        is free. Paid seats take a card on{" "}
         <Link href="/pricing" className="underline underline-offset-2">
           pricing
         </Link>
         .
+        {plan ? ` This sign-up is for the ${plan} seat.` : ""}
       </p>
       {error ? (
         <p className="mt-4 rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
@@ -52,7 +56,7 @@ export function SignupForm({ oauth }: Props) {
       ) : null}
 
       <div className="mt-8">
-        <OAuthSignInButtons oauth={oauth} nextPath="/dashboard" tone="member" />
+        <OAuthSignInButtons oauth={oauth} nextPath={next} tone="member" />
       </div>
 
       <form
@@ -81,7 +85,7 @@ export function SignupForm({ oauth }: Props) {
               setError(authErrorMessage(signed.error));
               return;
             }
-            router.push("/dashboard");
+            router.push(next);
           } catch {
             setError("Could not reach the campus. Try again.");
           } finally {
@@ -132,7 +136,10 @@ export function SignupForm({ oauth }: Props) {
 
       <p className="mt-4 text-sm text-muted-foreground">
         Already on campus?{" "}
-        <Link href="/login" className="underline underline-offset-2">
+        <Link
+          href={next && next !== "/dashboard" ? `/login?next=${encodeURIComponent(next)}` : "/login"}
+          className="underline underline-offset-2"
+        >
           Sign in
         </Link>
         .

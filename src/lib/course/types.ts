@@ -102,7 +102,7 @@ export type CourseSummary = {
 };
 
 export const COMPANY_NAME = "Field School";
-export const UNI_NAME = "Field School University";
+export const UNI_NAME = "Field School";
 export const UNI_SHORT = "Field School";
 export const GROK_BOT_SLUG = "grok-bot";
 

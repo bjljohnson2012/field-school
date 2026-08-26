@@ -43,7 +43,7 @@ export default function CertificatePage() {
         <p className="mx-auto mt-4 max-w-md text-center text-sm leading-relaxed text-muted-foreground">
           {course.title}
           {tally.exam ? ` · exam ${tally.exam.score}/${course.examQuestions.length}` : ""}.
-          Study credential from Field School University — not a vendor certification.
+          A Field School training credential. Not a vendor certification.
         </p>
         <p className="mt-8 text-center font-mono text-xs text-faint">
           {new Date().toISOString().slice(0, 10)} · {course.kicker || course.slug}

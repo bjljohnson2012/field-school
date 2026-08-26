@@ -35,18 +35,25 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/88 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
-        <div className="flex min-w-0 items-baseline gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <Link
             href="/"
-            className="rounded-lg px-1.5 py-0.5 font-display text-lg tracking-tight"
+            className="flex items-center gap-2 rounded-lg px-1.5 py-0.5 font-display text-lg tracking-tight"
           >
+            <img
+              src="/brand/mark-color.svg"
+              alt=""
+              width={28}
+              height={22}
+              className="h-[22px] w-[28px]"
+            />
             Field School
           </Link>
           <Link
             href="/"
             className="hidden text-xs uppercase tracking-[0.16em] text-muted-foreground sm:inline"
           >
-            University
+            Training portal
           </Link>
         </div>
         <nav className="flex items-center gap-0.5 text-sm">

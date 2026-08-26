@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePortal } from "@/hooks/use-portal";
-import { isAdminRoute } from "@/lib/admin-gate";
+import { isAdminRoute, safeMemberNext } from "@/lib/admin-gate";
 import type { OAuthProviderStatus } from "@/lib/auth/env";
 import { authErrorMessage, isStaffSession } from "@/lib/members/policy";
 import { continueAsGuest, signInLocal } from "@/lib/portal";
@@ -32,16 +32,21 @@ export function LoginForm({ oauth }: Props) {
     typeof window !== "undefined"
       ? new URLSearchParams(window.location.search).get("next") || ""
       : "";
-  const oauthNext = isAdminRoute(next) ? next : "/dashboard";
+  const memberNext = safeMemberNext(next);
+  const oauthNext = isAdminRoute(next) ? next : memberNext;
 
   useEffect(() => {
     if (status === "authenticated" && isAdminRoute(next) && !isStaffSession(authSession)) {
       router.replace("/request-access?from=admin");
       return;
     }
+    if (status === "authenticated" && !isAdminRoute(next)) {
+      router.replace(memberNext);
+      return;
+    }
     if (!ready || !isStaff) return;
     if (isAdminRoute(next)) router.replace(next);
-  }, [ready, isStaff, router, next, status, authSession]);
+  }, [ready, isStaff, router, next, memberNext, status, authSession]);
 
   return (
     <main className="mx-auto max-w-md px-4 py-16">
@@ -55,7 +60,10 @@ export function LoginForm({ oauth }: Props) {
       </p>
       <p className="mt-3 text-sm">
         New here?{" "}
-        <Link href="/signup" className="underline underline-offset-2">
+        <Link
+          href={next ? `/signup?next=${encodeURIComponent(next)}` : "/signup"}
+          className="underline underline-offset-2"
+        >
           Join the free beta
         </Link>
         .
@@ -90,7 +98,7 @@ export function LoginForm({ oauth }: Props) {
               setError(authErrorMessage(signed.error));
               return;
             }
-            router.push(isAdminRoute(next) ? "/request-access?from=admin" : "/dashboard");
+            router.push(isAdminRoute(next) ? "/request-access?from=admin" : memberNext);
           } catch {
             setError("Could not reach the campus. Try again.");
           } finally {
@@ -135,7 +143,7 @@ export function LoginForm({ oauth }: Props) {
           onSubmit={(e) => {
             e.preventDefault();
             signInLocal(name, email);
-            router.push("/dashboard");
+            router.push(memberNext);
           }}
         >
           <div className="space-y-2">

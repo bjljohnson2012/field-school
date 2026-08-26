@@ -88,7 +88,7 @@ test("privacy and terms pages are public, real policies linked from chrome", () 
   const proxy = readSrc("src/proxy.ts");
 
   assert.match(privacy, /title:\s*"Privacy Policy"/);
-  assert.match(privacy, /LAST_UPDATED = "2026-08-22"/);
+  assert.match(privacy, /LAST_UPDATED = "2026-08-25"/);
   assert.match(privacy, /Last updated \{LAST_UPDATED\}/);
   assert.match(privacy, /do not sell personal data/i);
   assert.match(privacy, /localStorage/);
@@ -101,7 +101,7 @@ test("privacy and terms pages are public, real policies linked from chrome", () 
   assert.doesNotMatch(privacy, /lorem ipsum/i);
 
   assert.match(terms, /title:\s*"Terms of Service"/);
-  assert.match(terms, /LAST_UPDATED = "2026-08-22"/);
+  assert.match(terms, /LAST_UPDATED = "2026-08-25"/);
   assert.match(terms, /Last updated \{LAST_UPDATED\}/);
   assert.match(terms, /Educational and demo nature/);
   assert.match(terms, /staff allowlist/);
@@ -174,7 +174,7 @@ test("OAuth scaffolding exists but fake localStorage dean shortcut does not", ()
   assert.match(login, /Continue as guest/);
   assert.match(login, /signInLocal/);
   assert.match(login, /never grants admin/);
-  assert.match(login, /href="\/signup"/);
+  assert.match(login, /\/signup/);
   assert.match(login, /Join the free beta/);
   assert.match(login, /signIn\("credentials"/);
   assert.doesNotMatch(login, /Enter as Jordan/);
@@ -365,16 +365,23 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.doesNotMatch(signup, /STUDENT_ID/);
   assert.doesNotMatch(signup, /lorem ipsum/i);
 
+  assert.match(pricing, /\$10/);
+  assert.match(pricing, /\$50/);
+  assert.match(pricing, /\$1,059/);
   assert.match(pricing, /\$100/);
   assert.match(pricing, /\$200/);
   assert.match(pricing, /\$1,000/);
-  assert.match(pricing, /Cohort meetings online/);
-  assert.match(pricing, /Cohort meetings in person/);
-  assert.match(pricing, /One-on-one AI \+ business coaching/);
-  assert.match(pricing, /Join free now/);
-  assert.match(pricing, /invoiced later/i);
-  assert.match(pricing, /no checkout/i);
-  assert.doesNotMatch(pricing, /stripe/i);
+  assert.match(pricing, /Online cohort/);
+  assert.match(pricing, /In the room/);
+  assert.match(pricing, /One-on-one hour/);
+  assert.match(pricing, /Start free/);
+  assert.match(pricing, /Stripe/);
+  assert.match(pricing, /checkoutPath\("10"\)/);
+  assert.match(pricing, /checkoutPath\("1000"\)/);
+  assert.doesNotMatch(pricing, /invoice/i);
+  assert.doesNotMatch(pricing, /University/);
+  assert.doesNotMatch(readSrc("src/lib/brand.ts"), /University/);
+  assert.doesNotMatch(readSrc("src/components/site-header.tsx"), /University/);
   assert.doesNotMatch(pricing, /<form/);
   assert.doesNotMatch(pricing, /lorem ipsum/i);
 
@@ -399,6 +406,17 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(authMd, /ACCESS_REQUEST_NOTIFY_EMAIL/);
   assert.match(authMd, /forever-free beta|Free beta/i);
   assert.match(readSrc("src/app/admin/access-requests/page.tsx"), /Access requests/);
+  assert.match(readSrc("src/components/admin-nav.tsx"), /href:\s*"\/admin\/forms"/);
+  assert.match(readSrc("src/app/admin/forms/page.tsx"), /Saturday list/);
+  assert.match(readSrc("src/app/admin/forms/page.tsx"), /Topic requests/);
+  assert.match(readSrc("src/lib/members/store.ts"), /formSubmissions/);
+  assert.match(readSrc("src/lib/admin-gate.ts"), /export function safeMemberNext/);
+  assert.match(readSrc("src/app/login/login-form.tsx"), /safeMemberNext/);
+  assert.match(readSrc("src/app/tools/page.tsx"), /href=\{`\/tools\/\$\{tool\.slug\}`\}/);
+  assert.doesNotMatch(readSrc("src/app/tools/page.tsx"), /login\?next=/);
+  assert.match(readSrc("src/app/tools/[slug]/page.tsx"), /See results/);
+  assert.match(readSrc("src/components/tool-result-actions.tsx"), /Export PDF/);
+  assert.match(readSrc("src/app/api/tools/email/route.ts"), /saturday_note/);
 });
 
 function resolveDemoLinkToken(env) {

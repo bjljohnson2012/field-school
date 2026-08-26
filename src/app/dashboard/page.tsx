@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { usePortal } from "@/hooks/use-portal";
 import { listPublishedCourses } from "@/lib/course/catalog";
 import { courseTally } from "@/lib/portal";
@@ -8,8 +9,10 @@ import { assessmentTools } from "@/lib/tools/registry";
 import { formatDay } from "@/lib/utils";
 
 export default function DashboardPage() {
+  const { data: authSession } = useSession();
   const { ready, session, tools, isStaff, impersonating } = usePortal();
   const courses = listPublishedCourses();
+  const seatLabel = authSession?.user?.seatLabel;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
@@ -19,7 +22,7 @@ export default function DashboardPage() {
       <h1 className="mt-2 font-display text-4xl tracking-tight">Dashboard</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">
         {session
-          ? `Signed in as ${session.name}${session.role === "guest" ? " (guest)" : session.role === "admin" ? " (admin)" : " (free beta)"}${impersonating ? " — impersonating" : ""}. Courses and tools stay on this portal.`
+          ? `Signed in as ${session.name}${session.role === "guest" ? " (guest)" : session.role === "admin" ? " (admin)" : ` (${seatLabel || "free beta"})`}${impersonating ? " — impersonating" : ""}. Courses and tools stay on this portal.`
           : "Join the free beta, continue as a guest, or sign in. Progress still saves on this device."}
       </p>
       {isStaff && !impersonating ? (

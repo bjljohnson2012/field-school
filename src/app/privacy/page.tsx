@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { DEAN_EMAIL, DEAN_NAME } from "@/lib/campus";
 
-const LAST_UPDATED = "2026-08-22";
+const LAST_UPDATED = "2026-08-25";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -83,7 +83,7 @@ export default function PrivacyPage() {
         <Block
           kicker="03"
           title="Processors and hosting"
-          body="If you choose Google or X sign-in, that provider is the identity processor for the OAuth handshake. Optional request-notify email uses SMTP only when those host settings are present. The live campus is hosted on our servers at fieldschool.ai and portal.fieldschool.ai. Those processors see only what is needed to authenticate, notify, or serve the site."
+          body="If you choose Google or X sign-in, that provider is the identity processor for the OAuth handshake. Paid seats go through Stripe. Stripe sees the card and billing details. We do not store card numbers. Optional request-notify email uses SMTP only when those host settings are present. The live campus is hosted on our servers at fieldschool.ai and portal.fieldschool.ai. Those processors see only what is needed to authenticate, take payment, notify, or serve the site."
         />
         <Block
           kicker="04"

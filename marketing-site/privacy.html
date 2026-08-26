@@ -17,7 +17,8 @@
     a:focus-visible { outline:3px solid var(--ink); outline-offset:3px; }
     .page { width:min(100%, calc(36rem + var(--pad) * 2)); margin:0 auto; padding:calc(2.35rem + env(safe-area-inset-top)) var(--pad) 3.25rem; }
     .wordmark { margin:0 0 1.75rem; font-family:Fraunces,"Liberation Serif",Georgia,serif; font-optical-sizing:auto; font-size:clamp(1.45rem,3.6vw,1.75rem); font-weight:700; letter-spacing:-0.038em; line-height:1; }
-    .wordmark a { color:var(--ink); text-decoration:none; }
+    .wordmark a { color:var(--ink); text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem; }
+    .wordmark-mark { width:1.4rem; height:1.12rem; }
     h1 { margin:0 0 0.85rem; font-family:Fraunces,"Liberation Serif",Georgia,serif; font-optical-sizing:auto; font-size:clamp(2rem,6.2vw,2.65rem); font-weight:700; letter-spacing:-0.03em; line-height:1.08; }
     h2 { margin:2.1rem 0 0.6rem; font-family:Fraunces,"Liberation Serif",Georgia,serif; font-optical-sizing:auto; font-size:clamp(1.25rem,3.2vw,1.45rem); font-weight:600; letter-spacing:-0.02em; line-height:1.2; }
     p { margin:0 0 1rem; max-width:36rem; color:var(--ink); }
@@ -27,29 +28,37 @@
     footer p { margin:0; color:var(--mute); }
     @media (min-width:800px) { .page { padding-top:3.4rem; padding-bottom:4.25rem; } .wordmark { margin-bottom:2.1rem; } }
   </style>
+  <link rel="icon" href="/favicon.ico?v=20260826" sizes="48x48">
+  <link rel="icon" href="/favicon.svg?v=20260826" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=20260826">
+  <meta property="og:image" content="https://fieldschool.ai/brand/png/og-1200x630.png">
+  <meta property="og:image:alt" content="Field School">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://fieldschool.ai/brand/png/og-1200x630.png">
 </head>
 <body>
   <div class="page">
     <header>
-      <p class="wordmark"><a href="/">Field School</a></p>
+      <p class="wordmark"><a href="/"><img class="wordmark-mark" src="/brand/mark-color.svg" width="28" height="22" alt="">Field School</a></p>
       <h1>Privacy Policy</h1>
       <p class="lede">Field School operates the campus at <a href="https://fieldschool.ai">https://fieldschool.ai</a> and <a href="https://portal.fieldschool.ai">https://portal.fieldschool.ai</a>. This policy explains what we collect when you walk the campus, how we use it, and how to reach us. We do not sell personal data.</p>
-      <p class="date">Last updated 2026-08-22. Operator: Benjamin Johnson.</p>
+      <p class="date">Last updated 2026-08-25. Operator: Benjamin Johnson.</p>
     </header>
     <main>
       <h2>What we collect</h2>
       <p>Staff sign-in. If you use Auth.js Google or X sign-in, we receive the name and email your provider shares so we can confirm you are on the staff allowlist and open admin tools. Guest, local name, and the Jordan demo never grant admin. Staff is invite-only.</p>
       <p>Member accounts. Free beta members may join with Google, X, or email and password. We store the name, email, provider, and a password hash (never the raw password) on the campus server. Staff access requests include name, email, provider, time, and an optional note.</p>
+      <p>Public forms. If you join the Saturday list, request a topic, or ask to hear when the shop opens, we store the name you give, the email, the note, the page you sent it from, and the time. Staff read those rows on the portal. We use them to send the Saturday note, cover requested topics, and write when the shop opens. We do not add you to a third-party list.</p>
       <p>Optional certificate label. If you type a name and optional email on sign-in to keep a dashboard, those values stay in this browser so certificates and progress can show your name.</p>
       <p>Usage on this device. Course progress, quiz answers, tool results, and guest walks are stored in browser localStorage on this device. Member login is a server account. Course progress is still per browser until we sync it.</p>
       <h2>How we use it</h2>
-      <p>We use this information to operate the educational portal, grant staff admin access to allowlisted people, run free beta member sign-in, review staff access requests, remember what you finished on this device, issue certificates with the name you typed, and improve courses and campus tools. We do not use it to sell ads or sell your data.</p>
+      <p>We use this information to operate the educational portal, grant staff admin access to allowlisted people, run free beta member sign-in, review staff access requests, send the Saturday note and other forms you submitted, remember what you finished on this device, issue certificates with the name you typed, and improve courses and campus tools. We do not use it to sell ads or sell your data.</p>
       <h2>Processors and hosting</h2>
-      <p>If you choose Google or X sign-in, that provider is the identity processor for the OAuth handshake. Optional request-notify email uses SMTP only when those host settings are present. The live campus is hosted on our servers at fieldschool.ai and portal.fieldschool.ai. Those processors see only what is needed to authenticate, notify, or serve the site.</p>
+      <p>If you choose Google or X sign-in, that provider is the identity processor for the OAuth handshake. Paid seats go through Stripe. Stripe sees the card and billing details. We do not store card numbers. Optional request-notify email uses SMTP only when those host settings are present. The live campus is hosted on our servers at fieldschool.ai and portal.fieldschool.ai. Those processors see only what is needed to authenticate, take payment, notify, or serve the site.</p>
       <h2>Cookies and localStorage</h2>
       <p>Auth.js uses session cookies so Google, X, and email-password members stay signed in. The campus also writes localStorage keys for theme, guest or local progress, and a staff gate marker after a real staff session. Passwords are not stored in localStorage. Clearing site data on this browser removes guest progress.</p>
       <h2>Retention</h2>
-      <p>Guest and local labels live in this browser until you clear them or sign out of the local session. Member accounts and access requests live in the campus store on the server until we delete them at your request. Staff OAuth session data lasts as long as the Auth.js session and provider token rules require. We keep operational logs only as long as needed to run and secure the campus.</p>
+      <p>Guest and local labels live in this browser until you clear them or sign out of the local session. Member accounts, access requests, and public form submissions live in the campus store on the server until we delete them at your request. Staff OAuth session data lasts as long as the Auth.js session and provider token rules require. We keep operational logs only as long as needed to run and secure the campus.</p>
       <h2>We do not sell personal data</h2>
       <p>The campus is an educational portal. Field School does not sell personal information, does not rent mailing lists, and does not share your name or email with advertisers.</p>
       <h2>Children</h2>

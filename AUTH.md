@@ -1,4 +1,4 @@
-# Authentication (Field School University portal)
+# Authentication (Field School training portal)
 
 This campus uses [Auth.js / NextAuth v5](https://authjs.dev) for Google, X (Twitter), and optional email + password. **Staff admin is invite-only.** Everyone else who signs in is a **free beta member**.
 
@@ -7,7 +7,7 @@ This campus uses [Auth.js / NextAuth v5](https://authjs.dev) for Google, X (Twit
 | Who | How they get in | What they get |
 |-----|-----------------|---------------|
 | Staff / admin | Google or X, and the email must be on `STAFF_ADMIN_EMAILS` (dean email by default) | `/admin*` |
-| Student / member | Google, X, or email + password (any email) | Dashboard and campus. Forever-free beta. No paywall. |
+| Student / member | Google, X, or email + password (any email) | Dashboard and campus. Free beta is one course. A paid Stripe seat raises that level. |
 | Guest | Local browser paths on `/login` and `/signup` | Walk the catalog. Never admin. |
 | Jordan student demo | Staff `/admin/demo`, or a token link on `/demo` | Walk as Jordan Hale. Never admin. Login never shows this button. |
 
@@ -29,9 +29,11 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | `AUTH_TWITTER_SECRET` or `X_CLIENT_SECRET` | X sign-in | Paired client secret. |
 | `STAFF_ADMIN_EMAILS` | Optional | Comma-separated staff allowlist. Defaults to the dean email baked into `src/lib/campus.ts`. |
 | `DEMO_LINK_TOKEN` | Optional | Secret for the shareable Jordan walk. `/demo?token=` must match this value. If unset, the campus derives a stable token from `AUTH_SECRET`. Staff copy the full URL from `/admin/demo` (“Copy demo link”). Do not put this button on `/login`. |
-| `MEMBER_STORE_PATH` | Optional | JSON file for member password hashes and access requests. Defaults to `.data/campus-store.json` in development and `/app/data/campus-store.json` in production. |
+| `MEMBER_STORE_PATH` | Optional | JSON file for member password hashes, access requests, and public form submissions. Defaults to `.data/campus-store.json` in development and `/app/data/campus-store.json` in production. |
 | `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests are emailed. Defaults to `bjljohnson2012@gmail.com`. |
-| `SMTP_HOST` | Optional email notify | If unset, requests are still stored; email is skipped. |
+| `RESEND_API_KEY` | Optional email send | Preferred. Sends checkout confirmations and other transactional mail. Lives in `/opt/field-school.env`. Never commit it. |
+| `RESEND_FROM` | Optional | Defaults to `Field School <note@fieldschool.ai>`. Domain must be verified in Resend. |
+| `SMTP_HOST` | Optional email notify | Fallback if Resend is unset. If both are unset, requests are still stored; email is skipped. |
 | `SMTP_PORT` | Optional | Defaults to `587`. |
 | `SMTP_SECURE` | Optional | Set `true` for implicit TLS. |
 | `SMTP_USER` / `SMTP_PASS` | Optional | SMTP auth. |
@@ -41,7 +43,9 @@ Set these in your host environment or `.env.local` (never commit secrets).
 
 ## Member store (survives deploy wipe)
 
-`deploy/docker-compose.yml` does **not** include a `field-school-db` Postgres service. Members and access requests persist in a JSON file on a Docker named volume:
+Public Saturday-list, topic-request, and shop-waitlist posts land in the same store. Staff read them on `/admin/forms` (one tab per form). `POST /api/forms` accepts JSON from `fieldschool.ai` and the portal.
+
+`deploy/docker-compose.yml` does **not** include a `field-school-db` Postgres service. Members, access requests, and form submissions persist in a JSON file on a Docker named volume:
 
 - Compose volume: `field-school-data` mounted at `/app/data`
 - File: `/app/data/campus-store.json` (`MEMBER_STORE_PATH`)
@@ -124,11 +128,36 @@ Run `npm run dev` and open `/signup`. Without real client IDs, Google/X stay dis
 
 ## Pricing
 
-`/pricing` is display-only. No Stripe and no card form. Invoice-based paid plans later:
+Paid seats use live Stripe Payment Links on the `fieldschool.ai` account. `/checkout?plan=` redirects to the matching link. After pay, Stripe sends people to `/checkout/success?session_id={CHECKOUT_SESSION_ID}`.
 
-- Cohort meetings online: $100/month
-- Cohort meetings in person: $200/month
-- One-on-one AI + business coaching: $1,000/month
+The webhook at `/api/stripe/webhook` grants the matching seat on that email, stores the purchase, and emails a confirmation when SMTP is set. Online cohort and in-the-room seats also say a second email is coming. In the room is Dayton, Ohio and the towns around it. Farther away, the buyer covers travel and stay.
+
+A new paid email can set a password on the success page or from `/login/claim?token=`. That email can then sign in. Coaching seats include unlimited portal access.
+
+| Variable | Required for | Notes |
+|----------|--------------|-------|
+| `STRIPE_WEBHOOK_SECRET` | Paid seat fulfillment | Signing secret for `/api/stripe/webhook`. Lives in `/opt/field-school.env`. Never commit it. |
+| `PORTAL_PUBLIC_URL` | Optional claim links | Defaults to `https://portal.fieldschool.ai`. |
+
+Seat after pay:
+
+| Plan | Seat |
+|------|------|
+| Up to three courses | 3 courses |
+| More than three courses | Unlimited portal |
+| Certification | Unlimited portal + certificate |
+| Online cohort | Unlimited portal + weekly online hour |
+| In the room | Unlimited portal + Dayton room |
+| One-on-one hour | Unlimited portal + weekly hour with Ben |
+
+| Plan | Price | Stripe price |
+|------|-------|--------------|
+| Up to three courses | $10/month | `price_1U8SWWABZCvmsACo5Dg1IOF1` |
+| More than three courses | $50/month | `price_1U8SWXABZCvmsACoE5CBz6lg` |
+| Certification | $1,059 one time | `price_1U8SWYABZCvmsACotpOTvlJ5` |
+| Online cohort | $100/month | `price_1U8SWYABZCvmsACoqlz5hgWP` |
+| In the room | $200/month | `price_1U8SWYABZCvmsACo83J0YNYs` |
+| One-on-one hour | $1,000/month | `price_1U8SWZABZCvmsACo6SLipTTi` |
 
 ## What we deliberately removed
 

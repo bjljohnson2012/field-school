@@ -1,5 +1,5 @@
 #!/bin/bash
-# Deploy Field School University to the Hostinger VPS.
+# Deploy the Field School training portal to the Hostinger VPS.
 # Public campus: https://university.benjohnson.ai
 set -euo pipefail
 VPS_HOST="${VPS_HOST:-root@2.24.70.248}"

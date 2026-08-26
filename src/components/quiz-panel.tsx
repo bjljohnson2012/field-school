@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { QuizQuestion } from "@/lib/course/types";
 import { passingScore } from "@/lib/course/content";
+import { ToolResultActions } from "@/components/tool-result-actions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +14,7 @@ export function QuizPanel({
   priorScore,
   priorPassed,
   onSubmit,
+  shareTitle,
 }: {
   title?: string;
   questions: QuizQuestion[];
@@ -20,6 +22,7 @@ export function QuizPanel({
   priorScore: number | null;
   priorPassed: boolean;
   onSubmit: (answers: Record<string, number>) => void;
+  shareTitle?: string;
 }) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [result, setResult] = useState<{ score: number; passed: boolean } | null>(
@@ -105,6 +108,24 @@ export function QuizPanel({
       >
         Submit
       </Button>
+      {result && shareTitle ? (
+        <div className="mt-6">
+          <ToolResultActions
+            signedIn={false}
+            share={{
+              toolSlug: "quiz",
+              title: shareTitle,
+              summary: `${result.score}/${questions.length} ${result.passed ? "passed" : "retry"}. Pass at ${need}/${questions.length}.`,
+              completedAt: new Date().toISOString(),
+              lines: [
+                shareTitle,
+                `Score ${result.score}/${questions.length}`,
+                result.passed ? "Passed" : "Retry",
+              ],
+            }}
+          />
+        </div>
+      ) : null}
     </section>
   );
 }

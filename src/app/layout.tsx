@@ -32,8 +32,32 @@ export const metadata: Metadata = {
     template: `%s · ${UNI_NAME}`,
   },
   description:
-    "Field School University is the course portal for Field School. Watch the clip, do the field work, clear the quiz. Track skills and assessments on your portal.",
-  icons: { icon: "/favicon.svg" },
+    "The Field School training portal helps you learn AI, sales, go-to-market, and leadership at your own pace. Watch the clip, do the field work, clear the quiz.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/brand/png/favicon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: UNI_NAME,
+    description:
+      "The Field School training portal helps you learn AI, sales, go-to-market, and leadership at your own pace.",
+    images: [
+      {
+        url: "https://fieldschool.ai/brand/png/og-1200x630.png",
+        width: 1200,
+        height: 630,
+        alt: "Field School",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["https://fieldschool.ai/brand/png/og-1200x630.png"],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

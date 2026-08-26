@@ -6,6 +6,7 @@ import {
   hasGoogleOAuthEnv,
   hasTwitterOAuthEnv,
 } from "@/lib/auth/env";
+import { getSeat, isSeatKind } from "@/lib/billing/seats";
 import { roleForAuth } from "@/lib/members/policy";
 
 function buildProviders() {
@@ -61,6 +62,9 @@ export function buildAuthConfig(): NextAuthConfig {
           session.user.role = token.role === "admin" ? "admin" : "member";
           session.user.provider =
             typeof token.provider === "string" ? token.provider : undefined;
+          const seat = getSeat(isSeatKind(token.seatKind) ? token.seatKind : "free");
+          session.user.seatKind = seat.kind;
+          session.user.seatLabel = seat.label;
         }
         return session;
       },

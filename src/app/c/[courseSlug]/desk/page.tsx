@@ -79,7 +79,7 @@ export default function DeskPage() {
           Build a brief you can send
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Same campus chrome as the rest of Field School University. When you
+          Same campus chrome as the rest of the training portal. When you
           are ready, copy the markdown or share the public template at{" "}
           <span className="text-foreground">/share/desk</span>.
         </p>
