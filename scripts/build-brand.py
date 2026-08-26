@@ -33,8 +33,9 @@ INK = "#1a1916"
 WHITE = "#ffffff"
 BAR_DIM = "#d7e3ff"
 WORD = "Field School"
-TAGLINE = "Learn at your pace. Use it this week."
+TAGLINE = "Lead yourself. Learn yourself. Do the Work."
 SITE = "fieldschool.ai"
+MUTED = "#5c5850"
 
 # Card mark in a 40x32 space. Two bars read as a field note.
 MARK_W, MARK_H = 40, 32
@@ -263,6 +264,25 @@ def build() -> None:
     write(BRAND / "wordmark-white.svg", svg_doc(wm_w_px, 48, paths_svg(text_paths(fraunces, WORD, 36, 4, 34)[0], WHITE)))
     write(BRAND / "wordmark-blue.svg", svg_doc(wm_w_px, 48, paths_svg(text_paths(fraunces, WORD, 36, 4, 34)[0], BLUE)))
 
+    slogan_cmds, slogan_w = text_paths(fraunces, TAGLINE, 14, 4, 28)
+    write(BRAND / "slogan-color.svg", svg_doc(int(round(slogan_w + 12)), 40, paths_svg(slogan_cmds, INK)))
+    write(
+        BRAND / "slogan-white.svg",
+        svg_doc(int(round(slogan_w + 12)), 40, paths_svg(text_paths(fraunces, TAGLINE, 14, 4, 28)[0], WHITE)),
+    )
+
+    slogan_lockup_w = int(round(max(lockup_w, slogan_w + word_x) + 8))
+    slogan_lockup_h = 86
+    slogan_line_cmds, _ = text_paths(fraunces, TAGLINE, 12, word_x, 74)
+    write(
+        BRAND / "lockup-wide-slogan.svg",
+        svg_doc(
+            slogan_lockup_w,
+            slogan_lockup_h,
+            lockup_body(BLUE, WHITE, BAR_DIM, INK) + paths_svg(slogan_line_cmds, MUTED),
+        ),
+    )
+
     # Social avatar SVG
     write(
         BRAND / "social-avatar.svg",
@@ -278,144 +298,193 @@ def build() -> None:
     write(ROOT / "public" / "favicon.svg", favicon)
     write(ROOT / "marketing-site" / "favicon.svg", favicon)
 
-    # Raster marks
-    for size in (256, 512, 1024):
+    # Raster marks. Large masters first. Standard sizes come from those.
+    for size in (512, 1024, 2048, 4096):
         save_png(raster_mark(size, BLUE, WHITE, BAR_DIM, None), PNG / f"mark-color-{size}.png")
         save_png(raster_mark(size, INK, WHITE, "#c8c4bb", None), PNG / f"mark-black-{size}.png")
         save_png(raster_mark(size, WHITE, BLUE, "#9db4ff", None), PNG / f"mark-white-{size}.png")
 
-    for size in (256, 512, 1024):
+    for size in (512, 1024, 2048, 4096):
         save_png(raster_icon(size, CREAM, BLUE, WHITE, BAR_DIM), PNG / f"icon-color-{size}.png")
         save_png(raster_icon(size, BLUE, WHITE, BLUE, "#9db4ff"), PNG / f"icon-blue-{size}.png")
         save_png(raster_icon(size, INK, WHITE, INK, "#c8c4bb"), PNG / f"icon-ink-{size}.png")
 
     save_png(raster_icon(180, CREAM, BLUE, WHITE, BAR_DIM), PNG / "apple-touch-180.png")
     save_png(raster_icon(32, CREAM, BLUE, WHITE, BAR_DIM), PNG / "favicon-32.png")
-    save_png(raster_icon(1080, CREAM, BLUE, WHITE, BAR_DIM), PNG / "social-avatar-1080.png")
-    save_png(raster_icon(1080, BLUE, WHITE, BLUE, "#9db4ff"), PNG / "social-avatar-blue-1080.png")
-    save_png(raster_icon(1080, INK, WHITE, INK, "#c8c4bb"), PNG / "social-avatar-ink-1080.png")
+    save_png(raster_icon(2048, CREAM, BLUE, WHITE, BAR_DIM), PNG / "social-avatar-2048.png")
+    save_png(raster_icon(2048, BLUE, WHITE, BLUE, "#9db4ff"), PNG / "social-avatar-blue-2048.png")
+    save_png(raster_icon(2048, INK, WHITE, INK, "#c8c4bb"), PNG / "social-avatar-ink-2048.png")
+    save_png(
+        raster_icon(2048, CREAM, BLUE, WHITE, BAR_DIM).resize((1080, 1080), Image.Resampling.LANCZOS),
+        PNG / "social-avatar-1080.png",
+    )
+    save_png(
+        raster_icon(2048, BLUE, WHITE, BLUE, "#9db4ff").resize((1080, 1080), Image.Resampling.LANCZOS),
+        PNG / "social-avatar-blue-1080.png",
+    )
+    save_png(
+        raster_icon(2048, INK, WHITE, INK, "#c8c4bb").resize((1080, 1080), Image.Resampling.LANCZOS),
+        PNG / "social-avatar-ink-1080.png",
+    )
 
-    # Wide lockup PNGs
-    def paint_wide(bg: str | None, fill: str, bar: str, bar_dim: str, text: str, pad=48) -> Image.Image:
-        font = fraunces_font(fraunces_path, 86)
+    def paint_wide(bg: str | None, fill: str, bar: str, bar_dim: str, text: str, pad=160, with_slogan=False) -> Image.Image:
+        font = fraunces_font(fraunces_path, 280)
         dummy = Image.new("RGBA", (4, 4), (0, 0, 0, 0))
         box = ImageDraw.Draw(dummy).textbbox((0, 0), WORD, font=font)
         tw, th = box[2] - box[0], box[3] - box[1]
-        mark_h = 112
+        slogan_font = fraunces_font(fraunces_path, 72)
+        sbox = ImageDraw.Draw(dummy).textbbox((0, 0), TAGLINE, font=slogan_font)
+        sw, sh = sbox[2] - sbox[0], sbox[3] - sbox[1]
+        mark_h = 360
         mark_scale_px = mark_h / MARK_H
         mark_w = MARK_W * mark_scale_px
-        width = int(pad * 2 + mark_w + 36 + tw)
-        height = int(pad * 2 + max(mark_h, th))
+        gap = 112
+        width = int(pad * 2 + max(mark_w + gap + tw, sw if with_slogan else 0))
+        height = int(pad * 2 + max(mark_h, th) + (sh + 48 if with_slogan else 0))
         image = Image.new("RGBA", (width, height), (0, 0, 0, 0) if bg is None else bg)
         draw = ImageDraw.Draw(image)
-        mx, my = pad, (height - mark_h) / 2
+        mx, my = pad, pad + ((max(mark_h, th) - mark_h) / 2)
         paint_mark(draw, mx, my, mark_scale_px, fill, bar, bar_dim)
-        tx = mx + mark_w + 36 - box[0]
-        ty = (height - th) / 2 - box[1]
+        tx = mx + mark_w + gap - box[0]
+        ty = pad + ((max(mark_h, th) - th) / 2) - box[1]
         draw.text((tx, ty), WORD, font=font, fill=text)
+        if with_slogan:
+            slogan_fill = WHITE if text == WHITE else MUTED
+            draw.text((tx - sbox[0], pad + max(mark_h, th) + 48 - sbox[1]), TAGLINE, font=slogan_font, fill=slogan_fill)
         return image
 
     save_png(paint_wide(None, BLUE, WHITE, BAR_DIM, INK), PNG / "lockup-wide-color.png")
-    save_png(paint_wide(CREAM, BLUE, WHITE, BAR_DIM, INK, 40), PNG / "lockup-wide-color-cream.png")
+    save_png(paint_wide(CREAM, BLUE, WHITE, BAR_DIM, INK, 128), PNG / "lockup-wide-color-cream.png")
     save_png(paint_wide(None, INK, WHITE, "#c8c4bb", INK), PNG / "lockup-wide-black.png")
-    save_png(paint_wide(INK, WHITE, BLUE, "#9db4ff", WHITE, 40), PNG / "lockup-wide-white-on-ink.png")
-    save_png(paint_wide(BLUE, WHITE, BLUE, "#9db4ff", WHITE, 40), PNG / "lockup-wide-white-on-blue.png")
+    save_png(paint_wide(INK, WHITE, BLUE, "#9db4ff", WHITE, 128), PNG / "lockup-wide-white-on-ink.png")
+    save_png(paint_wide(BLUE, WHITE, BLUE, "#9db4ff", WHITE, 128), PNG / "lockup-wide-white-on-blue.png")
+    save_png(paint_wide(None, BLUE, WHITE, BAR_DIM, INK, 160, True), PNG / "lockup-wide-slogan.png")
+    save_png(paint_wide(CREAM, BLUE, WHITE, BAR_DIM, INK, 128, True), PNG / "lockup-wide-slogan-cream.png")
+    save_png(paint_wide(INK, WHITE, BLUE, "#9db4ff", WHITE, 128, True), PNG / "lockup-wide-slogan-ink.png")
 
-    def paint_stacked(bg: str | None, fill: str, bar: str, bar_dim: str, text: str) -> Image.Image:
-        font = fraunces_font(fraunces_path, 72)
+    def paint_stacked(bg: str | None, fill: str, bar: str, bar_dim: str, text: str, with_slogan=False) -> Image.Image:
+        font = fraunces_font(fraunces_path, 220)
         dummy = Image.new("RGBA", (4, 4), (0, 0, 0, 0))
         box = ImageDraw.Draw(dummy).textbbox((0, 0), WORD, font=font)
         tw, th = box[2] - box[0], box[3] - box[1]
-        mark_h = 140
+        slogan_font = fraunces_font(fraunces_path, 64)
+        sbox = ImageDraw.Draw(dummy).textbbox((0, 0), TAGLINE, font=slogan_font)
+        sw, sh = sbox[2] - sbox[0], sbox[3] - sbox[1]
+        mark_h = 420
         mark_scale_px = mark_h / MARK_H
         mark_w = MARK_W * mark_scale_px
-        width = int(max(mark_w, tw) + 80)
-        height = int(80 + mark_h + 28 + th)
+        width = int(max(mark_w, tw, sw if with_slogan else 0) + 240)
+        height = int(200 + mark_h + 80 + th + (sh + 40 if with_slogan else 0))
         image = Image.new("RGBA", (width, height), (0, 0, 0, 0) if bg is None else bg)
         draw = ImageDraw.Draw(image)
-        paint_mark(draw, (width - mark_w) / 2, 40, mark_scale_px, fill, bar, bar_dim)
-        draw.text(((width - tw) / 2 - box[0], 40 + mark_h + 28 - box[1]), WORD, font=font, fill=text)
+        paint_mark(draw, (width - mark_w) / 2, 120, mark_scale_px, fill, bar, bar_dim)
+        draw.text(((width - tw) / 2 - box[0], 120 + mark_h + 80 - box[1]), WORD, font=font, fill=text)
+        if with_slogan:
+            slogan_fill = WHITE if text == WHITE else MUTED
+            draw.text(((width - sw) / 2 - sbox[0], 120 + mark_h + 80 + th + 40 - sbox[1]), TAGLINE, font=slogan_font, fill=slogan_fill)
         return image
 
     save_png(paint_stacked(None, BLUE, WHITE, BAR_DIM, INK), PNG / "lockup-stacked-color.png")
     save_png(paint_stacked(CREAM, BLUE, WHITE, BAR_DIM, INK), PNG / "lockup-stacked-color-cream.png")
     save_png(paint_stacked(None, INK, WHITE, "#c8c4bb", INK), PNG / "lockup-stacked-black.png")
     save_png(paint_stacked(INK, WHITE, BLUE, "#9db4ff", WHITE), PNG / "lockup-stacked-white-on-ink.png")
+    save_png(paint_stacked(CREAM, BLUE, WHITE, BAR_DIM, INK, True), PNG / "lockup-stacked-slogan-cream.png")
 
-    def paint_wordmark(bg: str | None, fill: str) -> Image.Image:
-        font = fraunces_font(fraunces_path, 96)
+    def paint_wordmark(bg: str | None, fill: str, copy: str = WORD, size: int = 320) -> Image.Image:
+        font = fraunces_font(fraunces_path, size)
         dummy = Image.new("RGBA", (4, 4), (0, 0, 0, 0))
-        box = ImageDraw.Draw(dummy).textbbox((0, 0), WORD, font=font)
-        image = Image.new("RGBA", (int(box[2] - box[0] + 48), int(box[3] - box[1] + 48)), (0, 0, 0, 0) if bg is None else bg)
-        ImageDraw.Draw(image).text((24 - box[0], 24 - box[1]), WORD, font=font, fill=fill)
+        box = ImageDraw.Draw(dummy).textbbox((0, 0), copy, font=font)
+        image = Image.new(
+            "RGBA",
+            (int(box[2] - box[0] + 160), int(box[3] - box[1] + 160)),
+            (0, 0, 0, 0) if bg is None else bg,
+        )
+        ImageDraw.Draw(image).text((80 - box[0], 80 - box[1]), copy, font=font, fill=fill)
         return image
 
     save_png(paint_wordmark(None, INK), PNG / "wordmark-color.png")
     save_png(paint_wordmark(None, BLUE), PNG / "wordmark-blue.png")
     save_png(paint_wordmark(None, WHITE), PNG / "wordmark-white.png")
     save_png(paint_wordmark(CREAM, INK), PNG / "wordmark-color-cream.png")
+    save_png(paint_wordmark(None, INK, TAGLINE, 120), PNG / "slogan-color.png")
+    save_png(paint_wordmark(CREAM, INK, TAGLINE, 120), PNG / "slogan-color-cream.png")
+    save_png(paint_wordmark(INK, WHITE, TAGLINE, 120), PNG / "slogan-white-on-ink.png")
 
-    # Social square with wordmark under the mark
-    def social_named(bg: str, fill: str, bar: str, bar_dim: str, text: str, path: Path) -> None:
-        size = 1080
+    def social_named(bg: str, fill: str, bar: str, bar_dim: str, text: str, path: Path, size=2048) -> None:
         image = Image.new("RGBA", (size, size), bg)
         draw = ImageDraw.Draw(image)
-        mark_h = 280
+        mark_h = int(size * 0.28)
         scale = mark_h / MARK_H
         mark_w = MARK_W * scale
-        paint_mark(draw, (size - mark_w) / 2, 280, scale, fill, bar, bar_dim)
-        font = fraunces_font(fraunces_path, 72)
+        paint_mark(draw, (size - mark_w) / 2, size * 0.24, scale, fill, bar, bar_dim)
+        font = fraunces_font(fraunces_path, int(size * 0.07))
         box = draw.textbbox((0, 0), WORD, font=font)
-        draw.text(((size - (box[2] - box[0])) / 2 - box[0], 620 - box[1]), WORD, font=font, fill=text)
+        draw.text(((size - (box[2] - box[0])) / 2 - box[0], size * 0.58 - box[1]), WORD, font=font, fill=text)
+        slogan_font = fraunces_font(fraunces_path, int(size * 0.028))
+        sbox = draw.textbbox((0, 0), TAGLINE, font=slogan_font)
+        slogan_fill = WHITE if text == WHITE else MUTED
+        draw.text(((size - (sbox[2] - sbox[0])) / 2 - sbox[0], size * 0.68 - sbox[1]), TAGLINE, font=slogan_font, fill=slogan_fill)
         save_png(image, path)
 
     social_named(CREAM, BLUE, WHITE, BAR_DIM, INK, PNG / "social-square-color.png")
     social_named(BLUE, WHITE, BLUE, "#9db4ff", WHITE, PNG / "social-square-blue.png")
     social_named(INK, WHITE, INK, "#c8c4bb", WHITE, PNG / "social-square-ink.png")
+    for name in ("social-square-color", "social-square-blue", "social-square-ink"):
+        Image.open(PNG / f"{name}.png").resize((1080, 1080), Image.Resampling.LANCZOS).save(
+            PNG / f"{name}-1080.png", "PNG", optimize=True
+        )
 
-    # OG / banners
     def banner(width: int, height: int, path: Path, align="center") -> None:
         image = Image.new("RGBA", (width, height), CREAM)
         draw = ImageDraw.Draw(image)
-        mark_h = 96 if width > 1300 else 88
+        mark_h = int(height * 0.22)
         scale = mark_h / MARK_H
         mark_w = MARK_W * scale
-        font = fraunces_font(fraunces_path, 78 if width > 1300 else 70)
+        font = fraunces_font(fraunces_path, int(height * 0.16))
         box = draw.textbbox((0, 0), WORD, font=font)
         tw, th = box[2] - box[0], box[3] - box[1]
-        block_w = mark_w + 32 + tw
-        if align == "left":
-            x0 = 96
-        else:
-            x0 = (width - block_w) / 2
-        y0 = (height - mark_h) / 2 - 18
+        block_w = mark_w + int(width * 0.03) + tw
+        x0 = int(width * 0.07) if align == "left" else (width - block_w) / 2
+        y0 = (height - mark_h) / 2 - height * 0.04
         paint_mark(draw, x0, y0, scale, BLUE, WHITE, BAR_DIM)
-        draw.text((x0 + mark_w + 32 - box[0], y0 + (mark_h - th) / 2 - box[1]), WORD, font=font, fill=INK)
-        small = plex_font(plex_path, 28)
+        draw.text((x0 + mark_w + width * 0.03 - box[0], y0 + (mark_h - th) / 2 - box[1]), WORD, font=font, fill=INK)
+        small = fraunces_font(fraunces_path, max(28, int(height * 0.045)))
         sbox = draw.textbbox((0, 0), TAGLINE, font=small)
-        draw.text(((width - (sbox[2] - sbox[0])) / 2 - sbox[0], y0 + mark_h + 28 - sbox[1]), TAGLINE, font=small, fill="#5c5850")
+        draw.text(((width - (sbox[2] - sbox[0])) / 2 - sbox[0], y0 + mark_h + height * 0.06 - sbox[1]), TAGLINE, font=small, fill=MUTED)
         save_png(image, path)
 
-    banner(1200, 630, PNG / "og-1200x630.png")
-    banner(1500, 500, PNG / "x-banner-1500x500.png", align="left")
-    banner(1600, 400, PNG / "banner-wide-1600x400.png", align="left")
-    banner(1920, 1080, PNG / "cover-1920x1080.png")
+    banner(2400, 1260, PNG / "og-2400x1260.png")
+    banner(2400, 1260, PNG / "og-1200x630.png")
+    Image.open(PNG / "og-2400x1260.png").resize((1200, 630), Image.Resampling.LANCZOS).save(
+        PNG / "og-1200x630.png", "PNG", optimize=True
+    )
+    banner(3000, 1000, PNG / "x-banner-3000x1000.png", align="left")
+    Image.open(PNG / "x-banner-3000x1000.png").resize((1500, 500), Image.Resampling.LANCZOS).save(
+        PNG / "x-banner-1500x500.png", "PNG", optimize=True
+    )
+    banner(3200, 800, PNG / "banner-wide-3200x800.png", align="left")
+    Image.open(PNG / "banner-wide-3200x800.png").resize((1600, 400), Image.Resampling.LANCZOS).save(
+        PNG / "banner-wide-1600x400.png", "PNG", optimize=True
+    )
+    banner(3840, 2160, PNG / "cover-3840x2160.png")
+    Image.open(PNG / "cover-3840x2160.png").resize((1920, 1080), Image.Resampling.LANCZOS).save(
+        PNG / "cover-1920x1080.png", "PNG", optimize=True
+    )
 
-    # Email lockup: cream, compact, Gmail-safe PNG
-    email = paint_wide(CREAM, BLUE, WHITE, BAR_DIM, INK, 20)
-    email = email.resize((min(880, email.width), round(email.height * min(880, email.width) / email.width)), Image.Resampling.LANCZOS)
+    email = paint_wide(CREAM, BLUE, WHITE, BAR_DIM, INK, 80)
+    email = email.resize((1600, round(email.height * 1600 / email.width)), Image.Resampling.LANCZOS)
     save_png(email, PNG / "email-lockup.png")
 
     # Compat copies used by mail and older paths
     for dest in (ROOT / "marketing-site" / "img", ROOT / "public" / "img"):
         dest.mkdir(parents=True, exist_ok=True)
         shutil.copy2(PNG / "email-lockup.png", dest / "field-school-lockup.png")
-        shutil.copy2(PNG / "mark-color-256.png", dest / "field-school-mark.png")
-        shutil.copy2(PNG / "og-1200x630.png", dest / "og.png")
+        shutil.copy2(PNG / "mark-color-1024.png", dest / "field-school-mark.png")
+        shutil.copy2(PNG / "og-2400x1260.png", dest / "og.png")
         shutil.copy2(PNG / "apple-touch-180.png", dest / "apple-touch-icon.png")
 
     shutil.copy2(PNG / "apple-touch-180.png", ROOT / "public" / "apple-touch-icon.png")
-    shutil.copy2(PNG / "og-1200x630.png", ROOT / "public" / "og.png")
+    shutil.copy2(PNG / "og-2400x1260.png", ROOT / "public" / "og.png")
 
     if PUBLIC_BRAND.exists():
         shutil.rmtree(PUBLIC_BRAND)
@@ -439,6 +508,8 @@ def preview_html() -> str:
         ("Wide lockup, white", "lockup-wide-white.svg", INK),
         ("Stacked lockup, color", "lockup-stacked-color.svg"),
         ("Wordmark", "wordmark-color.svg"),
+        ("Slogan", "slogan-color.svg"),
+        ("Wide lockup with slogan", "lockup-wide-slogan.svg"),
         ("Social avatar", "social-avatar.svg"),
     ]
     items = []
@@ -450,14 +521,14 @@ def preview_html() -> str:
             f"<figcaption>{label}</figcaption></figure>"
         )
     rasters = [
-        ("png/lockup-wide-color.png", "Wide lockup PNG"),
-        ("png/lockup-stacked-color.png", "Stacked lockup PNG"),
-        ("png/social-square-color.png", "Social square"),
-        ("png/social-avatar-blue-1080.png", "Social avatar, blue"),
-        ("png/og-1200x630.png", "Open Graph 1200x630"),
-        ("png/x-banner-1500x500.png", "X / LinkedIn banner"),
+        ("png/lockup-wide-slogan-cream.png", "Wide lockup with slogan"),
+        ("png/lockup-stacked-slogan-cream.png", "Stacked lockup with slogan"),
+        ("png/social-square-color.png", "Social square 2048"),
+        ("png/social-avatar-blue-2048.png", "Social avatar, blue 2048"),
+        ("png/og-2400x1260.png", "Open Graph 2400x1260"),
+        ("png/x-banner-3000x1000.png", "X / LinkedIn banner"),
         ("png/email-lockup.png", "Email lockup"),
-        ("png/cover-1920x1080.png", "Cover 1920x1080"),
+        ("png/cover-3840x2160.png", "Cover 3840x2160"),
     ]
     raster_html = "".join(
         f'<figure class="wide"><div class="frame"><img src="{src}" alt="{label}"></div>'
@@ -486,7 +557,7 @@ def preview_html() -> str:
     figure {{ margin:0; }}
     .frame {{ border:1px solid var(--border); border-radius:12px; min-height:140px; display:grid; place-items:center; padding:1.25rem; }}
     .frame img {{ max-width:100%; max-height:120px; height:auto; }}
-    .wide .frame img {{ max-height:280px; }}
+        .wide .frame img {{ max-height:420px; }}
     figcaption {{ margin-top:0.5rem; font-size:0.85rem; color:#5c5850; }}
     code {{ font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:0.8rem; }}
     a {{ color:var(--blue); }}

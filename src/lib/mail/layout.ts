@@ -45,7 +45,7 @@ export function brandedEmailHtml(input: {
               <h1 style="margin:0 0 16px;font-family:Fraunces,Georgia,Times,serif;font-size:28px;line-height:1.2;letter-spacing:-0.03em;color:#1a1916;">${escapeHtml(input.title)}</h1>
               ${paragraphs}
               ${button}
-              <p style="margin:28px 0 0;font-family:IBM Plex Sans,Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5c5850;">Field School<br><a href="https://fieldschool.ai" style="color:#1f5eff;text-decoration:none;">fieldschool.ai</a></p>
+              <p style="margin:28px 0 0;font-family:IBM Plex Sans,Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5;color:#5c5850;">Field School<br>Lead yourself. Learn yourself. Do the Work.<br><a href="https://fieldschool.ai" style="color:#1f5eff;text-decoration:none;">fieldschool.ai</a></p>
             </td>
           </tr>
         </table>

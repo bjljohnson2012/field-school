@@ -24,7 +24,7 @@ export default function Campus() {
               Field School training portal
             </p>
             <h1 className="mt-4 font-display text-4xl leading-[1.1] tracking-tight sm:text-5xl">
-              Learn at your pace. Use it this week.
+              Lead yourself. Learn yourself. Do the Work.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
               This is the Field School training portal. AI. Sales. Go-to-market.

@@ -19,15 +19,20 @@ const REQUIRED = [
   "marketing-site/brand/lockup-wide-white.svg",
   "marketing-site/brand/lockup-stacked-color.svg",
   "marketing-site/brand/wordmark-color.svg",
+  "marketing-site/brand/slogan-color.svg",
+  "marketing-site/brand/lockup-wide-slogan.svg",
   "marketing-site/brand/social-avatar.svg",
   "marketing-site/brand/png/lockup-wide-color.png",
+  "marketing-site/brand/png/lockup-wide-slogan-cream.png",
   "marketing-site/brand/png/lockup-wide-black.png",
   "marketing-site/brand/png/lockup-stacked-color.png",
   "marketing-site/brand/png/social-square-color.png",
-  "marketing-site/brand/png/social-avatar-1080.png",
-  "marketing-site/brand/png/og-1200x630.png",
-  "marketing-site/brand/png/x-banner-1500x500.png",
+  "marketing-site/brand/png/social-avatar-2048.png",
+  "marketing-site/brand/png/og-2400x1260.png",
+  "marketing-site/brand/png/x-banner-3000x1000.png",
+  "marketing-site/brand/png/cover-3840x2160.png",
   "marketing-site/brand/png/email-lockup.png",
+  "marketing-site/brand/png/mark-color-4096.png",
   "marketing-site/img/field-school-lockup.png",
   "public/brand/mark-color.svg",
   "public/favicon.svg",
@@ -62,4 +67,9 @@ test("Field School logo set exists and never says University", () => {
   assert.match(read("marketing-site/index.html"), /brand\/mark-color\.svg/);
   assert.match(read("src/components/site-header.tsx"), /brand\/mark-color\.svg/);
   assert.match(read("src/app/layout.tsx"), /og-1200x630\.png/);
+  assert.match(read("src/lib/brand.ts"), /Lead yourself\. Learn yourself\. Do the Work\./);
+  assert.match(read("src/app/page.tsx"), /Lead yourself\. Learn yourself\. Do the Work\./);
+  assert.match(read("scripts/build-brand.py"), /Lead yourself\. Learn yourself\. Do the Work\./);
+  assert.equal(statSync(join(root, "marketing-site/brand/png/lockup-wide-color.png")).size > 20000, true);
+  assert.equal(statSync(join(root, "marketing-site/brand/png/og-2400x1260.png")).size > 20000, true);
 });
