@@ -70,6 +70,13 @@ test("Field School logo set exists and never says University", () => {
   assert.match(read("marketing-site/index.html"), /favicon\.ico\?v=20260826/);
   assert.match(read("marketing-site/brand/index.html"), /Lead yourself\. Learn yourself\. Do the Work\./);
   assert.match(read("marketing-site/brand/index.html"), /lockup-wide-slogan-cream\.png/);
+  assert.match(read("marketing-site/brand/index.html"), /brand\/options/);
+  for (const key of ["journal", "f", "path", "plots", "fs"]) {
+    const option = join(root, `marketing-site/brand/options/${key}-1024.png`);
+    assert.equal(existsSync(option), true, option);
+    assert.equal(statSync(option).size > 1000, true, option);
+  }
+  assert.doesNotMatch(read("marketing-site/brand/options/index.html"), /University/);
   assert.match(read("marketing-site/index.html"), /brand\/mark-color\.svg/);
   assert.match(read("src/components/site-header.tsx"), /brand\/mark-color\.svg/);
   assert.match(read("src/app/layout.tsx"), /og-1200x630\.png/);

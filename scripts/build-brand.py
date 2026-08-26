@@ -192,9 +192,16 @@ def build() -> None:
     plex = load_plex(plex_path)
 
     brand_page = (BRAND / "index.html").read_text() if (BRAND / "index.html").exists() else None
+    options_keep = Path("/tmp/fs-brand-options")
+    if options_keep.exists():
+        shutil.rmtree(options_keep)
+    if (BRAND / "options").exists():
+        shutil.copytree(BRAND / "options", options_keep)
     if BRAND.exists():
         shutil.rmtree(BRAND)
     PNG.mkdir(parents=True)
+    if options_keep.exists():
+        shutil.copytree(options_keep, BRAND / "options")
 
     # Transparent marks
     write(BRAND / "mark-color.svg", svg_doc(MARK_W, MARK_H, mark_svg(BLUE, WHITE, BAR_DIM)))
