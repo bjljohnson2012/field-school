@@ -160,7 +160,7 @@ export async function emailSeatConfirmation(input: {
     to: input.email,
     subject: input.subject,
     text: input.text,
-    from: mailFrom("Field School <ben@fieldschool.ai>"),
+    from: mailFrom("Field School <note@fieldschool.ai>"),
     skipLog:
       "[seat-email] seat granted; email skipped (set RESEND_API_KEY or SMTP_HOST to send)",
   });

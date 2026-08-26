@@ -32,7 +32,7 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | `MEMBER_STORE_PATH` | Optional | JSON file for member password hashes, access requests, and public form submissions. Defaults to `.data/campus-store.json` in development and `/app/data/campus-store.json` in production. |
 | `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests are emailed. Defaults to `bjljohnson2012@gmail.com`. |
 | `RESEND_API_KEY` | Optional email send | Preferred. Sends checkout confirmations and other transactional mail. Lives in `/opt/field-school.env`. Never commit it. |
-| `RESEND_FROM` | Optional | Defaults to `Field School <ben@fieldschool.ai>`. Domain must be verified in Resend. |
+| `RESEND_FROM` | Optional | Defaults to `Field School <note@fieldschool.ai>`. Domain must be verified in Resend. |
 | `SMTP_HOST` | Optional email notify | Fallback if Resend is unset. If both are unset, requests are still stored; email is skipped. |
 | `SMTP_PORT` | Optional | Defaults to `587`. |
 | `SMTP_SECURE` | Optional | Set `true` for implicit TLS. |

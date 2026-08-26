@@ -33,7 +33,7 @@ Member passwords, staff access requests, and public form submissions live in a D
 
 Ship the public site with `bash deploy/deploy-site.sh`. That writes `marketing-site/` to `/var/www/fieldschool.ai` and keeps Caddy `try_files` so `/about` serves `about.html`. Staff read those forms at `/admin/forms`.
 
-Optional notify email: set `RESEND_API_KEY` in `/opt/field-school.env` (preferred). `RESEND_FROM` defaults to `Field School <ben@fieldschool.ai>`. SMTP still works as a fallback. Set `STRIPE_WEBHOOK_SECRET` there too so `/api/stripe/webhook` can grant seats after Stripe Checkout.
+Optional notify email: set `RESEND_API_KEY` in `/opt/field-school.env` (preferred). `RESEND_FROM` defaults to `Field School <note@fieldschool.ai>`. SMTP still works as a fallback. Set `STRIPE_WEBHOOK_SECRET` there too so `/api/stripe/webhook` can grant seats after Stripe Checkout.
 
 Optional shareable Jordan walk: set `DEMO_LINK_TOKEN` in `/opt/field-school.env`, then copy the full URL from `/admin/demo` (“Copy demo link”). The public path is `/demo?token=…`. Login never shows a Jordan button. If the env is unset, the campus still mints a token from `AUTH_SECRET` so staff can copy a working link. See [AUTH.md](AUTH.md).
 
