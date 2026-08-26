@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -87,6 +87,36 @@ test("paid seats, webhook, and claim login are wired", () => {
   assert.match(claimPage, /Set your password/);
   assert.match(dashboard, /seatLabel/);
   assert.match(auth, /seatKind/);
+});
+
+test("transactional mail uses the Field School lockup", () => {
+  const layout = readSrc("src/lib/mail/layout.ts");
+  const notify = readSrc("src/lib/members/notify.ts");
+  const seats = readSrc("src/lib/billing/seats.ts");
+  const fulfill = readSrc("src/lib/billing/fulfill.ts");
+
+  assert.match(layout, /fieldschool\.ai\/img\/field-school-lockup\.png/);
+  assert.match(layout, /brandedEmailHtml/);
+  assert.match(layout, /<img src="\$\{MAIL_LOGO_URL\}"/);
+  assert.match(layout, /background:#f6f3ec/);
+  assert.match(layout, /background:#1f5eff/);
+  assert.match(notify, /brandedEmailHtml/);
+  assert.match(notify, /Field School <note@fieldschool\.ai>/);
+  assert.match(notify, /html: brandedEmailHtml/);
+  assert.match(seats, /title: "You're in\."/);
+  assert.match(seats, /action/);
+  assert.match(fulfill, /\.\.\.copy/);
+
+  for (const rel of [
+    "public/img/field-school-lockup.png",
+    "public/img/field-school-mark.png",
+    "marketing-site/img/field-school-lockup.png",
+    "marketing-site/img/field-school-mark.png",
+  ]) {
+    const path = join(root, rel);
+    assert.equal(existsSync(path), true, rel);
+    assert.equal(statSync(path).size > 1000, true, rel);
+  }
 });
 
 function verifyStripeSignature(payload, header, secret, nowSec = Math.floor(Date.now() / 1000)) {

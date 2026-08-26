@@ -1,5 +1,10 @@
+import { brandedEmailHtml } from "@/lib/mail/layout";
 import { accessRequestNotifyEmail } from "@/lib/members/policy";
 import type { AccessRequest } from "@/lib/members/types";
+
+const NOTE_FROM = "Field School <note@fieldschool.ai>";
+const PORTAL = "https://portal.fieldschool.ai";
+const NEWSLETTER = "https://fieldschool.ai/newsletter";
 
 function smtpConfigured() {
   return Boolean(process.env.SMTP_HOST?.trim());
@@ -22,6 +27,7 @@ async function sendWithResend(input: {
   to: string;
   subject: string;
   text: string;
+  html?: string;
 }) {
   const key = process.env.RESEND_API_KEY?.trim();
   if (!key) return { emailed: false as const };
@@ -37,6 +43,7 @@ async function sendWithResend(input: {
       to: [input.to],
       subject: input.subject,
       text: input.text,
+      html: input.html,
     }),
   });
 
@@ -52,6 +59,7 @@ async function sendWithSmtp(input: {
   to: string;
   subject: string;
   text: string;
+  html?: string;
 }) {
   if (!smtpConfigured()) return { emailed: false as const };
 
@@ -74,6 +82,7 @@ async function sendWithSmtp(input: {
     to: input.to,
     subject: input.subject,
     text: input.text,
+    html: input.html,
   });
   return { emailed: true as const };
 }
@@ -82,6 +91,7 @@ async function sendTextMail(input: {
   to: string;
   subject: string;
   text: string;
+  html?: string;
   from: string;
   skipLog: string;
 }) {
@@ -100,23 +110,26 @@ async function sendTextMail(input: {
 export async function notifyAccessRequest(request: AccessRequest) {
   const to = accessRequestNotifyEmail();
   const subject = `Staff access request: ${request.name}`;
-  const body = [
+  const paragraphs = [
     "A campus member asked for staff access.",
-    "",
     `Name: ${request.name}`,
     `Email: ${request.email}`,
     `Provider: ${request.provider}`,
     `Submitted: ${request.createdAt}`,
     `Note: ${request.note || "(none)"}`,
-    "",
-    "Review pending requests at /admin/access-requests.",
-  ].join("\n");
+  ];
+  const review = `${PORTAL}/admin/access-requests`;
 
   return sendTextMail({
     to,
     subject,
-    text: body,
-    from: mailFrom(to),
+    text: [...paragraphs, "", `Review pending requests: ${review}`].join("\n"),
+    html: brandedEmailHtml({
+      title: "Staff access request",
+      paragraphs,
+      action: { href: review, label: "Review requests" },
+    }),
+    from: mailFrom(NOTE_FROM),
     skipLog:
       "[access-request] stored; email skipped (set RESEND_API_KEY or SMTP_HOST to notify)",
   });
@@ -145,7 +158,12 @@ export async function emailAssessmentResult(input: {
     to,
     subject,
     text,
-    from: mailFrom(accessRequestNotifyEmail()),
+    html: brandedEmailHtml({
+      title: input.title,
+      paragraphs: [...input.lines, input.summary, "You are on the Saturday newsletter."],
+      action: { href: NEWSLETTER, label: "Open the newsletter" },
+    }),
+    from: mailFrom(NOTE_FROM),
     skipLog:
       "[assessment-email] newsletter saved; email skipped (set RESEND_API_KEY or SMTP_HOST to send)",
   });
@@ -155,12 +173,20 @@ export async function emailSeatConfirmation(input: {
   email: string;
   subject: string;
   text: string;
+  title: string;
+  paragraphs: string[];
+  action: { href: string; label: string };
 }) {
   return sendTextMail({
     to: input.email,
     subject: input.subject,
     text: input.text,
-    from: mailFrom("Field School <note@fieldschool.ai>"),
+    html: brandedEmailHtml({
+      title: input.title,
+      paragraphs: input.paragraphs,
+      action: input.action,
+    }),
+    from: mailFrom(NOTE_FROM),
     skipLog:
       "[seat-email] seat granted; email skipped (set RESEND_API_KEY or SMTP_HOST to send)",
   });

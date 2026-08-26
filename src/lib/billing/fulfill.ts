@@ -37,8 +37,7 @@ export async function fulfillPaidCheckout(session: CheckoutSessionFields) {
     });
     await emailSeatConfirmation({
       email: session.email,
-      subject: copy.subject,
-      text: copy.text,
+      ...copy,
     });
   }
 

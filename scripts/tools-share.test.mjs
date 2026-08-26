@@ -89,6 +89,8 @@ test("assessments are free to take, export, and email", () => {
   assert.match(api, /createFormSubmission/);
   assert.match(api, /saturday_note/);
   assert.match(api, /emailAssessmentResult/);
+  assert.match(readSrc("src/lib/members/notify.ts"), /brandedEmailHtml/);
+  assert.match(readSrc("src/lib/mail/layout.ts"), /field-school-lockup\.png/);
   assert.match(pdf, /export function buildAssessmentPdf/);
   assert.match(pdf, /application\/pdf/);
   assert.match(quiz, /shareTitle/);

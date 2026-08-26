@@ -200,8 +200,19 @@ export function confirmationCopy(input: {
 
   lines.push("", "Field School", "https://fieldschool.ai");
 
+  const action = input.claimUrl
+    ? { href: input.claimUrl, label: "Set your password" }
+    : { href: login, label: "Sign in" };
+
   return {
     subject: `You're in: ${input.plan.name}`,
     text: lines.join("\n"),
+    title: "You're in.",
+    paragraphs: [
+      `You paid for ${input.plan.name}. That is your Field School seat now.`,
+      `Log in with this email: ${input.email}`,
+      ...successNotes(seat.kind),
+    ],
+    action,
   };
 }
