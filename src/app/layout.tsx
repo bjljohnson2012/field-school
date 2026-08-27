@@ -34,12 +34,8 @@ export const metadata: Metadata = {
   description:
     "The Field School training portal helps you learn AI, sales, go-to-market, and leadership at your own pace. Watch the clip, do the field work, clear the quiz.",
   icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "48x48" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/brand/png/favicon-32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: "/apple-touch-icon.png",
+    icon: [{ url: "/branding/assets/square-cream.png", type: "image/png" }],
+    apple: "/branding/assets/square-cream.png",
   },
   openGraph: {
     title: UNI_NAME,
