@@ -77,8 +77,13 @@ test("Field School logo set exists and never says University", () => {
     assert.equal(statSync(option).size > 1000, true, option);
   }
   assert.doesNotMatch(read("marketing-site/brand/options/index.html"), /University/);
-  assert.match(read("marketing-site/index.html"), /branding\/assets\/isolated-seal\.png/);
-  assert.doesNotMatch(read("marketing-site/index.html"), /brand\/mark-color\.svg/);
+  const home = read("marketing-site/index.html");
+  const wordmark = home.match(/<a class="wordmark"[^>]*>[\s\S]*?<\/a>/);
+  assert.ok(wordmark, "homepage wordmark");
+  assert.match(wordmark[0], /branding\/assets\/lockup-wide-cream-slogan\.png/);
+  assert.doesNotMatch(wordmark[0], /isolated-seal/);
+  assert.doesNotMatch(wordmark[0], />Field School</);
+  assert.doesNotMatch(home, /brand\/mark-color\.svg/);
   assert.match(read("src/components/site-header.tsx"), /brand\/mark-color\.svg/);
   assert.match(read("src/app/layout.tsx"), /og-1200x630\.png/);
   assert.match(read("src/lib/brand.ts"), /Lead yourself\. Learn yourself\. Do the Work\./);
