@@ -110,8 +110,9 @@ summary:focus-visible {
 
 .wordmark-mark {
   display: block;
-  width: 1.55rem;
-  height: 1.24rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  object-fit: contain;
 }
 
 .wordmark[aria-current="page"] {
