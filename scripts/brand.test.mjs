@@ -8,7 +8,6 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
 
 const REQUIRED = [
-  "marketing-site/brand/mark-color.svg",
   "marketing-site/brand/mark-black.svg",
   "marketing-site/brand/mark-white.svg",
   "marketing-site/brand/icon-color.svg",
@@ -34,10 +33,9 @@ const REQUIRED = [
   "marketing-site/brand/png/email-lockup.png",
   "marketing-site/brand/png/mark-color-4096.png",
   "marketing-site/img/field-school-lockup.png",
-  "public/brand/mark-color.svg",
-  "public/favicon.svg",
+  "public/branding/assets/isolated-seal.png",
+  "public/branding/assets/square-cream.png",
   "public/favicon.ico",
-  "src/app/favicon.ico",
   "marketing-site/favicon.ico",
   "public/apple-touch-icon.png",
 ];
@@ -64,9 +62,9 @@ test("Field School logo set exists and never says University", () => {
   walk(join(root, "marketing-site/brand"));
   walk(join(root, "public/brand"));
 
-  const mark = read("marketing-site/brand/mark-color.svg");
-  assert.match(mark, /#1f5eff/);
-  assert.doesNotMatch(mark, /University/);
+  assert.equal(existsSync(join(root, "public/brand/mark-color.svg")), false);
+  assert.equal(existsSync(join(root, "src/app/favicon.ico")), false);
+  assert.equal(existsSync(join(root, "public/favicon.svg")), false);
   assert.match(read("marketing-site/index.html"), /branding\/assets\/square-cream\.png/);
   assert.match(read("marketing-site/brand/index.html"), /Lead yourself\. Learn yourself\. Do the Work\./);
   assert.match(read("marketing-site/brand/index.html"), /lockup-wide-slogan-cream\.png/);
@@ -84,8 +82,15 @@ test("Field School logo set exists and never says University", () => {
   assert.doesNotMatch(wordmark[0], /isolated-seal/);
   assert.doesNotMatch(wordmark[0], />Field School</);
   assert.doesNotMatch(home, /brand\/mark-color\.svg/);
-  assert.match(read("src/components/site-header.tsx"), /brand\/mark-color\.svg/);
-  assert.match(read("src/app/layout.tsx"), /og-1200x630\.png/);
+  const header = read("src/components/site-header.tsx");
+  assert.match(header, /branding\/assets\/isolated-seal\.png/);
+  assert.doesNotMatch(header, /mark-color/);
+  assert.doesNotMatch(header, />\s*Field School\s*</);
+  const layout = read("src/app/layout.tsx");
+  assert.match(layout, /og-1200x630\.png/);
+  assert.match(layout, /branding\/assets\/square-cream\.png/);
+  assert.doesNotMatch(layout, /favicon\.svg/);
+  assert.doesNotMatch(layout, /mark-color/);
   assert.match(read("src/lib/brand.ts"), /Lead yourself\. Learn yourself\. Do the Work\./);
   assert.match(read("src/app/page.tsx"), /Lead yourself\. Learn yourself\. Do the Work\./);
   assert.match(read("scripts/build-brand.py"), /Lead yourself\. Learn yourself\. Do the Work\./);

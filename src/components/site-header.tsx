@@ -38,16 +38,15 @@ export function SiteHeader() {
         <div className="flex min-w-0 items-center gap-2">
           <Link
             href="/"
-            className="flex items-center gap-2 rounded-lg px-1.5 py-0.5 font-display text-lg tracking-tight"
+            className="flex items-center rounded-lg px-1.5 py-0.5"
           >
             <img
-              src="/brand/mark-color.svg"
-              alt=""
+              src="/branding/assets/isolated-seal.png"
+              alt="Field School"
               width={28}
-              height={22}
-              className="h-[22px] w-[28px]"
+              height={28}
+              className="h-7 w-7 object-contain"
             />
-            Field School
           </Link>
           <Link
             href="/"
