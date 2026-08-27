@@ -63,6 +63,9 @@ test("Field School logo set exists and never says University", () => {
   walk(join(root, "public/brand"));
 
   assert.equal(existsSync(join(root, "public/brand/mark-color.svg")), false);
+  assert.equal(existsSync(join(root, "public/brand/icon-color.svg")), false);
+  assert.equal(existsSync(join(root, "public/brand/png/favicon-32.png")), false);
+  assert.equal(existsSync(join(root, "public/brand/png/og-1200x630.png")), true);
   assert.equal(existsSync(join(root, "src/app/favicon.ico")), false);
   assert.equal(existsSync(join(root, "public/favicon.svg")), false);
   assert.match(read("marketing-site/index.html"), /branding\/assets\/square-cream\.png/);
