@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f3ec">
+<title>Brand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,450;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #f6f3ec;
+  --blue: #1f5eff;
+  --ink: #1a1916;
+  --stone: #7a746a;
+  --line: #e4e0d6;
+  --measure: 70rem;
+  --pad: clamp(1.25rem, 4.8vw, 5rem);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  background: var(--cream);
+  color-scheme: light;
+}
+html, body { margin: 0; padding: 0; }
+body {
+  min-height: 100dvh;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: Fraunces, "Iowan Old Style", Georgia, serif;
+  font-optical-sizing: auto;
+  font-weight: 450;
+  font-size: 1.125rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: var(--blue); color: var(--cream); }
+a { color: var(--ink); }
+a:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+.skip {
+  position: absolute;
+  left: -999px;
+  top: 0;
+}
+.skip:focus {
+  left: var(--pad);
+  top: 1rem;
+  z-index: 40;
+  padding: 0.65rem 0.9rem;
+  background: var(--cream);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.wrap {
+  width: min(100%, var(--measure));
+  margin: 0 auto;
+  padding: 0 var(--pad) 4rem;
+}
+.top {
+  width: min(100%, var(--measure));
+  margin: 0 auto;
+  padding: 1.15rem var(--pad) 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.wordmark {
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 450;
+  letter-spacing: -0.03em;
+  color: var(--stone);
+  line-height: 1;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.hero { margin: 2.15rem 0 0; }
+.hero .file { max-width: 52rem; }
+.pair {
+  margin: 2.5rem 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(8.5rem, 0.5fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: end;
+}
+.pair .seal { max-width: 16.5rem; }
+.prose {
+  max-width: 38rem;
+  margin: 3rem 0 0;
+}
+.prose p { margin: 0.7rem 0 0; }
+.prose p:first-of-type { margin-top: 0; }
+h2.ernest {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.85rem, 3.6vw, 2.35rem);
+  font-weight: 450;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+h2.board,
+h3.board {
+  margin: 0 0 1.05rem;
+  font-size: 1.05rem;
+  font-weight: 450;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stone);
+  line-height: 1.2;
+}
+h3.board { margin-top: 2.75rem; }
+.type-spec {
+  margin: 1.5rem 0 0;
+  width: max-content;
+  max-width: 100%;
+}
+.type-name {
+  margin: 0;
+  font-size: clamp(2.4rem, 8vw, 4.35rem);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  white-space: nowrap;
+}
+.type-tag {
+  margin: 0.4em 0 0;
+  width: 100%;
+  color: var(--stone);
+  font-size: clamp(0.95rem, 2.1vw, 1.15rem);
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+.type-note {
+  margin: 1.15rem 0 0;
+  max-width: 38rem;
+}
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.15rem 1.35rem;
+}
+.chip { height: 5.5rem; }
+.chip.cream { background: var(--cream); box-shadow: inset 0 0 0 1px var(--line); }
+.chip.blue { background: var(--blue); }
+.chip.ink { background: var(--ink); }
+.chip.stone { background: var(--stone); }
+.swatch p {
+  margin: 0.7rem 0 0;
+  letter-spacing: -0.02em;
+}
+.swatch span {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--stone);
+  font-size: 1rem;
+}
+.room { margin-top: 3rem; }
+.room-job {
+  margin: -0.45rem 0 1.35rem;
+  color: var(--stone);
+  max-width: 38rem;
+}
+.files-squares {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.75rem 1.5rem;
+  align-items: end;
+}
+.file-square { min-width: 0; }
+.file-square .file-meta {
+  flex-direction: column;
+  gap: 0.15rem;
+  align-items: flex-start;
+}
+.files-mix,
+.word-files,
+.extras-files {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+.files-mix .file,
+.extras-files .file { max-width: 46rem; }
+.word-files .file { max-width: 28rem; }
+.file-social { max-width: 18rem; }
+.extras-job { margin-top: 1.15rem; }
+.extras-files { margin-top: 0.25rem; }
+.file {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+.file img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.file-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 1rem;
+  min-height: 44px;
+  padding-top: 0.4rem;
+}
+.file-name {
+  letter-spacing: -0.02em;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+  overflow-wrap: anywhere;
+}
+.file:hover .file-name,
+.file:focus-visible .file-name { color: var(--blue); }
+.file-job {
+  color: var(--stone);
+  font-size: 1rem;
+}
+.rules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem 2.5rem;
+}
+.rules p {
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+.board-pic {
+  margin-top: 3.5rem;
+  max-width: 38rem;
+}
+.foot {
+  width: min(100%, var(--measure));
+  margin: 0 auto;
+  padding: 0 var(--pad) 3rem;
+}
+.foot p {
+  margin: 0;
+  letter-spacing: -0.03em;
+}
+@media (max-width: 860px) {
+  .swatches { grid-template-columns: 1fr 1fr; }
+  .files-squares { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  body { font-size: 1.0625rem; }
+  .pair { grid-template-columns: 1fr; }
+  .pair .seal { max-width: 12.5rem; }
+  .rules { grid-template-columns: 1fr; }
+  .type-name { white-space: normal; }
+}
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <a class="wordmark" href="/branding/">Field School</a>
+    <h1>Brand</h1>
+  </header>
+  <main id="main">
+    <div class="wrap">
+
+      <div class="hero">
+        <a class="file" href="/branding/assets/lockup-wide-cream-slogan.png" download="lockup-wide-cream-slogan.png">
+          <img src="/branding/assets/lockup-wide-cream-slogan.png" width="1972" height="592" alt="Field School lockup with tagline">
+          <span class="file-meta">
+            <span class="file-name">lockup-wide-cream-slogan.png</span>
+            <span class="file-job">Wide with tagline</span>
+          </span>
+        </a>
+      </div>
+
+      <div class="pair">
+        <a class="file" href="/branding/assets/lockup-wide-cream.png" download="lockup-wide-cream.png">
+          <img src="/branding/assets/lockup-wide-cream.png" width="1972" height="592" alt="Field School lockup">
+          <span class="file-meta">
+            <span class="file-name">lockup-wide-cream.png</span>
+            <span class="file-job">Header, mail. No slogan.</span>
+          </span>
+        </a>
+        <a class="file seal" href="/branding/assets/isolated-seal.png" download="isolated-seal.png">
+          <img src="/branding/assets/isolated-seal.png" width="950" height="942" alt="Field School seal">
+          <span class="file-meta">
+            <span class="file-name">isolated-seal.png</span>
+            <span class="file-job">Isolated mark. Transparent.</span>
+          </span>
+        </a>
+      </div>
+
+      <section class="prose" aria-labelledby="the-mark">
+        <h2 class="ernest" id="the-mark">The mark</h2>
+        <p>The Field School mark is wheat. Wisdom and knowledge are grown, and they have a purpose. You plant, water, grow, and harvest. Application of that knowledge happens in the field.</p>
+      </section>
+
+      <section class="room" aria-labelledby="rooms">
+        <h2 class="board" id="rooms">Rooms</h2>
+
+        <h3 class="board" id="room-seal">Seal alone</h3>
+        <p class="room-job">avatar, square, transparent mark</p>
+        <div class="files-squares">
+          <a class="file file-square" href="/branding/assets/mark-transparent.png" download="mark-transparent.png">
+            <img src="/branding/assets/mark-transparent.png" width="2048" height="2048" alt="Square transparent mark">
+            <span class="file-meta">
+              <span class="file-name">mark-transparent.png</span>
+              <span class="file-job">Square transparent mark.</span>
+            </span>
+          </a>
+          <a class="file file-square" href="/branding/assets/square-cream.png" download="square-cream.png">
+            <img src="/branding/assets/square-cream.png" width="2048" height="2048" alt="Square on cream">
+            <span class="file-meta">
+              <span class="file-name">square-cream.png</span>
+              <span class="file-job">App / square on cream.</span>
+            </span>
+          </a>
+          <a class="file file-square" href="/branding/assets/square-blue.png" download="square-blue.png">
+            <img src="/branding/assets/square-blue.png" width="2048" height="2048" alt="Square on blue">
+            <span class="file-meta">
+              <span class="file-name">square-blue.png</span>
+              <span class="file-job">App / square on blue.</span>
+            </span>
+          </a>
+          <a class="file file-square" href="/branding/assets/square-ink.png" download="square-ink.png">
+            <img src="/branding/assets/square-ink.png" width="2048" height="2048" alt="Square on ink">
+            <span class="file-meta">
+              <span class="file-name">square-ink.png</span>
+              <span class="file-job">App / square on ink.</span>
+            </span>
+          </a>
+          <a class="file file-square" href="/branding/assets/avatar-blue.png" download="avatar-blue.png">
+            <img src="/branding/assets/avatar-blue.png" width="1024" height="1024" alt="Avatar on blue">
+            <span class="file-meta">
+              <span class="file-name">avatar-blue.png</span>
+              <span class="file-job">Avatar. Seal on blue.</span>
+            </span>
+          </a>
+        </div>
+
+        <h3 class="board" id="room-lockup">Lockup</h3>
+        <p class="room-job">header, mail, no slogan</p>
+        <div class="files-mix">
+          <a class="file" href="/branding/assets/lockup-wide-ink.png" download="lockup-wide-ink.png">
+            <img src="/branding/assets/lockup-wide-ink.png" width="1972" height="592" alt="Lockup on ink">
+            <span class="file-meta">
+              <span class="file-name">lockup-wide-ink.png</span>
+              <span class="file-job">Dark header. No slogan.</span>
+            </span>
+          </a>
+          <a class="file" href="/branding/assets/lockup-transparent.png" download="lockup-transparent.png">
+            <img src="/branding/assets/lockup-transparent.png" width="1972" height="592" alt="Transparent lockup">
+            <span class="file-meta">
+              <span class="file-name">lockup-transparent.png</span>
+              <span class="file-job">Overlay. No cream field.</span>
+            </span>
+          </a>
+          <a class="file file-social" href="/branding/assets/social-square.png" download="social-square.png">
+            <img src="/branding/assets/social-square.png" width="1200" height="1200" alt="Social square">
+            <span class="file-meta">
+              <span class="file-name">social-square.png</span>
+              <span class="file-job">Social 1200. No slogan.</span>
+            </span>
+          </a>
+          <a class="file" href="/branding/assets/og-2400.png" download="og-2400.png">
+            <img src="/branding/assets/og-2400.png" width="2400" height="1260" alt="Open Graph 2400">
+            <span class="file-meta">
+              <span class="file-name">og-2400.png</span>
+              <span class="file-job">Open Graph 2400x1260. No slogan.</span>
+            </span>
+          </a>
+          <a class="file" href="/branding/assets/banner-x.png" download="banner-x.png">
+            <img src="/branding/assets/banner-x.png" width="1500" height="500" alt="X LinkedIn banner">
+            <span class="file-meta">
+              <span class="file-name">banner-x.png</span>
+              <span class="file-job">X / LinkedIn 1500x500. No slogan.</span>
+            </span>
+          </a>
+        </div>
+      </section>
+
+      <section class="prose" aria-labelledby="type">
+        <h2 class="ernest" id="type">Type</h2>
+        <p>Fraunces. The wordmark is the word Field School.</p>
+        <div class="type-spec">
+          <p class="type-name">Field School</p>
+          <p class="type-tag">Lead yourself. Learn yourself. Do the Work.</p>
+        </div>
+        <p class="type-note">Fraunces. Name in ink, tracking about -3%. Tagline in stone, under the name, inside the title width. One face.</p>
+      </section>
+
+      <h3 class="board" id="room-word">Wordmark</h3>
+      <p class="room-job">tight width, type only</p>
+      <div class="word-files">
+        <a class="file" href="/branding/assets/wordmark.png" download="wordmark.png">
+          <img src="/branding/assets/wordmark.png" width="1771" height="480" alt="Field School wordmark">
+          <span class="file-meta">
+            <span class="file-name">wordmark.png</span>
+            <span class="file-job">Type crop.</span>
+          </span>
+        </a>
+        <a class="file" href="/branding/assets/wordmark-transparent.png" download="wordmark-transparent.png">
+          <img src="/branding/assets/wordmark-transparent.png" width="1771" height="480" alt="Transparent wordmark">
+          <span class="file-meta">
+            <span class="file-name">wordmark-transparent.png</span>
+            <span class="file-job">Type on alpha.</span>
+          </span>
+        </a>
+      </div>
+
+      <section class="prose" aria-labelledby="extras">
+        <h2 class="ernest" id="extras">Extras</h2>
+        <p>The six slogan files Ben signed keep this line under the word: Lead yourself. Learn yourself. Do the Work. That line is an extra. It does not sit on the signed lockup.</p>
+      </section>
+      <p class="room-job extras-job">brand page, social, OG, banner</p>
+      <div class="extras-files">
+        <a class="file" href="/branding/assets/lockup-wide-cream-slogan.png" download="lockup-wide-cream-slogan.png">
+          <img src="/branding/assets/lockup-wide-cream-slogan.png" width="1972" height="592" alt="Lockup with tagline on cream">
+          <span class="file-meta">
+            <span class="file-name">lockup-wide-cream-slogan.png</span>
+            <span class="file-job">Wide with tagline.</span>
+          </span>
+        </a>
+        <a class="file" href="/branding/assets/lockup-wide-ink-slogan.png" download="lockup-wide-ink-slogan.png">
+          <img src="/branding/assets/lockup-wide-ink-slogan.png" width="1972" height="592" alt="Lockup with tagline on ink">
+          <span class="file-meta">
+            <span class="file-name">lockup-wide-ink-slogan.png</span>
+            <span class="file-job">Dark wide with tagline.</span>
+          </span>
+        </a>
+        <a class="file" href="/branding/assets/lockup-transparent-slogan.png" download="lockup-transparent-slogan.png">
+          <img src="/branding/assets/lockup-transparent-slogan.png" width="1972" height="592" alt="Transparent lockup with tagline">
+          <span class="file-meta">
+            <span class="file-name">lockup-transparent-slogan.png</span>
+            <span class="file-job">Overlay with tagline.</span>
+          </span>
+        </a>
+        <a class="file file-social" href="/branding/assets/social-square-slogan.png" download="social-square-slogan.png">
+          <img src="/branding/assets/social-square-slogan.png" width="1200" height="1200" alt="Social square with tagline">
+          <span class="file-meta">
+            <span class="file-name">social-square-slogan.png</span>
+            <span class="file-job">Social with tagline.</span>
+          </span>
+        </a>
+        <a class="file" href="/branding/assets/og-2400-slogan.png" download="og-2400-slogan.png">
+          <img src="/branding/assets/og-2400-slogan.png" width="2400" height="1260" alt="Open Graph with tagline">
+          <span class="file-meta">
+            <span class="file-name">og-2400-slogan.png</span>
+            <span class="file-job">OG with tagline.</span>
+          </span>
+        </a>
+        <a class="file" href="/branding/assets/banner-x-slogan.png" download="banner-x-slogan.png">
+          <img src="/branding/assets/banner-x-slogan.png" width="1500" height="500" alt="Banner with tagline">
+          <span class="file-meta">
+            <span class="file-name">banner-x-slogan.png</span>
+            <span class="file-job">Banner with tagline.</span>
+          </span>
+        </a>
+      </div>
+
+      <section class="room" aria-labelledby="palette">
+        <h2 class="board" id="palette">Palette</h2>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip cream"></div>
+            <p>Cream<span>#f6f3ec · field</span></p>
+          </div>
+          <div class="swatch">
+            <div class="chip blue"></div>
+            <p>Blue<span>#1f5eff · wax</span></p>
+          </div>
+          <div class="swatch">
+            <div class="chip ink"></div>
+            <p>Ink<span>#1a1916 · name</span></p>
+          </div>
+          <div class="swatch">
+            <div class="chip stone"></div>
+            <p>Stone<span>#7a746a · tagline</span></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="prose" aria-labelledby="do">
+        <h2 class="ernest" id="do">Do</h2>
+        <p>Use the wax three-scale stamp as the picture.</p>
+        <p>Set Field School in Fraunces.</p>
+        <p>Keep the signed lockup and isolated seal clean.</p>
+        <p>Use the six slogan files as extras only.</p>
+      </section>
+
+      <section class="prose" aria-labelledby="dont">
+        <h2 class="ernest" id="dont">Don't</h2>
+        <p>Put University in the lockup.</p>
+        <p>Swap the wax for the flatten or one-seed Germ.</p>
+        <p>Redraw the stamp as a wheat stalk.</p>
+        <p>Write Saturday-pressed-shut or Learn. Apply. Grow. as the meaning.</p>
+        <p>Add a new slogan.</p>
+        <p>Put a slogan on the signed lockup.</p>
+      </section>
+
+      <section class="room" aria-labelledby="do-not">
+        <h2 class="board" id="do-not">Do not</h2>
+        <div class="rules">
+          <p>Recut the signed seal</p>
+          <p>Put the tagline under the seal</p>
+          <p>Re-prompt a new wax photo</p>
+          <p>Add University, a second face, or a hairline</p>
+          <p>Flatten a 16px system mark</p>
+          <p>Outline the wax or sit it on a paper tile</p>
+        </div>
+      </section>
+
+      <a class="file board-pic" href="/branding/assets/style-guide.png" download="style-guide.png">
+        <img src="/branding/assets/style-guide.png" width="1200" height="2000" alt="Field School style guide">
+        <span class="file-meta">
+          <span class="file-name">style-guide.png</span>
+        </span>
+      </a>
+
+    </div>
+  </main>
+  <footer class="foot">
+    <p>Field School</p>
+  </footer>
+</body>
+</html>
