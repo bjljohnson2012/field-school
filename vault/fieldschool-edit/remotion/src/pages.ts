@@ -28,18 +28,21 @@ export const pagesWithHold = (words: CaptionWord[]): HoldPage[] => {
   }
 
   const pages: HoldPage[] = [];
-  let cursor = 0;
   for (const group of groups) {
     const first = group[0];
     const last = group[group.length - 1];
-    const appearMs = Math.max(first.fromMs, cursor);
+    const appearMs = first.fromMs;
     const hideMs = Math.max(last.toMs + MIN_HOLD_MS, appearMs + MIN_HOLD_MS);
     pages.push({words: group, appearMs, hideMs});
-    cursor = hideMs;
   }
   return pages;
 };
 
 export const pageAt = (pages: HoldPage[], nowMs: number): HoldPage | null => {
-  return pages.find((page) => nowMs >= page.appearMs && nowMs < page.hideMs) ?? null;
+  const spoken = pages.find((page) => page.words.some((word) => nowMs >= word.fromMs && nowMs < word.toMs));
+  if (spoken) {
+    return spoken;
+  }
+  const hits = pages.filter((page) => nowMs >= page.appearMs && nowMs < page.hideMs);
+  return hits[hits.length - 1] ?? null;
 };

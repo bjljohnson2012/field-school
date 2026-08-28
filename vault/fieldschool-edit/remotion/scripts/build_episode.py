@@ -95,17 +95,19 @@ def main() -> None:
         bucket.append(word)
     if bucket:
         groups.append(bucket)
-    cursor = 0
     holds = []
-    waiting = next((w for w in window if w["text"].rstrip(".").lower() == "waiting"), None)
+    waiting = next((w for w in window if w["text"] == "waiting."), None)
     drop = None
     for group in groups:
-        appear = max(group[0]["fromMs"], cursor)
+        appear = group[0]["fromMs"]
         hide = max(group[-1]["toMs"] + hold, appear + hold)
         holds.append(hide - appear)
         if waiting and any(w["fromMs"] == waiting["fromMs"] and w["text"] == waiting["text"] for w in group):
-            drop = {"fromMs": waiting["fromMs"], "toMs": hide, "durationMs": hide - waiting["fromMs"]}
-        cursor = hide
+            drop = {
+                "fromMs": waiting["fromMs"],
+                "toMs": waiting["toMs"] + hold,
+                "durationMs": waiting["toMs"] - waiting["fromMs"] + hold,
+            }
     short = [h for h in holds if h < hold]
     print(
         "words",

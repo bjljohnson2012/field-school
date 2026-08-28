@@ -1,6 +1,5 @@
 import {spring, useCurrentFrame, useVideoConfig} from "remotion";
-import {DROP_RETURN_LEAD_FRAMES} from "./brand/tokens";
-import {pagesWithHold} from "./pages";
+import {DROP_RETURN_LEAD_FRAMES, MIN_HOLD_MS} from "./brand/tokens";
 import type {CaptionWord} from "./schema/episode";
 
 export type DropOff = {
@@ -8,20 +7,14 @@ export type DropOff = {
   durationMs: number;
 };
 
-const EMPHASIS = /^waiting\.?$/i;
+const EMPHASIS = /^waiting\.$/i;
 
 export const emphasisDropOff = (words: CaptionWord[]): DropOff | null => {
   const target = words.find((word) => EMPHASIS.test(word.text.trim()));
   if (!target) {
     return null;
   }
-  const page = pagesWithHold(words).find((entry) =>
-    entry.words.some((word) => word.fromMs === target.fromMs && word.text === target.text),
-  );
-  if (!page) {
-    return null;
-  }
-  return {fromMs: target.fromMs, durationMs: page.hideMs - target.fromMs};
+  return {fromMs: target.fromMs, durationMs: target.toMs - target.fromMs + MIN_HOLD_MS};
 };
 
 export const useSolo = (drop: DropOff | null, originMs: number): number => {
