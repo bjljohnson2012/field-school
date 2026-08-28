@@ -1,0 +1,16 @@
+{
+  "name": "fieldschool-lesson",
+  "private": true,
+  "version": "0.2.0",
+  "scripts": {
+    "render": "remotion render src/index.ts FieldSchoolLesson",
+    "preview": "remotion render src/index.ts FieldSchoolPreview"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.247",
+    "@remotion/renderer": "4.0.247",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.247"
+  }
+}
