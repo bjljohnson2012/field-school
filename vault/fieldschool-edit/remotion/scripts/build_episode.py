@@ -75,7 +75,7 @@ def main() -> None:
         ],
         "nextUp": {"module": "Authored processes", "title": "Made up is not fake"},
         "showSrc": "01-the-waiting-trap.png",
-        "src": "a_roll.mp4",
+        "src": "head.mp4",
         "voSrc": "vo.wav",
         "durationSec": 25,
         "words": window,
