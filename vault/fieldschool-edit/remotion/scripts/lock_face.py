@@ -11,9 +11,7 @@ import numpy as np
 
 OUT_W = 720
 OUT_H = 800
-# Wider card so the face is not huge. Eyes sit in the upper third.
-FACE_Y = 0.32
-# No follow. The crop is the median face. That is the lock.
+# Full take height. Lock X on the face. Do not punch in.
 CASCADES = (
     str(Path(__file__).with_name("data") / "haarcascade_frontalface_alt2.xml"),
     "/usr/share/opencv4/haarcascades/haarcascade_frontalface_alt2.xml",
@@ -38,17 +36,12 @@ def detect(det: cv2.CascadeClassifier, frame: np.ndarray) -> tuple[float, float,
     return float(x + w / 2.0), float(y + h / 2.0), float(h)
 
 
-def crop_box(cx: float, cy: float, face_h: float, src_w: int, src_h: int) -> tuple[int, int, int, int]:
-    win_h = min(src_h, max(int(face_h * 2.85), int(src_h * 0.84)))
-    win_w = int(win_h * OUT_W / OUT_H)
-    if win_w > src_w:
-        win_w = src_w
-        win_h = int(win_w * OUT_H / OUT_W)
+def crop_box(cx: float, src_w: int, src_h: int) -> tuple[int, int, int, int]:
+    win_h = src_h
+    win_w = min(src_w, int(win_h * OUT_W / OUT_H))
     x0 = int(round(cx - win_w / 2.0))
-    y0 = int(round(cy - win_h * FACE_Y))
     x0 = max(0, min(src_w - win_w, x0))
-    y0 = max(0, min(src_h - win_h, y0))
-    return x0, y0, win_w, win_h
+    return x0, 0, win_w, win_h
 
 
 def collect(src: Path, det: cv2.CascadeClassifier) -> tuple[float, float, float, int, int]:
@@ -84,7 +77,7 @@ def main() -> None:
     src_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     src_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
-    x0, y0, win_w, win_h = crop_box(mx, my, mh, src_w, src_h)
+    x0, y0, win_w, win_h = crop_box(mx, src_w, src_h)
     ff = subprocess.Popen(
         [
             "ffmpeg",
