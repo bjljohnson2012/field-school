@@ -1,6 +1,8 @@
-import React from "react";
+import {fitText} from "@remotion/layout-utils";
+import React, {useEffect, useMemo, useState} from "react";
 import {Img, interpolate, staticFile} from "remotion";
-import {displayFace, gold} from "./tokens";
+import {waitMadeUpFonts} from "./fonts";
+import {HOOK_FULL, INSET, TYPE_COL, displayFace, gold} from "./tokens";
 
 type TitlePlateProps = {
   text: string;
@@ -9,17 +11,44 @@ type TitlePlateProps = {
 };
 
 export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    waitMadeUpFonts()
+      .then(() => setReady(true))
+      .catch(() => setReady(true));
+  }, []);
+  const width = docked ? TYPE_COL : HOOK_FULL;
+  const cap = docked ? 64 : 88;
+  const fontSize = useMemo(() => {
+    if (!ready) {
+      return cap;
+    }
+    try {
+      return Math.min(
+        cap,
+        fitText({
+          text,
+          withinWidth: width,
+          fontFamily: displayFace,
+          fontWeight: "700",
+        }).fontSize,
+      );
+    } catch {
+      return cap;
+    }
+  }, [cap, ready, text, width]);
   const enter = interpolate(local, [0, 8], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   return (
     <div
       style={{
         position: "absolute",
-        left: 72,
-        top: 220,
-        width: docked ? 980 : 1760,
+        left: INSET,
+        top: 200,
+        width,
+        overflow: "hidden",
         fontFamily: displayFace,
         fontWeight: 700,
-        fontSize: docked ? 64 : 88,
+        fontSize,
         lineHeight: 0.95,
         letterSpacing: "-0.03em",
         color: gold,

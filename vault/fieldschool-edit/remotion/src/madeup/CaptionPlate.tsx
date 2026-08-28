@@ -1,8 +1,8 @@
 import {measureText} from "@remotion/layout-utils";
 import {createRoundedTextBox} from "@remotion/rounded-text-box";
 import React, {useEffect, useMemo, useState} from "react";
-import {bodyFace, displayFace, gold, ink, paper} from "./tokens";
 import {waitMadeUpFonts} from "./fonts";
+import {CAPTION_BOTTOM, INSET, TYPE_COL, bodyFace, displayFace, gold, ink, paper} from "./tokens";
 import type {MadeWord} from "./schema";
 
 type CaptionPlateProps = {
@@ -12,9 +12,36 @@ type CaptionPlateProps = {
 };
 
 const PAGE_MS = 1400;
-const FONT_SIZE = 42;
-const LINE_HEIGHT = 1.2;
-const PAD = 28;
+const MAX_SIZE = 42;
+const LINE_HEIGHT = 1.15;
+const PAD = 24;
+
+const measureOpts = {
+  fontFamily: displayFace,
+  fontWeight: "700" as const,
+  letterSpacing: "normal" as const,
+  fontVariantNumeric: "normal" as const,
+  textTransform: "none" as const,
+  additionalStyles: {lineHeight: LINE_HEIGHT},
+  validateFontIsLoaded: true,
+};
+
+const wrapPage = (page: MadeWord[], maxWidth: number, fontSize: number): MadeWord[][] => {
+  const lines: MadeWord[][] = [[]];
+  let lineText = "";
+  for (const word of page) {
+    const next = lineText ? `${lineText} ${word.text}` : word.text;
+    const {width} = measureText({text: next, fontSize, ...measureOpts});
+    if (width > maxWidth && lineText) {
+      lines.push([word]);
+      lineText = word.text;
+    } else {
+      lines[lines.length - 1].push(word);
+      lineText = next;
+    }
+  }
+  return lines.filter((line) => line.length > 0);
+};
 
 export const CaptionPlate: React.FC<CaptionPlateProps> = ({words, nowMs, docked}) => {
   const [ready, setReady] = useState(false);
@@ -25,48 +52,49 @@ export const CaptionPlate: React.FC<CaptionPlateProps> = ({words, nowMs, docked}
   }, []);
 
   const page = useMemo(() => {
-    const live = words.filter((word) => nowMs >= word.fromMs - 80 && nowMs < word.toMs + PAGE_MS);
-    if (live.length === 0) {
+    const shown = words.filter((word) => nowMs >= word.fromMs);
+    if (shown.length === 0) {
       return [] as MadeWord[];
     }
-    const start = live[0].fromMs;
-    return live.filter((word) => word.fromMs < start + PAGE_MS + 400).slice(0, 10);
+    const last = shown[shown.length - 1];
+    return shown.filter((word) => word.fromMs >= last.fromMs - PAGE_MS).slice(-8);
   }, [words, nowMs]);
 
-  const line = page.map((word) => word.text).join(" ");
+  const boxWidth = docked ? TYPE_COL : 1600;
 
-  const box = useMemo(() => {
-    if (!ready || line.length === 0) {
+  const layout = useMemo(() => {
+    if (!ready || page.length === 0) {
       return null;
     }
     try {
-      const measured = measureText({
-        text: line,
-        fontFamily: displayFace,
-        fontSize: FONT_SIZE,
-        fontWeight: "700",
-        letterSpacing: "normal",
-        fontVariantNumeric: "normal",
-        textTransform: "none",
-        additionalStyles: {lineHeight: LINE_HEIGHT},
-        validateFontIsLoaded: true,
-      });
+      const inner = boxWidth - PAD * 2;
+      let fontSize = MAX_SIZE;
+      let lines = wrapPage(page, inner, fontSize);
+      while (lines.length > 2 && fontSize > 28) {
+        fontSize -= 2;
+        lines = wrapPage(page, inner, fontSize);
+      }
+      lines = lines.slice(0, 2);
+      const textMeasurements = lines.map((line) =>
+        measureText({
+          text: line.map((word) => word.text).join(" "),
+          fontSize,
+          ...measureOpts,
+        }),
+      );
       const {d, boundingBox} = createRoundedTextBox({
-        textMeasurements: [measured],
+        textMeasurements,
         textAlign: "left",
         horizontalPadding: PAD,
-        borderRadius: 18,
+        borderRadius: 16,
       });
-      return {d, boundingBox};
+      return {d, boundingBox, lines, fontSize};
     } catch {
-      return {
-        d: "",
-        boundingBox: {viewBox: "0 0 980 120", width: 980, height: 120, x1: 0, y1: 0, x2: 980, y2: 120},
-      };
+      return null;
     }
-  }, [line, ready]);
+  }, [boxWidth, page, ready]);
 
-  if (page.length === 0 || !box) {
+  if (!layout) {
     return null;
   }
 
@@ -74,55 +102,56 @@ export const CaptionPlate: React.FC<CaptionPlateProps> = ({words, nowMs, docked}
     <div
       style={{
         position: "absolute",
-        left: 64,
-        bottom: 140,
-        width: docked ? 980 : Math.min(1790, box.boundingBox.width + 8),
+        left: INSET,
+        bottom: CAPTION_BOTTOM,
+        width: Math.min(boxWidth, layout.boundingBox.width + 4),
+        height: layout.boundingBox.height,
+        overflow: "hidden",
       }}
     >
       <svg
-        viewBox={box.boundingBox.viewBox}
+        viewBox={layout.boundingBox.viewBox}
         style={{
           position: "absolute",
-          width: box.boundingBox.width,
-          height: box.boundingBox.height,
-          overflow: "visible",
+          width: layout.boundingBox.width,
+          height: layout.boundingBox.height,
+          overflow: "hidden",
         }}
       >
-        <path d={box.d} fill={paper} />
+        <path d={layout.d} fill={paper} />
       </svg>
-      <div
-        style={{
-          position: "relative",
-          paddingLeft: PAD,
-          paddingRight: PAD,
-          paddingTop: 16,
-          paddingBottom: 16,
-          fontFamily: displayFace,
-          fontWeight: 700,
-          fontSize: FONT_SIZE,
-          lineHeight: LINE_HEIGHT,
-          color: ink,
-        }}
-      >
-        {page.map((word, i) => {
-          const active = nowMs >= word.fromMs && nowMs < word.toMs;
-          const shown = nowMs >= word.fromMs;
-          return (
-            <span
-              key={`${word.fromMs}-${word.text}-${i}`}
-              style={{
-                display: "inline-block",
-                marginRight: 12,
-                color: active ? gold : ink,
-                opacity: shown ? 1 : 0,
-                scale: active ? 1.04 : 1,
-                fontFamily: active ? displayFace : bodyFace,
-              }}
-            >
-              {word.text}
-            </span>
-          );
-        })}
+      <div style={{position: "relative", paddingLeft: PAD, paddingRight: PAD, paddingTop: 10, paddingBottom: 10}}>
+        {layout.lines.map((line, lineIndex) => (
+          <div
+            key={`line-${lineIndex}`}
+            style={{
+              fontFamily: displayFace,
+              fontWeight: 700,
+              fontSize: layout.fontSize,
+              lineHeight: LINE_HEIGHT,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+            }}
+          >
+            {line.map((word, i) => {
+              const active = nowMs >= word.fromMs && nowMs < word.toMs;
+              return (
+                <span
+                  key={`${word.fromMs}-${word.text}-${i}`}
+                  style={{
+                    display: "inline-block",
+                    marginRight: 10,
+                    color: active ? gold : ink,
+                    scale: active ? 1.04 : 1,
+                    fontFamily: active ? displayFace : bodyFace,
+                  }}
+                >
+                  {word.text}
+                </span>
+              );
+            })}
+          </div>
+        ))}
       </div>
     </div>
   );

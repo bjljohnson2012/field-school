@@ -7,7 +7,7 @@ import {HookPlate} from "./HookPlate";
 import {MadeHead} from "./MadeHead";
 import {MadeLetterbox} from "./MadeLetterbox";
 import {CtaCard, StingLockup, TitlePlate} from "./TitlePlate";
-import {BED_FRAMES, FPS, MASTER_FRAMES, bg, paper, uiFace} from "./tokens";
+import {BED_FRAMES, FPS, LOWER_THIRD_BOTTOM, MASTER_FRAMES, bg, paper, uiFace} from "./tokens";
 import type {MadeEpisode, MadeShot, MadeWord} from "./schema";
 
 export const defaultMadeUp: MadeEpisode = {
@@ -50,18 +50,13 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             spoken={spokenNeedles(words, nowMs)}
           />
         ) : null}
-        <MadeHead
-          src={fileName(episode.cam)}
-          layout={shot ? shot.layout : "off"}
-          local={local}
-          fromFrame={shot ? shot.fromFrame : 0}
-        />
+        <MadeHead src={fileName(episode.cam)} layout={shot ? shot.layout : "off"} local={local} />
         {shot && shot.lowerThird ? (
           <div
             style={{
               position: "absolute",
               left: 72,
-              bottom: 72,
+              bottom: LOWER_THIRD_BOTTOM,
               fontFamily: uiFace,
               fontSize: 18,
               color: paper,
@@ -76,8 +71,8 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
         ) : null}
         {shot && shot.id === "s02" ? (
           <>
-            <HookPlate text="PEOPLE WAIT TO BE TOLD" local={8} />
-            <HookPlate text={shot.text || "YOU CAN JUST DO THINGS"} local={frame - enterAt(shot, justFrame)} second />
+            <HookPlate text="PEOPLE WAIT TO BE TOLD" local={8} pip />
+            <HookPlate text={shot.text || "YOU CAN JUST DO THINGS"} local={frame - enterAt(shot, justFrame)} second pip />
           </>
         ) : null}
         {shot && shot.type === "a-roll" && shot.plate ? (

@@ -1,6 +1,18 @@
 import React from "react";
 import {Img, interpolate, staticFile} from "remotion";
-import {displayFace, gold, ink, paper, uiFace, wine} from "./tokens";
+import {
+  INSET,
+  VOX_CARDS_BOTTOM,
+  VOX_CARDS_TOP,
+  VOX_HEADLINE_TOP,
+  VOX_META_TOP,
+  displayFace,
+  gold,
+  ink,
+  paper,
+  uiFace,
+  wine,
+} from "./tokens";
 
 export type CollageBeatProps = {
   assets: string[];
@@ -24,27 +36,46 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
   spoken = [],
 }) => {
   const wash = interpolate(local, [0, 8], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const n = Math.max(assets.length, 1);
+  const cardW = n > 3 ? 300 : n === 3 ? 520 : 640;
+  const cardH = n > 3 ? 200 : 360;
   const push = interpolate(local, [0, 90], [1, 1.02], {extrapolateRight: "clamp"});
   return (
-    <div style={{position: "absolute", inset: 0, backgroundColor: paper, opacity: wash, scale: `${push}`}}>
+    <div style={{position: "absolute", inset: 0, backgroundColor: paper, opacity: wash}}>
       {text ? (
         <div
           style={{
             position: "absolute",
-            left: 72,
-            top: 72,
+            left: INSET,
+            top: VOX_HEADLINE_TOP,
+            width: 1600,
+            height: 128,
+            overflow: "hidden",
             fontFamily: displayFace,
             fontWeight: 700,
-            fontSize: 56,
+            fontSize: 48,
+            lineHeight: 1.15,
             color: ink,
-            maxWidth: 1500,
             letterSpacing: "-0.03em",
           }}
         >
           {text}
         </div>
       ) : null}
-      <div style={{position: "absolute", left: 72, top: text ? 220 : 120, display: "flex", gap: 28, flexWrap: "wrap", width: 1780}}>
+      <div
+        style={{
+          position: "absolute",
+          left: INSET,
+          top: VOX_CARDS_TOP,
+          width: 1776,
+          height: VOX_CARDS_BOTTOM - VOX_CARDS_TOP,
+          display: "flex",
+          gap: 24,
+          flexWrap: "wrap",
+          alignContent: "flex-start",
+          overflow: "hidden",
+        }}
+      >
         {assets.map((src, i) => {
           const enter = interpolate(local, [2 + i * 4, 6 + i * 4], [0, 1], {
             extrapolateLeft: "clamp",
@@ -55,20 +86,19 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
             <div
               key={src}
               style={{
-                width: assets.length > 3 ? 320 : 480,
-                height: assets.length > 3 ? 240 : 320,
+                width: cardW,
+                height: cardH,
                 backgroundColor: paper,
                 outline: `3px solid ${ink}`,
                 overflow: "hidden",
                 opacity: enter,
                 translate: `0px ${(1 - enter) * 28}px`,
-                rotate: `${(1 - enter) * -2}deg`,
                 position: "relative",
               }}
             >
               <Img
                 src={staticFile(`episodes/everything-made-up/${src}`)}
-                style={{width: "100%", height: "100%", objectFit: "cover"}}
+                style={{width: "100%", height: "100%", objectFit: "cover", scale: `${push}`}}
               />
               {marked ? (
                 <div
@@ -80,7 +110,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                     justifyContent: "center",
                     fontFamily: displayFace,
                     fontWeight: 700,
-                    fontSize: 180,
+                    fontSize: 160,
                     color: wine,
                     opacity: 0.92,
                   }}
@@ -93,7 +123,16 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
         })}
       </div>
       {list && list.length > 0 ? (
-        <div style={{position: "absolute", left: 120, top: 200, width: 1600}}>
+        <div
+          style={{
+            position: "absolute",
+            left: 120,
+            top: 200,
+            width: 1600,
+            height: 640,
+            overflow: "hidden",
+          }}
+        >
           {list.map((line, i) => {
             const enter = interpolate(local, [2 + i * 4, 6 + i * 4], [0, 1], {
               extrapolateLeft: "clamp",
@@ -106,10 +145,13 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                 style={{
                   fontFamily: displayFace,
                   fontWeight: 700,
-                  fontSize: 42,
+                  fontSize: 40,
+                  lineHeight: 1.2,
                   color: hot ? gold : ink,
                   opacity: enter,
-                  marginBottom: 28,
+                  marginBottom: 22,
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
                 }}
               >
                 {line}
@@ -119,7 +161,18 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
         </div>
       ) : null}
       {chips && chips.length > 0 ? (
-        <div style={{position: "absolute", left: 72, bottom: 200, display: "flex", gap: 16, flexWrap: "wrap", width: 1700}}>
+        <div
+          style={{
+            position: "absolute",
+            left: INSET,
+            top: VOX_META_TOP,
+            width: 1400,
+            height: 80,
+            display: "flex",
+            gap: 16,
+            overflow: "hidden",
+          }}
+        >
           {chips.map((chip, i) => {
             const enter = interpolate(local, [10 + i * 4, 14 + i * 4], [0, 1], {
               extrapolateLeft: "clamp",
@@ -150,7 +203,9 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
           style={{
             position: "absolute",
             right: 80,
-            bottom: 180,
+            top: VOX_META_TOP,
+            maxWidth: 520,
+            overflow: "hidden",
             fontFamily: uiFace,
             fontWeight: 600,
             fontSize: 22,
@@ -159,6 +214,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
             opacity: interpolate(local, [18, 26], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
             outline: `3px solid ${gold}`,
             padding: "10px 16px",
+            whiteSpace: "nowrap",
           }}
         >
           {annotation}
