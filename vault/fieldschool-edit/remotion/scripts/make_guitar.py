@@ -8,7 +8,7 @@ import wave
 from pathlib import Path
 
 SR = 48000
-DEST = Path("/opt/fieldschool-edit/remotion/public")
+DEST = Path(__import__("os").environ.get("FS_REMOTION_PUBLIC", "/opt/fieldschool-edit/remotion/public"))
 
 C3, D3, E3, F3, G3, A3, B3 = 130.81, 146.83, 164.81, 174.61, 196.00, 220.00, 246.94
 G2, A2, B2 = 98.00, 110.00, 123.47
