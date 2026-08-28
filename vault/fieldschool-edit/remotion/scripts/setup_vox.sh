@@ -16,16 +16,20 @@ cp -a "$BRAND/wordmark-transparent.png" "$PUB/wordmark-transparent.png"
 cp -a "$BRAND/square-cream.png" "$PUB/square-cream.png"
 cp -a "$BRAND/square-blue.png" "$PUB/square-blue.png"
 
-if [ ! -f "$PUB/fonts/Fraunces-700.woff2" ]; then
-  CSS=$(curl -fsSL -A 'Mozilla/5.0' 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&display=swap')
-  URL=$(printf '%s\n' "$CSS" | grep -oE 'https://fonts.gstatic.com/[^)]+\.woff2' | head -n 1)
-  curl -fsSL -A 'Mozilla/5.0' "$URL" -o "$PUB/fonts/Fraunces-700.woff2"
-fi
-if [ ! -f "$PUB/fonts/IBMPlexSans-400.woff2" ]; then
-  CSS=$(curl -fsSL -A 'Mozilla/5.0' 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400&display=swap')
-  URL=$(printf '%s\n' "$CSS" | grep -oE 'https://fonts.gstatic.com/[^)]+\.woff2' | head -n 1)
-  curl -fsSL -A 'Mozilla/5.0' "$URL" -o "$PUB/fonts/IBMPlexSans-400.woff2"
-fi
+UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+download_font() {
+  local css_url=$1
+  local dest=$2
+  if [ -f "$dest" ]; then
+    return 0
+  fi
+  local css url
+  css=$(curl -fsSL -A "$UA" "$css_url")
+  url=$(printf '%s\n' "$css" | grep -oE 'https://fonts.gstatic.com/[^)]+' | head -n 1)
+  curl -fsSL -A "$UA" "$url" -o "$dest"
+}
+download_font 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&display=swap' "$PUB/fonts/Fraunces-700.woff2"
+download_font 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400&display=swap' "$PUB/fonts/IBMPlexSans-400.woff2"
 
 python3 "$ROOT/scripts/make_music.py"
 python3 "$ROOT/scripts/group_phrases.py" "$WORDS" "$PUB/phrases.json"
