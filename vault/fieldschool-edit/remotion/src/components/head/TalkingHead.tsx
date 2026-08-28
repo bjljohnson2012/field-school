@@ -59,9 +59,9 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            objectPosition: "50% 36%",
-            transform: "scale(1.12)",
-            transformOrigin: "50% 34%",
+            objectPosition: "50% 50%",
+            transform: "none",
+            transformOrigin: "50% 50%",
           }}
         />
       </div>
