@@ -37,10 +37,10 @@ const brollEnd = fromMs + dropMs;
 assert.ok(brollEnd > 14000, "waiting b-roll holds through the drop");
 assert.ok(brollEnd < 14992, "head is back before playbook types");
 
-const bedIntro = 0.18;
-const bedUnder = 0.1;
-assert.ok(bedIntro < 0.3, "intro bed stays behind the lockup");
-assert.ok(bedUnder >= 0.08, "speech bed does not cliff to silence");
+const bedIntro = 0.52;
+const bedUnder = 0.28;
+assert.ok(bedIntro <= 0.55, "intro bed stays behind the lockup");
+assert.ok(bedUnder >= 0.22, "speech bed does not cliff to silence");
 assert.ok(bedUnder < bedIntro, "bed settles under the voice");
 
 console.log("clip and typewriter clock ok", {dropMs, brollEnd});

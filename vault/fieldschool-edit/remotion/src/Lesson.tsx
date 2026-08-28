@@ -135,7 +135,7 @@ const Room: React.FC = () => {
 
 const Bed: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = interpolate(frame, [0, 42, 168, 320], [0, 0.18, 0.13, 0.1], {
+  const fade = interpolate(frame, [0, 42, 168, 320], [0, 0.52, 0.34, 0.28], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
