@@ -1,0 +1,10 @@
+# Only the edit.fieldschool.ai site. Do not paste this over the rest of the vault Caddyfile.
+edit.fieldschool.ai {
+	handle /trigger {
+		reverse_proxy 127.0.0.1:8789
+	}
+	handle /trigger/* {
+		reverse_proxy 127.0.0.1:8789
+	}
+	reverse_proxy 127.0.0.1:8788
+}

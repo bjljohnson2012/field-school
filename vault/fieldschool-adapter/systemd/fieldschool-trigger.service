@@ -1,0 +1,18 @@
+[Unit]
+Description=Field School adapter trigger (instant kick, Notion is the record)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/fieldschool-adapter
+EnvironmentFile=/opt/fieldschool-adapter/.env
+ExecStart=/opt/fieldschool-adapter/.venv/bin/python -m fieldschool_adapter serve
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
