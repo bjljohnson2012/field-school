@@ -24,15 +24,19 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
   if (!page) {
     return null;
   }
-  const fieldWidth = interpolate(solo, [0, 1], [1920 - headReservedPx() - TYPE_HEAD_GAP, 1920], {
+  const openField = interpolate(solo, [0.7, 0.95], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const fontSize = interpolate(solo, [0, 1], [TYPE_BESIDE, TYPE_SOLO], {
+  const fieldWidth = interpolate(openField, [0, 1], [1920 - headReservedPx() - TYPE_HEAD_GAP, 1920], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const sidePad = interpolate(solo, [0, 1], [88, 160], {
+  const fontSize = interpolate(openField, [0, 1], [TYPE_BESIDE, TYPE_SOLO], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const sidePad = interpolate(openField, [0, 1], [88, 160], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
