@@ -74,10 +74,25 @@ def pencil_tap() -> list[float]:
     return out
 
 
+def paper_close() -> list[float]:
+    rng = random.Random(23)
+    n = int(SR * 0.32)
+    out = [0.0] * n
+    x = 0.0
+    for i in range(n):
+        x = 0.6 * x + 0.4 * noise(rng)
+        t = i / n
+        env = math.sin(math.pi * min(1.0, t / 0.08)) * (1.0 - t) ** 1.1
+        fold = x * (0.55 + 0.45 * math.sin(2 * math.pi * 26 * t))
+        out[i] = 0.3 * env * fold
+    return out
+
+
 def main() -> None:
     write_mono(DEST / "paper.wav", paper_open())
     write_mono(DEST / "pencil.wav", pencil_write())
     write_mono(DEST / "pencil-tap.wav", pencil_tap())
+    write_mono(DEST / "paper-close.wav", paper_close())
     print(DEST / "paper.wav")
 
 

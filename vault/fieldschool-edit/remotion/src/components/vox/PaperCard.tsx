@@ -17,10 +17,11 @@ export const PaperCard: React.FC<PaperCardProps> = ({open, kicker, children, sol
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const top = interpolate(solo, [0, 1], [668, 702], {
+  const top = interpolate(solo, [0, 1], [648, 688], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
+  const unfold = 0.1 + open * 0.9;
   return (
     <div
       style={{
@@ -30,21 +31,46 @@ export const PaperCard: React.FC<PaperCardProps> = ({open, kicker, children, sol
         width: field,
         display: "flex",
         justifyContent: "center",
-        opacity: open,
-        transform: `translateY(${(1 - open) * 28}px) rotate(${(1 - open) * -4}deg)`,
+        opacity: interpolate(open, [0, 0.18, 1], [0, 1, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        }),
+        transform: `translateY(${(1 - open) * 36}px) rotate(${(1 - open) * -5}deg)`,
       }}
     >
       <div
         style={{
-          width: 280,
+          width: 300,
           backgroundColor: cream,
           border: `2px solid ${stone}`,
-          boxShadow: `6px 10px 0 ${ink}14`,
-          padding: "16px 18px 18px",
-          transform: `scaleX(${0.18 + open * 0.82})`,
+          boxShadow: `${4 + open * 4}px ${8 + open * 6}px 0 ${ink}16`,
+          padding: "20px 20px 18px",
+          transform: `scaleX(${unfold})`,
           transformOrigin: "left center",
+          position: "relative",
         }}
       >
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 5,
+            backgroundColor: `${stone}33`,
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            left: 118,
+            top: -7,
+            width: 56,
+            height: 12,
+            backgroundColor: `${stone}55`,
+            transform: "rotate(-3deg)",
+          }}
+        />
         <div
           style={{
             fontFamily: sansFace,
@@ -57,7 +83,7 @@ export const PaperCard: React.FC<PaperCardProps> = ({open, kicker, children, sol
         >
           {kicker}
         </div>
-        <div style={{width: 72 * open, height: 2, backgroundColor: stone, marginBottom: 14}} />
+        <div style={{width: 80 * open, height: 2, backgroundColor: stone, marginBottom: 14}} />
         {children}
       </div>
     </div>

@@ -14,7 +14,7 @@ import {Stack} from "./components/layers/Stack";
 import {emphasisDropOff, useSolo, type DropOff} from "./dropOff";
 import type {Episode} from "./schema/episode";
 import {VignetteStage} from "./components/vox/VignetteStage";
-import {vignetteCues, vignetteLiftAt} from "./vignettes";
+import {PAPER_LEAVE_FRAMES, vignetteCues, useVignetteLift} from "./vignettes";
 
 export const PREVIEW_FRAMES = 151;
 export const CLIP_FRAMES = 750;
@@ -68,9 +68,7 @@ const Teach: React.FC<{episode: Episode}> = ({episode}) => {
   const drop = useMemo(() => emphasisDropOff(episode.words), [episode.words]);
   const cues = useMemo(() => vignetteCues(episode.words), [episode.words]);
   const solo = useSolo(drop, SOURCE_START_MS);
-  const frame = useCurrentFrame();
-  const nowMs = SOURCE_START_MS + (frame / FPS) * 1000;
-  const lift = vignetteLiftAt(cues, nowMs);
+  const lift = useVignetteLift(cues, SOURCE_START_MS);
   return (
     <>
       <FieldGraphic solo={solo} />
@@ -85,7 +83,7 @@ const Teach: React.FC<{episode: Episode}> = ({episode}) => {
       <WaitingTrap solo={solo} />
       <ClockKaraoke words={episode.words} solo={solo} drop={drop} lift={lift} />
       <VignetteStage cues={cues} originMs={SOURCE_START_MS} solo={solo} />
-      {lift < 1 ? <IndexLine solo={solo} /> : null}
+      {lift < 0.2 ? <IndexLine solo={solo} /> : null}
       <Letterbox close={solo} />
       <PaperAudio cues={cues} />
     </>
@@ -117,19 +115,30 @@ const PaperAudio: React.FC<{cues: ReturnType<typeof vignetteCues>}> = ({cues}) =
     <>
       {cues.map((cue) => {
         const start = Math.round(((cue.fromMs - SOURCE_START_MS) / 1000) * FPS);
+        const hold = Math.round((cue.holdMs / 1000) * FPS);
+        const closeAt = Math.max(start + 8, start + hold - PAPER_LEAVE_FRAMES);
+        const taps: number[] = [];
+        if (cue.id === "wait") {
+          for (let at = start + 28; at < closeAt - 4; at += 14) {
+            taps.push(at);
+          }
+        }
         return (
           <React.Fragment key={`${cue.id}-sfx-${cue.fromMs}`}>
             <Sequence from={start} durationInFrames={16} layout="none">
-              <Audio src={staticFile("sfx/paper.wav")} volume={0.22} />
+              <Audio src={staticFile("sfx/paper.wav")} volume={0.26} />
             </Sequence>
-            <Sequence from={start + 4} durationInFrames={22} layout="none">
-              <Audio src={staticFile("sfx/pencil.wav")} volume={0.18} />
+            <Sequence from={start + 8} durationInFrames={24} layout="none">
+              <Audio src={staticFile("sfx/pencil.wav")} volume={0.2} />
             </Sequence>
-            {cue.id === "wait" ? (
-              <Sequence from={start} durationInFrames={8} layout="none">
-                <Audio src={staticFile("sfx/pencil-tap.wav")} volume={0.16} />
+            <Sequence from={closeAt} durationInFrames={14} layout="none">
+              <Audio src={staticFile("sfx/paper-close.wav")} volume={0.2} />
+            </Sequence>
+            {taps.map((at) => (
+              <Sequence key={`${cue.id}-tap-${at}`} from={at} durationInFrames={6} layout="none">
+                <Audio src={staticFile("sfx/pencil-tap.wav")} volume={0.14} />
               </Sequence>
-            ) : null}
+            ))}
           </React.Fragment>
         );
       })}

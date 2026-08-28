@@ -48,7 +48,7 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
         paddingLeft: sidePad,
         paddingRight: sidePad,
         boxSizing: "border-box",
-        transform: `translateY(${-lift * 56}px)`,
+        transform: `translateY(${-lift * 72}px)`,
       }}
     >
       <div style={{textAlign: "center", maxWidth: 1480}}>
