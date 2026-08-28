@@ -50,7 +50,7 @@ fieldschool-adapter processor --cap <cap-id>
 fieldschool-adapter serve
 ```
 
-`serve` binds `127.0.0.1:8789`. Caddy on `edit.fieldschool.ai` sends `/trigger` there. Auth is `Authorization: Bearer <EDIT_MCP_TOKEN>` or `X-Edit-Token`. Same token as the edit MCP. No token is 401.
+`serve` binds `127.0.0.1:8789`. On the Field School VPS, Caddy on `edit.fieldschool.ai` sends `/trigger` there. Auth is `Authorization: Bearer <EDIT_MCP_TOKEN>` or `X-Edit-Token`. Same token as the edit MCP. No token is 401. Do not run this on CNC vault.
 
 ```bash
 # Notion automation, or a person. Work starts on the vault. Notion is updated after.
