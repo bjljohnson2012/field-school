@@ -14,15 +14,7 @@ import {Stack} from "./components/layers/Stack";
 import {emphasisDropOff, useSolo, type DropOff} from "./dropOff";
 import type {Episode} from "./schema/episode";
 import {VignetteStage} from "./components/vox/VignetteStage";
-import {
-  DRAW_FRAMES,
-  DRAW_START_FRAMES,
-  PAPER_ENTER_FRAMES,
-  PAPER_LEAVE_FRAMES,
-  WRITE_FRAMES,
-  useVignetteLift,
-  vignetteCues,
-} from "./vignettes";
+import {PAPER_ENTER_FRAMES, PAPER_LEAVE_FRAMES, useVignetteLift, vignetteCues} from "./vignettes";
 
 export const PREVIEW_FRAMES = 151;
 export const CLIP_FRAMES = 750;
@@ -125,39 +117,36 @@ const PaperAudio: React.FC<{cues: ReturnType<typeof vignetteCues>}> = ({cues}) =
         const start = Math.round(((cue.fromMs - SOURCE_START_MS) / 1000) * FPS);
         const hold = Math.round((cue.holdMs / 1000) * FPS);
         const closeAt = Math.max(start + 8, start + hold - PAPER_LEAVE_FRAMES);
-        const drawFrom = start + DRAW_START_FRAMES;
-        const pencilHold = cue.id === "playbook" ? WRITE_FRAMES : DRAW_FRAMES;
-        const stampAt = drawFrom + DRAW_FRAMES - 2;
         const taps: number[] = [];
         if (cue.id === "wait") {
-          for (let at = stampAt + 4; at < closeAt - 4; at += 14) {
+          for (let at = start + 22; at < closeAt - 4; at += 16) {
             taps.push(at);
           }
         }
         return (
           <React.Fragment key={`${cue.id}-sfx-${cue.fromMs}`}>
-            <Sequence from={start} durationInFrames={PAPER_ENTER_FRAMES} layout="none">
-              <Audio src={staticFile("sfx/paper.wav")} volume={0.3} />
+            <Sequence from={start} durationInFrames={10} layout="none">
+              <Audio src={staticFile("sfx/pop.wav")} volume={0.2} />
             </Sequence>
-            <Sequence from={drawFrom} durationInFrames={pencilHold} layout="none">
-              <Audio src={staticFile("sfx/pencil.wav")} volume={0.26} />
+            <Sequence from={start} durationInFrames={PAPER_ENTER_FRAMES} layout="none">
+              <Audio src={staticFile("sfx/paper.wav")} volume={0.12} />
             </Sequence>
             {cue.id === "playbook" ? (
-              <Sequence from={start + 6} durationInFrames={14} layout="none">
-                <Audio src={staticFile("sfx/page.wav")} volume={0.24} />
+              <Sequence from={start + 4} durationInFrames={12} layout="none">
+                <Audio src={staticFile("sfx/page.wav")} volume={0.12} />
               </Sequence>
             ) : null}
             {cue.id === "wait" ? (
-              <Sequence from={stampAt} durationInFrames={10} layout="none">
-                <Audio src={staticFile("sfx/stamp.wav")} volume={0.22} />
+              <Sequence from={start + 12} durationInFrames={10} layout="none">
+                <Audio src={staticFile("sfx/stamp.wav")} volume={0.14} />
               </Sequence>
             ) : null}
             <Sequence from={closeAt} durationInFrames={PAPER_LEAVE_FRAMES} layout="none">
-              <Audio src={staticFile("sfx/paper-close.wav")} volume={0.24} />
+              <Audio src={staticFile("sfx/paper-close.wav")} volume={0.12} />
             </Sequence>
             {taps.map((at) => (
               <Sequence key={`${cue.id}-tap-${at}`} from={at} durationInFrames={6} layout="none">
-                <Audio src={staticFile("sfx/pencil-tap.wav")} volume={0.16} />
+                <Audio src={staticFile("sfx/pencil-tap.wav")} volume={0.09} />
               </Sequence>
             ))}
           </React.Fragment>
