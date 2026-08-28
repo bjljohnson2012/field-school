@@ -9,7 +9,7 @@ if [ ! -f "$SRC" ]; then
   exit 1
 fi
 mkdir -p "$DEST/sfx"
-SCOOP="highpass=f=150,lowpass=f=3400,equalizer=f=220:t=q:w=1.2:g=-5,equalizer=f=1500:t=q:w=1.3:g=-6.5,equalizer=f=3000:t=q:w=1.1:g=-4,loudnorm=I=-26:TP=-2:LRA=8"
+SCOOP="highpass=f=150,lowpass=f=3400,equalizer=f=220:t=q:w=1.2:g=-5,equalizer=f=1500:t=q:w=1.3:g=-6.5,equalizer=f=3000:t=q:w=1.1:g=-4,loudnorm=I=-20:TP=-2:LRA=8"
 if [ -f "$VO" ]; then
   ffmpeg -y -hide_banner -loglevel error -stream_loop 2 -t 64 -i "$SRC" -i "$VO" \
     -filter_complex "[0:a]${SCOOP}[bed];[1:a]adelay=6000,apad=whole_dur=64,aformat=channel_layouts=stereo[sc];[bed][sc]sidechaincompress=threshold=0.055:ratio=2.6:attack=70:release=480:knee=6:level_sc=1:mix=0.8" \
