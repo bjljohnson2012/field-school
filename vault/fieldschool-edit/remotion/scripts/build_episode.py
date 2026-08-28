@@ -43,10 +43,14 @@ def main() -> None:
     preview_hi = 5200
     preview_pages = [p for p in pages if p["endMs"] > preview_lo and p["startMs"] < preview_hi]
     window = [w for w in stamps if preview_lo <= w["fromMs"] < preview_hi]
-    cue_word = next(
-        (w for w in window if w["text"].lower().rstrip(".,!?") == "things"),
-        next((w for w in window if w["text"].lower().rstrip(".,!?") in {"just", "do", "one", "made"}), window[2] if len(window) > 2 else stamps[0]),
-    )
+    prefer = ("things", "reasons", "main", "people", "one")
+    cue_word = None
+    for name in prefer:
+        cue_word = next((w for w in window if w["text"].lower().rstrip(".,!?") == name), None)
+        if cue_word is not None:
+            break
+    if cue_word is None:
+        cue_word = window[2] if len(window) > 2 else stamps[0]
     episode = {
         "course": "Field School",
         "module": "Authored processes",
