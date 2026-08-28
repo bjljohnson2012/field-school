@@ -11,7 +11,7 @@ import type {Episode} from "./schema/episode";
 
 export const PREVIEW_FRAMES = 151;
 export const CLIP_FRAMES = 750;
-export const TEACH_FROM = 165;
+export const TEACH_FROM = 180;
 export const SOURCE_START_MS = 2400;
 
 export const defaultEpisode: Episode = {
