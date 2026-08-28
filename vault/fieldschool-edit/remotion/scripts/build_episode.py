@@ -11,7 +11,7 @@ EPISODE = Path("/opt/fieldschool-edit/remotion/public/episode.json")
 CUTS = Path("/opt/fieldschool-edit/remotion/public/cuts.json")
 
 CLIP_LO = 2400
-CLIP_HI = 12700
+CLIP_HI = 22000
 
 
 def load_stamps() -> list[dict]:
@@ -50,27 +50,10 @@ def load_stamps() -> list[dict]:
     return stamps
 
 
-def first_named(window: list[dict], names: tuple[str, ...]) -> dict | None:
-    for name in names:
-        for word in window:
-            if word["text"].lower().rstrip(".,!?") == name:
-                return word
-    return None
-
-
 def main() -> None:
     stamps = load_stamps()
     window = [w for w in stamps if CLIP_LO <= w["fromMs"] < CLIP_HI]
-    cues = []
-    one = first_named(window, ("one",))
-    things = first_named(window, ("things",))
-    waiting = first_named(window, ("waiting.", "waiting"))
-    if one:
-        cues.append({"word": one["text"], "fromMs": one["fromMs"], "kind": "hit"})
-    if things:
-        cues.append({"word": things["text"], "fromMs": things["fromMs"], "kind": "vox"})
-    if waiting:
-        cues.append({"word": waiting["text"].rstrip("."), "fromMs": waiting["fromMs"], "kind": "vox"})
+    cues: list[dict] = []
 
     silences = []
     for a, b in zip(stamps, stamps[1:]):

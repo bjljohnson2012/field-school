@@ -2,6 +2,6 @@
 
 Lives on the Field School VPS at `/opt/fieldschool-edit/remotion`. Do not deploy this to CNC vault.
 
-Stack later-sibling-on-top. Head docks at 38% width. KaraokePlate walks words at fromMs. 5s preview is `FieldSchoolPreview`. 25s clip is `FieldSchoolClip` at concurrency 1. Do not start an hour master until the 25s clips look right.
+Look-dev clip is intro plus teach only. Cream field, ink type, blue on the active word. Readable text holds 3 seconds. Bed is a quiet pad, not stacked sines. Do not dump the full spine into 25s.
 
 You Can Just Do Things clips: `https://cap.fieldschool.ai/hls/j013r823wx9ecaf/vox/`

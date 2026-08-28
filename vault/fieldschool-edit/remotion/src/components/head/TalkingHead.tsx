@@ -1,6 +1,6 @@
 import React from "react";
 import {OffthreadVideo, staticFile} from "remotion";
-import {HEAD_DOCK, gold} from "../../brand/tokens";
+import {HEAD_DOCK, stone} from "../../brand/tokens";
 
 type TalkingHeadProps = {
   src: string;
@@ -23,9 +23,8 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({src, startFrom, dock = 
         width,
         height: 820,
         overflow: "hidden",
-        borderRadius: 8,
-        outline: `3px solid ${gold}`,
-        outlineOffset: -3,
+        borderRadius: 6,
+        boxShadow: `inset 0 0 0 1px ${stone}22`,
       }}
     >
       <OffthreadVideo
