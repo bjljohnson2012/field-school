@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame} from "remotion";
 import {FPS, INTRO_FRAMES, bg} from "./brand/tokens";
 import {Fonts} from "./Fonts";
@@ -7,6 +7,7 @@ import {LowerThird} from "./components/boxes/LowerThird";
 import {TalkingHead} from "./components/head/TalkingHead";
 import {LockupIntro} from "./components/intro/LockupIntro";
 import {Stack} from "./components/layers/Stack";
+import {emphasisDropOff, useSolo} from "./dropOff";
 import type {Episode} from "./schema/episode";
 
 export const PREVIEW_FRAMES = 151;
@@ -43,18 +44,7 @@ export const Lesson: React.FC<Episode> = (episode) => {
       <Stack>
         <AbsoluteFill style={{backgroundColor: bg}} />
         <Sequence from={TEACH_FROM} layout="none">
-          <TalkingHead
-            src={episode.src}
-            startFrom={Math.round((SOURCE_START_MS / 1000) * FPS)}
-            dock="dock-right"
-            muted
-          />
-        </Sequence>
-        <Sequence from={TEACH_FROM} layout="none">
-          <LowerThird kicker={episode.module} title={episode.title} />
-        </Sequence>
-        <Sequence from={TEACH_FROM} layout="none">
-          <ClockKaraoke words={episode.words} />
+          <Teach episode={episode} />
         </Sequence>
         <Sequence from={0} durationInFrames={INTRO_FRAMES} layout="none">
           <LockupIntro course={episode.course} module={episode.module} title={episode.title} />
@@ -68,10 +58,28 @@ export const Lesson: React.FC<Episode> = (episode) => {
   );
 };
 
-const ClockKaraoke: React.FC<{words: Episode["words"]}> = ({words}) => {
+const Teach: React.FC<{episode: Episode}> = ({episode}) => {
+  const drop = useMemo(() => emphasisDropOff(episode.words), [episode.words]);
+  const solo = useSolo(drop, SOURCE_START_MS);
+  return (
+    <>
+      <TalkingHead
+        src={episode.src}
+        startFrom={Math.round((SOURCE_START_MS / 1000) * FPS)}
+        dock="dock-right"
+        muted
+        solo={solo}
+      />
+      <LowerThird kicker={episode.module} title={episode.title} solo={solo} />
+      <ClockKaraoke words={episode.words} solo={solo} />
+    </>
+  );
+};
+
+const ClockKaraoke: React.FC<{words: Episode["words"]; solo: number}> = ({words, solo}) => {
   const frame = useCurrentFrame();
   const nowMs = SOURCE_START_MS + (frame / FPS) * 1000;
-  return <KaraokePlate words={words} nowMs={nowMs} originMs={SOURCE_START_MS} />;
+  return <KaraokePlate words={words} nowMs={nowMs} originMs={SOURCE_START_MS} solo={solo} />;
 };
 
 const Bed: React.FC = () => {

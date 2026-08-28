@@ -1,14 +1,29 @@
 import React from "react";
-import {ink, sansFace, stone} from "../../brand/tokens";
+import {interpolate} from "remotion";
+import {headReservedPx, ink, sansFace, stone} from "../../brand/tokens";
 
 type LowerThirdProps = {
   title: string;
   kicker: string;
+  solo: number;
 };
 
-export const LowerThird: React.FC<LowerThirdProps> = ({title, kicker}) => {
+export const LowerThird: React.FC<LowerThirdProps> = ({title, kicker, solo}) => {
+  const fieldWidth = interpolate(solo, [0, 1], [1920 - headReservedPx(), 1920], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   return (
-    <div style={{position: "absolute", left: 64, bottom: 64, minWidth: 360}}>
+    <div
+      style={{
+        position: "absolute",
+        left: 0,
+        bottom: 64,
+        width: fieldWidth,
+        textAlign: "center",
+        opacity: 1 - solo,
+      }}
+    >
       <div
         style={{
           fontFamily: sansFace,

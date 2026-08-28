@@ -1,6 +1,6 @@
 import React, {useMemo} from "react";
 import {interpolate, useCurrentFrame, useVideoConfig} from "remotion";
-import {WORD_FADE_FRAMES, blue, displayFace, ink} from "../../brand/tokens";
+import {TYPE_BESIDE, TYPE_SOLO, WORD_FADE_FRAMES, blue, displayFace, headReservedPx, ink} from "../../brand/tokens";
 import {pageAt, pagesWithHold} from "../../pages";
 import type {CaptionWord} from "../../schema/episode";
 
@@ -8,12 +8,12 @@ type KaraokePlateProps = {
   words: CaptionWord[];
   nowMs: number;
   originMs: number;
+  solo: number;
 };
 
-const FONT_SIZE = 44;
-const LINE_HEIGHT = 1.2;
+const LINE_HEIGHT = 1.18;
 
-export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originMs}) => {
+export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originMs, solo}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const pages = useMemo(() => pagesWithHold(words), [words]);
@@ -21,46 +21,65 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
   if (!page) {
     return null;
   }
+  const fieldWidth = interpolate(solo, [0, 1], [1920 - headReservedPx(), 1920], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const fontSize = interpolate(solo, [0, 1], [TYPE_BESIDE, TYPE_SOLO], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const sidePad = interpolate(solo, [0, 1], [72, 160], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   return (
     <div
       style={{
         position: "absolute",
-        left: 64,
-        top: 360,
-        width: 1040,
-        whiteSpace: "pre-wrap",
+        left: 0,
+        top: 0,
+        width: fieldWidth,
+        height: 1080,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingLeft: sidePad,
+        paddingRight: sidePad,
+        boxSizing: "border-box",
       }}
     >
-      {page.words.map((word, i) => {
-        const appearMs = Math.max(word.fromMs, page.appearMs);
-        const appear = Math.round(((appearMs - originMs) / 1000) * fps);
-        const fade = interpolate(frame, [appear, appear + WORD_FADE_FRAMES], [0, 1], {
-          extrapolateLeft: "clamp",
-          extrapolateRight: "clamp",
-        });
-        const spoken = nowMs >= word.fromMs;
-        const active = nowMs >= word.fromMs && nowMs < word.toMs;
-        const ready = nowMs >= appearMs;
-        return (
-          <span
-            key={`${word.fromMs}-${word.text}-${i}`}
-            style={{
-              display: "inline-block",
-              marginRight: 14,
-              marginBottom: 10,
-              fontFamily: displayFace,
-              fontWeight: 700,
-              fontSize: FONT_SIZE,
-              letterSpacing: "-0.03em",
-              lineHeight: LINE_HEIGHT,
-              color: active ? blue : ink,
-              opacity: ready ? (spoken && active ? 1 : 0.88) * fade : 0,
-            }}
-          >
-            {word.text}
-          </span>
-        );
-      })}
+      <div style={{textAlign: "center", maxWidth: 1480}}>
+        {page.words.map((word, i) => {
+          const appearMs = Math.max(word.fromMs, page.appearMs);
+          const appear = Math.round(((appearMs - originMs) / 1000) * fps);
+          const fade = interpolate(frame, [appear, appear + WORD_FADE_FRAMES], [0, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          });
+          const active = nowMs >= word.fromMs && nowMs < word.toMs;
+          const ready = nowMs >= appearMs;
+          return (
+            <span
+              key={`${word.fromMs}-${word.text}-${i}`}
+              style={{
+                display: "inline-block",
+                marginRight: 16,
+                marginBottom: 12,
+                fontFamily: displayFace,
+                fontWeight: 700,
+                fontSize,
+                letterSpacing: "-0.03em",
+                lineHeight: LINE_HEIGHT,
+                color: active ? blue : ink,
+                opacity: ready ? (active ? 1 : 0.88) * fade : 0,
+              }}
+            >
+              {word.text}
+            </span>
+          );
+        })}
+      </div>
     </div>
   );
 };

@@ -85,7 +85,40 @@ def main() -> None:
     CAPTIONS.write_text(json.dumps({"words": stamps, "window": window}))
     EPISODE.write_text(json.dumps(episode))
     CUTS.write_text(json.dumps({"cues": cues, "silences": silences}))
-    print("words", len(window), "cues", cues, "silences", silences)
+    hold = 3000
+    groups: list[list[dict]] = []
+    bucket: list[dict] = []
+    for word in window:
+        if bucket and word["fromMs"] - bucket[-1]["toMs"] >= 400:
+            groups.append(bucket)
+            bucket = []
+        bucket.append(word)
+    if bucket:
+        groups.append(bucket)
+    cursor = 0
+    holds = []
+    waiting = next((w for w in window if w["text"].rstrip(".").lower() == "waiting"), None)
+    drop = None
+    for group in groups:
+        appear = max(group[0]["fromMs"], cursor)
+        hide = max(group[-1]["toMs"] + hold, appear + hold)
+        holds.append(hide - appear)
+        if waiting and any(w["fromMs"] == waiting["fromMs"] and w["text"] == waiting["text"] for w in group):
+            drop = {"fromMs": waiting["fromMs"], "toMs": hide, "durationMs": hide - waiting["fromMs"]}
+        cursor = hide
+    short = [h for h in holds if h < hold]
+    print(
+        "words",
+        len(window),
+        "pages",
+        len(groups),
+        "min_hold",
+        min(holds) if holds else 0,
+        "short",
+        short,
+        "drop",
+        drop,
+    )
 
 
 if __name__ == "__main__":
