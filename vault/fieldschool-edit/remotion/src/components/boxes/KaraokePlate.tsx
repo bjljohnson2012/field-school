@@ -51,7 +51,7 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
         transform: `translateY(${-lift * 72}px)`,
       }}
     >
-      <div style={{textAlign: "center", maxWidth: 1480}}>
+      <div style={{textAlign: "center", width: "100%", maxWidth: "100%"}}>
         {page.words.map((word, i) => {
           const appearMs = Math.max(word.fromMs, page.appearMs);
           const appear = Math.round(((appearMs - originMs) / 1000) * fps);
