@@ -54,10 +54,10 @@ export const Lesson: React.FC<Episode> = (episode) => {
         </Sequence>
         <Bed />
         <Sequence from={0} durationInFrames={30} layout="none">
-          <Audio src={staticFile("sfx/sting.wav")} volume={0.14} />
+          <Audio src={staticFile("sfx/sting.wav")} volume={0.16} />
         </Sequence>
         <Sequence from={162} durationInFrames={18} layout="none">
-          <Audio src={staticFile("sfx/whoosh.wav")} volume={0.16} />
+          <Audio src={staticFile("sfx/whoosh.wav")} volume={0.18} />
         </Sequence>
         <Sequence from={TEACH_FROM} layout="none">
           <Audio src={staticFile(episode.voSrc)} startFrom={Math.round((SOURCE_START_MS / 1000) * FPS)} />
@@ -108,13 +108,13 @@ const DropAudio: React.FC<{drop: DropOff | null}> = ({drop}) => {
   return (
     <>
       <Sequence from={start} durationInFrames={16} layout="none">
-        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.15} />
+        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.18} />
       </Sequence>
       <Sequence from={start} durationInFrames={14} layout="none">
-        <Audio src={staticFile("sfx/hit.wav")} volume={0.12} />
+        <Audio src={staticFile("sfx/hit.wav")} volume={0.14} />
       </Sequence>
       <Sequence from={Math.max(0, end - 18)} durationInFrames={16} layout="none">
-        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.13} />
+        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.15} />
       </Sequence>
     </>
   );
@@ -122,7 +122,7 @@ const DropAudio: React.FC<{drop: DropOff | null}> = ({drop}) => {
 
 const Bed: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = interpolate(frame, [0, 48, 150, 210], [0, 0.08, 0.08, 0.06], {
+  const fade = interpolate(frame, [0, 48, 150, 210], [0, 0.11, 0.11, 0.07], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
