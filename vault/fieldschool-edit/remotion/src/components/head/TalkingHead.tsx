@@ -1,5 +1,5 @@
 import React from "react";
-import {OffthreadVideo, staticFile} from "remotion";
+import {OffthreadVideo, spring, staticFile, useCurrentFrame, useVideoConfig} from "remotion";
 import {HEAD_DOCK, HEAD_MAT_PX, HEAD_RIGHT_GAP, HEAD_RULE_PX, cream, ink, stone} from "../../brand/tokens";
 
 type TalkingHeadProps = {
@@ -23,6 +23,14 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({
   const name = src.includes("/") ? src.split("/").pop() || src : src;
   const file = src.startsWith("http") ? src : staticFile(name);
   const side = dock === "dock-right" ? 1 : -1;
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const enter = spring({
+    frame,
+    fps,
+    durationInFrames: 20,
+    config: {damping: 15, mass: 0.6},
+  });
   return (
     <div
       style={{
@@ -38,7 +46,8 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({
         borderRadius: 4,
         boxShadow: `0 22px 48px ${ink}2e`,
         overflow: "hidden",
-        transform: `translateY(${solo * (height + 140)}px) translateX(${solo * side * 36}px)`,
+        transform: `translateY(${solo * (height + 140) + (1 - enter) * 72}px) translateX(${solo * side * 36}px)`,
+        opacity: enter,
       }}
     >
       <div style={{width: "100%", height: "100%", overflow: "hidden", borderRadius: 2}}>
