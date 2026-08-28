@@ -24,14 +24,10 @@ if command -v sox >/dev/null 2>&1; then
   sox "$PASS1" "$PASS2" noisered "$PROF" 0.055
   DENOISED="$PASS2"
 fi
-DEESS="equalizer=f=5500:t=q:w=1.5:g=-3.2"
-if ffmpeg -hide_banner -h filter=deesser 2>&1 | grep -q "deesser AVOptions"; then
-  DEESS="deesser=i=0.18:m=0.45:f=5500:s=0.2"
-fi
 # 24 dB/oct HPF, two 6 dB denoise passes, downward expander, body back,
 # no air hype, slow optical glue then a fast peak catch.
 ffmpeg -y -hide_banner -loglevel error -i "$DENOISED" \
-  -af "highpass=f=85:poles=2,highpass=f=85:poles=2,afftdn=nr=6:nf=-34:tn=1,afftdn=nr=6:nf=-34:tn=1,agate=threshold=0.007:ratio=2.2:attack=22:release=260:knee=8:makeup=1,compand=attacks=0.25:decays=0.9:points=-90/-90|-50/-42|-24/-20|-12/-11|-6/-6:soft-knee=6,equalizer=f=200:t=q:w=1.1:g=1.2,equalizer=f=3000:t=q:w=1.3:g=-2.2,${DEESS},lowpass=f=9800,acompressor=threshold=-24dB:ratio=1.7:attack=35:release=300:knee=8:makeup=1.3,acompressor=threshold=-9dB:ratio=3.2:attack=3:release=48:knee=3:makeup=1,alimiter=limit=0.95,loudnorm=I=-18:TP=-1.8:LRA=11,apad=whole_dur=${SECS},atrim=0:${SECS}" \
+  -af "highpass=f=85:poles=2,highpass=f=85:poles=2,afftdn=nr=6:nf=-34:tn=1,afftdn=nr=6:nf=-34:tn=1,agate=threshold=0.007:ratio=2.2:attack=22:release=260:knee=8:makeup=1,compand=attacks=0.25:decays=0.9:points=-90/-90|-50/-42|-24/-20|-12/-11|-6/-6:soft-knee=6,equalizer=f=200:t=q:w=1.1:g=1.2,equalizer=f=3000:t=q:w=1.3:g=-2.2,equalizer=f=5500:t=q:w=1.5:g=-3.2,lowpass=f=9800,acompressor=threshold=-24dB:ratio=1.7:attack=35:release=300:knee=8:makeup=1.3,acompressor=threshold=-9dB:ratio=3.2:attack=3:release=48:knee=3:makeup=1,alimiter=limit=0.95,loudnorm=I=-18:TP=-1.8:LRA=11,apad=whole_dur=${SECS},atrim=0:${SECS}" \
   -ar 48000 -ac 1 -t "$SECS" "$WAV"
 python3 "$HERE/make_room_tone.py" "$NOISE" "$ROOM" 64
 ffmpeg -y -hide_banner -loglevel error -i "$WAV" -i "$ROOM" \
