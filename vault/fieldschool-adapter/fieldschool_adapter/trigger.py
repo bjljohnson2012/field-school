@@ -36,6 +36,14 @@ def extract_ids(payload: Any) -> tuple[str | None, str | None]:
     return asset, cap
 
 
+def _first_str(payload: dict, keys: tuple[str, ...]) -> str | None:
+    for key in keys:
+        value = payload.get(key)
+        if isinstance(value, str) and value.strip() and len(value.strip()) >= 8:
+            return value.strip()
+    return None
+
+
 def serve_trigger(config: Config, *, host: str = "127.0.0.1", port: int = 8789) -> int:
     token = (os.environ.get("EDIT_MCP_TOKEN") or os.environ.get("TRIGGER_TOKEN") or "").strip()
     if not token:
