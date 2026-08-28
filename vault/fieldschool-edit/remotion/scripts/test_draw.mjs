@@ -37,4 +37,10 @@ const holdMs = Math.max(1900, spoken - WAIT_CLEAR_MS);
 const paperEnd = fromMs + holdMs;
 const headReturn = fromMs + spoken - (DROP_RETURN_LEAD_FRAMES / FPS) * 1000;
 assert.ok(paperEnd <= headReturn, `paper ${paperEnd} must leave before head ${headReturn}`);
-console.log("draw and wait clearance ok", {holdMs, paperEnd, headReturn});
+
+const DRAW_START_FRAMES = 8;
+const DRAW_FRAMES = 26;
+const holdFrames = Math.round((holdMs / 1000) * FPS);
+assert.ok(DRAW_START_FRAMES + DRAW_FRAMES + PAPER_LEAVE_FRAMES < holdFrames, "draw must finish before the fold");
+assert.ok(DRAW_START_FRAMES >= 6, "pencil starts after the paper has begun to open");
+console.log("draw and wait clearance ok", {holdMs, paperEnd, headReturn, holdFrames});

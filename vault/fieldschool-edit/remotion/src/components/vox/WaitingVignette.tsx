@@ -7,77 +7,82 @@ import {PencilTip} from "./PencilTip";
 
 type WaitingVignetteProps = {
   open: number;
+  draw: number;
   solo: number;
 };
 
-export const WaitingVignette: React.FC<WaitingVignetteProps> = ({open, solo}) => {
+export const WaitingVignette: React.FC<WaitingVignetteProps> = ({open, draw, solo}) => {
   const frame = useCurrentFrame();
-  const draw = interpolate(open, [0.12, 0.78], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const live = interpolate(draw, [0.72, 1], [0, 1], {
+  const live = interpolate(draw, [0.78, 1], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
   const tap = Math.sin(frame / 2.4) * 8 * live;
-  const steam = (0.45 + 0.55 * Math.abs(Math.sin(frame / 5.2))) * live;
-  const stamp = interpolate(open, [0.82, 1], [0, 1], {
+  const steam = (0.4 + 0.6 * Math.abs(Math.sin(frame / 5.2))) * live;
+  const stamp = interpolate(draw, [0.88, 1], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const pencilOn = interpolate(draw, [0.02, 0.08, 0.92, 1], [0, 1, 1, 0], {
+  const pencilOn = interpolate(draw, [0.02, 0.08, 0.9, 1], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const px = along(draw, [118, 118, 88, 150, 162]);
-  const py = along(draw, [22, 70, 100, 118, 148]);
-  const angle = along(draw, [-22, -8, 12, 18, 8]);
+  const px = along(draw, [150, 150, 112, 188, 204]);
+  const py = along(draw, [28, 86, 118, 138, 168]);
+  const angle = along(draw, [-20, -8, 10, 16, 6]);
   const hour = (frame * 0.35) % 360;
   const minute = (frame * 2.4) % 360;
+  const head = interpolate(draw, [0, 0.22], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const body = interpolate(draw, [0.2, 0.55], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const chair = interpolate(draw, [0, 0.18], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const clock = interpolate(draw, [0.18, 0.42], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   return (
-    <PaperCard open={open} kicker="Waiting" solo={solo}>
-      <svg width="260" height="176" viewBox="0 0 260 176" fill="none">
-        <path d="M72 150 H168" stroke={stone} strokeWidth="2" {...dash(96, draw)} />
-        <path d="M86 150 V118 H154 V150" stroke={stone} strokeWidth="2.5" {...dash(150, draw)} />
-        <path d="M154 118 L176 86" stroke={stone} strokeWidth="2.5" {...dash(50, interpolate(draw, [0.15, 0.45], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
-        <circle cx="120" cy="40" r="18" stroke={ink} strokeWidth="3" {...dash(114, interpolate(draw, [0, 0.28], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
-        <path d="M105 28 L117 38" stroke={ink} strokeWidth="3.5" strokeLinecap="round" {...dash(16, interpolate(draw, [0.22, 0.34], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
-        <path d="M135 28 L123 38" stroke={ink} strokeWidth="3.5" strokeLinecap="round" {...dash(16, interpolate(draw, [0.24, 0.36], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
-        <circle cx="113" cy="42" r="2" fill={ink} opacity={interpolate(draw, [0.3, 0.4], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})} />
-        <circle cx="127" cy="42" r="2" fill={ink} opacity={interpolate(draw, [0.32, 0.42], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})} />
-        <path d="M111 54 Q120 47 129 54" stroke={ink} strokeWidth="2.8" strokeLinecap="round" {...dash(22, interpolate(draw, [0.36, 0.48], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
-        <path d="M120 58 L120 96" stroke={ink} strokeWidth="3" strokeLinecap="round" {...dash(38, interpolate(draw, [0.4, 0.58], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
-        <path d="M120 72 L86 86 L96 98 L120 84" stroke={ink} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" {...dash(86, interpolate(draw, [0.5, 0.7], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
-        <path d="M120 72 L154 86 L144 98 L120 84" stroke={ink} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" {...dash(86, interpolate(draw, [0.54, 0.74], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
-        <path d="M120 96 L98 148" stroke={ink} strokeWidth="3" strokeLinecap="round" {...dash(58, interpolate(draw, [0.62, 0.82], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
-        <g transform={`translate(0 ${tap})`} opacity={interpolate(draw, [0.68, 0.86], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}>
-          <path d="M120 96 L150 140" stroke={ink} strokeWidth="3" strokeLinecap="round" />
-          <path d="M150 140 L164 136" stroke={blue} strokeWidth="3" strokeLinecap="round" />
+    <PaperCard open={open} kicker="Waiting" caption="Still sitting there." solo={solo}>
+      <svg width="360" height="200" viewBox="0 0 360 200" fill="none">
+        <path d="M48 176 H250" stroke={stone} strokeWidth="2" {...dash(202, chair)} />
+        <path d="M108 176 V132 H196 V176" stroke={stone} strokeWidth="2.6" {...dash(176, chair)} />
+        <path d="M196 132 V78 H212 V176" stroke={stone} strokeWidth="2.6" {...dash(164, interpolate(draw, [0.08, 0.32], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
+        <circle cx="150" cy="48" r="22" stroke={ink} strokeWidth="3.2" {...dash(138, head)} />
+        <path d="M132 34 L146 44" stroke={ink} strokeWidth="3.6" strokeLinecap="round" {...dash(18, interpolate(draw, [0.16, 0.28], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
+        <path d="M168 34 L154 44" stroke={ink} strokeWidth="3.6" strokeLinecap="round" {...dash(18, interpolate(draw, [0.18, 0.3], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
+        <circle cx="141" cy="50" r="2.4" fill={ink} opacity={interpolate(draw, [0.24, 0.34], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})} />
+        <circle cx="159" cy="50" r="2.4" fill={ink} opacity={interpolate(draw, [0.26, 0.36], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})} />
+        <path d="M138 64 Q150 56 162 64" stroke={ink} strokeWidth="3" strokeLinecap="round" {...dash(28, interpolate(draw, [0.3, 0.42], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
+        <path d="M150 70 L150 118" stroke={ink} strokeWidth="3.2" strokeLinecap="round" {...dash(48, body)} />
+        <path d="M150 88 L108 104 L120 118 L150 100" stroke={ink} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" {...dash(108, interpolate(draw, [0.42, 0.64], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
+        <path d="M150 88 L192 104 L180 118 L150 100" stroke={ink} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" {...dash(108, interpolate(draw, [0.46, 0.68], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
+        <path d="M150 118 L124 172" stroke={ink} strokeWidth="3.2" strokeLinecap="round" {...dash(66, interpolate(draw, [0.58, 0.78], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
+        <g transform={`translate(0 ${tap})`} opacity={interpolate(draw, [0.66, 0.86], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}>
+          <path d="M150 118 L186 164" stroke={ink} strokeWidth="3.2" strokeLinecap="round" />
+          <path d="M186 164 L204 158" stroke={blue} strokeWidth="3.4" strokeLinecap="round" />
         </g>
-        <path d="M104 14 C100 6 108 2 112 10" stroke={stone} strokeWidth="2" strokeLinecap="round" opacity={steam} />
-        <path d="M128 12 C126 3 136 1 138 10" stroke={stone} strokeWidth="2" strokeLinecap="round" opacity={steam} />
-        <circle cx="210" cy="40" r="18" stroke={stone} strokeWidth="2" {...dash(114, interpolate(draw, [0.2, 0.5], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
-        <g transform={`rotate(${minute} 210 40)`} opacity={interpolate(draw, [0.45, 0.6], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}>
-          <path d="M210 40 L210 26" stroke={blue} strokeWidth="2" strokeLinecap="round" />
+        <path d="M130 16 C124 6 136 2 140 14" stroke={stone} strokeWidth="2.2" strokeLinecap="round" opacity={steam} />
+        <path d="M162 14 C158 2 172 0 174 13" stroke={stone} strokeWidth="2.2" strokeLinecap="round" opacity={steam} />
+        <circle cx="292" cy="48" r="26" stroke={stone} strokeWidth="2.4" {...dash(164, clock)} />
+        <path d="M292 26 V32" stroke={stone} strokeWidth="2" opacity={clock} />
+        <path d="M292 64 V70" stroke={stone} strokeWidth="2" opacity={clock} />
+        <path d="M270 48 H276" stroke={stone} strokeWidth="2" opacity={clock} />
+        <path d="M308 48 H314" stroke={stone} strokeWidth="2" opacity={clock} />
+        <g transform={`rotate(${minute} 292 48)`} opacity={interpolate(draw, [0.4, 0.55], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}>
+          <path d="M292 48 L292 28" stroke={blue} strokeWidth="2.2" strokeLinecap="round" />
         </g>
-        <g transform={`rotate(${hour} 210 40)`} opacity={interpolate(draw, [0.45, 0.6], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}>
-          <path d="M210 40 L220 44" stroke={ink} strokeWidth="2" strokeLinecap="round" />
+        <g transform={`rotate(${hour} 292 48)`} opacity={interpolate(draw, [0.4, 0.55], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}>
+          <path d="M292 48 L306 54" stroke={ink} strokeWidth="2.2" strokeLinecap="round" />
         </g>
         <PencilTip x={px} y={py} angle={angle} show={pencilOn} />
       </svg>
       <div
         style={{
           position: "absolute",
-          right: 16,
-          bottom: 18,
+          right: 18,
+          bottom: 8,
           border: `2.5px solid ${blue}`,
           color: blue,
           fontFamily: sansFace,
-          fontSize: 11,
-          letterSpacing: "0.18em",
+          fontSize: 12,
+          letterSpacing: "0.16em",
           textTransform: "uppercase",
-          padding: "5px 8px 4px",
+          padding: "5px 9px 4px",
           opacity: stamp,
           transform: `rotate(-12deg) scale(${0.74 + stamp * 0.26})`,
         }}

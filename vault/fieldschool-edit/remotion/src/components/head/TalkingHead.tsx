@@ -62,6 +62,7 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({
             objectPosition: "50% 50%",
             transform: "none",
             transformOrigin: "50% 50%",
+            filter: "contrast(1.06) saturate(1.05) brightness(1.02)",
           }}
         />
       </div>

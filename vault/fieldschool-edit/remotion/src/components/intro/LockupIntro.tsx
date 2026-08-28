@@ -92,8 +92,15 @@ export const LockupIntro: React.FC<LockupIntroProps> = ({course, module, title})
           fontSize: 56,
           letterSpacing: "-0.03em",
           color: ink,
-          opacity: typeIn,
-          transform: `translateY(${(1 - typeIn) * 12}px)`,
+          opacity: interpolate(frame, [20, 40], [0, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          }),
+          transform: `scale(${interpolate(frame, [22, 168], [0.78, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          })})`,
+          transformOrigin: "center",
         }}
       >
         {title}

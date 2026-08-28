@@ -1,4 +1,4 @@
-import {spring, useCurrentFrame, useVideoConfig} from "remotion";
+import {interpolate, spring, useCurrentFrame, useVideoConfig} from "remotion";
 import {DROP_RETURN_LEAD_FRAMES, FPS, MIN_HOLD_MS} from "./brand/tokens";
 import type {CaptionWord} from "./schema/episode";
 
@@ -10,8 +10,18 @@ export type VignetteCue = {
   holdMs: number;
 };
 
+export type PaperLife = {
+  open: number;
+  age: number;
+  draw: number;
+  write: number;
+};
+
 export const PAPER_ENTER_FRAMES = 18;
 export const PAPER_LEAVE_FRAMES = 16;
+export const DRAW_START_FRAMES = 8;
+export const DRAW_FRAMES = 26;
+export const WRITE_FRAMES = 40;
 
 const WAIT = /^waiting\.$/i;
 const BOOK = /^playbook\.?$/i;
@@ -62,6 +72,31 @@ export const usePaper = (fromMs: number, holdMs: number, originMs: number, nextF
     return 0;
   }
   return Math.max(0, Math.min(1, enter - leave));
+};
+
+export const usePaperLife = (
+  fromMs: number,
+  holdMs: number,
+  originMs: number,
+  nextFromMs: number | null,
+): PaperLife => {
+  const open = usePaper(fromMs, holdMs, originMs, nextFromMs);
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const start = Math.round(((fromMs - originMs) / 1000) * fps);
+  const age = frame - start;
+  const draw = interpolate(age, [DRAW_START_FRAMES, DRAW_START_FRAMES + DRAW_FRAMES], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const write = interpolate(age, [DRAW_START_FRAMES + 2, DRAW_START_FRAMES + 2 + WRITE_FRAMES], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  if (open <= 0) {
+    return {open: 0, age, draw: 0, write: 0};
+  }
+  return {open, age, draw, write};
 };
 
 export const useVignetteLift = (cues: VignetteCue[], originMs: number): number => {
