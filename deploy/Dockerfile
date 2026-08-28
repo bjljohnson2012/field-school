@@ -1,13 +1,27 @@
-FROM node:22-bookworm-slim
+FROM node:22-bookworm-slim AS deps
 WORKDIR /app
-
 COPY package.json package-lock.json ./
-RUN npm install --no-audit --no-fund
+RUN npm ci --no-audit --no-fund
 
+FROM node:22-bookworm-slim AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-ENV NITRO_PRESET=node-server
-RUN npx vite build
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run build
 
-ENV NODE_ENV=production PORT=3000 HOST=0.0.0.0
+FROM node:22-bookworm-slim AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 nextjs
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
+USER nextjs
 EXPOSE 3000
-CMD ["sh", "-c", "node scripts/migrate.mjs && if [ -f .output/server/index.mjs ]; then exec node .output/server/index.mjs; elif [ -f .output/server/index.js ]; then exec node .output/server/index.js; else echo 'missing server output' >&2; ls -la .output 2>/dev/null || true; exit 1; fi"]
+CMD ["node", "server.js"]

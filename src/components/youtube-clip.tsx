@@ -1,5 +1,7 @@
-import { useState } from "react";
+"use client";
+
 import { ExternalLink, Play } from "lucide-react";
+import { useState } from "react";
 import { formatTimecode } from "@/lib/utils";
 import { VIDEO_ID, VIDEO_TITLE } from "@/lib/course/types";
 import {
@@ -34,8 +36,8 @@ export function YoutubeClip({
         : null;
 
   return (
-    <figure className="overflow-hidden rounded-xl border border-border bg-surface">
-      <div className="relative aspect-video bg-raised">
+    <figure className="overflow-hidden rounded-xl border border-border bg-card">
+      <div className="relative aspect-video bg-secondary">
         {inline ? (
           <iframe
             title={label}
@@ -47,18 +49,19 @@ export function YoutubeClip({
           />
         ) : (
           <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={youtubePoster(videoId)}
               alt=""
               className="absolute inset-0 h-full w-full object-cover"
             />
-            <div className="absolute inset-0 bg-bg/55" />
+            <div className="absolute inset-0 bg-background/55" />
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4">
               <a
                 href={watch}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-12 items-center gap-2 rounded-md bg-accent px-5 text-sm font-medium text-accent-fg"
+                className="inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
               >
                 <Play className="size-4" />
                 Watch on YouTube
@@ -66,12 +69,12 @@ export function YoutubeClip({
               <button
                 type="button"
                 onClick={() => setInline(true)}
-                className="h-11 text-sm text-fg underline-offset-4 hover:underline"
+                className="h-11 text-sm text-foreground underline-offset-4 hover:underline"
               >
                 Try inline player
               </button>
               {range ? (
-                <p className="font-mono text-xs text-muted">{range}</p>
+                <p className="font-mono text-xs text-muted-foreground">{range}</p>
               ) : null}
             </div>
           </>
@@ -79,8 +82,8 @@ export function YoutubeClip({
       </div>
       <figcaption className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <p className="font-medium text-fg">{label}</p>
-          <p className="text-sm text-muted">
+          <p className="font-medium">{label}</p>
+          <p className="text-sm text-muted-foreground">
             {range ? `${range} · ` : null}
             {why ?? VIDEO_TITLE}
           </p>
@@ -89,7 +92,7 @@ export function YoutubeClip({
           href={watch}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex h-11 shrink-0 items-center gap-2 text-sm text-accent hover:underline"
+          className="inline-flex h-11 shrink-0 items-center gap-2 text-sm text-primary hover:underline"
         >
           <ExternalLink className="size-4" />
           Open clip
