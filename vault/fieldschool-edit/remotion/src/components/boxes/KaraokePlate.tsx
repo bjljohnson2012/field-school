@@ -10,11 +10,12 @@ type KaraokePlateProps = {
   originMs: number;
   solo: number;
   drop: DropOff | null;
+  lift?: number;
 };
 
 const LINE_HEIGHT = 1.18;
 
-export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originMs, solo, drop}) => {
+export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originMs, solo, drop, lift = 0}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const page = useMemo(() => pageForClock(words, nowMs, drop), [words, nowMs, drop]);
@@ -47,6 +48,7 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
         paddingLeft: sidePad,
         paddingRight: sidePad,
         boxSizing: "border-box",
+        transform: `translateY(${-lift * 56}px)`,
       }}
     >
       <div style={{textAlign: "center", maxWidth: 1480}}>
