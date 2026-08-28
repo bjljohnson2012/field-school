@@ -1,6 +1,6 @@
 import React from "react";
 import {interpolate, useCurrentFrame} from "remotion";
-import {blue, ink, stone} from "../../brand/tokens";
+import {blue, ink, sansFace, stone} from "../../brand/tokens";
 import {along, dash} from "../../draw";
 import {PaperCard} from "./PaperCard";
 import {PencilTip} from "./PencilTip";
@@ -64,15 +64,26 @@ export const WaitingVignette: React.FC<WaitingVignetteProps> = ({open, solo}) =>
         <g transform={`rotate(${hour} 210 40)`} opacity={interpolate(draw, [0.45, 0.6], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}>
           <path d="M210 40 L220 44" stroke={ink} strokeWidth="2" strokeLinecap="round" />
         </g>
-        <g transform={`translate(188 118) rotate(-12) scale(${0.72 + stamp * 0.28})`} opacity={stamp}>
-          <rect x="-30" y="-16" width="60" height="32" stroke={blue} strokeWidth="2.5" />
-          <path d="M-22 8 L-18 -8 L-14 4 L-10 -8 L-6 8" stroke={blue} strokeWidth="2" strokeLinejoin="round" />
-          <path d="M0 8 L6 -8 L12 8 M2 2 H10" stroke={blue} strokeWidth="2" />
-          <path d="M18 -8 V16" stroke={blue} strokeWidth="2" />
-          <path d="M26 -8 H38 M32 -8 V8" stroke={blue} strokeWidth="2" />
-        </g>
         <PencilTip x={px} y={py} angle={angle} show={pencilOn} />
       </svg>
+      <div
+        style={{
+          position: "absolute",
+          right: 16,
+          bottom: 18,
+          border: `2.5px solid ${blue}`,
+          color: blue,
+          fontFamily: sansFace,
+          fontSize: 11,
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          padding: "5px 8px 4px",
+          opacity: stamp,
+          transform: `rotate(-12deg) scale(${0.74 + stamp * 0.26})`,
+        }}
+      >
+        Wait
+      </div>
     </PaperCard>
   );
 };

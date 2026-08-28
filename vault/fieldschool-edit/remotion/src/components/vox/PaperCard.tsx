@@ -84,7 +84,7 @@ export const PaperCard: React.FC<PaperCardProps> = ({open, kicker, children, sol
           {kicker}
         </div>
         <div style={{width: 80 * open, height: 2, backgroundColor: stone, marginBottom: 14}} />
-        {children}
+        <div style={{position: "relative"}}>{children}</div>
       </div>
     </div>
   );
