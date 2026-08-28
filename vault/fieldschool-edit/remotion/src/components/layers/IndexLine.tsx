@@ -9,7 +9,7 @@ type IndexLineProps = {
 export const IndexLine: React.FC<IndexLineProps> = ({solo}) => {
   const frame = useCurrentFrame();
   const draw = interpolate(frame, [0, 16], [0, 1], {extrapolateRight: "clamp"});
-  const openField = interpolate(solo, [0.7, 0.95], [0, 1], {
+  const openField = interpolate(solo, [0.88, 0.99], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

@@ -6,6 +6,8 @@ import type {CaptionWord} from "../../schema/episode";
 import {PLAYBOOK, typedCount} from "../../typewriter";
 import {TypewriterWord} from "../vox/TypewriterWord";
 
+const WAITING = /^waiting\.$/i;
+
 type KaraokePlateProps = {
   words: CaptionWord[];
   nowMs: number;
@@ -24,7 +26,7 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
   if (!page) {
     return null;
   }
-  const openField = interpolate(solo, [0.7, 0.95], [0, 1], {
+  const openField = interpolate(solo, [0.88, 0.99], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -67,6 +69,28 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
           });
           const active = nowMs >= word.fromMs && nowMs < word.toMs;
           const ready = nowMs >= appearMs;
+          if (WAITING.test(word.text.trim())) {
+            return (
+              <span
+                key={`${word.fromMs}-${word.text}-${i}`}
+                style={{
+                  display: "block",
+                  marginTop: 8,
+                  marginBottom: 12,
+                  fontFamily: displayFace,
+                  fontWeight: 700,
+                  fontSize,
+                  letterSpacing: "-0.03em",
+                  lineHeight: LINE_HEIGHT,
+                  color: active ? blue : ink,
+                  opacity: ready ? (active ? 1 : 0.88) * fade : 0,
+                  transform: `translateY(${(1 - fade) * 8}px)`,
+                }}
+              >
+                {word.text}
+              </span>
+            );
+          }
           if (PLAYBOOK.test(word.text.trim())) {
             const shown = typedCount(nowMs, word.fromMs, word.text.length);
             return (

@@ -9,7 +9,7 @@ type LowerThirdProps = {
 };
 
 export const LowerThird: React.FC<LowerThirdProps> = ({title, kicker, solo}) => {
-  const openField = interpolate(solo, [0.7, 0.95], [0, 1], {
+  const openField = interpolate(solo, [0.88, 0.99], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
