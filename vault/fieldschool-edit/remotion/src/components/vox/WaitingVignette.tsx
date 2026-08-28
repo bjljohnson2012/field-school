@@ -46,7 +46,7 @@ export const WaitingVignette: React.FC<WaitingVignetteProps> = ({open, solo}) =>
         <path d="M135 28 L123 38" stroke={ink} strokeWidth="3.5" strokeLinecap="round" {...dash(16, interpolate(draw, [0.24, 0.36], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
         <circle cx="113" cy="42" r="2" fill={ink} opacity={interpolate(draw, [0.3, 0.4], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})} />
         <circle cx="127" cy="42" r="2" fill={ink} opacity={interpolate(draw, [0.32, 0.42], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})} />
-        <path d="M111 52 Q120 46 129 52" stroke={ink} strokeWidth="2.5" strokeLinecap="round" {...dash(22, interpolate(draw, [0.36, 0.48], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
+        <path d="M111 54 Q120 47 129 54" stroke={ink} strokeWidth="2.8" strokeLinecap="round" {...dash(22, interpolate(draw, [0.36, 0.48], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
         <path d="M120 58 L120 96" stroke={ink} strokeWidth="3" strokeLinecap="round" {...dash(38, interpolate(draw, [0.4, 0.58], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
         <path d="M120 72 L86 86 L96 98 L120 84" stroke={ink} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" {...dash(86, interpolate(draw, [0.5, 0.7], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />
         <path d="M120 72 L154 86 L144 98 L120 84" stroke={ink} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" {...dash(86, interpolate(draw, [0.54, 0.74], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}))} />

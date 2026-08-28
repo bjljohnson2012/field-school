@@ -30,7 +30,7 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const sidePad = interpolate(solo, [0, 1], [72, 160], {
+  const sidePad = interpolate(solo, [0, 1], [88, 160], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
