@@ -46,7 +46,7 @@ import json
 from pathlib import Path
 phrases = json.loads(Path("/opt/fieldschool-edit/remotion/public/phrases.json").read_text())
 props = {
-  "src": "a_roll.mp4",
+  "src": "head.mp4",
   "cuts": [{"in": 0.0, "out": 651.878}],
   "overlay": {
     "logo": "isolated-seal.png",
