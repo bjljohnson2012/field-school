@@ -7,9 +7,10 @@ type MadeHeadProps = {
   src: string;
   layout: ShotLayout;
   local: number;
+  fromFrame: number;
 };
 
-export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local}) => {
+export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, fromFrame}) => {
   const hidden = layout === "off";
   const pip = layout === "pip-tr";
   const enter = interpolate(local, [0, pip ? 10 : 12], [0, 1], {
@@ -20,6 +21,9 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local}) => {
   const height = pip ? 420 : 800;
   const left = pip ? 1920 - width - 48 : 1920 - width - HEAD_RIGHT_GAP;
   const top = pip ? 48 : 140;
+  if (hidden) {
+    return null;
+  }
   return (
     <div
       style={{
@@ -32,13 +36,13 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local}) => {
         boxSizing: "border-box",
         backgroundColor: paper,
         outline: `2px solid ${ink}`,
-        opacity: hidden ? 0 : enter,
+        opacity: enter,
         translate: `0px ${(1 - enter) * (pip ? 24 : 40)}px`,
       }}
     >
       <OffthreadVideo
         src={staticFile(src)}
-        startFrom={0}
+        startFrom={fromFrame}
         muted
         style={{width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 40%"}}
       />

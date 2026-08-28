@@ -7,13 +7,13 @@ import {HookPlate} from "./HookPlate";
 import {MadeHead} from "./MadeHead";
 import {MadeLetterbox} from "./MadeLetterbox";
 import {CtaCard, StingLockup, TitlePlate} from "./TitlePlate";
-import {BED_FRAMES, FPS, MASTER_FRAMES, bg, uiFace} from "./tokens";
+import {BED_FRAMES, FPS, MASTER_FRAMES, bg, paper, uiFace} from "./tokens";
 import type {MadeEpisode, MadeShot, MadeWord} from "./schema";
 
 export const defaultMadeUp: MadeEpisode = {
   slug: "everything-made-up",
   title: "Everything Is Made Up",
-  cam: "episodes/everything-made-up/cam.mp4",
+  cam: "a_roll.mp4",
   vo: "episodes/everything-made-up/vo.wav",
   captions: "episodes/everything-made-up/captions.json",
   shots: [],
@@ -50,7 +50,12 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             spoken={spokenNeedles(words, nowMs)}
           />
         ) : null}
-        <MadeHead src={fileName(episode.cam)} layout={shot ? shot.layout : "off"} local={local} />
+        <MadeHead
+          src={fileName(episode.cam)}
+          layout={shot ? shot.layout : "off"}
+          local={local}
+          fromFrame={shot ? shot.fromFrame : 0}
+        />
         {shot && shot.lowerThird ? (
           <div
             style={{
@@ -150,10 +155,8 @@ const stampCount = (shot: MadeShot, words: MadeWord[], nowMs: number, local: num
   const light = words.some((word) => nowMs >= word.fromMs && (norm(word.text).includes("light") || norm(word.text).includes("speed")));
   const freeze = words.some((word) => nowMs >= word.fromMs && (norm(word.text).includes("freez") || norm(word.text).includes("ice")));
   const keyed = Number(gravity) + Number(light) + Number(freeze);
-  if (keyed > 0) {
-    return keyed;
-  }
-  return Math.min(3, Math.max(0, Math.floor((local - 2) / 4)));
+  const cascade = Math.min(3, Math.max(0, Math.floor((local - 2) / 4)));
+  return Math.max(keyed, cascade);
 };
 
 const spokenNeedles = (words: MadeWord[], nowMs: number): string[] => {
