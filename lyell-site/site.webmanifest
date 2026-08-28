@@ -1,0 +1,16 @@
+{
+  "name": "LyellX",
+  "short_name": "LyellX",
+  "description": "LyellX LLC is a management and holding company. We build, we expand, and we live by first principles.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#131313",
+  "theme_color": "#131313",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
