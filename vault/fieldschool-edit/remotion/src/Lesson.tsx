@@ -55,6 +55,7 @@ export const Lesson: React.FC<Episode> = (episode) => {
         <Sequence from={0} durationInFrames={INTRO_FRAMES} layout="none">
           <LockupIntro course={episode.course} module={episode.module} title={episode.title} />
         </Sequence>
+        <Room />
         <Bed />
         <Sequence from={TEACH_FROM} layout="none">
           <Audio src={staticFile(episode.voSrc)} startFrom={Math.round((SOURCE_START_MS / 1000) * FPS)} />
@@ -116,21 +117,25 @@ const CueAudio: React.FC<{words: Episode["words"]; drop: DropOff | null}> = ({wo
     <>
       {waitStart !== null ? (
         <Sequence from={waitStart} durationInFrames={24} layout="none">
-          <Audio src={staticFile("sfx/swell.wav")} volume={0.16} />
+            <Audio src={staticFile("sfx/swell.wav")} volume={0.09} />
         </Sequence>
       ) : null}
       {keys.map((at, i) => (
         <Sequence key={`key-${at}-${i}`} from={at} durationInFrames={5} layout="none">
-          <Audio src={staticFile(i % 2 === 0 ? "sfx/key-a.wav" : "sfx/key-b.wav")} volume={0.18} />
+          <Audio src={staticFile(i % 2 === 0 ? "sfx/key-a.wav" : "sfx/key-b.wav")} volume={0.09} />
         </Sequence>
       ))}
     </>
   );
 };
 
+const Room: React.FC = () => {
+  return <Audio src={staticFile("room.wav")} volume={0.06} />;
+};
+
 const Bed: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = interpolate(frame, [0, 28, 160, 230], [0, 0.46, 0.38, 0.04], {
+  const fade = interpolate(frame, [0, 42, 168, 320], [0, 0.18, 0.13, 0.1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
