@@ -1,0 +1,12 @@
+{
+  "slug": "everything-made-up",
+  "master": "out/everything-made-up/master-16x9.mp4",
+  "fps": 30,
+  "cuts": [
+    {"id": "cut-01", "platform": "shorts", "startSec": 2, "endSec": 22, "hookLine": "You can just do things", "needsReframe": "left-third", "notes": "Waiting plate, then playbook a-roll. Just-do-things lands at 34.9s if you want the second plate."},
+    {"id": "cut-02", "platform": "shorts", "startSec": 113.7, "endSec": 136, "hookLine": "Not gravity", "needsReframe": "full-vox", "notes": "X-stamp collage on quota/policy/ice"},
+    {"id": "cut-03", "platform": "shorts", "startSec": 258.8, "endSec": 300, "hookLine": "Five questions", "needsReframe": "full-vox"},
+    {"id": "cut-04", "platform": "shorts", "startSec": 382.4, "endSec": 420, "hookLine": "Their approval takes sixty days", "needsReframe": "full-vox"},
+    {"id": "cut-05", "platform": "shorts", "startSec": 634.5, "endSec": 668.5, "hookLine": "Change it with the reason in hand", "needsReframe": "left-third"}
+  ]
+}

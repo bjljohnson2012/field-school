@@ -1,0 +1,272 @@
+{
+  "slug": "everything-made-up",
+  "title": "Everything Is Made Up",
+  "brandKit": "custom",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "hook": "People wait to be told how. You can just do things because the blockers were made up.",
+  "thesis": "Made up does not mean fake. Made up means authored, and authored things can be changed with the reason in hand.",
+  "cam": "episodes/everything-made-up/cam.mp4",
+  "vo": "episodes/everything-made-up/vo.wav",
+  "captions": "episodes/everything-made-up/captions.json",
+  "shots": [
+    {
+      "id": "s00",
+      "type": "sting",
+      "fromFrame": 0,
+      "durationInFrames": 60,
+      "layout": "off",
+      "sfx": [
+        "sting"
+      ]
+    },
+    {
+      "id": "s01",
+      "type": "hook",
+      "fromFrame": 60,
+      "durationInFrames": 390,
+      "layout": "off",
+      "text": "PEOPLE WAIT TO BE TOLD",
+      "sfx": [
+        "hit"
+      ]
+    },
+    {
+      "id": "s03",
+      "type": "a-roll",
+      "fromFrame": 450,
+      "durationInFrames": 597,
+      "layout": "dock-right",
+      "text": "They wait for a playbook. A permission slip. A meeting. A title.",
+      "lowerThird": {
+        "name": "Ben Johnson",
+        "title": ""
+      }
+    },
+    {
+      "id": "s02",
+      "type": "hook",
+      "fromFrame": 1047,
+      "durationInFrames": 911,
+      "layout": "pip-tr",
+      "text": "YOU CAN JUST DO THINGS",
+      "sfx": [
+        "tick"
+      ]
+    },
+    {
+      "id": "s05",
+      "type": "a-roll",
+      "fromFrame": 1958,
+      "durationInFrames": 624,
+      "layout": "dock-right",
+      "text": "Made up is not fake. The quota is real.",
+      "plate": "MADE UP IS NOT FAKE"
+    },
+    {
+      "id": "s07",
+      "type": "a-roll",
+      "fromFrame": 2582,
+      "durationInFrames": 829,
+      "layout": "dock-right",
+      "text": "Somebody made it up for some reason.",
+      "plate": "AUTHORED = A PERSON WROTE IT"
+    },
+    {
+      "id": "s04",
+      "type": "vox",
+      "fromFrame": 3411,
+      "durationInFrames": 210,
+      "layout": "off",
+      "text": "Not gravity. Not the speed of light. Not the freezing point of water.",
+      "assets": [
+        "stills/quota.png",
+        "stills/policy.png",
+        "stills/ice.png"
+      ],
+      "sfx": [
+        "tick"
+      ],
+      "annotation": "A PERSON CHOSE THIS"
+    },
+    {
+      "id": "s06",
+      "type": "vox",
+      "fromFrame": 3621,
+      "durationInFrames": 2537,
+      "layout": "off",
+      "text": "GIVEN  |  AUTHORED",
+      "assets": [
+        "stills/given.png",
+        "stills/authored.png"
+      ],
+      "sfx": [
+        "whoosh"
+      ]
+    },
+    {
+      "id": "s09",
+      "type": "a-roll",
+      "fromFrame": 6158,
+      "durationInFrames": 1396,
+      "layout": "dock-right",
+      "text": "The rule is a decision that already happened once.",
+      "plate": "WAITING IS THE FIRST FAILURE"
+    },
+    {
+      "id": "s08",
+      "type": "vox",
+      "fromFrame": 7554,
+      "durationInFrames": 210,
+      "layout": "off",
+      "text": "Do not kick the fence yet.",
+      "assets": [
+        "stills/fence.png"
+      ],
+      "annotation": "FIND THE REASON FIRST",
+      "sfx": [
+        "tick"
+      ]
+    },
+    {
+      "id": "s10",
+      "type": "vox",
+      "fromFrame": 7764,
+      "durationInFrames": 2436,
+      "layout": "off",
+      "text": "Five questions",
+      "assets": [
+        "stills/q1.png",
+        "stills/q2.png",
+        "stills/q3.png",
+        "stills/q4.png",
+        "stills/q5.png"
+      ],
+      "sfx": [
+        "tick"
+      ]
+    },
+    {
+      "id": "s11",
+      "type": "a-roll",
+      "fromFrame": 10200,
+      "durationInFrames": 1271,
+      "layout": "dock-right",
+      "text": "Skip the questions and you look brave for a week."
+    },
+    {
+      "id": "s12",
+      "type": "vox",
+      "fromFrame": 11471,
+      "durationInFrames": 2546,
+      "layout": "off",
+      "text": "60 DAYS",
+      "assets": [
+        "stills/sixty.png"
+      ],
+      "chips": [
+        "FRAUD",
+        "BUDGET",
+        "LEGAL",
+        "POLITICS"
+      ],
+      "annotation": "FRAUD \u00b7 BUDGET \u00b7 LEGAL \u00b7 POLITICS",
+      "sfx": [
+        "hit"
+      ]
+    },
+    {
+      "id": "s13",
+      "type": "b-roll",
+      "fromFrame": 14017,
+      "durationInFrames": 893,
+      "layout": "pip-tr",
+      "text": "Satisfy the protection faster.",
+      "assets": [
+        "stills/proof.png",
+        "stills/template.png",
+        "stills/guarantee.png"
+      ],
+      "chips": [
+        "PROOF",
+        "TEMPLATE",
+        "GUARANTEE"
+      ],
+      "sfx": [
+        "whoosh"
+      ]
+    },
+    {
+      "id": "s14",
+      "type": "a-roll",
+      "fromFrame": 14910,
+      "durationInFrames": 758,
+      "layout": "dock-right",
+      "text": "Same reason. Better method.",
+      "plate": "SAME REASON. BETTER METHOD."
+    },
+    {
+      "id": "s15",
+      "type": "vox",
+      "fromFrame": 15668,
+      "durationInFrames": 1592,
+      "layout": "off",
+      "text": "Two refusals",
+      "assets": [
+        "stills/refuse-1.png",
+        "stills/refuse-2.png"
+      ],
+      "sfx": [
+        "tick"
+      ]
+    },
+    {
+      "id": "s16",
+      "type": "a-roll",
+      "fromFrame": 17260,
+      "durationInFrames": 1274,
+      "layout": "dock-right",
+      "text": "Waiting is the first failure. Vandalism is the second."
+    },
+    {
+      "id": "s17",
+      "type": "vox",
+      "fromFrame": 18534,
+      "durationInFrames": 502,
+      "layout": "off",
+      "text": "",
+      "assets": [],
+      "list": [
+        "Ask why they made it up.",
+        "What started it.",
+        "What they put in and left out.",
+        "If that is still the best way.",
+        "What would keep the good and cut the wait."
+      ],
+      "sfx": [
+        "tick"
+      ]
+    },
+    {
+      "id": "s18",
+      "type": "a-roll",
+      "fromFrame": 19036,
+      "durationInFrames": 298,
+      "layout": "dock-right",
+      "text": "Things are real. Things can change.",
+      "plate": "THINGS ARE REAL. THINGS CAN CHANGE."
+    },
+    {
+      "id": "s19",
+      "type": "cta",
+      "fromFrame": 19334,
+      "durationInFrames": 720,
+      "layout": "off",
+      "text": "CHANGE IT WITH THE REASON IN HAND",
+      "sfx": [
+        "sting"
+      ]
+    }
+  ]
+}
