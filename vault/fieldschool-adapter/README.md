@@ -1,6 +1,8 @@
 # Field School video adapter
 
-Cap is the media plane. This repo is the adapter.
+Do not deploy this to `2.24.64.248`. That box is CNC vault, a different product (`/opt/cnc-vault`, `portal.notarealchurch.com`). Field School video belongs on the Field School VPS `2.24.70.248` (`srv1643164`).
+
+Cap is the media plane. This tree is the adapter.
 
 Cap already records, stores, and plays video (cap-web, media-server, MinIO). When a Cap recording is ready, this process creates or updates a Notion Assets / Videos row, optionally transcribes with Grok STT, and writes Status after each step.
 
