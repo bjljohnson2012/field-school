@@ -4,12 +4,6 @@ export type CaptionWord = {
   toMs: number;
 };
 
-export type CaptionPage = {
-  startMs: number;
-  endMs: number;
-  words: CaptionWord[];
-};
-
 export type CueKind = "vox" | "hit" | "whoosh";
 
 export type KeywordCue = {
@@ -18,13 +12,37 @@ export type KeywordCue = {
   kind: CueKind;
 };
 
+export type Silence = {
+  afterMs: number;
+  gapMs: number;
+  cut: boolean;
+  voxEnter: boolean;
+};
+
+export type RecapPlate = {
+  kicker: string;
+  text: string;
+};
+
+export type NextUp = {
+  module: string;
+  title: string;
+};
+
 export type Episode = {
   course: string;
   module: string;
   title: string;
   objective: string;
+  hook: string;
+  doPrompt: string;
+  recap: [RecapPlate, RecapPlate, RecapPlate];
+  nextUp: NextUp;
+  showSrc: string;
   src: string;
+  voSrc: string;
   durationSec: number;
-  captions: CaptionPage[];
+  words: CaptionWord[];
   cues: KeywordCue[];
+  silences: Silence[];
 };

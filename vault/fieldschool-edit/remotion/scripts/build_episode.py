@@ -5,12 +5,37 @@ import json
 from pathlib import Path
 
 WORDS = Path("/opt/fieldschool-video/edit/jobs/j013r823wx9ecaf/words.json")
+WHISPERX = Path("/opt/fieldschool-edit/remotion/public/whisperx")
 CAPTIONS = Path("/opt/fieldschool-edit/remotion/public/captions.json")
 EPISODE = Path("/opt/fieldschool-edit/remotion/public/episode.json")
 CUTS = Path("/opt/fieldschool-edit/remotion/public/cuts.json")
 
+CLIP_LO = 2400
+CLIP_HI = 12700
 
-def main() -> None:
+
+def load_stamps() -> list[dict]:
+    aligned = sorted(WHISPERX.glob("*.json")) if WHISPERX.exists() else []
+    if aligned:
+        raw = json.loads(aligned[0].read_text())
+        words = []
+        for seg in raw.get("segments") or []:
+            words.extend(seg.get("words") or [])
+        if words:
+            stamps = []
+            prev = 0
+            for word in words:
+                text = str(word.get("word") or word.get("text") or "").strip()
+                if not text:
+                    continue
+                start = word.get("start")
+                end = word.get("end")
+                from_ms = int(round(float(start) * 1000)) if start is not None else prev + 80
+                to_ms = int(round(float(end) * 1000)) if end is not None else from_ms + 180
+                stamps.append({"text": text.lstrip("-"), "fromMs": from_ms, "toMs": to_ms})
+                prev = to_ms
+            if stamps:
+                return stamps
     raw = json.loads(WORDS.read_text())
     stamps = []
     prev = 0
@@ -22,54 +47,62 @@ def main() -> None:
         to_ms = int(round(float(end) * 1000)) if end is not None else from_ms + 180
         stamps.append({"text": text, "fromMs": from_ms, "toMs": to_ms})
         prev = to_ms
+    return stamps
 
-    pages = []
-    bucket = []
-    for word in stamps:
-        if bucket and word["fromMs"] - bucket[0]["fromMs"] > 1400:
-            pages.append(
-                {
-                    "startMs": bucket[0]["fromMs"],
-                    "endMs": bucket[-1]["toMs"] + 80,
-                    "words": bucket,
-                }
-            )
-            bucket = []
-        bucket.append(word)
-    if bucket:
-        pages.append({"startMs": bucket[0]["fromMs"], "endMs": bucket[-1]["toMs"] + 80, "words": bucket})
 
-    preview_lo = 2400
-    preview_hi = 5200
-    preview_pages = [p for p in pages if p["endMs"] > preview_lo and p["startMs"] < preview_hi]
-    window = [w for w in stamps if preview_lo <= w["fromMs"] < preview_hi]
-    prefer = ("things", "reasons", "main", "people", "one")
-    cue_word = None
-    for name in prefer:
-        cue_word = next((w for w in window if w["text"].lower().rstrip(".,!?") == name), None)
-        if cue_word is not None:
-            break
-    if cue_word is None:
-        cue_word = window[2] if len(window) > 2 else stamps[0]
+def first_named(window: list[dict], names: tuple[str, ...]) -> dict | None:
+    for name in names:
+        for word in window:
+            if word["text"].lower().rstrip(".,!?") == name:
+                return word
+    return None
+
+
+def main() -> None:
+    stamps = load_stamps()
+    window = [w for w in stamps if CLIP_LO <= w["fromMs"] < CLIP_HI]
+    cues = []
+    one = first_named(window, ("one",))
+    things = first_named(window, ("things",))
+    waiting = first_named(window, ("waiting.", "waiting"))
+    if one:
+        cues.append({"word": one["text"], "fromMs": one["fromMs"], "kind": "hit"})
+    if things:
+        cues.append({"word": things["text"], "fromMs": things["fromMs"], "kind": "vox"})
+    if waiting:
+        cues.append({"word": waiting["text"].rstrip("."), "fromMs": waiting["fromMs"], "kind": "vox"})
+
+    silences = []
+    for a, b in zip(stamps, stamps[1:]):
+        gap = b["fromMs"] - a["toMs"]
+        if gap >= 400 and CLIP_LO <= a["toMs"] <= CLIP_HI:
+            silences.append({"afterMs": a["toMs"], "gapMs": gap, "cut": True, "voxEnter": gap >= 800})
+
     episode = {
         "course": "Field School",
         "module": "Authored processes",
         "title": "You Can Just Do Things",
         "objective": "Separate a memo from a law, then take the next step.",
+        "hook": "Most of what blocks you is waiting.",
+        "doPrompt": "Name the thing you are waiting on. Then do the next step anyway.",
+        "recap": [
+            {"kicker": "1", "text": "Waiting is a memo."},
+            {"kicker": "2", "text": "You can just do things."},
+            {"kicker": "3", "text": "Ask if it is a law."},
+        ],
+        "nextUp": {"module": "Authored processes", "title": "Made up is not fake"},
+        "showSrc": "01-the-waiting-trap.png",
         "src": "a_roll.mp4",
-        "durationSec": 5,
-        "captions": preview_pages,
-        "cues": [{"word": cue_word["text"], "fromMs": cue_word["fromMs"], "kind": "vox"}],
+        "voSrc": "vo.wav",
+        "durationSec": 25,
+        "words": window,
+        "cues": cues,
+        "silences": silences,
     }
-    CAPTIONS.write_text(json.dumps({"pages": pages, "words": stamps}))
+    CAPTIONS.write_text(json.dumps({"words": stamps, "window": window}))
     EPISODE.write_text(json.dumps(episode))
-    silences = []
-    for a, b in zip(stamps, stamps[1:]):
-        gap = b["fromMs"] - a["toMs"]
-        if gap >= 400:
-            silences.append({"afterMs": a["toMs"], "gapMs": gap, "cut": True, "voxEnter": gap >= 800})
-    CUTS.write_text(json.dumps({"cues": episode["cues"], "silences": silences[:40]}))
-    print("pages", len(pages), "cue", episode["cues"][0])
+    CUTS.write_text(json.dumps({"cues": cues, "silences": silences}))
+    print("words", len(window), "cues", cues, "silences", silences)
 
 
 if __name__ == "__main__":

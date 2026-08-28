@@ -3,14 +3,18 @@
   "private": true,
   "version": "0.2.0",
   "scripts": {
-    "render": "remotion render src/index.ts FieldSchoolPreview",
+    "render": "remotion render src/index.ts FieldSchoolClip --concurrency=1",
     "preview": "remotion render src/index.ts FieldSchoolPreview --frames=0-150 --concurrency=1"
   },
   "dependencies": {
-    "@remotion/cli": "4.0.247",
-    "@remotion/renderer": "4.0.247",
+    "@remotion/captions": "4.0.518",
+    "@remotion/cli": "4.0.518",
+    "@remotion/google-fonts": "4.0.518",
+    "@remotion/layout-utils": "4.0.518",
+    "@remotion/renderer": "4.0.518",
+    "@remotion/rounded-text-box": "4.0.518",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "remotion": "4.0.247"
+    "remotion": "4.0.518"
   }
 }

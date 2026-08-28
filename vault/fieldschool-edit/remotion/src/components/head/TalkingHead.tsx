@@ -6,12 +6,14 @@ type TalkingHeadProps = {
   src: string;
   startFrom: number;
   dock?: "dock-right" | "dock-left";
+  muted?: boolean;
 };
 
-export const TalkingHead: React.FC<TalkingHeadProps> = ({src, startFrom, dock = "dock-right"}) => {
+export const TalkingHead: React.FC<TalkingHeadProps> = ({src, startFrom, dock = "dock-right", muted = true}) => {
   const width = Math.round(1920 * HEAD_DOCK);
   const left = dock === "dock-right" ? 1920 - width : 0;
-  const file = src.startsWith("http") ? src : staticFile(src.includes("/") ? src.split("/").pop() || src : src);
+  const name = src.includes("/") ? src.split("/").pop() || src : src;
+  const file = src.startsWith("http") ? src : staticFile(name);
   return (
     <div
       style={{
@@ -29,6 +31,7 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({src, startFrom, dock = 
       <OffthreadVideo
         src={file}
         startFrom={startFrom}
+        muted={muted}
         style={{width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top"}}
       />
     </div>

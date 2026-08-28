@@ -88,6 +88,7 @@ The take about authored processes (waiting, memos, “that’s how we’ve alway
 
 Play the file:
 
+- 25s production-layer clip: https://cap.fieldschool.ai/hls/j013r823wx9ecaf/vox/clip.mp4
 - 5s production-layer preview: https://cap.fieldschool.ai/hls/j013r823wx9ecaf/vox/preview.mp4
 - Remotion slide cut: https://cap.fieldschool.ai/hls/j013r823wx9ecaf/remotion/master.mp4
 - Processor tighten (no slides): https://cap.fieldschool.ai/hls/j013r823wx9ecaf/master.mp4
