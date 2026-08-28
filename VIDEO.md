@@ -88,8 +88,9 @@ The take about authored processes (waiting, memos, “that’s how we’ve alway
 
 Play the file:
 
-- MP4: https://cap.fieldschool.ai/hls/j013r823wx9ecaf/master.mp4
-- HLS: https://cap.fieldschool.ai/hls/j013r823wx9ecaf/master.m3u8
+- Remotion final: https://cap.fieldschool.ai/hls/j013r823wx9ecaf/remotion/master.mp4
+- Processor tighten (no slides): https://cap.fieldschool.ai/hls/j013r823wx9ecaf/master.mp4
+- HLS of the tighten: https://cap.fieldschool.ai/hls/j013r823wx9ecaf/master.m3u8
 - Raw Cap: https://cap.fieldschool.ai/dev/j013r823wx9ecaf
 - Ticket: https://app.notion.com/p/3c9fe86f6dee81299337e318cfef6982
 
