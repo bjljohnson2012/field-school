@@ -16,7 +16,7 @@ ffmpeg -y -hide_banner -loglevel error -i "$WORK/cut.mp4" \
   -vf "vidstabdetect=shakiness=8:accuracy=15:stepsize=6:mincontrast=0.12:result=$WORK/head.trf" \
   -f null -
 ffmpeg -y -hide_banner -loglevel error -i "$WORK/cut.mp4" \
-  -vf "vidstabtransform=input=$WORK/head.trf:smoothing=40:optzoom=1:interpol=linear:crop=black,unsharp=5:5:0.6:3:3:0.2" \
+  -vf "vidstabtransform=input=$WORK/head.trf:smoothing=60:optzoom=1:interpol=bicubic:crop=black" \
   -an -c:v libx264 -crf 16 "$WORK/stab.mp4"
 python3 "$HERE/lock_face.py" "$WORK/stab.mp4" "$DEST"
 echo "$DEST"

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Two-pass face lock. Median crop first, then a tiny follow so the card stays put."""
+"""Pin one crop on the median face. Wider frame. No chase."""
 from __future__ import annotations
 
 import subprocess
@@ -11,10 +11,9 @@ import numpy as np
 
 OUT_W = 720
 OUT_H = 800
-FACE_Y = 0.38
-FOLLOW = 0.04
-MAX_DX = 12
-MAX_DY = 8
+# Wider card so the face is not huge. Eyes sit in the upper third.
+FACE_Y = 0.32
+# No follow. The crop is the median face. That is the lock.
 CASCADES = (
     str(Path(__file__).with_name("data") / "haarcascade_frontalface_alt2.xml"),
     "/usr/share/opencv4/haarcascades/haarcascade_frontalface_alt2.xml",
@@ -39,18 +38,8 @@ def detect(det: cv2.CascadeClassifier, frame: np.ndarray) -> tuple[float, float,
     return float(x + w / 2.0), float(y + h / 2.0), float(h)
 
 
-def smooth(prev: float | None, value: float) -> float:
-    if prev is None:
-        return value
-    return prev * (1.0 - FOLLOW) + value * FOLLOW
-
-
-def clamp(value: float, center: float, slack: float) -> float:
-    return max(center - slack, min(center + slack, value))
-
-
 def crop_box(cx: float, cy: float, face_h: float, src_w: int, src_h: int) -> tuple[int, int, int, int]:
-    win_h = min(src_h, max(int(face_h * 2.02), int(src_h * 0.54)))
+    win_h = min(src_h, max(int(face_h * 2.85), int(src_h * 0.84)))
     win_w = int(win_h * OUT_W / OUT_H)
     if win_w > src_w:
         win_w = src_w
@@ -95,8 +84,7 @@ def main() -> None:
     src_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     src_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
-    cx: float | None = mx
-    cy: float | None = my
+    x0, y0, win_w, win_h = crop_box(mx, my, mh, src_w, src_h)
     ff = subprocess.Popen(
         [
             "ffmpeg",
@@ -112,6 +100,8 @@ def main() -> None:
             "-i",
             "-",
             "-an",
+            "-vf",
+            "hqdn3d=1.5:1.5:3:3,unsharp=5:5:0.45:3:3:0.15,eq=contrast=1.06:saturation=1.04:gamma=1.02",
             "-c:v",
             "libx264",
             "-crf",
@@ -122,21 +112,12 @@ def main() -> None:
         ],
         stdin=subprocess.PIPE,
         stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
     )
     assert ff.stdin is not None
     while True:
         ok, frame = cap.read()
         if not ok:
             break
-        found = detect(det, frame)
-        if found:
-            cx = smooth(cx, found[0])
-            cy = smooth(cy, found[1])
-        assert cx is not None and cy is not None
-        lock_x = clamp(cx, mx, MAX_DX)
-        lock_y = clamp(cy, my, MAX_DY)
-        x0, y0, win_w, win_h = crop_box(lock_x, lock_y, mh, src_w, src_h)
         cut = frame[y0 : y0 + win_h, x0 : x0 + win_w]
         out = cv2.resize(cut, (OUT_W, OUT_H), interpolation=cv2.INTER_CUBIC)
         ff.stdin.write(out.tobytes())
