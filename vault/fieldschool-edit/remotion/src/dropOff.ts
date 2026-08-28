@@ -1,5 +1,6 @@
 import {spring, useCurrentFrame, useVideoConfig} from "remotion";
 import {DROP_RETURN_LEAD_FRAMES, MIN_HOLD_MS} from "./brand/tokens";
+import {pageAt, pagesWithHold, type HoldPage} from "./pages";
 import type {CaptionWord} from "./schema/episode";
 
 export type DropOff = {
@@ -15,6 +16,17 @@ export const emphasisDropOff = (words: CaptionWord[]): DropOff | null => {
     return null;
   }
   return {fromMs: target.fromMs, durationMs: target.toMs - target.fromMs + MIN_HOLD_MS};
+};
+
+export const pageForClock = (words: CaptionWord[], nowMs: number, drop: DropOff | null): HoldPage | null => {
+  const pages = pagesWithHold(words);
+  if (drop && nowMs >= drop.fromMs && nowMs < drop.fromMs + drop.durationMs) {
+    const locked = pages.find((page) => page.words.some((word) => word.fromMs === drop.fromMs));
+    if (locked) {
+      return locked;
+    }
+  }
+  return pageAt(pages, nowMs);
 };
 
 export const useSolo = (drop: DropOff | null, originMs: number): number => {

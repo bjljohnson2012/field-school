@@ -71,15 +71,19 @@ const Teach: React.FC<{episode: Episode}> = ({episode}) => {
         solo={solo}
       />
       <LowerThird kicker={episode.module} title={episode.title} solo={solo} />
-      <ClockKaraoke words={episode.words} solo={solo} />
+      <ClockKaraoke words={episode.words} solo={solo} drop={drop} />
     </>
   );
 };
 
-const ClockKaraoke: React.FC<{words: Episode["words"]; solo: number}> = ({words, solo}) => {
+const ClockKaraoke: React.FC<{words: Episode["words"]; solo: number; drop: ReturnType<typeof emphasisDropOff>}> = ({
+  words,
+  solo,
+  drop,
+}) => {
   const frame = useCurrentFrame();
   const nowMs = SOURCE_START_MS + (frame / FPS) * 1000;
-  return <KaraokePlate words={words} nowMs={nowMs} originMs={SOURCE_START_MS} solo={solo} />;
+  return <KaraokePlate words={words} nowMs={nowMs} originMs={SOURCE_START_MS} solo={solo} drop={drop} />;
 };
 
 const Bed: React.FC = () => {

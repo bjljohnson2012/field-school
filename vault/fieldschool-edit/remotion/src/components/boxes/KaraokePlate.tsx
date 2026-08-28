@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import {interpolate, useCurrentFrame, useVideoConfig} from "remotion";
 import {TYPE_BESIDE, TYPE_SOLO, WORD_FADE_FRAMES, blue, displayFace, headReservedPx, ink} from "../../brand/tokens";
-import {pageAt, pagesWithHold} from "../../pages";
+import {pageForClock, type DropOff} from "../../dropOff";
 import type {CaptionWord} from "../../schema/episode";
 
 type KaraokePlateProps = {
@@ -9,15 +9,15 @@ type KaraokePlateProps = {
   nowMs: number;
   originMs: number;
   solo: number;
+  drop: DropOff | null;
 };
 
 const LINE_HEIGHT = 1.18;
 
-export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originMs, solo}) => {
+export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originMs, solo, drop}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const pages = useMemo(() => pagesWithHold(words), [words]);
-  const page = pageAt(pages, nowMs);
+  const page = useMemo(() => pageForClock(words, nowMs, drop), [words, nowMs, drop]);
   if (!page) {
     return null;
   }
