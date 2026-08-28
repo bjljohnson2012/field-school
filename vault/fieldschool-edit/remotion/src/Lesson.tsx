@@ -12,7 +12,7 @@ import {Stack} from "./components/layers/Stack";
 import {CollageBeat} from "./components/vox/CollageBeat";
 import type {CaptionPage, Episode} from "./schema/episode";
 
-export const PREVIEW_FRAMES = 150;
+export const PREVIEW_FRAMES = 151;
 export const TEACH_FROM = 70;
 export const SOURCE_START_MS = 2400;
 
