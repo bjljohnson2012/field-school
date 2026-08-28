@@ -4,10 +4,11 @@ import {FPS, INTRO_FRAMES, bg} from "./brand/tokens";
 import {Fonts} from "./Fonts";
 import {KaraokePlate} from "./components/boxes/KaraokePlate";
 import {LowerThird} from "./components/boxes/LowerThird";
-import {ShowLabel, plateTitle} from "./components/boxes/ShowLabel";
+import {WaitingTrap} from "./components/boxes/WaitingTrap";
 import {TalkingHead} from "./components/head/TalkingHead";
 import {LockupIntro} from "./components/intro/LockupIntro";
 import {FieldGraphic} from "./components/layers/FieldGraphic";
+import {IndexLine} from "./components/layers/IndexLine";
 import {Letterbox} from "./components/layers/Letterbox";
 import {Stack} from "./components/layers/Stack";
 import {emphasisDropOff, useSolo, type DropOff} from "./dropOff";
@@ -53,12 +54,6 @@ export const Lesson: React.FC<Episode> = (episode) => {
           <LockupIntro course={episode.course} module={episode.module} title={episode.title} />
         </Sequence>
         <Guitar />
-        <Sequence from={0} durationInFrames={36} layout="none">
-          <Audio src={staticFile("sfx/sting.wav")} volume={0.2} />
-        </Sequence>
-        <Sequence from={162} durationInFrames={16} layout="none">
-          <Audio src={staticFile("sfx/whoosh.wav")} volume={0.1} />
-        </Sequence>
         <Sequence from={TEACH_FROM} layout="none">
           <Audio src={staticFile(episode.voSrc)} startFrom={Math.round((SOURCE_START_MS / 1000) * FPS)} />
         </Sequence>
@@ -81,8 +76,9 @@ const Teach: React.FC<{episode: Episode}> = ({episode}) => {
         solo={solo}
       />
       <LowerThird kicker={episode.module} title={episode.title} solo={solo} />
-      <ShowLabel text={plateTitle(episode.showSrc)} solo={solo} />
+      <WaitingTrap solo={solo} />
       <ClockKaraoke words={episode.words} solo={solo} drop={drop} />
+      <IndexLine solo={solo} />
       <Letterbox close={solo} />
       <DropAudio drop={drop} />
     </>
@@ -104,25 +100,16 @@ const DropAudio: React.FC<{drop: DropOff | null}> = ({drop}) => {
     return null;
   }
   const start = Math.round(((drop.fromMs - SOURCE_START_MS) / 1000) * FPS);
-  const end = Math.round(((drop.fromMs + drop.durationMs - SOURCE_START_MS) / 1000) * FPS);
   return (
-    <>
-      <Sequence from={start} durationInFrames={16} layout="none">
-        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.08} />
-      </Sequence>
-      <Sequence from={start} durationInFrames={14} layout="none">
-        <Audio src={staticFile("sfx/hit.wav")} volume={0.12} />
-      </Sequence>
-      <Sequence from={Math.max(0, end - 18)} durationInFrames={16} layout="none">
-        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.07} />
-      </Sequence>
-    </>
+    <Sequence from={start} durationInFrames={22} layout="none">
+      <Audio src={staticFile("sfx/drop-note.wav")} volume={0.2} />
+    </Sequence>
   );
 };
 
 const Guitar: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = interpolate(frame, [0, 16, 150, 210], [0, 0.22, 0.2, 0.055], {
+  const fade = interpolate(frame, [0, 18, 150, 198], [0, 0.34, 0.3, 0.05], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

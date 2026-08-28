@@ -12,21 +12,27 @@ export const LockupIntro: React.FC<LockupIntroProps> = ({course, module, title})
   const frame = useCurrentFrame();
   const {fps, durationInFrames} = useVideoConfig();
   const hold = Math.min(INTRO_FRAMES, durationInFrames);
-  const fadeIn = interpolate(frame, [0, 16], [0, 1], {extrapolateRight: "clamp"});
-  const fadeOut = interpolate(frame, [hold - 18, hold], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const lockup = spring({
+  const stamp = spring({
     frame,
     fps,
-    durationInFrames: 22,
-    config: {damping: 16, mass: 0.7},
+    durationInFrames: 16,
+    config: {damping: 11, mass: 0.42, stiffness: 190},
   });
   const typeIn = spring({
-    frame: frame - 14,
+    frame: frame - 12,
     fps,
-    durationInFrames: 20,
-    config: {damping: 14, mass: 0.55},
+    durationInFrames: 18,
+    config: {damping: 13, mass: 0.5},
   });
   const rule = interpolate(typeIn, [0, 1], [0, 1], {extrapolateRight: "clamp"});
+  const fadeOut = interpolate(frame, [hold - 14, hold], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const exit = interpolate(frame, [hold - 14, hold], [1, 0.97], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   return (
     <div
       style={{
@@ -37,7 +43,8 @@ export const LockupIntro: React.FC<LockupIntroProps> = ({course, module, title})
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        opacity: Math.min(fadeIn, fadeOut),
+        opacity: fadeOut,
+        transform: `scale(${exit})`,
       }}
     >
       <Img
@@ -47,17 +54,18 @@ export const LockupIntro: React.FC<LockupIntroProps> = ({course, module, title})
           height: 200,
           objectFit: "contain",
           objectPosition: "center",
-          opacity: lockup,
-          transform: `translateY(${(1 - lockup) * 18}px)`,
+          opacity: stamp,
+          transform: `scale(${interpolate(stamp, [0, 1], [1.16, 1])})`,
         }}
       />
       <div
         style={{
-          width: 120,
+          width: 168,
           height: 2,
           marginTop: 36,
           backgroundColor: stone,
           transform: `scaleX(${rule})`,
+          transformOrigin: "center",
           opacity: typeIn,
         }}
       />
@@ -70,7 +78,7 @@ export const LockupIntro: React.FC<LockupIntroProps> = ({course, module, title})
           textTransform: "uppercase",
           color: stone,
           opacity: typeIn,
-          transform: `translateY(${(1 - typeIn) * 14}px)`,
+          transform: `translateY(${(1 - typeIn) * 12}px)`,
         }}
       >
         {course} · {module}
@@ -85,7 +93,7 @@ export const LockupIntro: React.FC<LockupIntroProps> = ({course, module, title})
           letterSpacing: "-0.03em",
           color: ink,
           opacity: typeIn,
-          transform: `translateY(${(1 - typeIn) * 14}px)`,
+          transform: `translateY(${(1 - typeIn) * 12}px)`,
         }}
       >
         {title}

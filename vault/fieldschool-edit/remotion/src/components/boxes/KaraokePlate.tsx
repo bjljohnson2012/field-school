@@ -73,6 +73,7 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
                 lineHeight: LINE_HEIGHT,
                 color: active ? blue : ink,
                 opacity: ready ? (active ? 1 : 0.88) * fade : 0,
+                transform: `translateY(${(1 - fade) * 10}px)`,
               }}
             >
               {word.text}

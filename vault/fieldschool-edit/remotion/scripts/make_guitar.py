@@ -128,16 +128,7 @@ def chord(notes: tuple[float, ...], dur: float, gain: float) -> list[float]:
 
 
 def main() -> None:
-    left, right = guitar_track(32.0)
-    write_stereo(DEST / "guitar.wav", left, right)
-    write_stereo(DEST / "intro.wav", left[: int(SR * 8)], right[: int(SR * 8)])
-    sfx = DEST / "sfx"
-    write_mono(sfx / "sting.wav", chord((C3, E3, G3, C4), 0.9, 0.2))
-    write_mono(sfx / "hit.wav", chord((G2, G3), 0.28, 0.24))
-    scrape = pluck(90.0, 0.32, 0.96, 77)
-    fade(scrape, 0.02, 0.12)
-    write_mono(sfx / "whoosh.wav", scrape)
-    print(DEST / "guitar.wav", (DEST / "guitar.wav").stat().st_size)
+    raise SystemExit("guitar.wav comes from fetch_guitar.sh. Do not overwrite the acoustic.")
 
 
 if __name__ == "__main__":
