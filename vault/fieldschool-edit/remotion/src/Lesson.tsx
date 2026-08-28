@@ -52,13 +52,12 @@ export const Lesson: React.FC<Episode> = (episode) => {
         <Sequence from={0} durationInFrames={INTRO_FRAMES} layout="none">
           <LockupIntro course={episode.course} module={episode.module} title={episode.title} />
         </Sequence>
-        <IntroMusic />
         <Bed />
-        <Sequence from={0} durationInFrames={24} layout="none">
-          <Audio src={staticFile("sfx/sting.wav")} volume={0.2} />
+        <Sequence from={0} durationInFrames={30} layout="none">
+          <Audio src={staticFile("sfx/sting.wav")} volume={0.14} />
         </Sequence>
-        <Sequence from={162} durationInFrames={20} layout="none">
-          <Audio src={staticFile("sfx/whoosh.wav")} volume={0.32} />
+        <Sequence from={162} durationInFrames={18} layout="none">
+          <Audio src={staticFile("sfx/whoosh.wav")} volume={0.16} />
         </Sequence>
         <Sequence from={TEACH_FROM} layout="none">
           <Audio src={staticFile(episode.voSrc)} startFrom={Math.round((SOURCE_START_MS / 1000) * FPS)} />
@@ -108,27 +107,24 @@ const DropAudio: React.FC<{drop: DropOff | null}> = ({drop}) => {
   const end = Math.round(((drop.fromMs + drop.durationMs - SOURCE_START_MS) / 1000) * FPS);
   return (
     <>
-      <Sequence from={start} durationInFrames={18} layout="none">
-        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.3} />
-      </Sequence>
       <Sequence from={start} durationInFrames={16} layout="none">
-        <Audio src={staticFile("sfx/hit.wav")} volume={0.22} />
+        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.15} />
       </Sequence>
-      <Sequence from={Math.max(0, end - 20)} durationInFrames={18} layout="none">
-        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.26} />
+      <Sequence from={start} durationInFrames={14} layout="none">
+        <Audio src={staticFile("sfx/hit.wav")} volume={0.12} />
+      </Sequence>
+      <Sequence from={Math.max(0, end - 18)} durationInFrames={16} layout="none">
+        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.13} />
       </Sequence>
     </>
   );
 };
 
-const IntroMusic: React.FC = () => {
-  const frame = useCurrentFrame();
-  const fade = interpolate(frame, [0, 18, 150, 180], [0, 0.11, 0.11, 0], {extrapolateRight: "clamp"});
-  return <Audio src={staticFile("intro.wav")} volume={fade} />;
-};
-
 const Bed: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = interpolate(frame, [150, 210], [0, 0.07], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const fade = interpolate(frame, [0, 48, 150, 210], [0, 0.08, 0.08, 0.06], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   return <Audio src={staticFile("sfx/bed.wav")} volume={fade} />;
 };
