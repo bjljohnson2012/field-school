@@ -13,7 +13,7 @@ Site and portal belong on the Field School VPS `2.24.70.248`. Cap, edit, and HLS
 - `fieldschool.ai` is the public multi-page site. Source in this repo: `marketing-site/` (the live VPS tree from `/workspace/field-school/site/`).
 - `portal.fieldschool.ai` is the Next.js training portal. Same app as the legacy host `university.benjohnson.ai` until that 301 is lifted.
 - `AUTH_URL` still points at that legacy host. Do not flip it until the four portal Google/X OAuth callback rows exist. Do not 301 that host until then.
-- `cap.fieldschool.ai`, `edit.fieldschool.ai`, and `s3.cap.fieldschool.ai` should resolve to `2.24.70.248`. Today they still resolve to CNC vault `2.24.64.248`. That is wrong. Move the work, then move the DNS.
+- `cap.fieldschool.ai`, `edit.fieldschool.ai`, and `s3.cap.fieldschool.ai` resolve to `2.24.70.248`. Cap, edit, trigger, and HLS live on that box.
 
 ## Public site
 

@@ -1,10 +1,11 @@
-# Only the edit.fieldschool.ai site. Do not paste this over the rest of the vault Caddyfile.
+# edit.fieldschool.ai on the Field School VPS Docker Caddy.
+# Caddy must be on network fieldschool-video. Do not use 127.0.0.1 here.
 edit.fieldschool.ai {
 	handle /trigger {
-		reverse_proxy 127.0.0.1:8789
+		reverse_proxy fieldschool-trigger:8789
 	}
 	handle /trigger/* {
-		reverse_proxy 127.0.0.1:8789
+		reverse_proxy fieldschool-trigger:8789
 	}
-	reverse_proxy 127.0.0.1:8788
+	reverse_proxy fieldschool-edit:8788
 }

@@ -6,7 +6,7 @@ Cap is the media plane. This tree is the adapter.
 
 Cap already records, stores, and plays video (cap-web, media-server, MinIO). When a Cap recording is ready, this process creates or updates a Notion Assets / Videos row, optionally transcribes with Grok STT, and writes Status after each step.
 
-Notion is the trigger and the later record. It is not the work queue. POST `/trigger` starts the job now once this service lives on the Field School VPS. The 90s poll stays as backup. See [VIDEO.md](../../VIDEO.md).
+Notion is the trigger and the later record. It is not the work queue. POST `https://edit.fieldschool.ai/trigger` starts the job now on the Field School VPS. The 90s poll stays as backup. See [VIDEO.md](../../VIDEO.md).
 
 ## What it writes
 
@@ -50,10 +50,10 @@ fieldschool-adapter processor --cap <cap-id>
 fieldschool-adapter serve
 ```
 
-`serve` binds `127.0.0.1:8789`. On the Field School VPS, Caddy on `edit.fieldschool.ai` sends `/trigger` there. Auth is `Authorization: Bearer <EDIT_MCP_TOKEN>` or `X-Edit-Token`. Same token as the edit MCP. No token is 401. Do not run this on CNC vault.
+`serve` binds `127.0.0.1:8789` unless `TRIGGER_BIND` is set. The live container uses `TRIGGER_BIND=0.0.0.0:8789`. Caddy on `edit.fieldschool.ai` sends `/trigger` to `fieldschool-trigger:8789`. Auth is `Authorization: Bearer <EDIT_MCP_TOKEN>` or `X-Edit-Token`. Same token as the edit MCP. No token is 401. Do not run this on CNC vault.
 
 ```bash
-# Notion automation, or a person. Work starts on the vault. Notion is updated after.
+# Notion automation, or a person. Work starts on 2.24.70.248. Notion is updated after.
 curl -sS -X POST https://edit.fieldschool.ai/trigger \
   -H "Authorization: Bearer $EDIT_MCP_TOKEN" \
   -H "Content-Type: application/json" \

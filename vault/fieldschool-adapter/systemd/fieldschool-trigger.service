@@ -8,6 +8,7 @@ Type=simple
 User=root
 WorkingDirectory=/opt/fieldschool-adapter
 EnvironmentFile=/opt/fieldschool-adapter/.env
+Environment=TRIGGER_BIND=127.0.0.1:8789
 ExecStart=/opt/fieldschool-adapter/.venv/bin/python -m fieldschool_adapter serve
 Restart=always
 RestartSec=5

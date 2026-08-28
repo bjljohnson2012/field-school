@@ -48,6 +48,10 @@ def serve_trigger(config: Config, *, host: str = "127.0.0.1", port: int = 8789) 
     token = (os.environ.get("EDIT_MCP_TOKEN") or os.environ.get("TRIGGER_TOKEN") or "").strip()
     if not token:
         raise SystemExit("EDIT_MCP_TOKEN or TRIGGER_TOKEN is required")
+    bind = (os.environ.get("TRIGGER_BIND") or "").strip()
+    if bind and ":" in bind:
+        host, port_s = bind.rsplit(":", 1)
+        port = int(port_s)
     httpd = ThreadingHTTPServer((host, port), handler_for(config, token))
     print(f"fieldschool-trigger listening {host}:{port}", flush=True)
     httpd.serve_forever()
