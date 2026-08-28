@@ -15,6 +15,7 @@ OUT_H = 800
 FACE_Y = 0.34
 FOLLOW = 0.05
 CASCADES = (
+    str(Path(__file__).with_name("data") / "haarcascade_frontalface_alt2.xml"),
     "/usr/share/opencv4/haarcascades/haarcascade_frontalface_alt2.xml",
     "/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml",
     "/usr/share/opencv/haarcascades/haarcascade_frontalface_alt2.xml",
