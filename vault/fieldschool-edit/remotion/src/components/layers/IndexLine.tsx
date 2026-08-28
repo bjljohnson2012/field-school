@@ -1,6 +1,6 @@
 import React from "react";
 import {interpolate, useCurrentFrame} from "remotion";
-import {blue} from "../../brand/tokens";
+import {blue, headReservedPx} from "../../brand/tokens";
 
 type IndexLineProps = {
   solo: number;
@@ -17,13 +17,17 @@ export const IndexLine: React.FC<IndexLineProps> = ({solo}) => {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
+  const fieldWidth = interpolate(solo, [0, 1], [1920 - headReservedPx(), 1920], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   return (
     <div
       style={{
         position: "absolute",
         left: 0,
         top,
-        width: 1920,
+        width: fieldWidth,
         display: "flex",
         justifyContent: "center",
       }}

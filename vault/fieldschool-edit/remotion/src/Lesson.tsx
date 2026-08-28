@@ -109,7 +109,7 @@ const DropAudio: React.FC<{drop: DropOff | null}> = ({drop}) => {
 
 const Guitar: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = interpolate(frame, [0, 18, 150, 198], [0, 0.34, 0.3, 0.05], {
+  const fade = interpolate(frame, [0, 18, 150, 198], [0, 0.62, 0.55, 0.05], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
