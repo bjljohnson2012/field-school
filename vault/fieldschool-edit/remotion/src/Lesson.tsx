@@ -52,12 +52,12 @@ export const Lesson: React.FC<Episode> = (episode) => {
         <Sequence from={0} durationInFrames={INTRO_FRAMES} layout="none">
           <LockupIntro course={episode.course} module={episode.module} title={episode.title} />
         </Sequence>
-        <Bed />
-        <Sequence from={0} durationInFrames={30} layout="none">
-          <Audio src={staticFile("sfx/sting.wav")} volume={0.16} />
+        <Guitar />
+        <Sequence from={0} durationInFrames={36} layout="none">
+          <Audio src={staticFile("sfx/sting.wav")} volume={0.2} />
         </Sequence>
-        <Sequence from={162} durationInFrames={18} layout="none">
-          <Audio src={staticFile("sfx/whoosh.wav")} volume={0.18} />
+        <Sequence from={162} durationInFrames={16} layout="none">
+          <Audio src={staticFile("sfx/whoosh.wav")} volume={0.1} />
         </Sequence>
         <Sequence from={TEACH_FROM} layout="none">
           <Audio src={staticFile(episode.voSrc)} startFrom={Math.round((SOURCE_START_MS / 1000) * FPS)} />
@@ -108,23 +108,23 @@ const DropAudio: React.FC<{drop: DropOff | null}> = ({drop}) => {
   return (
     <>
       <Sequence from={start} durationInFrames={16} layout="none">
-        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.18} />
+        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.08} />
       </Sequence>
       <Sequence from={start} durationInFrames={14} layout="none">
-        <Audio src={staticFile("sfx/hit.wav")} volume={0.14} />
+        <Audio src={staticFile("sfx/hit.wav")} volume={0.12} />
       </Sequence>
       <Sequence from={Math.max(0, end - 18)} durationInFrames={16} layout="none">
-        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.15} />
+        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.07} />
       </Sequence>
     </>
   );
 };
 
-const Bed: React.FC = () => {
+const Guitar: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = interpolate(frame, [0, 48, 150, 210], [0, 0.11, 0.11, 0.07], {
+  const fade = interpolate(frame, [0, 16, 150, 210], [0, 0.22, 0.2, 0.055], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  return <Audio src={staticFile("sfx/bed.wav")} volume={fade} />;
+  return <Audio src={staticFile("guitar.wav")} volume={fade} />;
 };

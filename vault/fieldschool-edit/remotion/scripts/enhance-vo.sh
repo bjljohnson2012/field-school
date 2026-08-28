@@ -5,6 +5,6 @@ WAV=${2:-/opt/fieldschool-edit/remotion/public/vo.wav}
 START=${3:-0}
 SECS=${4:-20}
 docker exec fieldschool-edit ffmpeg -y -ss "$START" -t "$SECS" -i "$SRC" -vn \
-  -af "highpass=f=80,lowpass=f=12000,afftdn=nf=-25,acompressor=threshold=-18dB:ratio=3:attack=8:release=140,loudnorm=I=-16:TP=-1.5:LRA=11" \
+  -af "highpass=f=80,lowpass=f=10000,afftdn=nr=15:nf=-30,anlmdn=s=0.00025:p=0.002,agate=threshold=0.014:ratio=8:attack=5:release=100:makeup=1,equalizer=f=220:t=q:w=1.2:g=-4,equalizer=f=3200:t=q:w=1.1:g=2.4,acompressor=threshold=-20dB:ratio=3.2:attack=6:release=110:makeup=5,alimiter=limit=0.94,loudnorm=I=-16:TP=-1.5:LRA=8" \
   -ar 48000 -ac 1 "$WAV"
 echo "$WAV"
