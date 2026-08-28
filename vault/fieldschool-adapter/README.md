@@ -6,7 +6,7 @@ Cap is the media plane. This tree is the adapter.
 
 Cap already records, stores, and plays video (cap-web, media-server, MinIO). When a Cap recording is ready, this process creates or updates a Notion Assets / Videos row, optionally transcribes with Grok STT, and writes Status after each step.
 
-Notion is the trigger and the later record. It is not the work queue. POST `/trigger` on the vault starts the job now. The 90s poll stays as backup.
+Notion is the trigger and the later record. It is not the work queue. POST `/trigger` starts the job now once this service lives on the Field School VPS. The 90s poll stays as backup. See [VIDEO.md](../../VIDEO.md).
 
 ## What it writes
 
