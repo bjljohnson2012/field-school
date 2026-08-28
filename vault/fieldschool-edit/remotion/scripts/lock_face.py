@@ -11,10 +11,10 @@ import numpy as np
 
 OUT_W = 720
 OUT_H = 800
-FACE_Y = 0.36
-FOLLOW = 0.03
-MAX_DX = 28
-MAX_DY = 16
+FACE_Y = 0.38
+FOLLOW = 0.04
+MAX_DX = 12
+MAX_DY = 8
 CASCADES = (
     str(Path(__file__).with_name("data") / "haarcascade_frontalface_alt2.xml"),
     "/usr/share/opencv4/haarcascades/haarcascade_frontalface_alt2.xml",
@@ -50,7 +50,7 @@ def clamp(value: float, center: float, slack: float) -> float:
 
 
 def crop_box(cx: float, cy: float, face_h: float, src_w: int, src_h: int) -> tuple[int, int, int, int]:
-    win_h = min(src_h, max(int(face_h * 2.55), int(src_h * 0.72)))
+    win_h = min(src_h, max(int(face_h * 2.02), int(src_h * 0.54)))
     win_w = int(win_h * OUT_W / OUT_H)
     if win_w > src_w:
         win_w = src_w

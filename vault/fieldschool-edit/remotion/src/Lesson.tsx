@@ -53,7 +53,7 @@ export const Lesson: React.FC<Episode> = (episode) => {
         <Sequence from={0} durationInFrames={INTRO_FRAMES} layout="none">
           <LockupIntro course={episode.course} module={episode.module} title={episode.title} />
         </Sequence>
-        <Guitar />
+        <Bed />
         <Sequence from={TEACH_FROM} layout="none">
           <Audio src={staticFile(episode.voSrc)} startFrom={Math.round((SOURCE_START_MS / 1000) * FPS)} />
         </Sequence>
@@ -107,11 +107,11 @@ const DropAudio: React.FC<{drop: DropOff | null}> = ({drop}) => {
   );
 };
 
-const Guitar: React.FC = () => {
+const Bed: React.FC = () => {
   const frame = useCurrentFrame();
-  const fade = interpolate(frame, [0, 18, 150, 198], [0, 0.62, 0.55, 0.05], {
+  const fade = interpolate(frame, [0, 18, 150, 198], [0, 0.58, 0.5, 0.05], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  return <Audio src={staticFile("guitar.wav")} volume={fade} />;
+  return <Audio src={staticFile("bed.wav")} volume={fade} />;
 };
