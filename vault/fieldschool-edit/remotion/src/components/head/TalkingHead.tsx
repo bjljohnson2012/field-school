@@ -28,8 +28,8 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({
   const enter = spring({
     frame,
     fps,
-    durationInFrames: 20,
-    config: {damping: 15, mass: 0.6},
+    durationInFrames: 28,
+    config: {damping: 18, mass: 0.75},
   });
   return (
     <div
@@ -46,7 +46,7 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({
         borderRadius: 4,
         boxShadow: `0 22px 48px ${ink}2e`,
         overflow: "hidden",
-        transform: `translateY(${solo * (height + 140) + (1 - enter) * 72}px) translateX(${solo * side * 36}px)`,
+        transform: `translateY(${solo * (height + 140) + (1 - enter) * 48}px) translateX(${solo * side * 20}px)`,
         opacity: enter,
       }}
     >

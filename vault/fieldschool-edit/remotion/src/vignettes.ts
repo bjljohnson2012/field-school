@@ -24,7 +24,7 @@ export const DRAW_FRAMES = 26;
 export const WRITE_FRAMES = 40;
 
 const WAIT = /^waiting\.$/i;
-const BOOK = /^playbook\.?$/i;
+const BOOK = /^playbook[,.]?$/i;
 const WAIT_CLEAR_MS = ((DROP_RETURN_LEAD_FRAMES + PAPER_LEAVE_FRAMES) / FPS) * 1000;
 
 export const vignetteCues = (words: CaptionWord[]): VignetteCue[] => {

@@ -125,6 +125,31 @@ def shoe_tap() -> list[float]:
     return lowpass(out, 400)
 
 
+def type_key(seed: int, tone: float) -> list[float]:
+    rng = random.Random(seed)
+    n = int(SR * 0.09)
+    out = [0.0] * n
+    for i in range(n):
+        t = i / SR
+        env = math.exp(-t * 42)
+        body = math.sin(2 * math.pi * tone * t) * math.exp(-t * 28)
+        pad = math.sin(2 * math.pi * (tone * 0.52) * t) * math.exp(-t * 18)
+        felt = 0.08 * noise(rng) * math.exp(-t * 80)
+        out[i] = env * (0.28 * body + 0.16 * pad + felt)
+    return lowpass(out, 720)
+
+
+def swell() -> list[float]:
+    n = int(SR * 0.7)
+    out = [0.0] * n
+    for i in range(n):
+        t = i / SR
+        env = math.sin(math.pi * min(1.0, t / 0.7))
+        body = 0.34 * math.sin(2 * math.pi * 68 * t) + 0.16 * math.sin(2 * math.pi * 102 * t)
+        out[i] = env * body
+    return lowpass(out, 160)
+
+
 def main() -> None:
     write_mono(DEST / "pop.wav", pop())
     write_mono(DEST / "paper.wav", paper_open())
@@ -132,7 +157,10 @@ def main() -> None:
     write_mono(DEST / "page.wav", page_turn())
     write_mono(DEST / "stamp.wav", stamp())
     write_mono(DEST / "pencil-tap.wav", shoe_tap())
-    print(DEST / "pop.wav")
+    write_mono(DEST / "key-a.wav", type_key(11, 196))
+    write_mono(DEST / "key-b.wav", type_key(17, 164))
+    write_mono(DEST / "swell.wav", swell())
+    print(DEST / "key-a.wav")
 
 
 if __name__ == "__main__":

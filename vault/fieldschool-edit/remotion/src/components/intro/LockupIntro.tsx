@@ -15,21 +15,21 @@ export const LockupIntro: React.FC<LockupIntroProps> = ({course, module, title})
   const stamp = spring({
     frame,
     fps,
-    durationInFrames: 16,
-    config: {damping: 11, mass: 0.42, stiffness: 190},
+    durationInFrames: 24,
+    config: {damping: 16, mass: 0.62, stiffness: 140},
   });
   const typeIn = spring({
-    frame: frame - 12,
+    frame: frame - 16,
     fps,
-    durationInFrames: 18,
-    config: {damping: 13, mass: 0.5},
+    durationInFrames: 26,
+    config: {damping: 18, mass: 0.7},
   });
   const rule = interpolate(typeIn, [0, 1], [0, 1], {extrapolateRight: "clamp"});
-  const fadeOut = interpolate(frame, [hold - 14, hold], [1, 0], {
+  const fadeOut = interpolate(frame, [hold - 28, hold], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const exit = interpolate(frame, [hold - 14, hold], [1, 0.97], {
+  const exit = interpolate(frame, [hold - 28, hold], [1, 0.985], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

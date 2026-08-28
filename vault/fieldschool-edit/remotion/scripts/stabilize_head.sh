@@ -3,7 +3,7 @@
 set -euo pipefail
 SRC=${1:-/opt/fieldschool-edit/remotion/public/a_roll.mp4}
 DEST=${2:-/opt/fieldschool-edit/remotion/public/head.mp4}
-SECS=${3:-28}
+SECS=${3:-58}
 HERE=$(cd "$(dirname "$0")" && pwd)
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT

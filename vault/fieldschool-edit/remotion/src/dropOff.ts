@@ -40,14 +40,14 @@ export const useSolo = (drop: DropOff | null, originMs: number): number => {
   const leave = spring({
     frame: frame - start,
     fps,
-    durationInFrames: 22,
-    config: {damping: 16, mass: 0.7},
+    durationInFrames: 32,
+    config: {damping: 20, mass: 0.9},
   });
   const back = spring({
     frame: frame - (end - DROP_RETURN_LEAD_FRAMES),
     fps,
-    durationInFrames: 20,
-    config: {damping: 14, mass: 0.55},
+    durationInFrames: 28,
+    config: {damping: 18, mass: 0.8},
   });
   if (frame < start || frame >= end) {
     return 0;

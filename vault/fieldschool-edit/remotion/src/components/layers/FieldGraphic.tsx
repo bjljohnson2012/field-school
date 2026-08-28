@@ -6,7 +6,7 @@ type FieldGraphicProps = {
 };
 
 export const FieldGraphic: React.FC<FieldGraphicProps> = ({solo}) => {
-  const opacity = interpolate(solo, [0, 1], [0.045, 0.12], {
+  const opacity = interpolate(solo, [0, 1], [0.045, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

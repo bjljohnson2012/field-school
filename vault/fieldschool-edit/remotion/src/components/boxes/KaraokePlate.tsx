@@ -1,8 +1,10 @@
 import React, {useMemo} from "react";
 import {interpolate, useCurrentFrame, useVideoConfig} from "remotion";
-import {TYPE_BESIDE, TYPE_HEAD_GAP, TYPE_SOLO, WORD_FADE_FRAMES, blue, displayFace, headReservedPx, ink} from "../../brand/tokens";
+import {TYPE_BESIDE, TYPE_HEAD_GAP, TYPE_PLAYBOOK, TYPE_SOLO, WORD_FADE_FRAMES, blue, displayFace, headReservedPx, ink} from "../../brand/tokens";
 import {pageForClock, type DropOff} from "../../dropOff";
 import type {CaptionWord} from "../../schema/episode";
+import {PLAYBOOK, typedCount} from "../../typewriter";
+import {TypewriterWord} from "../vox/TypewriterWord";
 
 type KaraokePlateProps = {
   words: CaptionWord[];
@@ -61,6 +63,18 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
           });
           const active = nowMs >= word.fromMs && nowMs < word.toMs;
           const ready = nowMs >= appearMs;
+          if (PLAYBOOK.test(word.text.trim())) {
+            const shown = typedCount(nowMs, word.fromMs, word.text.length);
+            return (
+              <TypewriterWord
+                key={`${word.fromMs}-${word.text}-${i}`}
+                text={word.text}
+                shown={shown}
+                size={TYPE_PLAYBOOK}
+                active={active || shown === word.text.length}
+              />
+            );
+          }
           return (
             <span
               key={`${word.fromMs}-${word.text}-${i}`}
@@ -75,7 +89,7 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
                 lineHeight: LINE_HEIGHT,
                 color: active ? blue : ink,
                 opacity: ready ? (active ? 1 : 0.88) * fade : 0,
-                transform: `translateY(${(1 - fade) * 10}px)`,
+                transform: `translateY(${(1 - fade) * 8}px)`,
               }}
             >
               {word.text}

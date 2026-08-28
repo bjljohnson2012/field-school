@@ -1,5 +1,5 @@
 #!/bin/bash
-# Turn a Suno (or any) bed into the 25s mix. Loop comes later.
+# Turn a Suno bed into the 60s mix. Loop the 32s intro once.
 set -euo pipefail
 SRC=${1:-/opt/fieldschool-edit/remotion/public/beds/marimba-intro.mp3}
 DEST=${FS_REMOTION_PUBLIC:-/opt/fieldschool-edit/remotion/public}
@@ -8,9 +8,8 @@ if [ ! -f "$SRC" ]; then
   exit 1
 fi
 mkdir -p "$DEST/sfx"
-# 32s is enough for this clip. Do not loop yet.
-ffmpeg -y -hide_banner -loglevel error -t 32 -i "$SRC" \
-  -af "highpass=f=70,loudnorm=I=-18:TP=-1.5:LRA=11" \
+ffmpeg -y -hide_banner -loglevel error -stream_loop 2 -t 64 -i "$SRC" \
+  -af "highpass=f=50,lowpass=f=7800,equalizer=f=3200:t=q:w=1.1:g=-2.8,loudnorm=I=-20:TP=-1.5:LRA=11" \
   -ar 48000 -ac 2 "$DEST/bed.wav"
 # One marimba hit for the waiting. drop.
 ffmpeg -y -hide_banner -loglevel error -ss 2.4 -t 0.7 -i "$DEST/bed.wav" \

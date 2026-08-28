@@ -11,10 +11,26 @@ EPISODE = Path("/opt/fieldschool-edit/remotion/public/episode.json")
 CUTS = Path("/opt/fieldschool-edit/remotion/public/cuts.json")
 
 CLIP_LO = 2400
-CLIP_HI = 22000
+CLIP_HI = 56400
 
 
 def load_stamps() -> list[dict]:
+    if WORDS.exists():
+        raw = json.loads(WORDS.read_text())
+        stamps = []
+        prev = 0
+        for word in raw.get("words") or []:
+            text = str(word.get("text") or word.get("word") or "").strip()
+            if not text:
+                continue
+            start = word.get("start")
+            end = word.get("end")
+            from_ms = int(round(float(start) * 1000)) if start is not None else prev + 80
+            to_ms = int(round(float(end) * 1000)) if end is not None else from_ms + 180
+            stamps.append({"text": text.lstrip("-"), "fromMs": from_ms, "toMs": to_ms})
+            prev = to_ms
+        if stamps:
+            return stamps
     aligned = sorted(WHISPERX.glob("*.json")) if WHISPERX.exists() else []
     if aligned:
         raw = json.loads(aligned[0].read_text())
@@ -77,7 +93,7 @@ def main() -> None:
         "showSrc": "01-the-waiting-trap.png",
         "src": "head.mp4",
         "voSrc": "vo.wav",
-        "durationSec": 25,
+        "durationSec": 60,
         "words": window,
         "cues": cues,
         "silences": silences,

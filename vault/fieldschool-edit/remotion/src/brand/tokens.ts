@@ -19,11 +19,12 @@ export const HEAD_RULE_PX = 3;
 export const HEAD_RIGHT_GAP = 56;
 export const TYPE_BESIDE = 68;
 export const TYPE_SOLO = 92;
+export const TYPE_PLAYBOOK = 124;
 export const TYPE_HEAD_GAP = 180;
 export const MIN_HOLD_FRAMES = 90;
 export const MIN_HOLD_MS = 3000;
-export const WORD_FADE_FRAMES = 10;
+export const WORD_FADE_FRAMES = 14;
 export const INTRO_FRAMES = 180;
-export const DROP_RETURN_LEAD_FRAMES = 22;
+export const DROP_RETURN_LEAD_FRAMES = 28;
 
 export const headReservedPx = (): number => Math.round(1920 * HEAD_DOCK) + HEAD_RIGHT_GAP;
