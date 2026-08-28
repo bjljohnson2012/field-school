@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.2.0",
   "scripts": {
-    "render": "remotion render src/index.ts FieldSchoolLesson",
-    "preview": "remotion render src/index.ts FieldSchoolPreview"
+    "render": "remotion render src/index.ts FieldSchoolPreview",
+    "preview": "remotion render src/index.ts FieldSchoolPreview --frames=0-150 --concurrency=1"
   },
   "dependencies": {
     "@remotion/cli": "4.0.247",

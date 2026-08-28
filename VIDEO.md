@@ -88,7 +88,7 @@ The take about authored processes (waiting, memos, “that’s how we’ve alway
 
 Play the file:
 
-- Vox preview (intro + first 18s): https://cap.fieldschool.ai/hls/j013r823wx9ecaf/vox/preview.mp4
+- 5s production-layer preview: https://cap.fieldschool.ai/hls/j013r823wx9ecaf/vox/preview.mp4
 - Remotion slide cut: https://cap.fieldschool.ai/hls/j013r823wx9ecaf/remotion/master.mp4
 - Processor tighten (no slides): https://cap.fieldschool.ai/hls/j013r823wx9ecaf/master.mp4
 - HLS of the tighten: https://cap.fieldschool.ai/hls/j013r823wx9ecaf/master.m3u8
@@ -109,5 +109,7 @@ Lesson clips: `https://cap.fieldschool.ai/hls/j013r823wx9ecaf/lessons/{1-10}/mas
 | `deploy/caddy-video.snippet` | Cap, MinIO, edit, trigger sites for Docker Caddy |
 | `vault/fieldschool-adapter/` | Adapter + instant trigger. Deploy to the Field School VPS only |
 | `vault/fieldschool-adapter/docker-compose.trigger.yml` | Trigger container on network `fieldschool-video` |
+| `vault/fieldschool-edit/remotion/` | Remotion lesson tree. Preview `FieldSchoolPreview`, frames 0-150 |
+| `video-pipeline/` | Punch list and layer law for the Remotion cut |
 
 Cap and fieldschool-edit still live on the Field School VPS disk (`/opt/cap`, `/opt/fieldschool-edit`). They are not in this git tree yet.
