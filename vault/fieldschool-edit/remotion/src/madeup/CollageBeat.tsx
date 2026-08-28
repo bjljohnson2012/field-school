@@ -47,9 +47,9 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
           style={{
             position: "absolute",
             left: INSET,
-            top: VOX_HEADLINE_TOP,
+            top: Math.max(VOX_HEADLINE_TOP, 104),
             width: 1600,
-            height: 128,
+            height: 100,
             overflow: "hidden",
             fontFamily: displayFace,
             fontWeight: 700,
@@ -198,7 +198,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
           })}
         </div>
       ) : null}
-      {annotation ? (
+      {annotation && !(chips && chips.length > 0) ? (
         <div
           style={{
             position: "absolute",

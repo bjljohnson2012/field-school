@@ -1,6 +1,7 @@
 import {measureText} from "@remotion/layout-utils";
 import {createRoundedTextBox} from "@remotion/rounded-text-box";
 import React, {useEffect, useMemo, useState} from "react";
+import {useDelayRender} from "remotion";
 import {waitMadeUpFonts} from "./fonts";
 import {CAPTION_BOTTOM, INSET, TYPE_COL, bodyFace, displayFace, gold, ink, paper} from "./tokens";
 import type {MadeWord} from "./schema";
@@ -44,12 +45,20 @@ const wrapPage = (page: MadeWord[], maxWidth: number, fontSize: number): MadeWor
 };
 
 export const CaptionPlate: React.FC<CaptionPlateProps> = ({words, nowMs, docked}) => {
+  const {delayRender, continueRender} = useDelayRender();
+  const [handle] = useState(() => delayRender("caption-fonts"));
   const [ready, setReady] = useState(false);
   useEffect(() => {
     waitMadeUpFonts()
-      .then(() => setReady(true))
-      .catch(() => setReady(true));
-  }, []);
+      .then(() => {
+        setReady(true);
+        continueRender(handle);
+      })
+      .catch(() => {
+        setReady(true);
+        continueRender(handle);
+      });
+  }, [continueRender, handle]);
 
   const page = useMemo(() => {
     const shown = words.filter((word) => nowMs >= word.fromMs);
@@ -104,9 +113,9 @@ export const CaptionPlate: React.FC<CaptionPlateProps> = ({words, nowMs, docked}
         position: "absolute",
         left: INSET,
         bottom: CAPTION_BOTTOM,
-        width: Math.min(boxWidth, layout.boundingBox.width + 4),
+        width: layout.boundingBox.width,
         height: layout.boundingBox.height,
-        overflow: "hidden",
+        overflow: "visible",
       }}
     >
       <svg
@@ -115,12 +124,12 @@ export const CaptionPlate: React.FC<CaptionPlateProps> = ({words, nowMs, docked}
           position: "absolute",
           width: layout.boundingBox.width,
           height: layout.boundingBox.height,
-          overflow: "hidden",
+          overflow: "visible",
         }}
       >
         <path d={layout.d} fill={paper} />
       </svg>
-      <div style={{position: "relative", paddingLeft: PAD, paddingRight: PAD, paddingTop: 10, paddingBottom: 10}}>
+      <div style={{position: "relative", paddingLeft: PAD, paddingRight: PAD}}>
         {layout.lines.map((line, lineIndex) => (
           <div
             key={`line-${lineIndex}`}

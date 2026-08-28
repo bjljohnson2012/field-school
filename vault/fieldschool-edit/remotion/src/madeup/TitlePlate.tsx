@@ -1,6 +1,6 @@
 import {fitText} from "@remotion/layout-utils";
 import React, {useEffect, useMemo, useState} from "react";
-import {Img, interpolate, staticFile} from "remotion";
+import {Img, interpolate, staticFile, useDelayRender} from "remotion";
 import {waitMadeUpFonts} from "./fonts";
 import {HOOK_FULL, INSET, TYPE_COL, displayFace, gold} from "./tokens";
 
@@ -11,12 +11,20 @@ type TitlePlateProps = {
 };
 
 export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => {
+  const {delayRender, continueRender} = useDelayRender();
+  const [handle] = useState(() => delayRender("title-fonts"));
   const [ready, setReady] = useState(false);
   useEffect(() => {
     waitMadeUpFonts()
-      .then(() => setReady(true))
-      .catch(() => setReady(true));
-  }, []);
+      .then(() => {
+        setReady(true);
+        continueRender(handle);
+      })
+      .catch(() => {
+        setReady(true);
+        continueRender(handle);
+      });
+  }, [continueRender, handle]);
   const width = docked ? TYPE_COL : HOOK_FULL;
   const cap = docked ? 64 : 88;
   const fontSize = useMemo(() => {
@@ -38,6 +46,9 @@ export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => 
     }
   }, [cap, ready, text, width]);
   const enter = interpolate(local, [0, 8], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  if (!ready) {
+    return null;
+  }
   return (
     <div
       style={{

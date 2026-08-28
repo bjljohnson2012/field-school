@@ -1,6 +1,6 @@
 import {fitText} from "@remotion/layout-utils";
 import React, {useEffect, useMemo, useState} from "react";
-import {interpolate} from "remotion";
+import {interpolate, useDelayRender} from "remotion";
 import {waitMadeUpFonts} from "./fonts";
 import {HOOK_FULL, HOOK_PIP_COL, INSET, displayFace, gold, paper} from "./tokens";
 
@@ -12,12 +12,20 @@ type HookPlateProps = {
 };
 
 export const HookPlate: React.FC<HookPlateProps> = ({text, local, second = false, pip = false}) => {
+  const {delayRender, continueRender} = useDelayRender();
+  const [handle] = useState(() => delayRender("hook-fonts"));
   const [ready, setReady] = useState(false);
   useEffect(() => {
     waitMadeUpFonts()
-      .then(() => setReady(true))
-      .catch(() => setReady(true));
-  }, []);
+      .then(() => {
+        setReady(true);
+        continueRender(handle);
+      })
+      .catch(() => {
+        setReady(true);
+        continueRender(handle);
+      });
+  }, [continueRender, handle]);
   const width = pip ? HOOK_PIP_COL : HOOK_FULL;
   const cap = second ? 92 : 108;
   const fontSize = useMemo(() => {
@@ -27,7 +35,7 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, second = false
     try {
       const fitted = fitText({
         text,
-        withinWidth: width,
+        withinWidth: width - 24,
         fontFamily: displayFace,
         fontWeight: "700",
       });
@@ -37,6 +45,9 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, second = false
     }
   }, [cap, ready, text, width]);
   const enter = interpolate(local, [0, 8], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  if (!ready) {
+    return null;
+  }
   return (
     <div
       style={{
@@ -49,7 +60,7 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, second = false
         fontWeight: 700,
         fontSize,
         lineHeight: 0.95,
-        letterSpacing: "-0.04em",
+        letterSpacing: "0",
         color: second ? gold : paper,
         opacity: enter,
         translate: `0px ${(1 - enter) * 36}px`,
