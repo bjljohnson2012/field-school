@@ -19,6 +19,7 @@ export const HEAD_RULE_PX = 3;
 export const HEAD_RIGHT_GAP = 56;
 export const TYPE_BESIDE = 68;
 export const TYPE_SOLO = 92;
+export const TYPE_HEAD_GAP = 88;
 export const MIN_HOLD_FRAMES = 90;
 export const MIN_HOLD_MS = 3000;
 export const WORD_FADE_FRAMES = 10;

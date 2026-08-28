@@ -1,6 +1,6 @@
 import React, {useMemo} from "react";
 import {interpolate, useCurrentFrame, useVideoConfig} from "remotion";
-import {TYPE_BESIDE, TYPE_SOLO, WORD_FADE_FRAMES, blue, displayFace, headReservedPx, ink} from "../../brand/tokens";
+import {TYPE_BESIDE, TYPE_HEAD_GAP, TYPE_SOLO, WORD_FADE_FRAMES, blue, displayFace, headReservedPx, ink} from "../../brand/tokens";
 import {pageForClock, type DropOff} from "../../dropOff";
 import type {CaptionWord} from "../../schema/episode";
 
@@ -22,7 +22,7 @@ export const KaraokePlate: React.FC<KaraokePlateProps> = ({words, nowMs, originM
   if (!page) {
     return null;
   }
-  const fieldWidth = interpolate(solo, [0, 1], [1920 - headReservedPx(), 1920], {
+  const fieldWidth = interpolate(solo, [0, 1], [1920 - headReservedPx() - TYPE_HEAD_GAP, 1920], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
