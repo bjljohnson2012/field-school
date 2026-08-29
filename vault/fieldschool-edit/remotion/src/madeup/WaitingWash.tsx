@@ -2,6 +2,11 @@ import React from "react";
 import {Img, interpolate, staticFile} from "remotion";
 import {ink, paper} from "./tokens";
 
+const SRC_W = 1536;
+const SRC_H = 1024;
+const FOCUS_X = 0.82;
+const FOCUS_Y = 0.46;
+
 type WaitingWashProps = {
   open: number;
 };
@@ -14,25 +19,26 @@ export const WaitingWash: React.FC<WaitingWashProps> = ({open}) => {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const zoom = interpolate(open, [0, 1], [1.14, 1.04], {
+  const zoom = interpolate(open, [0, 1], [2.08, 1.92], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const drift = interpolate(open, [0, 1], [24, -16], {
+  const drift = interpolate(open, [0, 1], [18, -22], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
+  const width = SRC_W * zoom;
+  const height = SRC_H * zoom;
   return (
     <div style={{position: "absolute", inset: 0, overflow: "hidden", opacity}}>
       <Img
         src={staticFile("vox/wait-broll.png")}
         style={{
-          width: 1920,
-          height: 1080,
-          objectFit: "cover",
-          objectPosition: "78% 58%",
-          scale: `${zoom}`,
-          translate: `${drift}px 0px`,
+          position: "absolute",
+          width,
+          height,
+          left: 1920 / 2 - width * FOCUS_X + drift,
+          top: 1080 / 2 - height * FOCUS_Y,
         }}
       />
       <div
