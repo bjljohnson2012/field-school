@@ -72,7 +72,7 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
           outline: band ? `3px solid ${ink}22` : "none",
           borderRadius: band ? 14 : 0,
           padding: band ? "18px 28px" : 0,
-          textAlign: band ? "center" : leftDock ? "left" : "center",
+          textAlign: "center",
         }}
       >
         {page.words.map((word, i) => {

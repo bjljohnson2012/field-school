@@ -1,13 +1,15 @@
 import React from "react";
 import {interpolate} from "remotion";
 import {TYPE_HEAD_GAP, gold, headReservedPx, ink, paper, paperGrain} from "./tokens";
+import type {ShotLayout} from "./schema";
 
 type PaperSheetProps = {
   open: number;
   solo: number;
+  layout?: ShotLayout;
 };
 
-export const PaperSheet: React.FC<PaperSheetProps> = ({open, solo}) => {
+export const PaperSheet: React.FC<PaperSheetProps> = ({open, solo, layout = "dock-right"}) => {
   if (open <= 0) {
     return null;
   }
@@ -32,28 +34,36 @@ export const PaperSheet: React.FC<PaperSheetProps> = ({open, solo}) => {
         opacity: open,
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          right: headReservedPx() - 24,
-          top: 72,
-          width: 3,
-          height: 936,
-          backgroundColor: ink,
-          opacity: rule,
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          right: headReservedPx() - 29,
-          top: 72,
-          width: 2,
-          height: 936,
-          backgroundColor: gold,
-          opacity: rule * 0.78,
-        }}
-      />
+      {layout === "dock-left" || layout === "dock-right" ? (
+        <>
+          <div
+            style={{
+              position: "absolute",
+              ...(layout === "dock-left"
+                ? {left: headReservedPx() - 24}
+                : {right: headReservedPx() - 24}),
+              top: 72,
+              width: 3,
+              height: 936,
+              backgroundColor: ink,
+              opacity: rule,
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              ...(layout === "dock-left"
+                ? {left: headReservedPx() - 29}
+                : {right: headReservedPx() - 29}),
+              top: 72,
+              width: 2,
+              height: 936,
+              backgroundColor: gold,
+              opacity: rule * 0.78,
+            }}
+          />
+        </>
+      ) : null}
       <div
         style={{
           position: "absolute",

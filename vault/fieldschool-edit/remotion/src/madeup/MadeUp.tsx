@@ -61,7 +61,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
     <AbsoluteFill style={{backgroundColor: bg}}>
       <Stack>
         <AbsoluteFill style={{backgroundColor: bg, backgroundImage: paperGrain}} />
-        <PaperSheet open={paperOpen} solo={solo} />
+        <PaperSheet open={paperOpen} solo={solo} layout={shot?.layout} />
         <WaitingWash open={shot?.id === "s01" && waited ? 1 : solo} />
         {shot && vox ? (
           <CollageBeat
