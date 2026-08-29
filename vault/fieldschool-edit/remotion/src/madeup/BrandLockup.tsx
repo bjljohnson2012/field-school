@@ -24,8 +24,8 @@ export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everyth
     config: {damping: 12, mass: 0.55, stiffness: 190},
   });
   const grow = interpolate(local, [16, 132], [0.92, 1.05], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const leave = interpolate(local, [138, 154], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const shove = interpolate(local, [138, 154], [0, -90], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const leave = interpolate(local, [146, 152], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const shove = interpolate(local, [146, 152], [0, -140], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   return (
     <div
       style={{

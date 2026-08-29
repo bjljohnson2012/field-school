@@ -112,7 +112,9 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             </div>
           </div>
         ) : null}
-        {shot && shot.type !== "sting" ? <PaperCut local={local} /> : null}
+        {shot && (shot.type !== "sting" || local >= 146) ? (
+          <PaperCut local={shot.type === "sting" ? local - 146 : local} />
+        ) : null}
         {shot && shot.type === "sting" ? <BrandLockup local={local} /> : null}
         {shot && shot.type === "cta" ? <CtaCard text={shot.text || ""} local={local} /> : null}
         <BrandBug open={shot && shot.type !== "sting" && shot.type !== "cta" ? 1 : 0} />

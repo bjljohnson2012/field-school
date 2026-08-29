@@ -57,14 +57,19 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
   }, [continueRender, handle]);
 
   const lock = useMemo(() => words.find((word) => WAITING.test(word.text.trim()))?.fromMs ?? null, [words]);
+  const bookMs = useMemo(() => words.find((word) => PLAYBOOK.test(word.text.trim()))?.fromMs ?? null, [words]);
   const page = useMemo(() => {
     const next = pageForClock(words, nowMs, lock);
-    if (!next || (solo < 0.12 && nowMs < (lock ?? 0) + 4000)) {
+    if (!next) {
       return next;
     }
-    const only = next.words.filter((word) => WAITING.test(word.text.trim()));
-    return only.length > 0 ? {...next, words: only} : next;
-  }, [lock, nowMs, solo, words]);
+    const held = lock !== null && nowMs >= lock && (bookMs === null || nowMs < bookMs);
+    if (held || solo >= 0.12) {
+      const only = next.words.filter((word) => WAITING.test(word.text.trim()));
+      return only.length > 0 ? {...next, words: only} : next;
+    }
+    return next;
+  }, [bookMs, lock, nowMs, solo, words]);
 
   if (!ready || !page) {
     return null;
