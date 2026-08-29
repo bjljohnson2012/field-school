@@ -11,7 +11,7 @@ type MadeHeadProps = {
   fresh?: boolean;
 };
 
-export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0, fresh: _fresh = true}) => {
+export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local: _local, solo = 0, fresh: _fresh = true}) => {
   const hidden = layout === "off";
   const pip = layout === "pip-tr";
   const letter = layout === "letterbox";

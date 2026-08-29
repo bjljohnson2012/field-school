@@ -3,6 +3,12 @@ export const blue = "#1f5eff";
 export const ink = "#1a1916";
 export const stone = "#7a746a";
 
+export const night = "#11140C";
+export const fieldPaper = "#EFE7D6";
+export const fieldInk = "#1A1A16";
+export const fieldGold = "#C4A35A";
+export const fieldOlive = "#6B7F4F";
+
 export const bg = cream;
 export const paper = cream;
 export const gold = stone;

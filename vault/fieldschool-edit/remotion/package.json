@@ -4,15 +4,22 @@
   "version": "0.2.0",
   "scripts": {
     "render": "remotion render src/index.ts FieldSchoolClip --concurrency=1",
-    "preview": "remotion render src/index.ts FieldSchoolPreview --frames=0-150 --concurrency=1"
+    "preview": "remotion render src/index.ts FieldSchoolPreview --frames=0-150 --concurrency=1",
+    "hook": "remotion render src/index.ts EverythingMadeUpHook --concurrency=1",
+    "master": "remotion render src/index.ts EverythingMadeUp --concurrency=1"
   },
   "dependencies": {
     "@remotion/captions": "4.0.518",
     "@remotion/cli": "4.0.518",
+    "@remotion/effects": "4.0.518",
     "@remotion/google-fonts": "4.0.518",
     "@remotion/layout-utils": "4.0.518",
+    "@remotion/media": "4.0.518",
+    "@remotion/paths": "4.0.518",
     "@remotion/renderer": "4.0.518",
     "@remotion/rounded-text-box": "4.0.518",
+    "@remotion/shapes": "4.0.518",
+    "@remotion/transitions": "4.0.518",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "remotion": "4.0.518"

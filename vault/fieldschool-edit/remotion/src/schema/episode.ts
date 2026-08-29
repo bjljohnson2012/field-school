@@ -1,3 +1,17 @@
+export type ShotType = "sting" | "hook" | "a-roll" | "b-roll" | "vox" | "cta";
+export type ShotLayout = "off" | "dock-left" | "dock-right" | "pip-tl" | "pip-tr" | "letterbox";
+
+export type EditShot = {
+  id: string;
+  type: ShotType;
+  fromFrame: number;
+  durationInFrames: number;
+  layout: ShotLayout;
+  text?: string;
+  assets?: string[];
+  sfx?: string[];
+};
+
 export type CaptionWord = {
   text: string;
   fromMs: number;

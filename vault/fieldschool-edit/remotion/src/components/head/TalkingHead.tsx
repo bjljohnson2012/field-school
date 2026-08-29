@@ -2,10 +2,13 @@ import React from "react";
 import {OffthreadVideo, spring, staticFile, useCurrentFrame, useVideoConfig} from "remotion";
 import {HEAD_DOCK, HEAD_MAT_PX, HEAD_RIGHT_GAP, HEAD_RULE_PX, cream, ink, stone} from "../../brand/tokens";
 
+export type HeadLayout = "dock-left" | "dock-right" | "pip-tl" | "pip-tr" | "off";
+
 type TalkingHeadProps = {
   src: string;
   startFrom: number;
   dock?: "dock-right" | "dock-left";
+  layout?: HeadLayout;
   muted?: boolean;
   solo?: number;
 };
@@ -14,12 +17,19 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({
   src,
   startFrom,
   dock = "dock-right",
+  layout,
   muted = true,
   solo = 0,
 }) => {
-  const width = Math.round(1920 * HEAD_DOCK);
-  const height = 800;
-  const left = dock === "dock-right" ? 1920 - width - HEAD_RIGHT_GAP : HEAD_RIGHT_GAP;
+  const place: HeadLayout = layout ?? dock;
+  if (place === "off") {
+    return null;
+  }
+  const pip = place === "pip-tl" || place === "pip-tr";
+  const width = pip ? 380 : Math.round(1920 * HEAD_DOCK);
+  const height = pip ? 380 : 800;
+  const left =
+    place === "dock-left" || place === "pip-tl" ? HEAD_RIGHT_GAP : 1920 - width - HEAD_RIGHT_GAP;
   const name = src.includes("/") ? src.split("/").pop() || src : src;
   const file = src.startsWith("http") ? src : staticFile(name);
   const side = dock === "dock-right" ? 1 : -1;
@@ -36,7 +46,7 @@ export const TalkingHead: React.FC<TalkingHeadProps> = ({
       style={{
         position: "absolute",
         left,
-        top: 132,
+        top: pip ? 72 : 132,
         width,
         height,
         padding: HEAD_MAT_PX,
