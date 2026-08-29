@@ -9,7 +9,7 @@ import {MadeLetterbox} from "./MadeLetterbox";
 import {PaperSheet} from "./PaperSheet";
 import {BrandBug, BrandLockup} from "./BrandLockup";
 import {CtaCard} from "./TitlePlate";
-import {PLAYBOOK, TypeField, letterAtMs, waitingOpen} from "./TypeField";
+import {PLAYBOOK, TypeField, letterAtMs, playbookHoldMs, waitingOpen} from "./TypeField";
 import {PhrasePlate} from "./PhrasePlate";
 import {DockWash} from "./DockWash";
 import {pageAt, pagesForShot, washForPage} from "./phrasePages";
@@ -176,7 +176,7 @@ const playbookOpen = (nowMs: number, words: MadeWord[]): boolean => {
   if (!book) {
     return false;
   }
-  return nowMs + 34 >= book.fromMs && nowMs < book.fromMs + 2360;
+  return nowMs + 34 >= book.fromMs && nowMs < playbookHoldMs(book, words);
 };
 
 const WaitHit: React.FC<{words: MadeWord[]}> = ({words}) => {

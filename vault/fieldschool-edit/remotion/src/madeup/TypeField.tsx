@@ -21,7 +21,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs}) => {
     if (waitWord && nowMs >= waitWord.fromMs && (bookMs === null || nowMs < bookMs)) {
       return {word: waitWord, kind: "waiting" as const};
     }
-    if (bookWord && bookMs !== null && nowMs + 34 >= bookMs && nowMs < bookMs + 2360) {
+    if (bookWord && bookMs !== null && nowMs + 34 >= bookMs && nowMs < playbookHoldMs(bookWord, words)) {
       return {word: bookWord, kind: "playbook" as const};
     }
     return null;
@@ -107,6 +107,11 @@ export const letterAtMs = (fromMs: number, index: number, letters: number): numb
     return fromMs;
   }
   return fromMs + (index / letters) * TYPE_MS;
+};
+
+export const playbookHoldMs = (book: MadeWord, words: MadeWord[]): number => {
+  const next = words.find((word) => word.fromMs > book.toMs + 40);
+  return next ? next.fromMs : book.fromMs + 2360;
 };
 
 export const waitingOpen = (nowMs: number, words: MadeWord[]): boolean => {
