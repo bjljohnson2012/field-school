@@ -12,7 +12,7 @@ import {CtaCard, TitlePlate} from "./TitlePlate";
 import {PLAYBOOK, TypeField, letterAtMs} from "./TypeField";
 import {PaperCut, type CutKind} from "./PaperCut";
 import {WaitingWash} from "./WaitingWash";
-import {FPS, MASTER_FRAMES, bg, gold, paperGrain, uiFace} from "./tokens";
+import {BED_FRAMES, FPS, MASTER_FRAMES, bg, gold, paperGrain, uiFace} from "./tokens";
 import type {MadeEpisode, MadeShot, MadeWord} from "./schema";
 
 export const defaultMadeUp: MadeEpisode = {
@@ -45,6 +45,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const kind = cutKind(shot);
   const stingLen = episode.shots.find((item) => item.type === "sting")?.durationInFrames ?? 122;
   const bedVol = bedVolume(shot, frame, vox);
+  const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
   return (
     <AbsoluteFill style={{backgroundColor: bg}}>
       <Stack>
@@ -112,7 +113,11 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
         {shot && shot.type === "cta" ? <CtaCard text={shot.text || ""} local={local} /> : null}
         <BrandBug open={shot && shot.type !== "sting" && shot.type !== "cta" ? 1 : 0} />
         <MadeLetterbox mode={letterMode} local={local} />
-        <Audio src={staticFile("bed.wav")} volume={bedVol} loop />
+        {Array.from({length: bedLoops}, (_, i) => (
+          <Sequence key={`bed-${i}`} from={i * BED_FRAMES} durationInFrames={BED_FRAMES} layout="none">
+            <Audio src={staticFile("bed.wav")} volume={bedVol} />
+          </Sequence>
+        ))}
         <Audio src={staticFile(fileName(episode.vo))} />
         {episode.shots.map((item) => (
           <ShotSfx key={`${item.id}-sfx`} shot={item} />
