@@ -4,8 +4,8 @@ import {ink, paper} from "./tokens";
 
 const SRC_W = 1536;
 const SRC_H = 1024;
-const FOCUS_X = 0.73;
-const FOCUS_Y = 0.56;
+const FOCUS_X = 0.86;
+const FOCUS_Y = 0.34;
 
 type WaitingWashProps = {
   open: number;
@@ -19,11 +19,11 @@ export const WaitingWash: React.FC<WaitingWashProps> = ({open}) => {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const zoom = interpolate(open, [0, 1], [2.48, 2.36], {
+  const zoom = interpolate(open, [0, 1], [1.96, 1.88], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const drift = interpolate(open, [0, 1], [16, -18], {
+  const drift = interpolate(open, [0, 1], [12, -14], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

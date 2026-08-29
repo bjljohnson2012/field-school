@@ -10,9 +10,9 @@ import {PaperSheet} from "./PaperSheet";
 import {BrandBug, BrandLockup} from "./BrandLockup";
 import {CtaCard, TitlePlate} from "./TitlePlate";
 import {PLAYBOOK, TypeField, letterAtMs} from "./TypeField";
-import {PaperCut} from "./PaperCut";
+import {PaperCut, type CutKind} from "./PaperCut";
 import {WaitingWash} from "./WaitingWash";
-import {BED_FRAMES, FPS, MASTER_FRAMES, bg, gold, paperGrain, uiFace} from "./tokens";
+import {FPS, MASTER_FRAMES, bg, gold, paperGrain, uiFace} from "./tokens";
 import type {MadeEpisode, MadeShot, MadeWord} from "./schema";
 
 export const defaultMadeUp: MadeEpisode = {
@@ -35,30 +35,22 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const vox = Boolean(shot && (shot.type === "vox" || shot.type === "b-roll"));
   const waited = words.some((word) => /^waiting\.$/i.test(word.text.trim()) && nowMs >= word.fromMs);
   const teach = Boolean(shot && (shot.type === "a-roll" || (shot.id === "s01" && waited)));
-  const docked = Boolean(shot && (shot.layout === "dock-right" || shot.layout === "pip-tr") && solo < 0.5);
+  const docked = Boolean(shot && shot.layout === "dock-right" && solo < 0.5);
   const paperOpen =
     shot && shot.type === "a-roll"
       ? interpolate(local, [0, 10], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})
       : 0;
   const hookGhost = shot?.id === "s01" && solo > 0.08 ? 1 : 0;
-  const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
-  const letterMode = shot && shot.type === "a-roll" ? "hair" : "none";
-  const cutKind = shot?.id === "s01" || shot?.type === "sting" ? "wipe" : shot?.id === "s03" ? "slide" : "flash";
-  const bedVol = Math.min(
-    0.56,
-    interpolate(frame, [0, 10, 70, 154, 200], [0, 0.5, 0.46, 0.28, 0.28], {
-      extrapolateLeft: "clamp",
-      extrapolateRight: "clamp",
-    }) +
-      (shot?.type === "cta" ? 0.22 : 0) +
-      (vox ? 0.12 : 0),
-  );
+  const letterMode = shot && (shot.type === "a-roll" || shot.layout === "letterbox") ? "hair" : "none";
+  const kind = cutKind(shot);
+  const stingLen = episode.shots.find((item) => item.type === "sting")?.durationInFrames ?? 122;
+  const bedVol = bedVolume(shot, frame, vox);
   return (
     <AbsoluteFill style={{backgroundColor: bg}}>
       <Stack>
         <AbsoluteFill style={{backgroundColor: bg, backgroundImage: paperGrain}} />
         <PaperSheet open={paperOpen} solo={solo} />
-        <WaitingWash open={shot?.id === "s01" && waited ? Math.max(solo, 0.92) : solo} />
+        <WaitingWash open={shot?.id === "s01" && waited ? 1 : solo} />
         {shot && vox ? (
           <CollageBeat
             assets={shot.assets || []}
@@ -113,18 +105,14 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             </div>
           </div>
         ) : null}
-        {shot && (shot.type !== "sting" || local >= 146) ? (
-          <PaperCut local={shot.type === "sting" ? local - 146 : local} kind={cutKind} />
+        {shot && (shot.type !== "sting" || local >= stingLen - 12) ? (
+          <PaperCut local={shot.type === "sting" ? local - (stingLen - 12) : local} kind={kind} />
         ) : null}
-        {shot && shot.type === "sting" ? <BrandLockup local={local} /> : null}
+        {shot && shot.type === "sting" ? <BrandLockup local={local} duration={stingLen} /> : null}
         {shot && shot.type === "cta" ? <CtaCard text={shot.text || ""} local={local} /> : null}
         <BrandBug open={shot && shot.type !== "sting" && shot.type !== "cta" ? 1 : 0} />
         <MadeLetterbox mode={letterMode} local={local} />
-        {Array.from({length: bedLoops}, (_, i) => (
-          <Sequence key={`bed-${i}`} from={i * BED_FRAMES} durationInFrames={BED_FRAMES} layout="none">
-            <Audio src={staticFile("bed.wav")} volume={bedVol} />
-          </Sequence>
-        ))}
+        <Audio src={staticFile("bed.wav")} volume={bedVol} loop />
         <Audio src={staticFile(fileName(episode.vo))} />
         {episode.shots.map((item) => (
           <ShotSfx key={`${item.id}-sfx`} shot={item} />
@@ -132,6 +120,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
         <PlaybookKeys words={words} />
         <WaitHit words={words} />
         <EditorialHits words={words} />
+        <WordHits words={words} />
       </Stack>
     </AbsoluteFill>
   );
@@ -165,6 +154,43 @@ const PlaybookKeys: React.FC<{words: MadeWord[]}> = ({words}) => {
       ))}
     </>
   );
+};
+
+const WordHits: React.FC<{words: MadeWord[]}> = ({words}) => {
+  const names = ["just", "authored", "gravity", "stuck", "five", "sixty", "60", "wreck", "vandal", "act"];
+  const hits = words.filter((word) => names.includes(norm(word.text)));
+  return (
+    <>
+      {hits.map((word, i) => (
+        <Sequence key={`hit-${word.fromMs}-${i}`} from={Math.round((word.fromMs / 1000) * FPS)} durationInFrames={10} layout="none">
+          <Audio src={staticFile("sfx/tick.wav")} volume={0.14} />
+        </Sequence>
+      ))}
+    </>
+  );
+};
+
+const cutKind = (shot: MadeShot | null): CutKind => {
+  if (!shot) {
+    return "none";
+  }
+  if (shot.type === "sting" || shot.id === "s01") {
+    return "wipe";
+  }
+  if (shot.id === "s03") {
+    return "slide";
+  }
+  if (shot.type === "vox" || shot.type === "b-roll") {
+    return "flash";
+  }
+  return "none";
+};
+
+const bedVolume = (shot: MadeShot | null, frame: number, vox: boolean): number => {
+  const fade = interpolate(frame, [0, 10], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const base =
+    shot?.type === "sting" ? 0.48 : shot?.type === "cta" ? 0.5 : vox ? 0.36 : shot?.type === "hook" ? 0.3 : 0.26;
+  return fade * base;
 };
 
 const EditorialHits: React.FC<{words: MadeWord[]}> = ({words}) => {
@@ -247,7 +273,14 @@ const spokenNeedles = (words: MadeWord[], nowMs: number): string[] => {
     "politics",
     "proof",
     "template",
-    "guarantee",
+    "law",
+    "cliff",
+    "refuse",
+    "wreck",
+    "stuck",
+    "keep",
+    "change",
+    "decided",
   ];
   return needles.filter((needle) => live.some((text) => text.includes(needle)));
 };

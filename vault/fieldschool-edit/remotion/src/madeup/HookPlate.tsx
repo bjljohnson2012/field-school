@@ -65,8 +65,7 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
   }
   const grow = interpolate(local, [0, 24, 170], [0.94, 1.02, 1.08], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   const pulse = interpolate(local, [40, 52, 70], [1, 1.05, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const posterLeave = pip ? interpolate(local, [88, 118], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}) : 1;
-  const exit = interpolate(ghost, [0, 1], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}) * posterLeave;
+  const exit = interpolate(ghost, [0, 1], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   return (
     <div
       style={{

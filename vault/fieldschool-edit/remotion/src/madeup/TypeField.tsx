@@ -19,6 +19,12 @@ import type {MadeWord} from "./schema";
 const WAITING = /^waiting\.$/i;
 export const PLAYBOOK = /^playbook[,.]?$/i;
 const TYPE_MS = 1500;
+const ALLOW_HOLD_MS = 2200;
+const ALLOWED = /^(just|real|authored|gravity|stuck|five|sixty|60|intimidated|wreck|vandal|act|reason)$/i;
+
+const bare = (text: string): string => text.trim().replace(/[.,!?]+$/g, "");
+
+const isAllowed = (text: string): boolean => ALLOWED.test(bare(text));
 
 type TypeFieldProps = {
   words: MadeWord[];
@@ -65,13 +71,26 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
     if (held && waitWord) {
       return {words: [waitWord], appearMs: waitWord.fromMs, hideMs: bookMs ?? waitWord.toMs + 8000};
     }
+    const bookPage =
+      bookWord && bookMs !== null && nowMs >= bookMs && nowMs < bookMs + TYPE_MS + 800
+        ? {words: [bookWord], appearMs: bookWord.fromMs, hideMs: bookMs + TYPE_MS + 800}
+        : null;
+    if (bookPage) {
+      return bookPage;
+    }
+    const hit = [...words]
+      .reverse()
+      .find((word) => isAllowed(word.text) && nowMs >= word.fromMs && nowMs < word.toMs + ALLOW_HOLD_MS);
+    if (hit) {
+      return {words: [hit], appearMs: hit.fromMs, hideMs: hit.toMs + ALLOW_HOLD_MS};
+    }
     const next = pageForClock(words, nowMs, lock);
     if (!next) {
       return next;
     }
     const keep = next.words.filter((word) => WAITING.test(word.text.trim()) || PLAYBOOK.test(word.text.trim()));
     return keep.length > 0 ? {...next, words: keep} : null;
-  }, [bookMs, lock, nowMs, waitWord, words]);
+  }, [bookMs, bookWord, lock, nowMs, waitWord, words]);
 
   if (!ready || !page) {
     return null;

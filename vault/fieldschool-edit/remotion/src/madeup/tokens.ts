@@ -26,7 +26,7 @@ export const MIN_HOLD_MS = 3000;
 export const DROP_RETURN_LEAD_FRAMES = 28;
 export const TYPE_COL = 980;
 export const HOOK_FULL = 1760;
-export const MASTER_FRAMES = 20220;
+export const MASTER_FRAMES = 19936;
 export const HOOK_FRAMES = 540;
 export const BED_FRAMES = 1834;
 

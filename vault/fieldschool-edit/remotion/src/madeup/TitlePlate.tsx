@@ -81,7 +81,7 @@ export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => 
           fontSize,
           lineHeight: 0.95,
           letterSpacing: "-0.035em",
-          color: gold,
+          color: ink,
         }}
       >
         {text}
@@ -100,6 +100,7 @@ export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) 
     durationInFrames: 14,
     config: {damping: 8, mass: 0.42, stiffness: 240},
   });
+  const leave = interpolate(local, [160, 200], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   const lines = text === "CHANGE IT WITH THE REASON IN HAND" ? CTA_LINES : [text];
   return (
     <div
@@ -111,7 +112,7 @@ export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) 
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        opacity: enter,
+        opacity: enter * leave,
       }}
     >
       <Img

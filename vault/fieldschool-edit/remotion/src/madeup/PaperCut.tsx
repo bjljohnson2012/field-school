@@ -2,7 +2,7 @@ import React from "react";
 import {interpolate, spring, useVideoConfig} from "remotion";
 import {gold, paper} from "./tokens";
 
-export type CutKind = "wipe" | "flash" | "slide";
+export type CutKind = "wipe" | "flash" | "slide" | "none";
 
 type PaperCutProps = {
   local: number;
@@ -10,7 +10,7 @@ type PaperCutProps = {
 };
 
 export const PaperCut: React.FC<PaperCutProps> = ({local, kind = "flash"}) => {
-  if (local < 0 || local > 16) {
+  if (kind === "none" || local < 0 || local > 16) {
     return null;
   }
   const {fps} = useVideoConfig();

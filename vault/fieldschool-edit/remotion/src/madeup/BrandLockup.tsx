@@ -5,11 +5,12 @@ import {displayFace, gold, ink, uiFace} from "./tokens";
 type BrandLockupProps = {
   local: number;
   title?: string;
+  duration?: number;
 };
 
 const SLOGAN = "Lead yourself. Learn yourself. Do the work.";
 
-export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everything Is Made Up"}) => {
+export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everything Is Made Up", duration = 122}) => {
   const {fps} = useVideoConfig();
   const stamp = spring({
     frame: local,
@@ -23,9 +24,18 @@ export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everyth
     durationInFrames: 18,
     config: {damping: 12, mass: 0.55, stiffness: 190},
   });
-  const grow = interpolate(local, [16, 132], [0.92, 1.05], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const leave = interpolate(local, [146, 152], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const shove = interpolate(local, [146, 152], [0, -140], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const grow = interpolate(local, [16, Math.max(40, duration - 24)], [0.92, 1.05], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const leave = interpolate(local, [duration - 14, duration - 2], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const shove = interpolate(local, [duration - 14, duration - 2], [0, -140], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   return (
     <div
       style={{

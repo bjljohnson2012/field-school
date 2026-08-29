@@ -57,6 +57,8 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
       });
   }, [continueRender, handle]);
   const hero = /^(60 DAYS|FIVE QUESTIONS)$/i.test(text);
+  const ask = /^ASK$/i.test(text);
+  const giant = !list && assets.length === 0 && text.length > 0 && text.length <= 28 && !/^60 DAYS$/i.test(text);
   const wash = spring({
     frame: local,
     fps,
@@ -70,7 +72,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
     }
     try {
       return Math.min(
-        list && list.length > 0 ? 96 : hero || assets.length === 1 ? 200 : assets.length > 3 ? 88 : 120,
+        list && list.length > 0 ? 96 : giant ? 168 : hero || assets.length === 1 ? 200 : assets.length > 3 ? 88 : 120,
         fitText({
           text,
           withinWidth: assets.length === 1 ? 1760 : 1680,
@@ -81,7 +83,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
     } catch {
       return 72;
     }
-  }, [assets.length, hero, list, ready, text]);
+  }, [assets.length, giant, hero, list, ready, text]);
   if (!ready) {
     return null;
   }
@@ -92,7 +94,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
           style={{
             position: "absolute",
             left: 80,
-            top: /^60 DAYS$/i.test(text) ? 280 : 64,
+            top: /^60 DAYS$/i.test(text) ? 280 : giant ? 340 : 64,
             width: 1760,
             fontFamily: displayFace,
             fontWeight: 700,
@@ -100,7 +102,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
             lineHeight: 0.92,
             color: ink,
             letterSpacing: "-0.04em",
-            textAlign: /^60 DAYS$/i.test(text) ? "center" : "left",
+            textAlign: /^60 DAYS$/i.test(text) || giant ? "center" : "left",
           }}
         >
           {/^60 DAYS$/i.test(text) ? (
@@ -117,8 +119,8 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
         <div
           style={{
             position: "absolute",
-            left: 120,
-            top: 200,
+            left: ask ? 160 : 120,
+            top: ask ? 240 : 200,
             width: 1680,
             height: 760,
           }}
@@ -137,16 +139,18 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                 style={{
                   fontFamily: displayFace,
                   fontWeight: 700,
-                  fontSize: 58,
+                  fontSize: ask ? 72 : 58,
                   lineHeight: 1.16,
                   color: hot ? wine : ink,
-                  opacity: hot ? 1 : enter * 0.28,
+                  opacity: hot ? 1 : enter * (ask ? 0.62 : 0.28),
                   translate: `0px ${(1 - enter) * 24}px`,
                   scale: `${hot ? 1.03 : 1}`,
-                  marginBottom: 16,
+                  marginBottom: ask ? 22 : 16,
                 }}
               >
-                <span style={{color: gold, marginRight: 28, fontSize: 44}}>{String(i + 1).padStart(2, "0")}</span>
+                {ask ? null : (
+                  <span style={{color: gold, marginRight: 28, fontSize: 44}}>{String(i + 1).padStart(2, "0")}</span>
+                )}
                 {line}
               </div>
             );
@@ -262,7 +266,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                   fontSize: 26,
                   letterSpacing: "0.14em",
                   color: paper,
-                  backgroundColor: hot || i === 0 ? wine : ink,
+                  backgroundColor: hot ? wine : ink,
                   padding: "14px 22px",
                   opacity: enter,
                   rotate: `${(i % 2 === 0 ? -1 : 1) * 1.4}deg`,

@@ -15,22 +15,18 @@
       "id": "s00",
       "type": "sting",
       "fromFrame": 0,
-      "durationInFrames": 154,
+      "durationInFrames": 122,
       "layout": "off",
-      "sfx": [
-        "sting"
-      ]
+      "sfx": ["sting"]
     },
     {
       "id": "s01",
       "type": "hook",
-      "fromFrame": 154,
-      "durationInFrames": 297,
+      "fromFrame": 122,
+      "durationInFrames": 329,
       "layout": "off",
       "text": "PEOPLE WAIT TO BE TOLD",
-      "sfx": [
-        "hit"
-      ]
+      "sfx": ["hit"]
     },
     {
       "id": "s03",
@@ -39,21 +35,23 @@
       "durationInFrames": 597,
       "layout": "dock-right",
       "text": "They wait for a playbook. A permission slip. A meeting. A title.",
-      "lowerThird": {
-        "name": "Ben Johnson",
-        "title": ""
-      }
+      "lowerThird": {"name": "Ben Johnson", "title": ""}
     },
     {
       "id": "s02",
       "type": "hook",
       "fromFrame": 1048,
-      "durationInFrames": 911,
+      "durationInFrames": 162,
       "layout": "pip-tr",
       "text": "YOU CAN JUST DO THINGS",
-      "sfx": [
-        "tick"
-      ]
+      "sfx": ["tick"]
+    },
+    {
+      "id": "s02b",
+      "type": "a-roll",
+      "fromFrame": 1210,
+      "durationInFrames": 749,
+      "layout": "dock-right"
     },
     {
       "id": "s05",
@@ -71,7 +69,7 @@
       "durationInFrames": 829,
       "layout": "dock-right",
       "text": "Somebody made it up for some reason.",
-      "plate": "AUTHORED = A PERSON WROTE IT"
+      "plate": "A PERSON WROTE IT"
     },
     {
       "id": "s04",
@@ -80,39 +78,75 @@
       "durationInFrames": 210,
       "layout": "off",
       "text": "Not gravity. Not the speed of light. Not the freezing point of water.",
-      "assets": [
-        "stills/quota.png",
-        "stills/policy.png",
-        "stills/ice.png"
-      ],
-      "sfx": [
-        "tick"
-      ],
+      "assets": ["stills/quota.png", "stills/policy.png", "stills/ice.png"],
+      "sfx": ["tick"],
       "annotation": "A PERSON CHOSE THIS"
     },
     {
       "id": "s06",
       "type": "vox",
       "fromFrame": 3622,
-      "durationInFrames": 2537,
+      "durationInFrames": 256,
       "layout": "off",
-      "text": "GIVEN  |  AUTHORED",
-      "assets": [
-        "stills/given.png",
-        "stills/authored.png"
-      ],
-      "sfx": [
-        "whoosh"
-      ]
+      "text": "MADE UP",
+      "sfx": ["whoosh"]
+    },
+    {
+      "id": "s06b",
+      "type": "vox",
+      "fromFrame": 3878,
+      "durationInFrames": 616,
+      "layout": "off",
+      "text": "REASON"
+    },
+    {
+      "id": "s06c",
+      "type": "vox",
+      "fromFrame": 4494,
+      "durationInFrames": 219,
+      "layout": "off",
+      "text": "SOMEBODY DECIDED"
+    },
+    {
+      "id": "s06d",
+      "type": "vox",
+      "fromFrame": 4713,
+      "durationInFrames": 495,
+      "layout": "off",
+      "text": "A TITLE. A PRICE."
+    },
+    {
+      "id": "s06e",
+      "type": "vox",
+      "fromFrame": 5208,
+      "durationInFrames": 546,
+      "layout": "off",
+      "text": "SOME REASON"
+    },
+    {
+      "id": "s06f",
+      "type": "vox",
+      "fromFrame": 5754,
+      "durationInFrames": 405,
+      "layout": "off",
+      "text": "A PERSON CAN CHANGE IT"
     },
     {
       "id": "s09",
       "type": "a-roll",
       "fromFrame": 6159,
-      "durationInFrames": 1396,
+      "durationInFrames": 780,
       "layout": "dock-right",
       "text": "The rule is a decision that already happened once.",
-      "plate": "WAITING IS THE FIRST FAILURE"
+      "plate": "STUCK"
+    },
+    {
+      "id": "s09b",
+      "type": "a-roll",
+      "fromFrame": 6939,
+      "durationInFrames": 616,
+      "layout": "letterbox",
+      "plate": "AUTHOR"
     },
     {
       "id": "s08",
@@ -121,61 +155,115 @@
       "durationInFrames": 210,
       "layout": "off",
       "text": "Do not kick the fence yet.",
-      "assets": [
-        "stills/fence.png"
-      ],
+      "assets": ["stills/fence.png"],
       "annotation": "FIND THE REASON FIRST",
-      "sfx": [
-        "tick"
-      ]
+      "sfx": ["tick"]
     },
     {
       "id": "s10",
       "type": "vox",
       "fromFrame": 7765,
-      "durationInFrames": 2435,
+      "durationInFrames": 123,
       "layout": "off",
       "text": "FIVE QUESTIONS",
-      "assets": [],
-      "list": [
-        "Why did they make it up?",
-        "What started it?",
-        "What went in, and what got left out?",
-        "Is this still the best way?",
-        "What keeps the good and cuts the wait?"
-      ],
-      "sfx": [
-        "tick"
-      ]
+      "sfx": ["tick"]
+    },
+    {
+      "id": "s10b",
+      "type": "vox",
+      "fromFrame": 7888,
+      "durationInFrames": 334,
+      "layout": "off",
+      "text": "WHY"
+    },
+    {
+      "id": "s10c",
+      "type": "vox",
+      "fromFrame": 8222,
+      "durationInFrames": 730,
+      "layout": "off",
+      "text": "STARTED"
+    },
+    {
+      "id": "s10d",
+      "type": "vox",
+      "fromFrame": 8952,
+      "durationInFrames": 670,
+      "layout": "off",
+      "text": "LEFT OUT"
+    },
+    {
+      "id": "s10e",
+      "type": "vox",
+      "fromFrame": 9622,
+      "durationInFrames": 578,
+      "layout": "off",
+      "text": "BEST"
     },
     {
       "id": "s11",
       "type": "a-roll",
       "fromFrame": 10200,
-      "durationInFrames": 1271,
+      "durationInFrames": 785,
       "layout": "dock-right",
-      "text": "Skip the questions and you look brave for a week."
+      "text": "Skip the questions and you look brave for a week.",
+      "plate": "KEEP"
+    },
+    {
+      "id": "s11b",
+      "type": "a-roll",
+      "fromFrame": 10985,
+      "durationInFrames": 486,
+      "layout": "letterbox"
     },
     {
       "id": "s12",
       "type": "vox",
       "fromFrame": 11471,
-      "durationInFrames": 2546,
+      "durationInFrames": 286,
       "layout": "off",
       "text": "60 DAYS",
-      "assets": [
-        "stills/sixty.png"
-      ],
-      "chips": [
-        "FRAUD",
-        "BUDGET",
-        "LEGAL",
-        "POLITICS"
-      ],
-      "annotation": "FRAUD \u00b7 BUDGET \u00b7 LEGAL \u00b7 POLITICS",
-      "sfx": [
-        "hit"
-      ]
+      "sfx": ["hit"]
+    },
+    {
+      "id": "s12b",
+      "type": "vox",
+      "fromFrame": 11757,
+      "durationInFrames": 162,
+      "layout": "off",
+      "text": "WHY"
+    },
+    {
+      "id": "s12c",
+      "type": "vox",
+      "fromFrame": 11919,
+      "durationInFrames": 405,
+      "layout": "off",
+      "text": "LAW"
+    },
+    {
+      "id": "s12d",
+      "type": "vox",
+      "fromFrame": 12324,
+      "durationInFrames": 511,
+      "layout": "off",
+      "text": "CLIFF"
+    },
+    {
+      "id": "s12e",
+      "type": "vox",
+      "fromFrame": 12835,
+      "durationInFrames": 309,
+      "layout": "off",
+      "text": "FRAUD"
+    },
+    {
+      "id": "s12f",
+      "type": "vox",
+      "fromFrame": 13144,
+      "durationInFrames": 873,
+      "layout": "off",
+      "text": "STARTED"
     },
     {
       "id": "s13",
@@ -184,19 +272,8 @@
       "durationInFrames": 895,
       "layout": "pip-tr",
       "text": "Satisfy the protection faster.",
-      "assets": [
-        "stills/proof.png",
-        "stills/template.png",
-        "stills/guarantee.png"
-      ],
-      "chips": [
-        "PROOF",
-        "TEMPLATE",
-        "GUARANTEE"
-      ],
-      "sfx": [
-        "whoosh"
-      ]
+      "assets": ["stills/proof.png", "stills/template.png"],
+      "sfx": ["whoosh"]
     },
     {
       "id": "s14",
@@ -211,24 +288,51 @@
       "id": "s15",
       "type": "vox",
       "fromFrame": 15670,
-      "durationInFrames": 1590,
+      "durationInFrames": 414,
       "layout": "off",
-      "text": "Two refusals",
-      "assets": [
-        "stills/refuse-1.png",
-        "stills/refuse-2.png"
-      ],
-      "sfx": [
-        "tick"
-      ]
+      "text": "INTIMIDATED",
+      "sfx": ["tick"]
+    },
+    {
+      "id": "s15b",
+      "type": "vox",
+      "fromFrame": 16084,
+      "durationInFrames": 61,
+      "layout": "off",
+      "text": "REFUSE"
+    },
+    {
+      "id": "s15c",
+      "type": "vox",
+      "fromFrame": 16145,
+      "durationInFrames": 548,
+      "layout": "off",
+      "text": "WRECK"
+    },
+    {
+      "id": "s15d",
+      "type": "vox",
+      "fromFrame": 16693,
+      "durationInFrames": 567,
+      "layout": "off",
+      "text": "PEOPLE"
     },
     {
       "id": "s16",
       "type": "a-roll",
       "fromFrame": 17260,
-      "durationInFrames": 1275,
+      "durationInFrames": 478,
       "layout": "dock-right",
-      "text": "Waiting is the first failure. Vandalism is the second."
+      "text": "Waiting is the first failure. Vandalism is the second.",
+      "plate": "VANDAL"
+    },
+    {
+      "id": "s16b",
+      "type": "a-roll",
+      "fromFrame": 17738,
+      "durationInFrames": 797,
+      "layout": "letterbox",
+      "plate": "CHANGE"
     },
     {
       "id": "s17",
@@ -237,37 +341,41 @@
       "durationInFrames": 504,
       "layout": "off",
       "text": "ASK",
-      "assets": [],
-      "list": [
-        "Ask why they made it up.",
-        "What started it.",
-        "What they put in and left out.",
-        "If that is still the best way.",
-        "What would keep the good and cut the wait."
-      ],
-      "sfx": [
-        "tick"
-      ]
+      "list": ["WHY", "STARTED", "LEFT OUT", "BEST", "KEEP"],
+      "sfx": ["tick"]
     },
     {
       "id": "s18",
       "type": "a-roll",
       "fromFrame": 19039,
       "durationInFrames": 297,
-      "layout": "dock-right",
+      "layout": "letterbox",
       "text": "Things are real. Things can change.",
-      "plate": "THINGS ARE REAL. THINGS CAN CHANGE."
+      "plate": "THINGS ARE REAL."
     },
     {
       "id": "s19",
       "type": "cta",
       "fromFrame": 19336,
-      "durationInFrames": 720,
+      "durationInFrames": 180,
       "layout": "off",
       "text": "CHANGE IT WITH THE REASON IN HAND",
-      "sfx": [
-        "sting"
-      ]
+      "sfx": ["sting"]
+    },
+    {
+      "id": "s20",
+      "type": "a-roll",
+      "fromFrame": 19516,
+      "durationInFrames": 300,
+      "layout": "letterbox"
+    },
+    {
+      "id": "s21",
+      "type": "cta",
+      "fromFrame": 19816,
+      "durationInFrames": 120,
+      "layout": "off",
+      "text": "CHANGE IT WITH THE REASON IN HAND"
     }
   ]
 }

@@ -1,5 +1,5 @@
 export type ShotType = "sting" | "hook" | "a-roll" | "b-roll" | "vox" | "cta";
-export type ShotLayout = "off" | "dock-right" | "pip-tr";
+export type ShotLayout = "off" | "dock-right" | "pip-tr" | "letterbox";
 
 export type MadeShot = {
   id: string;
