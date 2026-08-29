@@ -18,7 +18,7 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0}
   const enter = spring({
     frame: local,
     fps,
-    durationInFrames: pip ? 12 : 14,
+    durationInFrames: 6,
     config: {damping: 8, mass: 0.4, stiffness: 260},
   });
   const tape = spring({

@@ -15,15 +15,15 @@
       "id": "s00",
       "type": "sting",
       "fromFrame": 0,
-      "durationInFrames": 122,
+      "durationInFrames": 154,
       "layout": "off",
       "sfx": ["sting"]
     },
     {
       "id": "s01",
       "type": "hook",
-      "fromFrame": 122,
-      "durationInFrames": 329,
+      "fromFrame": 154,
+      "durationInFrames": 297,
       "layout": "off",
       "text": "PEOPLE WAIT TO BE TOLD",
       "sfx": ["hit"]

@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {interpolate, useCurrentFrame, useDelayRender, useVideoConfig} from "remotion";
+import {interpolate, useDelayRender} from "remotion";
 import {waitMadeUpFonts} from "./fonts";
 import {pageForClock} from "./pages";
 import {
@@ -7,7 +7,6 @@ import {
   TYPE_HEAD_GAP,
   TYPE_PLAYBOOK,
   TYPE_SOLO,
-  WORD_FADE_FRAMES,
   displayFace,
   gold,
   headReservedPx,
@@ -18,7 +17,7 @@ import type {MadeWord} from "./schema";
 
 const WAITING = /^waiting\.$/i;
 export const PLAYBOOK = /^playbook[,.]?$/i;
-const TYPE_MS = 1500;
+const TYPE_MS = 460;
 const ALLOW_HOLD_MS = 2200;
 const ALLOWED = /^(just|real|authored|gravity|stuck|five|sixty|60|intimidated|wreck|vandal|act|reason)$/i;
 
@@ -45,8 +44,6 @@ const typedCount = (nowMs: number, fromMs: number, letters: number): number => {
 };
 
 export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}) => {
-  const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
   const {delayRender, continueRender} = useDelayRender();
   const [handle] = useState(() => delayRender("type-fonts"));
   const [ready, setReady] = useState(false);
@@ -92,7 +89,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
     return keep.length > 0 ? {...next, words: keep} : null;
   }, [bookMs, bookWord, lock, nowMs, waitWord, words]);
 
-  if (!ready || !page) {
+  if (!page) {
     return null;
   }
 
@@ -133,11 +130,6 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
     >
       <div style={{textAlign: "center", width: "100%", maxWidth: "100%"}}>
         {page.words.map((word, i) => {
-          const appear = Math.round((Math.max(word.fromMs, page.appearMs) / 1000) * fps);
-          const fade = interpolate(frame, [appear, appear + WORD_FADE_FRAMES], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          });
           const active = nowMs >= word.fromMs && nowMs < word.toMs;
           const readyWord = nowMs >= Math.max(word.fromMs, page.appearMs);
           if (WAITING.test(word.text.trim())) {
@@ -157,8 +149,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
                   letterSpacing: "-0.04em",
                   lineHeight: 1.05,
                   color: ink,
-                  opacity: readyWord ? fade : 0,
-                  translate: `0px ${(1 - fade) * 18}px`,
+                  opacity: readyWord ? 1 : 0,
                   scale: `${interpolate(solo, [0, 1], [1, 1.04], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}`,
                 }}
               >
@@ -170,7 +161,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
                     height: 6,
                     margin: "12px auto 0",
                     backgroundColor: ink,
-                    opacity: fade,
+                    opacity: readyWord ? 1 : 0,
                   }}
                 />
               </span>
@@ -200,8 +191,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
                 letterSpacing: "-0.03em",
                 lineHeight: 1.16,
                 color: active ? gold : spokenColor,
-                opacity: readyWord ? (active ? 1 : 0.86) * fade : 0,
-                translate: `0px ${(1 - fade) * 8}px`,
+                opacity: readyWord ? 1 : 0,
               }}
             >
               {word.text}

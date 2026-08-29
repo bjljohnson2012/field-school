@@ -78,9 +78,6 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
       return 72;
     }
   }, [assets.length, giant, hero, list, ready, text]);
-  if (!ready) {
-    return null;
-  }
   return (
     <div style={{position: "absolute", inset: 0, backgroundColor: paper, opacity: 1}}>
       {text ? (
@@ -120,12 +117,6 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
           }}
         >
           {list.map((line, i) => {
-            const enter = spring({
-              frame: Math.max(0, local - 2 - i * 4),
-              fps,
-              durationInFrames: 14,
-              config: {damping: 10, mass: 0.48, stiffness: 210},
-            });
             const hot = spoken.some((needle) => line.toLowerCase().includes(needle));
             return (
               <div
@@ -136,8 +127,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                   fontSize: ask ? 72 : 58,
                   lineHeight: 1.16,
                   color: hot ? wine : ink,
-                  opacity: hot ? 1 : enter * (ask ? 0.62 : 0.28),
-                  translate: `0px ${(1 - enter) * 24}px`,
+                  opacity: hot ? 1 : ask ? 0.7 : 0.34,
                   scale: `${hot ? 1.03 : 1}`,
                   marginBottom: ask ? 22 : 16,
                 }}
@@ -166,12 +156,6 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
           }}
         >
           {assets.map((src, i) => {
-            const enter = spring({
-              frame: Math.max(0, local - 2 - i * 4),
-              fps,
-              durationInFrames: 16,
-              config: {damping: 9, mass: 0.45, stiffness: 230},
-            });
             const tilt = (i % 2 === 0 ? -1 : 1) * (1.6 + (i % 3));
             const marked = stamps > i;
             return (
@@ -185,10 +169,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                   boxSizing: "border-box",
                   outline: `3px solid ${ink}`,
                   boxShadow: `0 18px 36px ${ink}2e`,
-                  opacity: enter,
-                  scale: `${0.86 + enter * 0.14}`,
                   rotate: `${tilt}deg`,
-                  translate: `0px ${(1 - enter) * 36}px`,
                   position: "relative",
                 }}
               >
@@ -244,12 +225,6 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
           }}
         >
           {chips.map((chip, i) => {
-            const enter = spring({
-              frame: Math.max(0, local - 10 - i * 4),
-              fps,
-              durationInFrames: 12,
-              config: {damping: 10, mass: 0.42, stiffness: 220},
-            });
             const hot = spoken.some((needle) => chip.toLowerCase().includes(needle));
             return (
               <div
@@ -262,9 +237,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                   color: paper,
                   backgroundColor: hot ? wine : ink,
                   padding: "14px 22px",
-                  opacity: enter,
                   rotate: `${(i % 2 === 0 ? -1 : 1) * 1.4}deg`,
-                  scale: `${0.9 + enter * 0.1}`,
                 }}
               >
                 {chip}
@@ -286,7 +259,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
             color: wine,
             outline: `3px solid ${gold}`,
             padding: "12px 18px",
-            opacity: interpolate(local, [16, 26], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
+            opacity: 1,
           }}
         >
           {annotation}

@@ -1,6 +1,6 @@
 import {fitText} from "@remotion/layout-utils";
 import React, {useEffect, useMemo, useState} from "react";
-import {Img, interpolate, spring, staticFile, useDelayRender, useVideoConfig} from "remotion";
+import {Img, interpolate, staticFile, useDelayRender} from "remotion";
 import {waitMadeUpFonts} from "./fonts";
 import {TYPE_COL, displayFace, gold, ink} from "./tokens";
 
@@ -10,8 +10,7 @@ type TitlePlateProps = {
   docked: boolean;
 };
 
-export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => {
-  const {fps} = useVideoConfig();
+export const TitlePlate: React.FC<TitlePlateProps> = ({text, local: _local, docked}) => {
   const {delayRender, continueRender} = useDelayRender();
   const [handle] = useState(() => delayRender("title-fonts"));
   const [ready, setReady] = useState(false);
@@ -46,20 +45,7 @@ export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => 
       return cap;
     }
   }, [cap, ready, text, width]);
-  const enter = spring({
-    frame: local,
-    fps,
-    durationInFrames: 10,
-    config: {damping: 8, mass: 0.4, stiffness: 250},
-  });
-  const rule = spring({
-    frame: local - 2,
-    fps,
-    durationInFrames: 10,
-    config: {damping: 14, mass: 0.4, stiffness: 220},
-  });
-  const hold = interpolate(local, [180, 240], [1, 0.72], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  if (!ready) {
+  if (!ready && !text) {
     return null;
   }
   return (
@@ -69,11 +55,10 @@ export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => 
         left: 88,
         top: 96,
         width,
-        opacity: enter * hold,
-        translate: `0px ${(1 - enter) * 36}px`,
+        opacity: 1,
       }}
     >
-      <div style={{width: 96, height: 5, backgroundColor: gold, marginBottom: 18, scale: `${rule} 1`}} />
+      <div style={{width: 96, height: 5, backgroundColor: gold, marginBottom: 18}} />
       <div
         style={{
           fontFamily: displayFace,
@@ -93,13 +78,6 @@ export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => 
 const CTA_LINES = ["CHANGE IT", "WITH THE REASON", "IN HAND"];
 
 export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) => {
-  const {fps} = useVideoConfig();
-  const enter = spring({
-    frame: local,
-    fps,
-    durationInFrames: 14,
-    config: {damping: 8, mass: 0.42, stiffness: 240},
-  });
   const leave = interpolate(local, [160, 200], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   const lines = text === "CHANGE IT WITH THE REASON IN HAND" ? CTA_LINES : [text];
   return (
@@ -112,20 +90,19 @@ export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) 
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        opacity: enter * leave,
+        opacity: leave,
       }}
     >
       <Img
         src={staticFile("wordmark-transparent.png")}
         style={{
-          width: 980,
-          height: 180,
+          width: 1100,
+          height: 200,
           objectFit: "contain",
           marginBottom: 22,
-          scale: `${interpolate(enter, [0, 1], [1.18, 1])}`,
         }}
       />
-      <div style={{width: 160, height: 4, backgroundColor: gold, marginBottom: 28, scale: `${enter} 1`}} />
+      <div style={{width: 160, height: 4, backgroundColor: gold, marginBottom: 28}} />
       {lines.map((line, i) => (
         <div
           key={line}
@@ -136,7 +113,6 @@ export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) 
             lineHeight: 0.95,
             letterSpacing: "-0.04em",
             color: i === 1 ? gold : ink,
-            translate: `0px ${(1 - enter) * (20 + i * 8)}px`,
           }}
         >
           {line}

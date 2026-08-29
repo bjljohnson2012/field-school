@@ -12,6 +12,7 @@ import {CtaCard, TitlePlate} from "./TitlePlate";
 import {PLAYBOOK, TypeField, letterAtMs} from "./TypeField";
 import {PaperCut, type CutKind} from "./PaperCut";
 import {WaitingWash} from "./WaitingWash";
+import {HoldFonts} from "./HoldFonts";
 import {BED_FRAMES, FPS, MASTER_FRAMES, bg, gold, paperGrain, uiFace} from "./tokens";
 import type {MadeEpisode, MadeShot, MadeWord} from "./schema";
 
@@ -43,10 +44,11 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const hookGhost = shot?.id === "s01" && solo > 0.08 ? 1 : 0;
   const letterMode = shot && (shot.type === "a-roll" || shot.layout === "letterbox") ? "hair" : "none";
   const kind = cutKind(shot);
-  const stingLen = episode.shots.find((item) => item.type === "sting")?.durationInFrames ?? 122;
+  const stingLen = episode.shots.find((item) => item.type === "sting")?.durationInFrames ?? 154;
   const bedVol = bedVolume(shot, frame, vox);
   const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
   return (
+    <HoldFonts>
     <AbsoluteFill style={{backgroundColor: bg}}>
       <Stack>
         <AbsoluteFill style={{backgroundColor: bg, backgroundImage: paperGrain}} />
@@ -90,7 +92,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
               bottom: 88,
               width: 680,
               textAlign: "right",
-              opacity: interpolate(local, [8, 18], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
+              opacity: 1,
             }}
           >
             <div style={{width: 48, height: 3, backgroundColor: gold, marginLeft: "auto", marginBottom: 10}} />
@@ -106,13 +108,13 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             </div>
           </div>
         ) : null}
-        {shot && (shot.type !== "sting" || local >= stingLen - 12) ? (
-          <PaperCut local={shot.type === "sting" ? local - (stingLen - 12) : local} kind={kind} />
+        {shot && (shot.type !== "sting" || local >= stingLen - 6) ? (
+          <PaperCut local={shot.type === "sting" ? local - (stingLen - 6) : local} kind={kind} />
         ) : null}
         {shot && shot.type === "sting" ? <BrandLockup local={local} duration={stingLen} /> : null}
         {shot && shot.type === "cta" ? <CtaCard text={shot.text || ""} local={local} /> : null}
         <BrandBug open={shot && shot.type !== "sting" && shot.type !== "cta" ? 1 : 0} />
-        <MadeLetterbox mode={letterMode} local={local} />
+        <MadeLetterbox mode={letterMode} local={20} />
         {Array.from({length: bedLoops}, (_, i) => (
           <Sequence key={`bed-${i}`} from={i * BED_FRAMES} durationInFrames={BED_FRAMES} layout="none">
             <Audio src={staticFile("bed.wav")} volume={bedVol} />
@@ -128,6 +130,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
         <WordHits words={words} />
       </Stack>
     </AbsoluteFill>
+    </HoldFonts>
   );
 };
 

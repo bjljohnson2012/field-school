@@ -1,5 +1,5 @@
 import React from "react";
-import {Img, interpolate, spring, staticFile, useVideoConfig} from "remotion";
+import {Img, interpolate, staticFile} from "remotion";
 import {displayFace, gold, ink, uiFace} from "./tokens";
 
 type BrandLockupProps = {
@@ -10,29 +10,8 @@ type BrandLockupProps = {
 
 const SLOGAN = "Lead yourself. Learn yourself. Do the work.";
 
-export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everything Is Made Up", duration = 122}) => {
-  const {fps} = useVideoConfig();
-  const stamp = spring({
-    frame: local,
-    fps,
-    durationInFrames: 16,
-    config: {damping: 9, mass: 0.42, stiffness: 240},
-  });
-  const typeIn = spring({
-    frame: local - 10,
-    fps,
-    durationInFrames: 18,
-    config: {damping: 12, mass: 0.55, stiffness: 190},
-  });
-  const grow = interpolate(local, [16, Math.max(40, duration - 24)], [0.92, 1.05], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const leave = interpolate(local, [duration - 14, duration - 2], [1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const shove = interpolate(local, [duration - 14, duration - 2], [0, -140], {
+export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everything Is Made Up", duration = 154}) => {
+  const leave = interpolate(local, [duration - 4, duration], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -47,42 +26,35 @@ export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everyth
         justifyContent: "center",
         textAlign: "center",
         opacity: leave,
-        translate: `0px ${shove}px`,
       }}
     >
       <Img
         src={staticFile("wordmark-transparent.png")}
         style={{
-          width: 1180,
-          height: 220,
+          width: 1320,
+          height: 260,
           objectFit: "contain",
           objectPosition: "center",
-          opacity: stamp,
-          scale: `${interpolate(stamp, [0, 1], [1.28, 1])}`,
-          rotate: `${interpolate(stamp, [0, 1], [-4, 0])}deg`,
         }}
       />
       <div
         style={{
-          marginTop: 16,
+          marginTop: 18,
           fontFamily: uiFace,
           fontWeight: 600,
-          fontSize: 22,
+          fontSize: 24,
           letterSpacing: "0.08em",
           color: ink,
-          opacity: typeIn,
         }}
       >
         {SLOGAN}
       </div>
       <div
         style={{
-          width: 220,
+          width: 240,
           height: 4,
           marginTop: 26,
           backgroundColor: gold,
-          scale: `${typeIn} 1`,
-          opacity: typeIn,
         }}
       />
       <div
@@ -91,12 +63,9 @@ export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everyth
           width: 1500,
           fontFamily: displayFace,
           fontWeight: 700,
-          fontSize: 68,
+          fontSize: 72,
           letterSpacing: "-0.04em",
           color: ink,
-          opacity: typeIn,
-          scale: `${grow}`,
-          translate: `0px ${(1 - typeIn) * 36}px`,
         }}
       >
         {title}
@@ -116,10 +85,10 @@ export const BrandBug: React.FC<{open: number}> = ({open}) => {
         position: "absolute",
         right: 36,
         bottom: 28,
-        width: 76,
-        height: 76,
+        width: 84,
+        height: 84,
         objectFit: "contain",
-        opacity: 0.5 * open,
+        opacity: 0.72 * open,
       }}
     />
   );

@@ -4,7 +4,7 @@ import {ink, paper} from "./tokens";
 
 const SRC_W = 1536;
 const SRC_H = 1024;
-const FOCUS_X = 0.86;
+const FOCUS_X = 0.91;
 const FOCUS_Y = 0.40;
 
 type WaitingWashProps = {
