@@ -40,9 +40,14 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
     if (held && waitWord) {
       return {words: [waitWord], appearMs: waitWord.fromMs, hideMs: bookMs ?? waitWord.toMs + 8000};
     }
+    const nextAfterBook =
+      bookMs === null
+        ? null
+        : words.find((word) => isAllowed(word.text) && word.fromMs > bookMs);
+    const bookHide = nextAfterBook?.fromMs ?? (bookMs !== null ? bookMs + 3600 : null);
     const bookPage =
-      bookWord && bookMs !== null && nowMs + 34 >= bookMs && nowMs < bookMs + 900
-        ? {words: [bookWord], appearMs: bookWord.fromMs, hideMs: bookMs + 900}
+      bookWord && bookMs !== null && bookHide !== null && nowMs + 34 >= bookMs && nowMs < bookHide
+        ? {words: [bookWord], appearMs: bookWord.fromMs, hideMs: bookHide}
         : null;
     if (bookPage) {
       return bookPage;
