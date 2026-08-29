@@ -30,7 +30,7 @@ def detect(det: cv2.CascadeClassifier, frame: np.ndarray) -> tuple[float, float]
     if len(faces) == 0:
         return None
     x, y, w, h = max(faces, key=lambda item: item[2] * item[3])
-    return float(x + w / 2.0), float(y + h * 0.38)
+    return float(x + w / 2.0), float(y + h / 2.0)
 
 
 def smooth(values: np.ndarray, window: int) -> np.ndarray:
@@ -73,10 +73,10 @@ def main() -> None:
     cap.release()
     if hits == 0:
         raise SystemExit("no faces found")
-    x = smooth(np.array(xs, dtype=np.float64), 25)
-    y = smooth(np.array(ys, dtype=np.float64), 25)
-    y = np.clip(y - 0.04, 0.08, 0.55)
-    x = np.clip(x, 0.2, 0.8)
+    x = smooth(np.array(xs, dtype=np.float64), 17)
+    y = smooth(np.array(ys, dtype=np.float64), 17)
+    x = np.clip(x, 0.18, 0.82)
+    y = np.clip(y, 0.12, 0.72)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(
         json.dumps(
