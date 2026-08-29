@@ -59,12 +59,6 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
   const hero = /^(60 DAYS|FIVE QUESTIONS)$/i.test(text);
   const ask = /^ASK$/i.test(text);
   const giant = !list && assets.length === 0 && text.length > 0 && text.length <= 28 && !/^60 DAYS$/i.test(text);
-  const wash = spring({
-    frame: local,
-    fps,
-    durationInFrames: 10,
-    config: {damping: 11, mass: 0.4, stiffness: 250},
-  });
   const {w: cardW, h: cardH} = cardSize(assets.length);
   const headline = useMemo(() => {
     if (!ready || !text) {
@@ -88,7 +82,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
     return null;
   }
   return (
-    <div style={{position: "absolute", inset: 0, backgroundColor: paper, opacity: wash}}>
+    <div style={{position: "absolute", inset: 0, backgroundColor: paper, opacity: 1}}>
       {text ? (
         <div
           style={{
