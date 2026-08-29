@@ -112,9 +112,9 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
         <div
           style={{
             position: "absolute",
-            left: 100,
+            left: 120,
             top: 200,
-            width: 1720,
+            width: 1680,
             height: 760,
           }}
         >
@@ -132,14 +132,15 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                 style={{
                   fontFamily: displayFace,
                   fontWeight: 700,
-                  fontSize: 64,
-                  lineHeight: 1.18,
+                  fontSize: 58,
+                  lineHeight: 1.16,
                   color: hot ? wine : ink,
                   opacity: enter,
                   translate: `0px ${(1 - enter) * 24}px`,
-                  marginBottom: 18,
+                  marginBottom: 16,
                 }}
               >
+                <span style={{color: gold, marginRight: 28, fontSize: 44}}>{String(i + 1).padStart(2, "0")}</span>
                 {line}
               </div>
             );
