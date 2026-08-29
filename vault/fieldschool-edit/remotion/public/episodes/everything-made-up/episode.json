@@ -15,7 +15,7 @@
       "id": "s00",
       "type": "sting",
       "fromFrame": 0,
-      "durationInFrames": 154,
+      "durationInFrames": 153,
       "layout": "off",
       "sfx": [
         "sting"
@@ -24,8 +24,8 @@
     {
       "id": "s01",
       "type": "hook",
-      "fromFrame": 154,
-      "durationInFrames": 297,
+      "fromFrame": 153,
+      "durationInFrames": 298,
       "layout": "off",
       "text": "PEOPLE CANNOT GET THINGS DONE",
       "sfx": [
@@ -61,7 +61,7 @@
       "id": "s02",
       "type": "hook",
       "fromFrame": 1041,
-      "durationInFrames": 40,
+      "durationInFrames": 74,
       "layout": "off",
       "text": "YOU CAN JUST DO THINGS",
       "sfx": [
@@ -71,36 +71,36 @@
     {
       "id": "s02b",
       "type": "a-roll",
-      "fromFrame": 1081,
+      "fromFrame": 1115,
       "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
       "id": "s02b-1",
       "type": "a-roll",
-      "fromFrame": 1561,
+      "fromFrame": 1595,
       "durationInFrames": 480,
       "layout": "letterbox"
     },
     {
       "id": "s02b-2",
       "type": "a-roll",
-      "fromFrame": 2041,
+      "fromFrame": 2075,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
       "id": "s02b-3",
       "type": "a-roll",
-      "fromFrame": 2521,
+      "fromFrame": 2555,
       "durationInFrames": 540,
       "layout": "dock-left"
     },
     {
       "id": "s02b-4",
       "type": "a-roll",
-      "fromFrame": 3061,
-      "durationInFrames": 351,
+      "fromFrame": 3095,
+      "durationInFrames": 317,
       "layout": "letterbox"
     },
     {
@@ -173,15 +173,8 @@
       "id": "s06-7",
       "type": "a-roll",
       "fromFrame": 6999,
-      "durationInFrames": 540,
+      "durationInFrames": 556,
       "layout": "letterbox"
-    },
-    {
-      "id": "s06-8",
-      "type": "a-roll",
-      "fromFrame": 7539,
-      "durationInFrames": 16,
-      "layout": "dock-left"
     },
     {
       "id": "s08",
@@ -202,7 +195,7 @@
       "id": "s10",
       "type": "vox",
       "fromFrame": 7668,
-      "durationInFrames": 220,
+      "durationInFrames": 219,
       "layout": "off",
       "text": "FIVE QUESTIONS",
       "sfx": [
@@ -212,58 +205,51 @@
     {
       "id": "s10b",
       "type": "a-roll",
-      "fromFrame": 7888,
+      "fromFrame": 7887,
       "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
       "id": "s10b-1",
       "type": "a-roll",
-      "fromFrame": 8368,
+      "fromFrame": 8367,
       "durationInFrames": 480,
       "layout": "letterbox"
     },
     {
       "id": "s10b-2",
       "type": "a-roll",
-      "fromFrame": 8848,
+      "fromFrame": 8847,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
       "id": "s10b-3",
       "type": "a-roll",
-      "fromFrame": 9328,
+      "fromFrame": 9327,
       "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
       "id": "s10b-4",
       "type": "a-roll",
-      "fromFrame": 9808,
+      "fromFrame": 9807,
       "durationInFrames": 480,
       "layout": "letterbox"
     },
     {
       "id": "s10b-5",
       "type": "a-roll",
-      "fromFrame": 10288,
+      "fromFrame": 10287,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
       "id": "s10b-6",
       "type": "a-roll",
-      "fromFrame": 10768,
-      "durationInFrames": 540,
+      "fromFrame": 10767,
+      "durationInFrames": 704,
       "layout": "dock-left"
-    },
-    {
-      "id": "s10b-7",
-      "type": "a-roll",
-      "fromFrame": 11308,
-      "durationInFrames": 163,
-      "layout": "letterbox"
     },
     {
       "id": "s12",
@@ -330,21 +316,14 @@
       "id": "s14",
       "type": "a-roll",
       "fromFrame": 14912,
-      "durationInFrames": 540,
+      "durationInFrames": 757,
       "layout": "dock-left"
-    },
-    {
-      "id": "s14-1",
-      "type": "a-roll",
-      "fromFrame": 15452,
-      "durationInFrames": 218,
-      "layout": "letterbox"
     },
     {
       "id": "s15",
       "type": "vox",
-      "fromFrame": 15670,
-      "durationInFrames": 414,
+      "fromFrame": 15669,
+      "durationInFrames": 415,
       "layout": "off",
       "text": "INTIMIDATED",
       "sfx": [
@@ -392,15 +371,8 @@
       "id": "s16-3",
       "type": "a-roll",
       "fromFrame": 17816,
-      "durationInFrames": 540,
+      "durationInFrames": 723,
       "layout": "dock-right"
-    },
-    {
-      "id": "s16-4",
-      "type": "a-roll",
-      "fromFrame": 18356,
-      "durationInFrames": 183,
-      "layout": "letterbox"
     },
     {
       "id": "s17",
@@ -435,14 +407,14 @@
       "id": "s18b",
       "type": "vox",
       "fromFrame": 19132,
-      "durationInFrames": 215,
+      "durationInFrames": 214,
       "layout": "off",
       "text": "THINGS ARE REAL."
     },
     {
       "id": "s19",
       "type": "cta",
-      "fromFrame": 19347,
+      "fromFrame": 19346,
       "durationInFrames": 180,
       "layout": "off",
       "text": "CHANGE IT WITH THE REASON IN HAND",
@@ -453,8 +425,8 @@
     {
       "id": "s20",
       "type": "a-roll",
-      "fromFrame": 19527,
-      "durationInFrames": 300,
+      "fromFrame": 19526,
+      "durationInFrames": 301,
       "layout": "letterbox"
     },
     {
