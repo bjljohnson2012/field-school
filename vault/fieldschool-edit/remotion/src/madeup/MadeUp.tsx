@@ -57,7 +57,6 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
       <Stack>
         <AbsoluteFill style={{backgroundColor: bg, backgroundImage: paperGrain}} />
         <PaperSheet open={paperOpen} solo={solo} />
-        {shot ? <PaperCut local={local} /> : null}
         <WaitingWash open={shot?.id === "s01" && waited ? Math.max(solo, 0.92) : solo} />
         {shot && vox ? (
           <CollageBeat
@@ -113,6 +112,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             </div>
           </div>
         ) : null}
+        {shot && shot.type !== "sting" ? <PaperCut local={local} /> : null}
         {shot && shot.type === "sting" ? <BrandLockup local={local} /> : null}
         {shot && shot.type === "cta" ? <CtaCard text={shot.text || ""} local={local} /> : null}
         <BrandBug open={shot && shot.type !== "sting" && shot.type !== "cta" ? 1 : 0} />
