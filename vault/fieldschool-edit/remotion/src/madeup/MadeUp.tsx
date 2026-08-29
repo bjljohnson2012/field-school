@@ -1,13 +1,16 @@
 import React from "react";
 import {AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame} from "remotion";
 import {Stack} from "../components/layers/Stack";
-import {CaptionPlate} from "./CaptionPlate";
 import {CollageBeat} from "./CollageBeat";
+import {useWaitingSolo} from "./dropOff";
 import {HookPlate} from "./HookPlate";
 import {MadeHead} from "./MadeHead";
 import {MadeLetterbox} from "./MadeLetterbox";
+import {PaperSheet} from "./PaperSheet";
 import {CtaCard, StingLockup, TitlePlate} from "./TitlePlate";
-import {BED_FRAMES, FPS, LOWER_THIRD_BOTTOM, MASTER_FRAMES, bg, paper, uiFace} from "./tokens";
+import {PLAYBOOK, TypeField, letterAtMs} from "./TypeField";
+import {WaitingWash} from "./WaitingWash";
+import {BED_FRAMES, FPS, MASTER_FRAMES, bg, darkGrain, gold, paper, uiFace} from "./tokens";
 import type {MadeEpisode, MadeShot, MadeWord} from "./schema";
 
 export const defaultMadeUp: MadeEpisode = {
@@ -26,18 +29,27 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const words = episode.words || [];
   const shot = shotAt(episode.shots, frame);
   const local = shot ? frame - shot.fromFrame : 0;
+  const solo = useWaitingSolo(words);
   const vox = Boolean(shot && (shot.type === "vox" || shot.type === "b-roll"));
-  const letter = interpolate(vox ? local : 0, [0, 16], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const waitFrame = wordFrame(words, "waiting", 0) ?? 333;
-  const justFrame = wordFrame(words, "just", 30000) ?? 1047;
+  const teach = Boolean(
+    shot &&
+      (shot.type === "a-roll" || shot.id === "s02" || (shot.id === "s01" && solo > 0.02)),
+  );
+  const docked = Boolean(shot && (shot.layout === "dock-right" || shot.layout === "pip-tr") && solo < 0.5);
+  const paperOpen =
+    shot && shot.type === "a-roll"
+      ? interpolate(local, [0, 10], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})
+      : 0;
+  const hookGhost = shot?.id === "s01" && solo > 0.08 ? 1 : 0;
   const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
+  const letterMode = !shot || shot.type === "sting" || shot.type === "cta" || shot.type === "hook" ? "none" : vox ? "vox" : "hair";
   return (
     <AbsoluteFill style={{backgroundColor: bg}}>
       <Stack>
         <AbsoluteFill style={{backgroundColor: vox ? paper : bg}} />
+        {!vox ? <AbsoluteFill style={{backgroundImage: darkGrain, opacity: 0.85}} /> : null}
+        <PaperSheet open={paperOpen} solo={solo} />
+        <WaitingWash open={solo} />
         {shot && vox ? (
           <CollageBeat
             assets={shot.assets || []}
@@ -50,40 +62,52 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             spoken={spokenNeedles(words, nowMs)}
           />
         ) : null}
-        <MadeHead src={fileName(episode.cam)} layout={shot ? shot.layout : "off"} local={local} />
-        {shot && shot.lowerThird ? (
-          <div
-            style={{
-              position: "absolute",
-              left: 72,
-              bottom: LOWER_THIRD_BOTTOM,
-              fontFamily: uiFace,
-              fontSize: 18,
-              color: paper,
-              letterSpacing: "0.12em",
-            }}
-          >
-            {shot.lowerThird.name}
-          </div>
+        {teach ? (
+          <TypeField
+            words={words}
+            nowMs={nowMs}
+            solo={solo}
+            docked={docked}
+            mode={shot?.type === "a-roll" ? "paper" : "dark"}
+          />
         ) : null}
         {shot && shot.type === "hook" && shot.id === "s01" ? (
-          <HookPlate text={shot.text || "PEOPLE WAIT TO BE TOLD"} local={frame - enterAt(shot, waitFrame)} />
+          <HookPlate text={shot.text || "PEOPLE WAIT TO BE TOLD"} local={frame - shot.fromFrame} ghost={hookGhost} />
         ) : null}
         {shot && shot.id === "s02" ? (
-          <>
-            <HookPlate text="PEOPLE WAIT TO BE TOLD" local={8} pip />
-            <HookPlate text={shot.text || "YOU CAN JUST DO THINGS"} local={frame - enterAt(shot, justFrame)} second pip />
-          </>
+          <HookPlate text={shot.text || "YOU CAN JUST DO THINGS"} local={local} pip />
         ) : null}
         {shot && shot.type === "a-roll" && shot.plate ? (
           <TitlePlate text={shot.plate} local={local} docked={shot.layout === "dock-right"} />
         ) : null}
-        {shot && (shot.type === "a-roll" || shot.type === "hook") ? (
-          <CaptionPlate words={words} nowMs={nowMs} docked={shot.layout === "dock-right"} />
+        <MadeHead src={fileName(episode.cam)} layout={shot ? shot.layout : "off"} local={local} solo={solo} />
+        {shot && shot.lowerThird && shot.layout === "dock-right" && solo < 0.4 ? (
+          <div
+            style={{
+              position: "absolute",
+              right: 72,
+              bottom: 88,
+              width: 680,
+              textAlign: "right",
+              opacity: interpolate(local, [8, 18], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
+            }}
+          >
+            <div style={{width: 48, height: 3, backgroundColor: gold, marginLeft: "auto", marginBottom: 10}} />
+            <div
+              style={{
+                fontFamily: uiFace,
+                fontSize: 18,
+                letterSpacing: "0.16em",
+                color: gold,
+              }}
+            >
+              {shot.lowerThird.name}
+            </div>
+          </div>
         ) : null}
         {shot && shot.type === "sting" ? <StingLockup local={local} /> : null}
         {shot && shot.type === "cta" ? <CtaCard text={shot.text || ""} local={local} /> : null}
-        <MadeLetterbox close={vox ? letter : 0.2} />
+        <MadeLetterbox mode={letterMode} />
         {Array.from({length: bedLoops}, (_, i) => (
           <Sequence key={`bed-${i}`} from={i * BED_FRAMES} durationInFrames={BED_FRAMES} layout="none">
             <Audio src={staticFile("bed.wav")} volume={0.22} />
@@ -93,8 +117,26 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
         {episode.shots.map((item) => (
           <ShotSfx key={`${item.id}-sfx`} shot={item} />
         ))}
+        <PlaybookKeys words={words} />
       </Stack>
     </AbsoluteFill>
+  );
+};
+
+const PlaybookKeys: React.FC<{words: MadeWord[]}> = ({words}) => {
+  const book = words.find((word) => PLAYBOOK.test(word.text.trim()));
+  if (!book) {
+    return null;
+  }
+  const keys = book.text.split("").map((_, i) => Math.round((letterAtMs(book.fromMs, i, book.text.length) / 1000) * FPS));
+  return (
+    <>
+      {keys.map((at, i) => (
+        <Sequence key={`key-${at}-${i}`} from={at} durationInFrames={5} layout="none">
+          <Audio src={staticFile(i % 2 === 0 ? "sfx/key-a.wav" : "sfx/key-b.wav")} volume={0.1} />
+        </Sequence>
+      ))}
+    </>
   );
 };
 
@@ -118,7 +160,7 @@ const ShotSfx: React.FC<{shot: MadeShot}> = ({shot}) => {
 };
 
 const shotAt = (shots: MadeShot[], frame: number): MadeShot | null => {
-  return shots.find((shot) => frame >= shot.fromFrame && frame < shot.fromFrame + shot.durationInFrames) ?? null;
+  return shots.find((item) => frame >= item.fromFrame && frame < item.fromFrame + item.durationInFrames) ?? null;
 };
 
 const fileName = (path: string): string => {
@@ -127,20 +169,6 @@ const fileName = (path: string): string => {
   }
   return path.split("/").pop() || path;
 };
-
-const enterAt = (shot: MadeShot, cue: number): number => {
-  if (cue >= shot.fromFrame && cue < shot.fromFrame + shot.durationInFrames) {
-    return cue;
-  }
-  return shot.fromFrame;
-};
-
-const wordFrame = (words: MadeWord[], needle: string, afterMs: number): number | null => {
-  const hit = words.find((word) => word.fromMs >= afterMs && norm(word.text).includes(needle));
-  return hit ? Math.round((hit.fromMs / 1000) * FPS) : null;
-};
-
-const norm = (text: string): string => text.toLowerCase().replace(/[^a-z0-9]+/g, "");
 
 const stampCount = (shot: MadeShot, words: MadeWord[], nowMs: number, local: number): number => {
   if (shot.id !== "s04") {
@@ -159,5 +187,7 @@ const spokenNeedles = (words: MadeWord[], nowMs: number): string[] => {
   const needles = ["why", "started", "left", "best", "keep"];
   return needles.filter((needle) => live.some((text) => text.includes(needle)));
 };
+
+const norm = (text: string): string => text.toLowerCase().replace(/[^a-z0-9]+/g, "");
 
 export const madeUpDuration = (_episode: MadeEpisode): number => MASTER_FRAMES;

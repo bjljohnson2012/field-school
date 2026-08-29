@@ -1,18 +1,8 @@
-import React from "react";
-import {Img, interpolate, staticFile} from "remotion";
-import {
-  INSET,
-  VOX_CARDS_BOTTOM,
-  VOX_CARDS_TOP,
-  VOX_HEADLINE_TOP,
-  VOX_META_TOP,
-  displayFace,
-  gold,
-  ink,
-  paper,
-  uiFace,
-  wine,
-} from "./tokens";
+import {fitText} from "@remotion/layout-utils";
+import React, {useEffect, useMemo, useState} from "react";
+import {Img, interpolate, spring, staticFile, useDelayRender, useVideoConfig} from "remotion";
+import {waitMadeUpFonts} from "./fonts";
+import {displayFace, gold, ink, paper, uiFace, wine} from "./tokens";
 
 export type CollageBeatProps = {
   assets: string[];
@@ -25,6 +15,19 @@ export type CollageBeatProps = {
   spoken?: string[];
 };
 
+const cardSize = (n: number): {w: number; h: number} => {
+  if (n <= 1) {
+    return {w: 760, h: 520};
+  }
+  if (n === 2) {
+    return {w: 700, h: 460};
+  }
+  if (n === 3) {
+    return {w: 520, h: 360};
+  }
+  return {w: 340, h: 260};
+};
+
 export const CollageBeat: React.FC<CollageBeatProps> = ({
   assets,
   text,
@@ -35,108 +38,80 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
   stamps = 0,
   spoken = [],
 }) => {
+  const {fps} = useVideoConfig();
+  const {delayRender, continueRender} = useDelayRender();
+  const [handle] = useState(() => delayRender("vox-fonts"));
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    waitMadeUpFonts()
+      .then(() => {
+        setReady(true);
+        continueRender(handle);
+      })
+      .catch(() => {
+        setReady(true);
+        continueRender(handle);
+      });
+  }, [continueRender, handle]);
   const wash = interpolate(local, [0, 8], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const n = Math.max(assets.length, 1);
-  const cardW = n > 3 ? 300 : n === 3 ? 520 : 640;
-  const cardH = n > 3 ? 200 : 360;
-  const push = interpolate(local, [0, 90], [1, 1.02], {extrapolateRight: "clamp"});
+  const {w: cardW, h: cardH} = cardSize(assets.length);
+  const headline = useMemo(() => {
+    if (!ready || !text) {
+      return 72;
+    }
+    try {
+      return Math.min(
+        assets.length > 3 ? 72 : 108,
+        fitText({
+          text,
+          withinWidth: 1680,
+          fontFamily: displayFace,
+          fontWeight: "700",
+        }).fontSize,
+      );
+    } catch {
+      return 72;
+    }
+  }, [assets.length, ready, text]);
+  if (!ready) {
+    return null;
+  }
   return (
     <div style={{position: "absolute", inset: 0, backgroundColor: paper, opacity: wash}}>
       {text ? (
         <div
           style={{
             position: "absolute",
-            left: INSET,
-            top: Math.max(VOX_HEADLINE_TOP, 104),
-            width: 1600,
-            height: 100,
-            overflow: "hidden",
+            left: 80,
+            top: 88,
+            width: 1760,
             fontFamily: displayFace,
             fontWeight: 700,
-            fontSize: 48,
-            lineHeight: 1.15,
+            fontSize: headline,
+            lineHeight: 0.95,
             color: ink,
-            letterSpacing: "-0.03em",
+            letterSpacing: "-0.04em",
           }}
         >
           {text}
         </div>
       ) : null}
-      <div
-        style={{
-          position: "absolute",
-          left: INSET,
-          top: VOX_CARDS_TOP,
-          width: 1776,
-          height: VOX_CARDS_BOTTOM - VOX_CARDS_TOP,
-          display: "flex",
-          gap: 24,
-          flexWrap: "wrap",
-          alignContent: "flex-start",
-          overflow: "hidden",
-        }}
-      >
-        {assets.map((src, i) => {
-          const enter = interpolate(local, [2 + i * 4, 6 + i * 4], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          });
-          const marked = stamps > i;
-          return (
-            <div
-              key={src}
-              style={{
-                width: cardW,
-                height: cardH,
-                backgroundColor: paper,
-                outline: `3px solid ${ink}`,
-                overflow: "hidden",
-                opacity: enter,
-                translate: `0px ${(1 - enter) * 28}px`,
-                position: "relative",
-              }}
-            >
-              <Img
-                src={staticFile(`episodes/everything-made-up/${src}`)}
-                style={{width: "100%", height: "100%", objectFit: "cover", scale: `${push}`}}
-              />
-              {marked ? (
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: displayFace,
-                    fontWeight: 700,
-                    fontSize: 160,
-                    color: wine,
-                    opacity: 0.92,
-                  }}
-                >
-                  X
-                </div>
-              ) : null}
-            </div>
-          );
-        })}
-      </div>
       {list && list.length > 0 ? (
         <div
           style={{
             position: "absolute",
-            left: 120,
+            left: 100,
             top: 200,
-            width: 1600,
-            height: 640,
-            overflow: "hidden",
+            width: 1720,
+            height: 760,
           }}
         >
           {list.map((line, i) => {
-            const enter = interpolate(local, [2 + i * 4, 6 + i * 4], [0, 1], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
+            const enter = spring({
+              frame: Math.max(0, local - 2 - i * 4),
+              fps,
+              durationInFrames: 14,
+              config: {damping: 16, mass: 0.6, stiffness: 150},
             });
             const hot = spoken.some((needle) => line.toLowerCase().includes(needle));
             return (
@@ -145,13 +120,12 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                 style={{
                   fontFamily: displayFace,
                   fontWeight: 700,
-                  fontSize: 40,
-                  lineHeight: 1.2,
-                  color: hot ? gold : ink,
+                  fontSize: 56,
+                  lineHeight: 1.18,
+                  color: hot ? wine : ink,
                   opacity: enter,
-                  marginBottom: 22,
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
+                  translate: `0px ${(1 - enter) * 24}px`,
+                  marginBottom: 18,
                 }}
               >
                 {line}
@@ -159,24 +133,104 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
             );
           })}
         </div>
-      ) : null}
+      ) : (
+        <div
+          style={{
+            position: "absolute",
+            left: 80,
+            top: text ? 260 : 160,
+            width: 1760,
+            height: 640,
+            display: "flex",
+            gap: 28,
+            flexWrap: "wrap",
+            alignContent: "flex-start",
+          }}
+        >
+          {assets.map((src, i) => {
+            const enter = spring({
+              frame: Math.max(0, local - 2 - i * 4),
+              fps,
+              durationInFrames: 16,
+              config: {damping: 13, mass: 0.55, stiffness: 170},
+            });
+            const tilt = (i % 2 === 0 ? -1 : 1) * (1.6 + (i % 3));
+            const marked = stamps > i;
+            return (
+              <div
+                key={src}
+                style={{
+                  width: cardW,
+                  height: cardH,
+                  backgroundColor: paper,
+                  padding: 14,
+                  boxSizing: "border-box",
+                  outline: `3px solid ${ink}`,
+                  boxShadow: `0 18px 36px ${ink}2e`,
+                  opacity: enter,
+                  scale: `${0.86 + enter * 0.14}`,
+                  rotate: `${tilt}deg`,
+                  translate: `0px ${(1 - enter) * 36}px`,
+                  position: "relative",
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: -8,
+                    width: 92,
+                    height: 18,
+                    marginLeft: -46,
+                    backgroundColor: gold,
+                    opacity: 0.85,
+                  }}
+                />
+                <Img
+                  src={staticFile(`episodes/everything-made-up/${src}`)}
+                  style={{width: "100%", height: "100%", objectFit: "cover"}}
+                />
+                {marked ? (
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontFamily: displayFace,
+                      fontWeight: 700,
+                      fontSize: 180,
+                      color: wine,
+                      opacity: 0.92,
+                      rotate: "-8deg",
+                    }}
+                  >
+                    X
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+      )}
       {chips && chips.length > 0 ? (
         <div
           style={{
             position: "absolute",
-            left: INSET,
-            top: VOX_META_TOP,
-            width: 1400,
-            height: 80,
+            left: 80,
+            bottom: 88,
+            width: 1760,
             display: "flex",
-            gap: 16,
-            overflow: "hidden",
+            gap: 18,
           }}
         >
           {chips.map((chip, i) => {
-            const enter = interpolate(local, [10 + i * 4, 14 + i * 4], [0, 1], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
+            const enter = spring({
+              frame: Math.max(0, local - 10 - i * 4),
+              fps,
+              durationInFrames: 12,
+              config: {damping: 14, mass: 0.5, stiffness: 180},
             });
             return (
               <div
@@ -184,12 +238,14 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                 style={{
                   fontFamily: uiFace,
                   fontWeight: 600,
-                  fontSize: 22,
-                  letterSpacing: "0.12em",
+                  fontSize: 26,
+                  letterSpacing: "0.14em",
                   color: paper,
-                  backgroundColor: ink,
-                  padding: "12px 18px",
+                  backgroundColor: i === 0 ? wine : ink,
+                  padding: "14px 22px",
                   opacity: enter,
+                  rotate: `${(i % 2 === 0 ? -1 : 1) * 1.4}deg`,
+                  scale: `${0.9 + enter * 0.1}`,
                 }}
               >
                 {chip}
@@ -202,19 +258,16 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
         <div
           style={{
             position: "absolute",
-            right: 80,
-            top: VOX_META_TOP,
-            maxWidth: 520,
-            overflow: "hidden",
+            right: 88,
+            bottom: 96,
             fontFamily: uiFace,
             fontWeight: 600,
-            fontSize: 22,
-            letterSpacing: "0.14em",
+            fontSize: 24,
+            letterSpacing: "0.12em",
             color: wine,
-            opacity: interpolate(local, [18, 26], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
             outline: `3px solid ${gold}`,
-            padding: "10px 16px",
-            whiteSpace: "nowrap",
+            padding: "12px 18px",
+            opacity: interpolate(local, [16, 26], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
           }}
         >
           {annotation}

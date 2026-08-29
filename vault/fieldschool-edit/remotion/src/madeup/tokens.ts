@@ -10,18 +10,33 @@ export const olive = "#6B7F4F";
 export const FPS = 30;
 export const HEAD_DOCK = 0.38;
 export const HEAD_RIGHT_GAP = 56;
-export const HEAD_PIP = 420;
-export const HEAD_PIP_GAP = 48;
-export const INSET = 72;
-export const TYPE_COL = 980;
-export const HOOK_FULL = 1680;
-export const HOOK_PIP_COL = 1280;
+export const HEAD_PIP = 380;
+export const HEAD_PIP_GAP = 56;
+export const HEAD_MAT_PX = 18;
+export const HEAD_RULE_PX = 3;
+export const INSET = 80;
 export const CAPTION_BOTTOM = 140;
-export const LOWER_THIRD_BOTTOM = 248;
-export const VOX_HEADLINE_TOP = 104;
-export const VOX_CARDS_TOP = 220;
-export const VOX_CARDS_BOTTOM = 720;
-export const VOX_META_TOP = 740;
+export const TYPE_BESIDE = 76;
+export const TYPE_SOLO = 120;
+export const TYPE_PLAYBOOK = 132;
+export const TYPE_HEAD_GAP = 160;
+export const WORD_FADE_FRAMES = 12;
+export const MIN_HOLD_MS = 3000;
+export const DROP_RETURN_LEAD_FRAMES = 28;
+export const TYPE_COL = 980;
+export const HOOK_FULL = 1760;
 export const MASTER_FRAMES = 20220;
-export const HOOK_FRAMES = 361;
+export const HOOK_FRAMES = 540;
 export const BED_FRAMES = 1834;
+
+export const paperGrain = [
+  "repeating-linear-gradient(0deg, rgba(26,26,22,0.035) 0 1px, transparent 1px 4px)",
+  "repeating-linear-gradient(90deg, rgba(196,163,90,0.045) 0 1px, transparent 1px 7px)",
+].join(", ");
+
+export const darkGrain = [
+  "repeating-linear-gradient(0deg, rgba(239,231,214,0.03) 0 1px, transparent 1px 5px)",
+  "repeating-linear-gradient(90deg, rgba(196,163,90,0.04) 0 1px, transparent 1px 9px)",
+].join(", ");
+
+export const headReservedPx = (): number => Math.round(1920 * HEAD_DOCK) + HEAD_RIGHT_GAP;

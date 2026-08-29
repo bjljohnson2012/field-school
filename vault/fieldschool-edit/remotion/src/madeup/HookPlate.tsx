@@ -1,17 +1,23 @@
 import {fitText} from "@remotion/layout-utils";
 import React, {useEffect, useMemo, useState} from "react";
-import {interpolate, useDelayRender} from "remotion";
+import {interpolate, spring, useDelayRender, useVideoConfig} from "remotion";
 import {waitMadeUpFonts} from "./fonts";
-import {HOOK_FULL, HOOK_PIP_COL, INSET, displayFace, gold, paper} from "./tokens";
+import {displayFace, gold, paper} from "./tokens";
 
 type HookPlateProps = {
   text: string;
   local: number;
-  second?: boolean;
+  ghost?: number;
   pip?: boolean;
 };
 
-export const HookPlate: React.FC<HookPlateProps> = ({text, local, second = false, pip = false}) => {
+const LINES: Record<string, string[]> = {
+  "PEOPLE WAIT TO BE TOLD": ["PEOPLE", "WAIT TO", "BE TOLD"],
+  "YOU CAN JUST DO THINGS": ["YOU CAN", "JUST DO", "THINGS"],
+};
+
+export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip = false}) => {
+  const {fps} = useVideoConfig();
   const {delayRender, continueRender} = useDelayRender();
   const [handle] = useState(() => delayRender("hook-fonts"));
   const [ready, setReady] = useState(false);
@@ -26,48 +32,79 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, second = false
         continueRender(handle);
       });
   }, [continueRender, handle]);
-  const width = pip ? HOOK_PIP_COL : HOOK_FULL;
-  const cap = second ? 92 : 108;
-  const fontSize = useMemo(() => {
+  const lines = LINES[text] || text.split(" ").reduce<string[]>((acc, word, i, all) => {
+    if (i % 2 === 0) {
+      acc.push(all.slice(i, i + 2).join(" "));
+    }
+    return acc;
+  }, []);
+  const width = pip ? 1280 : 1680;
+  const sizes = useMemo(() => {
     if (!ready) {
-      return cap;
+      return lines.map(() => (pip ? 88 : 148));
     }
-    try {
-      const fitted = fitText({
-        text,
-        withinWidth: width - 24,
-        fontFamily: displayFace,
-        fontWeight: "700",
-      });
-      return Math.min(cap, fitted.fontSize);
-    } catch {
-      return cap;
-    }
-  }, [cap, ready, text, width]);
-  const enter = interpolate(local, [0, 8], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+    return lines.map((line, i) => {
+      const cap = pip ? (i === 1 ? 96 : 88) : i === 1 ? 132 : 156;
+      try {
+        return Math.min(
+          cap,
+          fitText({
+            text: line,
+            withinWidth: width,
+            fontFamily: displayFace,
+            fontWeight: "700",
+          }).fontSize,
+        );
+      } catch {
+        return cap;
+      }
+    });
+  }, [lines, pip, ready, width]);
   if (!ready) {
     return null;
   }
+  const grow = interpolate(local, [0, 90], [0.92, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   return (
     <div
       style={{
         position: "absolute",
-        left: INSET,
-        top: second ? 430 : 240,
+        left: pip ? 72 : 120,
+        top: 0,
         width,
-        overflow: "hidden",
-        fontFamily: displayFace,
-        fontWeight: 700,
-        fontSize,
-        lineHeight: 0.95,
-        letterSpacing: "0",
-        color: second ? gold : paper,
-        opacity: enter,
-        translate: `0px ${(1 - enter) * 36}px`,
-        whiteSpace: "nowrap",
+        height: 1080,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        opacity: interpolate(ghost, [0, 1], [1, 0.1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
+        scale: `${grow}`,
       }}
     >
-      {text}
+      {lines.map((line, i) => {
+        const enter = spring({
+          frame: Math.max(0, local - i * 5),
+          fps,
+          durationInFrames: 18,
+          config: {damping: 14, mass: 0.55, stiffness: 160},
+        });
+        return (
+          <div
+            key={line}
+            style={{
+              fontFamily: displayFace,
+              fontWeight: 700,
+              fontSize: sizes[i],
+              lineHeight: 0.92,
+              letterSpacing: "-0.045em",
+              color: i === 1 ? gold : paper,
+              opacity: enter,
+              translate: `0px ${(1 - enter) * 48}px`,
+              marginBottom: 8,
+            }}
+          >
+            {line}
+          </div>
+        );
+      })}
     </div>
   );
 };
