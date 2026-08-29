@@ -17,15 +17,18 @@ export type CollageBeatProps = {
 
 const cardSize = (n: number): {w: number; h: number} => {
   if (n <= 1) {
-    return {w: 760, h: 520};
+    return {w: 1080, h: 720};
   }
   if (n === 2) {
-    return {w: 700, h: 460};
+    return {w: 760, h: 500};
   }
   if (n === 3) {
-    return {w: 520, h: 360};
+    return {w: 540, h: 380};
   }
-  return {w: 340, h: 260};
+  if (n === 5) {
+    return {w: 540, h: 360};
+  }
+  return {w: 400, h: 300};
 };
 
 export const CollageBeat: React.FC<CollageBeatProps> = ({
@@ -53,6 +56,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
         continueRender(handle);
       });
   }, [continueRender, handle]);
+  const hero = /^(60 DAYS|FIVE QUESTIONS)$/i.test(text);
   const wash = interpolate(local, [0, 8], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   const {w: cardW, h: cardH} = cardSize(assets.length);
   const headline = useMemo(() => {
@@ -61,10 +65,10 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
     }
     try {
       return Math.min(
-        assets.length > 3 ? 72 : 108,
+        list && list.length > 0 ? 96 : hero || assets.length === 1 ? 200 : assets.length > 3 ? 88 : 120,
         fitText({
           text,
-          withinWidth: 1680,
+          withinWidth: assets.length === 1 ? 1760 : 1680,
           fontFamily: displayFace,
           fontWeight: "700",
         }).fontSize,
@@ -72,7 +76,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
     } catch {
       return 72;
     }
-  }, [assets.length, ready, text]);
+  }, [assets.length, hero, list, ready, text]);
   if (!ready) {
     return null;
   }
@@ -83,17 +87,25 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
           style={{
             position: "absolute",
             left: 80,
-            top: 88,
+            top: /^60 DAYS$/i.test(text) ? 280 : 64,
             width: 1760,
             fontFamily: displayFace,
             fontWeight: 700,
             fontSize: headline,
-            lineHeight: 0.95,
+            lineHeight: 0.92,
             color: ink,
             letterSpacing: "-0.04em",
+            textAlign: /^60 DAYS$/i.test(text) ? "center" : "left",
           }}
         >
-          {text}
+          {/^60 DAYS$/i.test(text) ? (
+            <>
+              <div style={{fontSize: 280, letterSpacing: "-0.06em"}}>60</div>
+              <div style={{fontSize: 92, color: wine, letterSpacing: "0.12em"}}>DAYS</div>
+            </>
+          ) : (
+            text
+          )}
         </div>
       ) : null}
       {list && list.length > 0 ? (
@@ -120,7 +132,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                 style={{
                   fontFamily: displayFace,
                   fontWeight: 700,
-                  fontSize: 56,
+                  fontSize: 64,
                   lineHeight: 1.18,
                   color: hot ? wine : ink,
                   opacity: enter,
@@ -133,18 +145,19 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
             );
           })}
         </div>
-      ) : (
+      ) : assets.length > 0 && !/^60 DAYS$/i.test(text) ? (
         <div
           style={{
             position: "absolute",
             left: 80,
-            top: text ? 260 : 160,
+            top: text ? 220 : 140,
             width: 1760,
-            height: 640,
+            height: 720,
             display: "flex",
             gap: 28,
             flexWrap: "wrap",
-            alignContent: "flex-start",
+            alignContent: "center",
+            justifyContent: assets.length <= 1 ? "center" : "flex-start",
           }}
         >
           {assets.map((src, i) => {
@@ -213,7 +226,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
             );
           })}
         </div>
-      )}
+      ) : null}
       {chips && chips.length > 0 ? (
         <div
           style={{

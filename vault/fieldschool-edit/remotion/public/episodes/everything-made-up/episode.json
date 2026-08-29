@@ -135,13 +135,14 @@
       "fromFrame": 7765,
       "durationInFrames": 2435,
       "layout": "off",
-      "text": "Five questions",
-      "assets": [
-        "stills/q1.png",
-        "stills/q2.png",
-        "stills/q3.png",
-        "stills/q4.png",
-        "stills/q5.png"
+      "text": "FIVE QUESTIONS",
+      "assets": [],
+      "list": [
+        "Why did they make it up?",
+        "What started it?",
+        "What went in, and what got left out?",
+        "Is this still the best way?",
+        "What keeps the good and cuts the wait?"
       ],
       "sfx": [
         "tick"

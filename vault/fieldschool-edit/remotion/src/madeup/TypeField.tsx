@@ -59,7 +59,14 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked,
   }, [continueRender, handle]);
 
   const lock = useMemo(() => words.find((word) => WAITING.test(word.text.trim()))?.fromMs ?? null, [words]);
-  const page = useMemo(() => pageForClock(words, nowMs, lock), [lock, nowMs, words]);
+  const page = useMemo(() => {
+    const next = pageForClock(words, nowMs, lock);
+    if (!next || solo < 0.12) {
+      return next;
+    }
+    const only = next.words.filter((word) => WAITING.test(word.text.trim()));
+    return only.length > 0 ? {...next, words: only} : next;
+  }, [lock, nowMs, solo, words]);
 
   if (!ready || !page) {
     return null;
@@ -119,7 +126,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked,
                   marginBottom: 12,
                   fontFamily: displayFace,
                   fontWeight: 700,
-                  fontSize: interpolate(solo, [0, 1], [fontSize, 168], {
+                  fontSize: interpolate(solo, [0, 1], [fontSize, 220], {
                     extrapolateLeft: "clamp",
                     extrapolateRight: "clamp",
                   }),

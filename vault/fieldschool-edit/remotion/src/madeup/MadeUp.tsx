@@ -31,10 +31,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const local = shot ? frame - shot.fromFrame : 0;
   const solo = useWaitingSolo(words);
   const vox = Boolean(shot && (shot.type === "vox" || shot.type === "b-roll"));
-  const teach = Boolean(
-    shot &&
-      (shot.type === "a-roll" || shot.id === "s02" || (shot.id === "s01" && solo > 0.02)),
-  );
+  const teach = Boolean(shot && (shot.type === "a-roll" || (shot.id === "s01" && solo > 0.02)));
   const docked = Boolean(shot && (shot.layout === "dock-right" || shot.layout === "pip-tr") && solo < 0.5);
   const paperOpen =
     shot && shot.type === "a-roll"
@@ -42,7 +39,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
       : 0;
   const hookGhost = shot?.id === "s01" && solo > 0.08 ? 1 : 0;
   const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
-  const letterMode = !shot || shot.type === "sting" || shot.type === "cta" || shot.type === "hook" ? "none" : vox ? "vox" : "hair";
+  const letterMode = shot && shot.type === "a-roll" ? "hair" : "none";
   return (
     <AbsoluteFill style={{backgroundColor: bg}}>
       <Stack>
@@ -71,7 +68,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             mode={shot?.type === "a-roll" ? "paper" : "dark"}
           />
         ) : null}
-        {shot && shot.type === "hook" && shot.id === "s01" ? (
+        {shot && shot.type === "hook" && shot.id === "s01" && solo <= 0.05 ? (
           <HookPlate text={shot.text || "PEOPLE WAIT TO BE TOLD"} local={frame - shot.fromFrame} ghost={hookGhost} />
         ) : null}
         {shot && shot.id === "s02" ? (

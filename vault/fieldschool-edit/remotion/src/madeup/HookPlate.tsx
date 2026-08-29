@@ -38,13 +38,13 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
     }
     return acc;
   }, []);
-  const width = pip ? 1280 : 1680;
+  const width = pip ? 1320 : 1760;
   const sizes = useMemo(() => {
     if (!ready) {
-      return lines.map(() => (pip ? 88 : 148));
+      return lines.map(() => (pip ? 92 : 176));
     }
     return lines.map((line, i) => {
-      const cap = pip ? (i === 1 ? 96 : 88) : i === 1 ? 132 : 156;
+      const cap = pip ? (i === 1 ? 108 : 100) : i === 1 ? 156 : 188;
       try {
         return Math.min(
           cap,
@@ -68,13 +68,15 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
     <div
       style={{
         position: "absolute",
-        left: pip ? 72 : 120,
+        left: pip ? 64 : 80,
         top: 0,
         width,
         height: 1080,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
+        alignItems: pip ? "flex-start" : "center",
+        textAlign: pip ? "left" : "center",
         opacity: interpolate(ghost, [0, 1], [1, 0.1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
         scale: `${grow}`,
       }}
