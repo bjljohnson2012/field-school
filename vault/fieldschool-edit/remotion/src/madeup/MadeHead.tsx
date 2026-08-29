@@ -1,5 +1,7 @@
 import React from "react";
-import {OffthreadVideo, interpolate, spring, staticFile, useVideoConfig} from "remotion";
+import {OffthreadVideo, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from "remotion";
+import {faceFocus} from "./faceFocus";
+import faceTrack from "./face-track.json";
 import {HEAD_DOCK, HEAD_MAT_PX, HEAD_PIP, HEAD_PIP_GAP, HEAD_RIGHT_GAP, HEAD_RULE_PX, gold, ink, paper} from "./tokens";
 import type {ShotLayout} from "./schema";
 
@@ -12,6 +14,7 @@ type MadeHeadProps = {
 };
 
 export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0, fresh = true}) => {
+  const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const hidden = layout === "off";
   const pip = layout === "pip-tr";
@@ -27,8 +30,9 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0,
     : 1;
   const width = pip ? HEAD_PIP : letter ? 1680 : Math.round(1920 * HEAD_DOCK);
   const height = pip ? HEAD_PIP : letter ? 780 : 640;
-  const zoom = pip ? 1.72 : letter ? 1.78 : 2.38;
-  const focus = pip ? "50% 10%" : letter ? "50% 14%" : "50% 20%";
+  const zoom = pip ? 1.72 : letter ? 1.78 : 2.28;
+  const fallback = pip ? "50% 10%" : letter ? "50% 14%" : "50% 20%";
+  const focus = faceFocus(faceTrack, frame, fallback);
   const left = pip
     ? 1920 - width - HEAD_PIP_GAP
     : letter

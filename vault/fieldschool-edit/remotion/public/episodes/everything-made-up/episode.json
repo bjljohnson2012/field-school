@@ -36,7 +36,7 @@
       "id": "s03",
       "type": "a-roll",
       "fromFrame": 451,
-      "durationInFrames": 590,
+      "durationInFrames": 583,
       "layout": "dock-right",
       "lowerThird": {
         "name": "Ben Johnson",
@@ -46,8 +46,8 @@
     {
       "id": "s02",
       "type": "hook",
-      "fromFrame": 1041,
-      "durationInFrames": 74,
+      "fromFrame": 1034,
+      "durationInFrames": 95,
       "layout": "off",
       "text": "YOU CAN JUST DO THINGS",
       "sfx": [
@@ -57,37 +57,30 @@
     {
       "id": "s02b",
       "type": "a-roll",
-      "fromFrame": 1115,
-      "durationInFrames": 480,
+      "fromFrame": 1129,
+      "durationInFrames": 720,
       "layout": "dock-left"
     },
     {
       "id": "s02b-1",
       "type": "a-roll",
-      "fromFrame": 1595,
-      "durationInFrames": 480,
-      "layout": "letterbox"
-    },
-    {
-      "id": "s02b-2",
-      "type": "a-roll",
-      "fromFrame": 2075,
+      "fromFrame": 1849,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
-      "id": "s02b-3",
+      "id": "s02b-2",
       "type": "a-roll",
-      "fromFrame": 2555,
+      "fromFrame": 2329,
       "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
-      "id": "s02b-4",
+      "id": "s02b-3",
       "type": "a-roll",
-      "fromFrame": 3035,
-      "durationInFrames": 377,
-      "layout": "letterbox"
+      "fromFrame": 2809,
+      "durationInFrames": 603,
+      "layout": "dock-right"
     },
     {
       "id": "s04",
@@ -110,57 +103,57 @@
       "id": "s06",
       "type": "a-roll",
       "fromFrame": 3639,
-      "durationInFrames": 480,
+      "durationInFrames": 720,
       "layout": "dock-right"
     },
     {
       "id": "s06-1",
       "type": "a-roll",
-      "fromFrame": 4119,
-      "durationInFrames": 480,
-      "layout": "letterbox"
-    },
-    {
-      "id": "s06-2",
-      "type": "a-roll",
-      "fromFrame": 4599,
+      "fromFrame": 4359,
       "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
-      "id": "s06-3",
+      "id": "s06-2",
       "type": "a-roll",
-      "fromFrame": 5079,
+      "fromFrame": 4839,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
+      "id": "s06-3",
+      "type": "a-roll",
+      "fromFrame": 5319,
+      "durationInFrames": 480,
+      "layout": "dock-left"
+    },
+    {
       "id": "s06-4",
       "type": "a-roll",
-      "fromFrame": 5559,
+      "fromFrame": 5799,
       "durationInFrames": 480,
-      "layout": "letterbox"
+      "layout": "dock-right"
     },
     {
       "id": "s06-5",
       "type": "a-roll",
-      "fromFrame": 6039,
+      "fromFrame": 6279,
       "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
       "id": "s06-6",
       "type": "a-roll",
-      "fromFrame": 6519,
+      "fromFrame": 6759,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
       "id": "s06-7",
       "type": "a-roll",
-      "fromFrame": 6999,
-      "durationInFrames": 556,
-      "layout": "letterbox"
+      "fromFrame": 7239,
+      "durationInFrames": 316,
+      "layout": "dock-left"
     },
     {
       "id": "s08",
@@ -192,57 +185,50 @@
       "id": "s10b",
       "type": "a-roll",
       "fromFrame": 7887,
-      "durationInFrames": 480,
+      "durationInFrames": 720,
       "layout": "dock-left"
     },
     {
       "id": "s10b-1",
       "type": "a-roll",
-      "fromFrame": 8367,
-      "durationInFrames": 480,
-      "layout": "letterbox"
-    },
-    {
-      "id": "s10b-2",
-      "type": "a-roll",
-      "fromFrame": 8847,
+      "fromFrame": 8607,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
-      "id": "s10b-3",
+      "id": "s10b-2",
       "type": "a-roll",
-      "fromFrame": 9327,
+      "fromFrame": 9087,
       "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
+      "id": "s10b-3",
+      "type": "a-roll",
+      "fromFrame": 9567,
+      "durationInFrames": 480,
+      "layout": "dock-right"
+    },
+    {
       "id": "s10b-4",
       "type": "a-roll",
-      "fromFrame": 9807,
+      "fromFrame": 10047,
       "durationInFrames": 480,
-      "layout": "letterbox"
+      "layout": "dock-left"
     },
     {
       "id": "s10b-5",
       "type": "a-roll",
-      "fromFrame": 10287,
+      "fromFrame": 10527,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
       "id": "s10b-6",
       "type": "a-roll",
-      "fromFrame": 10767,
-      "durationInFrames": 480,
+      "fromFrame": 11007,
+      "durationInFrames": 464,
       "layout": "dock-left"
-    },
-    {
-      "id": "s10b-7",
-      "type": "a-roll",
-      "fromFrame": 11247,
-      "durationInFrames": 224,
-      "layout": "letterbox"
     },
     {
       "id": "s12",
@@ -259,36 +245,29 @@
       "id": "s12b",
       "type": "a-roll",
       "fromFrame": 11691,
-      "durationInFrames": 480,
+      "durationInFrames": 720,
       "layout": "dock-right"
     },
     {
       "id": "s12b-1",
       "type": "a-roll",
-      "fromFrame": 12171,
-      "durationInFrames": 480,
-      "layout": "letterbox"
-    },
-    {
-      "id": "s12b-2",
-      "type": "a-roll",
-      "fromFrame": 12651,
+      "fromFrame": 12411,
       "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
-      "id": "s12b-3",
+      "id": "s12b-2",
       "type": "a-roll",
-      "fromFrame": 13131,
+      "fromFrame": 12891,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
-      "id": "s12b-4",
+      "id": "s12b-3",
       "type": "a-roll",
-      "fromFrame": 13611,
-      "durationInFrames": 321,
-      "layout": "letterbox"
+      "fromFrame": 13371,
+      "durationInFrames": 561,
+      "layout": "dock-left"
     },
     {
       "id": "s13",
@@ -309,15 +288,8 @@
       "id": "s14",
       "type": "a-roll",
       "fromFrame": 14912,
-      "durationInFrames": 480,
+      "durationInFrames": 757,
       "layout": "dock-left"
-    },
-    {
-      "id": "s14-1",
-      "type": "a-roll",
-      "fromFrame": 15392,
-      "durationInFrames": 277,
-      "layout": "letterbox"
     },
     {
       "id": "s15",
@@ -350,36 +322,29 @@
       "id": "s16",
       "type": "a-roll",
       "fromFrame": 16365,
-      "durationInFrames": 480,
+      "durationInFrames": 720,
       "layout": "dock-right"
     },
     {
       "id": "s16-1",
       "type": "a-roll",
-      "fromFrame": 16845,
-      "durationInFrames": 480,
-      "layout": "letterbox"
-    },
-    {
-      "id": "s16-2",
-      "type": "a-roll",
-      "fromFrame": 17325,
+      "fromFrame": 17085,
       "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
-      "id": "s16-3",
+      "id": "s16-2",
       "type": "a-roll",
-      "fromFrame": 17805,
+      "fromFrame": 17565,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
-      "id": "s16-4",
+      "id": "s16-3",
       "type": "a-roll",
-      "fromFrame": 18285,
-      "durationInFrames": 243,
-      "layout": "letterbox"
+      "fromFrame": 18045,
+      "durationInFrames": 483,
+      "layout": "dock-left"
     },
     {
       "id": "s17",

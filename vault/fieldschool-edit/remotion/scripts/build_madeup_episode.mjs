@@ -17,6 +17,7 @@ const waiting = first("waiting");
 const playbook = first("playbook");
 const youJust = first("you", 34000);
 const thingsHook = first("things", 35000);
+const heyHook = first("hey", 34000);
 const gravity = first("gravity");
 const door = first("door", 250000);
 const five = first("five", 250000);
@@ -38,7 +39,7 @@ const push = (shot) => {
 };
 
 const fillAroll = (fromFrame, toFrame, startSide, extra = {}) => {
-  const layouts = startSide === "left" ? ["dock-left", "letterbox", "dock-right"] : ["dock-right", "letterbox", "dock-left"];
+  const layouts = startSide === "left" ? ["dock-left", "dock-right"] : ["dock-right", "dock-left"];
   let at = fromFrame;
   let i = 0;
   while (at < toFrame) {
@@ -47,7 +48,7 @@ const fillAroll = (fromFrame, toFrame, startSide, extra = {}) => {
       shots[shots.length - 1].durationInFrames += remain;
       break;
     }
-    const chunk = remain <= 540 ? remain : 480;
+    const chunk = remain <= 540 ? remain : i === 0 ? 720 : 480;
     push({
       id: extra.id ? `${extra.id}${i === 0 ? "" : `-${i}`}` : `a${fromFrame}-${i}`,
       type: "a-roll",
@@ -76,7 +77,7 @@ push({
 });
 
 const bookFrom = frameOf(ms(playbook, 15026));
-const justFrom = frameOf(ms(youJust, 34701));
+const justFrom = frameOf(ms(heyHook || youJust, 34469));
 push({
   id: "s03",
   type: "a-roll",
@@ -86,7 +87,7 @@ push({
   lowerThird: {name: "Ben Johnson", title: ""},
 });
 
-const justEnd = Math.max(justFrom + 74, frameOf((thingsHook?.toMs || 35622) + 700));
+const justEnd = frameOf((thingsHook?.toMs || 35649) + 2000);
 push({
   id: "s02",
   type: "hook",

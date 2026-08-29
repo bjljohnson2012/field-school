@@ -1,5 +1,5 @@
 import React from "react";
-import {AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame} from "remotion";
+import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame} from "remotion";
 import {Stack} from "../components/layers/Stack";
 import {CollageBeat} from "./CollageBeat";
 import {useWaitingSolo} from "./dropOff";
@@ -14,6 +14,7 @@ import {PhrasePlate} from "./PhrasePlate";
 import {PaperCut, type CutKind} from "./PaperCut";
 import {HoldFonts} from "./HoldFonts";
 import {heardSince} from "./spoken";
+import {BED_CROSS, loopBedGain} from "./bedMix";
 import {BED_FRAMES, FPS, MASTER_FRAMES, bg, gold, paperGrain, uiFace} from "./tokens";
 import type {MadeEpisode, MadeShot, MadeWord} from "./schema";
 
@@ -48,7 +49,6 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const shotToMs = shot ? ((shot.fromFrame + shot.durationInFrames) / FPS) * 1000 : 0;
   const heard = heardSince(words, nowMs, shotFromMs);
   const headFresh = Boolean(shot && shot.layout !== "off" && (!prev || prev.layout !== shot.layout));
-  const bedVol = bedVolume(shot, frame);
   const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
   const phraseOn =
     teach &&
@@ -142,8 +142,11 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
         <BrandBug open={shot && shot.type !== "sting" && shot.type !== "cta" ? 1 : 0} />
         <MadeLetterbox mode={letterMode} local={20} />
         {Array.from({length: bedLoops}, (_, i) => (
-          <Sequence key={`bed-${i}`} from={i * BED_FRAMES} durationInFrames={BED_FRAMES} layout="none">
-            <Audio src={staticFile("bed.wav")} volume={bedVol} />
+          <Sequence key={`bed-${i}`} from={i * BED_FRAMES} durationInFrames={BED_FRAMES + BED_CROSS} layout="none">
+            <Audio
+              src={staticFile("bed.wav")}
+              volume={(local) => loopBedGain(i * BED_FRAMES + local, local, i * BED_FRAMES)}
+            />
           </Sequence>
         ))}
         <Audio src={staticFile(fileName(episode.vo))} />
@@ -186,12 +189,15 @@ const PlaybookKeys: React.FC<{words: MadeWord[]}> = ({words}) => {
   if (!book) {
     return null;
   }
-  const keys = book.text.split("").map((_, i) => Math.round((letterAtMs(book.fromMs, i, book.text.length) / 1000) * FPS));
+  const keys = book.text
+    .split("")
+    .map((_, i) => Math.round((letterAtMs(book.fromMs, i, book.text.length) / 1000) * FPS))
+    .filter((_, i) => i % 2 === 0);
   return (
     <>
       {keys.map((at, i) => (
         <Sequence key={`key-${at}-${i}`} from={at} durationInFrames={5} layout="none">
-          <Audio src={staticFile(i % 2 === 0 ? "sfx/key-a.wav" : "sfx/key-b.wav")} volume={0.16} />
+          <Audio src={staticFile(i % 2 === 0 ? "sfx/key-a.wav" : "sfx/key-b.wav")} volume={0.08} />
         </Sequence>
       ))}
     </>
@@ -223,12 +229,6 @@ const cutKind = (shot: MadeShot | null): CutKind => {
     return "flash";
   }
   return "none";
-};
-
-const bedVolume = (shot: MadeShot | null, frame: number): number => {
-  const fade = interpolate(frame, [0, 18], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const base = shot?.type === "sting" ? 0.2 : shot?.type === "cta" ? 0.16 : 0.12;
-  return fade * base;
 };
 
 const EditorialHits: React.FC<{words: MadeWord[]}> = ({words}) => {
