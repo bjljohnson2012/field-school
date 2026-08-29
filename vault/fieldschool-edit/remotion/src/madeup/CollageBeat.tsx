@@ -57,7 +57,12 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
       });
   }, [continueRender, handle]);
   const hero = /^(60 DAYS|FIVE QUESTIONS)$/i.test(text);
-  const wash = interpolate(local, [0, 8], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const wash = spring({
+    frame: local,
+    fps,
+    durationInFrames: 10,
+    config: {damping: 11, mass: 0.4, stiffness: 250},
+  });
   const {w: cardW, h: cardH} = cardSize(assets.length);
   const headline = useMemo(() => {
     if (!ready || !text) {

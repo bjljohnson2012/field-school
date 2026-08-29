@@ -41,10 +41,10 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
   const width = pip ? 1320 : 1760;
   const sizes = useMemo(() => {
     if (!ready) {
-      return lines.map(() => (pip ? 92 : 176));
+      return lines.map(() => (pip ? 92 : 184));
     }
     return lines.map((line, i) => {
-      const cap = pip ? (i === 1 ? 108 : 100) : i === 1 ? 156 : 188;
+      const cap = pip ? (i === 1 ? 112 : 104) : i === 1 ? 164 : 196;
       try {
         return Math.min(
           cap,
@@ -63,7 +63,8 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
   if (!ready) {
     return null;
   }
-  const grow = interpolate(local, [0, 48], [0.82, 1.04], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const grow = interpolate(local, [0, 36], [0.94, 1.06], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const exit = interpolate(ghost, [0, 1], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   return (
     <div
       style={{
@@ -77,34 +78,55 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
         justifyContent: "center",
         alignItems: pip ? "flex-start" : "center",
         textAlign: pip ? "left" : "center",
-        opacity: interpolate(ghost, [0, 1], [1, 0.1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
+        opacity: exit,
         scale: `${grow}`,
+        translate: `0px ${interpolate(ghost, [0, 1], [0, -40], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}px`,
       }}
     >
       {lines.map((line, i) => {
         const enter = spring({
-          frame: Math.max(0, local - i * 3),
+          frame: Math.max(0, local - i * 2),
           fps,
-          durationInFrames: 14,
-          config: {damping: 9, mass: 0.45, stiffness: 220},
+          durationInFrames: 12,
+          config: {damping: 8, mass: 0.38, stiffness: 280},
+        });
+        const rule = spring({
+          frame: Math.max(0, local - 4 - i * 2),
+          fps,
+          durationInFrames: 10,
+          config: {damping: 14, mass: 0.4, stiffness: 220},
         });
         return (
-          <div
-            key={line}
-            style={{
-              fontFamily: displayFace,
-              fontWeight: 700,
-              fontSize: sizes[i],
-              lineHeight: 0.92,
-              letterSpacing: "-0.045em",
-              color: i === 1 ? gold : ink,
-              opacity: enter,
-              translate: `0px ${(1 - enter) * 72}px`,
-              scale: `${0.88 + enter * 0.12}`,
-              marginBottom: 8,
-            }}
-          >
-            {line}
+          <div key={line} style={{marginBottom: 6}}>
+            <div
+              style={{
+                fontFamily: displayFace,
+                fontWeight: 700,
+                fontSize: sizes[i],
+                lineHeight: 0.9,
+                letterSpacing: "-0.05em",
+                color: i === 1 ? gold : ink,
+                opacity: enter,
+                translate: `0px ${(1 - enter) * 96}px`,
+                scale: `${0.72 + enter * 0.28}`,
+              }}
+            >
+              {line}
+            </div>
+            {i === 1 ? (
+              <div
+                style={{
+                  width: pip ? 420 : 640,
+                  height: 5,
+                  marginTop: 8,
+                  marginLeft: pip ? 0 : "auto",
+                  marginRight: pip ? 0 : "auto",
+                  backgroundColor: gold,
+                  scale: `${rule} 1`,
+                  opacity: rule,
+                }}
+              />
+            ) : null}
           </div>
         );
       })}

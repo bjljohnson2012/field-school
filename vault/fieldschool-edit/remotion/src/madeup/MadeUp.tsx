@@ -10,6 +10,7 @@ import {PaperSheet} from "./PaperSheet";
 import {BrandBug, BrandLockup} from "./BrandLockup";
 import {CtaCard, TitlePlate} from "./TitlePlate";
 import {PLAYBOOK, TypeField, letterAtMs} from "./TypeField";
+import {PaperCut} from "./PaperCut";
 import {WaitingWash} from "./WaitingWash";
 import {BED_FRAMES, FPS, MASTER_FRAMES, bg, gold, paperGrain, uiFace} from "./tokens";
 import type {MadeEpisode, MadeShot, MadeWord} from "./schema";
@@ -43,16 +44,20 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
   const letterMode = shot && shot.type === "a-roll" ? "hair" : "none";
   const bedVol = Math.min(
-    0.48,
-    interpolate(frame, [0, 16, 80, 154], [0, 0.44, 0.4, 0.36], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}) +
-      (shot?.type === "cta" ? 0.08 : 0) +
-      (vox ? 0.04 : 0),
+    0.56,
+    interpolate(frame, [0, 10, 70, 154, 220], [0, 0.52, 0.46, 0.34, 0.38], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    }) +
+      (shot?.type === "cta" ? 0.1 : 0) +
+      (vox ? 0.05 : 0),
   );
   return (
     <AbsoluteFill style={{backgroundColor: bg}}>
       <Stack>
         <AbsoluteFill style={{backgroundColor: bg, backgroundImage: paperGrain}} />
         <PaperSheet open={paperOpen} solo={solo} />
+        {shot ? <PaperCut local={local} /> : null}
         <WaitingWash open={shot?.id === "s01" && waited ? Math.max(solo, 0.92) : solo} />
         {shot && vox ? (
           <CollageBeat
@@ -111,7 +116,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
         {shot && shot.type === "sting" ? <BrandLockup local={local} /> : null}
         {shot && shot.type === "cta" ? <CtaCard text={shot.text || ""} local={local} /> : null}
         <BrandBug open={shot && shot.type !== "sting" && shot.type !== "cta" ? 1 : 0} />
-        <MadeLetterbox mode={letterMode} />
+        <MadeLetterbox mode={letterMode} local={local} />
         {Array.from({length: bedLoops}, (_, i) => (
           <Sequence key={`bed-${i}`} from={i * BED_FRAMES} durationInFrames={BED_FRAMES} layout="none">
             <Audio src={staticFile("bed.wav")} volume={bedVol} />
@@ -123,6 +128,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
         ))}
         <PlaybookKeys words={words} />
         <WaitHit words={words} />
+        <EditorialHits words={words} />
       </Stack>
     </AbsoluteFill>
   );
@@ -136,7 +142,7 @@ const WaitHit: React.FC<{words: MadeWord[]}> = ({words}) => {
   const at = Math.round((hit.fromMs / 1000) * FPS);
   return (
     <Sequence from={at} durationInFrames={16} layout="none">
-      <Audio src={staticFile("sfx/hit.wav")} volume={0.22} />
+      <Audio src={staticFile("sfx/hit.wav")} volume={0.34} />
     </Sequence>
   );
 };
@@ -151,9 +157,37 @@ const PlaybookKeys: React.FC<{words: MadeWord[]}> = ({words}) => {
     <>
       {keys.map((at, i) => (
         <Sequence key={`key-${at}-${i}`} from={at} durationInFrames={5} layout="none">
-          <Audio src={staticFile(i % 2 === 0 ? "sfx/key-a.wav" : "sfx/key-b.wav")} volume={0.1} />
+          <Audio src={staticFile(i % 2 === 0 ? "sfx/key-a.wav" : "sfx/key-b.wav")} volume={0.16} />
         </Sequence>
       ))}
+    </>
+  );
+};
+
+const EditorialHits: React.FC<{words: MadeWord[]}> = ({words}) => {
+  const people = words.find((word) => /^people$/i.test(word.text.trim()));
+  const waiting = words.find((word) => /^waiting\.$/i.test(word.text.trim()));
+  const book = words.find((word) => PLAYBOOK.test(word.text.trim()));
+  const peopleAt = people ? Math.round((people.fromMs / 1000) * FPS) : 154;
+  const waitAt = waiting ? Math.round((waiting.fromMs / 1000) * FPS) : 334;
+  const bookAt = book ? Math.round((book.fromMs / 1000) * FPS) : 451;
+  return (
+    <>
+      <Sequence from={3} durationInFrames={20} layout="none">
+        <Audio src={staticFile("sfx/stamp.wav")} volume={0.32} />
+      </Sequence>
+      <Sequence from={10} durationInFrames={28} layout="none">
+        <Audio src={staticFile("sfx/swell.wav")} volume={0.2} />
+      </Sequence>
+      <Sequence from={Math.max(0, peopleAt - 6)} durationInFrames={14} layout="none">
+        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.28} />
+      </Sequence>
+      <Sequence from={waitAt} durationInFrames={18} layout="none">
+        <Audio src={staticFile("sfx/paper.wav")} volume={0.3} />
+      </Sequence>
+      <Sequence from={bookAt} durationInFrames={16} layout="none">
+        <Audio src={staticFile("sfx/page.wav")} volume={0.26} />
+      </Sequence>
     </>
   );
 };
@@ -167,9 +201,10 @@ const ShotSfx: React.FC<{shot: MadeShot}> = ({shot}) => {
         const at = shot.fromFrame + (name === "tick" ? 2 + i * 4 : 2);
         const file =
           name === "whoosh" ? "sfx/whoosh.wav" : name === "hit" ? "sfx/hit.wav" : name === "sting" ? "sfx/sting.wav" : "sfx/tick.wav";
+        const vol = name === "hit" ? 0.34 : name === "sting" ? 0.3 : name === "whoosh" ? 0.26 : 0.14;
         return (
-          <Sequence key={`${shot.id}-${name}-${i}`} from={at} durationInFrames={12} layout="none">
-            <Audio src={staticFile(file)} volume={0.16} />
+          <Sequence key={`${shot.id}-${name}-${i}`} from={at} durationInFrames={14} layout="none">
+            <Audio src={staticFile(file)} volume={vol} />
           </Sequence>
         );
       })}

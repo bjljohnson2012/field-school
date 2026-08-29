@@ -132,10 +132,21 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
                   lineHeight: 1.05,
                   color: gold,
                   opacity: readyWord ? fade : 0,
-                  translate: `0px ${(1 - fade) * 10}px`,
+                  translate: `0px ${(1 - fade) * 18}px`,
+                  scale: `${interpolate(solo, [0, 1], [1, 1.04], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}`,
                 }}
               >
                 {word.text}
+                <span
+                  style={{
+                    display: "block",
+                    width: interpolate(solo, [0, 1], [80, 420], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
+                    height: 6,
+                    margin: "12px auto 0",
+                    backgroundColor: gold,
+                    opacity: fade,
+                  }}
+                />
               </span>
             );
           }

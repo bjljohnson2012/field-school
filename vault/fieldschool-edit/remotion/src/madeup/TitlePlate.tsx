@@ -49,8 +49,14 @@ export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => 
   const enter = spring({
     frame: local,
     fps,
-    durationInFrames: 12,
-    config: {damping: 10, mass: 0.5, stiffness: 200},
+    durationInFrames: 10,
+    config: {damping: 8, mass: 0.4, stiffness: 250},
+  });
+  const rule = spring({
+    frame: local - 2,
+    fps,
+    durationInFrames: 10,
+    config: {damping: 14, mass: 0.4, stiffness: 220},
   });
   const hold = interpolate(local, [90, 120], [1, 0.28], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   if (!ready) {
@@ -64,10 +70,10 @@ export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => 
         top: 96,
         width,
         opacity: enter * hold,
-        translate: `0px ${(1 - enter) * 24}px`,
+        translate: `0px ${(1 - enter) * 36}px`,
       }}
     >
-      <div style={{width: 72, height: 4, backgroundColor: gold, marginBottom: 18}} />
+      <div style={{width: 96, height: 5, backgroundColor: gold, marginBottom: 18, scale: `${rule} 1`}} />
       <div
         style={{
           fontFamily: displayFace,
@@ -91,8 +97,8 @@ export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) 
   const enter = spring({
     frame: local,
     fps,
-    durationInFrames: 16,
-    config: {damping: 11, mass: 0.5, stiffness: 190},
+    durationInFrames: 14,
+    config: {damping: 8, mass: 0.42, stiffness: 240},
   });
   const lines = text === "CHANGE IT WITH THE REASON IN HAND" ? CTA_LINES : [text];
   return (
@@ -109,16 +115,16 @@ export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) 
       }}
     >
       <Img
-        src={staticFile("lockup-wide-cream-slogan.png")}
+        src={staticFile("wordmark-transparent.png")}
         style={{
-          width: 920,
-          height: 160,
+          width: 980,
+          height: 180,
           objectFit: "contain",
-          marginBottom: 28,
-          scale: `${0.86 + enter * 0.14}`,
+          marginBottom: 22,
+          scale: `${interpolate(enter, [0, 1], [1.18, 1])}`,
         }}
       />
-      <div style={{width: 120, height: 3, backgroundColor: gold, marginBottom: 28, opacity: enter}} />
+      <div style={{width: 160, height: 4, backgroundColor: gold, marginBottom: 28, scale: `${enter} 1`}} />
       {lines.map((line, i) => (
         <div
           key={line}

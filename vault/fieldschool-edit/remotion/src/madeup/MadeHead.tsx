@@ -17,8 +17,14 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0}
   const enter = spring({
     frame: local,
     fps,
-    durationInFrames: pip ? 14 : 18,
-    config: {damping: 11, mass: 0.55, stiffness: 190},
+    durationInFrames: pip ? 12 : 14,
+    config: {damping: 8, mass: 0.4, stiffness: 260},
+  });
+  const tape = spring({
+    frame: local - 3,
+    fps,
+    durationInFrames: 10,
+    config: {damping: 10, mass: 0.35, stiffness: 240},
   });
   const width = pip ? HEAD_PIP : Math.round(1920 * HEAD_DOCK);
   const height = pip ? HEAD_PIP : 760;
@@ -37,10 +43,11 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0}
         boxSizing: "border-box",
         backgroundColor: paper,
         outline: `${HEAD_RULE_PX}px solid ${ink}`,
-        boxShadow: `0 22px 48px ${ink}40`,
+        boxShadow: `0 28px 56px ${ink}55`,
         opacity: hidden ? 0 : enter * interpolate(solo, [0, 0.85], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
         pointerEvents: "none",
-        translate: hidden ? "0px 0px" : `0px ${(1 - enter) * 64 + drop}px`,
+        rotate: hidden ? "0deg" : `${(1 - enter) * -3.2}deg`,
+        translate: hidden ? "0px 0px" : `0px ${(1 - enter) * 110 + drop}px`,
       }}
     >
       <div
@@ -52,7 +59,8 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0}
           height: 22,
           marginLeft: -54,
           backgroundColor: gold,
-          opacity: 0.88,
+          opacity: 0.9 * tape,
+          scale: `${0.4 + tape * 0.6}`,
         }}
       />
       <OffthreadVideo
