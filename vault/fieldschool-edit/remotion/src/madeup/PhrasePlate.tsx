@@ -14,7 +14,7 @@ type PhrasePlateProps = {
   phrases?: MadePhrase[];
 };
 
-const BAND_HEIGHT = 160;
+const BAND_HEIGHT = 168;
 const FADE = 3;
 
 export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, toMs, layout, phrases}) => {
@@ -30,7 +30,11 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
   const reserved = headReservedPx();
   const columnLeft = leftDock ? reserved : 0;
   const columnWidth = 1920 - reserved;
-  const boxText = page.words.map((word) => word.text).join(" ");
+  const liveCount = page.words.filter((word) => nowMs + 40 >= word.fromMs).length;
+  const boxText = page.words
+    .slice(0, Math.max(1, liveCount))
+    .map((word) => word.text)
+    .join(" ");
   let bandBox: {width: number; height: number} | null = null;
   if (band) {
     try {
@@ -38,14 +42,14 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
         text: boxText,
         textBoxHorizontalPadding: 28,
         fontFamily: displayFace,
-        fontSize: 40,
+        fontSize: 36,
         fontWeight: "700",
         borderRadius: 14,
-        leading: 10,
+        leading: 8,
       });
-      bandBox = {width: Math.min(1680, box.width), height: Math.min(BAND_HEIGHT - 16, box.height)};
+      bandBox = {width: Math.min(1680, box.width), height: Math.min(BAND_HEIGHT - 12, box.height)};
     } catch {
-      bandBox = {width: Math.min(1680, 48 + boxText.length * 22), height: 88};
+      bandBox = {width: Math.min(1680, 48 + boxText.length * 18), height: 96};
     }
   }
   return (
@@ -53,14 +57,14 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
       style={{
         position: "absolute",
         left: band ? 120 : columnLeft,
-        top: band ? 1080 - BAND_HEIGHT - 36 : 0,
+        top: band ? 1080 - BAND_HEIGHT - 28 : 0,
         width: band ? 1680 : columnWidth,
         height: band ? BAND_HEIGHT : 1080,
         display: "flex",
         alignItems: band ? "center" : "center",
-        justifyContent: band ? "center" : "center",
-        paddingLeft: band ? 0 : 72,
-        paddingRight: band ? 0 : 72,
+        justifyContent: "center",
+        paddingLeft: band ? 0 : 64,
+        paddingRight: band ? 0 : 64,
         boxSizing: "border-box",
       }}
     >
@@ -71,19 +75,17 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
           backgroundColor: band ? paper : "transparent",
           outline: band ? `3px solid ${ink}22` : "none",
           borderRadius: band ? 14 : 0,
-          padding: band ? "18px 28px" : 0,
+          padding: band ? "16px 24px" : 0,
           textAlign: "center",
         }}
       >
         {page.words.map((word, i) => {
-          const appear = page.authored
-            ? Math.round((page.appearMs / 1000) * fps) + i * 2
-            : Math.round((Math.max(word.fromMs, page.appearMs) / 1000) * fps);
+          const appear = Math.round((word.fromMs / 1000) * fps);
           const fade = interpolate(frame, [appear - 1, appear + FADE], [0, 1], {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",
           });
-          const live = word.toMs > word.fromMs && nowMs >= word.fromMs && nowMs < word.toMs;
+          const live = nowMs >= word.fromMs && nowMs < word.toMs;
           const pop = live
             ? spring({
                 frame: Math.max(0, frame - appear),
@@ -92,19 +94,19 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
                 config: {damping: 14, mass: 0.4, stiffness: 260},
               })
             : 0;
-          const seen = nowMs + 40 >= (page.authored ? page.appearMs : Math.min(word.fromMs, page.appearMs));
+          const seen = nowMs + 40 >= word.fromMs;
           return (
             <span
               key={`${word.fromMs}-${word.text}-${i}`}
               style={{
                 display: "inline-block",
-                marginRight: band ? 12 : 16,
-                marginBottom: band ? 0 : 10,
+                marginRight: band ? 10 : 14,
+                marginBottom: band ? 0 : 8,
                 fontFamily: displayFace,
                 fontWeight: 700,
-                fontSize: band ? 40 : 64,
+                fontSize: band ? 36 : 52,
                 letterSpacing: "-0.03em",
-                lineHeight: 1.18,
+                lineHeight: 1.2,
                 color: live ? gold : ink,
                 opacity: seen ? fade : 0,
                 scale: `${1 + pop * 0.06}`,

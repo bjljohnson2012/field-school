@@ -11,6 +11,8 @@ import {BrandBug, BrandLockup} from "./BrandLockup";
 import {CtaCard} from "./TitlePlate";
 import {PLAYBOOK, TypeField, letterAtMs, waitingOpen} from "./TypeField";
 import {PhrasePlate} from "./PhrasePlate";
+import {DockWash} from "./DockWash";
+import {pageAt, pagesForShot, washForPage} from "./phrasePages";
 import {PaperCut, type CutKind} from "./PaperCut";
 import {WaitingWash} from "./WaitingWash";
 import {HoldFonts} from "./HoldFonts";
@@ -73,6 +75,13 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             local={local}
             stamps={stampCount(shot, words, nowMs, local)}
             spoken={heard}
+          />
+        ) : null}
+        {phraseOn && shot ? (
+          <DockWash
+            src={washForPage(pageAt(pagesForShot(words, shotFromMs, shotToMs, shot.phrases), nowMs), nowMs)}
+            layout={shot.layout}
+            local={local}
           />
         ) : null}
         {slamType ? <TypeField words={words} nowMs={nowMs} /> : null}

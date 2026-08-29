@@ -1,5 +1,5 @@
 import {staticFile, type CalculateMetadataFunction} from "remotion";
-import {HOOK_FRAMES, MASTER_FRAMES} from "./tokens";
+import {CLIP_FRAMES, HOOK_FRAMES, MASTER_FRAMES} from "./tokens";
 import {defaultMadeUp} from "./MadeUp";
 import type {MadeEpisode, MadeWord} from "./schema";
 
@@ -35,5 +35,13 @@ export const calcMadeUpHook: CalculateMetadataFunction<MadeEpisode> = async (arg
   return {
     ...meta,
     durationInFrames: HOOK_FRAMES,
+  };
+};
+
+export const calcMadeUpClip: CalculateMetadataFunction<MadeEpisode> = async (args) => {
+  const meta = await calcMadeUp(args);
+  return {
+    ...meta,
+    durationInFrames: CLIP_FRAMES,
   };
 };

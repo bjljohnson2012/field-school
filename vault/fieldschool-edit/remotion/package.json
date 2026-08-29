@@ -6,6 +6,7 @@
     "render": "remotion render src/index.ts FieldSchoolClip --concurrency=1",
     "preview": "remotion render src/index.ts FieldSchoolPreview --frames=0-150 --concurrency=1",
     "hook": "remotion render src/index.ts EverythingMadeUpHook --concurrency=1",
+    "clip": "remotion render src/index.ts EverythingMadeUpClip --concurrency=1",
     "master": "remotion render src/index.ts EverythingMadeUp --concurrency=1"
   },
   "dependencies": {

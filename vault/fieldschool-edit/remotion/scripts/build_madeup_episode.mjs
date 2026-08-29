@@ -84,14 +84,6 @@ push({
   durationInFrames: justFrom - bookFrom,
   layout: "dock-right",
   lowerThird: {name: "Ben Johnson", title: ""},
-  phrases: [
-    {text: "they told you to wait", fromMs: 17400},
-    {text: "for a meeting", fromMs: 19927},
-    {text: "for a title", fromMs: 21308},
-    {text: "somebody to walk in", fromMs: 24021},
-    {text: "this is how we do it", fromMs: 25662},
-    {text: "you need to do it this way", fromMs: 27003},
-  ],
 });
 
 const justEnd = Math.max(justFrom + 74, frameOf((thingsHook?.toMs || 35622) + 700));

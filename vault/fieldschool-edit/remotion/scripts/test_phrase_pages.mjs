@@ -1,47 +1,65 @@
 const normWord = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, "");
+const FILLER = /^(um|uh|uhh)$/i;
+const ENDS = /[.!?]$/;
+const MAX_WORDS = 18;
+const GAP_MS = 840;
+const WEAK = /^(a|an|the|and|to|of|for|or)$/i;
+const bare = (text) => text.trim();
 
-const matchAuthored = (line, spoken, fromMs, untilMs) => {
-  const tokens = line.split(/\s+/).filter(Boolean);
-  const pool = spoken.filter((word) => word.fromMs >= fromMs - 80 && word.fromMs < untilMs);
-  const used = new Set();
-  const hits = [];
-  let cursor = 0;
-  for (const token of tokens) {
-    const needle = normWord(token);
-    let found;
-    for (let i = cursor; i < pool.length; i += 1) {
-      if (used.has(i)) {
-        continue;
-      }
-      const have = normWord(pool[i].text);
-      if (have === needle || have.includes(needle) || needle.includes(have)) {
-        found = pool[i];
-        used.add(i);
-        cursor = i + 1;
-        break;
-      }
+const autoPages = (spoken, fromMs, toMs) => {
+  const span = spoken.filter((word) => word.fromMs >= fromMs && word.fromMs < toMs && !FILLER.test(normWord(word.text)));
+  const groups = [];
+  let bucket = [];
+  const flush = () => {
+    if (bucket.length > 0) {
+      groups.push(bucket);
+      bucket = [];
     }
-    hits.push(found ? {...found, text: token} : {text: token, fromMs, toMs: fromMs});
+  };
+  for (const word of span) {
+    const prev = bucket[bucket.length - 1];
+    const gap = prev ? word.fromMs - prev.toMs : 0;
+    const punct = prev ? ENDS.test(bare(prev.text)) : false;
+    const pause = prev ? gap >= GAP_MS && bucket.length >= 3 && !WEAK.test(normWord(prev.text)) : false;
+    if (prev && (punct || pause || bucket.length >= MAX_WORDS)) {
+      flush();
+    }
+    bucket.push({...word, text: bare(word.text)});
   }
-  return hits;
-};
-
-const authoredPages = (phrases, spoken, untilMs) =>
-  phrases.map((phrase, i) => {
-    const next = phrases[i + 1];
-    const hideMs = next ? next.fromMs : Math.max(untilMs, phrase.fromMs + 900);
+  flush();
+  return groups.map((group, i) => {
+    const next = groups[i + 1];
     return {
-      words: matchAuthored(phrase.text, spoken, phrase.fromMs, hideMs),
-      appearMs: phrase.fromMs,
-      hideMs,
-      authored: true,
+      words: group,
+      appearMs: group[0].fromMs,
+      hideMs: next ? next[0].fromMs : Math.max(toMs, group[group.length - 1].toMs + 700),
     };
   });
+};
 
 const pageAt = (pages, nowMs) => pages.find((page) => nowMs >= page.appearMs && nowMs < page.hideMs) ?? null;
 
+const washForPage = (page) => {
+  if (!page) {
+    return null;
+  }
+  const blob = page.words.map((word) => normWord(word.text)).join(" ");
+  if (blob.includes("meeting")) {
+    return "episodes/everything-made-up/stills/meeting.png";
+  }
+  if (blob.includes("title")) {
+    return "episodes/everything-made-up/stills/title.png";
+  }
+  if (blob.includes("walk") || blob.includes("ahead")) {
+    return "episodes/everything-made-up/stills/walkin.png";
+  }
+  if ((blob.includes("how") && blob.includes("do")) || blob.includes("way")) {
+    return "episodes/everything-made-up/stills/memo.png";
+  }
+  return null;
+};
+
 const spoken = [
-  {text: "playbook.", fromMs: 15035, toMs: 16776},
   {text: "Somebody", fromMs: 18037, toMs: 18377},
   {text: "tell", fromMs: 18417, toMs: 18557},
   {text: "them", fromMs: 18597, toMs: 18697},
@@ -54,40 +72,36 @@ const spoken = [
   {text: "meeting,", fromMs: 19938, toMs: 20599},
   {text: "a", fromMs: 20619, toMs: 20639},
   {text: "title.", fromMs: 21319, toMs: 21859},
-  {text: "um", fromMs: 29814, toMs: 29934},
-  {text: "you", fromMs: 34701, toMs: 34781},
-  {text: "can", fromMs: 34821, toMs: 34921},
-  {text: "just", fromMs: 34941, toMs: 35101},
-  {text: "do", fromMs: 35142, toMs: 35282},
-  {text: "things", fromMs: 35362, toMs: 35622},
+  {text: "Somebody", fromMs: 24021, toMs: 24361},
+  {text: "to", fromMs: 24381, toMs: 24421},
+  {text: "walk", fromMs: 24481, toMs: 24681},
+  {text: "in", fromMs: 24741, toMs: 24801},
+  {text: "and", fromMs: 24841, toMs: 24921},
+  {text: "say,", fromMs: 24961, toMs: 25182},
+  {text: "hey,", fromMs: 25202, toMs: 25622},
+  {text: "this", fromMs: 25662, toMs: 25782},
+  {text: "is", fromMs: 25842, toMs: 25902},
+  {text: "how", fromMs: 25942, toMs: 26062},
+  {text: "we", fromMs: 26082, toMs: 26202},
+  {text: "do", fromMs: 26222, toMs: 26382},
+  {text: "it.", fromMs: 26462, toMs: 26542},
 ];
 
-const authored = authoredPages(
-  [
-    {text: "they told you to wait", fromMs: 17400},
-    {text: "for a meeting", fromMs: 19927},
-    {text: "for a title", fromMs: 21308},
-  ],
-  spoken,
-  34701,
-);
-
-const open = pageAt(authored, 18000);
-const openText = open ? open.words.map((word) => word.text).join(" ") : "";
-if (!open || !/they told you to wait/i.test(openText)) {
-  throw new Error(`0:18 field must show they told you to wait, got ${openText || "empty"}`);
+const pages = autoPages(spoken, 17400, 34700);
+const mid = pageAt(pages, 20100);
+const midText = mid ? mid.words.map((word) => word.text).join(" ") : "";
+if (!mid || !/Somebody tell them that they can do something/.test(midText)) {
+  throw new Error(`sentence must accumulate, got ${midText || "empty"}`);
 }
-const you = open.words.find((word) => /^you$/i.test(word.text));
-if (you && you.fromMs > 22000 && you.toMs > you.fromMs) {
-  throw new Error("you bound to a later utterance");
+if (!/meeting/.test(midText) || !/title/.test(midText)) {
+  throw new Error(`sentence must keep going through meeting and title, got ${midText}`);
 }
-
-const meeting = pageAt(authored, 20100);
-if (!meeting || !meeting.words.some((word) => /meeting/i.test(word.text))) {
-  throw new Error("meeting page must print the meeting phrase, not a lone noun");
+if (washForPage(mid) !== "episodes/everything-made-up/stills/meeting.png") {
+  throw new Error(`meeting wash missing for ${midText}`);
 }
-
-if (authored.some((page) => page.words.some((word) => word.text === "um"))) {
-  throw new Error("filler leaked into authored pages");
+const next = pageAt(pages, 25000);
+const nextText = next ? next.words.map((word) => word.text).join(" ") : "";
+if (!next || !/walk in/.test(nextText)) {
+  throw new Error(`next sentence should start after title., got ${nextText || "empty"}`);
 }
-console.log("PASS phrase pages", authored.length, openText);
+console.log("PASS sentence pages", pages.length, midText);

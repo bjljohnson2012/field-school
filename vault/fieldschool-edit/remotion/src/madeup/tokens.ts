@@ -28,6 +28,7 @@ export const TYPE_COL = 980;
 export const HOOK_FULL = 1760;
 export const MASTER_FRAMES = 19936;
 export const HOOK_FRAMES = 540;
+export const CLIP_FRAMES = 1800;
 export const BED_FRAMES = 1834;
 
 export const paperGrain = [

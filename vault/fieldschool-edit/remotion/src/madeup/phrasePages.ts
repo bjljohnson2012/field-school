@@ -8,11 +8,11 @@ export type PhrasePage = {
   authored?: boolean;
 };
 
-const FILLER = /^(um|uh|uhh|so)$/i;
+const FILLER = /^(um|uh|uhh)$/i;
 const ENDS = /[.!?]$/;
-const MIN_WORDS = 3;
-const MAX_WORDS = 8;
-const GAP_MS = 420;
+const MAX_WORDS = 18;
+const GAP_MS = 840;
+const WEAK = /^(a|an|the|and|to|of|for|or)$/i;
 
 const bare = (text: string): string => text.trim();
 
@@ -39,15 +39,7 @@ const matchAuthored = (line: string, spoken: MadeWord[], fromMs: number, untilMs
         break;
       }
     }
-    hits.push(
-      found
-        ? {...found, text: token}
-        : {
-            text: token,
-            fromMs,
-            toMs: fromMs,
-          },
-    );
+    hits.push(found ? {...found, text: token} : {text: token, fromMs, toMs: fromMs});
   }
   return hits;
 };
@@ -56,9 +48,8 @@ export const authoredPages = (phrases: MadePhrase[], spoken: MadeWord[], untilMs
   return phrases.map((phrase, i) => {
     const next = phrases[i + 1];
     const hideMs = next ? next.fromMs : Math.max(untilMs, phrase.fromMs + 900);
-    const words = matchAuthored(phrase.text, spoken, phrase.fromMs, hideMs);
     return {
-      words,
+      words: matchAuthored(phrase.text, spoken, phrase.fromMs, hideMs),
       appearMs: phrase.fromMs,
       hideMs,
       authored: true,
@@ -79,18 +70,10 @@ export const autoPages = (spoken: MadeWord[], fromMs: number, toMs: number): Phr
   for (const word of span) {
     const prev = bucket[bucket.length - 1];
     const gap = prev ? word.fromMs - prev.toMs : 0;
-    const full = bucket.length >= MAX_WORDS;
-    const punct = prev ? ENDS.test(bare(prev.text)) && bucket.length >= MIN_WORDS : false;
-    const silence = prev ? gap >= GAP_MS && bucket.length >= MIN_WORDS : false;
-    if (full || punct || silence) {
+    const punct = prev ? ENDS.test(bare(prev.text)) : false;
+    const pause = prev ? gap >= GAP_MS && bucket.length >= 3 && !WEAK.test(normWord(prev.text)) : false;
+    if (prev && (punct || pause || bucket.length >= MAX_WORDS)) {
       flush();
-    }
-    const sameWeak =
-      prev &&
-      /^(that|the|a|and|to|of|it)$/i.test(normWord(prev.text)) &&
-      normWord(prev.text) === normWord(word.text);
-    if (sameWeak) {
-      continue;
     }
     bucket.push({...word, text: bare(word.text)});
   }
@@ -118,6 +101,31 @@ export const pagesForShot = (
 };
 
 export const pageAt = (pages: PhrasePage[], nowMs: number): PhrasePage | null => {
-  const live = pages.find((page) => nowMs >= page.appearMs && nowMs < page.hideMs);
-  return live ?? null;
+  return pages.find((page) => nowMs >= page.appearMs && nowMs < page.hideMs) ?? null;
+};
+
+export const washForPage = (page: PhrasePage | null, nowMs = Number.POSITIVE_INFINITY): string | null => {
+  if (!page) {
+    return null;
+  }
+  const heard = page.words.filter((word) => nowMs + 40 >= word.fromMs);
+  for (let i = heard.length - 1; i >= 0; i -= 1) {
+    const token = normWord(heard[i].text);
+    if (token.includes("title")) {
+      return "episodes/everything-made-up/stills/title.png";
+    }
+    if (token.includes("meeting")) {
+      return "episodes/everything-made-up/stills/meeting.png";
+    }
+    if (token.includes("walk") || token.includes("ahead")) {
+      return "episodes/everything-made-up/stills/walkin.png";
+    }
+    if (token.includes("way") || token === "it") {
+      const blob = heard.map((word) => normWord(word.text)).join(" ");
+      if (blob.includes("how") && blob.includes("do")) {
+        return "episodes/everything-made-up/stills/memo.png";
+      }
+    }
+  }
+  return null;
 };

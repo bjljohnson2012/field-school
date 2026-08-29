@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {interpolate} from "remotion";
+import {Img, staticFile} from "remotion";
 import {TYPE_PLAYBOOK, displayFace, ink} from "./tokens";
 import {TypewriterWord} from "./TypewriterWord";
 import type {MadeWord} from "./schema";
@@ -79,13 +79,24 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs}) => {
         width: 1920 - 780,
         height: 1080,
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         paddingLeft: 88,
         paddingRight: 72,
         boxSizing: "border-box",
+        gap: 28,
       }}
     >
+      <Img
+        src={staticFile("vox/playbook-book.png")}
+        style={{
+          width: 420,
+          height: 280,
+          objectFit: "contain",
+          opacity: 0.92,
+        }}
+      />
       <TypewriterWord text={page.word.text} shown={page.word.text.length} size={TYPE_PLAYBOOK} active={active} />
     </div>
   );

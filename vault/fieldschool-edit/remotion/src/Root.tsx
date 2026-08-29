@@ -2,8 +2,8 @@ import React from "react";
 import {Composition} from "remotion";
 import {CLIP_FRAMES, Lesson, PREVIEW_FRAMES, defaultEpisode} from "./Lesson";
 import {MadeUp, defaultMadeUp} from "./madeup/MadeUp";
-import {calcMadeUp, calcMadeUpHook} from "./madeup/calc";
-import {HOOK_FRAMES, MASTER_FRAMES} from "./madeup/tokens";
+import {calcMadeUp, calcMadeUpClip, calcMadeUpHook} from "./madeup/calc";
+import {CLIP_FRAMES as MADEUP_CLIP, HOOK_FRAMES, MASTER_FRAMES} from "./madeup/tokens";
 
 export const Root: React.FC = () => {
   return (
@@ -35,6 +35,16 @@ export const Root: React.FC = () => {
         height={1080}
         defaultProps={defaultMadeUp}
         calculateMetadata={calcMadeUpHook}
+      />
+      <Composition
+        id="EverythingMadeUpClip"
+        component={MadeUp}
+        durationInFrames={MADEUP_CLIP}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultMadeUp}
+        calculateMetadata={calcMadeUpClip}
       />
       <Composition
         id="EverythingMadeUp"
