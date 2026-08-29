@@ -31,7 +31,8 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const local = shot ? frame - shot.fromFrame : 0;
   const solo = useWaitingSolo(words);
   const vox = Boolean(shot && (shot.type === "vox" || shot.type === "b-roll"));
-  const teach = Boolean(shot && (shot.type === "a-roll" || (shot.id === "s01" && solo > 0.02)));
+  const waited = words.some((word) => /^waiting\.$/i.test(word.text.trim()) && nowMs >= word.fromMs);
+  const teach = Boolean(shot && (shot.type === "a-roll" || (shot.id === "s01" && waited)));
   const docked = Boolean(shot && (shot.layout === "dock-right" || shot.layout === "pip-tr") && solo < 0.5);
   const paperOpen =
     shot && shot.type === "a-roll"
@@ -46,7 +47,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
         <AbsoluteFill style={{backgroundColor: vox ? paper : bg}} />
         {!vox ? <AbsoluteFill style={{backgroundImage: darkGrain, opacity: 0.85}} /> : null}
         <PaperSheet open={paperOpen} solo={solo} />
-        <WaitingWash open={solo} />
+        <WaitingWash open={shot?.id === "s01" && waited ? Math.max(solo, 0.92) : solo} />
         {shot && vox ? (
           <CollageBeat
             assets={shot.assets || []}
@@ -68,7 +69,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             mode={shot?.type === "a-roll" ? "paper" : "dark"}
           />
         ) : null}
-        {shot && shot.type === "hook" && shot.id === "s01" && solo <= 0.05 ? (
+        {shot && shot.type === "hook" && shot.id === "s01" && !waited ? (
           <HookPlate text={shot.text || "PEOPLE WAIT TO BE TOLD"} local={frame - shot.fromFrame} ghost={hookGhost} />
         ) : null}
         {shot && shot.id === "s02" ? (

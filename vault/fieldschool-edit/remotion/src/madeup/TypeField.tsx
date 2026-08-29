@@ -61,7 +61,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked,
   const lock = useMemo(() => words.find((word) => WAITING.test(word.text.trim()))?.fromMs ?? null, [words]);
   const page = useMemo(() => {
     const next = pageForClock(words, nowMs, lock);
-    if (!next || solo < 0.12) {
+    if (!next || (solo < 0.12 && nowMs < (lock ?? 0) + 4000)) {
       return next;
     }
     const only = next.words.filter((word) => WAITING.test(word.text.trim()));
