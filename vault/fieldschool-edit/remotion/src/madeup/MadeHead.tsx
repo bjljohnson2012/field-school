@@ -67,19 +67,27 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0,
           opacity: 0.9,
         }}
       />
-      <OffthreadVideo
-        src={staticFile(src)}
-        startFrom={0}
-        muted
+      <div
         style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          objectPosition: "50% 0%",
-          scale: "1.48",
-          filter: "contrast(1.06) saturate(1.04) brightness(1.02)",
+          position: "absolute",
+          inset: HEAD_MAT_PX,
+          overflow: "hidden",
         }}
-      />
+      >
+        <OffthreadVideo
+          src={staticFile(src)}
+          startFrom={0}
+          muted
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "50% 12%",
+            scale: "1.62",
+            filter: "contrast(1.06) saturate(1.04) brightness(1.02)",
+          }}
+        />
+      </div>
     </div>
   );
 };
