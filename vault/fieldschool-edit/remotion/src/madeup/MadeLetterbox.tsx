@@ -1,5 +1,5 @@
 import React from "react";
-import {bg, gold} from "./tokens";
+import {gold, night} from "./tokens";
 
 type MadeLetterboxProps = {
   mode: "none" | "hair" | "vox";
@@ -19,8 +19,8 @@ export const MadeLetterbox: React.FC<MadeLetterboxProps> = ({mode}) => {
   }
   return (
     <>
-      <div style={{position: "absolute", left: 0, top: 0, width: 1920, height: 48, backgroundColor: bg}} />
-      <div style={{position: "absolute", left: 0, bottom: 0, width: 1920, height: 48, backgroundColor: bg}} />
+      <div style={{position: "absolute", left: 0, top: 0, width: 1920, height: 48, backgroundColor: night}} />
+      <div style={{position: "absolute", left: 0, bottom: 0, width: 1920, height: 48, backgroundColor: night}} />
     </>
   );
 };

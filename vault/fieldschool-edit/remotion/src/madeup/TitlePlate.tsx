@@ -2,7 +2,7 @@ import {fitText} from "@remotion/layout-utils";
 import React, {useEffect, useMemo, useState} from "react";
 import {Img, interpolate, spring, staticFile, useDelayRender, useVideoConfig} from "remotion";
 import {waitMadeUpFonts} from "./fonts";
-import {TYPE_COL, displayFace, gold, paper} from "./tokens";
+import {TYPE_COL, displayFace, gold, ink} from "./tokens";
 
 type TitlePlateProps = {
   text: string;
@@ -128,7 +128,7 @@ export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) 
             fontSize: i === 1 ? 72 : 88,
             lineHeight: 0.95,
             letterSpacing: "-0.04em",
-            color: i === 1 ? gold : paper,
+            color: i === 1 ? gold : ink,
             translate: `0px ${(1 - enter) * (20 + i * 8)}px`,
           }}
         >

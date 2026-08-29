@@ -15,7 +15,7 @@ export const PaperSheet: React.FC<PaperSheetProps> = ({open, solo}) => {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const width = interpolate(field, [0, 1], [1920 - headReservedPx() + 24, 1920], {
+  const rule = interpolate(field, [0, 1], [0.9, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -25,34 +25,33 @@ export const PaperSheet: React.FC<PaperSheetProps> = ({open, solo}) => {
         position: "absolute",
         left: 0,
         top: 0,
-        width,
+        width: 1920,
         height: 1080,
         backgroundColor: paper,
         backgroundImage: paperGrain,
         opacity: open,
-        boxShadow: `inset -18px 0 0 ${ink}14`,
       }}
     >
       <div
         style={{
           position: "absolute",
-          right: 0,
+          right: headReservedPx() - 24,
           top: 72,
           width: 3,
           height: 936,
           backgroundColor: ink,
-          opacity: interpolate(field, [0, 1], [0.9, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
+          opacity: rule,
         }}
       />
       <div
         style={{
           position: "absolute",
-          right: 5,
+          right: headReservedPx() - 29,
           top: 72,
           width: 2,
           height: 936,
           backgroundColor: gold,
-          opacity: interpolate(field, [0, 1], [0.7, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
+          opacity: rule * 0.78,
         }}
       />
       <div

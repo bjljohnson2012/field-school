@@ -1,6 +1,6 @@
 import React from "react";
 import {Img, interpolate, spring, staticFile, useVideoConfig} from "remotion";
-import {displayFace, gold, paper} from "./tokens";
+import {displayFace, gold, ink} from "./tokens";
 
 type BrandLockupProps = {
   local: number;
@@ -64,7 +64,7 @@ export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everyth
           fontWeight: 700,
           fontSize: 64,
           letterSpacing: "-0.035em",
-          color: paper,
+          color: ink,
           opacity: typeIn,
           scale: `${grow}`,
           translate: `0px ${(1 - typeIn) * 20}px`,
@@ -90,7 +90,7 @@ export const BrandBug: React.FC<{open: number}> = ({open}) => {
         width: 72,
         height: 72,
         objectFit: "contain",
-        opacity: 0.22 * open,
+        opacity: 0.42 * open,
       }}
     />
   );

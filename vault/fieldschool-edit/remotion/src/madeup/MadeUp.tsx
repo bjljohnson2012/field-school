@@ -11,7 +11,7 @@ import {BrandBug, BrandLockup} from "./BrandLockup";
 import {CtaCard, TitlePlate} from "./TitlePlate";
 import {PLAYBOOK, TypeField, letterAtMs} from "./TypeField";
 import {WaitingWash} from "./WaitingWash";
-import {BED_FRAMES, FPS, MASTER_FRAMES, bg, darkGrain, gold, paper, uiFace} from "./tokens";
+import {BED_FRAMES, FPS, MASTER_FRAMES, bg, gold, paperGrain, uiFace} from "./tokens";
 import type {MadeEpisode, MadeShot, MadeWord} from "./schema";
 
 export const defaultMadeUp: MadeEpisode = {
@@ -51,8 +51,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   return (
     <AbsoluteFill style={{backgroundColor: bg}}>
       <Stack>
-        <AbsoluteFill style={{backgroundColor: vox ? paper : bg}} />
-        {!vox ? <AbsoluteFill style={{backgroundImage: darkGrain, opacity: 0.85}} /> : null}
+        <AbsoluteFill style={{backgroundColor: bg, backgroundImage: paperGrain}} />
         <PaperSheet open={paperOpen} solo={solo} />
         <WaitingWash open={shot?.id === "s01" && waited ? Math.max(solo, 0.92) : solo} />
         {shot && vox ? (
@@ -73,7 +72,6 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             nowMs={nowMs}
             solo={solo}
             docked={docked}
-            mode={shot?.type === "a-roll" ? "paper" : "dark"}
           />
         ) : null}
         {shot && shot.type === "hook" && shot.id === "s01" && !waited ? (

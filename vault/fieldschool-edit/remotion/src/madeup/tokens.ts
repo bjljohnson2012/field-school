@@ -1,7 +1,8 @@
 export {bodyFace, displayFace, uiFace} from "./fonts";
 
-export const bg = "#11140C";
+export const night = "#11140C";
 export const paper = "#EFE7D6";
+export const bg = paper;
 export const ink = "#1A1A16";
 export const gold = "#C4A35A";
 export const wine = "#8B3A2A";

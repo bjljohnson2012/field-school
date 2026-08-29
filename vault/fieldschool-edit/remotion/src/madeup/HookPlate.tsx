@@ -2,7 +2,7 @@ import {fitText} from "@remotion/layout-utils";
 import React, {useEffect, useMemo, useState} from "react";
 import {interpolate, spring, useDelayRender, useVideoConfig} from "remotion";
 import {waitMadeUpFonts} from "./fonts";
-import {displayFace, gold, paper} from "./tokens";
+import {displayFace, gold, ink} from "./tokens";
 
 type HookPlateProps = {
   text: string;
@@ -97,7 +97,7 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
               fontSize: sizes[i],
               lineHeight: 0.92,
               letterSpacing: "-0.045em",
-              color: i === 1 ? gold : paper,
+              color: i === 1 ? gold : ink,
               opacity: enter,
               translate: `0px ${(1 - enter) * 72}px`,
               scale: `${0.88 + enter * 0.12}`,

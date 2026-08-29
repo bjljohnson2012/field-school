@@ -1,6 +1,6 @@
 import React from "react";
 import {Img, interpolate, staticFile} from "remotion";
-import {bg, paper} from "./tokens";
+import {paper} from "./tokens";
 
 type WaitingWashProps = {
   open: number;
@@ -39,7 +39,7 @@ export const WaitingWash: React.FC<WaitingWashProps> = ({open}) => {
         style={{
           position: "absolute",
           inset: 0,
-          background: `linear-gradient(180deg, ${bg}f2 0%, ${bg}99 42%, ${paper}55 100%)`,
+          background: `linear-gradient(180deg, ${paper}e6 0%, ${paper}99 38%, ${paper}55 100%)`,
         }}
       />
     </div>

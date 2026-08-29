@@ -12,7 +12,6 @@ import {
   gold,
   headReservedPx,
   ink,
-  paper,
 } from "./tokens";
 import {TypewriterWord} from "./TypewriterWord";
 import type {MadeWord} from "./schema";
@@ -26,7 +25,6 @@ type TypeFieldProps = {
   nowMs: number;
   solo: number;
   docked: boolean;
-  mode: "dark" | "paper";
 };
 
 const typedCount = (nowMs: number, fromMs: number, letters: number): number => {
@@ -40,7 +38,7 @@ const typedCount = (nowMs: number, fromMs: number, letters: number): number => {
   return Math.max(1, Math.min(letters, Math.ceil(t * letters)));
 };
 
-export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked, mode}) => {
+export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const {delayRender, continueRender} = useDelayRender();
@@ -89,7 +87,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked,
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const spokenColor = mode === "dark" ? paper : ink;
+  const spokenColor = ink;
 
   return (
     <div
