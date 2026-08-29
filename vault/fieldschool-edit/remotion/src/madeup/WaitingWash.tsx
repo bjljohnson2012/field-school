@@ -4,8 +4,8 @@ import {ink, paper} from "./tokens";
 
 const SRC_W = 1536;
 const SRC_H = 1024;
-const FOCUS_X = 0.82;
-const FOCUS_Y = 0.46;
+const FOCUS_X = 0.73;
+const FOCUS_Y = 0.56;
 
 type WaitingWashProps = {
   open: number;
@@ -19,16 +19,18 @@ export const WaitingWash: React.FC<WaitingWashProps> = ({open}) => {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const zoom = interpolate(open, [0, 1], [2.08, 1.92], {
+  const zoom = interpolate(open, [0, 1], [2.48, 2.36], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const drift = interpolate(open, [0, 1], [18, -22], {
+  const drift = interpolate(open, [0, 1], [16, -18], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
   const width = SRC_W * zoom;
   const height = SRC_H * zoom;
+  const left = Math.min(0, Math.max(1920 - width, 1920 / 2 - width * FOCUS_X + drift));
+  const top = Math.min(0, Math.max(1080 - height, 1080 / 2 - height * FOCUS_Y));
   return (
     <div style={{position: "absolute", inset: 0, overflow: "hidden", opacity}}>
       <Img
@@ -37,8 +39,8 @@ export const WaitingWash: React.FC<WaitingWashProps> = ({open}) => {
           position: "absolute",
           width,
           height,
-          left: 1920 / 2 - width * FOCUS_X + drift,
-          top: 1080 / 2 - height * FOCUS_Y,
+          left,
+          top,
         }}
       />
       <div
