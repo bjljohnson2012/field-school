@@ -5,6 +5,7 @@ export type PhrasePage = {
   words: MadeWord[];
   appearMs: number;
   hideMs: number;
+  authored?: boolean;
 };
 
 const FILLER = /^(um|uh|uhh|so)$/i;
@@ -17,9 +18,9 @@ const bare = (text: string): string => text.trim();
 
 export const isFiller = (text: string): boolean => FILLER.test(normWord(text));
 
-const matchAuthored = (line: string, spoken: MadeWord[], fromMs: number): MadeWord[] => {
+const matchAuthored = (line: string, spoken: MadeWord[], fromMs: number, untilMs: number): MadeWord[] => {
   const tokens = line.split(/\s+/).filter(Boolean);
-  const pool = spoken.filter((word) => word.fromMs >= fromMs - 80);
+  const pool = spoken.filter((word) => word.fromMs >= fromMs - 80 && word.fromMs < untilMs);
   const used = new Set<number>();
   const hits: MadeWord[] = [];
   let cursor = 0;
@@ -39,11 +40,13 @@ const matchAuthored = (line: string, spoken: MadeWord[], fromMs: number): MadeWo
       }
     }
     hits.push(
-      found ?? {
-        text: token,
-        fromMs: hits[hits.length - 1]?.toMs ?? fromMs,
-        toMs: (hits[hits.length - 1]?.toMs ?? fromMs) + 180,
-      },
+      found
+        ? {...found, text: token}
+        : {
+            text: token,
+            fromMs,
+            toMs: fromMs,
+          },
     );
   }
   return hits;
@@ -51,13 +54,14 @@ const matchAuthored = (line: string, spoken: MadeWord[], fromMs: number): MadeWo
 
 export const authoredPages = (phrases: MadePhrase[], spoken: MadeWord[], untilMs: number): PhrasePage[] => {
   return phrases.map((phrase, i) => {
-    const words = matchAuthored(phrase.text, spoken, phrase.fromMs);
     const next = phrases[i + 1];
-    const last = words[words.length - 1];
+    const hideMs = next ? next.fromMs : Math.max(untilMs, phrase.fromMs + 900);
+    const words = matchAuthored(phrase.text, spoken, phrase.fromMs, hideMs);
     return {
       words,
       appearMs: phrase.fromMs,
-      hideMs: next ? next.fromMs : Math.max(untilMs, (last?.toMs ?? phrase.fromMs) + 900),
+      hideMs,
+      authored: true,
     };
   });
 };
@@ -80,6 +84,13 @@ export const autoPages = (spoken: MadeWord[], fromMs: number, toMs: number): Phr
     const silence = prev ? gap >= GAP_MS && bucket.length >= MIN_WORDS : false;
     if (full || punct || silence) {
       flush();
+    }
+    const sameWeak =
+      prev &&
+      /^(that|the|a|and|to|of|it)$/i.test(normWord(prev.text)) &&
+      normWord(prev.text) === normWord(word.text);
+    if (sameWeak) {
+      continue;
     }
     bucket.push({...word, text: bare(word.text)});
   }

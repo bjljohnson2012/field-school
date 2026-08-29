@@ -1,6 +1,6 @@
 import {fitText} from "@remotion/layout-utils";
 import React, {useMemo} from "react";
-import {Img, interpolate, spring, staticFile, useVideoConfig} from "remotion";
+import {Img, spring, staticFile, useVideoConfig} from "remotion";
 import {hasHeard} from "./spoken";
 import {displayFace, gold, ink, paper, uiFace, wine} from "./tokens";
 
@@ -64,7 +64,6 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
     durationInFrames: 8,
     config: {damping: 14, mass: 0.45, stiffness: 260},
   });
-  const fade = interpolate(local, [0, 8], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   const hero = /^(60 DAYS|FIVE QUESTIONS)$/i.test(text);
   const ask = /^ASK$/i.test(text);
   const giant = !list && assets.length === 0 && text.length > 0 && text.length <= 28 && !/^60 DAYS$/i.test(text);
@@ -89,7 +88,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
   }, [assets.length, giant, hero, list, text]);
   const visibleList = (list || []).filter((line) => heardLine(spoken, line));
   return (
-    <div style={{position: "absolute", inset: 0, backgroundColor: paper, opacity: fade, scale: `${0.94 + enter * 0.06}`}}>
+    <div style={{position: "absolute", inset: 0, backgroundColor: paper, opacity: 1, scale: `${0.94 + enter * 0.06}`}}>
       {text ? (
         <div
           style={{

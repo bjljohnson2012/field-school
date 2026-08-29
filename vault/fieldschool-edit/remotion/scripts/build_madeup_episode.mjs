@@ -43,11 +43,11 @@ const fillAroll = (fromFrame, toFrame, startSide, extra = {}) => {
   let i = 0;
   while (at < toFrame) {
     const remain = toFrame - at;
-    if (remain < 240 && i > 0) {
+    if (remain < 150 && i > 0) {
       shots[shots.length - 1].durationInFrames += remain;
       break;
     }
-    const chunk = remain <= 540 ? remain : Math.min(540, Math.max(360, remain > 900 ? 480 : remain));
+    const chunk = remain <= 540 ? remain : 480;
     push({
       id: extra.id ? `${extra.id}${i === 0 ? "" : `-${i}`}` : `a${fromFrame}-${i}`,
       type: "a-roll",
@@ -85,9 +85,12 @@ push({
   layout: "dock-right",
   lowerThird: {name: "Ben Johnson", title: ""},
   phrases: [
-    {text: "they told you to wait", fromMs: 18047},
+    {text: "they told you to wait", fromMs: 17400},
     {text: "for a meeting", fromMs: 19927},
     {text: "for a title", fromMs: 21308},
+    {text: "somebody to walk in", fromMs: 24021},
+    {text: "this is how we do it", fromMs: 25662},
+    {text: "you need to do it this way", fromMs: 27003},
   ],
 });
 
@@ -268,12 +271,20 @@ push({
   text: "CHANGE IT WITH THE REASON IN HAND",
 });
 
-for (let i = 1; i < shots.length; i += 1) {
-  const prev = shots[i - 1];
-  const end = prev.fromFrame + prev.durationInFrames;
-  if (shots[i].fromFrame !== end) {
-    shots[i].fromFrame = end;
+shots.sort((a, b) => a.fromFrame - b.fromFrame);
+for (let i = 0; i < shots.length - 1; ) {
+  const next = shots[i + 1];
+  const gap = next.fromFrame - shots[i].fromFrame;
+  if (gap <= 0) {
+    if (shots[i].type === "a-roll" && next.type !== "a-roll") {
+      shots.splice(i, 1);
+      continue;
+    }
+    next.fromFrame = shots[i].fromFrame + Math.max(36, shots[i].durationInFrames);
+  } else {
+    shots[i].durationInFrames = gap;
   }
+  i += 1;
 }
 const last = shots[shots.length - 1];
 last.durationInFrames = MASTER - last.fromFrame;

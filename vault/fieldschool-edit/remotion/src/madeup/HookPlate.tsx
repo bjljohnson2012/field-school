@@ -93,8 +93,8 @@ export const HookPlate: React.FC<HookPlateProps> = ({
         justifyContent: "center",
         alignItems: pip ? "flex-start" : "center",
         textAlign: pip ? "left" : "center",
-        opacity: enter,
-        scale: `${0.92 + enter * 0.08}`,
+        opacity: 1,
+        scale: `${0.94 + enter * 0.06}`,
       }}
     >
       {lines.map((line, i) => (

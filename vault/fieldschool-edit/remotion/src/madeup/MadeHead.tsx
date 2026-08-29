@@ -75,7 +75,8 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0,
           width: "100%",
           height: "100%",
           objectFit: "cover",
-          objectPosition: "50% 22%",
+          objectPosition: "50% 0%",
+          scale: "1.48",
           filter: "contrast(1.06) saturate(1.04) brightness(1.02)",
         }}
       />

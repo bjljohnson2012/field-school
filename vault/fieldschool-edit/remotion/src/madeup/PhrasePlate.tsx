@@ -76,21 +76,23 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
         }}
       >
         {page.words.map((word, i) => {
-          const appear = Math.round((Math.max(word.fromMs, page.appearMs) / 1000) * fps);
-          const fade = interpolate(frame, [appear, appear + FADE], [0, 1], {
+          const appear = page.authored
+            ? Math.round((page.appearMs / 1000) * fps) + i * 2
+            : Math.round((Math.max(word.fromMs, page.appearMs) / 1000) * fps);
+          const fade = interpolate(frame, [appear - 1, appear + FADE], [0, 1], {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",
           });
-          const live = nowMs >= word.fromMs && nowMs < word.toMs;
+          const live = word.toMs > word.fromMs && nowMs >= word.fromMs && nowMs < word.toMs;
           const pop = live
             ? spring({
-                frame: frame - appear,
+                frame: Math.max(0, frame - appear),
                 fps,
                 durationInFrames: 4,
                 config: {damping: 14, mass: 0.4, stiffness: 260},
               })
             : 0;
-          const seen = nowMs + 33 >= word.fromMs;
+          const seen = nowMs + 40 >= (page.authored ? page.appearMs : Math.min(word.fromMs, page.appearMs));
           return (
             <span
               key={`${word.fromMs}-${word.text}-${i}`}

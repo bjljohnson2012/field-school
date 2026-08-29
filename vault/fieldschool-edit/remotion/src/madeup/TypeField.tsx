@@ -21,7 +21,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs}) => {
     if (waitWord && nowMs >= waitWord.fromMs && (bookMs === null || nowMs < bookMs)) {
       return {word: waitWord, kind: "waiting" as const};
     }
-    if (bookWord && bookMs !== null && nowMs + 34 >= bookMs && nowMs < bookMs + 2400) {
+    if (bookWord && bookMs !== null && nowMs + 34 >= bookMs && nowMs < bookMs + 2360) {
       return {word: bookWord, kind: "playbook" as const};
     }
     return null;

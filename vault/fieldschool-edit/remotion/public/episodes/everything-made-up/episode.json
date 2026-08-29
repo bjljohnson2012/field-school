@@ -45,7 +45,7 @@
       "phrases": [
         {
           "text": "they told you to wait",
-          "fromMs": 18047
+          "fromMs": 17400
         },
         {
           "text": "for a meeting",
@@ -54,6 +54,18 @@
         {
           "text": "for a title",
           "fromMs": 21308
+        },
+        {
+          "text": "somebody to walk in",
+          "fromMs": 24021
+        },
+        {
+          "text": "this is how we do it",
+          "fromMs": 25662
+        },
+        {
+          "text": "you need to do it this way",
+          "fromMs": 27003
         }
       ]
     },
@@ -93,14 +105,14 @@
       "id": "s02b-3",
       "type": "a-roll",
       "fromFrame": 2555,
-      "durationInFrames": 540,
+      "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
       "id": "s02b-4",
       "type": "a-roll",
-      "fromFrame": 3095,
-      "durationInFrames": 317,
+      "fromFrame": 3035,
+      "durationInFrames": 377,
       "layout": "letterbox"
     },
     {
@@ -248,8 +260,15 @@
       "id": "s10b-6",
       "type": "a-roll",
       "fromFrame": 10767,
-      "durationInFrames": 704,
+      "durationInFrames": 480,
       "layout": "dock-left"
+    },
+    {
+      "id": "s10b-7",
+      "type": "a-roll",
+      "fromFrame": 11247,
+      "durationInFrames": 224,
+      "layout": "letterbox"
     },
     {
       "id": "s12",
@@ -287,14 +306,14 @@
       "id": "s12b-3",
       "type": "a-roll",
       "fromFrame": 13131,
-      "durationInFrames": 540,
+      "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
       "id": "s12b-4",
       "type": "a-roll",
-      "fromFrame": 13671,
-      "durationInFrames": 261,
+      "fromFrame": 13611,
+      "durationInFrames": 321,
       "layout": "letterbox"
     },
     {
@@ -316,8 +335,15 @@
       "id": "s14",
       "type": "a-roll",
       "fromFrame": 14912,
-      "durationInFrames": 757,
+      "durationInFrames": 480,
       "layout": "dock-left"
+    },
+    {
+      "id": "s14-1",
+      "type": "a-roll",
+      "fromFrame": 15392,
+      "durationInFrames": 277,
+      "layout": "letterbox"
     },
     {
       "id": "s15",
@@ -334,14 +360,14 @@
       "id": "s15b",
       "type": "vox",
       "fromFrame": 16084,
-      "durationInFrames": 72,
+      "durationInFrames": 61,
       "layout": "off",
       "text": "REFUSE"
     },
     {
       "id": "s15c",
       "type": "vox",
-      "fromFrame": 16156,
+      "fromFrame": 16145,
       "durationInFrames": 220,
       "layout": "off",
       "text": "WRECK"
@@ -349,35 +375,42 @@
     {
       "id": "s16",
       "type": "a-roll",
-      "fromFrame": 16376,
+      "fromFrame": 16365,
       "durationInFrames": 480,
       "layout": "dock-right"
     },
     {
       "id": "s16-1",
       "type": "a-roll",
-      "fromFrame": 16856,
+      "fromFrame": 16845,
       "durationInFrames": 480,
       "layout": "letterbox"
     },
     {
       "id": "s16-2",
       "type": "a-roll",
-      "fromFrame": 17336,
+      "fromFrame": 17325,
       "durationInFrames": 480,
       "layout": "dock-left"
     },
     {
       "id": "s16-3",
       "type": "a-roll",
-      "fromFrame": 17816,
-      "durationInFrames": 723,
+      "fromFrame": 17805,
+      "durationInFrames": 480,
       "layout": "dock-right"
+    },
+    {
+      "id": "s16-4",
+      "type": "a-roll",
+      "fromFrame": 18285,
+      "durationInFrames": 243,
+      "layout": "letterbox"
     },
     {
       "id": "s17",
       "type": "vox",
-      "fromFrame": 18539,
+      "fromFrame": 18528,
       "durationInFrames": 511,
       "layout": "off",
       "text": "ASK",
@@ -395,7 +428,7 @@
     {
       "id": "s18",
       "type": "vox",
-      "fromFrame": 19050,
+      "fromFrame": 19039,
       "durationInFrames": 82,
       "layout": "off",
       "text": "ACT",
@@ -406,7 +439,7 @@
     {
       "id": "s18b",
       "type": "vox",
-      "fromFrame": 19132,
+      "fromFrame": 19121,
       "durationInFrames": 214,
       "layout": "off",
       "text": "THINGS ARE REAL."
@@ -414,7 +447,7 @@
     {
       "id": "s19",
       "type": "cta",
-      "fromFrame": 19346,
+      "fromFrame": 19335,
       "durationInFrames": 180,
       "layout": "off",
       "text": "CHANGE IT WITH THE REASON IN HAND",
@@ -425,15 +458,15 @@
     {
       "id": "s20",
       "type": "a-roll",
-      "fromFrame": 19526,
+      "fromFrame": 19515,
       "durationInFrames": 301,
       "layout": "letterbox"
     },
     {
       "id": "s21",
       "type": "cta",
-      "fromFrame": 19827,
-      "durationInFrames": 109,
+      "fromFrame": 19816,
+      "durationInFrames": 120,
       "layout": "off",
       "text": "CHANGE IT WITH THE REASON IN HAND"
     }

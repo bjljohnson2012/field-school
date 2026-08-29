@@ -116,9 +116,9 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
           <div
             style={{
               position: "absolute",
-              right: 72,
+              right: 88,
               bottom: 88,
-              width: 680,
+              width: 640,
               textAlign: "right",
               opacity: 1,
             }}
@@ -128,7 +128,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
               style={{
                 fontFamily: uiFace,
                 fontSize: 18,
-                letterSpacing: "0.16em",
+                letterSpacing: "0.08em",
                 color: gold,
               }}
             >
@@ -167,7 +167,7 @@ const playbookOpen = (nowMs: number, words: MadeWord[]): boolean => {
   if (!book) {
     return false;
   }
-  return nowMs + 34 >= book.fromMs && nowMs < book.fromMs + 2400;
+  return nowMs + 34 >= book.fromMs && nowMs < book.fromMs + 2360;
 };
 
 const WaitHit: React.FC<{words: MadeWord[]}> = ({words}) => {
