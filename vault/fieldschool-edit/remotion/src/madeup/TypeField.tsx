@@ -18,7 +18,7 @@ import {TypewriterWord} from "./TypewriterWord";
 import type {MadeWord} from "./schema";
 
 const WAITING = /^waiting\.$/i;
-const PLAYBOOK = /^playbook[,.]?$/i;
+export const PLAYBOOK = /^playbook[,.]?$/i;
 const TYPE_MS = 1500;
 
 type TypeFieldProps = {
@@ -177,5 +177,3 @@ export const letterAtMs = (fromMs: number, index: number, letters: number): numb
   }
   return fromMs + (index / letters) * TYPE_MS;
 };
-
-export const PLAYBOOK = /^playbook[,.]?$/i;
