@@ -41,7 +41,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
       return {words: [waitWord], appearMs: waitWord.fromMs, hideMs: bookMs ?? waitWord.toMs + 8000};
     }
     const bookPage =
-      bookWord && bookMs !== null && nowMs >= bookMs && nowMs < bookMs + 900
+      bookWord && bookMs !== null && nowMs + 34 >= bookMs && nowMs < bookMs + 900
         ? {words: [bookWord], appearMs: bookWord.fromMs, hideMs: bookMs + 900}
         : null;
     if (bookPage) {

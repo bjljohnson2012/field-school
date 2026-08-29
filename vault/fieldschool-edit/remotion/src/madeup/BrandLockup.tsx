@@ -28,19 +28,10 @@ export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everyth
       }}
     >
       <Img
-        src={staticFile("isolated-seal.png")}
-        style={{
-          width: 128,
-          height: 128,
-          objectFit: "contain",
-          marginBottom: 18,
-        }}
-      />
-      <Img
         src={staticFile("wordmark-transparent.png")}
         style={{
           width: 1320,
-          height: 240,
+          height: 260,
           objectFit: "contain",
           objectPosition: "center",
         }}

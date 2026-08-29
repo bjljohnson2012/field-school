@@ -201,9 +201,6 @@ const cutKind = (shot: MadeShot | null): CutKind => {
   if (shot.type === "sting" || shot.id === "s01") {
     return "wipe";
   }
-  if (shot.id === "s03") {
-    return "slide";
-  }
   if (shot.type === "vox" || shot.type === "b-roll") {
     return "flash";
   }
