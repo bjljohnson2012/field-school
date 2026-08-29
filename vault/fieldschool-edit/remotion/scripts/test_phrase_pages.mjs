@@ -39,26 +39,6 @@ const autoPages = (spoken, fromMs, toMs) => {
 
 const pageAt = (pages, nowMs) => pages.find((page) => nowMs >= page.appearMs && nowMs < page.hideMs) ?? null;
 
-const washForPage = (page) => {
-  if (!page) {
-    return null;
-  }
-  const blob = page.words.map((word) => normWord(word.text)).join(" ");
-  if (blob.includes("meeting")) {
-    return "episodes/everything-made-up/stills/meeting.png";
-  }
-  if (blob.includes("title")) {
-    return "episodes/everything-made-up/stills/title.png";
-  }
-  if (blob.includes("walk") || blob.includes("ahead")) {
-    return "episodes/everything-made-up/stills/walkin.png";
-  }
-  if ((blob.includes("how") && blob.includes("do")) || blob.includes("way")) {
-    return "episodes/everything-made-up/stills/memo.png";
-  }
-  return null;
-};
-
 const spoken = [
   {text: "Somebody", fromMs: 18037, toMs: 18377},
   {text: "tell", fromMs: 18417, toMs: 18557},
@@ -95,9 +75,6 @@ if (!mid || !/Somebody tell them that they can do something/.test(midText)) {
 }
 if (!/meeting/.test(midText) || !/title/.test(midText)) {
   throw new Error(`sentence must keep going through meeting and title, got ${midText}`);
-}
-if (washForPage(mid) !== "episodes/everything-made-up/stills/meeting.png") {
-  throw new Error(`meeting wash missing for ${midText}`);
 }
 const next = pageAt(pages, 25000);
 const nextText = next ? next.words.map((word) => word.text).join(" ") : "";

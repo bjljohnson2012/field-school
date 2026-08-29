@@ -103,29 +103,3 @@ export const pagesForShot = (
 export const pageAt = (pages: PhrasePage[], nowMs: number): PhrasePage | null => {
   return pages.find((page) => nowMs >= page.appearMs && nowMs < page.hideMs) ?? null;
 };
-
-export const washForPage = (page: PhrasePage | null, nowMs = Number.POSITIVE_INFINITY): string | null => {
-  if (!page) {
-    return null;
-  }
-  const heard = page.words.filter((word) => nowMs + 40 >= word.fromMs);
-  for (let i = heard.length - 1; i >= 0; i -= 1) {
-    const token = normWord(heard[i].text);
-    if (token.includes("title")) {
-      return "episodes/everything-made-up/stills/title.png";
-    }
-    if (token.includes("meeting")) {
-      return "episodes/everything-made-up/stills/meeting.png";
-    }
-    if (token.includes("walk") || token.includes("ahead")) {
-      return "episodes/everything-made-up/stills/walkin.png";
-    }
-    if (token.includes("way") || token === "it") {
-      const blob = heard.map((word) => normWord(word.text)).join(" ");
-      if (blob.includes("how") && blob.includes("do")) {
-        return "episodes/everything-made-up/stills/memo.png";
-      }
-    }
-  }
-  return null;
-};

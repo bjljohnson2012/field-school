@@ -11,10 +11,7 @@ import {BrandBug, BrandLockup} from "./BrandLockup";
 import {CtaCard} from "./TitlePlate";
 import {PLAYBOOK, TypeField, letterAtMs, playbookHoldMs, waitingOpen} from "./TypeField";
 import {PhrasePlate} from "./PhrasePlate";
-import {DockWash} from "./DockWash";
-import {pageAt, pagesForShot, washForPage} from "./phrasePages";
 import {PaperCut, type CutKind} from "./PaperCut";
-import {WaitingWash} from "./WaitingWash";
 import {HoldFonts} from "./HoldFonts";
 import {heardSince} from "./spoken";
 import {BED_FRAMES, FPS, MASTER_FRAMES, bg, gold, paperGrain, uiFace} from "./tokens";
@@ -64,7 +61,6 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
       <Stack>
         <AbsoluteFill style={{backgroundColor: bg, backgroundImage: paperGrain}} />
         <PaperSheet open={paperOpen} solo={solo} layout={shot?.layout} />
-        <WaitingWash open={shot?.id === "s01" && waited ? 1 : solo} />
         {shot && vox ? (
           <CollageBeat
             assets={shot.assets || []}
@@ -75,13 +71,6 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             local={local}
             stamps={stampCount(shot, words, nowMs, local)}
             spoken={heard}
-          />
-        ) : null}
-        {phraseOn && shot ? (
-          <DockWash
-            src={washForPage(pageAt(pagesForShot(words, shotFromMs, shotToMs, shot.phrases), nowMs), nowMs)}
-            layout={shot.layout}
-            local={local}
           />
         ) : null}
         {slamType ? <TypeField words={words} nowMs={nowMs} /> : null}

@@ -1,3 +1,4 @@
+import {fitTextOnNLines} from "@remotion/layout-utils";
 import {createRoundedTextBox} from "@remotion/rounded-text-box";
 import React, {useMemo} from "react";
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from "remotion";
@@ -16,6 +17,32 @@ type PhrasePlateProps = {
 
 const BAND_HEIGHT = 168;
 const FADE = 3;
+const DOCK_PAD = 40;
+
+const dockFontSize = (pageWords: MadeWord[], boxWidth: number): number => {
+  const count = pageWords.length;
+  const maxLines = count <= 6 ? 3 : count <= 12 ? 4 : 5;
+  const maxSize = count <= 6 ? 176 : count <= 12 ? 148 : 124;
+  const fallback = count <= 6 ? 140 : count <= 12 ? 108 : 86;
+  const text = pageWords.map((word) => word.text).join(" ");
+  if (!text) {
+    return fallback;
+  }
+  try {
+    const fit = fitTextOnNLines({
+      text,
+      maxLines,
+      maxBoxWidth: boxWidth,
+      fontFamily: displayFace,
+      fontWeight: 700,
+      letterSpacing: "-0.04em",
+      maxFontSize: maxSize,
+    });
+    return Math.max(76, Math.round(fit.fontSize));
+  } catch {
+    return fallback;
+  }
+};
 
 export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, toMs, layout, phrases}) => {
   const frame = useCurrentFrame();
@@ -30,6 +57,8 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
   const reserved = headReservedPx();
   const columnLeft = leftDock ? reserved : 0;
   const columnWidth = 1920 - reserved;
+  const boxWidth = columnWidth - DOCK_PAD * 2;
+  const dockSize = dockFontSize(page.words, boxWidth);
   const liveCount = page.words.filter((word) => nowMs + 40 >= word.fromMs).length;
   const boxText = page.words
     .slice(0, Math.max(1, liveCount))
@@ -61,10 +90,10 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
         width: band ? 1680 : columnWidth,
         height: band ? BAND_HEIGHT : 1080,
         display: "flex",
-        alignItems: band ? "center" : "center",
-        justifyContent: "center",
-        paddingLeft: band ? 0 : 64,
-        paddingRight: band ? 0 : 64,
+        alignItems: "center",
+        justifyContent: band ? "center" : "flex-start",
+        paddingLeft: band ? 0 : DOCK_PAD,
+        paddingRight: band ? 0 : DOCK_PAD,
         boxSizing: "border-box",
       }}
     >
@@ -76,7 +105,7 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
           outline: band ? `3px solid ${ink}22` : "none",
           borderRadius: band ? 14 : 0,
           padding: band ? "16px 24px" : 0,
-          textAlign: "center",
+          textAlign: band ? "center" : "left",
         }}
       >
         {page.words.map((word, i) => {
@@ -100,13 +129,13 @@ export const PhrasePlate: React.FC<PhrasePlateProps> = ({words, nowMs, fromMs, t
               key={`${word.fromMs}-${word.text}-${i}`}
               style={{
                 display: "inline-block",
-                marginRight: band ? 10 : 14,
-                marginBottom: band ? 0 : 8,
+                marginRight: band ? 12 : 22,
+                marginBottom: band ? 0 : 6,
                 fontFamily: displayFace,
                 fontWeight: 700,
-                fontSize: band ? 36 : 52,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.2,
+                fontSize: band ? 48 : dockSize,
+                letterSpacing: "-0.04em",
+                lineHeight: 1.08,
                 color: live ? gold : ink,
                 opacity: seen ? fade : 0,
                 scale: `${1 + pop * 0.06}`,
