@@ -7,7 +7,8 @@ import {HookPlate} from "./HookPlate";
 import {MadeHead} from "./MadeHead";
 import {MadeLetterbox} from "./MadeLetterbox";
 import {PaperSheet} from "./PaperSheet";
-import {CtaCard, StingLockup, TitlePlate} from "./TitlePlate";
+import {BrandBug, BrandLockup} from "./BrandLockup";
+import {CtaCard, TitlePlate} from "./TitlePlate";
 import {PLAYBOOK, TypeField, letterAtMs} from "./TypeField";
 import {WaitingWash} from "./WaitingWash";
 import {BED_FRAMES, FPS, MASTER_FRAMES, bg, darkGrain, gold, paper, uiFace} from "./tokens";
@@ -41,6 +42,12 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const hookGhost = shot?.id === "s01" && solo > 0.08 ? 1 : 0;
   const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
   const letterMode = shot && shot.type === "a-roll" ? "hair" : "none";
+  const bedVol = Math.min(
+    0.48,
+    interpolate(frame, [0, 16, 80, 154], [0, 0.44, 0.4, 0.36], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}) +
+      (shot?.type === "cta" ? 0.08 : 0) +
+      (vox ? 0.04 : 0),
+  );
   return (
     <AbsoluteFill style={{backgroundColor: bg}}>
       <Stack>
@@ -103,12 +110,13 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             </div>
           </div>
         ) : null}
-        {shot && shot.type === "sting" ? <StingLockup local={local} /> : null}
+        {shot && shot.type === "sting" ? <BrandLockup local={local} /> : null}
         {shot && shot.type === "cta" ? <CtaCard text={shot.text || ""} local={local} /> : null}
+        <BrandBug open={shot && shot.type !== "sting" && shot.type !== "cta" ? 1 : 0} />
         <MadeLetterbox mode={letterMode} />
         {Array.from({length: bedLoops}, (_, i) => (
           <Sequence key={`bed-${i}`} from={i * BED_FRAMES} durationInFrames={BED_FRAMES} layout="none">
-            <Audio src={staticFile("bed.wav")} volume={0.22} />
+            <Audio src={staticFile("bed.wav")} volume={bedVol} />
           </Sequence>
         ))}
         <Audio src={staticFile(fileName(episode.vo))} />
@@ -116,8 +124,22 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
           <ShotSfx key={`${item.id}-sfx`} shot={item} />
         ))}
         <PlaybookKeys words={words} />
+        <WaitHit words={words} />
       </Stack>
     </AbsoluteFill>
+  );
+};
+
+const WaitHit: React.FC<{words: MadeWord[]}> = ({words}) => {
+  const hit = words.find((word) => /^waiting\.$/i.test(word.text.trim()));
+  if (!hit) {
+    return null;
+  }
+  const at = Math.round((hit.fromMs / 1000) * FPS);
+  return (
+    <Sequence from={at} durationInFrames={16} layout="none">
+      <Audio src={staticFile("sfx/hit.wav")} volume={0.22} />
+    </Sequence>
   );
 };
 

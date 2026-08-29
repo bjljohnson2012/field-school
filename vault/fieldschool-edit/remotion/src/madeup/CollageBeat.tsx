@@ -123,7 +123,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
               frame: Math.max(0, local - 2 - i * 4),
               fps,
               durationInFrames: 14,
-              config: {damping: 16, mass: 0.6, stiffness: 150},
+              config: {damping: 10, mass: 0.48, stiffness: 210},
             });
             const hot = spoken.some((needle) => line.toLowerCase().includes(needle));
             return (
@@ -166,7 +166,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
               frame: Math.max(0, local - 2 - i * 4),
               fps,
               durationInFrames: 16,
-              config: {damping: 13, mass: 0.55, stiffness: 170},
+              config: {damping: 9, mass: 0.45, stiffness: 230},
             });
             const tilt = (i % 2 === 0 ? -1 : 1) * (1.6 + (i % 3));
             const marked = stamps > i;
@@ -244,7 +244,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
               frame: Math.max(0, local - 10 - i * 4),
               fps,
               durationInFrames: 12,
-              config: {damping: 14, mass: 0.5, stiffness: 180},
+              config: {damping: 10, mass: 0.42, stiffness: 220},
             });
             return (
               <div

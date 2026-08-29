@@ -17,8 +17,8 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0}
   const enter = spring({
     frame: local,
     fps,
-    durationInFrames: pip ? 18 : 26,
-    config: {damping: 16, mass: 0.7, stiffness: 140},
+    durationInFrames: pip ? 14 : 18,
+    config: {damping: 11, mass: 0.55, stiffness: 190},
   });
   const width = pip ? HEAD_PIP : Math.round(1920 * HEAD_DOCK);
   const height = pip ? HEAD_PIP : 760;
@@ -40,7 +40,7 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0}
         boxShadow: `0 22px 48px ${ink}40`,
         opacity: hidden ? 0 : enter * interpolate(solo, [0, 0.85], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
         pointerEvents: "none",
-        translate: hidden ? "0px 0px" : `0px ${(1 - enter) * 40 + drop}px`,
+        translate: hidden ? "0px 0px" : `0px ${(1 - enter) * 64 + drop}px`,
       }}
     >
       <div

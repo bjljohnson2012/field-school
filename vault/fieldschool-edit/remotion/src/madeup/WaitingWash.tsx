@@ -14,11 +14,11 @@ export const WaitingWash: React.FC<WaitingWashProps> = ({open}) => {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const zoom = interpolate(open, [0, 1], [1.06, 1.14], {
+  const zoom = interpolate(open, [0, 1], [1.08, 1.2], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const drift = interpolate(open, [0, 1], [0, -32], {
+  const drift = interpolate(open, [0, 1], [0, -48], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

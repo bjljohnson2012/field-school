@@ -2,7 +2,7 @@ import {fitText} from "@remotion/layout-utils";
 import React, {useEffect, useMemo, useState} from "react";
 import {Img, interpolate, spring, staticFile, useDelayRender, useVideoConfig} from "remotion";
 import {waitMadeUpFonts} from "./fonts";
-import {TYPE_COL, displayFace, gold, paper, uiFace} from "./tokens";
+import {TYPE_COL, displayFace, gold, paper} from "./tokens";
 
 type TitlePlateProps = {
   text: string;
@@ -49,10 +49,10 @@ export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => 
   const enter = spring({
     frame: local,
     fps,
-    durationInFrames: 16,
-    config: {damping: 15, mass: 0.6, stiffness: 150},
+    durationInFrames: 12,
+    config: {damping: 10, mass: 0.5, stiffness: 200},
   });
-  const hold = interpolate(local, [70, 96], [1, 0.22], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const hold = interpolate(local, [90, 120], [1, 0.28], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   if (!ready) {
     return null;
   }
@@ -91,8 +91,8 @@ export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) 
   const enter = spring({
     frame: local,
     fps,
-    durationInFrames: 20,
-    config: {damping: 16, mass: 0.65, stiffness: 140},
+    durationInFrames: 16,
+    config: {damping: 11, mass: 0.5, stiffness: 190},
   });
   const lines = text === "CHANGE IT WITH THE REASON IN HAND" ? CTA_LINES : [text];
   return (
@@ -109,16 +109,16 @@ export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) 
       }}
     >
       <Img
-        src={staticFile("brand/logo.svg")}
+        src={staticFile("lockup-wide-cream-slogan.png")}
         style={{
-          width: 140,
-          height: 140,
+          width: 920,
+          height: 160,
           objectFit: "contain",
           marginBottom: 28,
-          scale: `${0.82 + enter * 0.18}`,
+          scale: `${0.86 + enter * 0.14}`,
         }}
       />
-      <div style={{width: 96, height: 3, backgroundColor: gold, marginBottom: 28, opacity: enter}} />
+      <div style={{width: 120, height: 3, backgroundColor: gold, marginBottom: 28, opacity: enter}} />
       {lines.map((line, i) => (
         <div
           key={line}
@@ -139,48 +139,4 @@ export const CtaCard: React.FC<{text: string; local: number}> = ({text, local}) 
   );
 };
 
-export const StingLockup: React.FC<{local: number}> = ({local}) => {
-  const {fps} = useVideoConfig();
-  const enter = spring({
-    frame: local,
-    fps,
-    durationInFrames: 22,
-    config: {damping: 14, mass: 0.55, stiffness: 160},
-  });
-  return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        opacity: enter,
-      }}
-    >
-      <Img
-        src={staticFile("brand/logo.svg")}
-        style={{
-          width: 240,
-          height: 240,
-          objectFit: "contain",
-          scale: `${interpolate(enter, [0, 1], [1.18, 1])}`,
-        }}
-      />
-      <div
-        style={{
-          marginTop: 28,
-          fontFamily: uiFace,
-          fontWeight: 600,
-          fontSize: 16,
-          letterSpacing: "0.22em",
-          color: gold,
-          opacity: interpolate(local, [12, 24], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
-        }}
-      >
-        FIELD SCHOOL
-      </div>
-    </div>
-  );
-};
+export {BrandLockup as StingLockup} from "./BrandLockup";

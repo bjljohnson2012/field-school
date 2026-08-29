@@ -63,7 +63,7 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
   if (!ready) {
     return null;
   }
-  const grow = interpolate(local, [0, 90], [0.92, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const grow = interpolate(local, [0, 48], [0.82, 1.04], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   return (
     <div
       style={{
@@ -83,10 +83,10 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
     >
       {lines.map((line, i) => {
         const enter = spring({
-          frame: Math.max(0, local - i * 5),
+          frame: Math.max(0, local - i * 3),
           fps,
-          durationInFrames: 18,
-          config: {damping: 14, mass: 0.55, stiffness: 160},
+          durationInFrames: 14,
+          config: {damping: 9, mass: 0.45, stiffness: 220},
         });
         return (
           <div
@@ -99,7 +99,8 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
               letterSpacing: "-0.045em",
               color: i === 1 ? gold : paper,
               opacity: enter,
-              translate: `0px ${(1 - enter) * 48}px`,
+              translate: `0px ${(1 - enter) * 72}px`,
+              scale: `${0.88 + enter * 0.12}`,
               marginBottom: 8,
             }}
           >
