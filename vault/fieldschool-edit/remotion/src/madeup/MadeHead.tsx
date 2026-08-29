@@ -26,9 +26,9 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0,
       })
     : 1;
   const width = pip ? HEAD_PIP : letter ? 1680 : Math.round(1920 * HEAD_DOCK);
-  const height = pip ? HEAD_PIP : letter ? 860 : 640;
-  const zoom = pip ? 1.72 : letter ? 1.22 : 2.38;
-  const focus = pip ? "50% 10%" : letter ? "50% 16%" : "50% 20%";
+  const height = pip ? HEAD_PIP : letter ? 780 : 640;
+  const zoom = pip ? 1.72 : letter ? 1.78 : 2.38;
+  const focus = pip ? "50% 10%" : letter ? "50% 14%" : "50% 20%";
   const left = pip
     ? 1920 - width - HEAD_PIP_GAP
     : letter
