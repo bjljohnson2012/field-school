@@ -8,8 +8,9 @@ import {MadeHead} from "./MadeHead";
 import {MadeLetterbox} from "./MadeLetterbox";
 import {PaperSheet} from "./PaperSheet";
 import {BrandBug, BrandLockup} from "./BrandLockup";
-import {CtaCard, TitlePlate} from "./TitlePlate";
-import {PLAYBOOK, TypeField, letterAtMs} from "./TypeField";
+import {CtaCard} from "./TitlePlate";
+import {PLAYBOOK, TypeField, letterAtMs, waitingOpen} from "./TypeField";
+import {PhrasePlate} from "./PhrasePlate";
 import {PaperCut, type CutKind} from "./PaperCut";
 import {WaitingWash} from "./WaitingWash";
 import {HoldFonts} from "./HoldFonts";
@@ -36,19 +37,25 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const local = shot ? frame - shot.fromFrame : 0;
   const solo = useWaitingSolo(words);
   const vox = Boolean(shot && (shot.type === "vox" || shot.type === "b-roll"));
-  const waited = words.some((word) => /^waiting\.$/i.test(word.text.trim()) && nowMs >= word.fromMs);
-  const teach = Boolean(shot && (shot.type === "a-roll" || (shot.id === "s01" && waited)));
-  const docked = Boolean(shot && shot.layout === "dock-right" && solo < 0.5);
+  const waited = waitingOpen(nowMs, words);
+  const slamType = waited || playbookOpen(nowMs, words);
+  const teach = Boolean(shot && shot.type === "a-roll");
   const paperOpen = shot && shot.type === "a-roll" ? 1 : 0;
   const hookGhost = shot?.id === "s01" && solo > 0 ? 1 : 0;
-  const letterMode = shot && (shot.type === "a-roll" || shot.layout === "letterbox") ? "hair" : "none";
+  const letterMode = shot && shot.layout === "letterbox" ? "hair" : "none";
   const kind = cutKind(shot);
   const stingLen = episode.shots.find((item) => item.type === "sting")?.durationInFrames ?? 154;
   const shotFromMs = shot ? (shot.fromFrame / FPS) * 1000 : 0;
+  const shotToMs = shot ? ((shot.fromFrame + shot.durationInFrames) / FPS) * 1000 : 0;
   const heard = heardSince(words, nowMs, shotFromMs);
-  const headFresh = Boolean(shot && shot.layout !== "off" && (!prev || prev.layout === "off"));
-  const bedVol = bedVolume(shot, frame, vox);
+  const headFresh = Boolean(shot && shot.layout !== "off" && (!prev || prev.layout !== shot.layout));
+  const bedVol = bedVolume(shot, frame);
   const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
+  const phraseOn =
+    teach &&
+    !slamType &&
+    shot &&
+    (shot.layout === "dock-right" || shot.layout === "dock-left" || shot.layout === "letterbox");
   return (
     <HoldFonts>
     <AbsoluteFill style={{backgroundColor: bg}}>
@@ -68,14 +75,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             spoken={heard}
           />
         ) : null}
-        {teach ? (
-          <TypeField
-            words={words}
-            nowMs={nowMs}
-            solo={solo}
-            docked={docked}
-          />
-        ) : null}
+        {slamType ? <TypeField words={words} nowMs={nowMs} /> : null}
         {shot && shot.type === "hook" && shot.id === "s01" && !waited ? (
           <HookPlate
             text={shot.text || "PEOPLE CANNOT GET THINGS DONE"}
@@ -90,16 +90,28 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
           <HookPlate
             text={shot.text || "YOU CAN JUST DO THINGS"}
             local={local}
-            pip
             words={words}
             nowMs={nowMs}
             fromMs={shotFromMs}
           />
         ) : null}
-        {shot && shot.type === "a-roll" && shot.plate ? (
-          <TitlePlate text={shot.plate} local={local} docked={shot.layout === "dock-right"} />
+        {phraseOn && shot ? (
+          <PhrasePlate
+            words={words}
+            nowMs={nowMs}
+            fromMs={shotFromMs}
+            toMs={shotToMs}
+            layout={shot.layout}
+            phrases={shot.phrases}
+          />
         ) : null}
-        <MadeHead src={fileName(episode.cam)} layout={shot ? shot.layout : "off"} local={local} solo={solo} fresh={headFresh} />
+        <MadeHead
+          src={fileName(episode.cam)}
+          layout={shot ? shot.layout : "off"}
+          local={local}
+          solo={solo}
+          fresh={headFresh}
+        />
         {shot && shot.lowerThird && shot.layout === "dock-right" && solo < 0.4 ? (
           <div
             style={{
@@ -148,6 +160,14 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
     </AbsoluteFill>
     </HoldFonts>
   );
+};
+
+const playbookOpen = (nowMs: number, words: MadeWord[]): boolean => {
+  const book = words.find((word) => PLAYBOOK.test(word.text.trim()));
+  if (!book) {
+    return false;
+  }
+  return nowMs + 34 >= book.fromMs && nowMs < book.fromMs + 2400;
 };
 
 const WaitHit: React.FC<{words: MadeWord[]}> = ({words}) => {
@@ -207,10 +227,9 @@ const cutKind = (shot: MadeShot | null): CutKind => {
   return "none";
 };
 
-const bedVolume = (shot: MadeShot | null, frame: number, vox: boolean): number => {
-  const fade = interpolate(frame, [0, 10], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const base =
-    shot?.type === "sting" ? 0.58 : shot?.type === "cta" ? 0.56 : vox ? 0.42 : shot?.type === "hook" ? 0.38 : 0.3;
+const bedVolume = (shot: MadeShot | null, frame: number): number => {
+  const fade = interpolate(frame, [0, 18], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const base = shot?.type === "sting" ? 0.2 : shot?.type === "cta" ? 0.16 : 0.12;
   return fade * base;
 };
 

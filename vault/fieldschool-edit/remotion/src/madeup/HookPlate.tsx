@@ -1,5 +1,6 @@
 import {fitText} from "@remotion/layout-utils";
 import React, {useMemo} from "react";
+import {spring, useVideoConfig} from "remotion";
 import {hasHeard, heardSince} from "./spoken";
 import {displayFace, gold, ink} from "./tokens";
 import type {MadeWord} from "./schema";
@@ -46,6 +47,13 @@ export const HookPlate: React.FC<HookPlateProps> = ({
   nowMs = 0,
   fromMs = 0,
 }) => {
+  const {fps} = useVideoConfig();
+  const enter = spring({
+    frame: local,
+    fps,
+    durationInFrames: 8,
+    config: {damping: 14, mass: 0.45, stiffness: 260},
+  });
   const beats = BEATS[text] || text.split(" ").map((line) => ({line, needles: [line.toLowerCase()]}));
   const heard = heardSince(words, nowMs, Math.max(0, fromMs - 40));
   const live = beats.filter((beat, i) => i === 0 || hasHeard(heard, beat.needles));
@@ -85,7 +93,8 @@ export const HookPlate: React.FC<HookPlateProps> = ({
         justifyContent: "center",
         alignItems: pip ? "flex-start" : "center",
         textAlign: pip ? "left" : "center",
-        opacity: 1,
+        opacity: enter,
+        scale: `${0.92 + enter * 0.08}`,
       }}
     >
       {lines.map((line, i) => (

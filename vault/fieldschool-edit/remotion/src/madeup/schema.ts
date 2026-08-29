@@ -1,5 +1,10 @@
 export type ShotType = "sting" | "hook" | "a-roll" | "b-roll" | "vox" | "cta";
-export type ShotLayout = "off" | "dock-right" | "pip-tr" | "letterbox";
+export type ShotLayout = "off" | "dock-right" | "dock-left" | "pip-tr" | "letterbox";
+
+export type MadePhrase = {
+  text: string;
+  fromMs: number;
+};
 
 export type MadeShot = {
   id: string;
@@ -9,6 +14,7 @@ export type MadeShot = {
   layout: ShotLayout;
   text?: string;
   plate?: string;
+  phrases?: MadePhrase[];
   assets?: string[];
   sfx?: string[];
   annotation?: string;
