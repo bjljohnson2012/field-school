@@ -1,5 +1,5 @@
 import React from "react";
-import {Img, interpolate, staticFile} from "remotion";
+import {Img, staticFile} from "remotion";
 import {displayFace, gold, ink, uiFace} from "./tokens";
 
 type BrandLockupProps = {
@@ -11,10 +11,9 @@ type BrandLockupProps = {
 const SLOGAN = "Lead yourself. Learn yourself. Do the work.";
 
 export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everything Is Made Up", duration = 154}) => {
-  const leave = interpolate(local, [duration - 4, duration], [1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  if (local < 0 || local >= duration) {
+    return null;
+  }
   return (
     <div
       style={{
@@ -25,21 +24,30 @@ export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everyth
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        opacity: leave,
+        opacity: 1,
       }}
     >
+      <Img
+        src={staticFile("isolated-seal.png")}
+        style={{
+          width: 128,
+          height: 128,
+          objectFit: "contain",
+          marginBottom: 18,
+        }}
+      />
       <Img
         src={staticFile("wordmark-transparent.png")}
         style={{
           width: 1320,
-          height: 260,
+          height: 240,
           objectFit: "contain",
           objectPosition: "center",
         }}
       />
       <div
         style={{
-          marginTop: 18,
+          marginTop: 16,
           fontFamily: uiFace,
           fontWeight: 600,
           fontSize: 24,
@@ -53,13 +61,13 @@ export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everyth
         style={{
           width: 240,
           height: 4,
-          marginTop: 26,
+          marginTop: 24,
           backgroundColor: gold,
         }}
       />
       <div
         style={{
-          marginTop: 22,
+          marginTop: 20,
           width: 1500,
           fontFamily: displayFace,
           fontWeight: 700,

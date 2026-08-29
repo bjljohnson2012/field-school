@@ -1,27 +1,55 @@
 import {fitText} from "@remotion/layout-utils";
 import React, {useMemo} from "react";
-import {interpolate} from "remotion";
+import {hasHeard, heardSince} from "./spoken";
 import {displayFace, gold, ink} from "./tokens";
+import type {MadeWord} from "./schema";
 
 type HookPlateProps = {
   text: string;
   local: number;
   ghost?: number;
   pip?: boolean;
+  words?: MadeWord[];
+  nowMs?: number;
+  fromMs?: number;
 };
 
-const LINES: Record<string, string[]> = {
-  "PEOPLE WAIT TO BE TOLD": ["PEOPLE", "WAIT TO", "BE TOLD"],
-  "YOU CAN JUST DO THINGS": ["YOU CAN", "JUST DO", "THINGS"],
+type Beat = {
+  line: string;
+  needles: string[];
 };
 
-export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip = false}) => {
-  const lines = LINES[text] || text.split(" ").reduce<string[]>((acc, word, i, all) => {
-    if (i % 2 === 0) {
-      acc.push(all.slice(i, i + 2).join(" "));
-    }
-    return acc;
-  }, []);
+const BEATS: Record<string, Beat[]> = {
+  "PEOPLE CANNOT GET THINGS DONE": [
+    {line: "PEOPLE", needles: ["people"]},
+    {line: "CANNOT GET", needles: ["cannot"]},
+    {line: "THINGS DONE", needles: ["things", "done"]},
+  ],
+  "PEOPLE WAIT TO BE TOLD": [
+    {line: "PEOPLE", needles: ["people"]},
+    {line: "CANNOT GET", needles: ["cannot"]},
+    {line: "THINGS DONE", needles: ["things", "done"]},
+  ],
+  "YOU CAN JUST DO THINGS": [
+    {line: "YOU CAN", needles: ["you"]},
+    {line: "JUST DO", needles: ["just"]},
+    {line: "THINGS", needles: ["things"]},
+  ],
+};
+
+export const HookPlate: React.FC<HookPlateProps> = ({
+  text,
+  local,
+  ghost = 0,
+  pip = false,
+  words = [],
+  nowMs = 0,
+  fromMs = 0,
+}) => {
+  const beats = BEATS[text] || text.split(" ").map((line) => ({line, needles: [line.toLowerCase()]}));
+  const heard = heardSince(words, nowMs, Math.max(0, fromMs - 40));
+  const live = beats.filter((beat, i) => i === 0 || hasHeard(heard, beat.needles));
+  const lines = live.length > 0 ? live.map((beat) => beat.line) : [beats[0]?.line || text];
   const width = pip ? 1320 : 1760;
   const sizes = useMemo(() => {
     return lines.map((line, i) => {
@@ -41,8 +69,7 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
       }
     });
   }, [lines, pip, width]);
-  const exit = interpolate(ghost, [0, 1], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  if (local < 0) {
+  if (local < 0 || ghost >= 1) {
     return null;
   }
   return (
@@ -58,7 +85,7 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
         justifyContent: "center",
         alignItems: pip ? "flex-start" : "center",
         textAlign: pip ? "left" : "center",
-        opacity: exit,
+        opacity: 1,
       }}
     >
       {lines.map((line, i) => (

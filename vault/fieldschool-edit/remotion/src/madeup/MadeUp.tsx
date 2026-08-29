@@ -13,6 +13,7 @@ import {PLAYBOOK, TypeField, letterAtMs} from "./TypeField";
 import {PaperCut, type CutKind} from "./PaperCut";
 import {WaitingWash} from "./WaitingWash";
 import {HoldFonts} from "./HoldFonts";
+import {heardSince} from "./spoken";
 import {BED_FRAMES, FPS, MASTER_FRAMES, bg, gold, paperGrain, uiFace} from "./tokens";
 import type {MadeEpisode, MadeShot, MadeWord} from "./schema";
 
@@ -31,20 +32,21 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const nowMs = (frame / FPS) * 1000;
   const words = episode.words || [];
   const shot = shotAt(episode.shots, frame);
+  const prev = shotBefore(episode.shots, frame);
   const local = shot ? frame - shot.fromFrame : 0;
   const solo = useWaitingSolo(words);
   const vox = Boolean(shot && (shot.type === "vox" || shot.type === "b-roll"));
   const waited = words.some((word) => /^waiting\.$/i.test(word.text.trim()) && nowMs >= word.fromMs);
   const teach = Boolean(shot && (shot.type === "a-roll" || (shot.id === "s01" && waited)));
   const docked = Boolean(shot && shot.layout === "dock-right" && solo < 0.5);
-  const paperOpen =
-    shot && shot.type === "a-roll"
-      ? interpolate(local, [0, 10], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})
-      : 0;
-  const hookGhost = shot?.id === "s01" && solo > 0.08 ? 1 : 0;
+  const paperOpen = shot && shot.type === "a-roll" ? 1 : 0;
+  const hookGhost = shot?.id === "s01" && solo > 0 ? 1 : 0;
   const letterMode = shot && (shot.type === "a-roll" || shot.layout === "letterbox") ? "hair" : "none";
   const kind = cutKind(shot);
   const stingLen = episode.shots.find((item) => item.type === "sting")?.durationInFrames ?? 154;
+  const shotFromMs = shot ? (shot.fromFrame / FPS) * 1000 : 0;
+  const heard = heardSince(words, nowMs, shotFromMs);
+  const headFresh = Boolean(shot && shot.layout !== "off" && (!prev || prev.layout === "off"));
   const bedVol = bedVolume(shot, frame, vox);
   const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
   return (
@@ -63,7 +65,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
             list={shot.list}
             local={local}
             stamps={stampCount(shot, words, nowMs, local)}
-            spoken={spokenNeedles(words, nowMs)}
+            spoken={heard}
           />
         ) : null}
         {teach ? (
@@ -75,15 +77,29 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
           />
         ) : null}
         {shot && shot.type === "hook" && shot.id === "s01" && !waited ? (
-          <HookPlate text={shot.text || "PEOPLE WAIT TO BE TOLD"} local={frame - shot.fromFrame} ghost={hookGhost} />
+          <HookPlate
+            text={shot.text || "PEOPLE CANNOT GET THINGS DONE"}
+            local={frame - shot.fromFrame}
+            ghost={hookGhost}
+            words={words}
+            nowMs={nowMs}
+            fromMs={shotFromMs}
+          />
         ) : null}
         {shot && shot.id === "s02" ? (
-          <HookPlate text={shot.text || "YOU CAN JUST DO THINGS"} local={local} pip />
+          <HookPlate
+            text={shot.text || "YOU CAN JUST DO THINGS"}
+            local={local}
+            pip
+            words={words}
+            nowMs={nowMs}
+            fromMs={shotFromMs}
+          />
         ) : null}
         {shot && shot.type === "a-roll" && shot.plate ? (
           <TitlePlate text={shot.plate} local={local} docked={shot.layout === "dock-right"} />
         ) : null}
-        <MadeHead src={fileName(episode.cam)} layout={shot ? shot.layout : "off"} local={local} solo={solo} />
+        <MadeHead src={fileName(episode.cam)} layout={shot ? shot.layout : "off"} local={local} solo={solo} fresh={headFresh} />
         {shot && shot.lowerThird && shot.layout === "dock-right" && solo < 0.4 ? (
           <div
             style={{
@@ -197,7 +213,7 @@ const cutKind = (shot: MadeShot | null): CutKind => {
 const bedVolume = (shot: MadeShot | null, frame: number, vox: boolean): number => {
   const fade = interpolate(frame, [0, 10], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   const base =
-    shot?.type === "sting" ? 0.48 : shot?.type === "cta" ? 0.5 : vox ? 0.36 : shot?.type === "hook" ? 0.3 : 0.26;
+    shot?.type === "sting" ? 0.58 : shot?.type === "cta" ? 0.56 : vox ? 0.42 : shot?.type === "hook" ? 0.38 : 0.3;
   return fade * base;
 };
 
@@ -265,32 +281,9 @@ const stampCount = (shot: MadeShot, words: MadeWord[], nowMs: number, local: num
   return Number(gravity) + Number(light) + Number(freeze);
 };
 
-const spokenNeedles = (words: MadeWord[], nowMs: number): string[] => {
-  const live = words.filter((word) => nowMs >= word.fromMs && nowMs < word.toMs + 900).map((word) => norm(word.text));
-  const needles = [
-    "why",
-    "started",
-    "left",
-    "best",
-    "keep",
-    "given",
-    "authored",
-    "fraud",
-    "budget",
-    "legal",
-    "politics",
-    "proof",
-    "template",
-    "law",
-    "cliff",
-    "refuse",
-    "wreck",
-    "stuck",
-    "keep",
-    "change",
-    "decided",
-  ];
-  return needles.filter((needle) => live.some((text) => text.includes(needle)));
+const shotBefore = (shots: MadeShot[], frame: number): MadeShot | null => {
+  const index = shots.findIndex((item) => frame >= item.fromFrame && frame < item.fromFrame + item.durationInFrames);
+  return index > 0 ? shots[index - 1] : null;
 };
 
 const norm = (text: string): string => text.toLowerCase().replace(/[^a-z0-9]+/g, "");

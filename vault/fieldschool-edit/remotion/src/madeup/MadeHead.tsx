@@ -8,25 +8,30 @@ type MadeHeadProps = {
   layout: ShotLayout;
   local: number;
   solo?: number;
+  fresh?: boolean;
 };
 
-export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0}) => {
+export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0, fresh = true}) => {
   const {fps} = useVideoConfig();
   const hidden = layout === "off";
   const pip = layout === "pip-tr";
   const letter = layout === "letterbox";
-  const enter = spring({
-    frame: local,
-    fps,
-    durationInFrames: 6,
-    config: {damping: 8, mass: 0.4, stiffness: 260},
-  });
-  const tape = spring({
-    frame: local - 3,
-    fps,
-    durationInFrames: 10,
-    config: {damping: 10, mass: 0.35, stiffness: 240},
-  });
+  const enter = fresh
+    ? spring({
+        frame: local,
+        fps,
+        durationInFrames: 6,
+        config: {damping: 8, mass: 0.4, stiffness: 260},
+      })
+    : 1;
+  const tape = fresh
+    ? spring({
+        frame: local - 3,
+        fps,
+        durationInFrames: 10,
+        config: {damping: 10, mass: 0.35, stiffness: 240},
+      })
+    : 1;
   const width = pip ? HEAD_PIP : letter ? 1680 : Math.round(1920 * HEAD_DOCK);
   const height = pip ? HEAD_PIP : letter ? 860 : 760;
   const left = pip ? 1920 - width - HEAD_PIP_GAP : letter ? 120 : 1920 - width - HEAD_RIGHT_GAP;

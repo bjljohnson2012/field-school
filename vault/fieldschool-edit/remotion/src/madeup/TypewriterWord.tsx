@@ -1,5 +1,5 @@
 import React from "react";
-import {interpolate, useCurrentFrame} from "remotion";
+import {useCurrentFrame} from "remotion";
 import {displayFace, gold, ink} from "./tokens";
 
 type TypewriterWordProps = {
@@ -14,7 +14,6 @@ export const TypewriterWord: React.FC<TypewriterWordProps> = ({text, shown, size
   const typing = shown > 0 && shown < text.length;
   const blink = frame % 20 < 12;
   const caret = typing ? blink : shown >= text.length && blink && frame % 40 < 8;
-  const fade = interpolate(shown, [0, 1], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   return (
     <span
       style={{
@@ -27,7 +26,7 @@ export const TypewriterWord: React.FC<TypewriterWordProps> = ({text, shown, size
         letterSpacing: "-0.04em",
         lineHeight: 1.05,
         color: active ? gold : ink,
-        opacity: fade,
+        opacity: shown > 0 ? 1 : 0,
       }}
     >
       {text.slice(0, shown)}

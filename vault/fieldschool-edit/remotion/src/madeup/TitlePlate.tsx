@@ -1,7 +1,6 @@
 import {fitText} from "@remotion/layout-utils";
-import React, {useEffect, useMemo, useState} from "react";
-import {Img, interpolate, staticFile, useDelayRender} from "remotion";
-import {waitMadeUpFonts} from "./fonts";
+import React, {useMemo} from "react";
+import {Img, interpolate, staticFile} from "remotion";
 import {TYPE_COL, displayFace, gold, ink} from "./tokens";
 
 type TitlePlateProps = {
@@ -11,26 +10,9 @@ type TitlePlateProps = {
 };
 
 export const TitlePlate: React.FC<TitlePlateProps> = ({text, local: _local, docked}) => {
-  const {delayRender, continueRender} = useDelayRender();
-  const [handle] = useState(() => delayRender("title-fonts"));
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    waitMadeUpFonts()
-      .then(() => {
-        setReady(true);
-        continueRender(handle);
-      })
-      .catch(() => {
-        setReady(true);
-        continueRender(handle);
-      });
-  }, [continueRender, handle]);
   const width = docked ? TYPE_COL : 1680;
   const cap = docked ? 72 : 96;
   const fontSize = useMemo(() => {
-    if (!ready) {
-      return cap;
-    }
     try {
       return Math.min(
         cap,
@@ -44,8 +26,8 @@ export const TitlePlate: React.FC<TitlePlateProps> = ({text, local: _local, dock
     } catch {
       return cap;
     }
-  }, [cap, ready, text, width]);
-  if (!ready && !text) {
+  }, [cap, text, width]);
+  if (!text) {
     return null;
   }
   return (

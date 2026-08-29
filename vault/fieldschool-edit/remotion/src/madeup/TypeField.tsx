@@ -1,7 +1,5 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {interpolate, useDelayRender} from "remotion";
-import {waitMadeUpFonts} from "./fonts";
-import {pageForClock} from "./pages";
+import React, {useMemo} from "react";
+import {interpolate} from "remotion";
 import {
   TYPE_BESIDE,
   TYPE_HEAD_GAP,
@@ -17,9 +15,9 @@ import type {MadeWord} from "./schema";
 
 const WAITING = /^waiting\.$/i;
 export const PLAYBOOK = /^playbook[,.]?$/i;
-const TYPE_MS = 460;
-const ALLOW_HOLD_MS = 2200;
-const ALLOWED = /^(just|real|authored|gravity|stuck|five|sixty|60|intimidated|wreck|vandal|act|reason)$/i;
+const TYPE_MS = 180;
+const ALLOW_HOLD_MS = 1100;
+const ALLOWED = /^(just|real|authored|gravity|stuck|five|sixty|60|intimidated|wreck|vandal|act|reason|meeting|title|tell)$/i;
 
 const bare = (text: string): string => text.trim().replace(/[.,!?]+$/g, "");
 
@@ -32,33 +30,7 @@ type TypeFieldProps = {
   docked: boolean;
 };
 
-const typedCount = (nowMs: number, fromMs: number, letters: number): number => {
-  if (letters <= 0 || nowMs < fromMs) {
-    return 0;
-  }
-  const t = (nowMs - fromMs) / TYPE_MS;
-  if (t >= 1) {
-    return letters;
-  }
-  return Math.max(1, Math.min(letters, Math.ceil(t * letters)));
-};
-
 export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}) => {
-  const {delayRender, continueRender} = useDelayRender();
-  const [handle] = useState(() => delayRender("type-fonts"));
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    waitMadeUpFonts()
-      .then(() => {
-        setReady(true);
-        continueRender(handle);
-      })
-      .catch(() => {
-        setReady(true);
-        continueRender(handle);
-      });
-  }, [continueRender, handle]);
-
   const waitWord = useMemo(() => words.find((word) => WAITING.test(word.text.trim())) ?? null, [words]);
   const bookWord = useMemo(() => words.find((word) => PLAYBOOK.test(word.text.trim())) ?? null, [words]);
   const lock = waitWord?.fromMs ?? null;
@@ -69,8 +41,8 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
       return {words: [waitWord], appearMs: waitWord.fromMs, hideMs: bookMs ?? waitWord.toMs + 8000};
     }
     const bookPage =
-      bookWord && bookMs !== null && nowMs >= bookMs && nowMs < bookMs + TYPE_MS + 800
-        ? {words: [bookWord], appearMs: bookWord.fromMs, hideMs: bookMs + TYPE_MS + 800}
+      bookWord && bookMs !== null && nowMs >= bookMs && nowMs < bookMs + 900
+        ? {words: [bookWord], appearMs: bookWord.fromMs, hideMs: bookMs + 900}
         : null;
     if (bookPage) {
       return bookPage;
@@ -81,12 +53,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
     if (hit) {
       return {words: [hit], appearMs: hit.fromMs, hideMs: hit.toMs + ALLOW_HOLD_MS};
     }
-    const next = pageForClock(words, nowMs, lock);
-    if (!next) {
-      return next;
-    }
-    const keep = next.words.filter((word) => WAITING.test(word.text.trim()) || PLAYBOOK.test(word.text.trim()));
-    return keep.length > 0 ? {...next, words: keep} : null;
+    return null;
   }, [bookMs, bookWord, lock, nowMs, waitWord, words]);
 
   if (!page) {
@@ -110,7 +77,6 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const spokenColor = ink;
 
   return (
     <div
@@ -172,9 +138,9 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
               <TypewriterWord
                 key={`${word.fromMs}-${word.text}-${i}`}
                 text={word.text}
-                shown={typedCount(nowMs, word.fromMs, word.text.length)}
+                shown={word.text.length}
                 size={TYPE_PLAYBOOK}
-                active={active || typedCount(nowMs, word.fromMs, word.text.length) === word.text.length}
+                active={active}
               />
             );
           }
@@ -190,7 +156,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
                 fontSize,
                 letterSpacing: "-0.03em",
                 lineHeight: 1.16,
-                color: active ? gold : spokenColor,
+                color: active ? gold : ink,
                 opacity: readyWord ? 1 : 0,
               }}
             >

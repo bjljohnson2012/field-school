@@ -1,7 +1,7 @@
 import {fitText} from "@remotion/layout-utils";
-import React, {useEffect, useMemo, useState} from "react";
-import {Img, interpolate, spring, staticFile, useDelayRender, useVideoConfig} from "remotion";
-import {waitMadeUpFonts} from "./fonts";
+import React, {useMemo} from "react";
+import {Img, staticFile} from "remotion";
+import {hasHeard} from "./spoken";
 import {displayFace, gold, ink, paper, uiFace, wine} from "./tokens";
 
 export type CollageBeatProps = {
@@ -31,37 +31,30 @@ const cardSize = (n: number): {w: number; h: number} => {
   return {w: 400, h: 300};
 };
 
+const lineNeedles = (line: string): string[] => {
+  const raw = line.toLowerCase().replace(/[^a-z0-9\s]+/g, " ").trim();
+  if (raw === "left out") {
+    return ["left", "out"];
+  }
+  return raw.split(/\s+/).filter(Boolean);
+};
+
 export const CollageBeat: React.FC<CollageBeatProps> = ({
   assets,
   text,
   annotation,
   chips,
   list,
-  local,
+  local: _local,
   stamps = 0,
   spoken = [],
 }) => {
-  const {fps} = useVideoConfig();
-  const {delayRender, continueRender} = useDelayRender();
-  const [handle] = useState(() => delayRender("vox-fonts"));
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    waitMadeUpFonts()
-      .then(() => {
-        setReady(true);
-        continueRender(handle);
-      })
-      .catch(() => {
-        setReady(true);
-        continueRender(handle);
-      });
-  }, [continueRender, handle]);
   const hero = /^(60 DAYS|FIVE QUESTIONS)$/i.test(text);
   const ask = /^ASK$/i.test(text);
   const giant = !list && assets.length === 0 && text.length > 0 && text.length <= 28 && !/^60 DAYS$/i.test(text);
   const {w: cardW, h: cardH} = cardSize(assets.length);
   const headline = useMemo(() => {
-    if (!ready || !text) {
+    if (!text) {
       return 72;
     }
     try {
@@ -77,7 +70,8 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
     } catch {
       return 72;
     }
-  }, [assets.length, giant, hero, list, ready, text]);
+  }, [assets.length, giant, hero, list, text]);
+  const visibleList = (list || []).filter((line) => hasHeard(spoken, lineNeedles(line)));
   return (
     <div style={{position: "absolute", inset: 0, backgroundColor: paper, opacity: 1}}>
       {text ? (
@@ -116,29 +110,22 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
             height: 760,
           }}
         >
-          {list.map((line, i) => {
-            const hot = spoken.some((needle) => line.toLowerCase().includes(needle));
-            return (
-              <div
-                key={line}
-                style={{
-                  fontFamily: displayFace,
-                  fontWeight: 700,
-                  fontSize: ask ? 72 : 58,
-                  lineHeight: 1.16,
-                  color: hot ? wine : ink,
-                  opacity: hot ? 1 : ask ? 0.7 : 0.34,
-                  scale: `${hot ? 1.03 : 1}`,
-                  marginBottom: ask ? 22 : 16,
-                }}
-              >
-                {ask ? null : (
-                  <span style={{color: gold, marginRight: 28, fontSize: 44}}>{String(i + 1).padStart(2, "0")}</span>
-                )}
-                {line}
-              </div>
-            );
-          })}
+          {visibleList.map((line) => (
+            <div
+              key={line}
+              style={{
+                fontFamily: displayFace,
+                fontWeight: 700,
+                fontSize: ask ? 72 : 58,
+                lineHeight: 1.16,
+                color: wine,
+                opacity: 1,
+                marginBottom: ask ? 22 : 16,
+              }}
+            >
+              {line}
+            </div>
+          ))}
         </div>
       ) : assets.length > 0 && !/^60 DAYS$/i.test(text) ? (
         <div
@@ -225,7 +212,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
           }}
         >
           {chips.map((chip, i) => {
-            const hot = spoken.some((needle) => chip.toLowerCase().includes(needle));
+            const hot = hasHeard(spoken, lineNeedles(chip));
             return (
               <div
                 key={chip}
@@ -238,6 +225,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                   backgroundColor: hot ? wine : ink,
                   padding: "14px 22px",
                   rotate: `${(i % 2 === 0 ? -1 : 1) * 1.4}deg`,
+                  opacity: hot ? 1 : 0,
                 }}
               >
                 {chip}
