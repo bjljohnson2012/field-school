@@ -43,14 +43,15 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
   const hookGhost = shot?.id === "s01" && solo > 0.08 ? 1 : 0;
   const bedLoops = Math.ceil((MASTER_FRAMES + 60) / BED_FRAMES);
   const letterMode = shot && shot.type === "a-roll" ? "hair" : "none";
+  const cutKind = shot?.id === "s01" || shot?.type === "sting" ? "wipe" : shot?.id === "s03" ? "slide" : "flash";
   const bedVol = Math.min(
     0.56,
-    interpolate(frame, [0, 10, 70, 154, 220], [0, 0.52, 0.46, 0.34, 0.38], {
+    interpolate(frame, [0, 10, 70, 154, 200], [0, 0.5, 0.46, 0.28, 0.28], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     }) +
-      (shot?.type === "cta" ? 0.1 : 0) +
-      (vox ? 0.05 : 0),
+      (shot?.type === "cta" ? 0.22 : 0) +
+      (vox ? 0.12 : 0),
   );
   return (
     <AbsoluteFill style={{backgroundColor: bg}}>
@@ -113,7 +114,7 @@ export const MadeUp: React.FC<MadeEpisode> = (episode) => {
           </div>
         ) : null}
         {shot && (shot.type !== "sting" || local >= 146) ? (
-          <PaperCut local={shot.type === "sting" ? local - 146 : local} />
+          <PaperCut local={shot.type === "sting" ? local - 146 : local} kind={cutKind} />
         ) : null}
         {shot && shot.type === "sting" ? <BrandLockup local={local} /> : null}
         {shot && shot.type === "cta" ? <CtaCard text={shot.text || ""} local={local} /> : null}
@@ -167,10 +168,8 @@ const PlaybookKeys: React.FC<{words: MadeWord[]}> = ({words}) => {
 };
 
 const EditorialHits: React.FC<{words: MadeWord[]}> = ({words}) => {
-  const people = words.find((word) => /^people$/i.test(word.text.trim()));
   const waiting = words.find((word) => /^waiting\.$/i.test(word.text.trim()));
   const book = words.find((word) => PLAYBOOK.test(word.text.trim()));
-  const peopleAt = people ? Math.round((people.fromMs / 1000) * FPS) : 154;
   const waitAt = waiting ? Math.round((waiting.fromMs / 1000) * FPS) : 334;
   const bookAt = book ? Math.round((book.fromMs / 1000) * FPS) : 451;
   return (
@@ -180,9 +179,6 @@ const EditorialHits: React.FC<{words: MadeWord[]}> = ({words}) => {
       </Sequence>
       <Sequence from={10} durationInFrames={28} layout="none">
         <Audio src={staticFile("sfx/swell.wav")} volume={0.2} />
-      </Sequence>
-      <Sequence from={Math.max(0, peopleAt - 6)} durationInFrames={14} layout="none">
-        <Audio src={staticFile("sfx/whoosh.wav")} volume={0.28} />
       </Sequence>
       <Sequence from={waitAt} durationInFrames={18} layout="none">
         <Audio src={staticFile("sfx/paper.wav")} volume={0.3} />
@@ -203,7 +199,7 @@ const ShotSfx: React.FC<{shot: MadeShot}> = ({shot}) => {
         const at = shot.fromFrame + (name === "tick" ? 2 + i * 4 : 2);
         const file =
           name === "whoosh" ? "sfx/whoosh.wav" : name === "hit" ? "sfx/hit.wav" : name === "sting" ? "sfx/sting.wav" : "sfx/tick.wav";
-        const vol = name === "hit" ? 0.34 : name === "sting" ? 0.3 : name === "whoosh" ? 0.26 : 0.14;
+        const vol = name === "hit" ? 0.32 : name === "sting" ? 0.16 : name === "whoosh" ? 0.2 : 0.12;
         return (
           <Sequence key={`${shot.id}-${name}-${i}`} from={at} durationInFrames={14} layout="none">
             <Audio src={staticFile(file)} volume={vol} />
@@ -232,14 +228,27 @@ const stampCount = (shot: MadeShot, words: MadeWord[], nowMs: number, local: num
   const gravity = words.some((word) => nowMs >= word.fromMs && norm(word.text).includes("gravity"));
   const light = words.some((word) => nowMs >= word.fromMs && (norm(word.text).includes("light") || norm(word.text).includes("speed")));
   const freeze = words.some((word) => nowMs >= word.fromMs && (norm(word.text).includes("freez") || norm(word.text).includes("ice")));
-  const keyed = Number(gravity) + Number(light) + Number(freeze);
-  const cascade = Math.min(3, Math.max(0, Math.floor((local - 2) / 4)));
-  return Math.max(keyed, cascade);
+  return Number(gravity) + Number(light) + Number(freeze);
 };
 
 const spokenNeedles = (words: MadeWord[], nowMs: number): string[] => {
-  const live = words.filter((word) => nowMs >= word.fromMs && nowMs < word.toMs + 800).map((word) => norm(word.text));
-  const needles = ["why", "started", "left", "best", "keep"];
+  const live = words.filter((word) => nowMs >= word.fromMs && nowMs < word.toMs + 900).map((word) => norm(word.text));
+  const needles = [
+    "why",
+    "started",
+    "left",
+    "best",
+    "keep",
+    "given",
+    "authored",
+    "fraud",
+    "budget",
+    "legal",
+    "politics",
+    "proof",
+    "template",
+    "guarantee",
+  ];
   return needles.filter((needle) => live.some((text) => text.includes(needle)));
 };
 

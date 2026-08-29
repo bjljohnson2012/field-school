@@ -60,7 +60,7 @@ export const BrandLockup: React.FC<BrandLockupProps> = ({local, title = "Everyth
           fontSize: 22,
           letterSpacing: "0.08em",
           color: ink,
-          opacity: typeIn * 0.74,
+          opacity: typeIn,
         }}
       >
         {SLOGAN}

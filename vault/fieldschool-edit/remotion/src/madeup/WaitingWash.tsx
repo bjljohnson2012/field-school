@@ -1,6 +1,6 @@
 import React from "react";
 import {Img, interpolate, staticFile} from "remotion";
-import {gold, ink, paper} from "./tokens";
+import {ink, paper} from "./tokens";
 
 type WaitingWashProps = {
   open: number;
@@ -10,15 +10,15 @@ export const WaitingWash: React.FC<WaitingWashProps> = ({open}) => {
   if (open <= 0) {
     return null;
   }
-  const opacity = interpolate(open, [0, 0.16, 1], [0, 1, 1], {
+  const opacity = interpolate(open, [0, 0.12, 1], [0, 1, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const zoom = interpolate(open, [0, 1], [1.16, 1.06], {
+  const zoom = interpolate(open, [0, 1], [1.14, 1.04], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const drift = interpolate(open, [0, 1], [36, -28], {
+  const drift = interpolate(open, [0, 1], [24, -16], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -30,7 +30,7 @@ export const WaitingWash: React.FC<WaitingWashProps> = ({open}) => {
           width: 1920,
           height: 1080,
           objectFit: "cover",
-          objectPosition: "50% 42%",
+          objectPosition: "78% 58%",
           scale: `${zoom}`,
           translate: `${drift}px 0px`,
         }}
@@ -39,27 +39,15 @@ export const WaitingWash: React.FC<WaitingWashProps> = ({open}) => {
         style={{
           position: "absolute",
           inset: 0,
-          background: `linear-gradient(180deg, ${paper}f0 0%, ${paper}b8 34%, ${paper}66 100%)`,
+          background: `linear-gradient(90deg, ${paper}66 0%, ${paper}2e 38%, ${paper}14 100%)`,
         }}
       />
       <div
         style={{
           position: "absolute",
           inset: 28,
-          outline: `3px solid ${ink}22`,
+          outline: `3px solid ${ink}33`,
           pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          right: 0,
-          top: 0,
-          width: 0,
-          height: 0,
-          borderLeft: `72px solid transparent`,
-          borderTop: `72px solid ${gold}`,
-          opacity: 0.85,
         }}
       />
     </div>

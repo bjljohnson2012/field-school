@@ -58,7 +58,7 @@ export const TitlePlate: React.FC<TitlePlateProps> = ({text, local, docked}) => 
     durationInFrames: 10,
     config: {damping: 14, mass: 0.4, stiffness: 220},
   });
-  const hold = interpolate(local, [90, 120], [1, 0.28], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const hold = interpolate(local, [180, 240], [1, 0.72], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   if (!ready) {
     return null;
   }

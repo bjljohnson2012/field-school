@@ -56,20 +56,22 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
       });
   }, [continueRender, handle]);
 
-  const lock = useMemo(() => words.find((word) => WAITING.test(word.text.trim()))?.fromMs ?? null, [words]);
-  const bookMs = useMemo(() => words.find((word) => PLAYBOOK.test(word.text.trim()))?.fromMs ?? null, [words]);
+  const waitWord = useMemo(() => words.find((word) => WAITING.test(word.text.trim())) ?? null, [words]);
+  const bookWord = useMemo(() => words.find((word) => PLAYBOOK.test(word.text.trim())) ?? null, [words]);
+  const lock = waitWord?.fromMs ?? null;
+  const bookMs = bookWord?.fromMs ?? null;
   const page = useMemo(() => {
+    const held = lock !== null && nowMs >= lock && (bookMs === null || nowMs < bookMs);
+    if (held && waitWord) {
+      return {words: [waitWord], appearMs: waitWord.fromMs, hideMs: bookMs ?? waitWord.toMs + 8000};
+    }
     const next = pageForClock(words, nowMs, lock);
     if (!next) {
       return next;
     }
-    const held = lock !== null && nowMs >= lock && (bookMs === null || nowMs < bookMs);
-    if (held || solo >= 0.12) {
-      const only = next.words.filter((word) => WAITING.test(word.text.trim()));
-      return only.length > 0 ? {...next, words: only} : next;
-    }
-    return next;
-  }, [bookMs, lock, nowMs, solo, words]);
+    const keep = next.words.filter((word) => WAITING.test(word.text.trim()) || PLAYBOOK.test(word.text.trim()));
+    return keep.length > 0 ? {...next, words: keep} : null;
+  }, [bookMs, lock, nowMs, waitWord, words]);
 
   if (!ready || !page) {
     return null;
@@ -135,7 +137,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
                   }),
                   letterSpacing: "-0.04em",
                   lineHeight: 1.05,
-                  color: gold,
+                  color: ink,
                   opacity: readyWord ? fade : 0,
                   translate: `0px ${(1 - fade) * 18}px`,
                   scale: `${interpolate(solo, [0, 1], [1, 1.04], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}`,
@@ -148,7 +150,7 @@ export const TypeField: React.FC<TypeFieldProps> = ({words, nowMs, solo, docked}
                     width: interpolate(solo, [0, 1], [80, 420], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}),
                     height: 6,
                     margin: "12px auto 0",
-                    backgroundColor: gold,
+                    backgroundColor: ink,
                     opacity: fade,
                   }}
                 />

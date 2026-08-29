@@ -63,8 +63,10 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
   if (!ready) {
     return null;
   }
-  const grow = interpolate(local, [0, 36], [0.94, 1.06], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const exit = interpolate(ghost, [0, 1], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const grow = interpolate(local, [0, 24, 170], [0.94, 1.02, 1.08], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const pulse = interpolate(local, [40, 52, 70], [1, 1.05, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const posterLeave = pip ? interpolate(local, [88, 118], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}) : 1;
+  const exit = interpolate(ghost, [0, 1], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}) * posterLeave;
   return (
     <div
       style={{
@@ -79,7 +81,7 @@ export const HookPlate: React.FC<HookPlateProps> = ({text, local, ghost = 0, pip
         alignItems: pip ? "flex-start" : "center",
         textAlign: pip ? "left" : "center",
         opacity: exit,
-        scale: `${grow}`,
+        scale: `${grow * (pip ? 1 : pulse)}`,
         translate: `0px ${interpolate(ghost, [0, 1], [0, -40], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}px`,
       }}
     >

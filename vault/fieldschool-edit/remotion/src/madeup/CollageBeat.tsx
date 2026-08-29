@@ -140,8 +140,9 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                   fontSize: 58,
                   lineHeight: 1.16,
                   color: hot ? wine : ink,
-                  opacity: enter,
+                  opacity: hot ? 1 : enter * 0.28,
                   translate: `0px ${(1 - enter) * 24}px`,
+                  scale: `${hot ? 1.03 : 1}`,
                   marginBottom: 16,
                 }}
               >
@@ -251,6 +252,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
               durationInFrames: 12,
               config: {damping: 10, mass: 0.42, stiffness: 220},
             });
+            const hot = spoken.some((needle) => chip.toLowerCase().includes(needle));
             return (
               <div
                 key={chip}
@@ -260,7 +262,7 @@ export const CollageBeat: React.FC<CollageBeatProps> = ({
                   fontSize: 26,
                   letterSpacing: "0.14em",
                   color: paper,
-                  backgroundColor: i === 0 ? wine : ink,
+                  backgroundColor: hot || i === 0 ? wine : ink,
                   padding: "14px 22px",
                   opacity: enter,
                   rotate: `${(i % 2 === 0 ? -1 : 1) * 1.4}deg`,
