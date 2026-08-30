@@ -19,6 +19,8 @@ CROP_H = 400
 CROP_W = int(round(CROP_H * OUT_W / OUT_H))
 # Haar box sits right of the nose. Shift the lock left so the face lands in the middle.
 FACE_X_NUDGE = 0.02
+# Master is longer than a_roll. Hold the last crop so the letterbox tail does not run past EOF.
+PAD_TAIL = 480
 
 
 def cascade() -> cv2.CascadeClassifier:
@@ -56,13 +58,14 @@ def crop_box(cx: float, cy: float, src_w: int, src_h: int) -> tuple[int, int, in
     return x0, y0, CROP_W, CROP_H
 
 
-def collect(src: Path, det: cv2.CascadeClassifier, limit: int) -> tuple[np.ndarray, np.ndarray, int, int, float]:
+def collect(src: Path, det: cv2.CascadeClassifier, seconds: float) -> tuple[np.ndarray, np.ndarray, int, int, float]:
     cap = cv2.VideoCapture(str(src))
     if not cap.isOpened():
         raise SystemExit(f"cannot read {src}")
     src_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) or 1280
     src_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) or 720
     fps = float(cap.get(cv2.CAP_PROP_FPS) or 30.0)
+    limit = int(round(seconds * fps)) if seconds > 0 else 10**9
     xs: list[float] = []
     ys: list[float] = []
     last = (src_w * 0.5, src_h * 0.4)
@@ -79,18 +82,22 @@ def collect(src: Path, det: cv2.CascadeClassifier, limit: int) -> tuple[np.ndarr
         xs.append(last[0] - src_w * FACE_X_NUDGE)
         ys.append(last[1])
         frames += 1
+        if frames % 2000 == 0:
+            print(f"detect {frames}", flush=True)
     cap.release()
     if hits == 0:
         raise SystemExit("no faces found")
+    print(f"detect done {frames} hits {hits}", flush=True)
     return smooth(np.array(xs, dtype=np.float64), 7), smooth(np.array(ys, dtype=np.float64), 7), src_w, src_h, fps
 
 
 def main() -> None:
     src = Path(sys.argv[1] if len(sys.argv) > 1 else "/opt/fieldschool-edit/remotion/public/a_roll.mp4")
     dest = Path(sys.argv[2] if len(sys.argv) > 2 else "/opt/fieldschool-edit/remotion/public/head.mp4")
-    seconds = float(sys.argv[3]) if len(sys.argv) > 3 else 72.0
+    seconds = float(sys.argv[3]) if len(sys.argv) > 3 else 0.0
+    pad = int(sys.argv[4]) if len(sys.argv) > 4 else PAD_TAIL
     det = cascade()
-    sx, sy, src_w, src_h, fps = collect(src, det, int(round(seconds * 30.0)))
+    sx, sy, src_w, src_h, fps = collect(src, det, seconds)
     dest.parent.mkdir(parents=True, exist_ok=True)
     cap = cv2.VideoCapture(str(src))
     ff = subprocess.Popen(
@@ -121,6 +128,8 @@ def main() -> None:
         stderr=subprocess.DEVNULL,
     )
     assert ff.stdin is not None
+    last: np.ndarray | None = None
+    written = 0
     for i in range(len(sx)):
         ok, frame = cap.read()
         if not ok:
@@ -129,11 +138,23 @@ def main() -> None:
         cut = frame[y0 : y0 + win_h, x0 : x0 + win_w]
         out = cv2.resize(cut, (OUT_W, OUT_H), interpolation=cv2.INTER_CUBIC)
         ff.stdin.write(out.tobytes())
+        last = out
+        written += 1
+        if written % 2000 == 0:
+            print(f"crop {written}", flush=True)
     cap.release()
+    if last is None:
+        ff.stdin.close()
+        ff.wait()
+        raise SystemExit("no frames cropped")
+    for _ in range(pad):
+        ff.stdin.write(last.tobytes())
+        written += 1
+    print(f"crop done {written} pad {pad}", flush=True)
     ff.stdin.close()
     if ff.wait() != 0:
         raise SystemExit("ffmpeg encode failed")
-    print(dest, "frames", len(sx), f"crop={CROP_W}x{CROP_H}")
+    print(dest, "frames", written, f"crop={CROP_W}x{CROP_H}")
 
 
 if __name__ == "__main__":
