@@ -1,0 +1,413 @@
+{
+  "slug": "everything-made-up",
+  "title": "Everything Is Made Up",
+  "brandKit": "custom",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "hook": "People cannot get things done. You can just do things because the blockers were made up.",
+  "thesis": "Made up does not mean fake. Made up means authored, and authored things can be changed with the reason in hand.",
+  "cam": "a_roll.mp4",
+  "vo": "episodes/everything-made-up/vo.wav",
+  "captions": "episodes/everything-made-up/captions.json",
+  "shots": [
+    {
+      "id": "s00",
+      "type": "sting",
+      "fromFrame": 0,
+      "durationInFrames": 153,
+      "layout": "off",
+      "sfx": [
+        "sting"
+      ]
+    },
+    {
+      "id": "s01",
+      "type": "hook",
+      "fromFrame": 153,
+      "durationInFrames": 298,
+      "layout": "off",
+      "text": "PEOPLE CANNOT GET THINGS DONE",
+      "sfx": [
+        "hit"
+      ]
+    },
+    {
+      "id": "s03",
+      "type": "a-roll",
+      "fromFrame": 451,
+      "durationInFrames": 583,
+      "layout": "dock-right",
+      "lowerThird": {
+        "name": "Ben Johnson",
+        "title": ""
+      }
+    },
+    {
+      "id": "s02",
+      "type": "hook",
+      "fromFrame": 1034,
+      "durationInFrames": 95,
+      "layout": "off",
+      "text": "YOU CAN JUST DO THINGS",
+      "sfx": [
+        "tick"
+      ]
+    },
+    {
+      "id": "s02b",
+      "type": "a-roll",
+      "fromFrame": 1129,
+      "durationInFrames": 720,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s02b-1",
+      "type": "a-roll",
+      "fromFrame": 1849,
+      "durationInFrames": 480,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s02b-2",
+      "type": "a-roll",
+      "fromFrame": 2329,
+      "durationInFrames": 480,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s02b-3",
+      "type": "a-roll",
+      "fromFrame": 2809,
+      "durationInFrames": 603,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s04",
+      "type": "vox",
+      "fromFrame": 3412,
+      "durationInFrames": 227,
+      "layout": "off",
+      "text": "NOT GRAVITY",
+      "assets": [
+        "stills/quota.png",
+        "stills/policy.png",
+        "stills/ice.png"
+      ],
+      "sfx": [
+        "tick"
+      ],
+      "annotation": "A PERSON CHOSE THIS"
+    },
+    {
+      "id": "s06",
+      "type": "a-roll",
+      "fromFrame": 3639,
+      "durationInFrames": 720,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s06-1",
+      "type": "a-roll",
+      "fromFrame": 4359,
+      "durationInFrames": 480,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s06-2",
+      "type": "a-roll",
+      "fromFrame": 4839,
+      "durationInFrames": 480,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s06-3",
+      "type": "a-roll",
+      "fromFrame": 5319,
+      "durationInFrames": 480,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s06-4",
+      "type": "a-roll",
+      "fromFrame": 5799,
+      "durationInFrames": 480,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s06-5",
+      "type": "a-roll",
+      "fromFrame": 6279,
+      "durationInFrames": 480,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s06-6",
+      "type": "a-roll",
+      "fromFrame": 6759,
+      "durationInFrames": 480,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s06-7",
+      "type": "a-roll",
+      "fromFrame": 7239,
+      "durationInFrames": 316,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s08",
+      "type": "vox",
+      "fromFrame": 7555,
+      "durationInFrames": 113,
+      "layout": "off",
+      "text": "THE DOOR",
+      "assets": [
+        "stills/fence.png"
+      ],
+      "annotation": "FIND THE REASON FIRST",
+      "sfx": [
+        "tick"
+      ]
+    },
+    {
+      "id": "s10",
+      "type": "vox",
+      "fromFrame": 7668,
+      "durationInFrames": 219,
+      "layout": "off",
+      "text": "FIVE QUESTIONS",
+      "sfx": [
+        "tick"
+      ]
+    },
+    {
+      "id": "s10b",
+      "type": "a-roll",
+      "fromFrame": 7887,
+      "durationInFrames": 720,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s10b-1",
+      "type": "a-roll",
+      "fromFrame": 8607,
+      "durationInFrames": 480,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s10b-2",
+      "type": "a-roll",
+      "fromFrame": 9087,
+      "durationInFrames": 480,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s10b-3",
+      "type": "a-roll",
+      "fromFrame": 9567,
+      "durationInFrames": 480,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s10b-4",
+      "type": "a-roll",
+      "fromFrame": 10047,
+      "durationInFrames": 480,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s10b-5",
+      "type": "a-roll",
+      "fromFrame": 10527,
+      "durationInFrames": 480,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s10b-6",
+      "type": "a-roll",
+      "fromFrame": 11007,
+      "durationInFrames": 464,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s12",
+      "type": "vox",
+      "fromFrame": 11471,
+      "durationInFrames": 220,
+      "layout": "off",
+      "text": "60 DAYS",
+      "sfx": [
+        "hit"
+      ]
+    },
+    {
+      "id": "s12b",
+      "type": "a-roll",
+      "fromFrame": 11691,
+      "durationInFrames": 720,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s12b-1",
+      "type": "a-roll",
+      "fromFrame": 12411,
+      "durationInFrames": 480,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s12b-2",
+      "type": "a-roll",
+      "fromFrame": 12891,
+      "durationInFrames": 480,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s12b-3",
+      "type": "a-roll",
+      "fromFrame": 13371,
+      "durationInFrames": 561,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s13",
+      "type": "b-roll",
+      "fromFrame": 13932,
+      "durationInFrames": 980,
+      "layout": "pip-tr",
+      "text": "DOES IT HAVE TO BE",
+      "assets": [
+        "stills/proof.png",
+        "stills/template.png"
+      ],
+      "sfx": [
+        "whoosh"
+      ]
+    },
+    {
+      "id": "s14",
+      "type": "a-roll",
+      "fromFrame": 14912,
+      "durationInFrames": 757,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s15",
+      "type": "vox",
+      "fromFrame": 15669,
+      "durationInFrames": 415,
+      "layout": "off",
+      "text": "INTIMIDATED",
+      "sfx": [
+        "tick"
+      ]
+    },
+    {
+      "id": "s15b",
+      "type": "vox",
+      "fromFrame": 16084,
+      "durationInFrames": 61,
+      "layout": "off",
+      "text": "REFUSE"
+    },
+    {
+      "id": "s15c",
+      "type": "vox",
+      "fromFrame": 16145,
+      "durationInFrames": 220,
+      "layout": "off",
+      "text": "WRECK"
+    },
+    {
+      "id": "s16",
+      "type": "a-roll",
+      "fromFrame": 16365,
+      "durationInFrames": 720,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s16-1",
+      "type": "a-roll",
+      "fromFrame": 17085,
+      "durationInFrames": 480,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s16-2",
+      "type": "a-roll",
+      "fromFrame": 17565,
+      "durationInFrames": 480,
+      "layout": "dock-right"
+    },
+    {
+      "id": "s16-3",
+      "type": "a-roll",
+      "fromFrame": 18045,
+      "durationInFrames": 483,
+      "layout": "dock-left"
+    },
+    {
+      "id": "s17",
+      "type": "vox",
+      "fromFrame": 18528,
+      "durationInFrames": 511,
+      "layout": "off",
+      "text": "ASK",
+      "list": [
+        "WHY",
+        "STARTED",
+        "LEFT OUT",
+        "BEST",
+        "CUT"
+      ],
+      "sfx": [
+        "tick"
+      ]
+    },
+    {
+      "id": "s18",
+      "type": "vox",
+      "fromFrame": 19039,
+      "durationInFrames": 82,
+      "layout": "off",
+      "text": "ACT",
+      "sfx": [
+        "hit"
+      ]
+    },
+    {
+      "id": "s18b",
+      "type": "vox",
+      "fromFrame": 19121,
+      "durationInFrames": 214,
+      "layout": "off",
+      "text": "THINGS ARE REAL."
+    },
+    {
+      "id": "s19",
+      "type": "cta",
+      "fromFrame": 19335,
+      "durationInFrames": 180,
+      "layout": "off",
+      "text": "CHANGE IT WITH THE REASON IN HAND",
+      "sfx": [
+        "sting"
+      ]
+    },
+    {
+      "id": "s20",
+      "type": "a-roll",
+      "fromFrame": 19515,
+      "durationInFrames": 301,
+      "layout": "letterbox"
+    },
+    {
+      "id": "s21",
+      "type": "cta",
+      "fromFrame": 19816,
+      "durationInFrames": 120,
+      "layout": "off",
+      "text": "CHANGE IT WITH THE REASON IN HAND"
+    }
+  ]
+}

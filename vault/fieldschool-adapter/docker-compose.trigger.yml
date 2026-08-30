@@ -1,0 +1,24 @@
+# Instant kick. Lives on 2.24.70.248 only. Do not start this on CNC vault.
+services:
+  fieldschool-trigger:
+    container_name: fieldschool-trigger
+    image: python:3.12-slim
+    restart: unless-stopped
+    working_dir: /opt/fieldschool-adapter
+    env_file:
+      - /opt/fieldschool-adapter/.env
+    environment:
+      TRIGGER_BIND: 0.0.0.0:8789
+    volumes:
+      - /opt/fieldschool-adapter:/opt/fieldschool-adapter
+      - /opt/fieldschool-video:/opt/fieldschool-video
+    command: ["sh", "-c", "pip install -q -e . && python -m fieldschool_adapter serve"]
+    expose:
+      - "8789"
+    networks:
+      - video_net
+
+networks:
+  video_net:
+    name: fieldschool-video
+    external: true

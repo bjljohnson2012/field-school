@@ -8,9 +8,12 @@ Field School is a weekly Saturday hour. Directors come. So do people on the floo
 
 ## Domains
 
+Site and portal belong on the Field School VPS `2.24.70.248`. Cap, edit, and HLS belong there too. `2.24.64.248` is CNC vault, a different product. Do not put Field School video on it. Full map and the take-to-HLS walk: [VIDEO.md](VIDEO.md).
+
 - `fieldschool.ai` is the public multi-page site. Source in this repo: `marketing-site/` (the live VPS tree from `/workspace/field-school/site/`).
 - `portal.fieldschool.ai` is the Next.js training portal. Same app as the legacy host `university.benjohnson.ai` until that 301 is lifted.
 - `AUTH_URL` still points at that legacy host. Do not flip it until the four portal Google/X OAuth callback rows exist. Do not 301 that host until then.
+- `cap.fieldschool.ai`, `edit.fieldschool.ai`, and `s3.cap.fieldschool.ai` resolve to `2.24.70.248`. Cap, edit, trigger, and HLS live on that box.
 
 ## Public site
 
@@ -38,7 +41,7 @@ App: http://127.0.0.1:43141
 
 ## Deploy
 
-Ship via Cursor Cloud Agent to the Hostinger VPS (`2.24.70.248`). Apex static files go to the fieldschool.ai docroot. Next app is the portal. Do not merge to main as the live path. Do not use the shared Grok box for SSH.
+Ship via Cursor Cloud Agent to the Hostinger Field School VPS (`2.24.70.248`). Apex static files go to the fieldschool.ai docroot. Next app is the portal. Video production (Cap, adapter, edit, HLS) also belongs on that box. Do not deploy any of this to CNC vault `2.24.64.248`. Do not merge to main as the live path. Do not use the shared Grok box for SSH.
 
 ## Stack
 

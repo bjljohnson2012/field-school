@@ -1,0 +1,74 @@
+# Field School video hosts. Append to /opt/ae-coach/docker/Caddyfile on 2.24.70.248.
+# Caddy runs in Docker. Join it to cap_cap-network and fieldschool-video, then
+# proxy by container name. host.docker.internal and 127.0.0.1 502 from this Caddy.
+# Video files live under /opt/fieldschool-video, not /opt/field-school (portal deploy wipes that).
+
+cap.fieldschool.ai {
+	encode gzip
+
+	handle_path /hls/* {
+		root * /opt/fieldschool-video/hls
+		header Access-Control-Allow-Origin *
+		header Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+		file_server
+	}
+
+	handle_path /fs-brand/* {
+		root * /opt/fieldschool-video/cap-chrome
+		header Cache-Control "public, max-age=3600"
+		file_server
+	}
+
+	@cap_icons path /favicon.ico /favicon.svg /favicon-16x16.png /favicon-32x32.png /apple-touch-icon.png /safari-pinned-tab.svg
+	handle @cap_icons {
+		rewrite * /square-cream.png
+		root * /opt/fieldschool-video/cap-chrome
+		header Content-Type image/png
+		file_server
+	}
+
+	@fs_need_brand {
+		not header X-FS-Inject 1
+		not path /fs-brand/*
+		not path /hls/*
+	}
+
+	intercept @fs_need_brand {
+		@html {
+			header Content-Type *text/html*
+		}
+		handle_response @html {
+			request_header X-FS-Inject 1
+			header -Content-Length
+			header -Content-Encoding
+			header Content-Type "text/html; charset=utf-8"
+			rewrite * /inject.html
+			root * /opt/fieldschool-video/cap-chrome
+			templates
+			file_server
+		}
+	}
+
+	header @fs_need_brand Link "</fs-brand/overlay.css>; rel=stylesheet, </fs-brand/hide-upgrade.css>; rel=stylesheet"
+
+	reverse_proxy cap-web:3000 {
+		header_up Accept-Encoding identity
+	}
+}
+
+s3.cap.fieldschool.ai {
+	reverse_proxy cap-minio:9000 {
+		header_up Host {host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}
+
+edit.fieldschool.ai {
+	handle /trigger {
+		reverse_proxy fieldschool-trigger:8789
+	}
+	handle /trigger/* {
+		reverse_proxy fieldschool-trigger:8789
+	}
+	reverse_proxy fieldschool-edit:8788
+}
