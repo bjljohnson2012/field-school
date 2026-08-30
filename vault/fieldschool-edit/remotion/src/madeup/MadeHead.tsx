@@ -1,7 +1,5 @@
 import React from "react";
-import {OffthreadVideo, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from "remotion";
-import {faceSample, faceWindow} from "./faceCrop";
-import faceTrack from "./face-track.json";
+import {OffthreadVideo, interpolate, spring, staticFile, useVideoConfig} from "remotion";
 import {HEAD_DOCK, HEAD_MAT_PX, HEAD_PIP, HEAD_PIP_GAP, HEAD_RIGHT_GAP, HEAD_RULE_PX, gold, ink, paper} from "./tokens";
 import type {ShotLayout} from "./schema";
 
@@ -13,8 +11,7 @@ type MadeHeadProps = {
   fresh?: boolean;
 };
 
-export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0, fresh = true}) => {
-  const frame = useCurrentFrame();
+export const MadeHead: React.FC<MadeHeadProps> = ({layout, local, solo = 0, fresh = true}) => {
   const {fps} = useVideoConfig();
   const hidden = layout === "off";
   const pip = layout === "pip-tr";
@@ -30,19 +27,7 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0,
     : 1;
   const width = pip ? HEAD_PIP : letter ? 1680 : Math.round(1920 * HEAD_DOCK);
   const height = pip ? HEAD_PIP : letter ? 780 : 640;
-  const zoom = pip ? 1.9 : letter ? 2.05 : 2.2;
-  const face = faceSample(faceTrack, frame);
-  const boxW = width - HEAD_MAT_PX * 2;
-  const boxH = height - HEAD_MAT_PX * 2;
-  const window = faceWindow({
-    boxW,
-    boxH,
-    srcW: faceTrack.width || 1280,
-    srcH: faceTrack.height || 720,
-    zoom,
-    faceX: face.x,
-    faceY: face.y,
-  });
+  const zoom = 1;
   const left = pip
     ? 1920 - width - HEAD_PIP_GAP
     : letter
@@ -91,15 +76,15 @@ export const MadeHead: React.FC<MadeHeadProps> = ({src, layout, local, solo = 0,
         }}
       >
         <OffthreadVideo
-          src={staticFile(src)}
+          src={staticFile("head.mp4")}
           startFrom={0}
           muted
           style={{
-            position: "absolute",
-            width: window.width,
-            height: window.height,
-            left: window.left,
-            top: window.top,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "50% 50%",
+            scale: `${zoom}`,
             filter: "contrast(1.06) saturate(1.04) brightness(1.02)",
           }}
         />
