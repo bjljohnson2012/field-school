@@ -18,7 +18,7 @@ OUT_H = 640
 CROP_H = 400
 CROP_W = int(round(CROP_H * OUT_W / OUT_H))
 # Haar box sits right of the nose. Shift the lock left so the face lands in the middle.
-FACE_X_NUDGE = 0.04
+FACE_X_NUDGE = 0.02
 
 
 def cascade() -> cv2.CascadeClassifier:
