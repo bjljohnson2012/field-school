@@ -1,43 +1,42 @@
 # Field School
 
-Public site: https://fieldschool.ai  
-App: https://portal.fieldschool.ai  
-Legacy campus (still live, 301 held): https://university.benjohnson.ai
+Public site: https://fieldschool.ai
+App: https://portal.fieldschool.ai
+Legacy campus (301 held): https://university.benjohnson.ai
+Capture: https://cap.fieldschool.ai
+Edit MCP: https://edit.fieldschool.ai
 
-Field School is a weekly Saturday hour. Directors come. So do people on the floor, founders building the first team, young men starting, and people switching in.
+Official build path on this repo: **campus runtime** (multi-tenant Next app + Postgres).
+Start here: [docs/campus-runtime/README.md](docs/campus-runtime/README.md).
+
+The TanStack Start tree under `src/`, `vite.config.ts`, and `migrations/0001-0003` is frozen. Do not extend it. Do not deploy it to the VPS. Wave 1 builds the Next app in `app/`.
+
+## What main is now
+
+1. `docs/campus-runtime/` — plan, waves, Wave 1 Grok Build prompt.
+2. `app/` — Next campus runtime (Wave 1 creates this if it does not exist yet).
+3. `marketing-site/` — public fieldschool.ai HTML.
+4. `video-pipeline/` — Cap / adapter / edit notes for the factory on 2.24.70.248.
+5. Frozen TanStack demo — see [archive/TANSTACK.md](archive/TANSTACK.md).
 
 ## Domains
 
-- `fieldschool.ai` is the public multi-page site. Source in this repo: `marketing-site/` (the live VPS tree from `/workspace/field-school/site/`).
-- `portal.fieldschool.ai` is the Next.js campus app. Same app as `university.benjohnson.ai` until the university 301 is lifted.
-- `AUTH_URL` still points at university.benjohnson.ai. Do not flip it until the four portal Google/X OAuth callback rows exist. Do not 301 university until then.
+- `fieldschool.ai` — marketing. Source: `marketing-site/`.
+- `portal.fieldschool.ai` — campus app. Today a guest Next demo still runs on the VPS. AUTH_URL still points at university.benjohnson.ai. Do not flip AUTH_URL in Wave 1.
+- `cap.fieldschool.ai` — capture only.
+- `edit.fieldschool.ai` — factory MCP / melt. Not the learner MCP.
 
-## Public site
+## SKUs
 
-Pages: Home (newsletter CTA), About, Pricing, Tools (lead form to ben@fieldschool.ai), 12 Presuppositions, Shop (coming soon), Founder.  
-Login goes to https://portal.fieldschool.ai  
-Join goes to Pricing, then portal signup on the chosen plan (`/signup?plan=100|200|1000`).  
-SKUs: $100 / $200 / $1,000. Foundry is off the cart.  
-Privacy and terms stay at `/privacy` and `/terms`.
-
-## App (Field School University)
-
-Next.js campus: courses, assessments, dashboard, admin. Guest paths: `/c/grok-bot`, `/share/field-school`. Free beta on `/signup`. Staff admin is allowlist-only. See AUTH.md and DEPLOY.md.
-
-## Run locally
-
-```bash
-npm install
-npm run dev
-```
-
-App: http://127.0.0.1:43141
+Gym $100 / $200 / $1,000. Foundry is off the cart. Invoice later. This runtime is the gym OS plus a private household tenant. Not a fourth SKU.
 
 ## Deploy
 
-Ship via Cursor Cloud Agent to the Hostinger VPS (`2.24.70.248`). Apex static files go to the fieldschool.ai docroot. Next app is the portal. Do not merge to main as the live path. Do not use the shared Grok box for SSH.
+Cloud Agent + `/home/ubuntu/.ssh/vps_deploy` only. Target VPS `2.24.70.248`. CNC vault `2.24.64.248` is off limits.
 
-## Stack
+Do not deploy the frozen TanStack tree.
+Do not use the shared Grok box for SSH.
 
-Public site: static HTML, IBM Plex + Fraunces.  
-App: Next.js, TypeScript, Tailwind, shadcn/ui.
+## Agents
+
+Read [AGENTS.md](AGENTS.md) before writing code.
