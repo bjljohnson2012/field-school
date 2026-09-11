@@ -12,6 +12,9 @@ export function SiteFooter() {
           go-to-market, and leadership at your pace.
         </p>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
+          <Link href="/docs/api" className="hover:text-foreground">
+            API
+          </Link>
           <Link href="/about" className="hover:text-foreground">
             About
           </Link>

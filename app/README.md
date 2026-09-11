@@ -2,7 +2,7 @@
 
 Official campus runtime. Wave 1 is live: Postgres 16 + pgvector, seed orgs `field-school` and `household`, authenticated Grok Bot station 01 watch/quiz writes `learning_events`. Guests stay on localStorage.
 
-APIs: `GET /api/me`, `GET /api/progress?course=grok-bot`, `POST /api/events`. Proof: `docs/campus-runtime/WAVE1.md`. Deploy from this tree only (`bash deploy/deploy.sh`). Do not deploy the frozen TanStack tree.
+APIs: `GET /api/me`, `GET /api/progress?course=grok-bot`, `POST /api/events`. Live docs: https://portal.fieldschool.ai/docs/api. Schema + OpenAPI: `docs/campus-runtime/API.md`. Proof: `docs/campus-runtime/WAVE1.md`. Deploy from this tree only (`bash deploy/deploy.sh`). Do not deploy the frozen TanStack tree.
 
 Public site: https://fieldschool.ai  
 App: https://portal.fieldschool.ai  

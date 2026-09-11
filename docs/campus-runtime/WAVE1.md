@@ -2,6 +2,8 @@
 
 Identity plane on the live Next campus. GitHub TanStack `src/` was not deployed.
 
+How it works (schema + endpoints): [API.md](./API.md). Live page: https://portal.fieldschool.ai/docs/api. OpenAPI: [openapi-wave1.json](./openapi-wave1.json).
+
 ## Where it lives
 
 | Piece | Value |

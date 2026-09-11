@@ -3,6 +3,7 @@
 Canonical plan: `docs/campus-runtime/`.
 
 Wave 1 prompt: `docs/campus-runtime/GROK_BUILD_PROMPT.md`.
+Wave 1 API (schema + endpoints): `docs/campus-runtime/API.md`. Live: `/docs/api`.
 
 ## Do
 

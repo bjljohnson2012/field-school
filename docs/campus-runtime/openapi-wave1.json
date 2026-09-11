@@ -1,0 +1,187 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Field School campus runtime — Wave 1",
+    "version": "1.0.0",
+    "description": "Learner identity and Grok Bot progress events. Auth.js session cookies. Guest POST is rejected. Isolation is org_id + membership_id."
+  },
+  "servers": [
+    { "url": "https://portal.fieldschool.ai" },
+    { "url": "https://university.benjohnson.ai" }
+  ],
+  "paths": {
+    "/api/me": {
+      "get": {
+        "summary": "Current member or guest",
+        "responses": {
+          "200": {
+            "description": "Guest or signed-in member",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MeResponse" }
+              }
+            }
+          },
+          "503": { "description": "DATABASE_URL missing" }
+        }
+      }
+    },
+    "/api/progress": {
+      "get": {
+        "summary": "Course progress for this membership",
+        "parameters": [
+          {
+            "name": "course",
+            "in": "query",
+            "schema": { "type": "string", "default": "grok-bot" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Guest empty map, or membership-scoped modules",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProgressResponse" }
+              }
+            }
+          },
+          "503": { "description": "DATABASE_URL missing" }
+        }
+      }
+    },
+    "/api/events": {
+      "post": {
+        "summary": "Write a learning event (authenticated only)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/EventInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Inserted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/EventCreated" }
+              }
+            }
+          },
+          "400": { "description": "invalid_json or invalid_kind" },
+          "401": { "description": "guest / sign_in_required" },
+          "503": { "description": "database_unavailable" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MeResponse": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["authenticated", "guest"],
+            "properties": {
+              "authenticated": { "const": false },
+              "guest": { "const": true }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["authenticated", "member", "org", "memberships"],
+            "properties": {
+              "authenticated": { "const": true },
+              "member": { "$ref": "#/components/schemas/Member" },
+              "org": { "$ref": "#/components/schemas/OrgRef" },
+              "memberships": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/MembershipRef" }
+              }
+            }
+          }
+        ]
+      },
+      "Member": {
+        "type": "object",
+        "required": ["id", "email", "name"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "email": { "type": "string" },
+          "name": { "type": "string" }
+        }
+      },
+      "OrgRef": {
+        "type": "object",
+        "required": ["slug", "isolation"],
+        "properties": {
+          "slug": { "type": "string", "enum": ["field-school", "household"] },
+          "isolation": { "type": "string", "enum": ["public_catalog", "strict"] }
+        }
+      },
+      "MembershipRef": {
+        "type": "object",
+        "required": ["id", "stance", "org", "isolation"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "stance": { "type": "string" },
+          "org": { "type": "string" },
+          "isolation": { "type": "string" }
+        }
+      },
+      "ModuleProgress": {
+        "type": "object",
+        "properties": {
+          "watched": { "type": "boolean" },
+          "assignment": {
+            "type": "object",
+            "additionalProperties": { "type": "boolean" }
+          },
+          "notes": { "type": "string" },
+          "quizScore": { "type": ["number", "null"] },
+          "quizPassed": { "type": "boolean" },
+          "passed": { "type": "boolean" }
+        }
+      },
+      "ProgressResponse": {
+        "type": "object",
+        "required": ["authenticated", "course", "modules"],
+        "properties": {
+          "authenticated": { "type": "boolean" },
+          "guest": { "type": "boolean" },
+          "course": { "type": "string" },
+          "org": { "type": "string" },
+          "membershipId": { "type": "string", "format": "uuid" },
+          "modules": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/ModuleProgress" }
+          }
+        }
+      },
+      "EventInput": {
+        "type": "object",
+        "required": ["kind"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["watch", "quiz", "assignment"] },
+          "course": { "type": "string", "default": "grok-bot" },
+          "station": { "type": "string" },
+          "object_type": { "type": "string", "default": "station" },
+          "object_id": { "type": "string" },
+          "score": { "type": "number" },
+          "raw": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "EventCreated": {
+        "type": "object",
+        "required": ["ok", "id", "org", "membershipId"],
+        "properties": {
+          "ok": { "const": true },
+          "id": { "type": "string", "format": "uuid" },
+          "org": { "type": "string" },
+          "membershipId": { "type": "string", "format": "uuid" }
+        }
+      }
+    }
+  }
+}
