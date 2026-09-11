@@ -1,0 +1,57 @@
+name: field-school
+
+services:
+  campus-db:
+    image: pgvector/pgvector:pg16
+    container_name: field-school-campus-db
+    restart: unless-stopped
+    command: postgres -c shared_buffers=256MB
+    env_file:
+      - /opt/field-school.env
+    environment:
+      POSTGRES_USER: campus
+      POSTGRES_PASSWORD: ${CAMPUS_POSTGRES_PASSWORD}
+      POSTGRES_DB: campus
+    volumes:
+      - /opt/field-school/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U campus -d campus"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - campus
+
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: field-school-app
+    restart: unless-stopped
+    depends_on:
+      campus-db:
+        condition: service_healthy
+    env_file:
+      - /opt/field-school.env
+    environment:
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      MEMBER_STORE_PATH: /app/data/campus-store.json
+      DATABASE_URL: postgres://campus:${CAMPUS_POSTGRES_PASSWORD}@campus-db:5432/campus
+    expose:
+      - "3000"
+    volumes:
+      - field-school-data:/app/data
+    networks:
+      - proxy
+      - campus
+
+volumes:
+  field-school-data:
+
+networks:
+  campus:
+  proxy:
+    name: ae-coach_default
+    external: true
+
