@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { usePortal } from "@/hooks/use-portal";
 import { listPublishedCourses } from "@/lib/course/catalog";
@@ -13,6 +14,17 @@ export default function DashboardPage() {
   const { ready, session, tools, isStaff, impersonating } = usePortal();
   const courses = listPublishedCourses();
   const seatLabel = authSession?.user?.seatLabel;
+  const [nextStation, setNextStation] = useState<{ href: string; title: string } | null>(null);
+
+  useEffect(() => {
+    if (!authSession?.user?.email) return;
+    void fetch("/api/chooser?course=grok-bot")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.next?.href) setNextStation({ href: data.next.href, title: data.next.title });
+      })
+      .catch(() => undefined);
+  }, [authSession?.user?.email]);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
@@ -54,6 +66,15 @@ export default function DashboardPage() {
             Back to campus
           </Link>
         </div>
+      ) : null}
+
+      {nextStation ? (
+        <p className="mt-6 text-sm">
+          Chooser (reads Field Pattern, does not rewrite the pack):{" "}
+          <Link href={nextStation.href} className="underline underline-offset-4">
+            {nextStation.title}
+          </Link>
+        </p>
       ) : null}
 
       <section className="mt-12">

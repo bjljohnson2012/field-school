@@ -250,6 +250,29 @@ Do not put secrets in this page or in git.
 - Not Better Auth / PGlite / `migrations/0001-0003`.
 - Leftover container `field-school-db` is the frozen TanStack database. Do not write Wave 1 rows there.
 
+## Field Pattern (fp-50-v1)
+
+Instrument lives in `instrument_items`. Adult form is 50 Likert items (1–5). Child subset is the 20 items marked `child_subset`. Correspondences: learn, approach, conflict, feedback, group.
+
+Live UI: https://portal.fieldschool.ai/pattern
+
+| endpoint | who | writes |
+|---|---|---|
+| `GET /api/pattern/instrument?subset=adult\|child` | anyone | seeds item table if empty |
+| `POST /api/pattern/run` | signed-in | **resets** Bearing from this run; appends `member_profile_revisions` |
+| `GET /api/pattern/profile` | signed-in | live profile + recent revisions |
+| `POST /api/pattern/ingest` | signed-in | paper text, or voice/video via Grok STT; **nudges** Bearing |
+| `POST /api/pattern/lock` | guardian/admin | parent lock on a child membership |
+| `POST /api/pattern/wards` | guardian/admin | link guardian → child |
+| `GET /api/chooser?course=grok-bot` | signed-in | reads live profile; `wrotePack: false` |
+| `GET /api/skills` | signed-in | org-scoped skills; observations from artifacts with a rubric |
+
+`member_profiles` holds Bearing (degrees + primary/secondary), correspondence distributions, and narrative paragraphs for the five correspondences. Revisions are append-only. A locked child profile rejects writes unless the actor is the guardian or admin.
+
+Skills stay on `skills` (`UNIQUE org_id, slug`). The same artifact that nudges Bearing also writes `skill_observations` when the org skill has a rubric.
+
+Chooser never inserts assignments or lessons.
+
 ## curl
 
 ```bash

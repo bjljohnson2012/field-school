@@ -7,7 +7,7 @@ import { assessmentTools } from "@/lib/tools/registry";
 export const metadata: Metadata = {
   title: "Tools",
   description:
-    "Skill and intelligence assessments that stay on the Field School training portal. Tool and personality checklists come later.",
+    "Skill, intelligence, and Field Pattern (fp-50-v1) assessments that stay on the Field School training portal.",
 };
 
 export default function ToolsPage() {
@@ -22,7 +22,7 @@ export default function ToolsPage() {
       <p className="mt-4 max-w-2xl text-muted-foreground">
         Take a live assessment now, free. Login only if you want the score on
         your profile. Export a PDF, or email it and join the Saturday
-        newsletter. Tool and personality checklists land later.
+        newsletter. Field Pattern stores Bearing on the member profile.
       </p>
 
       <div className="mt-10 grid gap-4 md:grid-cols-2">

@@ -51,15 +51,13 @@ export const assessmentTools: AssessmentTool[] = [
   },
   {
     slug: "personality",
-    title: "Personality checklist",
+    title: "Field Pattern",
     category: "personality",
-    status: "coming",
-    kicker: "Coming later",
-    minutes: "—",
+    status: "live",
+    kicker: "fp-50-v1",
+    minutes: "12 min",
     summary:
-      "A short working-style checklist so a staff brief matches how you actually operate — not a party quiz.",
-    comingNote:
-      "Reserved for a later drop. The registry is already wired so a new checklist can save beside your other tools.",
+      "Fifty Likert items, or a twenty-item child subset. Stores Bearing, correspondence, and five narratives on your profile. A new run resets Bearing.",
   },
 ];
 

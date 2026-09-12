@@ -1,5 +1,7 @@
 import {
+  boolean,
   index,
+  integer,
   jsonb,
   numeric,
   pgTable,
@@ -120,5 +122,172 @@ export const learningEvents = pgTable(
       t.objectType,
       t.objectId,
     ),
+  ],
+);
+
+export const instruments = pgTable("instruments", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  version: text("version").notNull(),
+  likertMin: integer("likert_min").notNull().default(1),
+  likertMax: integer("likert_max").notNull().default(5),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const instrumentItems = pgTable(
+  "instrument_items",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    instrumentId: uuid("instrument_id")
+      .notNull()
+      .references(() => instruments.id),
+    itemKey: text("item_key").notNull(),
+    prompt: text("prompt").notNull(),
+    correspondence: text("correspondence").notNull(),
+    weights: jsonb("weights").notNull().default({}),
+    reverseScored: boolean("reverse_scored").notNull().default(false),
+    childSubset: boolean("child_subset").notNull().default(false),
+    sortOrder: integer("sort_order").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [unique("instrument_items_key").on(t.instrumentId, t.itemKey)],
+);
+
+export const wards = pgTable(
+  "wards",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    guardianMembershipId: uuid("guardian_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("wards_unique").on(t.orgId, t.guardianMembershipId, t.childMembershipId),
+  ],
+);
+
+export const memberProfiles = pgTable(
+  "member_profiles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    membershipId: uuid("membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    instrumentSlug: text("instrument_slug").notNull().default("fp-50-v1"),
+    bearingDeg: numeric("bearing_deg").notNull().default("0"),
+    bearingPrimary: text("bearing_primary"),
+    bearingSecondary: text("bearing_secondary"),
+    correspondence: jsonb("correspondence").notNull().default({}),
+    narratives: jsonb("narratives").notNull().default({}),
+    locked: boolean("locked").notNull().default(false),
+    lockedByMembershipId: uuid("locked_by_membership_id").references(
+      () => memberships.id,
+    ),
+    lockedAt: timestamp("locked_at", { withTimezone: true }),
+    lastRunAt: timestamp("last_run_at", { withTimezone: true }),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [unique("member_profiles_membership").on(t.orgId, t.membershipId)],
+);
+
+export const memberProfileRevisions = pgTable(
+  "member_profile_revisions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    profileId: uuid("profile_id")
+      .notNull()
+      .references(() => memberProfiles.id),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    membershipId: uuid("membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    cause: text("cause").notNull(),
+    bearingDeg: numeric("bearing_deg").notNull(),
+    correspondence: jsonb("correspondence").notNull(),
+    narratives: jsonb("narratives").notNull(),
+    raw: jsonb("raw").notNull().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("member_profile_revisions_profile_idx").on(t.profileId, t.createdAt)],
+);
+
+export const instrumentRuns = pgTable("instrument_runs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: uuid("org_id")
+    .notNull()
+    .references(() => organizations.id),
+  membershipId: uuid("membership_id")
+    .notNull()
+    .references(() => memberships.id),
+  instrumentSlug: text("instrument_slug").notNull(),
+  subset: text("subset").notNull(),
+  answers: jsonb("answers").notNull(),
+  correspondence: jsonb("correspondence").notNull(),
+  bearingDeg: numeric("bearing_deg").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const profileArtifacts = pgTable("profile_artifacts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: uuid("org_id")
+    .notNull()
+    .references(() => organizations.id),
+  membershipId: uuid("membership_id")
+    .notNull()
+    .references(() => memberships.id),
+  kind: text("kind").notNull(),
+  transcript: text("transcript").notNull().default(""),
+  inferred: jsonb("inferred").notNull().default({}),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const skills = pgTable(
+  "skills",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    slug: text("slug").notNull(),
+    name: text("name").notNull(),
+    rubric: jsonb("rubric"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [unique("skills_org_slug").on(t.orgId, t.slug)],
+);
+
+export const skillObservations = pgTable(
+  "skill_observations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    membershipId: uuid("membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    skillId: uuid("skill_id")
+      .notNull()
+      .references(() => skills.id),
+    artifactId: uuid("artifact_id").references(() => profileArtifacts.id),
+    score: numeric("score"),
+    evidence: text("evidence"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("skill_observations_membership_idx").on(t.orgId, t.membershipId, t.skillId),
   ],
 );

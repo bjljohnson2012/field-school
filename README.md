@@ -11,6 +11,8 @@ Start here: [docs/campus-runtime/README.md](docs/campus-runtime/README.md).
 
 Wave 1 is live in `app/` and on the VPS. How it works, schema, and APIs: [docs/campus-runtime/API.md](docs/campus-runtime/API.md). Live page: https://portal.fieldschool.ai/docs/api. Proof: [docs/campus-runtime/WAVE1.md](docs/campus-runtime/WAVE1.md).
 
+Field Pattern `fp-50-v1` (50 Likert + 20-item child subset) stores Bearing on `member_profiles`. UI: https://portal.fieldschool.ai/pattern. Notes: [docs/campus-runtime/FIELD_PATTERN.md](docs/campus-runtime/FIELD_PATTERN.md).
+
 The TanStack Start tree under `src/`, `vite.config.ts`, and `migrations/0001-0003` is frozen. Do not extend it. Do not deploy it to the VPS.
 
 ## What main is now

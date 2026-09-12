@@ -41,6 +41,13 @@ export default function ToolPage() {
         <p className="mt-8 rounded-xl border border-border bg-card px-5 py-5 text-sm text-muted-foreground">
           {tool.comingNote}
         </p>
+      ) : tool.slug === "personality" ? (
+        <p className="mt-8 text-sm text-muted-foreground">
+          Field Pattern lives on the profile, not in browser storage.{" "}
+          <Link href="/pattern" className="underline underline-offset-4">
+            Open fp-50-v1
+          </Link>
+        </p>
       ) : tool.slug === "skill" ? (
         <SkillForm signedIn={signedIn} priorSummary={prior?.summary} />
       ) : tool.slug === "intelligence" ? (
