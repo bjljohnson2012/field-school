@@ -1,30 +1,29 @@
 # Agents working in this repo
 
 Canonical plan: `docs/campus-runtime/`.
+Current run: `docs/campus-runtime/CURRENT_RUN.md` and `docs/campus-runtime/STATUS.md`.
 
-Wave 1 prompt: `docs/campus-runtime/GROK_BUILD_PROMPT.md`.
-Wave 1 API (schema + endpoints): `docs/campus-runtime/API.md`. Live: `/docs/api`.
+Wave 1 is done. Proof: `docs/campus-runtime/WAVE1.md`. API: `docs/campus-runtime/API.md`. Live: `/docs/api`.
 
 ## Do
 
 - Build the campus runtime as a Next app in `app/`.
-- Put Postgres schema for organizations, members, memberships, groups, assignments, learning_events under `app/` (Drizzle or SQL migrations owned by that app).
+- Follow CURRENT_RUN.md (household + sales, org picker, Field Pattern fp-50-v1, living profile, org-scoped skills).
+- Use the item table in `docs/campus-runtime/fp-50-v1.md`. Do not invent a second bank.
+- Keep guest Grok Bot working. Authenticated progress writes Postgres, scoped by org_id / membership_id.
 - Keep marketing-site/ and video-pipeline/ working.
-- Keep guest Grok Bot routes working once ported. Authenticated progress writes Postgres.
-- Scope every learner query by org_id / membership_id.
-- Stop at the current wave proof unless the human names the next wave. Default wave: 1.
 
 ## Do not
 
-- Extend `src/routes`, `src/router.tsx`, or TanStack Start.
-- Run or deploy `vite.config.ts` as the campus app.
-- Treat `migrations/0001_auth.sql`, `0002_course.sql`, `0003_university.sql` as the live schema. Those belong to the frozen demo.
-- Deploy GitHub TanStack files onto 2.24.70.248.
+- Extend the frozen TanStack tree in `src/`.
+- Deploy `vite.config.ts` or `migrations/0001-0003`.
 - Touch CNC vault 2.24.64.248.
-- Flip AUTH_URL or 301 university in Wave 1.
+- Flip AUTH_URL or 301 university this run.
 - Re-render Asset Just (Cap id 27pn9xs0zk8a73g).
 - Add Member / Quiz / Personality databases in Notion.
 - Scrape the web into the knowledge pack.
+- Copy official MBTI / Enneagram / Gallup / Wiley items.
+- Start Remotion plates or adaptive generation unless CURRENT_RUN.md says so.
 
 ## Factory vs campus
 
