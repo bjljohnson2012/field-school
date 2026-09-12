@@ -37,6 +37,8 @@ export default function PatternPage() {
   const [note, setNote] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [paper, setPaper] = useState("");
+  const [org, setOrg] = useState("");
+  const [importCode, setImportCode] = useState("");
 
   useEffect(() => {
     void fetch(`/api/pattern/instrument?subset=${subset}`)
@@ -49,6 +51,7 @@ export default function PatternPage() {
 
   useEffect(() => {
     if (!signedIn) return;
+    void fetch("/api/me").then((r) => r.json()).then((data) => setOrg(data.activeOrg?.slug || ""));
     void refresh();
   }, [signedIn]);
 
@@ -119,6 +122,18 @@ export default function PatternPage() {
   }
 
   const allAnswered = items.length > 0 && items.every((item) => answers[item.key] != null);
+
+  if (org === "sales") {
+    return (
+      <main className="mx-auto max-w-xl px-4 py-16">
+        <h1 className="font-display text-3xl">Field Pattern</h1>
+        <p className="mt-4 text-muted-foreground">
+          Pattern lives on the person. It does not appear on the sales board.
+          Switch to household to take or view it.
+        </p>
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
@@ -275,6 +290,40 @@ export default function PatternPage() {
             />
           </label>
         </div>
+      </section>
+
+      <section className="mt-12 space-y-3 rounded-xl border border-border bg-card px-5 py-5">
+        <h2 className="font-display text-2xl tracking-tight">Import an official result</h2>
+        <p className="text-sm text-muted-foreground">
+          Paste a type-code or cluster list from an official report you already
+          hold. This overrides correspondence estimates only. It does not
+          change Bearing. We do not sell or name that other product here.
+        </p>
+        <textarea
+          className="min-h-20 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+          value={importCode}
+          onChange={(e) => setImportCode(e.target.value)}
+          placeholder="Type-code or pasted summary"
+        />
+        <Button
+          disabled={!signedIn || !importCode.trim() || busy}
+          onClick={() => {
+            void fetch("/api/pattern/import", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ type_code: importCode.trim() }),
+            }).then(async (res) => {
+              const data = await res.json();
+              if (!res.ok) setNote(data.error);
+              else {
+                setNote("Correspondence overridden by import. Bearing unchanged.");
+                void refresh();
+              }
+            });
+          }}
+        >
+          Override correspondence
+        </Button>
       </section>
 
       {note ? <p className="mt-6 text-sm text-pass">{note}</p> : null}

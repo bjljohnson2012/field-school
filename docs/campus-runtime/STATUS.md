@@ -27,6 +27,10 @@ Gym wording is retired. First student orgs: household and sales.
 
 Wave 1 identity + Grok Bot station 01 events. Factory (Cap / edit / melt) left running. Just locked.
 
+## Landed this run
+
+Household + sales orgs, `/o/:slug`, org picker, invites, fixture welcome lessons, child on household, Field Pattern correspondences + import override, org-scoped skill diagnostics. AUTH_URL not flipped. TanStack not deployed. Remotion and adaptive generation not started.
+
 ## In flight / next
 
 - Org picker + /o/:slug + one email on household AND sales

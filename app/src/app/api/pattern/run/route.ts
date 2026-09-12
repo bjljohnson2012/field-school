@@ -6,9 +6,12 @@ import { ProfileLockedError, publicProfile, runInstrument } from "@/lib/pattern/
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const auth = await identityFromRequest();
+  const auth = await identityFromRequest(request);
   if (!auth.ok) {
     return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
+  }
+  if (auth.identity.orgSlug === "sales") {
+    return NextResponse.json({ ok: false, error: "not_on_sales_board" }, { status: 403 });
   }
   let body: Record<string, unknown>;
   try {

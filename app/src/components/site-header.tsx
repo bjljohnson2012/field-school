@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
+import { OrgPicker } from "@/components/org-picker";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
@@ -79,6 +80,7 @@ export function SiteHeader() {
               ) : null}
             </Link>
           ))}
+          <OrgPicker />
           <ThemeToggle />
           {!ready ? (
             <div className="h-8 w-8 animate-pulse rounded-full bg-secondary" />

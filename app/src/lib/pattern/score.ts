@@ -82,25 +82,73 @@ function softmax(pairs: Record<string, number>) {
   return Object.fromEntries(keys.map((k) => [k, Math.round((exps[k] / sum) * 1000) / 1000]));
 }
 
-/** Unofficial estimates. Not MBTI, Enneagram, Gallup, or Wiley results. */
+/**
+ * Unofficial probability maps from Bearing.
+ * Product copy never uses the names of other instruments.
+ */
 export function correspondenceFrom(bearing: BearingMap) {
+  const outward = (bearing.expression + bearing.drive) / 2;
+  const inward = (100 - bearing.expression + 50) / 1.5;
+  const concrete = 100 - bearing.abstraction;
+  const model = bearing.abstraction;
+  const task = (bearing.challenge + bearing.duty) / 2;
+  const human = bearing.harmony;
+  const planned = bearing.structure;
+  const adapting = bearing.pace;
+
+  const energy = outward >= inward ? "O" : "I";
+  const intake = concrete >= model ? "C" : "M";
+  const decide = task >= human ? "T" : "H";
+  const close = planned >= adapting ? "P" : "A";
+  const typeCode = `${energy}${intake}${decide}${close}`;
+
+  const typeLogits: Record<string, number> = {};
+  for (const e of ["O", "I"]) {
+    for (const i of ["C", "M"]) {
+      for (const d of ["T", "H"]) {
+        for (const c of ["P", "A"]) {
+          const code = `${e}${i}${d}${c}`;
+          typeLogits[code] =
+            (e === "O" ? outward : inward) +
+            (i === "C" ? concrete : model) +
+            (d === "T" ? task : human) +
+            (c === "P" ? planned : adapting);
+        }
+      }
+    }
+  }
+
   return {
-    note: "estimates, not official types",
-    energy: softmax({
-      outward: (bearing.expression + bearing.drive) / 2,
-      inward: (100 - bearing.expression + bearing.structure) / 2,
+    note: "Field Pattern estimates. Not an official result from another instrument.",
+    imported: false,
+    nine_patterns: softmax({
+      p1: bearing.duty * 0.6 + bearing.structure * 0.4,
+      p2: bearing.harmony * 0.7 + bearing.duty * 0.3,
+      p3: bearing.drive * 0.6 + bearing.expression * 0.4,
+      p4: bearing.abstraction * 0.5 + bearing.harmony * 0.5,
+      p5: bearing.abstraction * 0.6 + bearing.structure * 0.4,
+      p6: bearing.duty * 0.5 + bearing.harmony * 0.5,
+      p7: bearing.pace * 0.5 + bearing.drive * 0.3 + bearing.expression * 0.2,
+      p8: bearing.challenge * 0.7 + bearing.drive * 0.3,
+      p9: bearing.harmony * 0.5 + (100 - bearing.pace) * 0.5,
     }),
-    intake: softmax({
-      example_first: 100 - bearing.abstraction,
-      model_first: bearing.abstraction,
+    type_codes: softmax(typeLogits),
+    leading_type_code: typeCode,
+    influence: softmax({
+      direct: (bearing.drive + bearing.challenge) / 2,
+      warm: (bearing.harmony + bearing.expression) / 2,
+      steady: (bearing.duty + (100 - bearing.pace)) / 2,
+      precise: (bearing.structure + bearing.abstraction) / 2,
     }),
-    decision: softmax({
-      people: bearing.harmony,
-      standard: (bearing.challenge + bearing.duty) / 2,
-    }),
-    tempo: softmax({
-      short_sessions: bearing.pace,
-      long_sit: 100 - bearing.pace,
+    clusters: softmax({
+      drive: bearing.drive,
+      harmony: bearing.harmony,
+      structure: bearing.structure,
+      pace: bearing.pace,
+      abstraction: bearing.abstraction,
+      challenge: bearing.challenge,
+      duty: bearing.duty,
+      expression: bearing.expression,
     }),
   };
 }

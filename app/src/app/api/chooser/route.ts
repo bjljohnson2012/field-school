@@ -5,7 +5,7 @@ import { chooseNext } from "@/lib/pattern/chooser";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const auth = await identityFromRequest();
+  const auth = await identityFromRequest(request);
   if (!auth.ok) {
     return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
   }

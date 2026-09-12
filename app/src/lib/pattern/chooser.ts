@@ -2,6 +2,7 @@ import { getCourse } from "@/lib/course/catalog";
 import { emptyProgress } from "@/lib/course/content";
 import { eventsForCourse, reduceCourseProgress } from "@/lib/campus-runtime/events";
 import type { LearnerIdentity } from "@/lib/campus-runtime/identity";
+import { lessonForOrg } from "@/lib/campus-runtime/lessons";
 import { getLiveProfile } from "./profile";
 import type { BearingDim } from "./items";
 
@@ -23,6 +24,26 @@ export async function chooseNext(opts: {
   identity: LearnerIdentity;
   course: string;
 }) {
+  const tenant = lessonForOrg(opts.identity.orgSlug);
+  if (tenant) {
+    const profile = await getLiveProfile(opts.identity.orgId, opts.identity.membershipId);
+    return {
+      next: {
+        course: tenant.course,
+        station: tenant.slug,
+        title: tenant.title,
+        href: `/o/${tenant.org}/welcome`,
+        bearing: profile.bearingPrimary,
+      },
+      profile: {
+        bearing: Number(profile.bearingDeg),
+        primary: profile.bearingPrimary,
+        locked: profile.locked,
+      },
+      wrotePack: false,
+      reason: "live_profile",
+    };
+  }
   const course = getCourse(opts.course) ?? getCourse("grok-bot");
   if (!course) return { next: null, reason: "no_course", wrotePack: false };
   const profile = await getLiveProfile(opts.identity.orgId, opts.identity.membershipId);

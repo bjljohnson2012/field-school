@@ -1,49 +1,46 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/db/client";
-import { memberships, organizations } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
-import { identityFromRequest } from "@/lib/campus-runtime/identity";
+import { loadSession } from "@/lib/campus-runtime/identity";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
-  const result = await identityFromRequest();
-  if (!result.ok) {
-    if (result.status === 401) {
-      return NextResponse.json({ authenticated: false, guest: true });
-    }
-    return NextResponse.json({ authenticated: false, error: result.error }, { status: 503 });
+export async function GET(request: Request) {
+  const session = await loadSession(request);
+  if (!session) {
+    return NextResponse.json({ authenticated: false, guest: true });
   }
-
-  const db = getDb();
-  const rows = await db
-    .select({
-      membershipId: memberships.id,
-      stance: memberships.stance,
-      orgSlug: organizations.slug,
-      orgName: organizations.name,
-      isolation: organizations.isolation,
-    })
-    .from(memberships)
-    .innerJoin(organizations, eq(organizations.id, memberships.orgId))
-    .where(eq(memberships.memberId, result.identity.memberId));
-
-  return NextResponse.json({
-    authenticated: true,
-    member: {
-      id: result.identity.memberId,
-      email: result.identity.email,
-      name: result.identity.name,
-    },
-    org: {
-      slug: result.identity.orgSlug,
-      isolation: result.identity.orgIsolation,
-    },
-    memberships: rows.map((row) => ({
+  const memberships = session.rows
+    .filter((row) => session.member.kind !== "child" || row.orgSlug !== "sales")
+    .map((row) => ({
       id: row.membershipId,
       stance: row.stance,
       org: row.orgSlug,
+      name: row.orgName,
+      kind: row.orgKind,
       isolation: row.isolation,
-    })),
+    }));
+  const active = session.active && memberships.some((m) => m.org === session.active?.orgSlug)
+    ? session.active
+    : null;
+  return NextResponse.json({
+    authenticated: true,
+    member: {
+      id: session.member.id,
+      email: session.member.email,
+      name: session.member.name,
+      kind: session.member.kind,
+    },
+    activeOrg: active
+      ? {
+          slug: active.orgSlug,
+          name: active.orgName,
+          isolation: active.isolation,
+          stance: active.stance,
+          membershipId: active.membershipId,
+        }
+      : null,
+    org: active
+      ? { slug: active.orgSlug, isolation: active.isolation }
+      : null,
+    memberships,
   });
 }

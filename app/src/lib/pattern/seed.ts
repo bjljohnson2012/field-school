@@ -35,6 +35,18 @@ export async function ensureInstrument() {
   if (stale) {
     await db.delete(instrumentItems).where(eq(instrumentItems.instrumentId, instrument.id));
   }
+  if (!stale && rows.length === FP50_ITEMS.length) {
+    for (const item of FP50_ITEMS) {
+      await db
+        .update(instrumentItems)
+        .set({
+          childSubset: item.child,
+          weights: item.weights,
+          correspondence: primaryDim(item.weights),
+        })
+        .where(eq(instrumentItems.itemKey, item.key));
+    }
+  }
   if (stale || rows.length < FP50_ITEMS.length) {
     await db
       .insert(instrumentItems)
