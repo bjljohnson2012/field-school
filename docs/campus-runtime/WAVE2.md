@@ -69,6 +69,16 @@ SQL events                 field-school gym grok-bot:briefing;
 home create child          200 household learner child
 ```
 
+## Reprobe 2026-09-18 19:59Z (live VPS, no redeploy)
+
+Guest still matches A, I, J, K, L. Pattern instrument still `fp-50-v1` 50 / child 26. AUTH_URL still `https://university.benjohnson.ai` (credentials callback lands there).
+
+Signed-in picker email still lists `household:guardian` + `sales:trainer` only (not forced onto field-school). `POST /api/org/active` flips household ↔ sales. `/o/household` 200, `/o/sales` 200, `/o/field-school` 403. Household watch `home:welcome` 200; household watch `grok-bot` or `sales:welcome` 403 `cross_org`. Skills: household `morning/chores/read`, sales `discovery/qualification/next-step`. Pattern profile still reads Bearing `drive`. Invites mint household learner and sales trainer 200.
+
+Child kind account: `child_cannot_invite` 403, `/admin` 307 `/request-access?from=admin`, `/o/household` 403, `/o/sales` 403.
+
+Logs: `/opt/cursor/artifacts/wave2_live_reprobe.log`, `/opt/cursor/artifacts/wave2_signedin_reprobe.json`.
+
 ## Chrome (local, not redeployed)
 
 Chrome + parent lock live on `cursor/wave-2-tenants-ca6e` after `880278c`. Not shipped with `deploy.sh` after the A–L VPS proofs. Do not treat the A–L table as chrome proof.
@@ -82,7 +92,7 @@ Local Next on this worker:
 - Admin Start here / Courses vs Assessments / Field Pattern under Assessments.
 - Org switcher View all → `/people`.
 
-`npm test` 45+ chrome tests. VPS chrome and Ben’s recordings are still open.
+`npm test` 46 pass. Live VPS still serves pre-chrome copy (`Admin → Notifications`, logged-in `/` is 200 marketing home, `/people` 404, GET `/api/children` 405). Ben’s recordings are still open. No deploy this pass.
 
 ## Stop
 
