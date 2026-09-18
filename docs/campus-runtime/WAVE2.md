@@ -81,18 +81,18 @@ Logs: `/opt/cursor/artifacts/wave2_live_reprobe.log`, `/opt/cursor/artifacts/wav
 
 ## Chrome (local, not redeployed)
 
-Chrome + parent lock live on `cursor/wave-2-tenants-ca6e` after `880278c`. Not shipped with `deploy.sh` after the A–L VPS proofs. Do not treat the A–L table as chrome proof.
+Chrome + parent lock live on `cursor/wave-2-tenants-ca6e`. Not shipped with `deploy.sh` after the A–L VPS proofs. Do not treat the A–L table as chrome proof.
 
 Local Next on this worker:
 
 - Guest `/` 200: Continue as guest, Join free beta, About. No Inbox. No Instant demo.
-- Logged-in `/` 307 `/dashboard`.
+- Logged-in `/` 307 `/dashboard`. Header hides About and Join free until Auth.js says the visitor is a guest.
 - Guest `/c/grok-bot` 200. Feedback copy is Admin → Inbox.
-- Household children list says Child, not Student. Parent notes + Pattern lock on `/o/household`.
-- Admin Start here / Courses vs Assessments / Field Pattern under Assessments.
-- Org switcher View all → `/people`.
+- Household children/subusers database says Child, not Student. Parent notes + Pattern lock on `/o/household` and `/children`.
+- Admin Start here / Courses vs Assessments / Field Pattern under Assessments. Progress: people, children, Pattern, Inbox, Grok Bot, access requests.
+- Org switcher View all → `/people` lists users across every org the viewer belongs to. Staff sees all orgs.
 
-`npm test` 46 pass. Live VPS still serves pre-chrome copy (`Admin → Notifications`, logged-in `/` is 200 marketing home, `/people` 404, GET `/api/children` 405). Ben’s recordings are still open. No deploy this pass.
+Live VPS still serves pre-chrome copy (`Admin → Notifications`, logged-in `/` is 200 marketing home, `/people` 404, GET `/api/children` 405). Ben’s recordings are still open. No deploy this pass.
 
 ## Stop
 

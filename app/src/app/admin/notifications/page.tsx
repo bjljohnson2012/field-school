@@ -8,7 +8,7 @@ import {
 import { usePortal } from "@/hooks/use-portal";
 import { formatDay } from "@/lib/utils";
 
-export default function NotificationsPage() {
+export default function InboxPage() {
   const { notices, unreadNotices, users, isStaff, feedback, ready } = usePortal();
 
   if (!ready || !isStaff) return null;

@@ -14,14 +14,16 @@ export function SiteHeader() {
   const { data: authSession, status } = useSession();
   const { session, ready, isAdmin, isStaff, impersonating, unreadNotices } =
     usePortal();
+  const guestChrome = status === "unauthenticated";
   const loggedIn = status === "authenticated" && Boolean(authSession?.user?.email);
+  const showAbout = guestChrome;
   const initial = (session?.name || "G").slice(0, 1).toUpperCase();
-  const homeHref = loggedIn ? "/dashboard" : "/";
+  const homeHref = guestChrome ? "/" : "/dashboard";
 
   const links = [
     { href: "/dashboard", label: "Dashboard", compact: true },
     { href: "/tools", label: "Tools", compact: true },
-    ...(!loggedIn ? [{ href: "/about", label: "About", compact: false }] : []),
+    ...(showAbout ? [{ href: "/about", label: "About", compact: false }] : []),
     ...(isStaff
       ? [
           {
@@ -81,7 +83,7 @@ export function SiteHeader() {
           ))}
           {loggedIn ? <OrgPicker /> : null}
           <ThemeToggle />
-          {!ready ? (
+          {status === "loading" || !ready ? (
             <div className="h-8 w-8 animate-pulse rounded-full bg-secondary" />
           ) : loggedIn ? (
             <div className="ml-1 flex items-center gap-2">
