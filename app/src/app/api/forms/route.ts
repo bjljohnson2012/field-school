@@ -4,6 +4,7 @@ import {
   isAllowedFormOrigin,
   validateFormInput,
 } from "@/lib/members/forms";
+import { guardPublicSubmit } from "@/lib/members/spam";
 import { createFormSubmission } from "@/lib/members/store";
 
 export const runtime = "nodejs";
@@ -57,6 +58,9 @@ export async function POST(request: Request) {
       { status: 400, headers },
     );
   }
+
+  const blocked = guardPublicSubmit(request, body, "forms", headers);
+  if (blocked) return blocked;
 
   const parsed = validateFormInput(body);
   if (!parsed.ok) {

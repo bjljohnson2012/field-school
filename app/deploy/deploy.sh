@@ -1,7 +1,8 @@
 #!/bin/bash
 # Deploy the Field School Next campus (Wave 1) to the Hostinger VPS.
 # Do not run this from the GitHub TanStack root. This tree is app/.
-# Public campus: https://university.benjohnson.ai and https://portal.fieldschool.ai
+# Public campus: https://portal.fieldschool.ai (university.benjohnson.ai 301s here)
+# AUTH_URL lives in /opt/field-school.env. Flip it with flip-auth-url.sh, not this wipe.
 set -euo pipefail
 VPS_HOST="${VPS_HOST:-root@2.24.70.248}"
 KEY="${VPS_SSH_KEY:-$HOME/.ssh/field-school-agent}"
@@ -77,5 +78,5 @@ done
 docker compose --env-file "\$ENV_FILE" ps
 REMOTE
 
-echo "Campus: https://university.benjohnson.ai"
-echo "Portal: https://portal.fieldschool.ai"
+echo "Campus: https://portal.fieldschool.ai"
+echo "University 301: https://university.benjohnson.ai -> https://portal.fieldschool.ai"

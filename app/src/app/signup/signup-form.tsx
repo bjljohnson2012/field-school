@@ -25,6 +25,7 @@ export function SignupForm({ oauth }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [website, setWebsite] = useState("");
   const [error, setError] = useState<string | null>(
     searchParams.get("error")
       ? authErrorMessage(searchParams.get("error"))
@@ -69,7 +70,7 @@ export function SignupForm({ oauth }: Props) {
             const res = await fetch("/api/members/register", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ name, email, password }),
+              body: JSON.stringify({ name, email, password, website }),
             });
             const data = (await res.json()) as { error?: string };
             if (!res.ok) {
@@ -93,6 +94,17 @@ export function SignupForm({ oauth }: Props) {
           }
         }}
       >
+        <div className="hidden" aria-hidden="true">
+          <Label htmlFor="signup-website">Company</Label>
+          <Input
+            id="signup-website"
+            name="website"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+          />
+        </div>
         <div className="space-y-2">
           <Label htmlFor="signup-name">Name</Label>
           <Input

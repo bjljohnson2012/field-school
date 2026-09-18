@@ -131,7 +131,8 @@ test("fixture lessons and tenant UI stay in app/", () => {
 test("wave docs still lock AUTH_URL and the frozen TanStack tree", () => {
   const prompt = readFileSync(join(repo, "docs/campus-runtime/CURSOR_AGENT_PROMPT.md"), "utf8");
   assert.match(prompt, /university\.benjohnson\.ai/);
-  assert.match(prompt, /Do not flip it/);
+  assert.match(prompt, /AUTH_URL is https:\/\/portal\.fieldschool\.ai/);
+  assert.match(prompt, /Do not flip AUTH_URL back/);
   const src = readSrc("src/lib/campus-runtime/identity.ts");
   assert.doesNotMatch(src, /from "\.\.\/\.\.\/\.\.\/src\//);
 });

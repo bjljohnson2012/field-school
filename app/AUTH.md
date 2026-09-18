@@ -13,7 +13,9 @@ This campus uses [Auth.js / NextAuth v5](https://authjs.dev) for Google, X (Twit
 
 Random Google or X users are **never** auto-elevated to admin. A staff email used with email + password is still a member. Credentials cannot open `/admin`.
 
-If someone expected staff access and is not on the allowlist, they see **Request Access** (not a dead error). Submitting it stores the request for `/admin/access-requests` and emails the dean when SMTP is configured.
+If someone expected staff access and is not on the allowlist, they see **Request Access** (not a dead error). Submitting it stores the request for `/admin/access-requests` and emails the dean when SMTP or Resend is configured. New free-beta enrollments file the same desk (kind `enrollment`) and notify that address.
+
+Public `/signup`, `/request-access`, `POST /api/forms`, and `POST /api/tools/email` drop honeypot posts (`website` filled) and rate-limit by IP and email. No third-party spam vendor.
 
 ## Required environment variables
 
@@ -22,7 +24,7 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | Variable | Required for | Notes |
 |----------|--------------|-------|
 | `AUTH_SECRET` | Any Auth.js session | Random string; `openssl rand -base64 32`. Also accepts legacy `NEXTAUTH_SECRET`. |
-| `AUTH_URL` | Production OAuth callbacks | Public site origin, e.g. `https://university.field.school`. Also accepts `NEXTAUTH_URL`. |
+| `AUTH_URL` | Production OAuth callbacks | Public site origin. Live value is `https://portal.fieldschool.ai`. Also accepts `NEXTAUTH_URL`. |
 | `GOOGLE_CLIENT_ID` | Google sign-in | OAuth 2.0 client from Google Cloud Console. |
 | `GOOGLE_CLIENT_SECRET` | Google sign-in | Paired secret for the Google client. |
 | `AUTH_TWITTER_ID` or `X_CLIENT_ID` | X sign-in | X developer app OAuth 2.0 client ID. |
@@ -30,7 +32,7 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | `STAFF_ADMIN_EMAILS` | Optional | Comma-separated staff allowlist. Defaults to the dean email baked into `src/lib/campus.ts`. |
 | `DEMO_LINK_TOKEN` | Optional | Secret for the shareable Jordan walk. `/demo?token=` must match this value. If unset, the campus derives a stable token from `AUTH_SECRET`. Staff copy the full URL from `/admin/demo` (“Copy demo link”). Do not put this button on `/login`. |
 | `MEMBER_STORE_PATH` | Optional | JSON file for member password hashes, access requests, and public form submissions. Defaults to `.data/campus-store.json` in development and `/app/data/campus-store.json` in production. |
-| `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests are emailed. Defaults to `bjljohnson2012@gmail.com`. |
+| `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests and new enrollments are emailed. Defaults to `bjljohnson2012@gmail.com`. |
 | `RESEND_API_KEY` | Optional email send | Preferred. Sends checkout confirmations and other transactional mail. Lives in `/opt/field-school.env`. Never commit it. |
 | `RESEND_FROM` | Optional | Defaults to `Field School <note@fieldschool.ai>`. Domain must be verified in Resend. |
 | `SMTP_HOST` | Optional email notify | Fallback if Resend is unset. If both are unset, requests are still stored; email is skipped. |
@@ -87,7 +89,7 @@ To send the walk to someone without putting a button on login:
 Example (after you set the env):
 
 ```
-https://university.benjohnson.ai/demo?token=YOUR_DEMO_LINK_TOKEN
+https://portal.fieldschool.ai/demo?token=YOUR_DEMO_LINK_TOKEN
 ```
 
 Random visitors do not see this URL on the homepage. It is not a staff login and never grants `/admin`.
@@ -98,15 +100,17 @@ Failed OAuth or Auth.js errors use `pages.error` → `/signup?error=…` (never 
 
 Public policy URLs (must stay reachable without a login):
 
-- Privacy Policy: `https://university.benjohnson.ai/privacy`
-- Terms of Service: `https://university.benjohnson.ai/terms`
+- Privacy Policy: `https://fieldschool.ai/privacy`
+- Terms of Service: `https://fieldschool.ai/terms`
+
+`university.benjohnson.ai` 301s to `https://portal.fieldschool.ai{uri}`. Portal `/privacy` and `/terms` 308 to the apex pages.
 
 ## Callback URLs
 
-Register these redirect URIs with each provider (replace origin with yours):
+Live `AUTH_URL` is `https://portal.fieldschool.ai`. Register these redirect URIs (keep the old university rows until Google/X no longer show them):
 
-- Google: `{AUTH_URL}/api/auth/callback/google`
-- X: `{AUTH_URL}/api/auth/callback/twitter`
+- Google: `https://portal.fieldschool.ai/api/auth/callback/google`
+- X: `https://portal.fieldschool.ai/api/auth/callback/twitter`
 
 ## Local development
 

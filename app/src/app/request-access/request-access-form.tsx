@@ -16,6 +16,7 @@ function RequestAccessInner() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [note, setNote] = useState("");
+  const [website, setWebsite] = useState("");
   const [pending, setPending] = useState(false);
   const [done, setDone] = useState(false);
   const [emailed, setEmailed] = useState(false);
@@ -80,6 +81,7 @@ function RequestAccessInner() {
                   email: filled.email,
                   provider: session?.user?.provider || "unknown",
                   note,
+                  website,
                 }),
               });
               const data = (await res.json()) as {
@@ -104,6 +106,17 @@ function RequestAccessInner() {
               {error}
             </p>
           ) : null}
+          <div className="hidden" aria-hidden="true">
+            <Label htmlFor="access-website">Company</Label>
+            <Input
+              id="access-website"
+              name="website"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
           <div className="space-y-2">
             <Label htmlFor="access-name">Name</Label>
             <Input

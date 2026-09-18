@@ -48,8 +48,8 @@ export default function AccessRequestsPage() {
         Access requests
       </h1>
       <p className="mt-3 text-muted-foreground">
-        People who signed in as members and asked for the staff desk. Adding
-        them still means putting their email on{" "}
+        Staff-desk asks and new free-beta enrollments. Adding someone to
+        admin still means putting their email on{" "}
         <code className="text-xs">STAFF_ADMIN_EMAILS</code>.
       </p>
 
@@ -75,6 +75,7 @@ export default function AccessRequestsPage() {
                 {request.name}
               </h2>
               <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                {request.kind === "enrollment" ? "enrollment" : "staff"} ·{" "}
                 {request.status}
               </p>
             </div>
