@@ -17,7 +17,7 @@ export default function DashboardPage() {
   const [nextStation, setNextStation] = useState<{ href: string; title: string } | null>(null);
   const [activeOrg, setActiveOrg] = useState("");
   const [children, setChildren] = useState<
-    { membershipId: string; name: string; welcomeWatched: boolean; patternTitle: string | null; note: string }[]
+    { membershipId: string; name: string; welcomeWatched: boolean; patternTitle: string | null; locked: boolean; note: string }[]
   >([]);
 
   useEffect(() => {
@@ -140,7 +140,8 @@ export default function DashboardPage() {
                   <p className="mt-2 text-sm text-muted-foreground">
                     Welcome {child.welcomeWatched ? "watched" : "not yet"}
                     {child.patternTitle ? ` · ${child.patternTitle}` : " · Pattern not run"}
-                    {child.note ? ` · note on file` : ""}
+                    {child.locked ? " · locked" : ""}
+                    {child.note ? " · note on file" : ""}
                   </p>
                 </Link>
               ))

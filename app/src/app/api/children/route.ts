@@ -77,6 +77,7 @@ export async function GET(request: Request) {
       patternTitle: profile?.bearingPrimary
         ? `${profile.bearingPrimary}${profile.bearingSecondary ? ` / ${profile.bearingSecondary}` : ""}`
         : null,
+      locked: Boolean(profile?.locked),
       note,
     });
   }

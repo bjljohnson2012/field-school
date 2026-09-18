@@ -19,6 +19,7 @@ type ChildRow = {
   login: string;
   welcomeWatched: boolean;
   patternTitle: string | null;
+  locked: boolean;
   note: string;
 };
 
@@ -108,6 +109,25 @@ export default function OrgHomePage() {
       setChildName("");
       await loadChildren();
     }
+  }
+
+  async function toggleLock(membershipId: string, locked: boolean) {
+    const res = await fetch("/api/pattern/lock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-fs-org": slug },
+      body: JSON.stringify({ membership_id: membershipId, locked }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      setNote(
+        data.error === "profile_required"
+          ? "Child must take Field Pattern before you can lock the profile."
+          : data.error || "Could not lock.",
+      );
+      return;
+    }
+    setNote(locked ? "Child profile locked." : "Child profile unlocked.");
+    await loadChildren();
   }
 
   async function saveNote(membershipId: string) {
@@ -236,7 +256,20 @@ export default function OrgHomePage() {
                         {row.welcomeWatched ? "Watched" : "Not yet"}
                       </td>
                       <td className="px-3 py-3">
-                        {row.patternTitle || "Not run"}
+                        <p>{row.patternTitle || "Not run"}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {row.locked ? "Locked" : "Open"}
+                        </p>
+                        {row.patternTitle ? (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="mt-2"
+                            onClick={() => void toggleLock(row.membershipId, !row.locked)}
+                          >
+                            {row.locked ? "Unlock profile" : "Lock profile"}
+                          </Button>
+                        ) : null}
                       </td>
                       <td className="px-3 py-3">
                         <div className="flex min-w-[14rem] flex-col gap-2">

@@ -154,9 +154,10 @@ export default function PatternPage() {
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">Field Pattern</h1>
       <p className="mt-4 text-muted-foreground">
-        Fifty Likert items, or a twenty-item child subset. A Pattern run
-        resets Bearing. Papers, voice, and video transcribe with Grok STT and
-        only nudge. The chooser reads this profile. It does not rewrite the pack.
+        Fifty Likert items, or the child subset from the pinned fp-50-v1
+        table. A Pattern run resets Bearing. Papers, voice, and video
+        transcribe with Grok STT and only nudge. The chooser reads this
+        profile. It does not rewrite the pack.
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2">

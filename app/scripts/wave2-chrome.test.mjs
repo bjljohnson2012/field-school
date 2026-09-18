@@ -27,6 +27,9 @@ test("household org says child, not student, and lists parent-facing children", 
   assert.match(childrenApi, /login: "none"/);
   assert.match(childrenApi, /welcomeWatched/);
   assert.match(childrenApi, /patternTitle/);
+  assert.match(childrenApi, /locked: Boolean\(profile\?\.locked\)/);
+  assert.match(orgHome, /Lock profile/);
+  assert.match(orgHome, /\/api\/pattern\/lock/);
   assert.doesNotMatch(childrenApi, /login: row\.email/);
 
   assert.match(dashboard, /Parent-facing list/);
@@ -111,4 +114,14 @@ test("org switcher View all lists users and their org", () => {
   assert.match(peopleApi, /const people = staff/);
   assert.match(peopleApi, /rows\.filter\(\(row\) => row\.org === auth\.identity\.orgSlug\)/);
   assert.doesNotMatch(peopleApi, /email: row\.email/);
+});
+
+test("campus UI retires gym wording and names the child subset from the table", () => {
+  const docs = readSrc("src/app/docs/api/page.tsx");
+  const pattern = readSrc("src/app/pattern/page.tsx");
+  assert.doesNotMatch(docs, /gym/i);
+  assert.match(docs, /operator catalog events/);
+  assert.match(docs, /sales/);
+  assert.doesNotMatch(pattern, /twenty-item/);
+  assert.match(pattern, /child subset from the pinned fp-50-v1/);
 });

@@ -69,6 +69,21 @@ SQL events                 field-school gym grok-bot:briefing;
 home create child          200 household learner child
 ```
 
+## Chrome (local, not redeployed)
+
+Chrome + parent lock live on `cursor/wave-2-tenants-ca6e` after `880278c`. Not shipped with `deploy.sh` after the A–L VPS proofs. Do not treat the A–L table as chrome proof.
+
+Local Next on this worker:
+
+- Guest `/` 200: Continue as guest, Join free beta, About. No Inbox. No Instant demo.
+- Logged-in `/` 307 `/dashboard`.
+- Guest `/c/grok-bot` 200. Feedback copy is Admin → Inbox.
+- Household children list says Child, not Student. Parent notes + Pattern lock on `/o/household`.
+- Admin Start here / Courses vs Assessments / Field Pattern under Assessments.
+- Org switcher View all → `/people`.
+
+`npm test` 45+ chrome tests. VPS chrome and Ben’s recordings are still open.
+
 ## Stop
 
 No composer. No Remotion. No AUTH_URL flip. Wave 3 waits on a human.
