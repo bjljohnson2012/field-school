@@ -94,7 +94,13 @@ export default function PatternPage() {
     const data = await res.json();
     setBusy(false);
     if (!res.ok) {
-      setNote(data.error === "profile_locked" ? "This profile is locked by a parent." : data.error || "Could not ingest.");
+      setNote(
+        data.error === "profile_locked"
+          ? "This profile is locked by a parent."
+          : data.error === "profile_required"
+            ? "Take Field Pattern first. STT only nudges an existing profile."
+            : data.error || "Could not ingest.",
+      );
       return;
     }
     setProfile(data.profile);
@@ -113,7 +119,13 @@ export default function PatternPage() {
     const data = await res.json();
     setBusy(false);
     if (!res.ok) {
-      setNote(data.error === "stt_failed" ? "Grok STT could not transcribe that file." : data.error || "Upload failed.");
+      setNote(
+        data.error === "stt_failed"
+          ? "Grok STT could not transcribe that file."
+          : data.error === "profile_required"
+            ? "Take Field Pattern first. STT only nudges an existing profile."
+            : data.error || "Upload failed.",
+      );
       return;
     }
     setProfile(data.profile);
