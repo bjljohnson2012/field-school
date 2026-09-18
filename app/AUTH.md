@@ -132,7 +132,9 @@ Run `npm run dev` and open `/signup`. Without real client IDs, Google/X stay dis
 
 ## Pricing
 
-Paid seats use live Stripe Payment Links on the `fieldschool.ai` account. `/checkout?plan=` redirects to the matching link. After pay, Stripe sends people to `/checkout/success?session_id={CHECKOUT_SESSION_ID}`.
+Paid seats use live Stripe Payment Links on the `fieldschool.ai` account. `/checkout?plan=` still opens Stripe for that plan. If `STRIPE_SECRET_KEY` is set, the campus tries a Checkout Session first (plan metadata on the session) and falls back to the Payment Link if Stripe is down. After pay, Stripe sends people to `/checkout/success?session_id={CHECKOUT_SESSION_ID}`.
+
+Portal seats ($10 / $50 / $1,059) review on `/cart` before that same `/checkout?plan=` path. Learn with Ben ($100 / $200 / $1,000) stays a direct checkout from Pricing and fieldschool.ai.
 
 The webhook at `/api/stripe/webhook` grants the matching seat on that email, stores the purchase, and emails a confirmation when SMTP is set. Online cohort and in-the-room seats also say a second email is coming. In the room is Dayton, Ohio and the towns around it. Farther away, the buyer covers travel and stay.
 
@@ -141,6 +143,7 @@ A new paid email can set a password on the success page or from `/login/claim?to
 | Variable | Required for | Notes |
 |----------|--------------|-------|
 | `STRIPE_WEBHOOK_SECRET` | Paid seat fulfillment | Signing secret for `/api/stripe/webhook`. Lives in `/opt/field-school.env`. Never commit it. |
+| `STRIPE_SECRET_KEY` | Optional Checkout Sessions | Restricted or secret key. When unset, `/checkout?plan=` uses the live Payment Link. Never commit it. |
 | `PORTAL_PUBLIC_URL` | Optional claim links | Defaults to `https://portal.fieldschool.ai`. |
 
 Seat after pay:

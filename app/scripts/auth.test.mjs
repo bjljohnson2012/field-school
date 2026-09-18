@@ -418,7 +418,7 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(pricing, /One-on-one hour/);
   assert.match(pricing, /Start free/);
   assert.match(pricing, /Stripe/);
-  assert.match(pricing, /checkoutPath\("10"\)/);
+  assert.match(pricing, /cartPath\("10"\)/);
   assert.match(pricing, /checkoutPath\("1000"\)/);
   assert.doesNotMatch(pricing, /invoice/i);
   assert.doesNotMatch(pricing, /University/);

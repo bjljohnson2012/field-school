@@ -7,6 +7,7 @@ import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
 import { OrgPicker } from "@/components/org-picker";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useCart } from "@/hooks/use-cart";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
@@ -14,15 +15,18 @@ export function SiteHeader() {
   const { data: authSession, status } = useSession();
   const { session, ready, isAdmin, isStaff, impersonating, unreadNotices } =
     usePortal();
+  const cart = useCart();
   const guestChrome = status === "unauthenticated";
   const loggedIn = status === "authenticated" && Boolean(authSession?.user?.email);
   const showAbout = guestChrome;
   const initial = (session?.name || "G").slice(0, 1).toUpperCase();
   const homeHref = guestChrome ? "/" : "/dashboard";
+  const cartHref = cart.planId ? `/cart?plan=${cart.planId}` : "/cart";
 
   const links = [
     { href: "/dashboard", label: "Dashboard", compact: true },
     { href: "/tools", label: "Tools", compact: true },
+    { href: cartHref, label: "Cart", compact: true, badge: cart.planId ? 1 : 0 },
     ...(loggedIn ? [{ href: "/children", label: "Children", compact: true }] : []),
     ...(showAbout ? [{ href: "/about", label: "About", compact: false }] : []),
     ...(isStaff
@@ -71,7 +75,9 @@ export function SiteHeader() {
                   : "hidden h-11 items-center px-2.5 text-muted-foreground hover:text-foreground md:flex",
                 (l.label === "Admin"
                   ? pathname.startsWith("/admin")
-                  : pathname === l.href) && "text-foreground",
+                  : l.label === "Cart"
+                    ? pathname === "/cart"
+                    : pathname === l.href) && "text-foreground",
               )}
             >
               {l.label}

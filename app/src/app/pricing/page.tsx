@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { checkoutPath } from "@/lib/billing/plans";
+import { cartPath, checkoutPath } from "@/lib/billing/plans";
 import { PORTAL_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ const portalPlans = [
     price: "$10",
     cadence: "per month",
     body: "Keep up to three courses open on your portal.",
-    href: checkoutPath("10"),
+    href: cartPath("10"),
     label: "Enroll $10",
   },
   {
@@ -30,7 +30,7 @@ const portalPlans = [
     price: "$50",
     cadence: "per month",
     body: "Open as many courses as you want.",
-    href: checkoutPath("50"),
+    href: cartPath("50"),
     label: "Enroll $50",
   },
   {
@@ -38,7 +38,7 @@ const portalPlans = [
     price: "$1,059",
     cadence: "one time",
     body: "Earn a Field School certificate. Take as long as you need.",
-    href: checkoutPath("1059"),
+    href: cartPath("1059"),
     label: "Enroll $1,059",
   },
 ];

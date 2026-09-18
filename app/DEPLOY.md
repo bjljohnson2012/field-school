@@ -35,7 +35,7 @@ Member passwords, staff access requests, and public form submissions live in a D
 
 Ship the public site with `bash deploy/deploy-site.sh`. That writes `marketing-site/` to `/var/www/fieldschool.ai` and keeps Caddy `try_files` so `/about` serves `about.html`. Staff read those forms at `/admin/forms`.
 
-Optional notify email: set `RESEND_API_KEY` in `/opt/field-school.env` (preferred). `RESEND_FROM` defaults to `Field School <note@fieldschool.ai>`. SMTP still works as a fallback. Set `STRIPE_WEBHOOK_SECRET` there too so `/api/stripe/webhook` can grant seats after Stripe Checkout.
+Optional notify email: set `RESEND_API_KEY` in `/opt/field-school.env` (preferred). `RESEND_FROM` defaults to `Field School <note@fieldschool.ai>`. SMTP still works as a fallback. Set `STRIPE_WEBHOOK_SECRET` there too so `/api/stripe/webhook` can grant seats after Stripe Checkout. `STRIPE_SECRET_KEY` is optional: when present, `/checkout?plan=` can mint a Checkout Session; when absent, the live Payment Links stay the path.
 
 Optional shareable Jordan walk: set `DEMO_LINK_TOKEN` in `/opt/field-school.env`, then copy the full URL from `/admin/demo` (“Copy demo link”). The public path is `/demo?token=…`. Login never shows a Jordan button. If the env is unset, the campus still mints a token from `AUTH_SECRET` so staff can copy a working link. See [AUTH.md](AUTH.md).
 
@@ -50,7 +50,7 @@ Check:
 - `/terms` — public Terms of Service (Google OAuth consent)
 - `/tools` — skill + intelligence live
 - `/signup` — free beta join (Google, X, email + password)
-- `/pricing` — plans. Paid enroll opens Stripe Checkout via `/checkout?plan=`
+- `/pricing` — plans. Learn with Ben enrolls via `/checkout?plan=`. Portal seats review on `/cart` then the same checkout path.
 - `/admin` — demo, users, notifications, access requests, forms, add tools
 - `/admin/forms` — Saturday list, topic requests, shop waitlist
 - `/admin/demo` — staff Jordan walk + Copy demo link

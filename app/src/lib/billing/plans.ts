@@ -85,6 +85,29 @@ export function getPaidPlan(value: string | null | undefined): PaidPlan | null {
   return PAID_PLANS[value];
 }
 
+export const PORTAL_CART_PLAN_IDS = ["10", "50", "1059"] as const;
+export const LEARN_WITH_BEN_PLAN_IDS = ["100", "200", "1000"] as const;
+
+export function isPortalCartPlanId(
+  value: string | null | undefined,
+): value is (typeof PORTAL_CART_PLAN_IDS)[number] {
+  return Boolean(value && (PORTAL_CART_PLAN_IDS as readonly string[]).includes(value));
+}
+
+export function isLearnWithBenPlanId(
+  value: string | null | undefined,
+): value is (typeof LEARN_WITH_BEN_PLAN_IDS)[number] {
+  return Boolean(value && (LEARN_WITH_BEN_PLAN_IDS as readonly string[]).includes(value));
+}
+
 export function checkoutPath(id: PaidPlanId) {
   return `/checkout?plan=${id}`;
+}
+
+export function cartPath(id: PaidPlanId) {
+  return `/cart?plan=${id}`;
+}
+
+export function enrollPath(id: PaidPlanId) {
+  return isLearnWithBenPlanId(id) ? checkoutPath(id) : cartPath(id);
 }
