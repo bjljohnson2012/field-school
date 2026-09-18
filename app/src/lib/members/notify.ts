@@ -135,6 +135,33 @@ export async function notifyAccessRequest(request: AccessRequest) {
   });
 }
 
+export async function notifyEnrollment(request: AccessRequest) {
+  const to = accessRequestNotifyEmail();
+  const subject = `New enrollment: ${request.name}`;
+  const paragraphs = [
+    "Someone new joined the Field School free beta.",
+    `Name: ${request.name}`,
+    `Email: ${request.email}`,
+    `Submitted: ${request.createdAt}`,
+    `Note: ${request.note || "New enrollment on the free beta."}`,
+  ];
+  const review = `${PORTAL}/admin/access-requests`;
+
+  return sendTextMail({
+    to,
+    subject,
+    text: [...paragraphs, "", `Review enrollments: ${review}`].join("\n"),
+    html: brandedEmailHtml({
+      title: "New enrollment",
+      paragraphs,
+      action: { href: review, label: "Review enrollments" },
+    }),
+    from: mailFrom(NOTE_FROM),
+    skipLog:
+      "[enrollment] stored; email skipped (set RESEND_API_KEY or SMTP_HOST to notify)",
+  });
+}
+
 export async function emailAssessmentResult(input: {
   email: string;
   title: string;

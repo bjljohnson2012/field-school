@@ -13,7 +13,9 @@ This campus uses [Auth.js / NextAuth v5](https://authjs.dev) for Google, X (Twit
 
 Random Google or X users are **never** auto-elevated to admin. A staff email used with email + password is still a member. Credentials cannot open `/admin`.
 
-If someone expected staff access and is not on the allowlist, they see **Request Access** (not a dead error). Submitting it stores the request for `/admin/access-requests` and emails the dean when SMTP is configured.
+If someone expected staff access and is not on the allowlist, they see **Request Access** (not a dead error). Submitting it stores the request for `/admin/access-requests` and emails the dean when SMTP or Resend is configured. New free-beta enrollments file the same desk (kind `enrollment`) and notify that address.
+
+Public `/signup`, `/request-access`, `POST /api/forms`, and `POST /api/tools/email` drop honeypot posts (`website` filled) and rate-limit by IP and email. No third-party spam vendor.
 
 ## Required environment variables
 
@@ -30,7 +32,7 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | `STAFF_ADMIN_EMAILS` | Optional | Comma-separated staff allowlist. Defaults to the dean email baked into `src/lib/campus.ts`. |
 | `DEMO_LINK_TOKEN` | Optional | Secret for the shareable Jordan walk. `/demo?token=` must match this value. If unset, the campus derives a stable token from `AUTH_SECRET`. Staff copy the full URL from `/admin/demo` (“Copy demo link”). Do not put this button on `/login`. |
 | `MEMBER_STORE_PATH` | Optional | JSON file for member password hashes, access requests, and public form submissions. Defaults to `.data/campus-store.json` in development and `/app/data/campus-store.json` in production. |
-| `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests are emailed. Defaults to `bjljohnson2012@gmail.com`. |
+| `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests and new enrollments are emailed. Defaults to `bjljohnson2012@gmail.com`. |
 | `RESEND_API_KEY` | Optional email send | Preferred. Sends checkout confirmations and other transactional mail. Lives in `/opt/field-school.env`. Never commit it. |
 | `RESEND_FROM` | Optional | Defaults to `Field School <note@fieldschool.ai>`. Domain must be verified in Resend. |
 | `SMTP_HOST` | Optional email notify | Fallback if Resend is unset. If both are unset, requests are still stored; email is skipped. |

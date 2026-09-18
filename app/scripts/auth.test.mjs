@@ -402,6 +402,8 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(signup, /\/api\/members\/register/);
   assert.match(signup, /signIn\("credentials"/);
   assert.match(signup, /authErrorMessage/);
+  assert.match(signup, /signup-website/);
+  assert.match(signup, /website/);
   assert.doesNotMatch(signup, /Enter as Jordan/);
   assert.doesNotMatch(signup, /STUDENT_ID/);
   assert.doesNotMatch(signup, /lorem ipsum/i);
@@ -428,6 +430,8 @@ test("free beta signup, pricing, and request-access pages exist", () => {
 
   assert.match(request, /\/api\/access-requests/);
   assert.match(request, /Request access/);
+  assert.match(request, /access-website/);
+  assert.match(request, /website/);
   assert.match(complete, /request-access/);
   assert.match(complete, /activateMemberFromAuth/);
   assert.match(complete, /\/signup\?error=/);
@@ -438,6 +442,10 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.doesNotMatch(store, /localStorage/);
   assert.match(notify, /ACCESS_REQUEST_NOTIFY_EMAIL|accessRequestNotifyEmail/);
   assert.match(notify, /SMTP_HOST/);
+  assert.match(notify, /notifyEnrollment/);
+  assert.match(readSrc("src/lib/members/enroll.ts"), /recordNewEnrollment/);
+  assert.match(readSrc("src/app/api/members/register/route.ts"), /guardPublicSubmit/);
+  assert.match(readSrc("src/app/api/access-requests/route.ts"), /guardPublicSubmit/);
 
   assert.match(compose, /field-school-data/);
   assert.match(compose, /MEMBER_STORE_PATH/);

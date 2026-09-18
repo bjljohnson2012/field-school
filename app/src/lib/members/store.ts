@@ -91,7 +91,9 @@ export async function registerMember(input: {
   name: string;
   email: string;
   password: string;
-}): Promise<{ ok: true; member: StoredMember } | { ok: false; error: string }> {
+}): Promise<
+  { ok: true; member: StoredMember; created: boolean } | { ok: false; error: string }
+> {
   const name = input.name.trim();
   const email = normalizeEmail(input.email);
   const pwdError = passwordError(input.password);
@@ -115,7 +117,7 @@ export async function registerMember(input: {
       delete existing.claimTokenExpiresAt;
       await writeStore(path, store);
       const { passwordHash: _omit, ...safe } = existing;
-      return { ok: true, member: safe as StoredMember };
+      return { ok: true, member: safe as StoredMember, created: false };
     }
     const member: StoredMember = {
       id: `member-${randomUUID()}`,
@@ -130,7 +132,7 @@ export async function registerMember(input: {
     store.members.push(member);
     await writeStore(path, store);
     const { passwordHash: _omit, ...safe } = member;
-    return { ok: true, member: safe as StoredMember };
+    return { ok: true, member: safe as StoredMember, created: true };
   });
 }
 
@@ -191,10 +193,12 @@ export async function createAccessRequest(input: {
   email: string;
   provider: string;
   note?: string;
+  kind?: AccessRequest["kind"];
 }): Promise<{ ok: true; request: AccessRequest } | { ok: false; error: string }> {
   const name = input.name.trim();
   const email = normalizeEmail(input.email);
   const note = (input.note ?? "").trim();
+  const kind = input.kind ?? "staff";
   if (!name) return { ok: false, error: "Name is required." };
   if (!isValidEmail(email)) return { ok: false, error: "Enter a valid email." };
   if (note.length > 2000) {
@@ -204,9 +208,10 @@ export async function createAccessRequest(input: {
   return withLock(async () => {
     const path = resolveStorePath();
     const store = await readStore(path);
-    const existing = store.accessRequests.find(
-      (r) => r.email === email && r.status === "pending",
-    );
+    const existing = store.accessRequests.find((r) => {
+      if (r.email !== email || r.status !== "pending") return false;
+      return (r.kind ?? "staff") === kind;
+    });
     const request: AccessRequest = existing
       ? {
           ...existing,
@@ -214,6 +219,7 @@ export async function createAccessRequest(input: {
           provider: input.provider.trim() || existing.provider,
           note: note || existing.note,
           createdAt: new Date().toISOString(),
+          kind,
         }
       : {
           id: `access-${randomUUID()}`,
@@ -223,6 +229,7 @@ export async function createAccessRequest(input: {
           note,
           createdAt: new Date().toISOString(),
           status: "pending",
+          kind,
         };
     if (existing) {
       store.accessRequests = store.accessRequests.map((r) =>

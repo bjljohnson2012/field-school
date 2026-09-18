@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { emailAssessmentResult } from "@/lib/members/notify";
 import { isValidEmail, normalizeEmail } from "@/lib/members/policy";
+import { guardPublicSubmit } from "@/lib/members/spam";
 import { createFormSubmission } from "@/lib/members/store";
 import { parseAssessmentShare } from "@/lib/tools/share";
 
@@ -23,9 +24,8 @@ export async function POST(request: Request) {
   }
 
   const record = body;
-  if (typeof record.website === "string" && record.website.trim()) {
-    return NextResponse.json({ ok: true, emailed: true });
-  }
+  const blocked = guardPublicSubmit(request, record, "forms");
+  if (blocked) return blocked;
 
   const email = normalizeEmail(typeof record.email === "string" ? record.email : "");
   if (!isValidEmail(email)) {

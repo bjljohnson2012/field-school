@@ -28,6 +28,8 @@ export type StoredPurchase = {
 
 export type AccessRequestStatus = "pending" | "noted";
 
+export type AccessRequestKind = "staff" | "enrollment";
+
 export type AccessRequest = {
   id: string;
   name: string;
@@ -36,6 +38,7 @@ export type AccessRequest = {
   note: string;
   createdAt: string;
   status: AccessRequestStatus;
+  kind?: AccessRequestKind;
 };
 
 export const FORM_KINDS = [

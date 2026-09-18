@@ -1,4 +1,5 @@
 import { isValidEmail, normalizeEmail } from "@/lib/members/policy";
+import { isHoneypotSpam } from "@/lib/members/spam";
 import {
   FORM_KINDS,
   type FormKind,
@@ -67,7 +68,7 @@ export function validateFormInput(input: {
       source: string;
     }
   | { ok: false; error: string } {
-  if (typeof input.website === "string" && input.website.trim()) {
+  if (isHoneypotSpam(input.website)) {
     return {
       ok: true,
       spam: true,
