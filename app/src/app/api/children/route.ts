@@ -92,14 +92,18 @@ export async function PATCH(request: Request) {
   if (!canCreateChild(auth.identity, isStaffEmail(auth.identity.email))) {
     return NextResponse.json({ ok: false, error: "household_guardian_only" }, { status: 403 });
   }
-  let body: { membershipId?: string; note?: string };
+  let body: { membershipId?: string; note?: string; welcomeWatched?: boolean };
   try {
-    body = (await request.json()) as { membershipId?: string; note?: string };
+    body = (await request.json()) as {
+      membershipId?: string;
+      note?: string;
+      welcomeWatched?: boolean;
+    };
   } catch {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
   const membershipId = body.membershipId?.trim() || "";
-  const note = body.note?.trim() || "";
+  const note = typeof body.note === "string" ? body.note.trim() : null;
   if (!membershipId) {
     return NextResponse.json({ ok: false, error: "membership_id_required" }, { status: 400 });
   }
@@ -118,16 +122,30 @@ export async function PATCH(request: Request) {
   if (!ward) {
     return NextResponse.json({ ok: false, error: "not_your_child" }, { status: 403 });
   }
-  await db.insert(learningEvents).values({
-    orgId: auth.identity.orgId,
-    membershipId,
-    actorMembershipId: auth.identity.membershipId,
-    actorStance: auth.identity.stance,
-    kind: "assignment",
-    objectType: "child",
-    objectId: "parent-note",
-    raw: { notes: note },
-  });
+  if (body.welcomeWatched === true) {
+    await db.insert(learningEvents).values({
+      orgId: auth.identity.orgId,
+      membershipId,
+      actorMembershipId: auth.identity.membershipId,
+      actorStance: auth.identity.stance,
+      kind: "watch",
+      objectType: "station",
+      objectId: "home:welcome",
+      raw: { course: "home", station: "welcome", recordedBy: "parent" },
+    });
+  }
+  if (note !== null) {
+    await db.insert(learningEvents).values({
+      orgId: auth.identity.orgId,
+      membershipId,
+      actorMembershipId: auth.identity.membershipId,
+      actorStance: auth.identity.stance,
+      kind: "assignment",
+      objectType: "child",
+      objectId: "parent-note",
+      raw: { notes: note },
+    });
+  }
   return NextResponse.json({ ok: true });
 }
 

@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
+
+const HOUSEHOLD_HEADERS = { "x-fs-org": "household" } as const;
 
 export type ChildRow = {
   id: string;
@@ -27,12 +30,7 @@ export function ChildrenDatabase({
   const [blocked, setBlocked] = useState(false);
 
   async function loadChildren() {
-    await fetch("/api/org/active", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-fs-org": "household" },
-      body: JSON.stringify({ slug: "household" }),
-    }).catch(() => undefined);
-    const res = await fetch("/api/children", { headers: { "x-fs-org": "household" } });
+    const res = await fetch("/api/children", { headers: HOUSEHOLD_HEADERS });
     const data = await res.json();
     if (!res.ok) {
       setBlocked(true);
@@ -54,7 +52,7 @@ export function ChildrenDatabase({
   async function addChild() {
     const res = await fetch("/api/children", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-fs-org": "household" },
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
       body: JSON.stringify({ name: childName }),
     });
     const data = await res.json();
@@ -68,7 +66,7 @@ export function ChildrenDatabase({
   async function toggleLock(membershipId: string, locked: boolean) {
     const res = await fetch("/api/pattern/lock", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-fs-org": "household" },
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
       body: JSON.stringify({ membership_id: membershipId, locked }),
     });
     const data = await res.json();
@@ -87,7 +85,7 @@ export function ChildrenDatabase({
   async function saveNote(membershipId: string) {
     const res = await fetch("/api/children", {
       method: "PATCH",
-      headers: { "Content-Type": "application/json", "x-fs-org": "household" },
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
       body: JSON.stringify({ membershipId, note: notes[membershipId] || "" }),
     });
     const data = await res.json();
@@ -95,12 +93,22 @@ export function ChildrenDatabase({
     if (res.ok) await loadChildren();
   }
 
+  async function recordWelcome(membershipId: string) {
+    const res = await fetch("/api/children", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({ membershipId, welcomeWatched: true }),
+    });
+    const data = await res.json();
+    setNote(res.ok ? "Welcome recorded for this child." : data.error || "Could not record welcome.");
+    if (res.ok) await loadChildren();
+  }
+
   return (
     <section className="rounded-xl border border-border bg-card px-5 py-5">
       <h2 className="font-display text-2xl">{heading}</h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        Parent-facing children/subusers database. Say child, not student. Kids
-        have no own login. You record feedback and progress here.
+        Parent-facing children/subusers database. Say child, not student. Kids have no own login. You record feedback and progress here.
       </p>
       {blocked ? (
         <p className="mt-4 text-sm text-muted-foreground">
@@ -146,13 +154,29 @@ export function ChildrenDatabase({
                       <td className="px-3 py-3">Yes · no login</td>
                       <td className="px-3 py-3">None</td>
                       <td className="px-3 py-3">
-                        {row.welcomeWatched ? "Watched" : "Not yet"}
+                        <p>{row.welcomeWatched ? "Watched" : "Not yet"}</p>
+                        {row.welcomeWatched ? null : (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="mt-2"
+                            onClick={() => void recordWelcome(row.membershipId)}
+                          >
+                            Record welcome
+                          </Button>
+                        )}
                       </td>
                       <td className="px-3 py-3">
                         <p>{row.patternTitle || "Not run"}</p>
                         <p className="text-xs text-muted-foreground">
                           {row.locked ? "Locked" : "Open"}
                         </p>
+                        <Link
+                          href={`/pattern?child=${encodeURIComponent(row.membershipId)}`}
+                          className="mt-2 inline-flex h-9 items-center rounded-xl border border-border px-3 text-xs"
+                        >
+                          {row.patternTitle ? "Review Pattern" : "Record Pattern"}
+                        </Link>
                         {row.patternTitle ? (
                           <Button
                             type="button"

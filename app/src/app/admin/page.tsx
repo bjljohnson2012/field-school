@@ -48,6 +48,11 @@ export default function AdminPage() {
 
   const startHere = [
     {
+      href: "/children",
+      title: "Children database",
+      body: "Parent-facing children/subusers. Say child, not student. Kids have no own login. Parent records progress.",
+    },
+    {
       href: "/o/household",
       title: "Open household",
       body: "Household org. Add a child. Parent records feedback and progress. Kids have no own login.",

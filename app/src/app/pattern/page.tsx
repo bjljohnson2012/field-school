@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -26,10 +27,13 @@ const SCALE = [
   { value: 5, label: "Strongly agree" },
 ];
 
-export default function PatternPage() {
+function PatternForm() {
   const { data: session, status } = useSession();
+  const search = useSearchParams();
+  const childMembershipId = search.get("child")?.trim() || "";
+  const forChild = Boolean(childMembershipId);
   const signedIn = Boolean(session?.user?.email);
-  const [subset, setSubset] = useState<"adult" | "child">("adult");
+  const [subset, setSubset] = useState<"adult" | "child">(forChild ? "child" : "adult");
   const [items, setItems] = useState<Item[]>([]);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -39,6 +43,7 @@ export default function PatternPage() {
   const [paper, setPaper] = useState("");
   const [org, setOrg] = useState("");
   const [importCode, setImportCode] = useState("");
+  const householdHeaders = forChild ? { "x-fs-org": "household" } : {};
 
   useEffect(() => {
     void fetch(`/api/pattern/instrument?subset=${subset}`)
@@ -50,14 +55,31 @@ export default function PatternPage() {
   }, [subset]);
 
   useEffect(() => {
+    if (forChild) {
+      setOrg("household");
+      setSubset("child");
+    }
     if (!signedIn) return;
-    void fetch("/api/me").then((r) => r.json()).then((data) => setOrg(data.activeOrg?.slug || ""));
+    if (!forChild) {
+      void fetch("/api/me").then((r) => r.json()).then((data) => setOrg(data.activeOrg?.slug || ""));
+    }
     void refresh();
-  }, [signedIn]);
+  }, [signedIn, childMembershipId]);
 
   async function refresh() {
+    const profileUrl = childMembershipId
+      ? `/api/pattern/profile?membership_id=${encodeURIComponent(childMembershipId)}`
+      : "/api/pattern/profile";
+    const profileRes = fetch(profileUrl, { headers: householdHeaders }).then((r) => r.json());
+    if (forChild) {
+      const p = await profileRes;
+      if (p.ok) setProfile(p.profile);
+      else setProfile(null);
+      setChooser(null);
+      return;
+    }
     const [p, c] = await Promise.all([
-      fetch("/api/pattern/profile").then((r) => r.json()),
+      profileRes,
       fetch("/api/chooser?course=grok-bot").then((r) => r.json()),
     ]);
     if (p.ok) setProfile(p.profile);
@@ -69,8 +91,12 @@ export default function PatternPage() {
     setNote(null);
     const res = await fetch("/api/pattern/run", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ subset, answers }),
+      headers: { "Content-Type": "application/json", ...householdHeaders },
+      body: JSON.stringify({
+        subset,
+        answers,
+        ...(childMembershipId ? { membership_id: childMembershipId } : {}),
+      }),
     });
     const data = await res.json();
     setBusy(false);
@@ -88,8 +114,12 @@ export default function PatternPage() {
     setNote(null);
     const res = await fetch("/api/pattern/ingest", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ kind: "paper", text: paper }),
+      headers: { "Content-Type": "application/json", ...householdHeaders },
+      body: JSON.stringify({
+        kind: "paper",
+        text: paper,
+        ...(childMembershipId ? { membership_id: childMembershipId } : {}),
+      }),
     });
     const data = await res.json();
     setBusy(false);
@@ -115,7 +145,8 @@ export default function PatternPage() {
     const form = new FormData();
     form.set("kind", kind);
     form.set("file", file);
-    const res = await fetch("/api/pattern/ingest", { method: "POST", body: form });
+    if (childMembershipId) form.set("membership_id", childMembershipId);
+    const res = await fetch("/api/pattern/ingest", { method: "POST", headers: householdHeaders, body: form });
     const data = await res.json();
     setBusy(false);
     if (!res.ok) {
@@ -135,7 +166,7 @@ export default function PatternPage() {
 
   const allAnswered = items.length > 0 && items.every((item) => answers[item.key] != null);
 
-  if (org === "sales") {
+  if (org === "sales" && !forChild) {
     return (
       <main className="mx-auto max-w-xl px-4 py-16">
         <h1 className="font-display text-3xl">Field Pattern</h1>
@@ -159,6 +190,15 @@ export default function PatternPage() {
         transcribe with Grok STT and only nudge. The chooser reads this
         profile. It does not rewrite the pack.
       </p>
+      {forChild ? (
+        <p className="mt-3 text-sm">
+          Recording the child subset for a household child. Kids have no own
+          login.{" "}
+          <Link href="/children" className="underline underline-offset-4">
+            Back to children
+          </Link>
+        </p>
+      ) : null}
 
       <div className="mt-6 flex flex-wrap gap-2">
         <button
@@ -305,7 +345,7 @@ export default function PatternPage() {
         </div>
       </section>
 
-      <section className="mt-12 space-y-3 rounded-xl border border-border bg-card px-5 py-5">
+      {forChild ? null : <section className="mt-12 space-y-3 rounded-xl border border-border bg-card px-5 py-5">
         <h2 className="font-display text-2xl tracking-tight">Import an official result</h2>
         <p className="text-sm text-muted-foreground">
           Paste a type-code or cluster list from an official report you already
@@ -337,9 +377,23 @@ export default function PatternPage() {
         >
           Override correspondence
         </Button>
-      </section>
+      </section>}
 
       {note ? <p className="mt-6 text-sm text-pass">{note}</p> : null}
     </main>
+  );
+}
+
+export default function PatternPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="mx-auto max-w-3xl px-4 py-12">
+          <p className="text-sm text-muted-foreground">Loading Field Pattern…</p>
+        </main>
+      }
+    >
+      <PatternForm />
+    </Suspense>
   );
 }

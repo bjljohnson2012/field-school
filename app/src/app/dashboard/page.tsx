@@ -29,8 +29,9 @@ export default function DashboardPage() {
         setActiveOrg(slug);
         const course = slug === "household" ? "home" : slug === "sales" ? "sales" : "grok-bot";
         const next = fetch(`/api/chooser?course=${course}`).then((r) => r.json());
-        if (slug === "household") {
-          void fetch("/api/children", { headers: { "x-fs-org": slug } })
+        const orgs = (data.memberships ?? []).map((row: { org?: string }) => row.org);
+        if (orgs.includes("household") || slug === "household") {
+          void fetch("/api/children", { headers: { "x-fs-org": "household" } })
             .then((r) => r.json())
             .then((body) => {
               if (body?.children) setChildren(body.children);
@@ -96,7 +97,7 @@ export default function DashboardPage() {
         </p>
       ) : null}
 
-      {household ? (
+      {household || children.length > 0 ? (
         <section className="mt-12">
           <h2 className="font-display text-2xl tracking-tight">Children</h2>
           <p className="mt-2 text-sm text-muted-foreground">

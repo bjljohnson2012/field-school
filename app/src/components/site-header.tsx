@@ -23,6 +23,7 @@ export function SiteHeader() {
   const links = [
     { href: "/dashboard", label: "Dashboard", compact: true },
     { href: "/tools", label: "Tools", compact: true },
+    ...(loggedIn ? [{ href: "/children", label: "Children", compact: true }] : []),
     ...(showAbout ? [{ href: "/about", label: "About", compact: false }] : []),
     ...(isStaff
       ? [
