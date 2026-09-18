@@ -93,9 +93,9 @@ export default function ApiDocsPage() {
             </li>
           </ol>
           <p>
-            Base URL <code>https://portal.fieldschool.ai</code>. Same app at{" "}
-            <code>https://university.benjohnson.ai</code>. AUTH_URL still points
-            at university. Cookies are Auth.js session cookies.
+            Base URL <code>https://portal.fieldschool.ai</code>.{" "}
+            <code>university.benjohnson.ai</code> 301s to portal. AUTH_URL is
+            portal. Cookies are Auth.js session cookies.
           </p>
         </Block>
 
@@ -242,7 +242,7 @@ curl -sS -X POST https://portal.fieldschool.ai/api/events \\
             <li>Not Cap or the edit MCP.</li>
             <li>Not campus MCP (Wave 7) or wildcard hosts (Wave 2).</li>
             <li>Not Better Auth / PGlite / migrations 0001–0003.</li>
-            <li>AUTH_URL is not flipped in Wave 1.</li>
+            <li>AUTH_URL is portal.fieldschool.ai. University 301s there.</li>
           </ul>
         </Block>
       </div>

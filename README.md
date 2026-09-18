@@ -2,7 +2,7 @@
 
 Public site: https://fieldschool.ai
 App: https://portal.fieldschool.ai
-Legacy campus (301 held): https://university.benjohnson.ai
+Legacy campus (301 to portal): https://university.benjohnson.ai
 Capture: https://cap.fieldschool.ai
 Edit MCP: https://edit.fieldschool.ai
 
@@ -25,12 +25,12 @@ The TanStack Start tree under `src/`, `vite.config.ts`, and `migrations/0001-000
 
 ## Wave 1 in one pass
 
-Guest progress stays in the browser. A signed-in member is upserted onto org `field-school`. Watch / quiz / field work on [Grok Bot station 01](https://portal.fieldschool.ai/c/grok-bot/s/briefing) writes `learning_events`. `GET /api/me`, `GET /api/progress?course=grok-bot`, `POST /api/events`. Isolation is `org_id` + `membership_id`. Seed slugs: `field-school`, `household`. AUTH_URL still `university.benjohnson.ai`.
+Guest progress stays in the browser. A signed-in member is upserted onto org `field-school`. Watch / quiz / field work on [Grok Bot station 01](https://portal.fieldschool.ai/c/grok-bot/s/briefing) writes `learning_events`. `GET /api/me`, `GET /api/progress?course=grok-bot`, `POST /api/events`. Isolation is `org_id` + `membership_id`. Seed slugs: `field-school`, `household`. AUTH_URL is `portal.fieldschool.ai`. University 301s there.
 
 ## Domains
 
 - `fieldschool.ai` — marketing. Source: `marketing-site/`.
-- `portal.fieldschool.ai` — campus app. Today a guest Next demo still runs on the VPS. AUTH_URL still points at university.benjohnson.ai. Do not flip AUTH_URL in Wave 1.
+- `portal.fieldschool.ai` — campus app. AUTH_URL is this origin. `university.benjohnson.ai` 301s here.
 - `cap.fieldschool.ai` — capture only.
 - `edit.fieldschool.ai` — factory MCP / melt. Not the learner MCP.
 

@@ -1,0 +1,11 @@
+# Applied by deploy/flip-auth-url.sh. Not loaded by deploy/deploy.sh.
+# 301 university.benjohnson.ai → portal.fieldschool.ai.
+# Keep srv1643164.hstgr.cloud on the app so Hostinger itself is not redirected.
+
+university.benjohnson.ai {
+	encode gzip
+	redir https://portal.fieldschool.ai{uri} permanent
+	log {
+		output file /data/university.access.log
+	}
+}
