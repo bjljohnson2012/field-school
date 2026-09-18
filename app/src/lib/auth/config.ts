@@ -3,6 +3,8 @@ import Google from "next-auth/providers/google";
 import Twitter from "next-auth/providers/twitter";
 import {
   authCanMintSessions,
+  googleClientId,
+  googleClientSecret,
   hasGoogleOAuthEnv,
   hasTwitterOAuthEnv,
 } from "@/lib/auth/env";
@@ -15,8 +17,8 @@ function buildProviders() {
   if (hasGoogleOAuthEnv()) {
     providers.push(
       Google({
-        clientId: process.env.GOOGLE_CLIENT_ID!,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        clientId: googleClientId(),
+        clientSecret: googleClientSecret(),
       }),
     );
   }
@@ -46,7 +48,7 @@ export function buildAuthConfig(): NextAuthConfig {
     providers: buildProviders(),
     pages: {
       signIn: "/login",
-      error: "/signup",
+      error: "/login",
     },
     callbacks: {
       signIn({ account, profile, user }) {

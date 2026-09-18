@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { OAuthSignInButtons } from "@/components/oauth-sign-in-buttons";
@@ -11,7 +11,8 @@ import { Label } from "@/components/ui/label";
 import { usePortal } from "@/hooks/use-portal";
 import { isAdminRoute, safeMemberNext } from "@/lib/admin-gate";
 import type { OAuthProviderStatus } from "@/lib/auth/env";
-import { authErrorMessage, isStaffSession } from "@/lib/members/policy";
+import { visibleLoginProviderError } from "@/lib/auth/provider-error";
+import { isStaffSession } from "@/lib/members/policy";
 import { continueAsGuest, signInLocal } from "@/lib/portal";
 
 type Props = {
@@ -20,20 +21,24 @@ type Props = {
 
 export function LoginForm({ oauth }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: authSession, status } = useSession();
   const { ready, isStaff } = usePortal();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() =>
+    visibleLoginProviderError(searchParams.get("error"), oauth),
+  );
   const [pending, setPending] = useState(false);
 
-  const next =
-    typeof window !== "undefined"
-      ? new URLSearchParams(window.location.search).get("next") || ""
-      : "";
+  const next = searchParams.get("next") || "";
   const memberNext = safeMemberNext(next);
   const oauthNext = isAdminRoute(next) ? next : memberNext;
+
+  useEffect(() => {
+    setError(visibleLoginProviderError(searchParams.get("error"), oauth));
+  }, [oauth, searchParams]);
 
   useEffect(() => {
     if (status === "authenticated" && isAdminRoute(next) && !isStaffSession(authSession)) {
@@ -95,7 +100,7 @@ export function LoginForm({ oauth }: Props) {
               redirect: false,
             });
             if (signed?.error) {
-              setError(authErrorMessage(signed.error));
+              setError(visibleLoginProviderError(signed.error, oauth));
               return;
             }
             router.push(isAdminRoute(next) ? "/request-access?from=admin" : memberNext);
