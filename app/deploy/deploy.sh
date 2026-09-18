@@ -28,8 +28,11 @@ fi
 
 echo "==> packing Next source"
 TMP_TAR="$(mktemp /tmp/field-school-next.XXXXXX.tar.gz)"
-trap 'rm -f "$TMP_TAR"' EXIT
-tar -C "$ROOT" -czf "$TMP_TAR" \
+STAGE="$(mktemp -d /tmp/field-school-next-stage.XXXXXX)"
+trap 'rm -rf "$TMP_TAR" "$STAGE"' EXIT
+# Standalone image reads the pinned bank at /app/docs/campus-runtime.
+# That file lives at repo docs/, not inside app/.
+tar -C "$ROOT" -cf - \
   --exclude node_modules \
   --exclude .git \
   --exclude .next \
@@ -37,7 +40,10 @@ tar -C "$ROOT" -czf "$TMP_TAR" \
   --exclude postgres \
   --exclude deploy/.vps.env \
   --exclude .data \
-  .
+  . | tar -C "$STAGE" -xf -
+mkdir -p "$STAGE/docs/campus-runtime"
+cp "$ROOT/../docs/campus-runtime/fp-50-v1.md" "$STAGE/docs/campus-runtime/fp-50-v1.md"
+tar -C "$STAGE" -czf "$TMP_TAR" .
 
 echo "==> uploading to $VPS_HOST:$REMOTE_DIR (keeping postgres data)"
 "${SSH[@]}" "$VPS_HOST" "mkdir -p '$REMOTE_DIR/postgres' && find '$REMOTE_DIR' -mindepth 1 -maxdepth 1 ! -name postgres -exec rm -rf {} +"
