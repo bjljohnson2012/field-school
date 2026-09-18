@@ -3,6 +3,7 @@ import { getDb } from "@/lib/db/client";
 import {
   memberProfileRevisions,
   memberProfiles,
+  memberships,
   instrumentRuns,
   profileArtifacts,
   skillObservations,
@@ -26,6 +27,13 @@ export class ProfileLockedError extends Error {
   constructor() {
     super("profile_locked");
     this.name = "ProfileLockedError";
+  }
+}
+
+export class WardOrgScopeError extends Error {
+  constructor() {
+    super("child_not_in_org");
+    this.name = "WardOrgScopeError";
   }
 }
 
@@ -53,11 +61,13 @@ export async function isGuardianOf(
   if (actor.stance === "admin") return true;
   const db = getDb();
   const rows = await db
-    .select()
+    .select({ id: wards.id })
     .from(wards)
+    .innerJoin(memberships, eq(memberships.id, wards.childMembershipId))
     .where(
       and(
         eq(wards.orgId, actor.orgId),
+        eq(memberships.orgId, actor.orgId),
         eq(wards.guardianMembershipId, actor.membershipId),
         eq(wards.childMembershipId, childMembershipId),
       ),
@@ -283,6 +293,14 @@ export async function linkWard(opts: {
     throw new ProfileLockedError();
   }
   const db = getDb();
+  const [child] = await db
+    .select({ id: memberships.id, orgId: memberships.orgId })
+    .from(memberships)
+    .where(eq(memberships.id, opts.childMembershipId))
+    .limit(1);
+  if (!child || child.orgId !== opts.actor.orgId) {
+    throw new WardOrgScopeError();
+  }
   const [row] = await db
     .insert(wards)
     .values({
