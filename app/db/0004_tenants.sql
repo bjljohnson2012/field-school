@@ -88,3 +88,26 @@ INSERT INTO skills (org_id, slug, name, rubric)
 SELECT id, 'next-step', 'Next step', '{"prompt":"Can they leave a dated next step on every live deal?"}'::jsonb
 FROM organizations WHERE slug = 'sales'
 ON CONFLICT (org_id, slug) DO NOTHING;
+
+-- One staff email on household + sales so the picker has both orgs before first login.
+INSERT INTO members (email, name, kind)
+VALUES ('bjljohnson2012@gmail.com', 'Benjamin Johnson', 'adult')
+ON CONFLICT (email) DO NOTHING;
+
+INSERT INTO memberships (org_id, member_id, stance)
+SELECT o.id, m.id, 'admin'
+FROM organizations o, members m
+WHERE o.slug = 'field-school' AND m.email = 'bjljohnson2012@gmail.com'
+ON CONFLICT (org_id, member_id) DO NOTHING;
+
+INSERT INTO memberships (org_id, member_id, stance)
+SELECT o.id, m.id, 'guardian'
+FROM organizations o, members m
+WHERE o.slug = 'household' AND m.email = 'bjljohnson2012@gmail.com'
+ON CONFLICT (org_id, member_id) DO NOTHING;
+
+INSERT INTO memberships (org_id, member_id, stance)
+SELECT o.id, m.id, 'trainer'
+FROM organizations o, members m
+WHERE o.slug = 'sales' AND m.email = 'bjljohnson2012@gmail.com'
+ON CONFLICT (org_id, member_id) DO NOTHING;

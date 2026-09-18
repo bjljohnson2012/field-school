@@ -20,7 +20,7 @@
 
 | Check | Expect | Result |
 |---|---|---|
-| Picker lists both student orgs | Staff login joins household + sales; `GET /api/me` returns both | **pass** (code + deploy). Staff bootstrap is `loadSession`. Live orgs: `field-school`, `household`, `sales`. |
+| Picker lists both student orgs | Staff login joins household + sales; `GET /api/me` returns both | **pass**. `0004` seeds `bjljohnson2012@gmail.com` as field-school admin, household guardian, sales trainer. `loadSession` also joins staff on login. Live orgs: `field-school`, `household`, `sales`. |
 | Events do not cross | Household `home:welcome` absent from sales; sales `sales:welcome` absent from household | **pass**. VPS counts: household home=1 sales home=0; household sales=0 sales sales=1. |
 | Uninvited `/o/household` | Guest 401; signed-in non-member 403; unknown slug 404 | **pass**. Live guest `/o/household` 401, `/o/sales` 401, `/o/does-not-exist` 404. Layout calls `forbidden()` for members without that org. |
 | Child cannot admin or invite | Child cannot mint invites or open `/admin` | **pass**. `childCanAdmin` false; `POST /api/invites` returns `child_cannot_invite`. Live child fixture `wave2.child@example.com` is household learner. |
