@@ -35,21 +35,23 @@ test("household org says child, not student, and lists parent-facing children", 
 });
 
 test("logged-in / is the dashboard and marketing CTAs stay guest-only", () => {
-  const home = readSrc("src/app/page.tsx");
-  assert.match(home, /useSession/);
-  assert.match(home, /if \(loggedIn\) router\.replace\("\/dashboard"\)/);
-  assert.match(home, /const showMarketing = status === "unauthenticated"/);
-  assert.match(home, /if \(!showMarketing\) return null/);
-  const redirectIdx = home.indexOf("if (!showMarketing) return null");
+  const page = readSrc("src/app/page.tsx");
+  const home = readSrc("src/app/campus-home.tsx");
+  assert.match(page, /const session = await auth\(\)/);
+  assert.match(page, /if \(session\?\.user\?\.email\) redirect\("\/dashboard"\)/);
+  assert.match(page, /return <CampusHome \/>/);
+  assert.match(home, /Continue as guest/);
+  assert.match(home, /Join free beta/);
   const guestIdx = home.indexOf("Continue as guest");
   const betaIdx = home.indexOf("Join free beta");
+  const gateIdx = home.indexOf("ready && isStaff");
   const adminIdx = home.indexOf('href="/admin"');
   const demoIdx = home.indexOf('href="/admin/demo"');
-  assert.ok(redirectIdx >= 0 && guestIdx > redirectIdx);
-  assert.ok(betaIdx > redirectIdx);
-  assert.ok(adminIdx > redirectIdx);
-  assert.ok(demoIdx > redirectIdx);
+  assert.ok(guestIdx >= 0 && betaIdx >= 0);
+  assert.ok(gateIdx >= 0 && adminIdx > gateIdx);
+  assert.ok(demoIdx > gateIdx);
   assert.doesNotMatch(home, /Instant demo/);
+  assert.doesNotMatch(page, /Instant demo/);
 });
 
 test("admin start-here splits courses from assessments and shows progress", () => {
@@ -75,7 +77,7 @@ test("logged-in header hides About; Inbox lives only under Admin", () => {
   const feedback = readSrc("src/components/course-feedback.tsx");
 
   assert.match(header, /loggedIn \? "\/dashboard" : "\/"/);
-  assert.match(header, /showGuestChrome \? \[\{ href: "\/about"/);
+  assert.match(header, /!\s*loggedIn \? \[\{ href: "\/about"/);
   assert.doesNotMatch(header, /href: "\/inbox"/);
   assert.doesNotMatch(header, /Notifications/);
   assert.doesNotMatch(header, /label: "About".*loggedIn/);

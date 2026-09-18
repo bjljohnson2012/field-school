@@ -69,7 +69,7 @@ export default function DashboardPage() {
           Run the student demo
         </Link>
       ) : null}
-      {!session ? (
+      {!session && !authSession?.user?.email ? (
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             href="/signup"

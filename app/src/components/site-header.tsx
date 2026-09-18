@@ -15,14 +15,13 @@ export function SiteHeader() {
   const { session, ready, isAdmin, isStaff, impersonating, unreadNotices } =
     usePortal();
   const loggedIn = status === "authenticated" && Boolean(authSession?.user?.email);
-  const showGuestChrome = status === "unauthenticated";
   const initial = (session?.name || "G").slice(0, 1).toUpperCase();
   const homeHref = loggedIn ? "/dashboard" : "/";
 
   const links = [
     { href: "/dashboard", label: "Dashboard", compact: true },
     { href: "/tools", label: "Tools", compact: true },
-    ...(showGuestChrome ? [{ href: "/about", label: "About", compact: false }] : []),
+    ...(!loggedIn ? [{ href: "/about", label: "About", compact: false }] : []),
     ...(isStaff
       ? [
           {
@@ -82,7 +81,7 @@ export function SiteHeader() {
           ))}
           {loggedIn ? <OrgPicker /> : null}
           <ThemeToggle />
-          {!ready || status === "loading" ? (
+          {!ready ? (
             <div className="h-8 w-8 animate-pulse rounded-full bg-secondary" />
           ) : loggedIn ? (
             <div className="ml-1 flex items-center gap-2">
@@ -103,7 +102,7 @@ export function SiteHeader() {
                 Sign out
               </button>
             </div>
-          ) : showGuestChrome ? (
+          ) : (
             <div className="ml-1 flex items-center gap-2">
               <Link
                 href="/login"
@@ -118,8 +117,6 @@ export function SiteHeader() {
                 Join free
               </Link>
             </div>
-          ) : (
-            <div className="h-8 w-8 animate-pulse rounded-full bg-secondary" />
           )}
         </nav>
       </div>

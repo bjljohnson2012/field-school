@@ -210,7 +210,8 @@ test("OAuth scaffolding exists but fake localStorage dean shortcut does not", ()
     assert.doesNotMatch(src, /GoogleSignInButton/);
   }
 
-  const home = readSrc("src/app/page.tsx");
+  const home = readSrc("src/app/campus-home.tsx");
+  assert.match(readSrc("src/app/page.tsx"), /redirect\("\/dashboard"\)/);
   assert.match(home, /Continue as guest/);
   assert.match(home, /Join free beta/);
   const gateIdx = home.indexOf("ready && isStaff");
@@ -489,7 +490,7 @@ function demoWalkPath(token) {
 test("login and signup never show the Jordan student-demo button", () => {
   const login = readSrc("src/app/login/login-form.tsx");
   const signup = readSrc("src/app/signup/signup-form.tsx");
-  const home = readSrc("src/app/page.tsx");
+  const home = readSrc("src/app/campus-home.tsx");
 
   assert.match(login, /Continue as guest/);
   assert.match(login, /Join the free beta/);
