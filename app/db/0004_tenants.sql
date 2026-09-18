@@ -58,3 +58,33 @@ CREATE TABLE IF NOT EXISTS skill_items (
   sort_order integer NOT NULL DEFAULT 0,
   created_at timestamptz NOT NULL DEFAULT now()
 );
+
+INSERT INTO groups (org_id, slug, name)
+SELECT id, 'desk', 'Sales desk' FROM organizations WHERE slug = 'sales'
+ON CONFLICT (org_id, slug) DO NOTHING;
+
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'morning', 'Morning start', '{"prompt":"Can they start the day without a fight?"}'::jsonb
+FROM organizations WHERE slug = 'household'
+ON CONFLICT (org_id, slug) DO NOTHING;
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'chores', 'Named chores', '{"prompt":"Can they finish one named chore without a reminder loop?"}'::jsonb
+FROM organizations WHERE slug = 'household'
+ON CONFLICT (org_id, slug) DO NOTHING;
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'read', 'Read and tell', '{"prompt":"Can they read a page and tell you what happened?"}'::jsonb
+FROM organizations WHERE slug = 'household'
+ON CONFLICT (org_id, slug) DO NOTHING;
+
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'discovery', 'Discovery', '{"prompt":"Can they run a discovery call and name the pain in one sentence?"}'::jsonb
+FROM organizations WHERE slug = 'sales'
+ON CONFLICT (org_id, slug) DO NOTHING;
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'qualification', 'Qualification', '{"prompt":"Can they qualify next step vs. noise?"}'::jsonb
+FROM organizations WHERE slug = 'sales'
+ON CONFLICT (org_id, slug) DO NOTHING;
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'next-step', 'Next step', '{"prompt":"Can they leave a dated next step on every live deal?"}'::jsonb
+FROM organizations WHERE slug = 'sales'
+ON CONFLICT (org_id, slug) DO NOTHING;

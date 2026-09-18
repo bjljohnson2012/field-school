@@ -15,7 +15,7 @@ export default function WelcomeLessonPage() {
   useEffect(() => {
     void fetch("/api/org/active", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fs-org": slug },
       body: JSON.stringify({ slug }),
     });
   }, [slug]);
@@ -33,7 +33,7 @@ export default function WelcomeLessonPage() {
   async function watch() {
     const res = await fetch("/api/events", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fs-org": slug },
       body: JSON.stringify({
         kind: "watch",
         course: current.course,

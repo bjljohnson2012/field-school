@@ -16,30 +16,45 @@ export default function OrgHomePage() {
   const [me, setMe] = useState<Me | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const [email, setEmail] = useState("");
+  const [stance, setStance] = useState("");
   const [childName, setChildName] = useState("");
   const [inviteUrl, setInviteUrl] = useState<string | null>(null);
 
   useEffect(() => {
     void fetch("/api/org/active", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fs-org": slug },
       body: JSON.stringify({ slug }),
     }).then((res) => {
       if (res.status === 403 || res.status === 404) setNote("You cannot open this org.");
-      return fetch(`/api/me?org=${slug}`);
+      return fetch(`/api/me?org=${slug}`, { headers: { "x-fs-org": slug } });
     }).then((r) => r?.json()).then((data) => setMe(data));
   }, [slug]);
 
   const lessonHref = slug === "household" ? "/o/household/welcome" : slug === "sales" ? "/o/sales/welcome" : "/c/grok-bot";
-  const canInvite = me?.member?.kind !== "child";
+  const canInvite =
+    me?.member?.kind !== "child" &&
+    ["admin", "guardian", "trainer"].includes(me?.activeOrg?.stance || "");
   const household = slug === "household";
   const sales = slug === "sales";
+  const inviteStance = stance || (household ? "guardian" : sales ? "trainer" : "learner");
+  const stanceOptions = household
+    ? [
+        { value: "guardian", label: "Guardian" },
+        { value: "learner", label: "Learner" },
+      ]
+    : sales
+      ? [
+          { value: "trainer", label: "Trainer" },
+          { value: "learner", label: "Learner" },
+        ]
+      : [{ value: "learner", label: "Learner" }];
 
   async function invite() {
     const res = await fetch("/api/invites", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ org: slug, email, stance: household ? "learner" : "learner" }),
+      headers: { "Content-Type": "application/json", "x-fs-org": slug },
+      body: JSON.stringify({ org: slug, email, stance: inviteStance }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -53,7 +68,7 @@ export default function OrgHomePage() {
   async function addChild() {
     const res = await fetch("/api/children", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fs-org": slug },
       body: JSON.stringify({ name: childName }),
     });
     const data = await res.json();
@@ -108,6 +123,17 @@ export default function OrgHomePage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            <select
+              className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
+              value={inviteStance}
+              onChange={(e) => setStance(e.target.value)}
+            >
+              {stanceOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
             <Button onClick={() => void invite()}>Send invite</Button>
           </div>
           {inviteUrl ? (

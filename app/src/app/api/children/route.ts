@@ -1,7 +1,8 @@
 import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { identityFromRequest, ensureMembership } from "@/lib/campus-runtime/identity";
-import { HOUSEHOLD_SLUG } from "@/lib/campus-runtime/org";
+import { HOUSEHOLD_SLUG, canCreateChild } from "@/lib/campus-runtime/org";
+import { isStaffEmail } from "@/lib/auth/staff";
 import { getDb } from "@/lib/db/client";
 import { members, wards } from "@/lib/db/schema";
 
@@ -12,11 +13,14 @@ export async function POST(request: Request) {
   if (!auth.ok) {
     return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
   }
-  if (auth.identity.orgSlug !== HOUSEHOLD_SLUG) {
-    return NextResponse.json({ ok: false, error: "household_only" }, { status: 403 });
-  }
-  if (auth.identity.kind === "child") {
-    return NextResponse.json({ ok: false, error: "child_cannot_create" }, { status: 403 });
+  if (!canCreateChild(auth.identity, isStaffEmail(auth.identity.email))) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: auth.identity.kind === "child" ? "child_cannot_create" : "household_guardian_only",
+      },
+      { status: 403 },
+    );
   }
   let body: { name?: string };
   try {

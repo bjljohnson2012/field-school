@@ -1,16 +1,27 @@
 import { cookies } from "next/headers";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
 import { memberships, organizations } from "@/lib/db/schema";
+import {
+  HOUSEHOLD_SLUG,
+  OPERATOR_SLUG,
+  SALES_SLUG,
+  courseAllowedInOrg,
+  pickActiveSlug,
+  studentOrgs,
+} from "./rules";
+
+export { HOUSEHOLD_SLUG, OPERATOR_SLUG, SALES_SLUG, courseAllowedInOrg, pickActiveSlug, studentOrgs };
+export {
+  canCreateChild,
+  canMintInvite,
+  childCanAdmin,
+  defaultInviteStance,
+  inviteStanceAllowed,
+  shouldForceOperatorOrg,
+} from "./rules";
 
 export const ORG_COOKIE = "fs_org";
-export const OPERATOR_SLUG = "field-school";
-export const HOUSEHOLD_SLUG = "household";
-export const SALES_SLUG = "sales";
-
-export function studentOrgs() {
-  return [HOUSEHOLD_SLUG, SALES_SLUG];
-}
 
 export async function getOrgBySlug(slug: string) {
   const db = getDb();
@@ -54,20 +65,6 @@ export async function requestedOrgSlug(request?: Request) {
   return jar.get(ORG_COOKIE)?.value?.trim() || "";
 }
 
-export function pickActiveSlug(
-  requested: string,
-  slugs: string[],
-  memberKind: string,
-) {
-  const allowed = memberKind === "child"
-    ? slugs.filter((s) => s !== SALES_SLUG)
-    : slugs;
-  if (requested && allowed.includes(requested)) return requested;
-  if (allowed.includes(HOUSEHOLD_SLUG)) return HOUSEHOLD_SLUG;
-  if (allowed.includes(SALES_SLUG)) return SALES_SLUG;
-  return allowed[0] || "";
-}
-
 export async function setActiveOrgCookie(slug: string) {
   const jar = await cookies();
   jar.set(ORG_COOKIE, slug, {
@@ -78,21 +75,25 @@ export async function setActiveOrgCookie(slug: string) {
   });
 }
 
-export function courseAllowedInOrg(orgSlug: string, course: string) {
-  if (orgSlug === HOUSEHOLD_SLUG) return course === "home";
-  if (orgSlug === SALES_SLUG) return course === "sales";
-  return course === "grok-bot";
-}
-
 export async function ensureTenantOrgs() {
   const db = getDb();
   await db
     .insert(organizations)
-    .values({
-      slug: SALES_SLUG,
-      name: "Sales team",
-      kind: "company",
-      isolation: "platform_plus",
-    })
+    .values([
+      {
+        slug: HOUSEHOLD_SLUG,
+        name: "Household",
+        kind: "homeschool",
+        isolation: "strict",
+        features: { cap: false },
+      },
+      {
+        slug: SALES_SLUG,
+        name: "Sales team",
+        kind: "company",
+        isolation: "platform_plus",
+        features: { cap: false },
+      },
+    ])
     .onConflictDoNothing();
 }

@@ -15,16 +15,26 @@ export default function DashboardPage() {
   const courses = listPublishedCourses();
   const seatLabel = authSession?.user?.seatLabel;
   const [nextStation, setNextStation] = useState<{ href: string; title: string } | null>(null);
+  const [activeOrg, setActiveOrg] = useState("");
 
   useEffect(() => {
     if (!authSession?.user?.email) return;
-    void fetch("/api/chooser?course=grok-bot")
+    void fetch("/api/me")
       .then((r) => r.json())
+      .then((data) => {
+        const slug = data.activeOrg?.slug || "";
+        setActiveOrg(slug);
+        const course = slug === "household" ? "home" : slug === "sales" ? "sales" : "grok-bot";
+        return fetch(`/api/chooser?course=${course}`).then((r) => r.json());
+      })
       .then((data) => {
         if (data?.next?.href) setNextStation({ href: data.next.href, title: data.next.title });
       })
       .catch(() => undefined);
   }, [authSession?.user?.email]);
+  const household = activeOrg === "household";
+  const sales = activeOrg === "sales";
+  const hideGrokBot = household || sales;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
@@ -79,6 +89,53 @@ export default function DashboardPage() {
 
       <section className="mt-12">
         <h2 className="font-display text-2xl tracking-tight">Courses</h2>
+        {hideGrokBot ? (
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <Link
+              href={household ? "/o/household/welcome" : "/o/sales/welcome"}
+              className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+            >
+              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                {household ? "home:welcome" : "sales:welcome"}
+              </p>
+              <h3 className="mt-1 font-display text-2xl tracking-tight">
+                {household ? "Welcome home" : "Welcome to the desk"}
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {household
+                  ? "Household lesson. Grok Bot is not in this catalog."
+                  : "Sales lesson. Household Pattern stays off this board."}
+              </p>
+            </Link>
+            {household ? (
+              <Link
+                href="/pattern"
+                className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+              >
+                <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                  Field Pattern
+                </p>
+                <h3 className="mt-1 font-display text-2xl tracking-tight">fp-50-v1</h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Living profile on the person. Skills stay org-scoped.
+                </p>
+              </Link>
+            ) : (
+              <Link
+                href="/skills"
+                className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+              >
+                <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                  Sales diagnostic
+                </p>
+                <h3 className="mt-1 font-display text-2xl tracking-tight">Desk skills</h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Discovery, qualification, next step.
+                </p>
+              </Link>
+            )}
+          </div>
+        ) : (
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           {courses.map((c) => {
             const tally = ready ? courseTally(c.slug) : { passed: 0, total: c.stationCount, exam: null, certified: false };
@@ -105,6 +162,7 @@ export default function DashboardPage() {
             );
           })}
         </div>
+        )}
       </section>
 
       <section className="mt-12">
