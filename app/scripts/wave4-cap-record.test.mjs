@@ -9,6 +9,7 @@ import {
   LONGFORM_DEFAULT,
   LONGFORM_FALLBACK,
   CLEANING_STATUS,
+  CHECKLIST,
   authorize,
   cleaningOnPass,
   isJustCapId,
@@ -48,6 +49,8 @@ test("next real take is Remotion; Just and factory gates stay closed", () => {
   assert.match(spec, /Melt is fallback/);
   assert.match(spec, /proposed_chapters/);
   assert.match(spec, /Auto-flip Notion Asset \*\*Status\*\* to \*\*Cleaning\*\*/);
+  assert.match(spec, /product-locked six-point/);
+  assert.doesNotMatch(spec, /seven-point|No generic-AI look/);
   assert.doesNotMatch(spec, /2\.24\.64\.248 is in scope/);
 });
 
@@ -55,24 +58,31 @@ const passIngest = {
   capId: "take_new_not_just",
   assetId: "asset_new_not_just",
   status: "Review",
+  title: "Teach the work",
+  summary: "Pause on purpose. Then do the next move.",
   transcript: "Teach the work. Pause on purpose. Then do the next move.",
+  rawCapFile: "https://cap.fieldschool.ai/s/take_new_not_just",
   duration: 120,
-  width: 1920,
-  height: 1080,
-  mark: "Field School",
-  cream: "#EFE7D6",
-  ink: "#1A1A16",
-  look: "field-school",
   chapters: [
     { title: "Teach the work", start: 0, end: 60 },
     { title: "Do the next move", start: 60, end: 120 },
   ],
 };
 
-test("cleaning-on-pass flips Status only when the checklist passes", () => {
+test("cleaning-on-pass flips Status only when the six locked checks pass", () => {
+  assert.deepEqual(CHECKLIST, [
+    "cap_take_copy",
+    "chapters_cover",
+    "overlay_lock",
+    "cards_head",
+    "remotion_just",
+    "hls_then_raw",
+  ]);
+  assert.equal(CHECKLIST.length, 6);
+
   const written = writeEditSpec(passIngest);
   assert.equal(written.ok, true);
-  assert.equal(runQualityChecklist(written.spec).pass, true);
+  assert.equal(runQualityChecklist(passIngest, written.spec).pass, true);
   assert.equal(authorize("cleaning_on_pass", { pass: true }).ok, true);
 
   const applied = [];
@@ -86,22 +96,31 @@ test("cleaning-on-pass flips Status only when the checklist passes", () => {
   assert.equal(pass.softShip, false);
   assert.equal(applied[0].value, "Cleaning");
 
-  const fail = cleaningOnPass({ ...passIngest, width: 1280, height: 720 });
+  const fail = cleaningOnPass({ ...passIngest, chapters: [] });
   assert.equal(fail.ok, false);
-  assert.equal(fail.action, "stop_take");
-  assert.equal(fail.escalate, "chief_decision_maker");
+  assert.equal(fail.action, "hold");
+  assert.equal(fail.escalate, true);
+  assert.equal(fail.escalateTo, "chief_decision_maker");
   assert.equal(fail.via, "cto_cursor_gate");
   assert.equal(fail.status, null);
   assert.equal(fail.softShip, false);
-  assert.ok(fail.failures.includes("frame_1920x1080"));
+  assert.ok(fail.failures.some((row) => row.startsWith("chapters_cover:")));
 
   const just = cleaningOnPass({ ...passIngest, capId: JUST_CAP_ID });
-  assert.equal(just.error, "just_locked");
+  assert.equal(just.action, "skip_just");
+  assert.equal(just.escalate, true);
   assert.equal(just.status, null);
 
-  const ready = cleaningOnPass({ ...passIngest, status: "HLS Ready" });
-  assert.equal(ready.error, "already_hls_ready");
-  assert.equal(ready.status, null);
+  const leftoverCheck = runQualityChecklist(passIngest, {
+    ...written.spec,
+    proposed_chapters: [{ title: "Draft", start: 0 }],
+  });
+  assert.equal(leftoverCheck.pass, false);
+  assert.ok(leftoverCheck.failures.some((row) => row.includes("propose leftovers")));
+
+  const publish = cleaningOnPass({ ...passIngest, status: "Published" });
+  assert.equal(publish.action, "held_publish");
+  assert.equal(publish.escalate, false);
 
   assert.equal(writeEditSpec({ ...passIngest, capId: JUST_CAP_ID }).error, "just_locked");
   assert.equal(authorize("cleaning_on_pass", { pass: false }).error, "checklist_failed");

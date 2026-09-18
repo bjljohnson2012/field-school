@@ -8,20 +8,28 @@ export const LONGFORM_FALLBACK = "melt";
 export const CLEANING_STATUS = "Cleaning";
 export const HLS_READY = "HLS Ready";
 
+export const LOGO_LOCK = "/opt/field-school/edit/brand/logo.png";
+export const OVERLAY_LOCK = { x: 1576, y: 24, w: 80, h: 64 };
+export const CREAM = "#EFE7D6";
+export const INK = "#1A1A16";
+export const FONT = "Fraunces";
+export const HEAD_WIDTH_FRAC = 0.38;
+export const DURATION_SLACK = 0.51;
+
 export const BRAND = {
-  cream: "#EFE7D6",
-  ink: "#1A1A16",
+  cream: CREAM,
+  ink: INK,
   mark: "Field School",
+  font: FONT,
 };
 
 export const CHECKLIST = [
-  "frame_1920x1080",
-  "field_school_mark",
-  "full_duration_pedagogical_chapters",
-  "cream_ink",
-  "remotion_default",
-  "melt_fallback_only",
-  "no_generic_ai_look",
+  "cap_take_copy",
+  "chapters_cover",
+  "overlay_lock",
+  "cards_head",
+  "remotion_just",
+  "hls_then_raw",
 ];
 
 export const UNAUTHORIZED = [
@@ -29,17 +37,7 @@ export const UNAUTHORIZED = [
   "publish_distribute",
 ];
 
-const GENERIC_AI = [
-  /in this video we'?ll explore/i,
-  /let'?s dive in/i,
-  /welcome to this (course|lesson|video)/i,
-  /generic-?ai/i,
-  /#7[cC]3[aA][eE][dD]/,
-  /#A78BFA/i,
-  /purple gradient/i,
-];
-
-const GENERIC_CHAPTER = /^(chapter|part|untitled|section|clip)\s*\d*$/i;
+const HELD = new Set(["Published", "Distributed"]);
 
 export function isJustCapId(capId) {
   return String(capId || "").trim() === JUST_CAP_ID;
@@ -47,6 +45,11 @@ export function isJustCapId(capId) {
 
 export function isJustAsset(assetId) {
   return String(assetId || "").replace(/-/g, "") === JUST_ASSET_ID.replace(/-/g, "");
+}
+
+export function isJust({ capId, assetId, raw, log } = {}) {
+  const blob = [capId, assetId, raw, log].filter(Boolean).join(" ");
+  return blob.includes(JUST_CAP_ID) || blob.replace(/-/g, "").includes(JUST_ASSET_ID.replace(/-/g, ""));
 }
 
 export function longformEngine(capId) {
@@ -74,103 +77,88 @@ export function writeEditSpec(ingest = {}) {
   const capId = String(ingest.capId || "").trim();
   const assetId = String(ingest.assetId || "").trim();
 
-  if (isJustCapId(capId) || isJustAsset(assetId)) {
+  if (isJust({ capId, assetId, raw: ingest.rawCapFile, log: ingest.processingLog })) {
     return { ok: false, error: "just_locked", spec: null };
   }
   if (!capId) {
     return { ok: false, error: "missing_cap_id", spec: null };
   }
-  if (!String(ingest.transcript || "").trim()) {
-    return { ok: false, error: "stt_incomplete", spec: null };
+
+  const duration = Number(ingest.duration || 0);
+  if (!(duration > 0)) {
+    return { ok: false, error: "duration_missing", spec: null };
   }
 
   const engine = longformEngine(capId);
   if (!engine.ok) return { ok: false, error: engine.error, spec: null };
 
-  const duration = Number(ingest.duration || 0);
-  const chapters = normalizeChapters(ingest.chapters, duration);
+  const title = String(ingest.title || "").trim();
+  const overlayTitle = ingest.overlayMode === "Logo" ? "" : title;
 
   const spec = {
-    format: "course",
-    capId,
-    assetId: assetId || null,
-    transcript: String(ingest.transcript),
-    duration,
-    width: Number(ingest.width || 1920),
-    height: Number(ingest.height || 1080),
-    engine: ingest.engine || engine.engine,
+    engine: LONGFORM_DEFAULT,
     fallback: LONGFORM_FALLBACK,
-    remotionFailed: Boolean(ingest.remotionFailed),
-    mark: ingest.mark || BRAND.mark,
-    palette: {
-      cream: ingest.cream || BRAND.cream,
-      ink: ingest.ink || BRAND.ink,
-    },
-    look: ingest.look || "field-school",
+    duration,
     overlay: {
-      logo: "/opt/field-school/edit/brand/logo.png",
-      title: "",
-      x: 1576,
-      y: 24,
-      w: 80,
-      h: 64,
+      logo: LOGO_LOCK,
+      title: overlayTitle,
+      ...OVERLAY_LOCK,
     },
-    transition: { id: "luma", frames: 12 },
-    silence_cut: false,
-    cuts: [],
-    broll: [],
-    chapters,
-    shorts: { mode: "blur" },
+    cards: {
+      paper: CREAM,
+      ink: INK,
+      font: FONT,
+    },
+    head: {
+      dock: ingest.headDock || "right",
+      width_frac: HEAD_WIDTH_FRAC,
+      full_frame: false,
+    },
+    chapters: normalizeChapters(ingest.chapters, duration),
+    cuts: [{ in: 0, out: duration }],
+    remotion: { duration },
+    raw_drop: false,
   };
 
   return { ok: true, spec };
 }
 
-export function runQualityChecklist(spec = {}) {
+export function runQualityChecklist(asset = {}, spec = null, extras = {}) {
+  const capId = String(asset.capId || asset.cap_id || "").trim();
+  const just = isJust({
+    capId,
+    assetId: asset.assetId || asset.asset_id,
+    raw: asset.rawCapFile || asset.raw_cap_file,
+    log: asset.processingLog || asset.processing_log,
+  });
+
   const checks = {
-    frame_1920x1080: Number(spec.width) === 1920 && Number(spec.height) === 1080,
-    field_school_mark:
-      String(spec.mark || "").includes(BRAND.mark) && Boolean(spec.overlay?.logo),
-    full_duration_pedagogical_chapters: chaptersCoverLesson(spec.chapters, spec.duration),
-    cream_ink:
-      normalizeHex(spec.palette?.cream) === normalizeHex(BRAND.cream) &&
-      normalizeHex(spec.palette?.ink) === normalizeHex(BRAND.ink),
-    remotion_default:
-      spec.engine === LONGFORM_DEFAULT ||
-      (spec.engine === LONGFORM_FALLBACK && spec.remotionFailed === true),
-    melt_fallback_only:
-      spec.fallback === LONGFORM_FALLBACK &&
-      (spec.engine !== LONGFORM_FALLBACK || spec.remotionFailed === true),
-    no_generic_ai_look: !hasGenericAiLook(spec),
+    cap_take_copy: capTakeCopy(asset, capId),
+    chapters_cover: chaptersCover(asset),
+    overlay_lock: overlayLock(asset, spec),
+    cards_head: cardsHead(spec),
+    remotion_just: remotionJust(asset, spec, extras, just),
+    hls_then_raw: hlsThenRaw(asset, spec, extras),
   };
 
-  const failures = CHECKLIST.filter((key) => !checks[key]);
+  const failures = CHECKLIST.filter((key) => !checks[key].ok);
   return {
     ok: failures.length === 0,
     pass: failures.length === 0,
     checks,
-    failures,
+    failures: failures.map((key) => `${key}: ${checks[key].detail}`),
+    just,
   };
 }
 
 export function cleaningOnPass(ingest = {}, applyStatus) {
-  if (isJustCapId(ingest.capId) || isJustAsset(ingest.assetId)) {
+  const status = String(ingest.status || "Review");
+  if (HELD.has(status)) {
     return {
       ok: false,
-      error: "just_locked",
-      action: "stop_take",
-      status: null,
-      escalate: false,
-      softShip: false,
-    };
-  }
-
-  if (ingest.status === HLS_READY) {
-    return {
-      ok: false,
-      error: "already_hls_ready",
-      action: "stop_take",
-      status: null,
+      error: "not_authorized",
+      action: "held_publish",
+      status,
       escalate: false,
       softShip: false,
     };
@@ -178,16 +166,27 @@ export function cleaningOnPass(ingest = {}, applyStatus) {
 
   const written = writeEditSpec(ingest);
   if (!written.ok) {
-    return escalateToCdm({
+    return holdAndEscalate({
       capId: ingest.capId,
       assetId: ingest.assetId,
       failures: [written.error],
+      action: written.error === "just_locked" ? "skip_just" : "hold",
     });
   }
 
-  const quality = runQualityChecklist(written.spec);
+  const quality = runQualityChecklist(ingest, written.spec, ingest.extras || {});
+  if (quality.just) {
+    return holdAndEscalate({
+      capId: ingest.capId,
+      assetId: ingest.assetId,
+      spec: written.spec,
+      failures: quality.failures.length ? quality.failures : ["remotion_just: Just locked until Ready"],
+      checks: quality.checks,
+      action: "skip_just",
+    });
+  }
   if (!quality.pass) {
-    return escalateToCdm({
+    return holdAndEscalate({
       capId: ingest.capId,
       assetId: ingest.assetId,
       spec: written.spec,
@@ -218,12 +217,13 @@ export function cleaningOnPass(ingest = {}, applyStatus) {
   return flip;
 }
 
-export function escalateToCdm({ capId, assetId, spec, failures, checks } = {}) {
+export function holdAndEscalate({ capId, assetId, spec, failures, checks, action } = {}) {
   return {
     ok: false,
-    action: "stop_take",
+    action: action || "hold",
     status: null,
-    escalate: "chief_decision_maker",
+    escalate: true,
+    escalateTo: "chief_decision_maker",
     via: "cto_cursor_gate",
     softShip: false,
     capId: capId || null,
@@ -235,14 +235,129 @@ export function escalateToCdm({ capId, assetId, spec, failures, checks } = {}) {
   };
 }
 
+export const escalateToCdm = holdAndEscalate;
+
+function capTakeCopy(asset, capId) {
+  const title = String(asset.title || "").trim();
+  const transcript = String(asset.transcript || "").trim();
+  const summary = String(asset.summary || asset.ai_summary || "").trim();
+  const raw = String(asset.rawCapFile || asset.raw_cap_file || "").trim();
+  const missing = [];
+  if (!capId) missing.push("cap_id");
+  if (!raw && !capId) missing.push("cap_take");
+  if (!transcript) missing.push("transcript");
+  if (!title) missing.push("title");
+  if (!summary) missing.push("summary");
+  if (missing.length) return { ok: false, detail: `missing ${missing.join(",")}` };
+  return { ok: true, detail: "cap take + transcript/title/summary" };
+}
+
+function chaptersCover(asset) {
+  const duration = Number(asset.duration);
+  if (!(duration > 0)) return { ok: false, detail: "duration missing" };
+  const chapters = normalizeChapters(asset.chapters, duration);
+  if (!chapters.length) return { ok: false, detail: "no chapters" };
+  if (chapters[0].start > DURATION_SLACK) return { ok: false, detail: "gap at start" };
+  if (chapters[chapters.length - 1].end + DURATION_SLACK < duration) {
+    return { ok: false, detail: "gap at end" };
+  }
+  for (let i = 0; i < chapters.length; i += 1) {
+    const chapter = chapters[i];
+    if (!(chapter.end > chapter.start)) return { ok: false, detail: `empty ${chapter.title}` };
+    if (i < chapters.length - 1 && chapters[i + 1].start - chapter.end > DURATION_SLACK) {
+      return { ok: false, detail: `gap before ${chapters[i + 1].title}` };
+    }
+  }
+  return { ok: true, detail: "chapters cover full duration" };
+}
+
+function overlayLock(asset, spec) {
+  if (!spec) return { ok: false, detail: "no edit spec" };
+  const overlay = spec.overlay;
+  if (!overlay || typeof overlay !== "object") return { ok: false, detail: "overlay missing" };
+  if (String(overlay.logo || "") !== LOGO_LOCK) return { ok: false, detail: "logo path off lock" };
+  for (const [key, expected] of Object.entries(OVERLAY_LOCK)) {
+    if (Number(overlay[key]) !== expected) return { ok: false, detail: `overlay ${key} off lock` };
+  }
+  const title = String(asset.title || "").trim();
+  if (String(overlay.title || "").trim() !== title) {
+    return { ok: false, detail: "overlay title off lock" };
+  }
+  return { ok: true, detail: "logo+title match lock" };
+}
+
+function cardsHead(spec) {
+  if (!spec) return { ok: false, detail: "no edit spec" };
+  const cards = spec.cards;
+  if (!cards || typeof cards !== "object") return { ok: false, detail: "cards missing" };
+  const paper = String(cards.paper || cards.cream || "").toUpperCase();
+  const ink = String(cards.ink || "").toUpperCase();
+  const font = String(cards.font || "");
+  if (paper !== CREAM.toUpperCase() || ink !== INK.toUpperCase() || font !== FONT) {
+    return { ok: false, detail: "cards not cream/ink/Fraunces" };
+  }
+  const head = spec.head;
+  if (!head || typeof head !== "object") return { ok: false, detail: "head missing" };
+  if (head.full_frame === true) return { ok: false, detail: "head full-frame covers type" };
+  if (!["left", "right"].includes(String(head.dock || ""))) {
+    return { ok: false, detail: "head dock missing" };
+  }
+  const width = Number(head.width_frac);
+  if (!(width > 0) || width > HEAD_WIDTH_FRAC + 0.001) {
+    return { ok: false, detail: "head clear zone lost" };
+  }
+  return { ok: true, detail: "cream/ink/Fraunces + head clear zone" };
+}
+
+function remotionJust(asset, spec, extras, just) {
+  if (just) return { ok: false, detail: "Just locked until Ready" };
+  if (!spec) return { ok: false, detail: "no edit spec" };
+  if (spec.engine !== LONGFORM_DEFAULT) return { ok: false, detail: "Remotion is not default" };
+  const leftovers = proposeLeftovers(spec);
+  if (leftovers.length) return { ok: false, detail: `propose leftovers: ${leftovers.join(",")}` };
+  const duration = Number(asset.duration);
+  if (!(duration > 0)) return { ok: false, detail: "duration missing" };
+  const declared = spec.remotion?.duration ?? spec.duration;
+  if (asNumber(declared) == null || Math.abs(Number(declared) - duration) > DURATION_SLACK) {
+    return { ok: false, detail: "Remotion duration mismatch" };
+  }
+  const master = extras.remotion_master_duration;
+  if (master != null && Math.abs(Number(master) - duration) > DURATION_SLACK) {
+    return { ok: false, detail: "Remotion master duration mismatch" };
+  }
+  return { ok: true, detail: "Remotion duration matches; no leftovers; Just locked" };
+}
+
+function hlsThenRaw(asset, spec, extras) {
+  const status = String(asset.status || "");
+  const rawDropped = Boolean(extras.raw_dropped);
+  const rawDrop = Boolean(spec?.raw_drop);
+  if (status === HLS_READY) return { ok: true, detail: "HLS Ready; raw may drop" };
+  if (rawDropped || rawDrop) return { ok: false, detail: "raw dropped before HLS Ready" };
+  return { ok: true, detail: "raw held until HLS Ready" };
+}
+
+function proposeLeftovers(spec) {
+  const leftover = [];
+  for (const key of ["proposed_chapters", "proposed_cuts"]) {
+    if (spec[key] && (Array.isArray(spec[key]) ? spec[key].length : true)) leftover.push(key);
+  }
+  const remotion = spec.remotion;
+  if (remotion && typeof remotion === "object") {
+    for (const key of ["title_cards", "vo_slots"]) {
+      const rows = remotion[key] || [];
+      if (rows.some((row) => row && row.draft)) leftover.push(`remotion.${key}`);
+    }
+  }
+  return leftover;
+}
+
 function normalizeChapters(chapters, duration) {
   if (!Array.isArray(chapters) || chapters.length === 0) return [];
   return chapters.map((chapter, index) => {
     const start = Number(chapter.start ?? chapter.in ?? 0);
     const next = chapters[index + 1];
-    const end = Number(
-      chapter.end ?? chapter.out ?? (next ? next.start : duration),
-    );
+    const end = Number(chapter.end ?? chapter.out ?? (next ? next.start : duration));
     return {
       title: String(chapter.title || "").trim(),
       start,
@@ -251,27 +366,10 @@ function normalizeChapters(chapters, duration) {
   });
 }
 
-function chaptersCoverLesson(chapters, duration) {
-  if (!Array.isArray(chapters) || chapters.length === 0) return false;
-  if (!(Number(duration) > 0)) return false;
-  if (chapters[0].start > 1) return false;
-  if (chapters[chapters.length - 1].end < Number(duration) - 1) return false;
-  for (const chapter of chapters) {
-    if (!chapter.title || GENERIC_CHAPTER.test(chapter.title)) return false;
-    if (!(chapter.end > chapter.start)) return false;
+function asNumber(value) {
+  if (typeof value === "boolean" || (typeof value !== "number" && typeof value !== "string")) {
+    return null;
   }
-  for (let i = 1; i < chapters.length; i += 1) {
-    if (chapters[i].start - chapters[i - 1].end > 1) return false;
-  }
-  return true;
-}
-
-function normalizeHex(value) {
-  return String(value || "").trim().toUpperCase();
-}
-
-function hasGenericAiLook(spec) {
-  const hay = JSON.stringify(spec);
-  if (spec.look && spec.look !== "field-school") return true;
-  return GENERIC_AI.some((pattern) => pattern.test(hay));
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
 }

@@ -6,15 +6,15 @@ Branch `cursor/wave-4-record` off `origin/main`.
 
 Ben lock: AI video builder = Cap + Remotion + Edit-spec only. Operator-only. No new campus UI. No student-facing AI builder. Remotion is default long-form. Melt is fallback only.
 
-Cleaning-on-pass is authorized. After ingest/STT, write the Edit spec, run the quality checklist, auto-flip Status to Cleaning only on a full pass. Failures stop the take and escalate to Chief Decision Maker via CTO/Cursor Gate. Do not soft-ship.
+Cleaning-on-pass is authorized. After ingest/STT, write the Edit spec, run the product-locked six-point checklist, auto-flip Status to Cleaning only when all six pass. Fail any → hold + escalate to Chief Decision Maker via CTO/Cursor Gate. Do not soft-ship.
 
 ## Do not
 
 - Add `/o/:slug/record`, `/o/:slug/watch`, or campus `/api/cap`
 - Re-render Asset Just (`27pn9xs0zk8a73g`)
 - Accept YCJDT `proposed_chapters`
-- Flip Cleaning without a checklist pass
-- Flip an Asset already `HLS Ready` back to Cleaning
+- Flip Cleaning without a six-item pass
+- Invent a seventh checklist item
 - Publish / Distribute
 - Flip `AUTH_URL` or 301 university
 - Touch CNC vault `2.24.64.248`
@@ -36,9 +36,10 @@ Cleaning-on-pass is authorized. After ingest/STT, write the Edit spec, run the q
 | Guest `/api/me` still guest | pass — live `{"authenticated":false,"guest":true}` |
 | Guest POST `/api/events` 401 | pass — live 401 |
 | Just not re-rendered | pass — Just Status still `HLS Ready`; no `/trigger` |
-| Cleaning-on-pass | pass — fixture flip to Cleaning only when all seven checks pass |
-| Checklist fail | pass — stop + escalate CDM; Status unchanged |
-| Just / HLS Ready refuse | pass — no Status write |
+| Cleaning-on-pass | pass — fixture flip to Cleaning only when all six locked checks pass |
+| Checklist fail | pass — hold + escalate CDM; Status unchanged |
+| Just refuse | pass — skip_just; no Status write |
+| Propose leftovers | pass — remotion_just fails; no Cleaning |
 | YCJDT `proposed_chapters` | pass — still not authorized |
 | Publish / Distribute | pass — still not authorized |
 | Remotion compositions list | pass — `MyComp` 1920×1080 |

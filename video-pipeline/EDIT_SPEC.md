@@ -12,29 +12,30 @@ No new campus UI. No student-facing AI builder. No `/o/:slug/record`. No campus 
 
 ## After ingest / STT
 
-Write this edit-spec. Then run the quality checklist. Auto-flip Notion Asset **Status** to **Cleaning** only on a full pass.
+Write this edit-spec. Then run the **product-locked six-point** checklist. Auto-flip Notion Asset **Status** to **Cleaning** only when all six pass.
 
-Failures stop the take. Escalate to Chief Decision Maker via CTO / Cursor Gate (`CURSOR_GATE.md`). Do not soft-ship a partial pass.
+Fail any item → hold the take and escalate to Chief Decision Maker via CTO / Cursor Gate (`CURSOR_GATE.md`). Do not soft-ship.
 
-## Quality checklist
+## Quality checklist (six only)
 
-All must pass:
+Product lock. Do not add a seventh item.
 
-1. `1920x1080`
-2. Field School mark (logo overlay, mark text)
-3. Full-duration pedagogical chapters (cover 0 → duration, real titles)
-4. Cream / ink (`#EFE7D6` / `#1A1A16`)
-5. Remotion default
-6. Melt fallback only
-7. No generic-AI look
+1. Cap take + transcript / title / summary on Asset
+2. Chapters cover full duration
+3. Overlay logo + title match lock
+4. Cards cream / ink / Fraunces; head clear zone
+5. Remotion master duration matches; no propose leftovers; Just locked until Ready
+6. HLS Ready, then raw may drop
+
+Machine keys: `cap_take_copy`, `chapters_cover`, `overlay_lock`, `cards_head`, `remotion_just`, `hls_then_raw`.
+
+Overlay lock: logo `/opt/field-school/edit/brand/logo.png`, `x=1576 y=24 w=80 h=64`, title matches Asset title. Cards `#EFE7D6` / `#1A1A16` / Fraunces. Head docked, width ≤ 0.38, not full-frame. Item 6 at Review: raw stays. After HLS Ready, raw may drop.
 
 ## Next real take
 
 Record a **new** Cap Studio take (cam or cam+screen). No titles in Cap.
 
 Do **not** re-render Asset Just (`27pn9xs0zk8a73g`). Do **not** write an Edit spec on Just. Do **not** flip Just.
-
-Do **not** flip an Asset that is already `HLS Ready` back to Cleaning.
 
 Default encode: Remotion 16:9 lesson master in `plates/` / factory Remotion, following `video-pipeline/AGENTS.md` layer law.
 
@@ -44,7 +45,7 @@ Melt HLS only if the Remotion path fails. Single-flight `render.lock`. No second
 
 - YCJDT `proposed_chapters` accept
 - Publish / Distribute
-- Blind Cleaning flip without a checklist pass
+- Blind Cleaning flip without a six-item pass
 
 ## Locks
 

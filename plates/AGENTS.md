@@ -25,6 +25,6 @@ Factory hour-spine law (bed, B-roll, Vox, head, karaoke) stays in `video-pipelin
 - Pin `remotion` and `@remotion/*` to the same version. No carets.
 - Use `npx remotion skills add` and `/remotion-docs`. Do not install Remotion MCP.
 - Do not re-render Asset Just (`27pn9xs0zk8a73g`).
-- Cleaning-on-pass only: after ingest/STT, write the Edit spec, run the quality checklist, flip Status to Cleaning only on a full pass. Failures stop the take and escalate via `video-pipeline/CURSOR_GATE.md`.
+- Cleaning-on-pass only: after ingest/STT, write the Edit spec, run the product-locked six-point checklist, flip Status to Cleaning only when all six pass. Fail any → hold + escalate via `video-pipeline/CURSOR_GATE.md`.
 - Do not accept YCJDT `proposed_chapters` or Publish/Distribute.
 - Plate jobs wait if factory `render.lock` exists or MemAvailable < 3072 MiB.
