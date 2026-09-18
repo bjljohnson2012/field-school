@@ -23,14 +23,6 @@ function isAdminRoute(pathname) {
   return pathname === "/admin" || pathname.startsWith("/admin/");
 }
 
-function adminCookieIsValid(value) {
-  return value === "1";
-}
-
-function signedOutAdminAccess(cookieValue) {
-  return adminCookieIsValid(cookieValue) ? "allow" : "redirect";
-}
-
 function sanitizeLocalSignInEmail(email) {
   const mail = (email ?? "").trim();
   if (!mail || isDeanEmail(mail)) return "";
@@ -65,12 +57,7 @@ test("dean email matches the Google admin", () => {
   assert.equal(isDeanEmail("maya@field.school"), false);
 });
 
-test("signed-out admin access is blocked without a staff cookie", () => {
-  assert.equal(signedOutAdminAccess(undefined), "redirect");
-  assert.equal(signedOutAdminAccess(null), "redirect");
-  assert.equal(signedOutAdminAccess(""), "redirect");
-  assert.equal(signedOutAdminAccess("guest"), "redirect");
-  assert.equal(signedOutAdminAccess("1"), "allow");
+test("admin route matcher covers /admin and nested paths only", () => {
   assert.equal(isAdminRoute("/admin"), true);
   assert.equal(isAdminRoute("/admin/users"), true);
   assert.equal(isAdminRoute("/admin/notifications"), true);
@@ -138,9 +125,7 @@ test("privacy and terms pages are public, real policies linked from chrome", () 
 
 test("proxy and admin layout redirect guests away from staff HTML", () => {
   const proxy = readSrc("src/proxy.ts");
-  assert.match(proxy, /signedOutAdminAccess/);
   assert.match(proxy, /loginRedirectForAdmin/);
-  assert.match(proxy, /authIsConfigured/);
   assert.match(proxy, /isStaffSession/);
   assert.match(proxy, /request-access/);
   assert.match(proxy, /edgeAuth/);
@@ -148,6 +133,20 @@ test("proxy and admin layout redirect guests away from staff HTML", () => {
   assert.match(proxy, /export async function proxy/);
   assert.doesNotMatch(proxy, /from \"@\/auth\"/);
   assert.doesNotMatch(proxy, /from \"@\/lib\/members\/store\"/);
+
+  // Regression guard for the forgeable-cookie /admin bypass: the proxy must
+  // check a real Auth.js staff session unconditionally, never fall back to
+  // trusting the client-writable fsu_admin_gate cookie when OAuth env is
+  // unset (credentials-only deploys are supported and must still gate
+  // /admin on a real staff session).
+  assert.doesNotMatch(proxy, /authIsConfigured/);
+  assert.doesNotMatch(proxy, /signedOutAdminAccess/);
+  assert.doesNotMatch(proxy, /ADMIN_GATE_COOKIE/);
+  assert.doesNotMatch(proxy, /request\.cookies/);
+
+  const gate = readSrc("src/lib/admin-gate.ts");
+  assert.doesNotMatch(gate, /export function signedOutAdminAccess/);
+  assert.doesNotMatch(gate, /export function adminCookieIsValid/);
 
   const layout = readSrc("src/app/admin/layout.tsx");
   assert.match(layout, /loginRedirectForAdmin/);

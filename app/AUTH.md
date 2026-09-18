@@ -64,7 +64,7 @@ If `AUTH_SECRET` is missing:
 - **No one is elevated to admin** via OAuth or localStorage shortcuts.
 - `/admin*` remains hard-gated (middleware proxy redirects unsigned browsers to `/login`).
 
-If OAuth credentials are missing but `AUTH_SECRET` is set, email + password still works.
+If OAuth credentials are missing but `AUTH_SECRET` is set (credentials-only), email + password still works for members, but staff sign-in has no path (credentials never grant `admin`), so `/admin*` still redirects everyone. Either way, `/admin*` is gated on a real Auth.js session, never on a client-writable cookie.
 
 ## Sign-in flow
 
@@ -72,7 +72,7 @@ If OAuth credentials are missing but `AUTH_SECRET` is set, email + password stil
 2. Auth.js mints a session. Role is `admin` only when the provider is Google or X **and** the email is allowlisted. Otherwise the role is `member`.
 3. `/login/complete` syncs the browser portal. Staff land on `/admin`. Members land on `/dashboard`.
 4. A member who aimed at `/admin` is sent to `/request-access`.
-5. The admin proxy allows `/admin*` only when a valid Auth.js **staff** session exists (when OAuth is configured). Members are redirected to Request Access.
+5. The admin proxy allows `/admin*` only when a valid Auth.js **staff** session exists — in every deploy shape, including credentials-only (`AUTH_SECRET` set, no Google/X). There is no cookie-based fallback: the browser-only `fsu_admin_gate` marker (used by the demo portal UI to show/hide nav) is never trusted by the proxy. Since credentials sign-in never grants the `admin` role, a credentials-only deploy has no staff session at all and `/admin*` stays redirected for everyone. Members with a real session are redirected to Request Access.
 
 Local **Keep a dashboard** and **Continue as guest** paths are unchanged and cannot attach the dean seat.
 

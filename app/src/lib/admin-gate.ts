@@ -1,20 +1,17 @@
 import { isDeanEmail, type Role } from "@/lib/campus";
 
-/** Client-set marker so middleware can refuse /admin without a staff session. */
+/**
+ * Legacy client-set marker for the browser-only demo portal UI (nav state
+ * only). Forgeable by design (plain, non-httpOnly, written from
+ * `localStorage` state) — the /admin proxy must never treat this as proof
+ * of a staff session. Server-side staff checks always go through
+ * `edgeAuth()` + `isStaffSession()`.
+ */
 export const ADMIN_GATE_COOKIE = "fsu_admin_gate";
 export const ADMIN_GATE_VALUE = "1";
 
 export function isAdminRoute(pathname: string) {
   return pathname === "/admin" || pathname.startsWith("/admin/");
-}
-
-export function adminCookieIsValid(value: string | null | undefined) {
-  return value === ADMIN_GATE_VALUE;
-}
-
-/** Signed-out browsers (no staff cookie) must never receive /admin HTML. */
-export function signedOutAdminAccess(cookieValue: string | null | undefined) {
-  return adminCookieIsValid(cookieValue) ? "allow" : "redirect";
 }
 
 export function loginRedirectForAdmin(pathname: string) {
