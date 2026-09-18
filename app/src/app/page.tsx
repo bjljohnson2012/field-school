@@ -18,12 +18,13 @@ export default function Campus() {
   const { status, data: authSession } = useSession();
   const { guest, ready, isStaff } = usePortal();
   const loggedIn = status === "authenticated" && Boolean(authSession?.user?.email);
+  const showMarketing = status === "unauthenticated";
 
   useEffect(() => {
     if (loggedIn) router.replace("/dashboard");
   }, [loggedIn, router]);
 
-  if (loggedIn) return null;
+  if (!showMarketing) return null;
 
   return (
     <main>

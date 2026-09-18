@@ -38,8 +38,9 @@ test("logged-in / is the dashboard and marketing CTAs stay guest-only", () => {
   const home = readSrc("src/app/page.tsx");
   assert.match(home, /useSession/);
   assert.match(home, /if \(loggedIn\) router\.replace\("\/dashboard"\)/);
-  assert.match(home, /if \(loggedIn\) return null/);
-  const redirectIdx = home.indexOf('if (loggedIn) return null');
+  assert.match(home, /const showMarketing = status === "unauthenticated"/);
+  assert.match(home, /if \(!showMarketing\) return null/);
+  const redirectIdx = home.indexOf("if (!showMarketing) return null");
   const guestIdx = home.indexOf("Continue as guest");
   const betaIdx = home.indexOf("Join free beta");
   const adminIdx = home.indexOf('href="/admin"');
@@ -74,7 +75,7 @@ test("logged-in header hides About; Inbox lives only under Admin", () => {
   const feedback = readSrc("src/components/course-feedback.tsx");
 
   assert.match(header, /loggedIn \? "\/dashboard" : "\/"/);
-  assert.match(header, /!\s*loggedIn \? \[\{ href: "\/about"/);
+  assert.match(header, /showGuestChrome \? \[\{ href: "\/about"/);
   assert.doesNotMatch(header, /href: "\/inbox"/);
   assert.doesNotMatch(header, /Notifications/);
   assert.doesNotMatch(header, /label: "About".*loggedIn/);
