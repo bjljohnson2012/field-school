@@ -26,9 +26,9 @@
 | C | Sales published lesson | absent from household catalog | **pass** (`org_id` scope) |
 | D | Quiz without `source_unit_id` | 400 `source_unit_id_required` | **pass** |
 | E | PDF / file from other org | 403 `cross_org` | **pass** |
-| F | Guest Grok Bot | `/c/grok-bot` still guest; POST `/api/events` 401 | **live** on chrome tip; Wave 3 routes not deployed yet |
+| F | Guest Grok Bot | `/c/grok-bot` still guest; POST `/api/events` 401 | **live** `{"authenticated":false,"guest":true}` + 200 + 401 |
 
-Live VPS publish / apply 0005 / browser walkthrough stay **pending** until four-model hotfix interrogate PASSes this SHA.
+Four-model hotfix interrogate of `a175f02`: Isolation / Item-bank / Factory / Goal all **PASS**. First campus deploy applied `0005` and guest composer POST returned `401 sign_in_required` (fail closed). A sibling worker then redeployed Wave 2 over the host; live composer is `404` again. Postgres still has the composer tables. Guest Grok Bot, cap login, and edit health still hold. Do not keep fighting sibling deploys.
 
 ## Manual cheat sheet
 
