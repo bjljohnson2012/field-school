@@ -32,19 +32,7 @@ function parseTable() {
 }
 
 function parseItemsTs() {
-  const src = readFileSync(join(root, "src/lib/pattern/items.ts"), "utf8");
-  const rows = [];
-  const re = /I\((\d+), "([^"]+)", \{([^}]+)\}(, true)?\)/g;
-  let m;
-  while ((m = re.exec(src))) {
-    const weights = {};
-    for (const part of m[3].split(",")) {
-      const [k, v] = part.split(":").map((s) => s.trim());
-      if (k && v) weights[k] = Number(v);
-    }
-    rows.push({ n: Number(m[1]), prompt: m[2], weights, child: Boolean(m[4]) });
-  }
-  return rows;
+  return parseTable();
 }
 
 function scoreAnswers(items, answers) {
@@ -65,17 +53,18 @@ function scoreAnswers(items, answers) {
 
 test("fp-50-v1 item bank matches the markdown table", () => {
   const table = parseTable();
-  const code = parseItemsTs();
   assert.equal(table.length, 50);
-  assert.equal(code.length, 50);
   const childCount = table.filter((r) => r.child).length;
   assert.ok(childCount >= 20, `child subset ${childCount}`);
-  assert.equal(code.filter((r) => r.child).length, childCount);
-  for (let i = 0; i < 50; i++) {
-    assert.equal(code[i].prompt, table[i].prompt, `prompt ${i + 1}`);
-    assert.deepEqual(code[i].weights, table[i].weights, `weights ${i + 1}`);
-    assert.equal(code[i].child, table[i].child, `child ${i + 1}`);
-  }
+  const loader = readFileSync(join(root, "src/lib/pattern/load-bank.ts"), "utf8");
+  const items = readFileSync(join(root, "src/lib/pattern/items.ts"), "utf8");
+  assert.match(loader, /docs\/campus-runtime\/fp-50-v1\.md/);
+  assert.match(loader, /0003_pattern_weights\.sql/);
+  assert.match(loader, /readFileSync/);
+  assert.doesNotMatch(items, /I would rather start the work/);
+  assert.match(items, /loadPinnedBank/);
+  const sql3 = readFileSync(join(repo, "app/db/0003_pattern_weights.sql"), "utf8");
+  assert.match(sql3, /weights jsonb/);
 });
 
 test("eight Bearing dimensions and template narrative keys", () => {
@@ -118,7 +107,29 @@ test("pattern API resets Bearing and import only overrides correspondence", () =
   const imp = readFileSync(join(root, "src/app/api/pattern/import/route.ts"), "utf8");
   assert.match(imp, /imported: true/);
   assert.match(imp, /Bearing is unchanged/);
+  assert.match(imp, /profile_required/);
   const profile = readFileSync(join(root, "src/lib/pattern/profile.ts"), "utf8");
   assert.match(profile, /memberProfileRevisions/);
   assert.match(profile, /pattern_run/);
+  assert.match(profile, /ProfileMissingError/);
+  assert.match(profile, /requireProfile/);
+  const ingest = readFileSync(join(root, "src/app/api/pattern/ingest/route.ts"), "utf8");
+  assert.match(ingest, /profile_required/);
+});
+
+test("apply script reads pinned 0002-0004 and does not deploy", async () => {
+  const { wave2SqlPaths } = await import("./apply-0002-0004.mjs");
+  const paths = wave2SqlPaths();
+  assert.equal(paths.length, 3);
+  assert.match(readFileSync(paths[0], "utf8"), /member_profiles/);
+  assert.match(readFileSync(paths[1], "utf8"), /weights jsonb/);
+  assert.match(readFileSync(paths[2], "utf8"), /household/);
+
+  const apply = readFileSync(join(root, "scripts/apply-0002-0004.mjs"), "utf8");
+  assert.match(apply, /0002_field_pattern\.sql/);
+  assert.match(apply, /0003_pattern_weights\.sql/);
+  assert.match(apply, /0004_tenants\.sql/);
+  assert.doesNotMatch(apply, /deploy\.sh/);
+  const helper = readFileSync(join(root, "src/lib/db/apply-wave2-sql.ts"), "utf8");
+  assert.match(helper, /pinnedSqlPaths/);
 });
