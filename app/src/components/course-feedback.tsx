@@ -28,7 +28,7 @@ export function CourseFeedback({
         Send feedback to staff
       </h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        This lands on Admin → Notifications. Use it when a clip is too long, a
+        This lands on Admin → Inbox. Use it when a clip is too long, a
         station is stuck, or you want a human reply.
       </p>
       <form
@@ -103,7 +103,7 @@ export function CourseFeedback({
         </Button>
         {sent ? (
           <p className="text-sm text-pass">
-            Sent. Staff will see it under Admin → Notifications.
+            Sent. Staff will see it under Admin → Inbox.
           </p>
         ) : null}
       </form>

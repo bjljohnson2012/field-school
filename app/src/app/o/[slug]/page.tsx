@@ -11,6 +11,17 @@ type Me = {
   member?: { kind: string };
 };
 
+type ChildRow = {
+  id: string;
+  name: string;
+  kind: string;
+  membershipId: string;
+  login: string;
+  welcomeWatched: boolean;
+  patternTitle: string | null;
+  note: string;
+};
+
 export default function OrgHomePage() {
   const { slug } = useParams<{ slug: string }>();
   const [me, setMe] = useState<Me | null>(null);
@@ -19,6 +30,8 @@ export default function OrgHomePage() {
   const [stance, setStance] = useState("");
   const [childName, setChildName] = useState("");
   const [inviteUrl, setInviteUrl] = useState<string | null>(null);
+  const [children, setChildren] = useState<ChildRow[]>([]);
+  const [notes, setNotes] = useState<Record<string, string>>({});
 
   useEffect(() => {
     void fetch("/api/org/active", {
@@ -50,6 +63,24 @@ export default function OrgHomePage() {
         ]
       : [{ value: "learner", label: "Learner" }];
 
+  async function loadChildren() {
+    if (slug !== "household") return;
+    const res = await fetch("/api/children", { headers: { "x-fs-org": slug } });
+    const data = await res.json();
+    if (!res.ok) return;
+    const rows = (data.children ?? []) as ChildRow[];
+    setChildren(rows);
+    const next: Record<string, string> = {};
+    for (const row of rows) next[row.membershipId] = row.note || "";
+    setNotes(next);
+  }
+
+  useEffect(() => {
+    if (household && canInvite) void loadChildren();
+    // loadChildren reads slug/household; canInvite is derived from me.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [household, canInvite, slug]);
+
   async function invite() {
     const res = await fetch("/api/invites", {
       method: "POST",
@@ -73,6 +104,21 @@ export default function OrgHomePage() {
     });
     const data = await res.json();
     setNote(res.ok ? `Child ${data.child.name} added.` : data.error);
+    if (res.ok) {
+      setChildName("");
+      await loadChildren();
+    }
+  }
+
+  async function saveNote(membershipId: string) {
+    const res = await fetch("/api/children", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", "x-fs-org": slug },
+      body: JSON.stringify({ membershipId, note: notes[membershipId] || "" }),
+    });
+    const data = await res.json();
+    setNote(res.ok ? "Parent note saved." : data.error || "Could not save note.");
+    if (res.ok) await loadChildren();
   }
 
   if (note === "You cannot open this org.") {
@@ -146,15 +192,79 @@ export default function OrgHomePage() {
 
       {household && canInvite ? (
         <section className="mt-6 rounded-xl border border-border bg-card px-5 py-5">
-          <h2 className="font-display text-2xl">Add a child</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <h2 className="font-display text-2xl">Children</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Parent-facing list. Say child, not student. Kids have no own login.
+            You record feedback and progress here.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
             <input
               className="h-11 flex-1 rounded-xl border border-border bg-background px-3 text-sm"
-              placeholder="Name"
+              placeholder="Child name"
               value={childName}
               onChange={(e) => setChildName(e.target.value)}
             />
-            <Button onClick={() => void addChild()}>Create child</Button>
+            <Button onClick={() => void addChild()}>Add a child</Button>
+          </div>
+          <div className="mt-5 overflow-x-auto rounded-xl border border-border">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-background text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                <tr>
+                  <th className="px-3 py-3 font-medium">Child</th>
+                  <th className="px-3 py-3 font-medium">Login</th>
+                  <th className="px-3 py-3 font-medium">Welcome</th>
+                  <th className="px-3 py-3 font-medium">Pattern</th>
+                  <th className="px-3 py-3 font-medium">Parent note</th>
+                </tr>
+              </thead>
+              <tbody>
+                {children.length === 0 ? (
+                  <tr>
+                    <td className="px-3 py-5 text-muted-foreground" colSpan={5}>
+                      No children yet.
+                    </td>
+                  </tr>
+                ) : (
+                  children.map((row) => (
+                    <tr key={row.membershipId} className="border-t border-border">
+                      <td className="px-3 py-3">
+                        <p>{row.name}</p>
+                        <p className="text-xs text-muted-foreground">Child</p>
+                      </td>
+                      <td className="px-3 py-3">None</td>
+                      <td className="px-3 py-3">
+                        {row.welcomeWatched ? "Watched" : "Not yet"}
+                      </td>
+                      <td className="px-3 py-3">
+                        {row.patternTitle || "Not run"}
+                      </td>
+                      <td className="px-3 py-3">
+                        <div className="flex min-w-[14rem] flex-col gap-2">
+                          <textarea
+                            className="min-h-16 rounded-xl border border-border bg-background px-3 py-2 text-sm"
+                            value={notes[row.membershipId] ?? ""}
+                            onChange={(e) =>
+                              setNotes((prev) => ({
+                                ...prev,
+                                [row.membershipId]: e.target.value,
+                              }))
+                            }
+                            placeholder="Feedback or progress"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => void saveNote(row.membershipId)}
+                          >
+                            Save note
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </section>
       ) : null}

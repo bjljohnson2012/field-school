@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { ArrowRight } from "lucide-react";
 import { CampusLadder } from "@/components/campus-ladder";
 import { ShareLink } from "@/components/share-link";
@@ -13,7 +15,15 @@ const courses = listPublishedCourses();
 
 export default function Campus() {
   const router = useRouter();
+  const { status, data: authSession } = useSession();
   const { guest, ready, isStaff } = usePortal();
+  const loggedIn = status === "authenticated" && Boolean(authSession?.user?.email);
+
+  useEffect(() => {
+    if (loggedIn) router.replace("/dashboard");
+  }, [loggedIn, router]);
+
+  if (loggedIn) return null;
 
   return (
     <main>

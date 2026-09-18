@@ -117,6 +117,9 @@ test("fixture lessons and tenant UI stay in app/", () => {
   const orgHome = readSrc("src/app/o/[slug]/page.tsx");
   assert.doesNotMatch(orgHome, /gym/i);
   assert.match(orgHome, /No Grok Bot catalog here/);
+  assert.match(orgHome, /Children/);
+  assert.match(orgHome, /Kids have no own login/);
+  assert.doesNotMatch(orgHome, /Student/);
   const me = readSrc("src/app/api/me/route.ts");
   assert.match(me, /activeOrg/);
   const layout = readSrc("src/app/o/[slug]/layout.tsx");

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
 import { OrgPicker } from "@/components/org-picker";
@@ -10,24 +11,24 @@ import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const { data: authSession, status } = useSession();
   const { session, ready, isAdmin, isStaff, impersonating, unreadNotices } =
     usePortal();
+  const loggedIn = status === "authenticated" && Boolean(authSession?.user?.email);
   const initial = (session?.name || "G").slice(0, 1).toUpperCase();
-  const inboxHref = isAdmin && !impersonating ? "/admin/notifications" : "/inbox";
-  const inboxCount = isStaff ? unreadNotices : 0;
+  const homeHref = loggedIn ? "/dashboard" : "/";
 
   const links = [
     { href: "/dashboard", label: "Dashboard", compact: true },
-    { href: inboxHref, label: "Inbox", compact: true, badge: inboxCount },
     { href: "/tools", label: "Tools", compact: true },
-    { href: "/about", label: "About", compact: false },
+    ...(!loggedIn ? [{ href: "/about", label: "About", compact: false }] : []),
     ...(isStaff
       ? [
           {
             href: "/admin",
             label: "Admin",
             compact: true,
-            badge: isAdmin ? unreadNotices : 0,
+            badge: isAdmin && !impersonating ? unreadNotices : 0,
           },
         ]
       : []),
@@ -38,7 +39,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
         <div className="flex min-w-0 items-center gap-2">
           <Link
-            href="/"
+            href={homeHref}
             className="flex items-center rounded-lg px-1.5 py-0.5"
           >
             <img
@@ -50,7 +51,7 @@ export function SiteHeader() {
             />
           </Link>
           <Link
-            href="/"
+            href={homeHref}
             className="hidden text-xs uppercase tracking-[0.16em] text-muted-foreground sm:inline"
           >
             Training portal
@@ -67,9 +68,7 @@ export function SiteHeader() {
                   : "hidden h-11 items-center px-2.5 text-muted-foreground hover:text-foreground md:flex",
                 (l.label === "Admin"
                   ? pathname.startsWith("/admin")
-                  : l.label === "Inbox"
-                    ? pathname === "/inbox" || pathname === "/admin/notifications"
-                    : pathname === l.href) && "text-foreground",
+                  : pathname === l.href) && "text-foreground",
               )}
             >
               {l.label}
@@ -80,11 +79,11 @@ export function SiteHeader() {
               ) : null}
             </Link>
           ))}
-          <OrgPicker />
+          {loggedIn ? <OrgPicker /> : null}
           <ThemeToggle />
           {!ready ? (
             <div className="h-8 w-8 animate-pulse rounded-full bg-secondary" />
-          ) : session ? (
+          ) : loggedIn ? (
             <div className="ml-1 flex items-center gap-2">
               <span
                 aria-hidden
@@ -93,7 +92,7 @@ export function SiteHeader() {
                 {initial}
               </span>
               <span className="hidden max-w-[9rem] truncate text-sm text-muted-foreground lg:inline">
-                {session.email || session.name}
+                {session?.email || session?.name}
               </span>
               <button
                 type="button"
