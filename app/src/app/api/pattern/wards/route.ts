@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
-import { ProfileLockedError, linkWard } from "@/lib/pattern/profile";
+import { ProfileLockedError, WardOrgScopeError, linkWard } from "@/lib/pattern/profile";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +29,9 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof ProfileLockedError) {
       return NextResponse.json({ ok: false, error: "not_guardian" }, { status: 403 });
+    }
+    if (error instanceof WardOrgScopeError) {
+      return NextResponse.json({ ok: false, error: "child_not_in_org" }, { status: 403 });
     }
     throw error;
   }

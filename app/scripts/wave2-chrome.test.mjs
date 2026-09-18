@@ -154,3 +154,13 @@ test("campus UI retires gym wording and names the child subset from the table", 
   assert.match(pattern, /search.get\("child"\)/);
   assert.match(pattern, /membership_id: childMembershipId/);
 });
+
+test("linkWard refuses a child membership outside the actor org", () => {
+  const profile = readSrc("src/lib/pattern/profile.ts");
+  const wards = readSrc("src/app/api/pattern/wards/route.ts");
+  assert.match(profile, /export class WardOrgScopeError/);
+  assert.match(profile, /child.orgId !== opts.actor.orgId/);
+  assert.match(profile, /eq\(memberships.orgId, actor.orgId\)/);
+  assert.match(wards, /WardOrgScopeError/);
+  assert.match(wards, /child_not_in_org/);
+});
