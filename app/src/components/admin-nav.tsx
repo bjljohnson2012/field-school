@@ -9,7 +9,7 @@ const items = [
   { href: "/admin", label: "Overview", exact: true },
   { href: "/admin/demo", label: "Student demo" },
   { href: "/admin/users", label: "Users" },
-  { href: "/admin/notifications", label: "Notifications" },
+  { href: "/admin/notifications", label: "Inbox" },
   { href: "/admin/access-requests", label: "Access requests" },
   { href: "/admin/forms", label: "Forms" },
   { href: "/admin/tools", label: "Add tools" },

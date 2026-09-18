@@ -3,11 +3,24 @@ export function hasAuthSecret() {
   return Boolean(process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET);
 }
 
-export function hasGoogleOAuthEnv() {
-  return Boolean(
-    process.env.GOOGLE_CLIENT_ID?.trim() &&
-      process.env.GOOGLE_CLIENT_SECRET?.trim(),
+export function googleClientId() {
+  return (
+    process.env.AUTH_GOOGLE_ID?.trim() ||
+    process.env.GOOGLE_CLIENT_ID?.trim() ||
+    ""
   );
+}
+
+export function googleClientSecret() {
+  return (
+    process.env.AUTH_GOOGLE_SECRET?.trim() ||
+    process.env.GOOGLE_CLIENT_SECRET?.trim() ||
+    ""
+  );
+}
+
+export function hasGoogleOAuthEnv() {
+  return Boolean(googleClientId() && googleClientSecret());
 }
 
 export function hasTwitterOAuthEnv() {

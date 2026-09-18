@@ -18,7 +18,7 @@ export async function GET(request: Request) {
         modules: {},
       });
     }
-    return NextResponse.json({ authenticated: false, error: result.error }, { status: 503 });
+    return NextResponse.json({ authenticated: false, error: result.error }, { status: result.status });
   }
 
   if (!courseAllowedInOrg(result.identity.orgSlug, course)) {

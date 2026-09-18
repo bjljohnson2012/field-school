@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
-import { ProfileLockedError, publicProfile, setLock } from "@/lib/pattern/profile";
+import {
+  ProfileLockedError,
+  ProfileMissingError,
+  publicProfile,
+  setLock,
+} from "@/lib/pattern/profile";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +35,9 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof ProfileLockedError) {
       return NextResponse.json({ ok: false, error: "not_guardian" }, { status: 403 });
+    }
+    if (error instanceof ProfileMissingError) {
+      return NextResponse.json({ ok: false, error: "profile_required" }, { status: 409 });
     }
     throw error;
   }

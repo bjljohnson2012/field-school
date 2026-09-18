@@ -165,7 +165,7 @@ function seedWorkspaces(): Record<string, UserWorkspace> {
           id: "admin-welcome",
           at: "2026-08-01T12:00:00.000Z",
           title: "Staff desk is open",
-          body: "Impersonate Jordan for the student walk, then check notifications when feedback lands.",
+          body: "Impersonate Jordan for the student walk, then check Inbox when feedback lands.",
           href: "/admin/demo",
         },
       ],
@@ -693,7 +693,7 @@ export function submitCourseNote(input: {
   };
   next = pushUserInbox(next, user.id, {
     title: `${label} sent to staff`,
-    body: `Staff can see this on Admin → Notifications.`,
+    body: `Staff can see this on Admin → Inbox.`,
     href: `/c/${input.courseSlug}`,
   });
   write(next);

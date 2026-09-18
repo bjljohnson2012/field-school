@@ -84,7 +84,7 @@ export function StudentDemoClient({
         </Step>
         <Step n="03" title="Submit feedback">
           On the course page, scroll to “Send feedback to staff.” Write a note
-          about a station. That creates an unread admin notification.
+          about a station. That creates an unread Inbox item.
           <div className="mt-4">
             <Link
               href="/c/grok-bot#feedback"
@@ -95,7 +95,7 @@ export function StudentDemoClient({
           </div>
         </Step>
         <Step n="04" title="See it as admin">
-          Stop impersonating and open Notifications. Unread count is on the
+          Stop impersonating and open Inbox. Unread count is on the
           Admin nav.
           <div className="mt-4 flex flex-wrap gap-3">
             <button

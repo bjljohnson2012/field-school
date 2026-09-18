@@ -5,6 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 
 type Membership = { org: string; name: string; stance: string };
 
+const VIEW_ALL = "__all__";
+
 export function OrgPicker() {
   const router = useRouter();
   const pathname = usePathname();
@@ -17,14 +19,14 @@ export function OrgPicker() {
       .then((data) => {
         if (!data.authenticated) return;
         setOrgs(data.memberships ?? []);
-        setActive(data.activeOrg?.slug || "");
+        setActive(pathname === "/people" ? VIEW_ALL : data.activeOrg?.slug || "");
       });
   }, [pathname]);
 
-  if (orgs.length < 2) return null;
+  if (!orgs.length) return null;
 
   return (
-    <label className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">
+    <label className="flex items-center gap-2 text-xs text-muted-foreground">
       Org
       <select
         className="h-9 rounded-lg border border-border bg-background px-2 text-sm text-foreground"
@@ -32,6 +34,10 @@ export function OrgPicker() {
         onChange={(e) => {
           const slug = e.target.value;
           setActive(slug);
+          if (slug === VIEW_ALL) {
+            router.push("/people");
+            return;
+          }
           void fetch("/api/org/active", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -44,6 +50,7 @@ export function OrgPicker() {
             {org.name || org.org}
           </option>
         ))}
+        <option value={VIEW_ALL}>View all</option>
       </select>
     </label>
   );

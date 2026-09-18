@@ -89,7 +89,7 @@ export default function ApiDocsPage() {
             </li>
             <li>
               Org <code>household</code> exists and does not see Field School
-              gym events. User B does not see user A.
+              operator catalog events. User B does not see user A.
             </li>
           </ol>
           <p>
@@ -113,7 +113,7 @@ export default function ApiDocsPage() {
               <tbody>
                 <tr className="border-t border-border">
                   <td className="px-3 py-2 text-foreground">field-school</td>
-                  <td className="px-3 py-2">gym</td>
+                  <td className="px-3 py-2">operator</td>
                   <td className="px-3 py-2">public_catalog</td>
                   <td className="px-3 py-2">cohort-0</td>
                 </tr>
@@ -122,6 +122,12 @@ export default function ApiDocsPage() {
                   <td className="px-3 py-2">homeschool</td>
                   <td className="px-3 py-2">strict</td>
                   <td className="px-3 py-2">family</td>
+                </tr>
+                <tr className="border-t border-border">
+                  <td className="px-3 py-2 text-foreground">sales</td>
+                  <td className="px-3 py-2">company</td>
+                  <td className="px-3 py-2">platform_plus</td>
+                  <td className="px-3 py-2">desk</td>
                 </tr>
               </tbody>
             </table>

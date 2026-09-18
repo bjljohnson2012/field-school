@@ -210,12 +210,52 @@ test("OAuth scaffolding exists but fake localStorage dean shortcut does not", ()
     assert.doesNotMatch(src, /GoogleSignInButton/);
   }
 
-  const home = readSrc("src/app/page.tsx");
+  const home = readSrc("src/app/campus-home.tsx");
+  assert.match(readSrc("src/app/page.tsx"), /redirect\("\/dashboard"\)/);
   assert.match(home, /Continue as guest/);
   assert.match(home, /Join free beta/);
   const gateIdx = home.indexOf("ready && isStaff");
   const adminIdx = home.indexOf('href="/admin"');
   assert.ok(gateIdx >= 0 && adminIdx > gateIdx, "home Admin CTA is staff-only");
+});
+
+function visibleLoginProviderError(code, oauth) {
+  if (!code) return null;
+  if (code === "Configuration" && (oauth.google || oauth.configured)) {
+    return null;
+  }
+  if (code === "Configuration") {
+    return "Campus sign-in is missing a provider setting. Use email and password, or try again later.";
+  }
+  return "Sign-in did not finish.";
+}
+
+test("false Configuration banner is hidden when Google is wired", () => {
+  const wired = { google: true, configured: true };
+  const missing = { google: false, configured: false };
+
+  assert.equal(visibleLoginProviderError("Configuration", wired), null);
+  assert.equal(visibleLoginProviderError(null, wired), null);
+  assert.match(
+    visibleLoginProviderError("Configuration", missing) ?? "",
+    /missing a provider setting/,
+  );
+
+  const env = readSrc("src/lib/auth/env.ts");
+  assert.match(env, /AUTH_GOOGLE_ID/);
+  assert.match(env, /AUTH_GOOGLE_SECRET/);
+  assert.match(env, /export function googleClientId/);
+
+  const login = readSrc("src/app/login/login-form.tsx");
+  assert.match(login, /visibleLoginProviderError/);
+  assert.doesNotMatch(login, /authErrorMessage\(/);
+
+  const helper = readSrc("src/lib/auth/provider-error.ts");
+  assert.match(helper, /code === "Configuration"/);
+  assert.match(helper, /oauth\.google/);
+  assert.doesNotMatch(helper, /AUTH_URL\s*=/);
+  assert.doesNotMatch(readSrc("src/lib/auth/config.ts"), /AUTH_URL\s*=/);
+  assert.doesNotMatch(readSrc("src/lib/auth/env.ts"), /AUTH_URL\s*=/);
 });
 
 test("Auth.js wiring is present and env-gated", () => {
@@ -233,7 +273,8 @@ test("Auth.js wiring is present and env-gated", () => {
   assert.match(oauthButtons, /nextPath = "\/dashboard"/);
 
   const config = readSrc("src/lib/auth/config.ts");
-  assert.match(config, /error:\s*"\/signup"/);
+  assert.match(config, /error:\s*"\/login"/);
+  assert.match(config, /googleClientId/);
   assert.match(config, /roleForAuth/);
   assert.doesNotMatch(config, /return isStaffEmail\(email\)/);
   assert.match(readSrc("src/auth.ts"), /Credentials/);
@@ -449,7 +490,7 @@ function demoWalkPath(token) {
 test("login and signup never show the Jordan student-demo button", () => {
   const login = readSrc("src/app/login/login-form.tsx");
   const signup = readSrc("src/app/signup/signup-form.tsx");
-  const home = readSrc("src/app/page.tsx");
+  const home = readSrc("src/app/campus-home.tsx");
 
   assert.match(login, /Continue as guest/);
   assert.match(login, /Join the free beta/);

@@ -19,11 +19,10 @@ export default function NotificationsPage() {
         Staff inbox
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">
-        Notifications
+        Inbox
       </h1>
       <p className="mt-3 text-muted-foreground">
-        Feedback and messages from students. The badge on Admin is this list’s
-        unread count.
+        Feedback and messages from the campus. This is the staff Inbox.
       </p>
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <p className="text-sm text-muted-foreground">

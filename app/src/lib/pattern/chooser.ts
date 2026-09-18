@@ -33,15 +33,17 @@ export async function chooseNext(opts: {
         station: tenant.slug,
         title: tenant.title,
         href: `/o/${tenant.org}/welcome`,
-        bearing: profile.bearingPrimary,
+        bearing: profile?.bearingPrimary ?? null,
       },
-      profile: {
-        bearing: Number(profile.bearingDeg),
-        primary: profile.bearingPrimary,
-        locked: profile.locked,
-      },
+      profile: profile
+        ? {
+            bearing: Number(profile.bearingDeg),
+            primary: profile.bearingPrimary,
+            locked: profile.locked,
+          }
+        : null,
       wrotePack: false,
-      reason: "live_profile",
+      reason: profile ? "live_profile" : "tenant_welcome",
     };
   }
   const course = getCourse(opts.course) ?? getCourse("grok-bot");
@@ -50,7 +52,7 @@ export async function chooseNext(opts: {
   const rows = await eventsForCourse(opts.identity, course.slug);
   const modules = reduceCourseProgress(rows);
   const open = course.modules.filter((mod) => !(modules[mod.slug] ?? emptyProgress()).passed);
-  const primary = (profile.bearingPrimary as BearingDim | null) ?? null;
+  const primary = (profile?.bearingPrimary as BearingDim | null) ?? null;
   const ranked = [...open].sort((a, b) => {
     const aMatch = primary && STATION_DIM[a.slug] === primary ? 0 : 1;
     const bMatch = primary && STATION_DIM[b.slug] === primary ? 0 : 1;
@@ -68,11 +70,13 @@ export async function chooseNext(opts: {
           bearing: STATION_DIM[next.slug] ?? null,
         }
       : null,
-    profile: {
-      bearing: Number(profile.bearingDeg),
-      primary: profile.bearingPrimary,
-      locked: profile.locked,
-    },
+    profile: profile
+      ? {
+          bearing: Number(profile.bearingDeg),
+          primary: profile.bearingPrimary,
+          locked: profile.locked,
+        }
+      : null,
     wrotePack: false,
     reason: next
       ? primary

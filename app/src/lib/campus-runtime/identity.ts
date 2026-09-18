@@ -9,6 +9,7 @@ import {
   membershipsForMember,
   pickActiveSlug,
   requestedOrgSlug,
+  shouldForceOperatorOrg,
 } from "./org";
 
 export const ORG0_SLUG = "field-school";
@@ -115,7 +116,22 @@ export async function loadSession(request?: Request) {
   if (!user) return null;
   await ensureTenantOrgs();
   const member = await upsertMember(user.email, user.name);
-  const rows = await membershipsForMember(member.id);
+  let rows = await membershipsForMember(member.id);
+  const staff = isStaffEmail(user.email);
+  if (staff && (member.kind ?? "adult") !== "child") {
+    await ensureMembership(member.id, ORG0_SLUG, "admin");
+    await ensureMembership(member.id, HOUSEHOLD_SLUG, "guardian");
+    await ensureMembership(member.id, SALES_SLUG, "trainer");
+    rows = await membershipsForMember(member.id);
+  } else if (
+    shouldForceOperatorOrg({
+      staff: false,
+      slugs: rows.map((r) => r.orgSlug),
+    })
+  ) {
+    await ensureMembership(member.id, ORG0_SLUG, "learner");
+    rows = await membershipsForMember(member.id);
+  }
   const requested = await requestedOrgSlug(request);
   const slug = pickActiveSlug(
     requested,

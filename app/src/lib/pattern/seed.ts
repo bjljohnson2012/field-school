@@ -3,11 +3,17 @@ import { getDb } from "@/lib/db/client";
 import {
   instrumentItems,
   instruments,
+  organizations,
   skills,
 } from "@/lib/db/schema";
-import { FP50_ITEMS, INSTRUMENT_SLUG, primaryDim } from "./items";
+import { HOUSEHOLD_SKILLS, SALES_SKILLS } from "@/lib/campus-runtime/lessons";
+import { HOUSEHOLD_SLUG, SALES_SLUG } from "@/lib/campus-runtime/org";
+import { applyWave2SqlIfConfigured } from "@/lib/db/apply-wave2-sql";
+import { fp50Items, INSTRUMENT_SLUG, primaryDim } from "./items";
 
 export async function ensureInstrument() {
+  await applyWave2SqlIfConfigured();
+  const items = fp50Items();
   const db = getDb();
   const existing = await db
     .select()
@@ -30,13 +36,13 @@ export async function ensureInstrument() {
     .select()
     .from(instrumentItems)
     .where(eq(instrumentItems.instrumentId, instrument.id));
-  const officialFirst = FP50_ITEMS[0].prompt;
+  const officialFirst = items[0].prompt;
   const stale = rows.length > 0 && rows[0].prompt !== officialFirst;
   if (stale) {
     await db.delete(instrumentItems).where(eq(instrumentItems.instrumentId, instrument.id));
   }
-  if (!stale && rows.length === FP50_ITEMS.length) {
-    for (const item of FP50_ITEMS) {
+  if (!stale && rows.length === items.length) {
+    for (const item of items) {
       await db
         .update(instrumentItems)
         .set({
@@ -47,11 +53,11 @@ export async function ensureInstrument() {
         .where(eq(instrumentItems.itemKey, item.key));
     }
   }
-  if (stale || rows.length < FP50_ITEMS.length) {
+  if (stale || rows.length < items.length) {
     await db
       .insert(instrumentItems)
       .values(
-        FP50_ITEMS.map((item) => ({
+        items.map((item) => ({
           instrumentId: instrument.id,
           itemKey: item.key,
           prompt: item.prompt,
@@ -69,42 +75,36 @@ export async function ensureInstrument() {
   return instrument;
 }
 
+function keywordsFor(prompt: string, slug: string) {
+  const words = prompt
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((word) => word.length > 3)
+    .slice(0, 6);
+  return Array.from(new Set([slug, ...slug.split("-"), ...words]));
+}
+
 export async function ensureOrgSkills(orgId: string) {
   const db = getDb();
-  const defaults = [
-    {
-      slug: "brief",
-      name: "Write the outcome",
-      rubric: {
-        keywords: ["outcome", "brief", "one sentence", "done"],
-        correspondence: "approach",
-      },
-    },
-    {
-      slug: "ladder",
-      name: "Walk a ladder",
-      rubric: {
-        keywords: ["ladder", "station", "quiz", "watch"],
-        correspondence: "learn",
-      },
-    },
-    {
-      slug: "staff",
-      name: "Name the staff",
-      rubric: {
-        keywords: ["staff", "team", "job", "thread"],
-        correspondence: "group",
-      },
-    },
-  ];
-  for (const skill of defaults) {
+  const [org] = await db
+    .select()
+    .from(organizations)
+    .where(eq(organizations.id, orgId))
+    .limit(1);
+  const defs =
+    org?.slug === SALES_SLUG
+      ? SALES_SKILLS
+      : org?.slug === HOUSEHOLD_SLUG
+        ? HOUSEHOLD_SKILLS
+        : [];
+  for (const skill of defs) {
     await db
       .insert(skills)
       .values({
         orgId,
         slug: skill.slug,
         name: skill.name,
-        rubric: skill.rubric,
+        rubric: { prompt: skill.prompt, keywords: keywordsFor(skill.prompt, skill.slug) },
       })
       .onConflictDoNothing({ target: [skills.orgId, skills.slug] });
   }

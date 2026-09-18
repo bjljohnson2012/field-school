@@ -15,16 +15,40 @@ export default function DashboardPage() {
   const courses = listPublishedCourses();
   const seatLabel = authSession?.user?.seatLabel;
   const [nextStation, setNextStation] = useState<{ href: string; title: string } | null>(null);
+  const [activeOrg, setActiveOrg] = useState("");
+  const [children, setChildren] = useState<
+    { membershipId: string; name: string; welcomeWatched: boolean; patternTitle: string | null; locked: boolean; note: string }[]
+  >([]);
 
   useEffect(() => {
     if (!authSession?.user?.email) return;
-    void fetch("/api/chooser?course=grok-bot")
+    void fetch("/api/me")
       .then((r) => r.json())
+      .then((data) => {
+        const slug = data.activeOrg?.slug || "";
+        setActiveOrg(slug);
+        const course = slug === "household" ? "home" : slug === "sales" ? "sales" : "grok-bot";
+        const next = fetch(`/api/chooser?course=${course}`).then((r) => r.json());
+        if (slug === "household") {
+          void fetch("/api/children", { headers: { "x-fs-org": slug } })
+            .then((r) => r.json())
+            .then((body) => {
+              if (body?.children) setChildren(body.children);
+            })
+            .catch(() => undefined);
+        } else {
+          setChildren([]);
+        }
+        return next;
+      })
       .then((data) => {
         if (data?.next?.href) setNextStation({ href: data.next.href, title: data.next.title });
       })
       .catch(() => undefined);
   }, [authSession?.user?.email]);
+  const household = activeOrg === "household";
+  const sales = activeOrg === "sales";
+  const hideGrokBot = household || sales;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
@@ -45,7 +69,7 @@ export default function DashboardPage() {
           Run the student demo
         </Link>
       ) : null}
-      {!session ? (
+      {!session && !authSession?.user?.email ? (
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             href="/signup"
@@ -77,8 +101,91 @@ export default function DashboardPage() {
         </p>
       ) : null}
 
+      {household ? (
+        <section className="mt-12">
+          <h2 className="font-display text-2xl tracking-tight">Children</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Parent-facing list. Kids have no own login. Record feedback and
+            progress on the household desk.
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            {children.length === 0 ? (
+              <Link
+                href="/o/household"
+                className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+              >
+                <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                  Household
+                </p>
+                <h3 className="mt-1 font-display text-2xl tracking-tight">
+                  Add a child
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Open the household children list.
+                </p>
+              </Link>
+            ) : (
+              children.map((child) => (
+                <Link
+                  key={child.membershipId}
+                  href="/o/household"
+                  className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+                >
+                  <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                    Child · login none
+                  </p>
+                  <h3 className="mt-1 font-display text-2xl tracking-tight">
+                    {child.name}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Welcome {child.welcomeWatched ? "watched" : "not yet"}
+                    {child.patternTitle ? ` · ${child.patternTitle}` : " · Pattern not run"}
+                    {child.locked ? " · locked" : ""}
+                    {child.note ? " · note on file" : ""}
+                  </p>
+                </Link>
+              ))
+            )}
+          </div>
+        </section>
+      ) : null}
+
       <section className="mt-12">
         <h2 className="font-display text-2xl tracking-tight">Courses</h2>
+        {hideGrokBot ? (
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <Link
+              href={household ? "/o/household/welcome" : "/o/sales/welcome"}
+              className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+            >
+              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                {household ? "home:welcome" : "sales:welcome"}
+              </p>
+              <h3 className="mt-1 font-display text-2xl tracking-tight">
+                {household ? "Household welcome" : "Welcome to the desk"}
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {household
+                  ? "Household lesson. Grok Bot is not in this catalog."
+                  : "Sales lesson. Household Pattern stays off this board."}
+              </p>
+            </Link>
+            {sales ? (
+              <Link
+                href="/skills"
+                className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+              >
+                <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                  Sales diagnostic
+                </p>
+                <h3 className="mt-1 font-display text-2xl tracking-tight">Desk skills</h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Discovery, qualification, next step.
+                </p>
+              </Link>
+            ) : null}
+          </div>
+        ) : (
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           {courses.map((c) => {
             const tally = ready ? courseTally(c.slug) : { passed: 0, total: c.stationCount, exam: null, certified: false };
@@ -105,11 +212,29 @@ export default function DashboardPage() {
             );
           })}
         </div>
+        )}
       </section>
 
       <section className="mt-12">
         <h2 className="font-display text-2xl tracking-tight">Assessments</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Field Pattern is the personality assessment. It is not a course.
+        </p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {!sales ? (
+            <Link
+              href="/pattern"
+              className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+            >
+              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                Personality
+              </p>
+              <h3 className="mt-1 font-display text-2xl tracking-tight">Field Pattern</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                fp-50-v1. Living profile on the person. Skills stay org-scoped.
+              </p>
+            </Link>
+          ) : null}
           {assessmentTools.map((tool) => {
             const result = tools[tool.slug];
             return (

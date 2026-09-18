@@ -95,7 +95,7 @@ test("Field School logo set exists and never says University", () => {
   assert.doesNotMatch(layout, /favicon\.svg/);
   assert.doesNotMatch(layout, /mark-color/);
   assert.match(read("src/lib/brand.ts"), /Lead yourself\. Learn yourself\. Do the Work\./);
-  assert.match(read("src/app/page.tsx"), /Lead yourself\. Learn yourself\. Do the Work\./);
+  assert.match(read("src/app/campus-home.tsx"), /Lead yourself\. Learn yourself\. Do the Work\./);
   assert.match(read("scripts/build-brand.py"), /Lead yourself\. Learn yourself\. Do the Work\./);
   assert.equal(statSync(join(root, "marketing-site/brand/png/lockup-wide-color.png")).size > 20000, true);
   assert.equal(statSync(join(root, "marketing-site/brand/png/og-2400x1260.png")).size > 20000, true);

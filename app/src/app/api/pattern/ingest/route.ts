@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import {
   ProfileLockedError,
+  ProfileMissingError,
   ingestArtifact,
   publicProfile,
 } from "@/lib/pattern/profile";
@@ -76,6 +77,9 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof ProfileLockedError) {
       return NextResponse.json({ ok: false, error: "profile_locked" }, { status: 403 });
+    }
+    if (error instanceof ProfileMissingError) {
+      return NextResponse.json({ ok: false, error: "profile_required" }, { status: 409 });
     }
     throw error;
   }

@@ -13,7 +13,7 @@ export const TENANT_LESSONS: TenantLesson[] = [
     course: "home",
     slug: "welcome",
     objectId: "home:welcome",
-    title: "Welcome home",
+    title: "Household welcome",
     body: "This is a household lesson. It is not the Grok Bot catalog. Watch is a text station. Progress stays in this org.",
   },
   {
@@ -41,3 +41,9 @@ export const SALES_SKILLS = [
   { slug: "qualification", name: "Qualification", prompt: "Can they qualify next step vs. noise?" },
   { slug: "next-step", name: "Next step", prompt: "Can they leave a dated next step on every live deal?" },
 ];
+
+export function skillsForOrg(orgSlug: string) {
+  if (orgSlug === "household") return HOUSEHOLD_SKILLS;
+  if (orgSlug === "sales") return SALES_SKILLS;
+  return [];
+}

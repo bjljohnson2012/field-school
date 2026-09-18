@@ -29,6 +29,13 @@ export class ProfileLockedError extends Error {
   }
 }
 
+export class ProfileMissingError extends Error {
+  constructor() {
+    super("profile_required");
+    this.name = "ProfileMissingError";
+  }
+}
+
 type ProfileRow = typeof memberProfiles.$inferSelect;
 
 function dimsFromProfile(profile: ProfileRow): BearingMap {
@@ -73,19 +80,31 @@ export async function assertCanWrite(
   }
 }
 
-async function loadOrCreate(orgId: string, membershipId: string) {
+async function findProfile(orgId: string, membershipId: string) {
   const db = getDb();
   const existing = await db
     .select()
     .from(memberProfiles)
     .where(and(eq(memberProfiles.orgId, orgId), eq(memberProfiles.membershipId, membershipId)))
     .limit(1);
-  if (existing[0]) return existing[0];
+  return existing[0] ?? null;
+}
+
+async function loadOrCreate(orgId: string, membershipId: string) {
+  const existing = await findProfile(orgId, membershipId);
+  if (existing) return existing;
+  const db = getDb();
   const inserted = await db
     .insert(memberProfiles)
     .values({ orgId, membershipId, instrumentSlug: INSTRUMENT_SLUG })
     .returning();
   return inserted[0];
+}
+
+async function requireProfile(orgId: string, membershipId: string) {
+  const existing = await findProfile(orgId, membershipId);
+  if (!existing) throw new ProfileMissingError();
+  return existing;
 }
 
 async function writeProfile(
@@ -124,7 +143,7 @@ async function writeProfile(
 
 export async function getLiveProfile(orgId: string, membershipId: string) {
   await ensureInstrument();
-  return loadOrCreate(orgId, membershipId);
+  return findProfile(orgId, membershipId);
 }
 
 export async function listRevisions(profileId: string, limit = 20) {
@@ -170,7 +189,7 @@ export async function ingestArtifact(opts: {
   kind: "paper" | "verbal" | "video";
   transcript: string;
 }) {
-  const profile = await loadOrCreate(opts.actor.orgId, opts.membershipId);
+  const profile = await requireProfile(opts.actor.orgId, opts.membershipId);
   await assertCanWrite(opts.actor, profile);
   const inferred = inferBearingFromTranscript(opts.transcript);
   const current = dimsFromProfile(profile);
@@ -241,7 +260,7 @@ export async function setLock(opts: {
 }) {
   const allowed = await isGuardianOf(opts.actor, opts.childMembershipId);
   if (!allowed) throw new ProfileLockedError();
-  const profile = await loadOrCreate(opts.actor.orgId, opts.childMembershipId);
+  const profile = await requireProfile(opts.actor.orgId, opts.childMembershipId);
   const db = getDb();
   const [updated] = await db
     .update(memberProfiles)
