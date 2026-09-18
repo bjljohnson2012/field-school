@@ -43,7 +43,9 @@ function PatternForm() {
   const [paper, setPaper] = useState("");
   const [org, setOrg] = useState("");
   const [importCode, setImportCode] = useState("");
-  const householdHeaders = forChild ? { "x-fs-org": "household" } : {};
+  const householdHeaders: Record<string, string> = forChild
+    ? { "x-fs-org": "household" }
+    : {};
 
   useEffect(() => {
     void fetch(`/api/pattern/instrument?subset=${subset}`)
