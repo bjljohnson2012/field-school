@@ -1,8 +1,10 @@
 # Wave 2 proof — tenants, picker, Field Pattern
 
-2026-09-18. Deployed to VPS `2.24.70.248` with `app/deploy/deploy.sh`. Wave 1 guest Grok Bot still works. AUTH_URL is still `https://university.benjohnson.ai`. No composer. No Remotion. TanStack leftover `field-school-db` was not written.
+2026-09-18. Deployed `cursor/wave-2-tenants-ca6e` `ea09fd1` to VPS `2.24.70.248` with `app/deploy/deploy.sh` only. Wave 1 guest Grok Bot still works. AUTH_URL is still `https://university.benjohnson.ai`. No university 301. No vault `2.24.64.248`. No TanStack. No composer. No Remotion. Leftover `field-school-db` was not written.
 
-Live session proof file: `/opt/cursor/artifacts/wave2_session_live_proof.json`.
+Packaging note: first `deploy.sh` image 500'd on `/o/*` and signed-in `/api/me` with `pinned_bank_missing:docs/campus-runtime/fp-50-v1.md`. `deploy.sh` now stages that pinned bank into the Next context; Dockerfile copies `/app/docs` + `/app/db` into the runner. Redeployed. Proofs below are from the second ship.
+
+Command log: `/opt/cursor/artifacts/wave2_deploy_proof.json`. Narrative: `/opt/cursor/artifacts/wave2-deploy-proof.md`.
 
 ## What shipped
 
@@ -18,68 +20,53 @@ Live session proof file: `/opt/cursor/artifacts/wave2_session_live_proof.json`.
 - Org-scoped skills: 3 parent-editable household skills, 3 seeded sales skills.
 - SQL `0002`-`0004` applied by deploy.
 
-## Proofs
+## Manual cheat sheet A–L
 
-Checked live this session on `university.benjohnson.ai` / `portal.fieldschool.ai` and campus Postgres.
+Credentials fixture this ship (university host, AUTH_URL unchanged): gym `wave2.gym.20260918185627@example.com` (field-school learner only), parent granted household guardian in SQL then minted invite, home accepted as household guardian.
 
-| Check | Expect | Result |
-|---|---|---|
-| Picker lists both student orgs | One login on household + sales; `GET /api/me` returns both; `/o/:slug` flips | **pass**. Dual-org fixture: `sales:trainer`, `household:guardian`. `fieldSchoolForced=false`. `activeOrg` household by default; `x-fs-org: sales` → `sales`. `/o/household` 200, `/o/sales` 200, `/o/field-school` 403 (not a member). Operator email in Postgres: field-school/admin, household/guardian, sales/trainer. |
-| Events do not cross | Household `home:welcome` absent from sales; sales `sales:welcome` absent from household | **pass**. Household watch `home:welcome` 200. Household watch `sales:welcome` 403 `cross_org`. Sales watch `sales:welcome` 200. Sales watch `home:welcome` 403 `cross_org`. Progress: household home has welcome; household grok-bot and sales empty; sales home empty; sales sales has welcome. |
-| Uninvited `/o/household` | Guest 401; signed-in non-member 403; unknown slug 404 | **pass**. Guest `/o/household` 401, `/o/sales` 401, `/o/does-not-exist` 404. Signed-in field-school-only member `/o/household` 403 and `/o/sales` 403. |
-| Child cannot admin or invite | Child cannot mint invites or open `/admin` | **pass**. Live child fixture: `kind=child`, orgs `field-school:learner`. `POST /api/invites` 403 `child_cannot_invite`. `/admin` 307 `/request-access?from=admin`. `POST /api/children` 403 `child_cannot_create`. |
-| fp-50 writes a profile | Pattern run writes `member_profiles` + revision; import overrides correspondence only | **pass**. `POST /api/pattern/run` 200 `reset=true`, primary Drive, title `Drive / Duty`, narratives learn/approach/conflict/feedback/group present. `POST /api/pattern/import` 200 `imported=true`, `leading_type_code=INTJ`, Bearing unchanged. Instrument live: adult 50, child 26 (table). Product name Field Pattern; page does not say MBTI. |
-| Guest Grok Bot | `/c/grok-bot` 200; guest `/api/me` guest; guest POST events 401 | **pass** on portal and university. |
-| cap + edit health | cap login 200; edit `/health` ok | **pass**. `cap.fieldschool.ai/login` 200; `{"ok": true, "service": "fieldschool-edit"}`. |
-| AUTH_URL | still university.benjohnson.ai | **pass**. Not flipped. Credentials callback still that host. |
-| Skills stay org-scoped | household 3 parent-editable; sales 3 seeded | **pass**. Live `GET /api/skills`: household morning/chores/read; sales discovery/qualification/next-step. |
-| Invite accept | Household learner invite lands the invitee on `/o/household` | **pass**. Guardian mint household learner 200; sales trainer mint 200. Prior invitee now `field-school:learner` + `household:learner`; `/o/household` 200. |
+| # | Browser | Action | Expect | Result |
+|---|---|---|---|---|
+| A | Guest | `/c/grok-bot` | works, no Postgres write | **pass**. `GET https://portal.fieldschool.ai/c/grok-bot` 200. `learning_events` count 9 → 9. |
+| B | Gym | `/api/me` | field-school only at first | **pass**. After credentials login: `activeOrg.slug=field-school`, memberships `[field-school:learner]` only. |
+| C | Gym/parent | invite Home to household | pending invite | **pass**. `POST /api/invites` `{org:household,email:home,stance:guardian}` 200 `status` pending, token minted. (Gym-only learner cannot mint; parent SQL-granted household guardian minted.) |
+| D | Home | accept invite | two orgs on `/api/me` | **pass**. `POST /api/invites/accept` 200 `{ok:true,org:household}`. `/api/me` lists `field-school:learner` + `household:guardian`. |
+| E | Gym | watch briefing | household progress empty | **pass**. `POST /api/events` watch `grok-bot:briefing` 200 `org=field-school`. Household `grok-bot%` event count 0. |
+| F | Home | `/o/household` watch welcome | gym progress unchanged | **pass**. `POST /api/events` `x-fs-org: household` watch `home:welcome` 200. Gym `field-school` `home:%` count 0. Household watch of `grok-bot` 403 `cross_org`. |
+| G | Gym | `/o/household` | 403 unless that account was invited | **pass**. Gym (not invited) `GET /o/household` 403. |
+| H | Home | create child | listed, no admin | **pass**. `POST /api/children` 200 `Wave2 Deploy Child`. SQL `kind=child` household learner `child.d872b0fa7bee@household.local`. Home `/admin` 307 `/request-access?from=admin`. |
+| I | Guest | `/o/household` | no roster, no events | **pass**. Guest `GET /o/household` 401. Guest `POST /api/events` 401 `sign_in_required`. |
+| J | any | `/admin` logged out | 307 | **pass**. Guest `GET /admin` 307 `Location: /login?next=%2Fadmin`. |
+| K | any | `cap.fieldschool.ai/login` | 200 | **pass**. `GET https://cap.fieldschool.ai/login` 200. |
+| L | any | `edit.fieldschool.ai/health` | ok | **pass**. `GET https://edit.fieldschool.ai/health` 200 `{"ok": true, "service": "fieldschool-edit"}`. |
 
-## Walkthrough artifacts
-
-Copied into the parent store media folder:
-
-- `/cursor/stores/bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133/media/wave2_guest_campus_walkthrough.mp4`
-- `/cursor/stores/bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133/media/wave2_guest_grok_bot.webp`
-- `/cursor/stores/bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133/media/wave2_guest_household_blocked.webp`
-- `/cursor/stores/bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133/media/wave2_field_pattern.webp`
-- `/cursor/stores/bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133/media/wave2_guest_api_me.webp`
-- `/cursor/stores/bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133/media/wave2_edit_health.webp`
-- `/cursor/stores/bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133/media/wave2_cap_login.webp`
-- `/cursor/stores/bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133/media/wave2_picker_both_orgs.webp`
-- `/cursor/stores/bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133/media/wave2_sales_org_home.webp`
-- `/cursor/stores/bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133/media/wave2_household_org_home.webp`
-
-## Automated
-
-```bash
-cd app && npm test
-```
-
-38 tests pass, including `scripts/wave2-tenants.test.mjs` and `scripts/wave2-pattern.test.mjs`.
-
-## Live after deploy
+## Live commands (this ship)
 
 ```text
-guest /api/me              {"authenticated":false,"guest":true}
+AUTH_URL                   https://university.benjohnson.ai   (unchanged)
+guest GET /api/me          200 {"authenticated":false,"guest":true}
+guest /c/grok-bot          200; events 9→9
+guest /o/household         401
+guest /o/does-not-exist    404
+guest /admin               307 /login?next=%2Fadmin
 guest POST /api/events     401 sign_in_required
-/c/grok-bot                200
-/o/household guest         401
-/o/sales guest             401
-/o/does-not-exist          404
-pattern adult / child      50 / 26
 cap /login                 200
-edit /health               ok
-orgs                       field-school (gym), household (homeschool/strict), sales (company/platform_plus)
-skills                     household morning/chores/read; sales discovery/qualification/next-step
-operator email             field-school/admin, household/guardian, sales/trainer
-picker /api/me             sales:trainer + household:guardian; fieldSchoolForced false
-pattern run                200 reset Drive / Duty
-pattern import             200 imported INTJ; Bearing unchanged
-household watch            home:welcome 200
-cross-org watch            403 cross_org both directions
-child invite / admin       403 child_cannot_invite; 307 /request-access
-invite accept              invitee /o/household 200
+edit /health               200 {"ok": true, "service": "fieldschool-edit"}
+pattern instrument         200 slug=fp-50-v1 count=50 child=26
+orgs                       field-school gym public_catalog;
+                           household homeschool strict {"cap": false};
+                           sales company platform_plus {"cap": false}
+skills                     household morning/chores/read;
+                           sales discovery/qualification/next-step
+gym /api/me                field-school learner only
+gym /o/household           403
+gym watch briefing         200 org=field-school
+invite Home                200 pending household guardian
+home accept                200 org=household; two memberships
+home watch welcome         200 org=household
+home watch grok-bot        403 cross_org
+SQL events                 field-school gym grok-bot:briefing;
+                           household home home:welcome
+home create child          200 household learner child
 ```
 
 ## Stop
