@@ -5,6 +5,8 @@ import { ensureTenantOrgs, getOrgBySlug } from "./org";
 import { SALES_SLUG } from "./rules";
 
 export async function assertOrgPageAccess(slug: string) {
+  const session = await loadSession();
+  if (!session) unauthorized();
   try {
     await ensureTenantOrgs();
   } catch (error) {
@@ -15,8 +17,6 @@ export async function assertOrgPageAccess(slug: string) {
   }
   const org = await getOrgBySlug(slug);
   if (!org) notFound();
-  const session = await loadSession();
-  if (!session) unauthorized();
   const member = session.rows.some((row) => row.orgSlug === slug);
   if (!member || (session.member.kind === "child" && slug === SALES_SLUG)) {
     forbidden();

@@ -126,6 +126,10 @@ test("fixture lessons and tenant UI stay in app/", () => {
   assert.match(me, /activeOrg/);
   const layout = readSrc("src/app/o/[slug]/layout.tsx");
   assert.match(layout, /assertOrgPageAccess/);
+  const access = readSrc("src/lib/campus-runtime/access.ts");
+  const sessionIdx = access.indexOf("if (!session) unauthorized()");
+  const dbIdx = access.indexOf("await ensureTenantOrgs()");
+  assert.equal(sessionIdx >= 0 && dbIdx >= 0 && sessionIdx < dbIdx, true);
 });
 
 test("wave docs still lock AUTH_URL and the frozen TanStack tree", () => {
