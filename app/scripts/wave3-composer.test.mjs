@@ -126,10 +126,15 @@ test("teach UI exists; guest Grok Bot and locks stay", () => {
   assert.match(org, /canTeach/);
   const header = read("src/components/site-header.tsx");
   assert.doesNotMatch(header, /composer|\/teach/);
+  const children = read("src/app/children/page.tsx");
+  assert.match(children, /Children/);
+  assert.doesNotMatch(children, /composer|\/teach/);
   const login = read("src/app/login/page.tsx");
   assert.doesNotMatch(login, /composer/);
   const pattern = read("src/lib/pattern/items.ts");
   assert.doesNotMatch(pattern, /composer/);
+  const sql = read("db/0005_composer.sql");
+  assert.doesNotMatch(sql, /CREATE TABLE IF NOT EXISTS users\b|child User/);
   const grok = read("src/lib/campus-runtime/client.ts");
   assert.doesNotMatch(grok, /composer|\/teach/);
   const me = read("src/app/api/me/route.ts");

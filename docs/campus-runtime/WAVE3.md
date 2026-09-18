@@ -1,13 +1,13 @@
 # Wave 3 proof — composer
 
-2026-09-18. Branch `cursor/wave-3-composer` rebased onto reviewed live Wave 2 chrome `7618b2d`. Not onto unreviewed `700f4f9`. Preferred PR base is `main`. AUTH_URL stays `https://university.benjohnson.ai`. Guest Grok Bot still works. No Remotion plates. No second Pattern bank.
+2026-09-18. Branch `cursor/wave-3-composer` restacked onto live campus pack `62acfd0` ([children HeadersInit hotfix](https://github.com/bjljohnson2012/field-school/pull/36)). `/children` is live. AUTH_URL stays `https://portal.fieldschool.ai`. Guest Grok Bot still works. No Remotion plates. No second Pattern bank. No child User.
 
 ## What shipped
 
 - `app/db/0005_composer.sql`: courses, lessons, sources, knowledge_units, quiz_items, publish_requests
 - Teacher UI `/o/:slug/teach` and `/o/:slug/teach/:lessonId`
 - Learner published catalog `/o/:slug/l` and `/o/:slug/l/:lessonId`
-- Org home Lessons + Teach links (Teach only when `canTeach`)
+- Org home Lessons + Teach links (Teach only when `canTeach`). Live `/children` desk kept
 - Source kinds: text, upload, book, link
 - Units from supplied text only. Links are stored; text is not scraped
 - Quiz items require `source_unit_id` or they do not persist
@@ -26,9 +26,9 @@
 | C | Sales published lesson | absent from household catalog | **pass** (`org_id` scope) |
 | D | Quiz without `source_unit_id` | 400 `source_unit_id_required` | **pass** |
 | E | PDF / file from other org | 403 `cross_org` | **pass** |
-| F | Guest Grok Bot | `/c/grok-bot` still guest; POST `/api/events` 401 | **live** `{"authenticated":false,"guest":true}` + 200 + 401 |
+| F | Guest Grok Bot | `/c/grok-bot` still guest; POST `/api/events` 401 | **live** on `62acfd0` pack |
 
-Four-model hotfix interrogate of `a175f02`: Isolation / Item-bank / Factory / Goal all **PASS**. First campus deploy applied `0005` and guest composer POST returned `401 sign_in_required` (fail closed). A sibling worker then redeployed Wave 2 over the host; live composer is `404` again. Postgres still has the composer tables. Guest Grok Bot, cap login, and edit health still hold. Do not keep fighting sibling deploys.
+Four-model hotfix interrogate of the restacked tip is required before any deploy. Old PASS on `a175f02` does not carry. Live `/api/composer` is 404 because the `62acfd0` extract has no Wave 3 routes. Postgres still has `0005` tables. Do not fight another VPS race.
 
 ## Manual cheat sheet
 
@@ -41,12 +41,14 @@ Four-model hotfix interrogate of `a175f02`: Isolation / Item-bank / Factory / Go
 | E | Household member | sales lesson id | 404 / not in catalog | local |
 | F | Teacher | quiz omit `source_unit_id` | 400 | local |
 | G | Household | `GET /api/composer/files/:salesSource` | 403 | local |
-| H | Guest | `/c/grok-bot` | 200, no Postgres write | Wave 2 live still holds |
+| H | Guest | `/c/grok-bot` | 200, no Postgres write | live on `62acfd0` |
 
 ## Do not
 
-- Flip AUTH_URL or 301 university
+- Flip AUTH_URL away from `https://portal.fieldschool.ai`
 - Start plates / Remotion / Cap record
 - Add a second Pattern bank
+- Add a child User
 - Revive course-mcp-server, portal-course-builder, or certification workers
-- Rebase onto `700f4f9` unless `/children` is the reviewed live tip
+- Deploy until four-model PASS on this restack
+- Fight another VPS extract race
