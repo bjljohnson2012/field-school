@@ -139,6 +139,13 @@ test("teach UI exists; guest Grok Bot and locks stay", () => {
   const deploy = read("deploy/deploy.sh");
   assert.match(deploy, /0005_composer\.sql/);
   assert.match(deploy, /! -name uploads/);
+  assert.match(deploy, /chown 1001:1001/);
+  const compose = read("deploy/docker-compose.yml");
+  assert.match(compose, /\/opt\/field-school\/uploads:\/opt\/field-school\/uploads/);
+  assert.match(compose, /COMPOSER_UPLOAD_ROOT: \/opt\/field-school\/uploads/);
+  const docker = read("deploy/Dockerfile");
+  assert.match(docker, /\/opt\/field-school\/uploads/);
+  assert.match(docker, /^USER nextjs$/m);
   const spec = readRepo("docs/campus-runtime/CURSOR_WAVES_1_5_SPEC.md");
   assert.match(spec, /AUTH_URL stays https:\/\/university\.benjohnson\.ai/);
   const wave3 = readRepo("docs/campus-runtime/WAVE3.md");

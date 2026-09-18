@@ -46,7 +46,7 @@ cp "$ROOT/../docs/campus-runtime/fp-50-v1.md" "$STAGE/docs/campus-runtime/fp-50-
 tar -C "$STAGE" -czf "$TMP_TAR" .
 
 echo "==> uploading to $VPS_HOST:$REMOTE_DIR (keeping postgres data and composer uploads)"
-"${SSH[@]}" "$VPS_HOST" "mkdir -p '$REMOTE_DIR/postgres' '$REMOTE_DIR/uploads' && find '$REMOTE_DIR' -mindepth 1 -maxdepth 1 ! -name postgres ! -name uploads -exec rm -rf {} +"
+"${SSH[@]}" "$VPS_HOST" "mkdir -p '$REMOTE_DIR/postgres' '$REMOTE_DIR/uploads' && chown 1001:1001 '$REMOTE_DIR/uploads' && find '$REMOTE_DIR' -mindepth 1 -maxdepth 1 ! -name postgres ! -name uploads -exec rm -rf {} +"
 cat "$TMP_TAR" | "${SSH[@]}" "$VPS_HOST" "tar -xzf - -C '$REMOTE_DIR'"
 
 echo "==> env, compose, migrate"

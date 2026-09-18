@@ -14,6 +14,7 @@
 - Drafts hidden from children. Publish writes `publish_requests` and shows the lesson to the child in the same org
 - Uploads at `/opt/field-school/uploads/{org_id}/` — 200MB file, 2GB org. Cross-org file GET is 403. Draft files 404 to non-teachers
 - `app/deploy/deploy.sh` applies 0005 and keeps the uploads directory across deploys
+- App container mounts `/opt/field-school/uploads` and runs as `nextjs` (uid 1001)
 - Guest composer requests 401 before `0005` DDL
 
 ## Proofs
