@@ -17,7 +17,7 @@ See full worker table, git SHAs, and replacement SKILL.md text in this conversat
 - stripe-paid-seats: checkout webhooks Resend only.
 - madeup-master: existing Everything Is Made Up Remotion master only. No plates/.
 - lyell-holding-site: branch cursor/lyell-holding-site-646c only.
-- admin-google-auth: dean allowlist. No AUTH_URL flip.
+- admin-google-auth: dean allowlist. AUTH_URL is portal. Do not flip it back.
 - portal-deploy: app/deploy/deploy.sh. Not TanStack.
 - hostinger-vps-access: campus SSH/DNS. Not vault 2.24.64.248.
 - campus-walkthroughs: recordings only.

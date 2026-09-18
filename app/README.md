@@ -6,15 +6,15 @@ APIs: `GET /api/me`, `GET /api/progress?course=grok-bot`, `POST /api/events`. Li
 
 Public site: https://fieldschool.ai  
 App: https://portal.fieldschool.ai  
-Legacy campus (still live, 301 held): https://university.benjohnson.ai
+Legacy campus: https://university.benjohnson.ai (301 to portal)
 
 Field School is a weekly Saturday hour. Directors come. So do people on the floor, founders building the first team, young men starting, and people switching in.
 
 ## Domains
 
 - `fieldschool.ai` is the public multi-page site. Source in this repo: `marketing-site/` (the live VPS tree from `/workspace/field-school/site/`).
-- `portal.fieldschool.ai` is the Next.js training portal. Same app as the legacy host `university.benjohnson.ai` until that 301 is lifted.
-- `AUTH_URL` still points at that legacy host. Do not flip it until the four portal Google/X OAuth callback rows exist. Do not 301 that host until then.
+- `portal.fieldschool.ai` is the Next.js training portal. `AUTH_URL` is that origin.
+- `university.benjohnson.ai` 301s to portal. Apply with `deploy/flip-auth-url.sh`. Do not run `deploy/deploy.sh` from a main-only branch (that wipe would replace live Wave 2 chrome).
 
 ## Public site
 

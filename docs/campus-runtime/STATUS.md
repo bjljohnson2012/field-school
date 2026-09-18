@@ -4,7 +4,7 @@ Wave 1 is live on the VPS and in `app/`. Wave 2 tenants + picker + Field Pattern
 
 - Postgres `field-school-campus-db`, orgs `field-school` and `household`
 - APIs: GET /api/me, GET /api/progress, POST /api/events
-- Guest Grok Bot still works. AUTH_URL still university.benjohnson.ai
+- Guest Grok Bot still works. AUTH_URL is portal.fieldschool.ai. university.benjohnson.ai 301s to portal.
 - Live docs: https://portal.fieldschool.ai/docs/api
 - Proof: WAVE1.md
 
@@ -29,7 +29,7 @@ Wave 1 identity + Grok Bot station 01 events. Factory (Cap / edit / melt) left r
 
 ## Landed this run
 
-Wave 2 is proven. Household + sales orgs, `/o/:slug`, org picker, invites, fixture welcome lessons, child on household, Field Pattern correspondences + import override, org-scoped skill diagnostics. AUTH_URL not flipped. TanStack not deployed. Remotion and adaptive generation not started. Proof: [WAVE2.md](./WAVE2.md).
+Wave 2 is proven. Household + sales orgs, `/o/:slug`, org picker, invites, fixture welcome lessons, child on household, Field Pattern correspondences + import override, org-scoped skill diagnostics. AUTH_URL is portal.fieldschool.ai. university.benjohnson.ai 301s to portal. TanStack not deployed. Remotion and adaptive generation not started. Proof: [WAVE2.md](./WAVE2.md).
 
 ## In flight / next
 
@@ -40,7 +40,7 @@ Wave 3 waits on a human. Not started.
 
 ## Not this run
 
-AUTH_URL flip, TanStack deploy, Remotion plates, adaptive generation, Notion publish, campus MCP, wildcard DNS.
+TanStack deploy, Remotion plates, adaptive generation, Notion publish, campus MCP, wildcard DNS. AUTH_URL flip is a separate ship: [AUTH_URL_FLIP.md](./AUTH_URL_FLIP.md).
 
 ## Tomorrow morning checklist
 

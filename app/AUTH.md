@@ -24,7 +24,7 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | Variable | Required for | Notes |
 |----------|--------------|-------|
 | `AUTH_SECRET` | Any Auth.js session | Random string; `openssl rand -base64 32`. Also accepts legacy `NEXTAUTH_SECRET`. |
-| `AUTH_URL` | Production OAuth callbacks | Public site origin, e.g. `https://university.field.school`. Also accepts `NEXTAUTH_URL`. |
+| `AUTH_URL` | Production OAuth callbacks | Public site origin. Live value is `https://portal.fieldschool.ai`. Also accepts `NEXTAUTH_URL`. |
 | `GOOGLE_CLIENT_ID` | Google sign-in | OAuth 2.0 client from Google Cloud Console. |
 | `GOOGLE_CLIENT_SECRET` | Google sign-in | Paired secret for the Google client. |
 | `AUTH_TWITTER_ID` or `X_CLIENT_ID` | X sign-in | X developer app OAuth 2.0 client ID. |
@@ -89,7 +89,7 @@ To send the walk to someone without putting a button on login:
 Example (after you set the env):
 
 ```
-https://university.benjohnson.ai/demo?token=YOUR_DEMO_LINK_TOKEN
+https://portal.fieldschool.ai/demo?token=YOUR_DEMO_LINK_TOKEN
 ```
 
 Random visitors do not see this URL on the homepage. It is not a staff login and never grants `/admin`.
@@ -100,15 +100,17 @@ Failed OAuth or Auth.js errors use `pages.error` → `/signup?error=…` (never 
 
 Public policy URLs (must stay reachable without a login):
 
-- Privacy Policy: `https://university.benjohnson.ai/privacy`
-- Terms of Service: `https://university.benjohnson.ai/terms`
+- Privacy Policy: `https://fieldschool.ai/privacy`
+- Terms of Service: `https://fieldschool.ai/terms`
+
+`university.benjohnson.ai` 301s to `https://portal.fieldschool.ai{uri}`. Portal `/privacy` and `/terms` 308 to the apex pages.
 
 ## Callback URLs
 
-Register these redirect URIs with each provider (replace origin with yours):
+Live `AUTH_URL` is `https://portal.fieldschool.ai`. Register these redirect URIs (keep the old university rows until Google/X no longer show them):
 
-- Google: `{AUTH_URL}/api/auth/callback/google`
-- X: `{AUTH_URL}/api/auth/callback/twitter`
+- Google: `https://portal.fieldschool.ai/api/auth/callback/google`
+- X: `https://portal.fieldschool.ai/api/auth/callback/twitter`
 
 ## Local development
 
