@@ -13,6 +13,7 @@ deploy/.vps.env
 .node_modules.lock
 .grok
 AGENTS.md
+!plates/AGENTS.md
 AGENTS.project.md
 deploy/hostinger.pub
 *.log

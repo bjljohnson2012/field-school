@@ -1,0 +1,13 @@
+node_modules
+dist
+.DS_Store
+.env
+
+# remotion skills add nests copies; keep only each skill's SKILL.md
+.agents/**
+!.agents/skills/
+!.agents/skills/*/
+!.agents/skills/*/SKILL.md
+
+# Ignore the output video from Git but not videos you import into src/.
+out
