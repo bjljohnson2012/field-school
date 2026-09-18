@@ -1,11 +1,11 @@
 ---
-name: factory-lock
-description: Wave 1 keep-alive for locked Asset Just, melt single-flight, and cap + edit health. Use when a task would re-render Just, start a second melt, or skip factory health checks.
+name: Factory lock
+description: Factory lock — Just 27pn9xs0zk8a73g, melt render.lock, cap + edit health
 ---
 
 # Factory lock
 
-Wave: 1 keep-alive (patch only if proofs fail). Factory stays running; do not expand it.
+Wave: 1 keep-alive (patch only if proofs fail).
 
 Attach:
 
@@ -22,9 +22,7 @@ Absorbed branches (stop using separately):
 
 - Asset Just Cap id `27pn9xs0zk8a73g` is locked. Do not `/trigger` or re-render it
 - Melt is single-flight: `/opt/field-school/edit/render.lock`. Refuse under 3072 MiB `MemAvailable`
-- After deploy, curl cap login (`cap.fieldschool.ai/login`) and `https://edit.fieldschool.ai/health`
-- Cap Studio has no titles. New takes only — not Just
-- Hour-long masters are melt. Remotion plates wait if the lock exists
+- After deploy, curl cap login and `https://edit.fieldschool.ai/health`
 
 ## Do not
 

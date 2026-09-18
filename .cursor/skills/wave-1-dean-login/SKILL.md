@@ -1,9 +1,9 @@
 ---
-name: admin-google-auth
-description: Wave 1 keep-alive for Auth.js Google staff login, dean allowlist, and /admin gate. Never flip AUTH_URL or 301 university.
+name: Wave 1 dean login
+description: Wave 1 dean login — dean allowlist, no AUTH_URL flip
 ---
 
-# Admin Google auth
+# Wave 1 dean login
 
 Wave: 1 keep-alive (patch only if proofs fail). No `AUTH_URL` flip through Wave 5.
 
@@ -22,16 +22,13 @@ Absorbed branches (stop using separately):
 
 ## Own
 
-- Auth.js in `app/src/auth.ts` and `app/src/lib/auth/`
-- Dean seed `bjljohnson2012@gmail.com`. Sign-out must stay signed out
-- Continue with Google on `/login` and staff pages. `/admin` anonymous 307, no PII
+- Auth.js dean allowlist. Seed `bjljohnson2012@gmail.com`
+- Continue with Google on `/login`. `/admin` anonymous 307, no PII
+- Sign-out must stay signed out. `/login` stays dynamic
 - `trustHost: true`. App code must not pin a public hostname
-- `/login` stays dynamic so Auth.js cookies survive deploy
 
 ## Do not
 
 - Flip `AUTH_URL` (stays `https://university.benjohnson.ai`) or 301 university → portal
 - Broaden staff beyond the allowlist / dean
 - Touch Stripe seats, Pattern items, or CNC vault
-
-Prove: sign in → sign out → sign in as dean; anonymous `/admin` 307.
