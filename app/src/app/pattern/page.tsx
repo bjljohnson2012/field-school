@@ -166,7 +166,7 @@ export default function PatternPage() {
           )}
           onClick={() => setSubset("child")}
         >
-          20-item child
+          Child subset
         </button>
       </div>
 

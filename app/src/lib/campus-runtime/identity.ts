@@ -5,8 +5,6 @@ import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import { members, memberships, organizations } from "@/lib/db/schema";
 import { normalizeEmail } from "@/lib/members/policy";
 import {
-  HOUSEHOLD_SLUG,
-  SALES_SLUG,
   ensureTenantOrgs,
   membershipsForMember,
   pickActiveSlug,
