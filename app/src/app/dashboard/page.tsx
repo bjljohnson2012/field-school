@@ -99,7 +99,7 @@ export default function DashboardPage() {
                 {household ? "home:welcome" : "sales:welcome"}
               </p>
               <h3 className="mt-1 font-display text-2xl tracking-tight">
-                {household ? "Welcome home" : "Welcome to the desk"}
+                {household ? "Household welcome" : "Welcome to the desk"}
               </h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 {household

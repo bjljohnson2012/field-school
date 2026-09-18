@@ -111,6 +111,8 @@ test("fixture lessons and tenant UI stay in app/", () => {
   const lessons = readSrc("src/lib/campus-runtime/lessons.ts");
   assert.match(lessons, /objectId: "home:welcome"/);
   assert.match(lessons, /objectId: "sales:welcome"/);
+  assert.match(lessons, /Household welcome/);
+  assert.doesNotMatch(lessons, /Welcome home|street|neighborhood|Madee/i);
   assert.match(lessons, /It is not the Grok Bot catalog/);
   const orgHome = readSrc("src/app/o/[slug]/page.tsx");
   assert.doesNotMatch(orgHome, /gym/i);

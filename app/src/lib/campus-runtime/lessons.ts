@@ -13,7 +13,7 @@ export const TENANT_LESSONS: TenantLesson[] = [
     course: "home",
     slug: "welcome",
     objectId: "home:welcome",
-    title: "Welcome home",
+    title: "Household welcome",
     body: "This is a household lesson. It is not the Grok Bot catalog. Watch is a text station. Progress stays in this org.",
   },
   {
