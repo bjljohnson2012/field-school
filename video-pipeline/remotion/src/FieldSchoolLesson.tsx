@@ -251,7 +251,7 @@ export const FieldSchoolLesson: React.FC<Props> = ({
   const livePhrases = (phrases || []).filter((phrase) => now >= phrase.start - 0.25 && now <= phrase.end + 0.55);
   const chapter = plates.find((scene) => now >= scene.in && now < scene.out) || plates[0];
   const motion: SceneMotion = chapter?.motion || "spring";
-  const veil = chapter ? lumaVeil(now, chapter.in, chapter.out, LUMA_SEC) : 0;
+  const veil = chapter ? lumaVeil(now, chapter.in, chapter.out, LUMA_SEC, motion) : 0;
   const lock = {
     logo: overlay?.logo || "isolated-seal.png",
     title: overlay?.title || "You Can Just Do Things",

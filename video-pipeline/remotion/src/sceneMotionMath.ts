@@ -35,11 +35,19 @@ export function takeoverHead(
   return {opacity: t, x: (1 - t) * 120, cardOwns: false};
 }
 
-export function lumaVeil(nowSec: number, sceneIn: number, sceneOut: number, duration = LUMA_SEC): number {
+export function lumaVeil(
+  nowSec: number,
+  sceneIn: number,
+  sceneOut: number,
+  duration = LUMA_SEC,
+  motion?: string,
+): number {
   const into = nowSec - sceneIn;
   const remain = sceneOut - nowSec;
-  if (into >= 0 && into < duration) {
-    return 1 - into / duration;
+  // Entrance is the motion (glide/takeover). Luma stands on the way out.
+  const inDur = motion === "takeover" || motion === "glide" ? 0 : duration;
+  if (inDur > 0 && into >= 0 && into < inDur) {
+    return 1 - into / inDur;
   }
   if (remain >= 0 && remain < duration) {
     return 1 - remain / duration;
