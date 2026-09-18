@@ -1,8 +1,10 @@
 # Deploy the Field School training portal
 
-Production campus: [https://university.benjohnson.ai](https://university.benjohnson.ai)
+Production campus: [https://portal.fieldschool.ai](https://portal.fieldschool.ai)
 
-This Next.js portal **replaces** the older TanStack container. Caddy on the VPS already sends `university.benjohnson.ai` to `field-school-app:3000` on Docker network `ae-coach_default`. Keep that container name.
+`university.benjohnson.ai` 301s to portal. AUTH_URL is `https://portal.fieldschool.ai`. Apply that flip with [deploy/flip-auth-url.sh](deploy/flip-auth-url.sh). Do not wipe the live Next tree from a `main`-only branch.
+
+This Next.js portal **replaces** the older TanStack container. Caddy sends `portal.fieldschool.ai` to `field-school-app:3000` on Docker network `ae-coach_default`. Keep that container name.
 
 ## Source of truth
 
@@ -25,7 +27,7 @@ export VPS_HOST="${VPS_HOST:-root@2.24.70.248}"
 bash deploy/deploy.sh
 ```
 
-`deploy/deploy.sh` packs this source (no `node_modules`, no `.next`), **wipes** `/opt/field-school` on the VPS, extracts, and runs `docker compose up -d --build` in `deploy/`. The wipe stops leftover Vite/TanStack files (`vite.config.ts`) from breaking `next build`. Keep container name `field-school-app` so Caddy keeps serving `university.benjohnson.ai`.
+`deploy/deploy.sh` packs this source (no `node_modules`, no `.next`), **wipes** `/opt/field-school` on the VPS, extracts, and runs `docker compose up -d --build` in `deploy/`. The wipe stops leftover Vite/TanStack files (`vite.config.ts`) from breaking `next build`. Keep container name `field-school-app` so Caddy keeps serving `portal.fieldschool.ai`. The AUTH_URL + university 301 ship uses `flip-auth-url.sh` instead of this wipe.
 
 OAuth secrets live at durable `/opt/field-school.env` **outside** that wipe. Compose mounts that file via `env_file`. Do not delete it. After a wipe, confirm the live compose still has `env_file: /opt/field-school.env` on the app service.
 
@@ -41,7 +43,8 @@ Optional shareable Jordan walk: set `DEMO_LINK_TOKEN` in `/opt/field-school.env`
 
 Check:
 
-- `https://university.benjohnson.ai` — kicker **Field School training portal**, cream/blue campus
+- `https://portal.fieldschool.ai` — kicker **Field School training portal**, cream/blue campus
+- `https://university.benjohnson.ai` — 301 to portal
 - `/about` — training portal
 - `/privacy` — public Privacy Policy (Google OAuth consent)
 - `/terms` — public Terms of Service (Google OAuth consent)

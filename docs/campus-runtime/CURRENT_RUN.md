@@ -21,4 +21,4 @@ Papers, verbal answers, and videos transcribe with Grok STT and nudge Bearing wi
 
 Also ship org-scoped skills + one household diagnostic (3 parent-editable skills) + one sales diagnostic (3 seeded sales skills).
 
-Do not flip AUTH_URL. Do not deploy TanStack. Do not start Remotion plates, chooser LLM, or adaptive generation this run.
+AUTH_URL is portal.fieldschool.ai. Do not flip it back to university. Do not deploy TanStack. Do not start Remotion plates, chooser LLM, or adaptive generation this run.

@@ -36,7 +36,7 @@ Learners have a living Field Pattern profile (fp-50-v1) saved on the person. Ski
 - Next app: app/ on VPS 2.24.70.248. Hosts: fieldschool.ai, portal.fieldschool.ai, university.benjohnson.ai, cap.fieldschool.ai, edit.fieldschool.ai
 - Postgres: container field-school-campus-db, database campus. Do not write to leftover field-school-db (frozen TanStack).
 - Wave 1 is live: GET /api/me, GET /api/progress, POST /api/events. Guest Grok Bot works. Guest POST /api/events is 401.
-- AUTH_URL is https://university.benjohnson.ai. Do not flip it. Do not 301 university.
+- AUTH_URL is https://portal.fieldschool.ai. university.benjohnson.ai 301s to portal. Do not flip AUTH_URL back.
 - SQL 0002-0004 is in the repo (Field Pattern + tenants). Verify it is applied on the VPS before building UI on top.
 - Factory: Cap capture, Notion Assets, edit.fieldschool.ai, melt. Asset Just (Cap id 27pn9xs0zk8a73g) is locked. Do not re-render it.
 - CNC vault 2.24.64.248 is off limits.

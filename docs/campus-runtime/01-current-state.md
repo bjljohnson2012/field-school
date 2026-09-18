@@ -3,8 +3,8 @@
 ## Live and working
 
 - Marketing site on fieldschool.ai (pricing $100/$200/$1000). Foundry off the cart.
-- Next campus on university.benjohnson.ai. portal.fieldschool.ai serves the same guest campus (Grok Bot, Continue as guest, free beta).
-- AUTH_URL still points at university.benjohnson.ai. University 301 is held. Portal Google/X OAuth callbacks are not complete.
+- Next campus on portal.fieldschool.ai. university.benjohnson.ai 301s there.
+- AUTH_URL is https://portal.fieldschool.ai. Guest Grok Bot still works.
 - Guest learning works. Progress is not a durable multi-user graph.
 - Cap on cap.fieldschool.ai. Adapter writes Notion Assets. Grok STT lands Review. POST edit.fieldschool.ai/trigger is live. Melt is single-flight.
 - Asset Just (Cap id 27pn9xs0zk8a73g) proved HLS. Locked. Do not re-render it.
