@@ -28,7 +28,7 @@ export function StudentDemoClient({
       </h1>
       <p className="mt-4 text-muted-foreground">
         Four beats. Impersonate the demo student, open the course, send
-        feedback, then come back to staff notifications. Login never shows this
+        feedback, then come back to staff Inbox. Login never shows this
         walk — share the token link when someone else should try it.
       </p>
 
@@ -107,7 +107,7 @@ export function StudentDemoClient({
                 router.push("/admin/notifications");
               }}
             >
-              Back to staff notifications
+              Back to staff Inbox
               {unreadNotices > 0 ? ` (${unreadNotices})` : ""}
             </button>
           </div>

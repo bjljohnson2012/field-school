@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { usePortal } from "@/hooks/use-portal";
@@ -8,13 +9,49 @@ import { courseTally, resetDemo } from "@/lib/portal";
 import { assessmentTools } from "@/lib/tools/registry";
 import { formatDay } from "@/lib/utils";
 
+type RosterPerson = { org: string; kind: string };
+type ChildProgress = { welcomeWatched: boolean; patternTitle: string | null; locked: boolean };
+
 export default function AdminPage() {
   const { isStaff, unreadNotices, users, ready, tools } = usePortal();
   const courses = listPublishedCourses();
+  const [roster, setRoster] = useState<RosterPerson[]>([]);
+  const [kids, setKids] = useState<ChildProgress[]>([]);
+  const [pendingAccess, setPendingAccess] = useState(0);
+
+  useEffect(() => {
+    if (!ready || !isStaff) return;
+    void fetch("/api/org/people")
+      .then((r) => r.json())
+      .then((data) => setRoster(data.people ?? []))
+      .catch(() => undefined);
+    void fetch("/api/children", { headers: { "x-fs-org": "household" } })
+      .then((r) => r.json())
+      .then((data) => setKids(data.children ?? []))
+      .catch(() => undefined);
+    void fetch("/api/admin/access-requests")
+      .then((r) => r.json())
+      .then((data) => {
+        const rows = data.requests ?? [];
+        setPendingAccess(rows.filter((row: { status?: string }) => row.status === "pending").length);
+      })
+      .catch(() => undefined);
+  }, [ready, isStaff]);
 
   if (!ready || !isStaff) return null;
 
+  const householdKids = kids.length;
+  const patternRun = kids.filter((kid) => kid.patternTitle).length;
+  const welcomeDone = kids.filter((kid) => kid.welcomeWatched).length;
+  const peopleCount = roster.length || users.length;
+  const orgCount = new Set(roster.map((row) => row.org)).size;
+
   const startHere = [
+    {
+      href: "/children",
+      title: "Children database",
+      body: "Parent-facing children/subusers. Say child, not student. Kids have no own login. Parent records progress.",
+    },
     {
       href: "/o/household",
       title: "Open household",
@@ -179,16 +216,46 @@ export default function AdminPage() {
 
       <section className="mt-12">
         <h2 className="font-display text-2xl tracking-tight">Progress</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          More surfaces than a single course tally. People, children, Pattern,
+          Inbox, and access.
+        </p>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           <article className="rounded-xl border border-border bg-card px-5 py-5">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
               People
             </p>
-            <p className="mt-2 font-display text-3xl">{users.length}</p>
+            <p className="mt-2 font-display text-3xl">{peopleCount}</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              On this campus. Open{" "}
+              {orgCount ? `${orgCount} orgs. ` : ""}Open{" "}
               <Link href="/people" className="underline">
                 View all
+              </Link>
+              .
+            </p>
+          </article>
+          <article className="rounded-xl border border-border bg-card px-5 py-5">
+            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+              Household children
+            </p>
+            <p className="mt-2 font-display text-3xl">{householdKids}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Welcome {welcomeDone}/{householdKids || 0}.{" "}
+              <Link href="/children" className="underline">
+                Children database
+              </Link>
+              .
+            </p>
+          </article>
+          <article className="rounded-xl border border-border bg-card px-5 py-5">
+            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+              Field Pattern
+            </p>
+            <p className="mt-2 font-display text-3xl">{patternRun}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Child profiles with a Pattern title.{" "}
+              <Link href="/pattern" className="underline">
+                Open assessment
               </Link>
               .
             </p>
@@ -215,6 +282,19 @@ export default function AdminPage() {
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
               Stations passed on this seat.
+            </p>
+          </article>
+          <article className="rounded-xl border border-border bg-card px-5 py-5">
+            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+              Access requests
+            </p>
+            <p className="mt-2 font-display text-3xl">{pendingAccess}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Pending.{" "}
+              <Link href="/admin/access-requests" className="underline">
+                Review
+              </Link>
+              .
             </p>
           </article>
         </div>

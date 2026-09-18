@@ -9,31 +9,50 @@ const readSrc = (rel) => readFileSync(join(root, rel), "utf8");
 
 test("household org says child, not student, and lists parent-facing children", () => {
   const orgHome = readSrc("src/app/o/[slug]/page.tsx");
+  const childrenDb = readSrc("src/components/children-database.tsx");
+  const childrenPage = readSrc("src/app/children/page.tsx");
   const childrenApi = readSrc("src/app/api/children/route.ts");
   const dashboard = readSrc("src/app/dashboard/page.tsx");
 
-  assert.match(orgHome, /Say child, not student/);
-  assert.match(orgHome, /Kids have no own login/);
-  assert.match(orgHome, /Parent-facing list/);
-  assert.match(orgHome, /<h2 className="font-display text-2xl">Children<\/h2>/);
-  assert.match(orgHome, /Add a child/);
-  assert.match(orgHome, /method: "PATCH"/);
+  assert.match(orgHome, /<ChildrenDatabase/);
+  assert.match(orgHome, /Children database/);
   assert.doesNotMatch(orgHome, /Student/);
   assert.doesNotMatch(orgHome, /street|neighborhood|Welcome home/i);
+
+  assert.match(childrenDb, /Say child, not student/);
+  assert.match(childrenDb, /Kids have no own login/);
+  assert.match(childrenDb, /Parent-facing children\/subusers database/);
+  assert.match(childrenDb, /<h2 className="font-display text-2xl">\{heading\}<\/h2>/);
+  assert.match(childrenDb, /Add a child/);
+  assert.match(childrenDb, /method: "PATCH"/);
+  assert.match(childrenDb, /Lock profile/);
+  assert.match(childrenDb, /\/api\/pattern\/lock/);
+  assert.match(childrenDb, /welcomeWatched: true/);
+  assert.match(childrenDb, /pattern\?child=/);
+  assert.match(childrenDb, /Record welcome/);
+  assert.doesNotMatch(childrenDb, /\/api\/org\/active/);
+  assert.doesNotMatch(childrenDb, /Student/);
+
+  assert.match(childrenPage, /Parent-facing children\/subusers database/);
+  assert.match(childrenPage, /<ChildrenDatabase/);
+  assert.match(childrenPage, /redirect\("\/login\?next=\/children"\)/);
 
   assert.match(childrenApi, /export async function GET/);
   assert.match(childrenApi, /export async function PATCH/);
   assert.match(childrenApi, /objectId: "parent-note"/);
+  assert.match(childrenApi, /objectId: "home:welcome"/);
   assert.match(childrenApi, /login: "none"/);
   assert.match(childrenApi, /welcomeWatched/);
   assert.match(childrenApi, /patternTitle/);
   assert.match(childrenApi, /locked: Boolean\(profile\?\.locked\)/);
-  assert.match(orgHome, /Lock profile/);
-  assert.match(orgHome, /\/api\/pattern\/lock/);
   assert.doesNotMatch(childrenApi, /login: row\.email/);
 
-  assert.match(dashboard, /Parent-facing list/);
+  assert.match(dashboard, /Parent-facing children\/subusers database/);
   assert.match(dashboard, /Child · login none/);
+  assert.match(dashboard, /!signedIn && !session/);
+  assert.match(dashboard, /signedIn/);
+  assert.doesNotMatch(dashboard, /Continue as guest/);
+  assert.doesNotMatch(dashboard, /Run the student demo/);
   assert.doesNotMatch(dashboard, /say student|Student org/i);
 });
 
@@ -67,6 +86,9 @@ test("admin start-here splits courses from assessments and shows progress", () =
   assert.match(admin, /Field Pattern sits here/);
   assert.match(admin, /href="\/pattern"/);
   assert.match(admin, /<h2 className="font-display text-2xl tracking-tight">Progress<\/h2>/);
+  assert.match(admin, /Household children/);
+  assert.match(admin, /Field Pattern/);
+  assert.match(admin, /Access requests/);
   assert.match(admin, /Open Inbox/);
   assert.match(admin, /Kids have no own login/);
   assert.doesNotMatch(admin, /First student org|Second student org/);
@@ -79,8 +101,10 @@ test("logged-in header hides About; Inbox lives only under Admin", () => {
   const notices = readSrc("src/app/admin/notifications/page.tsx");
   const feedback = readSrc("src/components/course-feedback.tsx");
 
-  assert.match(header, /loggedIn \? "\/dashboard" : "\/"/);
-  assert.match(header, /!\s*loggedIn \? \[\{ href: "\/about"/);
+  assert.match(header, /guestChrome \? "\/" : "\/dashboard"/);
+  assert.match(header, /status === "unauthenticated"/);
+  assert.match(header, /showAbout \? \[\{ href: "\/about"/);
+  assert.match(header, /href: "\/children"/);
   assert.doesNotMatch(header, /href: "\/inbox"/);
   assert.doesNotMatch(header, /Notifications/);
   assert.doesNotMatch(header, /label: "About".*loggedIn/);
@@ -108,11 +132,14 @@ test("org switcher View all lists users and their org", () => {
   assert.match(peoplePage, /<th className="px-4 py-3 font-medium">Org<\/th>/);
   assert.match(peoplePage, /person\.kind === "child" \? "Child" : "Adult"/);
   assert.match(peoplePage, /person\.kind === "child" \? "None" : "Member"/);
+  const peopleLayout = readSrc("src/app/people/layout.tsx");
+  assert.match(peopleLayout, /redirect\("\/login\?next=\/people"\)/);
 
   assert.match(peopleApi, /child_cannot_list/);
   assert.match(peopleApi, /login: row\.kind === "child" \? "none" : "member"/);
   assert.match(peopleApi, /const people = staff/);
-  assert.match(peopleApi, /rows\.filter\(\(row\) => row\.org === auth\.identity\.orgSlug\)/);
+  assert.match(peopleApi, /allowedOrgs\.has\(row\.org\)/);
+  assert.match(peopleApi, /auth\.memberships\.map/);
   assert.doesNotMatch(peopleApi, /email: row\.email/);
 });
 
@@ -124,4 +151,6 @@ test("campus UI retires gym wording and names the child subset from the table", 
   assert.match(docs, /sales/);
   assert.doesNotMatch(pattern, /twenty-item/);
   assert.match(pattern, /child subset from the pinned fp-50-v1/);
+  assert.match(pattern, /search.get\("child"\)/);
+  assert.match(pattern, /membership_id: childMembershipId/);
 });

@@ -16,6 +16,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ ok: false, error: "child_cannot_list" }, { status: 403 });
   }
   const staff = isStaffEmail(auth.identity.email);
+  const allowedOrgs = new Set(auth.memberships.map((row) => row.orgSlug));
   const db = getDb();
   const rows = await db
     .select({
@@ -31,7 +32,7 @@ export async function GET(request: Request) {
     .innerJoin(organizations, eq(organizations.id, memberships.orgId));
   const people = staff
     ? rows
-    : rows.filter((row) => row.org === auth.identity.orgSlug);
+    : rows.filter((row) => allowedOrgs.has(row.org));
   return NextResponse.json({
     ok: true,
     org: auth.identity.orgSlug,

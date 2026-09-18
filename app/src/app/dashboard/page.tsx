@@ -11,7 +11,7 @@ import { formatDay } from "@/lib/utils";
 
 export default function DashboardPage() {
   const { data: authSession } = useSession();
-  const { ready, session, tools, isStaff, impersonating } = usePortal();
+  const { ready, session, tools, impersonating } = usePortal();
   const courses = listPublishedCourses();
   const seatLabel = authSession?.user?.seatLabel;
   const [nextStation, setNextStation] = useState<{ href: string; title: string } | null>(null);
@@ -29,8 +29,9 @@ export default function DashboardPage() {
         setActiveOrg(slug);
         const course = slug === "household" ? "home" : slug === "sales" ? "sales" : "grok-bot";
         const next = fetch(`/api/chooser?course=${course}`).then((r) => r.json());
-        if (slug === "household") {
-          void fetch("/api/children", { headers: { "x-fs-org": slug } })
+        const orgs = (data.memberships ?? []).map((row: { org?: string }) => row.org);
+        if (orgs.includes("household") || slug === "household") {
+          void fetch("/api/children", { headers: { "x-fs-org": "household" } })
             .then((r) => r.json())
             .then((body) => {
               if (body?.children) setChildren(body.children);
@@ -49,6 +50,7 @@ export default function DashboardPage() {
   const household = activeOrg === "household";
   const sales = activeOrg === "sales";
   const hideGrokBot = household || sales;
+  const signedIn = Boolean(authSession?.user?.email);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-12">
@@ -57,19 +59,13 @@ export default function DashboardPage() {
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">Dashboard</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">
-        {session
-          ? `Signed in as ${session.name}${session.role === "guest" ? " (guest)" : session.role === "admin" ? " (admin)" : ` (${seatLabel || "free beta"})`}${impersonating ? " — impersonating" : ""}. Courses and tools stay on this portal.`
+        {signedIn
+          ? session
+            ? `Signed in as ${session.name}${session.role === "guest" ? "" : session.role === "admin" ? " (admin)" : ` (${seatLabel || "member"})`}${impersonating ? " — impersonating" : ""}. Courses and assessments stay on this desk.`
+            : "Signed in. Courses and assessments stay on this desk."
           : "Join the free beta, continue as a guest, or sign in. Progress still saves on this device."}
       </p>
-      {isStaff && !impersonating ? (
-        <Link
-          href="/admin/demo"
-          className="mt-6 inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm"
-        >
-          Run the student demo
-        </Link>
-      ) : null}
-      {!session && !authSession?.user?.email ? (
+      {!signedIn && !session ? (
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             href="/signup"
@@ -101,17 +97,17 @@ export default function DashboardPage() {
         </p>
       ) : null}
 
-      {household ? (
+      {household || children.length > 0 ? (
         <section className="mt-12">
           <h2 className="font-display text-2xl tracking-tight">Children</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Parent-facing list. Kids have no own login. Record feedback and
-            progress on the household desk.
+            Parent-facing children/subusers database. Kids have no own login.
+            Record feedback and progress here.
           </p>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             {children.length === 0 ? (
               <Link
-                href="/o/household"
+                href="/children"
                 className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
               >
                 <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
@@ -121,14 +117,14 @@ export default function DashboardPage() {
                   Add a child
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Open the household children list.
+                  Open the children/subusers database.
                 </p>
               </Link>
             ) : (
               children.map((child) => (
                 <Link
                   key={child.membershipId}
-                  href="/o/household"
+                  href="/children"
                   className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
                 >
                   <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
