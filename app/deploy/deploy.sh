@@ -45,8 +45,8 @@ mkdir -p "$STAGE/docs/campus-runtime"
 cp "$ROOT/../docs/campus-runtime/fp-50-v1.md" "$STAGE/docs/campus-runtime/fp-50-v1.md"
 tar -C "$STAGE" -czf "$TMP_TAR" .
 
-echo "==> uploading to $VPS_HOST:$REMOTE_DIR (keeping postgres data)"
-"${SSH[@]}" "$VPS_HOST" "mkdir -p '$REMOTE_DIR/postgres' && find '$REMOTE_DIR' -mindepth 1 -maxdepth 1 ! -name postgres -exec rm -rf {} +"
+echo "==> uploading to $VPS_HOST:$REMOTE_DIR (keeping postgres data and composer uploads)"
+"${SSH[@]}" "$VPS_HOST" "mkdir -p '$REMOTE_DIR/postgres' '$REMOTE_DIR/uploads' && find '$REMOTE_DIR' -mindepth 1 -maxdepth 1 ! -name postgres ! -name uploads -exec rm -rf {} +"
 cat "$TMP_TAR" | "${SSH[@]}" "$VPS_HOST" "tar -xzf - -C '$REMOTE_DIR'"
 
 echo "==> env, compose, migrate"
@@ -71,7 +71,7 @@ for i in \$(seq 1 40); do
   fi
   sleep 2
 done
-for f in 0001_wave1.sql 0002_field_pattern.sql 0003_pattern_weights.sql 0004_tenants.sql; do
+for f in 0001_wave1.sql 0002_field_pattern.sql 0003_pattern_weights.sql 0004_tenants.sql 0005_composer.sql; do
   docker exec -i field-school-campus-db psql -U campus -d campus < "$REMOTE_DIR/db/\$f"
 done
 docker compose --env-file "\$ENV_FILE" ps

@@ -321,8 +321,12 @@ export async function publishLesson(identity: LearnerIdentity, lessonId: string)
 export async function getSourceForOrg(orgId: string, sourceId: string) {
   const db = getDb();
   const [row] = await db
-    .select()
+    .select({
+      source: sources,
+      lessonStatus: lessons.status,
+    })
     .from(sources)
+    .innerJoin(lessons, eq(lessons.id, sources.lessonId))
     .where(and(eq(sources.id, sourceId), eq(sources.orgId, orgId)))
     .limit(1);
   return row ?? null;

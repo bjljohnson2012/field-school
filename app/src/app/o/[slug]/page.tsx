@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChildrenDatabase } from "@/components/children-database";
+import { canTeach } from "@/lib/composer/rules";
 
 type Me = {
   authenticated: boolean;
@@ -32,6 +33,10 @@ export default function OrgHomePage() {
   }, [slug]);
 
   const lessonHref = slug === "household" ? "/o/household/welcome" : slug === "sales" ? "/o/sales/welcome" : "/c/grok-bot";
+  const teacher = canTeach({
+    kind: me?.member?.kind || "",
+    stance: me?.activeOrg?.stance || "",
+  });
   const canInvite =
     me?.member?.kind !== "child" &&
     ["admin", "guardian", "trainer"].includes(me?.activeOrg?.stance || "");
@@ -106,6 +111,14 @@ export default function OrgHomePage() {
         <Link href="/skills" className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
           Skill diagnostic
         </Link>
+        <Link href={`/o/${slug}/l`} className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+          Lessons
+        </Link>
+        {teacher ? (
+          <Link href={`/o/${slug}/teach`} className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+            Teach
+          </Link>
+        ) : null}
       </div>
 
       {canInvite ? (

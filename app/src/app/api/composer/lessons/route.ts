@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireMember, requireTeacher, deny } from "@/lib/composer/access";
-import { isSourceKind } from "@/lib/composer/rules";
+import { canTeach, isSourceKind } from "@/lib/composer/rules";
 import { createLesson, getLessonDetail, listLessons } from "@/lib/composer/store";
 
 export const dynamic = "force-dynamic";
@@ -13,9 +13,11 @@ export async function GET(request: Request) {
   if (id) {
     const detail = await getLessonDetail(auth.identity, id);
     if (!detail) return deny(404, "unknown_lesson");
+    const teacher = canTeach(auth.identity);
     return NextResponse.json({
       ok: true,
       org: auth.identity.orgSlug,
+      canTeach: teacher,
       lesson: {
         id: detail.lesson.id,
         title: detail.lesson.title,
@@ -49,13 +51,17 @@ export async function GET(request: Request) {
         sourceUnitId: item.sourceUnitId,
         prompt: item.prompt,
         choices: item.choices,
-        answer: item.answer,
-        why: item.why,
+        ...(teacher ? { answer: item.answer, why: item.why } : {}),
       })),
     });
   }
   const lessons = await listLessons(auth.identity);
-  return NextResponse.json({ ok: true, org: auth.identity.orgSlug, lessons });
+  return NextResponse.json({
+    ok: true,
+    org: auth.identity.orgSlug,
+    canTeach: canTeach(auth.identity),
+    lessons,
+  });
 }
 
 export async function POST(request: Request) {

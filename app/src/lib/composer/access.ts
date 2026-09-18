@@ -4,7 +4,6 @@ import { applyComposerSqlIfConfigured } from "./sql";
 import { canTeach } from "./rules";
 
 export async function composerIdentity(request: Request) {
-  await applyComposerSqlIfConfigured();
   return identityFromRequest(request);
 }
 
@@ -21,11 +20,13 @@ export async function requireTeacher(request: Request) {
       response: deny(403, auth.identity.kind === "child" ? "child_cannot_teach" : "teacher_only"),
     };
   }
+  await applyComposerSqlIfConfigured();
   return { ok: true as const, identity: auth.identity, memberships: auth.memberships };
 }
 
 export async function requireMember(request: Request) {
   const auth = await composerIdentity(request);
   if (!auth.ok) return { ok: false as const, response: deny(auth.status, auth.error) };
+  await applyComposerSqlIfConfigured();
   return { ok: true as const, identity: auth.identity, memberships: auth.memberships };
 }

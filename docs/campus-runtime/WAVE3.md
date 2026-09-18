@@ -1,29 +1,33 @@
 # Wave 3 proof — composer
 
-2026-09-18. Branch `cursor/wave-3-composer` off `cursor/wave-2-tenants-ca6e`. New files only. Wave 2 chrome, auth, spam, and Pattern bank were not edited. No Remotion plates. AUTH_URL stays `https://university.benjohnson.ai`. Guest Grok Bot still works.
+2026-09-18. Branch `cursor/wave-3-composer` rebased onto reviewed live Wave 2 chrome `7618b2d`. Not onto unreviewed `700f4f9`. Preferred PR base is `main`. AUTH_URL stays `https://university.benjohnson.ai`. Guest Grok Bot still works. No Remotion plates. No second Pattern bank.
 
 ## What shipped
 
 - `app/db/0005_composer.sql`: courses, lessons, sources, knowledge_units, quiz_items, publish_requests
 - Teacher UI `/o/:slug/teach` and `/o/:slug/teach/:lessonId`
 - Learner published catalog `/o/:slug/l` and `/o/:slug/l/:lessonId`
+- Org home Lessons + Teach links (Teach only when `canTeach`)
 - Source kinds: text, upload, book, link
 - Units from supplied text only. Links are stored; text is not scraped
 - Quiz items require `source_unit_id` or they do not persist
 - Drafts hidden from children. Publish writes `publish_requests` and shows the lesson to the child in the same org
-- Uploads at `/opt/field-school/uploads/{org_id}/` — 200MB file, 2GB org. Cross-org file GET is 403
-- SQL applies on first composer request (`applyComposerSql`). Deploy loop still lists 0001–0004; 0005 is idempotent
+- Uploads at `/opt/field-school/uploads/{org_id}/` — 200MB file, 2GB org. Cross-org file GET is 403. Draft files 404 to non-teachers
+- `app/deploy/deploy.sh` applies 0005 and keeps the uploads directory across deploys
+- Guest composer requests 401 before `0005` DDL
 
 ## Proofs
 
 | # | Action | Expect | Result |
 |---|---|---|---|
-| A | Household draft as child | hidden / teach 403 `child_cannot_teach` or Teachers only | **pass** (rules + catalog filter + teach UI) |
+| A | Household draft as child | hidden / teach 403 `child_cannot_teach` or Teachers only | **pass** (imported `rules.ts` + catalog filter + teach UI) |
 | B | Publish household lesson | visible to child in household catalog | **pass** (published + same org) |
 | C | Sales published lesson | absent from household catalog | **pass** (`org_id` scope) |
 | D | Quiz without `source_unit_id` | 400 `source_unit_id_required` | **pass** |
 | E | PDF / file from other org | 403 `cross_org` | **pass** |
-| F | Guest Grok Bot | `/c/grok-bot` still guest; POST `/api/events` 401 | **pass** (untouched Wave 1/2 routes) |
+| F | Guest Grok Bot | `/c/grok-bot` still guest; POST `/api/events` 401 | **live** on chrome tip; Wave 3 routes not deployed yet |
+
+Live VPS publish / apply 0005 / browser walkthrough stay **pending** until four-model hotfix interrogate PASSes this SHA.
 
 ## Manual cheat sheet
 
@@ -44,3 +48,4 @@
 - Start plates / Remotion / Cap record
 - Add a second Pattern bank
 - Revive course-mcp-server, portal-course-builder, or certification workers
+- Rebase onto `700f4f9` unless `/children` is the reviewed live tip

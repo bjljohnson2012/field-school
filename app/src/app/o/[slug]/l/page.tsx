@@ -10,6 +10,7 @@ export default function PublishedCatalogPage() {
   const { slug } = useParams<{ slug: string }>();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [canTeach, setCanTeach] = useState(false);
 
   useEffect(() => {
     void fetch("/api/composer/catalog", { headers: { "x-fs-org": slug } })
@@ -19,6 +20,7 @@ export default function PublishedCatalogPage() {
           setError(json.error || "unavailable");
           return;
         }
+        setCanTeach(Boolean(json.canTeach));
         setLessons((json.lessons as Lesson[]).filter((lesson) => lesson.status === "published"));
       });
   }, [slug]);
@@ -48,6 +50,14 @@ export default function PublishedCatalogPage() {
         <Link href={`/o/${slug}`} className="underline underline-offset-4">
           Back to org
         </Link>
+        {canTeach ? (
+          <>
+            {" · "}
+            <Link href={`/o/${slug}/teach`} className="underline underline-offset-4">
+              Teach
+            </Link>
+          </>
+        ) : null}
       </p>
     </main>
   );

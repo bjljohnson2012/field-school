@@ -9,6 +9,7 @@ type Unit = { id: string; title: string; body: string };
 type Quiz = { id: string; sourceUnitId: string; prompt: string };
 type Detail = {
   error?: string;
+  canTeach?: boolean;
   lesson?: { id: string; title: string; status: string; body: string; kind: string };
   units?: Unit[];
   quiz?: Quiz[];
@@ -97,11 +98,20 @@ export default function TeachLessonPage() {
     if (res.ok) await load();
   }
 
-  if (data?.error === "child_cannot_teach" || data?.error === "teacher_only") {
+  if (
+    data?.error === "child_cannot_teach" ||
+    data?.error === "teacher_only" ||
+    data?.canTeach === false
+  ) {
     return (
       <main className="mx-auto max-w-xl px-4 py-16">
         <h1 className="font-display text-3xl">Teachers only</h1>
         <p className="mt-3 text-muted-foreground">Drafts stay hidden from children.</p>
+        <p className="mt-6 text-sm">
+          <Link href={`/o/${slug}/l`} className="underline underline-offset-4">
+            Published lessons
+          </Link>
+        </p>
       </main>
     );
   }
