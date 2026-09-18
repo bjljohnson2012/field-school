@@ -1,14 +1,24 @@
 ---
 name: hostinger-vps-access
-description: Maintain Hostinger VPS SSH keys and mailbox access for Field School campus hosts. Use for key paths, Hostinger VPS/DNS/email MCP, or deploy SSH — never the CNC vault.
+description: Fenced. Campus Hostinger VPS SSH/DNS/mail keys. Never the CNC vault 2.24.64.248. Does not block Wave 2.
 ---
+
 # Hostinger VPS access
 
-Use Hostinger MCP (`hostinger-vps`, `hostinger-dns`, `hostinger-email`) when the task is inventory or DNS. Campus SSH key is `/home/ubuntu/.ssh/vps_deploy`.
+Wave: fenced. Does not block Wave 2.
+
+Attach:
+
+- `app/DEPLOY.md`
+- `AGENTS.md`
+
+Absorbed branches: none.
 
 ## Own
 
 - Key path and permissions for campus VPS `2.24.70.248`
+- Campus SSH key `/home/ubuntu/.ssh/vps_deploy`
+- Hostinger MCP (`hostinger-vps`, `hostinger-dns`, `hostinger-email`) for inventory or DNS
 - Hostinger order mailboxes and DNS for fieldschool.ai / portal — no surprise record deletes
 - Document which key deploys campus vs which must never be copied into the repo
 
@@ -18,5 +28,6 @@ Use Hostinger MCP (`hostinger-vps`, `hostinger-dns`, `hostinger-email`) when the
 - Commit private keys
 - Flip `AUTH_URL` or rewrite Caddy site blocks
 - Rotate keys without leaving a working deploy path
+- Block Wave 2
 
-Prove `ssh -i /home/ubuntu/.ssh/vps_deploy root@2.24.70.248` and that vault host is untouched.
+Prove `ssh -i /home/ubuntu/.ssh/vps_deploy root@2.24.70.248` and that the vault host is untouched.

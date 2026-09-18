@@ -1,10 +1,19 @@
 ---
 name: cloud-env-builds
-description: Keep Field School Cloud Agent environment builds, lockfiles, and install scripts healthy. Use for environment.json, npm ci, or migrate-to-builds — not app feature work.
+description: Fenced. Cloud Agent environment builds, lockfiles, and npm ci. Not app feature work. Does not block Wave 2.
 ---
+
 # Cloud env builds
 
-Load `env-setup` and `migrate-to-builds`.
+Wave: fenced. Does not block Wave 2.
+
+Attach:
+
+- Cursor skills `env-setup` and `migrate-to-builds`
+- `package-lock.json` / `app/package-lock.json` as present
+- `.cursor/environment.json` when present
+
+Absorbed branches: none. Related historical branches `cursor/setup-dev-environment-f793` and `cursor/fix-npm-ci-lockfile-sync-a6ec` stay closed.
 
 ## Own
 
@@ -15,8 +24,9 @@ Load `env-setup` and `migrate-to-builds`.
 ## Do not
 
 - Put secrets in `environment.json`
-- Change campus product behavior, AUTH_URL, or Caddy
+- Change campus product behavior, `AUTH_URL`, or Caddy
 - Touch CNC vault
 - Propose an environment until a draft build has succeeded
+- Block Wave 2
 
 Prefer Dockerfile for slow system deps and idempotent `install` for repo deps.

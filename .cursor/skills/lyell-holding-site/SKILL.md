@@ -1,8 +1,18 @@
 ---
 name: lyell-holding-site
-description: Own the LyellX holding-company site in lyell-site/ for lyellx.com. Use for that static site, its Hostinger addon, or Squarespace DNS A records.
+description: Fenced. LyellX holding-company site on cursor/lyell-holding-site-646c only. Does not block Wave 2.
 ---
+
 # Lyell holding site
+
+Wave: fenced. Does not block Wave 2.
+
+Attach:
+
+- `lyell-site/` (when present on this branch)
+- `AGENTS.md`
+
+Absorbed branches: none. Own branch is `cursor/lyell-holding-site-646c` only. Do not open a second Lyell branch.
 
 ## Own
 
@@ -17,5 +27,6 @@ description: Own the LyellX holding-company site in lyell-site/ for lyellx.com. 
 - Add an open-seat placeholder
 - Edit campus `app/` tenants, Pattern, or portal Caddy
 - Touch CNC vault or Cap
+- Block Wave 2
 
 Verify with `python3 -m http.server 4173 --directory lyell-site`.

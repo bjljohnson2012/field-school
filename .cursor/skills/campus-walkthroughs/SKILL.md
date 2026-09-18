@@ -1,10 +1,19 @@
 ---
 name: campus-walkthroughs
-description: Record and upload walkthrough artifacts that prove campus UI (picker, Pattern, guest Grok Bot, admin). Use when a change needs a demo video or screenshot proof.
+description: Fenced. Record walkthrough artifacts that prove campus UI. No product code. Does not block Wave 2.
 ---
+
 # Campus walkthroughs
 
-Load `walkthrough-artifacts`. Use browser tools end-to-end; a single screenshot is not proof.
+Wave: fenced. Does not block Wave 2.
+
+Attach:
+
+- Cursor skill `walkthrough-artifacts`
+- `docs/campus-runtime/WAVE1.md`
+- `docs/campus-runtime/WAVE2.md` when recording tenant/Pattern proofs
+
+Absorbed branches: none.
 
 ## Own
 
@@ -19,5 +28,6 @@ Load `walkthrough-artifacts`. Use browser tools end-to-end; a single screenshot 
 - Upload failing or toy recordings
 - Flip `AUTH_URL` or deploy
 - Record CNC vault or Cap desktop unless asked
+- Block Wave 2
 
 Prefer one short end-to-end video plus a final-state still.

@@ -1,10 +1,19 @@
 ---
 name: stripe-paid-seats
-description: Grant Field School paid seats after Stripe checkout and mail the matching seat. Use for Checkout, webhooks, seat fulfillment, pricing, or Resend seat mail.
+description: Fenced. Stripe Checkout, webhooks, and Resend seat mail only. Does not block Wave 2 tenants.
 ---
+
 # Stripe paid seats
 
-Load Stripe skills: `stripe-best-practices`, `stripe-docs`. For mail, load `resend` and `email-best-practices`.
+Wave: fenced (out until after Wave 5 unless already on its own PR). Does not block Wave 2.
+
+Attach:
+
+- `app/AUTH.md`
+- Stripe skills: `stripe-best-practices`, `stripe-docs`
+- Mail skills: `resend`, `email-best-practices`
+
+Absorbed branches: none. Live work may already run from a non-main branch — do not merge to `main` unless asked.
 
 ## Own
 
@@ -15,9 +24,8 @@ Load Stripe skills: `stripe-best-practices`, `stripe-docs`. For mail, load `rese
 
 ## Do not
 
+- Block or rewrite Wave 2 tenants / Field Pattern
 - Flip `AUTH_URL` or 301 university
 - Deploy TanStack or touch CNC vault
-- Change guest Grok Bot or Field Pattern scoring
+- Change guest Grok Bot or Pattern scoring
 - Log raw card data or put secrets in the repo
-
-Verify webhook fulfill + login on the granted seat. Live deploys may already run from a non-main branch — do not merge to `main` unless asked.
