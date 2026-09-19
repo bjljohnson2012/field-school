@@ -48,6 +48,26 @@ export function ChildrenDatabase({
       createdAt: string;
     }>
   >([]);
+  const [pathCurrent, setPathCurrent] = useState<{
+    id: string;
+    version: number;
+    status: string;
+    items: Array<{
+      id: string;
+      sortOrder: number;
+      title: string;
+      subject: string;
+      source: string;
+      composerLessonId: string | null;
+      childMembershipId: string;
+    }>;
+  } | null>(null);
+  const [pathAssigned, setPathAssigned] = useState<typeof pathCurrent>(null);
+  const [pathVersions, setPathVersions] = useState<Array<{ id: string; version: number; status: string }>>(
+    [],
+  );
+  const [pathEdit, setPathEdit] = useState("");
+  const [pathPrompt, setPathPrompt] = useState("");
 
   function lines(value: string) {
     return value
@@ -55,6 +75,26 @@ export function ChildrenDatabase({
       .map((item) => item.trim())
       .filter(Boolean)
       .join("\n");
+  }
+
+  async function loadPath(membershipId: string) {
+    const res = await fetch(
+      `/api/curriculum?child_membership_id=${encodeURIComponent(membershipId)}`,
+      { headers: HOUSEHOLD_HEADERS },
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      setPathCurrent(null);
+      setPathAssigned(null);
+      setPathVersions([]);
+      setPathEdit("");
+      return;
+    }
+    const current = (data.current ?? null) as typeof pathCurrent;
+    setPathCurrent(current);
+    setPathAssigned((data.assigned ?? null) as typeof pathCurrent);
+    setPathVersions((data.versions ?? []) as typeof pathVersions);
+    setPathEdit((current?.items ?? []).map((item) => item.title).join("\n"));
   }
 
   async function loadIntent(membershipId: string) {
@@ -164,6 +204,7 @@ export function ChildrenDatabase({
   async function selectChild(membershipId: string) {
     setSelectedMembershipId(membershipId);
     await loadIntent(membershipId);
+    await loadPath(membershipId);
   }
 
   async function saveIntent() {
@@ -182,7 +223,75 @@ export function ChildrenDatabase({
     });
     const data = await res.json();
     setNote(res.ok ? `Intent v${data.version?.version ?? data.current?.version} saved.` : data.error || "Could not save intent.");
-    if (res.ok) await loadIntent(selectedMembershipId);
+    if (res.ok) {
+      await loadIntent(selectedMembershipId);
+      await loadPath(selectedMembershipId);
+    }
+  }
+
+  async function proposePath() {
+    if (!selectedMembershipId) return;
+    const res = await fetch("/api/curriculum", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({ childMembershipId: selectedMembershipId }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Path v${data.path?.version ?? data.current?.version} proposed for this child.`
+        : data.error === "intent_required"
+          ? "Save a learning intent before proposing a path."
+          : data.error || "Could not propose path.",
+    );
+    if (res.ok) await loadPath(selectedMembershipId);
+  }
+
+  async function acceptPath() {
+    if (!selectedMembershipId) return;
+    const res = await fetch("/api/curriculum", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({ childMembershipId: selectedMembershipId, action: "accept" }),
+    });
+    const data = await res.json();
+    setNote(res.ok ? `Path v${data.path?.version ?? data.current?.version} assigned to this child.` : data.error || "Could not accept path.");
+    if (res.ok) await loadPath(selectedMembershipId);
+  }
+
+  async function editPath() {
+    if (!selectedMembershipId) return;
+    const res = await fetch("/api/curriculum", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({
+        childMembershipId: selectedMembershipId,
+        action: "edit",
+        items: pathEdit.split("\n").map((title) => title.trim()).filter(Boolean),
+      }),
+    });
+    const data = await res.json();
+    setNote(res.ok ? `Path v${data.path?.version ?? data.current?.version} edited for this child.` : data.error || "Could not edit path.");
+    if (res.ok) await loadPath(selectedMembershipId);
+  }
+
+  async function rePromptPath() {
+    if (!selectedMembershipId) return;
+    const res = await fetch("/api/curriculum", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({
+        childMembershipId: selectedMembershipId,
+        action: "re-prompt",
+        prompt: pathPrompt,
+      }),
+    });
+    const data = await res.json();
+    setNote(res.ok ? `Path v${data.path?.version ?? data.current?.version} re-proposed for this child.` : data.error || "Could not re-prompt path.");
+    if (res.ok) {
+      setPathPrompt("");
+      await loadPath(selectedMembershipId);
+    }
   }
 
   return (
@@ -381,6 +490,80 @@ export function ChildrenDatabase({
               ) : (
                 <p className="mt-4 text-sm text-muted-foreground">No intent versions yet.</p>
               )}
+            </div>
+          ) : null}
+          {selectedMembershipId ? (
+            <div className="mt-6 rounded-xl border border-border px-4 py-4">
+              <h3 className="font-display text-xl">Curriculum path</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Ordered path bound to the selected child. Household catalog lessons attach here with
+                the child membership, not as an org-only catalog.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button type="button" onClick={() => void proposePath()}>
+                  Propose path
+                </Button>
+                <Button type="button" variant="outline" onClick={() => void acceptPath()}>
+                  Accept path
+                </Button>
+              </div>
+              {pathCurrent ? (
+                <ol className="mt-4 space-y-2 text-sm">
+                  {pathCurrent.items.map((item) => (
+                    <li key={item.id}>
+                      {item.sortOrder ? `${item.sortOrder}. ` : ""}
+                      {item.title}
+                      {item.subject ? ` · ${item.subject}` : ""}
+                      {item.composerLessonId ? " · catalog bound to this child" : ""}
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="mt-4 text-sm text-muted-foreground">No path versions yet.</p>
+              )}
+              <p className="mt-3 text-sm text-muted-foreground">
+                {pathAssigned
+                  ? `Assigned v${pathAssigned.version} on this child.`
+                  : pathCurrent
+                    ? `Proposed v${pathCurrent.version} · ${pathCurrent.status}. Accept to bind it.`
+                    : "Accept assigns the path to this child record."}
+              </p>
+              <label className="mt-4 block text-sm">
+                Edit order
+                <textarea
+                  className="mt-1 min-h-24 w-full rounded-xl border border-border bg-background px-3 py-2"
+                  value={pathEdit}
+                  onChange={(e) => setPathEdit(e.target.value)}
+                />
+              </label>
+              <div className="mt-3">
+                <Button type="button" variant="outline" onClick={() => void editPath()}>
+                  Save edited path
+                </Button>
+              </div>
+              <label className="mt-4 block text-sm">
+                Re-prompt
+                <input
+                  className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3"
+                  value={pathPrompt}
+                  onChange={(e) => setPathPrompt(e.target.value)}
+                  placeholder="Add fractions review"
+                />
+              </label>
+              <div className="mt-3">
+                <Button type="button" variant="outline" onClick={() => void rePromptPath()}>
+                  Re-prompt path
+                </Button>
+              </div>
+              {pathVersions.length ? (
+                <ol className="mt-4 space-y-2 text-sm">
+                  {pathVersions.map((row) => (
+                    <li key={row.id}>
+                      v{row.version} · {row.status}
+                    </li>
+                  ))}
+                </ol>
+              ) : null}
             </div>
           ) : null}
         </>

@@ -382,3 +382,80 @@ export const learningIntents = pgTable(
   ],
 );
 
+export const curriculumPaths = pgTable(
+  "curriculum_paths",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    intentId: uuid("intent_id").references(() => learningIntents.id),
+    version: integer("version").notNull(),
+    status: text("status").notNull().default("proposed"),
+    prompt: text("prompt").notNull().default(""),
+    progress: jsonb("progress").notNull().default({}),
+    supersedesId: uuid("supersedes_id"),
+    acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("curriculum_paths_child_version").on(t.orgId, t.childMembershipId, t.version),
+    index("curriculum_paths_child_idx").on(t.orgId, t.childMembershipId, t.version),
+    index("curriculum_paths_parent_child_idx").on(
+      t.orgId,
+      t.parentMembershipId,
+      t.childMembershipId,
+      t.version,
+    ),
+  ],
+);
+
+export const curriculumPathItems = pgTable(
+  "curriculum_path_items",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    pathId: uuid("path_id")
+      .notNull()
+      .references(() => curriculumPaths.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    sortOrder: integer("sort_order").notNull(),
+    title: text("title").notNull(),
+    subject: text("subject").notNull().default(""),
+    kind: text("kind").notNull().default("station"),
+    reason: text("reason").notNull().default(""),
+    source: text("source").notNull().default("intent"),
+    composerLessonId: uuid("composer_lesson_id"),
+    composerUnitId: uuid("composer_unit_id"),
+    status: text("status").notNull().default("pending"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("curriculum_path_items_order").on(t.pathId, t.sortOrder),
+    index("curriculum_path_items_child_idx").on(
+      t.orgId,
+      t.childMembershipId,
+      t.pathId,
+      t.sortOrder,
+    ),
+    index("curriculum_path_items_catalog_idx").on(
+      t.orgId,
+      t.childMembershipId,
+      t.composerLessonId,
+    ),
+  ],
+);
+

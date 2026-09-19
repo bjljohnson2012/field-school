@@ -72,7 +72,7 @@ for i in \$(seq 1 40); do
   fi
   sleep 2
 done
-for f in 0001_wave1.sql 0002_field_pattern.sql 0003_pattern_weights.sql 0004_tenants.sql 0005_composer.sql 0006_learning_intents.sql; do
+for f in 0001_wave1.sql 0002_field_pattern.sql 0003_pattern_weights.sql 0004_tenants.sql 0005_composer.sql 0006_learning_intents.sql 0007_curriculum_paths.sql; do
   docker exec -i field-school-campus-db psql -U campus -d campus < "$REMOTE_DIR/db/\$f"
 done
 docker compose --env-file "\$ENV_FILE" ps
