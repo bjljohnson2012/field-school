@@ -68,7 +68,17 @@ cutover_scope=plates-api-routes-only
 keep=postgres,uploads,FAMILY_V1_SHA,family-v1-home,family/operator,family/signals
 MARKER
 
-tar -C "$STAGE" -czf "$TMP_TAR" .
+# Members must be path-prefixed without "./" so remote extract can name them.
+tar -C "$STAGE" -czf "$TMP_TAR" \
+  src/app/api/plates/route.ts \
+  src/app/api/plates/approve/route.ts \
+  src/app/api/plates/reject/route.ts \
+  src/lib/plates/rules.ts \
+  src/lib/plates/sql.ts \
+  src/lib/plates/store.ts \
+  db/0012_plate_renders.sql \
+  MANIFEST.txt \
+  PLATES_API_SHA
 PACK_SHA="$(sha256sum "$TMP_TAR" | awk '{print $1}')"
 echo "$PACK_SHA  plates-api-campus-pack-$STAMP.tar.gz" > "$STAGE.sha256"
 echo "==> pack $TMP_TAR sha256=$PACK_SHA"
@@ -89,21 +99,14 @@ FAM_SIG=\$(sha256sum "\$REMOTE_DIR/src/lib/family/signals.ts" | awk '{print \$1}
 FAM_SHA=\$(sha256sum "\$REMOTE_DIR/FAMILY_V1_SHA" | awk '{print \$1}')
 echo "family hashes before: home=\$FAM_HOME op=\$FAM_OP sig=\$FAM_SIG sha=\$FAM_SHA"
 
-tar -tzf "\$PACK" | grep -E 'family-v1|vite.config|src/routes' && {
+echo "pack members:"
+tar -tzf "\$PACK"
+if tar -tzf "\$PACK" | grep -E '(^|/)(family-v1-home|src/routes/|vite.config)'; then
   echo "Refusing pack: family or TanStack paths present" >&2
   exit 1
-} || true
-
-tar -xzf "\$PACK" -C "\$REMOTE_DIR" \\
-  src/app/api/plates/route.ts \\
-  src/app/api/plates/approve/route.ts \\
-  src/app/api/plates/reject/route.ts \\
-  src/lib/plates/rules.ts \\
-  src/lib/plates/sql.ts \\
-  src/lib/plates/store.ts \\
-  db/0012_plate_renders.sql \\
-  MANIFEST.txt \\
-  PLATES_API_SHA
+fi
+mkdir -p "\$REMOTE_DIR/src/app/api/plates/approve" "\$REMOTE_DIR/src/app/api/plates/reject" "\$REMOTE_DIR/src/lib/plates" "\$REMOTE_DIR/db"
+tar -xzf "\$PACK" -C "\$REMOTE_DIR"
 
 if ! grep -q 'export const plateRenders' "\$REMOTE_DIR/src/lib/db/schema.ts"; then
   cat >> "\$REMOTE_DIR/src/lib/db/schema.ts" <<'SCHEMA'
