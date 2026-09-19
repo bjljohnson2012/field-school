@@ -68,6 +68,29 @@ export function ChildrenDatabase({
   );
   const [pathEdit, setPathEdit] = useState("");
   const [pathPrompt, setPathPrompt] = useState("");
+  const [portionCurrent, setPortionCurrent] = useState<{
+    id: string;
+    version: number;
+    status: string;
+    horizon: string;
+    title: string;
+    reason: string;
+    items: Array<{
+      id: string;
+      sortOrder: number;
+      title: string;
+      subject: string;
+      childMembershipId: string;
+    }>;
+  } | null>(null);
+  const [portionLocked, setPortionLocked] = useState<typeof portionCurrent>(null);
+  const [portionRemaining, setPortionRemaining] = useState<
+    Array<{ title: string; subject: string; childMembershipId: string }>
+  >([]);
+  const [portionVersions, setPortionVersions] = useState<
+    Array<{ id: string; version: number; status: string; title: string }>
+  >([]);
+  const [portionOverride, setPortionOverride] = useState("");
 
   function lines(value: string) {
     return value
@@ -95,6 +118,28 @@ export function ChildrenDatabase({
     setPathAssigned((data.assigned ?? null) as typeof pathCurrent);
     setPathVersions((data.versions ?? []) as typeof pathVersions);
     setPathEdit((current?.items ?? []).map((item) => item.title).join("\n"));
+  }
+
+  async function loadPortion(membershipId: string) {
+    const res = await fetch(
+      `/api/portion?child_membership_id=${encodeURIComponent(membershipId)}`,
+      { headers: HOUSEHOLD_HEADERS },
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      setPortionCurrent(null);
+      setPortionLocked(null);
+      setPortionRemaining([]);
+      setPortionVersions([]);
+      setPortionOverride("");
+      return;
+    }
+    const current = (data.current ?? null) as typeof portionCurrent;
+    setPortionCurrent(current);
+    setPortionLocked((data.locked ?? null) as typeof portionCurrent);
+    setPortionRemaining((data.remaining ?? []) as typeof portionRemaining);
+    setPortionVersions((data.versions ?? []) as typeof portionVersions);
+    setPortionOverride((current?.items ?? []).map((item) => item.title).join("\n"));
   }
 
   async function loadIntent(membershipId: string) {
@@ -205,6 +250,7 @@ export function ChildrenDatabase({
     setSelectedMembershipId(membershipId);
     await loadIntent(membershipId);
     await loadPath(membershipId);
+    await loadPortion(membershipId);
   }
 
   async function saveIntent() {
@@ -226,6 +272,7 @@ export function ChildrenDatabase({
     if (res.ok) {
       await loadIntent(selectedMembershipId);
       await loadPath(selectedMembershipId);
+      await loadPortion(selectedMembershipId);
     }
   }
 
@@ -244,7 +291,10 @@ export function ChildrenDatabase({
           ? "Save a learning intent before proposing a path."
           : data.error || "Could not propose path.",
     );
-    if (res.ok) await loadPath(selectedMembershipId);
+    if (res.ok) {
+      await loadPath(selectedMembershipId);
+      await loadPortion(selectedMembershipId);
+    }
   }
 
   async function acceptPath() {
@@ -256,7 +306,10 @@ export function ChildrenDatabase({
     });
     const data = await res.json();
     setNote(res.ok ? `Path v${data.path?.version ?? data.current?.version} assigned to this child.` : data.error || "Could not accept path.");
-    if (res.ok) await loadPath(selectedMembershipId);
+    if (res.ok) {
+      await loadPath(selectedMembershipId);
+      await loadPortion(selectedMembershipId);
+    }
   }
 
   async function editPath() {
@@ -272,7 +325,10 @@ export function ChildrenDatabase({
     });
     const data = await res.json();
     setNote(res.ok ? `Path v${data.path?.version ?? data.current?.version} edited for this child.` : data.error || "Could not edit path.");
-    if (res.ok) await loadPath(selectedMembershipId);
+    if (res.ok) {
+      await loadPath(selectedMembershipId);
+      await loadPortion(selectedMembershipId);
+    }
   }
 
   async function rePromptPath() {
@@ -291,7 +347,68 @@ export function ChildrenDatabase({
     if (res.ok) {
       setPathPrompt("");
       await loadPath(selectedMembershipId);
+      await loadPortion(selectedMembershipId);
     }
+  }
+
+  async function suggestPortion() {
+    if (!selectedMembershipId) return;
+    const res = await fetch("/api/portion", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({ childMembershipId: selectedMembershipId }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Next portion v${data.portion?.version ?? data.current?.version} suggested for this child.`
+        : data.error === "path_required"
+          ? "Accept a curriculum path before suggesting a next portion."
+          : data.error === "intent_required"
+            ? "Save a learning intent before suggesting a next portion."
+            : data.error === "remaining_required"
+              ? "No remaining stations on the accepted path."
+              : data.error || "Could not suggest next portion.",
+    );
+    if (res.ok) await loadPortion(selectedMembershipId);
+  }
+
+  async function lockPortion() {
+    if (!selectedMembershipId) return;
+    const res = await fetch("/api/portion", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({ childMembershipId: selectedMembershipId, action: "lock" }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Next portion v${data.portion?.version ?? data.current?.version} locked for this child.`
+        : data.error === "portion_required"
+          ? "Suggest a next portion before locking."
+          : data.error || "Could not lock next portion.",
+    );
+    if (res.ok) await loadPortion(selectedMembershipId);
+  }
+
+  async function overridePortion() {
+    if (!selectedMembershipId) return;
+    const res = await fetch("/api/portion", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({
+        childMembershipId: selectedMembershipId,
+        action: "override",
+        items: portionOverride.split("\n").map((title) => title.trim()).filter(Boolean),
+      }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Next portion v${data.portion?.version ?? data.current?.version} overridden for this child.`
+        : data.error || "Could not override next portion.",
+    );
+    if (res.ok) await loadPortion(selectedMembershipId);
   }
 
   return (
@@ -560,6 +677,78 @@ export function ChildrenDatabase({
                   {pathVersions.map((row) => (
                     <li key={row.id}>
                       v{row.version} · {row.status}
+                    </li>
+                  ))}
+                </ol>
+              ) : null}
+            </div>
+          ) : null}
+          {selectedMembershipId ? (
+            <div className="mt-6 rounded-xl border border-border px-4 py-4">
+              <h3 className="font-display text-xl">Next portion</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Suggested slice of the remaining accepted path for the selected child. Parent can
+                lock or override. This is not Pattern chooser and not a child login.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button type="button" onClick={() => void suggestPortion()}>
+                  Suggest next portion
+                </Button>
+                <Button type="button" variant="outline" onClick={() => void lockPortion()}>
+                  Lock portion
+                </Button>
+              </div>
+              {portionCurrent ? (
+                <>
+                  <p className="mt-4 text-sm">
+                    {portionCurrent.title} · {portionCurrent.horizon} · {portionCurrent.status}
+                  </p>
+                  <ol className="mt-3 space-y-2 text-sm">
+                    {portionCurrent.items.map((item) => (
+                      <li key={item.id}>
+                        {item.sortOrder ? `${item.sortOrder}. ` : ""}
+                        {item.title}
+                        {item.subject ? ` · ${item.subject}` : ""}
+                      </li>
+                    ))}
+                  </ol>
+                  {portionCurrent.reason ? (
+                    <p className="mt-3 text-sm text-muted-foreground">{portionCurrent.reason}</p>
+                  ) : null}
+                </>
+              ) : (
+                <p className="mt-4 text-sm text-muted-foreground">No next-portion versions yet.</p>
+              )}
+              <p className="mt-3 text-sm text-muted-foreground">
+                {portionLocked
+                  ? `Locked v${portionLocked.version} on this child.`
+                  : portionCurrent
+                    ? `Suggested v${portionCurrent.version} · ${portionCurrent.status}. Lock to keep it.`
+                    : "Suggest after an accepted path. Remaining stations wait on that path."}
+              </p>
+              {portionRemaining.length ? (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Remaining on the accepted path: {portionRemaining.map((row) => row.title).join(", ")}
+                </p>
+              ) : null}
+              <label className="mt-4 block text-sm">
+                Override stations
+                <textarea
+                  className="mt-1 min-h-24 w-full rounded-xl border border-border bg-background px-3 py-2"
+                  value={portionOverride}
+                  onChange={(e) => setPortionOverride(e.target.value)}
+                />
+              </label>
+              <div className="mt-3">
+                <Button type="button" variant="outline" onClick={() => void overridePortion()}>
+                  Override portion
+                </Button>
+              </div>
+              {portionVersions.length ? (
+                <ol className="mt-4 space-y-2 text-sm">
+                  {portionVersions.map((row) => (
+                    <li key={row.id}>
+                      v{row.version} · {row.status} · {row.title}
                     </li>
                   ))}
                 </ol>
