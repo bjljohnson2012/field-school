@@ -11,7 +11,7 @@ import {
   isCampusUri,
   isFamilyFirstKind,
 } from "../src/lib/brain/rules.ts";
-import { campusSnapshotBags, materializeCampusDrafts } from "../src/lib/brain/sync.ts";
+import { campusSnapshotBags, materializeCampusDrafts } from "../src/lib/brain/campus.ts";
 import { canWriteIntent } from "../src/lib/intent/rules.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -219,6 +219,11 @@ test("API sync lives on /api/brain/sync and reuses FR-3 through FR-6 plus FR-KB-
   assert.match(store, /family_mode_only/);
   assert.doesNotMatch(store, /chooseNext|\/api\/chooser|memberProfileRevisions/);
   assert.doesNotMatch(store, /credits|BYOK|customer_api_keys/);
+  const campus = read("src/lib/brain/campus.ts");
+  assert.match(campus, /campusSnapshotBags/);
+  assert.match(campus, /materializeCampusDrafts/);
+  assert.match(campus, /campus:\/\/|campusUri/);
+  assert.doesNotMatch(campus, /credits|BYOK|customer_api_keys|chooseNext/);
   const sync = read("src/lib/brain/sync.ts");
   assert.match(sync, /learningIntents/);
   assert.match(sync, /curriculumPaths/);
@@ -239,7 +244,8 @@ test("sync adds no Wave 2 chrome, no /children changes, and no select-unit UX", 
   assert.match(childrenDb, /Curriculum path/);
   assert.match(childrenDb, /Next portion/);
   assert.match(childrenDb, /Progress ledger/);
-  assert.doesNotMatch(childrenDb, /Knowledge brain|\/api\/brain|Student|select-unit|growth unit/i);
+  assert.doesNotMatch(childrenDb, /Knowledge brain|\/api\/brain|select-unit|growth unit/);
+  assert.doesNotMatch(childrenDb, /Student/);
   assert.doesNotMatch(childrenDb, /Now \/ Confidence \/ Next/);
   const childrenPage = read("src/app/children/page.tsx");
   assert.match(childrenPage, /<ChildrenDatabase/);
@@ -268,6 +274,7 @@ test("guest Grok Bot, AUTH_URL, metering, factory, and frozen trees stay untouch
   assert.match(read("deploy/deploy.sh"), /0010_knowledge_brains\.sql/);
   assert.equal(existsSync(join(root, "db/0011_brain_sync.sql")), false);
   assert.doesNotMatch(read("src/lib/brain/sync.ts"), /2\.24\.64\.248|27pn9xs0zk8a73g|Remotion|VOX/);
+  assert.doesNotMatch(read("src/lib/brain/campus.ts"), /2\.24\.64\.248|27pn9xs0zk8a73g|Remotion|VOX/);
   assert.doesNotMatch(read("src/lib/brain/store.ts"), /vite\.config|migrations\/0001/);
   assert.doesNotMatch(read("src/app/api/brain/sync/route.ts"), /vite\.config|migrations\/0001/);
 });

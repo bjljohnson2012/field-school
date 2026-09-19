@@ -28,12 +28,8 @@ import {
   parseBrainItems,
   snapshotHasKeys,
 } from "./rules";
-import {
-  campusSnapshotBags,
-  collectCampusObjects,
-  materializeCampusDrafts,
-  publicCampusBundle,
-} from "./sync";
+import { campusSnapshotBags, materializeCampusDrafts, publicCampusBundle } from "./campus";
+import { collectCampusObjects } from "./sync";
 
 export class BrainAccessError extends IntentAccessError {
   constructor(status: 403 | 404, code: string) {
