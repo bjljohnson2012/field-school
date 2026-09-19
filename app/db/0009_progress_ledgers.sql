@@ -32,6 +32,8 @@ CREATE TABLE IF NOT EXISTS progress_ledger_units (
   subject text NOT NULL DEFAULT '',
   status text NOT NULL DEFAULT 'recommended',
   source text NOT NULL DEFAULT 'refresh',
+  confidence text NOT NULL DEFAULT '',
+  flag text NOT NULL DEFAULT '',
   composer_lesson_id uuid,
   composer_unit_id uuid,
   started_at timestamptz,

@@ -592,6 +592,8 @@ export const progressLedgerUnits = pgTable(
     subject: text("subject").notNull().default(""),
     status: text("status").notNull().default("recommended"),
     source: text("source").notNull().default("refresh"),
+    confidence: text("confidence").notNull().default(""),
+    flag: text("flag").notNull().default(""),
     composerLessonId: uuid("composer_lesson_id"),
     composerUnitId: uuid("composer_unit_id"),
     startedAt: timestamp("started_at", { withTimezone: true }),

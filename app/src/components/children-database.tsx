@@ -105,13 +105,13 @@ export function ChildrenDatabase({
     }>;
   } | null>(null);
   const [ledgerCompleted, setLedgerCompleted] = useState<
-    Array<{ title: string; subject: string; status: string }>
+    Array<{ title: string; subject: string; status: string; confidence?: string; flag?: string }>
   >([]);
   const [ledgerInProgress, setLedgerInProgress] = useState<
-    Array<{ title: string; subject: string; status: string }>
+    Array<{ title: string; subject: string; status: string; confidence?: string; flag?: string }>
   >([]);
   const [ledgerRecommended, setLedgerRecommended] = useState<
-    Array<{ title: string; subject: string; status: string }>
+    Array<{ title: string; subject: string; status: string; confidence?: string; flag?: string }>
   >([]);
   const [ledgerNext, setLedgerNext] = useState<{ title: string; subject: string } | null>(null);
   const [ledgerVersions, setLedgerVersions] = useState<
@@ -520,6 +520,54 @@ export function ChildrenDatabase({
     }
   }
 
+  async function markConfidence(title: string, confidence: string, flag = "") {
+    if (!selectedMembershipId || !title) return;
+    const res = await fetch("/api/ledger", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({
+        childMembershipId: selectedMembershipId,
+        action: "confidence",
+        title,
+        confidence,
+        flag,
+      }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Parent confidence recorded for ${title}.`
+        : data.error === "confidence_required"
+          ? "Pick Not yet, Getting there, or Ready."
+          : data.error || "Could not record confidence.",
+    );
+    if (res.ok) await loadLedger(selectedMembershipId);
+  }
+
+  function confidenceButtons(item: { title: string; confidence?: string; flag?: string }) {
+    const current = item.confidence || "";
+    return (
+      <span className="mt-2 flex flex-wrap gap-2">
+        {(
+          [
+            ["not_yet", "Not yet"],
+            ["getting_there", "Getting there"],
+            ["ready", "Ready"],
+          ] as const
+        ).map(([value, label]) => (
+          <Button
+            key={`${item.title}-${value}`}
+            type="button"
+            variant={current === value ? "default" : "outline"}
+            onClick={() => void markConfidence(item.title, value, item.flag || "")}
+          >
+            {label}
+          </Button>
+        ))}
+      </span>
+    );
+  }
+
   return (
     <section className="rounded-xl border border-border bg-card px-5 py-5">
       <h2 className="font-display text-2xl">{heading}</h2>
@@ -868,8 +916,9 @@ export function ChildrenDatabase({
             <div className="mt-6 rounded-xl border border-border px-4 py-4">
               <h3 className="font-display text-xl">Progress ledger</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Parent-supervised unit ledger for the selected child. Completed, in progress, and
-                recommended next. This is not session progress and not Pattern chooser.
+                Parent-supervised unit ledger for the selected child. Completed, in progress,
+                recommended next, and parent confidence (Not yet / Getting there / Ready). This is
+                not session progress and not Pattern chooser.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Button type="button" onClick={() => void refreshLedger()}>
@@ -890,16 +939,19 @@ export function ChildrenDatabase({
                   <ol className="mt-2 space-y-2 text-sm">
                     {ledgerInProgress.map((item) => (
                       <li key={`in-${item.title}`}>
-                        {item.title}
-                        {item.subject ? ` · ${item.subject}` : ""}
+                        <p>
+                          {item.title}
+                          {item.subject ? ` · ${item.subject}` : ""}
+                        </p>
                         <Button
                           type="button"
                           variant="outline"
-                          className="ml-2"
+                          className="mt-2"
                           onClick={() => void markUnit("complete", item.title)}
                         >
                           Complete unit
                         </Button>
+                        {confidenceButtons(item)}
                       </li>
                     ))}
                   </ol>
@@ -911,8 +963,11 @@ export function ChildrenDatabase({
                   <ol className="mt-2 space-y-2 text-sm">
                     {ledgerCompleted.map((item) => (
                       <li key={`done-${item.title}`}>
-                        {item.title}
-                        {item.subject ? ` · ${item.subject}` : ""}
+                        <p>
+                          {item.title}
+                          {item.subject ? ` · ${item.subject}` : ""}
+                        </p>
+                        {confidenceButtons(item)}
                       </li>
                     ))}
                   </ol>
@@ -924,12 +979,14 @@ export function ChildrenDatabase({
                   <ol className="mt-2 space-y-2 text-sm">
                     {ledgerRecommended.map((item) => (
                       <li key={`rec-${item.title}`}>
-                        {item.title}
-                        {item.subject ? ` · ${item.subject}` : ""}
+                        <p>
+                          {item.title}
+                          {item.subject ? ` · ${item.subject}` : ""}
+                        </p>
                         <Button
                           type="button"
                           variant="outline"
-                          className="ml-2"
+                          className="mt-2"
                           onClick={() => void markUnit("start", item.title)}
                         >
                           Start unit
@@ -937,11 +994,12 @@ export function ChildrenDatabase({
                         <Button
                           type="button"
                           variant="outline"
-                          className="ml-2"
+                          className="mt-2 ml-2"
                           onClick={() => void markUnit("complete", item.title)}
                         >
                           Complete unit
                         </Button>
+                        {confidenceButtons(item)}
                       </li>
                     ))}
                   </ol>

@@ -57,6 +57,8 @@ export function publicUnit(row: typeof progressLedgerUnits.$inferSelect) {
     source: row.source,
     composerLessonId: row.composerLessonId,
     composerUnitId: row.composerUnitId,
+    confidence: row.confidence,
+    flag: row.flag,
     startedAt: row.startedAt ? row.startedAt.toISOString() : null,
     completedAt: row.completedAt ? row.completedAt.toISOString() : null,
     createdAt: row.createdAt.toISOString(),
@@ -79,6 +81,8 @@ export function publicLedger(
       portionItemId: unit.portionItemId,
       composerLessonId: unit.composerLessonId,
       composerUnitId: unit.composerUnitId,
+      confidence: (unit.confidence ?? "") as LedgerUnitDraft["confidence"],
+      flag: (unit.flag ?? "") as LedgerUnitDraft["flag"],
       startedAt: unit.startedAt,
       completedAt: unit.completedAt,
     })),
@@ -296,6 +300,8 @@ async function insertLedger(opts: {
         source: item.source,
         composerLessonId: item.composerLessonId,
         composerUnitId: item.composerUnitId,
+        confidence: item.confidence ?? "",
+        flag: item.flag ?? "",
         startedAt: item.startedAt ? new Date(item.startedAt) : null,
         completedAt: item.completedAt ? new Date(item.completedAt) : null,
       })),
@@ -314,6 +320,8 @@ async function assembleForChild(orgId: string, childMembershipId: string) {
     ? (await loadUnits(orgId, [latest.id])).map((row) => ({
         title: row.title,
         status: row.status as LedgerUnitStatus,
+        confidence: row.confidence as LedgerUnitDraft["confidence"],
+        flag: row.flag as LedgerUnitDraft["flag"],
         startedAt: row.startedAt ? row.startedAt.toISOString() : null,
         completedAt: row.completedAt ? row.completedAt.toISOString() : null,
       }))
@@ -410,8 +418,9 @@ async function writeSupervisedEvent(opts: {
   actor: LearnerIdentity;
   childMembershipId: string;
   title: string;
-  status: "in_progress" | "completed";
+  kind: "watch" | "assignment";
   composerLessonId: string | null;
+  raw: Record<string, unknown>;
 }) {
   const db = getDb();
   await db.insert(learningEvents).values({
@@ -419,15 +428,15 @@ async function writeSupervisedEvent(opts: {
     membershipId: opts.childMembershipId,
     actorMembershipId: opts.actor.membershipId,
     actorStance: opts.actor.stance,
-    kind: "watch",
+    kind: opts.kind,
     objectType: "unit",
     objectId: opts.title,
     raw: {
-      status: opts.status,
       supervised: true,
       recordedBy: "parent",
       composerLessonId: opts.composerLessonId,
       childMembershipId: opts.childMembershipId,
+      ...opts.raw,
     },
   });
 }
@@ -436,23 +445,33 @@ export async function markLedgerUnit(opts: {
   actor: LearnerIdentity;
   childMembershipId: string;
   staff: boolean;
-  action: "start" | "complete";
+  action: "start" | "complete" | "confidence";
   body: Record<string, unknown>;
 }) {
   await assertChildInHousehold(opts);
   const patch = parseLedgerUnitPatch(opts.body);
   if (!patch.title) throw new LedgerFieldsError("title_required");
+  if (opts.action === "confidence" && !patch.confidence && !patch.flag) {
+    throw new LedgerFieldsError("confidence_required");
+  }
   const now = new Date().toISOString();
   const assembled = await assembleForChild(opts.actor.orgId, opts.childMembershipId);
   const existing = assembled.items.find(
     (item) => item.title.toLowerCase() === patch.title.toLowerCase(),
   );
-  const nextStatus: LedgerUnitStatus = opts.action === "complete" ? "completed" : "in_progress";
+  const nextStatus: LedgerUnitStatus =
+    opts.action === "complete"
+      ? "completed"
+      : opts.action === "start"
+        ? "in_progress"
+        : (existing?.status ?? "recommended");
   const unit: LedgerUnitDraft = existing
     ? {
         ...existing,
         status: nextStatus,
         source: "parent",
+        confidence: opts.action === "confidence" ? patch.confidence || existing.confidence : existing.confidence,
+        flag: opts.action === "confidence" ? patch.flag || existing.flag : existing.flag,
         startedAt: existing.startedAt ?? (opts.action === "start" ? now : existing.startedAt),
         completedAt: opts.action === "complete" ? now : existing.completedAt ?? null,
       }
@@ -466,7 +485,9 @@ export async function markLedgerUnit(opts: {
         portionItemId: patch.portionItemId,
         composerLessonId: patch.composerLessonId,
         composerUnitId: patch.composerUnitId,
-        startedAt: now,
+        confidence: patch.confidence,
+        flag: patch.flag,
+        startedAt: opts.action === "start" || opts.action === "complete" ? now : null,
         completedAt: opts.action === "complete" ? now : null,
       };
   const items = existing
@@ -478,8 +499,12 @@ export async function markLedgerUnit(opts: {
     actor: opts.actor,
     childMembershipId: opts.childMembershipId,
     title: unit.title,
-    status: nextStatus === "completed" ? "completed" : "in_progress",
+    kind: opts.action === "confidence" ? "assignment" : "watch",
     composerLessonId: unit.composerLessonId,
+    raw:
+      opts.action === "confidence"
+        ? { confidence: unit.confidence, flag: unit.flag }
+        : { status: nextStatus === "completed" ? "completed" : "in_progress" },
   });
   return insertLedger({
     actor: opts.actor,

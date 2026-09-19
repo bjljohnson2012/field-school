@@ -104,6 +104,8 @@ export function assembleLedgerUnits(opts: {
         portionItemId: item.portionItemId ?? null,
         composerLessonId: item.composerLessonId,
         composerUnitId: item.composerUnitId,
+        confidence: prior?.confidence ?? "",
+        flag: prior?.flag ?? "",
         startedAt: prior?.startedAt ?? null,
         completedAt: prior?.completedAt ?? null,
       };

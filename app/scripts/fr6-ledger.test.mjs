@@ -13,6 +13,7 @@ import {
 import {
   canReadLedger,
   canWriteLedger,
+  asConfidence,
   parseLedgerUnitPatch,
 } from "../src/lib/ledger/rules.ts";
 import { canWriteIntent } from "../src/lib/intent/rules.ts";
@@ -34,6 +35,8 @@ test("0009 is a child-bound unit ledger after 0008", () => {
   assert.match(sql, /intent_id uuid REFERENCES learning_intents/);
   assert.match(sql, /started_at/);
   assert.match(sql, /completed_at/);
+  assert.match(sql, /confidence text/);
+  assert.match(sql, /flag text/);
   assert.doesNotMatch(sql, /ALTER TABLE lessons|ALTER TABLE courses|ALTER TABLE knowledge_units/);
   assert.doesNotMatch(sql, /member_profile_revisions|\/api\/chooser/);
   assert.doesNotMatch(sql, /CREATE TABLE IF NOT EXISTS users\b|price_/);
@@ -130,6 +133,10 @@ test("units group into completed, in progress, and recommended next", () => {
   assert.equal(grouped.next?.title, "Writing a paragraph");
   assert.equal(grouped.recommended[0]?.title, "Writing a paragraph");
   assert.equal(parseLedgerUnitPatch({ title: "Fractions kitchen" }).title, "Fractions kitchen");
+  assert.equal(asConfidence("Getting there"), "getting_there");
+  assert.equal(asConfidence("not_yet"), "not_yet");
+  assert.equal(asConfidence("ready"), "ready");
+  assert.equal(parseLedgerUnitPatch({ title: "Fractions kitchen", confidence: "ready" }).confidence, "ready");
 });
 
 test("API versions live on /api/ledger and do not use session progress or chooser", () => {
@@ -139,6 +146,7 @@ test("API versions live on /api/ledger and do not use session progress or choose
   assert.match(route, /export async function PATCH/);
   assert.match(route, /refreshProgressLedger/);
   assert.match(route, /markLedgerUnit/);
+  assert.match(route, /asLedgerAction/);
   assert.match(route, /child_cannot_write/);
   assert.match(route, /family_mode_only/);
   assert.doesNotMatch(route, /chooseNext|\/api\/chooser|wrotePack|\/api\/progress/);
@@ -149,6 +157,8 @@ test("API versions live on /api/ledger and do not use session progress or choose
   assert.match(store, /membershipId: opts.childMembershipId/);
   assert.match(store, /actorMembershipId: opts.actor.membershipId/);
   assert.match(store, /supervised: true/);
+  assert.match(store, /action === "confidence"/);
+  assert.match(store, /confidence_required/);
   assert.doesNotMatch(store, /chooseNext|\/api\/chooser|memberProfileRevisions/);
   const schema = read("src/lib/db/schema.ts");
   assert.match(schema, /progressLedgers = pgTable/);
@@ -161,6 +171,10 @@ test("API versions live on /api/ledger and do not use session progress or choose
   assert.match(childrenDb, /Refresh ledger/);
   assert.match(childrenDb, /Start unit/);
   assert.match(childrenDb, /Complete unit/);
+  assert.match(childrenDb, /Not yet/);
+  assert.match(childrenDb, /Getting there/);
+  assert.match(childrenDb, /Ready/);
+  assert.match(childrenDb, /action: "confidence"/);
   assert.match(childrenDb, /Add a child/);
   assert.doesNotMatch(childrenDb, /Now \/ Confidence \/ Next|Knowledge brain|Student/);
   assert.doesNotMatch(childrenDb, /\/api\/chooser|\/api\/progress/);

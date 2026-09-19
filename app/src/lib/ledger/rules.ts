@@ -3,12 +3,16 @@ import { canReadIntent, canWriteIntent } from "../intent/rules.ts";
 export const LEDGER_STATUSES = ["current"] as const;
 export const LEDGER_UNIT_STATUSES = ["completed", "in_progress", "recommended"] as const;
 export const LEDGER_UNIT_SOURCES = ["refresh", "event", "portion", "path", "parent"] as const;
-export const LEDGER_ACTIONS = ["start", "complete"] as const;
+export const LEDGER_ACTIONS = ["start", "complete", "confidence"] as const;
+export const LEDGER_CONFIDENCE = ["not_yet", "getting_there", "ready", ""] as const;
+export const LEDGER_FLAGS = ["stuck", "easy", ""] as const;
 
 export type LedgerStatus = (typeof LEDGER_STATUSES)[number];
 export type LedgerUnitStatus = (typeof LEDGER_UNIT_STATUSES)[number];
 export type LedgerUnitSource = (typeof LEDGER_UNIT_SOURCES)[number];
 export type LedgerAction = (typeof LEDGER_ACTIONS)[number];
+export type LedgerConfidence = (typeof LEDGER_CONFIDENCE)[number];
+export type LedgerFlag = (typeof LEDGER_FLAGS)[number];
 
 export type LedgerStation = {
   id?: string;
@@ -32,6 +36,8 @@ export type LedgerUnitDraft = {
   portionItemId: string | null;
   composerLessonId: string | null;
   composerUnitId: string | null;
+  confidence: LedgerConfidence;
+  flag: LedgerFlag;
   startedAt?: string | null;
   completedAt?: string | null;
 };
@@ -47,6 +53,8 @@ export type ChildProgress = {
 export type PersistedUnit = {
   title: string;
   status: LedgerUnitStatus;
+  confidence?: LedgerConfidence;
+  flag?: LedgerFlag;
   startedAt?: string | null;
   completedAt?: string | null;
 };
@@ -93,6 +101,28 @@ export function asTitle(value: unknown) {
   return typeof value === "string" ? value.trim().slice(0, 400) : "";
 }
 
+export function asConfidence(value: unknown): LedgerConfidence {
+  if (typeof value !== "string") return "";
+  const raw = value.trim().toLowerCase().replace(/\s+/g, "_");
+  if (raw === "not_yet" || raw === "not-yet") return "not_yet";
+  if (raw === "getting_there" || raw === "getting-there") return "getting_there";
+  if (raw === "ready") return "ready";
+  return (LEDGER_CONFIDENCE as readonly string[]).includes(raw) ? (raw as LedgerConfidence) : "";
+}
+
+export function asFlag(value: unknown): LedgerFlag {
+  if (typeof value !== "string") return "";
+  const raw = value.trim().toLowerCase();
+  return (LEDGER_FLAGS as readonly string[]).includes(raw) ? (raw as LedgerFlag) : "";
+}
+
+export function confidenceLabel(value: LedgerConfidence) {
+  if (value === "not_yet") return "Not yet";
+  if (value === "getting_there") return "Getting there";
+  if (value === "ready") return "Ready";
+  return "";
+}
+
 function asOptionalId(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim().slice(0, 80) : null;
 }
@@ -105,6 +135,8 @@ export function parseLedgerUnitPatch(body: Record<string, unknown>) {
     portionItemId: asOptionalId(body.portionItemId ?? body.portion_item_id),
     composerLessonId: asOptionalId(body.composerLessonId ?? body.composer_lesson_id),
     composerUnitId: asOptionalId(body.composerUnitId ?? body.composer_unit_id),
+    confidence: asConfidence(body.confidence),
+    flag: asFlag(body.flag),
   };
 }
 
