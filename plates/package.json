@@ -28,6 +28,7 @@
     "compositions": "remotion compositions",
     "still": "remotion still",
     "render": "node scripts/render-plate.mjs",
+    "cleaning-checklist": "node scripts/cleaning-checklist-lesson-spine.mjs",
     "test": "node --test scripts/*.test.mjs"
   }
 }

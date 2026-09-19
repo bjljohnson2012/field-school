@@ -44,4 +44,17 @@ npm ci
 npx remotion compositions
 node scripts/render-plate.mjs --comp LessonSpine --dry-run --lock /tmp/absent.render.lock --meminfo /proc/meminfo
 node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs
+node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4
 ```
+
+## Cleaning checklist (no live flip)
+
+`node scripts/cleaning-checklist-lesson-spine.mjs` scores the dated LessonSpine dest against [../docs/remotion-vox-standards.md](../docs/remotion-vox-standards.md) + ship 1–6.
+
+- exit **0** = antagonist HARD gates PASS
+- exit **1** = HARD_FAIL — hold Cleaning
+- `--flip` is refused (exit 2)
+
+Evidence: [cleaning-checklist-lesson-spine.md](./cleaning-checklist-lesson-spine.md).
+
+Future Cleaning auto-flip **must** call this script first. Flip only when exit 0 **and** ship 1–6 are green. This package **never flips** Cap / Notion / Publish / Distribute.
