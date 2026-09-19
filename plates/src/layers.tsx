@@ -1,8 +1,11 @@
 import React, {useMemo} from "react";
 import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame} from "remotion";
 import {bodyFace, charcoal, cream, displayFace, gold, ink, olive, sansFace} from "./brand";
-import {glideCard, takeoverHead} from "./sceneMotionMath";
+import {glideCard, TAKEOVER_EASE_FRAMES, takeoverHead} from "./sceneMotionMath";
 import type {Caption, Overlay} from "./types";
+
+/** Ink bars + gold inner rule. Close-in over TAKEOVER_EASE_FRAMES. After captions, before audio. */
+export const LETTERBOX_H = 48;
 
 export function Bed() {
   return <AbsoluteFill style={{backgroundColor: cream}} />;
@@ -155,7 +158,7 @@ export function LowerThird({
       style={{
         position: "absolute",
         left: 72,
-        bottom: 36,
+        bottom: LETTERBOX_H + 16,
         width: 720,
         opacity: glide.opacity,
         translate: `${glide.x}px 0px`,
@@ -205,7 +208,7 @@ export function CaptionsBand({captions}: {captions: Caption[]}) {
         position: "absolute",
         left: 72,
         right: 820,
-        bottom: 168,
+        bottom: LETTERBOX_H + 140,
         minHeight: 72,
         padding: "12px 8px 4px 0",
         fontFamily: displayFace,
@@ -249,6 +252,7 @@ export function Karaoke({captions}: {captions: Caption[]}) {
 }
 
 export function Letterbox() {
+  const frame = useCurrentFrame();
   return (
     <>
       <div
@@ -257,8 +261,24 @@ export function Letterbox() {
           top: 0,
           left: 0,
           right: 0,
-          height: 2,
+          height: interpolate(frame, [0, TAKEOVER_EASE_FRAMES], [0, LETTERBOX_H], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          }),
           backgroundColor: ink,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: interpolate(frame, [0, TAKEOVER_EASE_FRAMES], [0, LETTERBOX_H], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          }),
+          left: 0,
+          right: 0,
+          height: 2,
+          backgroundColor: gold,
         }}
       />
       <div
@@ -267,8 +287,24 @@ export function Letterbox() {
           bottom: 0,
           left: 0,
           right: 0,
-          height: 2,
+          height: interpolate(frame, [0, TAKEOVER_EASE_FRAMES], [0, LETTERBOX_H], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          }),
           backgroundColor: ink,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: interpolate(frame, [0, TAKEOVER_EASE_FRAMES], [0, LETTERBOX_H], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          }),
+          left: 0,
+          right: 0,
+          height: 2,
+          backgroundColor: gold,
         }}
       />
     </>

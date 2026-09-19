@@ -1,0 +1,8 @@
+[
+  {"text": "Bars", "startMs": 400, "endMs": 800},
+  {"text": "close", "startMs": 800, "endMs": 1200},
+  {"text": "in.", "startMs": 1200, "endMs": 1800},
+  {"text": "Captions", "startMs": 2200, "endMs": 2800},
+  {"text": "stay", "startMs": 2800, "endMs": 3200},
+  {"text": "above.", "startMs": 3200, "endMs": 4000}
+]

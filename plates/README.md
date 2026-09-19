@@ -12,6 +12,7 @@ PASS notes:
 - [antagonist-lesson-spine.md](./antagonist-lesson-spine.md) — LessonSpine (sting / slate / objective / recap / next-up)
 - [antagonist-captions-lower-third.md](./antagonist-captions-lower-third.md) — CaptionsBand + LowerThird
 - [antagonist-lesson-spine-reencode-captions.md](./antagonist-lesson-spine-reencode-captions.md) — LessonSpine re-encode with captions/LT
+- [antagonist-letterbox-layer.md](./antagonist-letterbox-layer.md) — Letterbox (after captions, before audio)
 
 1920×1080@30. `useCurrentFrame` only. Cream / ink / Fraunces. Isolated seal at `1576,24` / `80×64`.
 `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`.
@@ -32,6 +33,7 @@ Do not re-render Just `27pn9xs0zk8a73g`. Do not overwrite Aug 30 `vox/everything
 | **LessonSpine** | 41s fixture (10+8+6+10+7) | 1230 | Opener → TalkingHeadCard → DefinitionBoard → RecapCard → QuizBumper |
 | **LowerThirdDemo** | 8s craft | 240 | takeover head + lower third |
 | **CaptionsDemo** | 8s craft | 240 | lower third then captions band |
+| **LetterboxDemo** | 8s craft | 240 | captions then letterbox close-in |
 
 ## Render lock
 
@@ -47,7 +49,7 @@ CPU cap `--concurrency=2` (2/4). Dry-run does not encode.
 npm ci
 npx remotion compositions
 node scripts/render-plate.mjs --comp LessonSpine --dry-run --lock /tmp/absent.render.lock --meminfo /proc/meminfo
-node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs
+node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4
 ```
 
