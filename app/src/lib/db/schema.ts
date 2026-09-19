@@ -756,3 +756,103 @@ export const brainArtifacts = pgTable(
   ],
 );
 
+export const credits = pgTable(
+  "credits",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    growthUnitId: uuid("growth_unit_id").references(() => growthUnits.id),
+    childMembershipId: uuid("child_membership_id").references(() => memberships.id),
+    mode: text("mode").notNull().default("platform"),
+    status: text("status").notNull().default("current"),
+    units: integer("units").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("credits_parent_idx").on(t.orgId, t.parentMembershipId, t.mode),
+  ],
+);
+
+export const creditLedger = pgTable(
+  "credit_ledger",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    creditId: uuid("credit_id")
+      .notNull()
+      .references(() => credits.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    growthUnitId: uuid("growth_unit_id").references(() => growthUnits.id),
+    childMembershipId: uuid("child_membership_id").references(() => memberships.id),
+    eventName: text("event_name").notNull(),
+    direction: text("direction").notNull(),
+    units: integer("units").notNull().default(0),
+    note: text("note").notNull().default(""),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("credit_ledger_account_idx").on(t.orgId, t.creditId, t.createdAt),
+    index("credit_ledger_event_idx").on(t.orgId, t.eventName, t.createdAt),
+  ],
+);
+
+export const usageEvents = pgTable(
+  "usage_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    creditId: uuid("credit_id")
+      .notNull()
+      .references(() => credits.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    growthUnitId: uuid("growth_unit_id").references(() => growthUnits.id),
+    childMembershipId: uuid("child_membership_id").references(() => memberships.id),
+    eventName: text("event_name").notNull(),
+    units: integer("units").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("usage_events_account_idx").on(t.orgId, t.creditId, t.createdAt),
+    index("usage_events_name_idx").on(t.orgId, t.eventName, t.createdAt),
+  ],
+);
+
+export const customerApiKeys = pgTable(
+  "customer_api_keys",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    creditId: uuid("credit_id").references(() => credits.id),
+    provider: text("provider").notNull().default(""),
+    status: text("status").notNull().default("active"),
+    last4: text("last4").notNull().default(""),
+    fingerprint: text("fingerprint").notNull().default(""),
+    wrapAlg: text("wrap_alg").notNull().default("aes-256-gcm"),
+    wrapKid: text("wrap_kid").notNull().default("v1"),
+    wrapIv: text("wrap_iv").notNull().default(""),
+    wrapTag: text("wrap_tag").notNull().default(""),
+    wrappedCiphertext: text("wrapped_ciphertext").notNull().default(""),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+  },
+  (t) => [index("customer_api_keys_parent_idx").on(t.orgId, t.parentMembershipId, t.status)],
+);
+

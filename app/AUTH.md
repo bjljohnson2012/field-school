@@ -40,6 +40,7 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | `SMTP_SECURE` | Optional | Set `true` for implicit TLS. |
 | `SMTP_USER` / `SMTP_PASS` | Optional | SMTP auth. |
 | `SMTP_FROM` | Optional | Defaults to the notify address. |
+| `BYOK_WRAP_KEY` | Optional BYOK wrap | 32-byte hex or base64 wrap key for envelope-at-rest of customer keys. Never a customer secret. Not `RESEND_API_KEY`. Not `STRIPE_WEBHOOK_SECRET`. |
 
 `/login` and `/signup` are `force-dynamic` so production reads host OAuth env on each request (static prerender would hide Google/X).
 

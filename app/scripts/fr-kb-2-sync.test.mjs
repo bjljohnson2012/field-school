@@ -104,10 +104,11 @@ function childBundle() {
   };
 }
 
-test("sync lives in existing 0010 brain tables and does not add 0011", () => {
+test("sync lives in existing 0010 brain tables and does not add a brain-sync migration", () => {
   const files = readdirSync(join(root, "db"));
   assert.ok(files.includes("0010_knowledge_brains.sql"));
-  assert.equal(files.some((name) => /^0011_/.test(name)), false);
+  assert.ok(files.includes("0011_credits_byok.sql"));
+  assert.equal(files.some((name) => /^0011_brain_sync/.test(name)), false);
   const sql = read("db/0010_knowledge_brains.sql");
   assert.match(sql, /CREATE TABLE IF NOT EXISTS growth_units/);
   assert.match(sql, /CREATE TABLE IF NOT EXISTS knowledge_brains/);
