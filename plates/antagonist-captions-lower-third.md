@@ -15,7 +15,7 @@ gates: {
 }
 hold_cleaning: false
 escalate: false
-rendering: idle (stills only; no Cap take; Just untouched)
+rendering: stills /opt/cursor/artifacts/remotion-captions-lower-third/2026-09-19 (no Cap take; Just untouched)
 ```
 
 ## Craft
@@ -28,9 +28,12 @@ Demo compositions `LowerThirdDemo` + `CaptionsDemo` (8s / 240f). Wired on `Talki
 
 - `VOX-S02` / `EDU-S01` — craft layers + short demos, not a new spine
 - `VOX-S04` — no Ernest PNG
+- `VOX-S05` — OverlayLock title at 22px can read tight at 0.5 still scale; wordSpacing 0.12em stays
 - `EDU-S03` — olive fixture head, not gesturing A-roll (no Cap take)
 - `EDU-S05` — band is karaoke/signaling, not a transcript dump
 - `RM-H07` — no A-roll media; fixture stills only
+
+Stills: `LowerThirdDemo-f60.png`, `CaptionsDemo-f90.png`, `TalkingHeadCard-f90.png`. Compositions: LowerThirdDemo + CaptionsDemo 240f @30 plus existing LessonSpine 1230f.
 
 ## Held
 
