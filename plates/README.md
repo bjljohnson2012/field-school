@@ -58,3 +58,5 @@ node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/le
 Evidence: [cleaning-checklist-lesson-spine.md](./cleaning-checklist-lesson-spine.md).
 
 Future Cleaning auto-flip **must** call this script first. Flip only when exit 0 **and** ship 1–6 are green. This package **never flips** Cap / Notion / Publish / Distribute.
+
+Campus gate (approve/reject only, no player rail): [`app/db/0012_plate_renders.sql`](../app/db/0012_plate_renders.sql) + [`docs/campus-runtime/PLATE_RENDERS.md`](../docs/campus-runtime/PLATE_RENDERS.md). Teacher `GET/POST /api/plates` after checklist PASS. First live Cleaning auto-flip is a later seal when ship 1 and ship 6 can go green.

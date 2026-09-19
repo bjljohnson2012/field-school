@@ -856,3 +856,25 @@ export const customerApiKeys = pgTable(
   (t) => [index("customer_api_keys_parent_idx").on(t.orgId, t.parentMembershipId, t.status)],
 );
 
+export const plateRenders = pgTable(
+  "plate_renders",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    membershipId: uuid("membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    composition: text("composition").notNull(),
+    dest: text("dest").notNull(),
+    sha256: text("sha256").notNull().default(""),
+    status: text("status").notNull().default("pending"),
+    checklistVerdict: text("checklist_verdict").notNull().default(""),
+    holdCleaning: boolean("hold_cleaning").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    decidedAt: timestamp("decided_at", { withTimezone: true }),
+  },
+  (t) => [index("plate_renders_org_status_idx").on(t.orgId, t.status, t.createdAt)],
+);
+
