@@ -104,6 +104,12 @@ test("dedicated child home reuses family APIs and stays off Wave 2 chrome string
   assert.match(home, /markUnit\("complete"/);
   assert.match(home, /action: "confidence"/);
   assert.match(home, /placeholder="Child name"/);
+  assert.match(home, /Save intent version/);
+  assert.match(home, /Propose path/);
+  assert.match(home, /Accept path/);
+  assert.match(home, /Suggest next portion/);
+  assert.match(home, /Lock portion/);
+  assert.doesNotMatch(home, /Save edited path|Re-prompt path|Override portion/);
   assert.doesNotMatch(home, /type="email"|type='email'/);
   assert.doesNotMatch(home, /Student|child seat|fourth SKU/i);
   assert.doesNotMatch(home, /\/api\/chooser|\/api\/progress|\/api\/credits|\/api\/keys/);

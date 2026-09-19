@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { familyOperatorCopy, operatorLines, panelFromFamilyApis } from "@/lib/family/operator";
 import {
   buildFamilySignals,
   type SignalIntent,
@@ -40,6 +41,17 @@ export function FamilyV1Home({
   const [units, setUnits] = useState<LedgerUnit[]>([]);
   const [portion, setPortion] = useState<SignalPortion>(null);
   const [locked, setLocked] = useState(false);
+  const [intentDraft, setIntentDraft] = useState({
+    goals: "",
+    subjects: "",
+    themes: "",
+    timeHorizon: "",
+    constraints: "",
+  });
+  const [intentVersion, setIntentVersion] = useState<number | null>(null);
+  const [pathVersion, setPathVersion] = useState<number | null>(null);
+  const [pathStatus, setPathStatus] = useState("");
+  const [pathAccepted, setPathAccepted] = useState(false);
 
   useEffect(() => {
     setChildName(child?.name ?? "");
@@ -65,35 +77,28 @@ export function FamilyV1Home({
     const portionData = await portionRes.json();
     const ledgerData = await ledgerRes.json();
 
-    setIntent(
-      intentRes.ok
-        ? ((intentData.current as SignalIntent) ?? null)
-        : null,
-    );
-    const assigned = pathData.assigned ?? pathData.current;
-    setPathItems(pathRes.ok ? ((assigned?.items ?? []) as Array<{ title: string; subject?: string }>) : []);
-    if (portionRes.ok) {
-      const current = (portionData.locked ?? portionData.current ?? null) as SignalPortion;
-      setPortion(current);
-      setLocked(Boolean(portionData.locked));
-    } else {
-      setPortion(null);
-      setLocked(false);
-    }
-    if (ledgerRes.ok) {
-      const done = (ledgerData.completed ?? []) as LedgerUnit[];
-      const running = (ledgerData.inProgress ?? []) as LedgerUnit[];
-      const next = (ledgerData.recommended ?? []) as LedgerUnit[];
-      setCompleted(done);
-      setInProgress(running);
-      setRecommended(next);
-      setUnits((ledgerData.current?.units ?? [...done, ...running, ...next]) as LedgerUnit[]);
-    } else {
-      setCompleted([]);
-      setInProgress([]);
-      setRecommended([]);
-      setUnits([]);
-    }
+    const panel = panelFromFamilyApis({
+      childName: child?.name || "this child",
+      intent: intentRes.ok ? ((intentData.current as SignalIntent) ?? null) : null,
+      path: pathRes.ok ? (pathData.current ?? null) : null,
+      assigned: pathRes.ok ? (pathData.assigned ?? null) : null,
+      portion: portionRes.ok ? ((portionData.current as SignalPortion) ?? null) : null,
+      locked: portionRes.ok ? (portionData.locked ?? null) : null,
+      ledger: ledgerRes.ok ? ledgerData : null,
+    });
+    setIntent(panel.intent);
+    setIntentVersion(panel.intentVersion);
+    setIntentDraft(panel.intentDraft);
+    setPathItems(panel.pathItems);
+    setPathVersion(panel.pathVersion);
+    setPathStatus(panel.pathStatus);
+    setPathAccepted(panel.pathAccepted);
+    setPortion(panel.portion);
+    setLocked(panel.portionLocked);
+    setCompleted(panel.completed as LedgerUnit[]);
+    setInProgress(panel.inProgress as LedgerUnit[]);
+    setRecommended(panel.recommended as LedgerUnit[]);
+    setUnits(panel.units as LedgerUnit[]);
 
     await Promise.all([
       fetch(`/api/brain?child_membership_id=${encodeURIComponent(membershipId)}`, {
@@ -202,6 +207,88 @@ export function FamilyV1Home({
     await markConfidence(title, confidence, flag);
   }
 
+  async function saveIntent() {
+    const res = await fetch("/api/intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({
+        childMembershipId: child.membershipId,
+        goals: operatorLines(intentDraft.goals),
+        subjects: operatorLines(intentDraft.subjects),
+        themes: operatorLines(intentDraft.themes),
+        timeHorizon: intentDraft.timeHorizon,
+        constraints: operatorLines(intentDraft.constraints),
+      }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Intent v${data.version?.version ?? data.current?.version} saved.`
+        : familyOperatorCopy(data.error, "Could not save intent."),
+    );
+    if (res.ok) await loadHome(child.membershipId);
+  }
+
+  async function proposePath() {
+    const res = await fetch("/api/curriculum", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({ childMembershipId: child.membershipId }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Path v${data.path?.version ?? data.current?.version} proposed for this child.`
+        : familyOperatorCopy(data.error, "Could not propose path."),
+    );
+    if (res.ok) await loadHome(child.membershipId);
+  }
+
+  async function acceptPath() {
+    const res = await fetch("/api/curriculum", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({ childMembershipId: child.membershipId, action: "accept" }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Path v${data.path?.version ?? data.current?.version} assigned to this child.`
+        : familyOperatorCopy(data.error, "Could not accept path."),
+    );
+    if (res.ok) await loadHome(child.membershipId);
+  }
+
+  async function suggestPortion() {
+    const res = await fetch("/api/portion", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({ childMembershipId: child.membershipId }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Next portion v${data.portion?.version ?? data.current?.version} suggested for this child.`
+        : familyOperatorCopy(data.error, "Could not suggest next portion."),
+    );
+    if (res.ok) await loadHome(child.membershipId);
+  }
+
+  async function lockPortion() {
+    const res = await fetch("/api/portion", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({ childMembershipId: child.membershipId, action: "lock" }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Next portion v${data.portion?.version ?? data.current?.version} locked for this child.`
+        : familyOperatorCopy(data.error, "Could not lock next portion."),
+    );
+    if (res.ok) await loadHome(child.membershipId);
+  }
+
   const playTargets = [...inProgress, ...recommended, ...signals.next.items].filter(
     (item, index, rows) => item.title && rows.findIndex((row) => row.title === item.title) === index,
   );
@@ -243,6 +330,88 @@ export function FamilyV1Home({
         <Button type="button" variant="outline" onClick={() => void saveChildName()}>
           Save child
         </Button>
+      </div>
+
+      <div className="mt-6 rounded-xl border border-border px-4 py-4">
+        <h4 className="font-display text-lg">Plan for this child</h4>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Parent writes intent, accepts a path, then locks the next portion. Child · login none.
+        </p>
+        <p className="mt-2 text-sm">
+          Intent {intentVersion != null ? `v${intentVersion}` : "none"} · Path{" "}
+          {pathAccepted
+            ? `v${pathVersion} accepted`
+            : pathStatus
+              ? `v${pathVersion} ${pathStatus}`
+              : "none"}{" "}
+          · Portion {locked ? "locked" : "unlocked"}
+        </p>
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <label className="text-sm">
+            Goals
+            <textarea
+              className="mt-1 min-h-20 w-full rounded-xl border border-border bg-background px-3 py-2"
+              value={intentDraft.goals}
+              onChange={(event) => setIntentDraft((prev) => ({ ...prev, goals: event.target.value }))}
+            />
+          </label>
+          <label className="text-sm">
+            Subjects
+            <textarea
+              className="mt-1 min-h-20 w-full rounded-xl border border-border bg-background px-3 py-2"
+              value={intentDraft.subjects}
+              onChange={(event) =>
+                setIntentDraft((prev) => ({ ...prev, subjects: event.target.value }))
+              }
+            />
+          </label>
+          <label className="text-sm">
+            Themes
+            <textarea
+              className="mt-1 min-h-20 w-full rounded-xl border border-border bg-background px-3 py-2"
+              value={intentDraft.themes}
+              onChange={(event) => setIntentDraft((prev) => ({ ...prev, themes: event.target.value }))}
+            />
+          </label>
+          <label className="text-sm">
+            Constraints
+            <textarea
+              className="mt-1 min-h-20 w-full rounded-xl border border-border bg-background px-3 py-2"
+              value={intentDraft.constraints}
+              onChange={(event) =>
+                setIntentDraft((prev) => ({ ...prev, constraints: event.target.value }))
+              }
+            />
+          </label>
+          <label className="text-sm md:col-span-2">
+            Time horizon
+            <input
+              className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3"
+              value={intentDraft.timeHorizon}
+              onChange={(event) =>
+                setIntentDraft((prev) => ({ ...prev, timeHorizon: event.target.value }))
+              }
+              placeholder="this term"
+            />
+          </label>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Button type="button" onClick={() => void saveIntent()}>
+            Save intent version
+          </Button>
+          <Button type="button" variant="outline" onClick={() => void proposePath()}>
+            Propose path
+          </Button>
+          <Button type="button" variant="outline" onClick={() => void acceptPath()}>
+            Accept path
+          </Button>
+          <Button type="button" variant="outline" onClick={() => void suggestPortion()}>
+            Suggest next portion
+          </Button>
+          <Button type="button" variant="outline" onClick={() => void lockPortion()}>
+            Lock portion
+          </Button>
+        </div>
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
