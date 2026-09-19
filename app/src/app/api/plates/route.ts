@@ -41,7 +41,8 @@ export async function POST(request: Request) {
     sha256: typeof body.sha256 === "string" ? body.sha256 : "",
     checklistVerdict: typeof body.checklist_verdict === "string" ? body.checklist_verdict : "",
   });
-  if ("error" in result) return deny(400, result.error);
+  if ("error" in result) return deny(400, result.error ?? "register_failed");
+  if (!result.plate) return deny(400, "register_failed");
   return NextResponse.json({
     ok: true,
     hold_cleaning: true,

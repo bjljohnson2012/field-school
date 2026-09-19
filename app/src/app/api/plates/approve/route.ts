@@ -19,8 +19,9 @@ export async function POST(request: Request) {
   if (!id) return deny(400, "id_required");
   const result = await decidePlateRow(auth.identity, id, "approve");
   if ("error" in result) {
-    return deny(result.error === "unknown_plate" ? 404 : 400, result.error);
+    return deny(result.error === "unknown_plate" ? 404 : 400, result.error ?? "decide_failed");
   }
+  if (!result.plate) return deny(400, "decide_failed");
   return NextResponse.json({
     ok: true,
     hold_cleaning: true,
