@@ -2,61 +2,74 @@
 
 Phase: build only. Launch is closed until `docs/prelaunch/LAUNCH_GATE.md` is 8/8.
 
-Grok Bots decide. Cursor Project **Field School PM** runs the sub-agents. Ben records Cap, signs legal, and types LAUNCH.
+Live roster SoT: Notion Org Chart https://app.notion.com/p/3dffe86f6dee8190b990cab34b0fc518
+Do not invent seats. Do not hire Dean. Chief Decision Maker already owns the outer loop.
 
-## Topology
+## Execution path (hub)
 
 ```
-Ben (Cap / legal / launch gate)
-  |
-Dean (Grok Bot, outer loop)
-  |-- reads STATUS + health
-  |-- writes one sealed brief per day
-  |
-  +--> Field School PM (Cursor Project coordinator)
-          |-- campus workers (wave-N)
-          |-- prelaunch workers (docs + marketing-site)
-          +--> Judge notes back to Dean via PR + WAVE/STATUS files
+Ben
+└── Chief Decision Maker
+    ├── CTO
+    │   ├── Cursor Gate  ─── only seat that talks to Field School PM
+    │   ├── Audio Builder
+    │   ├── Soul Break
+    │   └── Share Desk
+    ├── Project Manager
+    ├── Product ── Portal, Designer
+    ├── Marketer ── Video
+    ├── Revenue ── Sales Plays
+    ├── Researcher
+    ├── Writer
+    ├── Notion Ops
+    ├── Budget
+    ├── Inbox
+    ├── Van Til
+    ├── Theology Expert
+    ├── Coach (held)
+    └── New Bot (empty; delete later)
 ```
 
-Do not hire twelve Bots. Dean is the only Grok Bot required. Optional later: Factory watch Bot.
+C-suite rule from the Org Chart: CTO, Marketer, Revenue, and Product do not message each other. Each raises input to Chief Decision Maker. CDM synthesizes and routes.
 
-## Nodes (launch AND-gate)
+Hands rule: Cursor Gate alone contacts Field School PM / Cursor cloud agents. CTO briefs Cursor Gate. CDM briefs CTO.
 
-1. Product
-2. ICP
-3. Brand
-4. Offer
-5. Marketing
-6. Sales
-7. Legal
-8. Plan
+## Launch nodes → owning seats
 
-Each node scores 0, 1, or 2 in `docs/prelaunch/STATUS.md`. Launch needs 16/16.
+| Node | Raises input | Hands |
+|---|---|---|
+| Product | Product (Portal, Designer) | CTO → Cursor Gate → Field School PM campus workers |
+| ICP | Researcher | Writer files `docs/prelaunch/ICP.md` via Gate if it is a repo PR |
+| Brand | Marketer + Writer + Van Til / Theology Expert | Gate only if marketing-site or BRAND.md must change |
+| Offer | Revenue | Writer + Marketer; Gate for pricing.html |
+| Marketing | Marketer (Video) + Writer | Gate for marketing-site |
+| Sales | Revenue (Sales Plays) | Writer drafts; humans send |
+| Legal | CDM holds; Ben signs | Writer updates LEGAL.md + privacy/terms via Gate |
+| Plan | Budget + Revenue | Writer files PLAN.md |
 
-## Who writes what
+Project Manager tracks the eight scores. Does not talk to Cursor. Does not invent work.
 
-| Hands | Path |
-|---|---|
-| Field School PM / campus workers | `app/`, `docs/campus-runtime/WAVE{N}.md`, later `plates/` |
-| Field School PM / prelaunch workers | `docs/prelaunch/*`, `marketing-site/` |
-| Dean | sealed briefs, daily score, Sunday note |
-| Ben | Cap takes, legal sign, Stripe, child lock, the word LAUNCH |
+Factory seats (Audio Builder, Soul Break, Share Desk) stay on tape and links. They are not launch-gate owners.
 
-## Daily loop (Dean, 07:00 ET)
+## Daily loop (unpause this)
 
-1. Guest `https://portal.fieldschool.ai/api/me`
-2. Cap login and `https://edit.fieldschool.ai/health`
-3. Last five commits on `bjljohnson2012/field-school`
-4. Read `docs/campus-runtime/STATUS.md` and `docs/prelaunch/STATUS.md`
-5. Pick one node. Default: Product while Wave 3 is incomplete.
-6. Hand Field School PM one sealed brief.
-7. Stop. No second wave the same day.
+Weekday 9:00 ET. Already named in the 2026-09-19 morning brief.
 
-## Sealed brief
+1. Notion Ops posts or refreshes the morning brief page.
+2. Project Manager reads `docs/prelaunch/STATUS.md` and the morning brief. Sends CDM one score table.
+3. CDM picks one launch node. Default while composer teach UI is unshipped: Product.
+4. If the node needs code or a repo file: CDM → CTO → Cursor Gate → one Field School PM stream.
+5. If the node is company prose only: CDM → Writer (and Marketer or Revenue as raisers). Gate only when a PR is required.
+6. Max two Cursor streams. Second stream only if Gate has spare capacity and the files cannot conflict.
+7. Stop. No third stream. No C-suite side channel.
+
+Sunday: CDM scores all eight nodes. Twenty lines. Contradictions listed. Launch stays closed.
+
+## Sealed brief (CDM writes, CTO forwards, Gate pastes)
 
 ```
 Node: Product | ICP | Offer | Brand | Marketing | Sales | Legal | Plan
+Raised by:
 Target files:
 Branch: cursor/wave-N-<slug> or cursor/prelaunch-<slug>
 Project: Field School PM
@@ -66,22 +79,26 @@ Do not:
 Human needed: none | Cap take | legal sign | launch gate
 ```
 
-## Locks (copy onto every brief)
+## Locks on every brief
 
-- One wave or one prelaunch file-set per brief.
+- One node per brief.
 - Build in `app/`. Do not extend frozen TanStack `src/`.
-- AUTH_URL stays `https://portal.fieldschool.ai`.
+- AUTH_URL / public portal flip stays held until Ben says so (PR 31).
+- No Stripe live, no ads, no outbound, no LAUNCH until the gate is 8/8.
+- FR-KB-3 schema may exist. Do not deploy metering UI or prices.
+- Do not remessage Wave 2.
 - Do not touch CNC vault `2.24.64.248`.
 - Do not re-render Just (`27pn9xs0zk8a73g`).
 - No second melt while `render.lock` exists.
-- No second Field Pattern bank. No official MBTI / Enneagram / Gallup / Wiley items.
+- Publish / Distribute on VOX stays held until a ship packet.
+- No second Field Pattern bank. No official psychometric item banks.
 - Do not inherit Grok Bot into the household catalog.
-- Quiz items need `source_unit_id` or they do not persist.
+- Quiz items need `source_unit_id`.
 - Household and sales events never mix.
-- No Stripe, no outbound email, no ads, no LAUNCH until the gate is 8/8.
-- Gym wording is retired. Voice: foundry, stations, field work. Charcoal / cream / olive.
-- Do not put Ben's street or neighborhood in copy.
+- Gym wording retired in new copy.
+- No street or neighborhood in copy.
 
 ## After launch
 
-This graph retires. Dean becomes ops. Ben runs Saturday rooms and sales conversations. Do not invent live-mode Bots before the gate.
+Ben gets more involved: Saturday rooms, sales conversations, child lock, money.
+CDM shrinks to ops routing. Coach may unhold. Do not unhold Coach before the gate.
