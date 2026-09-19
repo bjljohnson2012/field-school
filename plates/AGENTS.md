@@ -35,6 +35,8 @@ Dock the talking-head card to ~38% width (`dock-right` or `dock-left`). Never fu
 `node scripts/render-plate.mjs` waits (refuses) if melt `render.lock` exists or MemAvailable < 3072 MiB.
 CPU cap `--concurrency=2` (2/4). Refuse Just `27pn9xs0zk8a73g` and Aug 30 `vox/everything-made-up.mp4`.
 
+Cleaning checklist: `node scripts/cleaning-checklist-lesson-spine.mjs`. Exit 0 PASS / 1 FAIL. `--flip` refused. Never flip live Cap / Notion / Publish.
+
 ```
 npx remotion compositions
 npx remotion still Opener --frame=30

@@ -20,3 +20,5 @@ node scripts/render-plate.mjs \
 ```
 
 Clear lock + enough RAM → exit 0. Melt lock or MemAvailable < 3072 MiB → exit 75. Just / Aug 30 dest → exit 2.
+
+After encode, score (no live flip): `node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4`
