@@ -65,3 +65,7 @@ SHA `58671a3789a7270925765545d59703985c2e724b` (PR 63 on main). Suite: `cd app &
 | Campus cutover | **not done** |
 
 Dated table: [FOUR_MODEL.md](./FOUR_MODEL.md). Guest `/api/composer/*` is now 401 `sign_in_required` (18 Sep note of 404 is stale). Do not package or extract campus from this readout.
+
+## 2026-09-19 four-model farm target (no farm run)
+
+Coordinator-owned target only. SHA `e24b0127804cf387594ac38eb9cb6255efe98348` (PR 64 merge of `7a68b01`). Ship gate stays **FAIL**. Campus cutover **not done**. Do not spawn Isolation / Item-bank / Factory / Goal workers.

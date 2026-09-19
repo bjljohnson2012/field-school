@@ -19,6 +19,9 @@ test("2026-09-19 FOUR_MODEL + WAVE3 readiness docs exist; no cutover claim", () 
   assert.match(four, /wave3-four-model-readiness\.mjs/);
   assert.match(wave3, /2026-09-19 four-model readiness/);
   assert.match(wave3, /FOUR_MODEL\.md/);
+  assert.match(four, /e24b0127804cf387594ac38eb9cb6255efe98348/);
+  assert.match(four, /coordinator-owned/);
+  assert.match(wave3, /2026-09-19 four-model farm target/);
   assert.doesNotMatch(four, /cutover done|campus package extracted/i);
   assert.equal(existsSync(join(here, "wave3-four-model-readiness.mjs")), true);
   assert.equal(existsSync(join(here, "wave3-composer.test.mjs")), true);
