@@ -25,7 +25,8 @@ Gym wording is retired. Student orgs: household and sales.
 - Family v1 operator writes on FamilyV1Home (save intent version, accept path, lock next portion). Child ≠ User. No child login. Do not steal `bc-4765f2f0`.
 - Wave 5 Remotion plates in `plates/` (not campus Next): Opener, RecapCard, DefinitionBoard, QuizBumper, TalkingHeadCard, LessonSpine. Order lock: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up.
 - LessonSpine encode + Cleaning checklist (exit 0 PASS, `hold_cleaning: true`, `--flip` refused). No live Cleaning / Publish flip.
-- `app/db/0012_plate_renders.sql` applied on `field-school-campus-db` / `campus` (0012 only; 0001–0011 untouched). Table `plate_renders` exists. No Next pack extract; live `/api/plates` is 404 until a later pack. Guest unsigned contract stays `POST /api/events` 401.
+- `app/db/0012_plate_renders.sql` applied on `field-school-campus-db` / `campus` (0012 only; 0001–0011 untouched). Table `plate_renders` exists.
+- Plates API campus pack (routes only) overlay on `/opt/field-school`. No `deploy.sh` wipe. Family operator-writes chrome hashes unchanged. Live guest unsigned `GET`/`POST /api/plates` is **401** `sign_in_required` (was 404). `GET /api/me` `{guest:true}`. `POST /api/events` 401. Pack: `/opt/field-school-packs/plates-api-campus-pack-20260919T202200Z.tar.gz` sha256 `75ab10d322ae872cfb9aea0989bf2ff243a9b65178f17aa474cca7080a4ecfcb`.
 
 ## Held (not this readout)
 

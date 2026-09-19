@@ -50,7 +50,20 @@ Ship 1 HOLD (no Cap take). Ship 6 HOLD (Publish/HLS). First live Cleaning auto-f
 
 `\d plate_renders` shows org_id, membership_id, composition, dest, status default `pending`, `hold_cleaning` default true. Log: `/opt/cursor/artifacts/plate-renders-0012-apply/describe-plate-renders.log`.
 
-Live `GET https://portal.fieldschool.ai/api/plates` is **404** (route not in the running pack). Guest unsigned stay: `GET /api/me` 200 `{guest:true}`; `POST /api/events` 401 `{guest:true}`. `https://edit.fieldschool.ai/health` 200.
+Live `GET https://portal.fieldschool.ai/api/plates` is **401** `sign_in_required` after the routes-only overlay (was 404). Guest unsigned stay: `GET /api/me` 200 `{guest:true}`; `POST /api/events` 401 `{guest:true}`. `/c/grok-bot` 200. `https://edit.fieldschool.ai/health` 200.
+
+## Plates API campus pack (routes only)
+
+2026-09-19. Safer overlay than `deploy.sh` wipe. Script: `app/deploy/overlay-plates-api.sh`. Rebuild `field-school-app` only. `plate_renders` already present — skip migrate. Family chrome hashes unchanged (`family-v1-home` `e352f5ad…`, `FAMILY_V1_SHA` `71b3245b…`). Did not steal `bc-4765f2f0`.
+
+| | |
+|---|---|
+| Pack | `/opt/field-school-packs/plates-api-campus-pack-20260919T202200Z.tar.gz` |
+| sha256 | `75ab10d322ae872cfb9aea0989bf2ff243a9b65178f17aa474cca7080a4ecfcb` |
+| Main merge under pack | `5abfa4ab356e65c60defb63062e5c5a1e1fca47c` (PR 59) |
+| Overlay PR tip | PR 60 `ccb3f1b1bb5e932575ffc3fb53214ed2a01f4418` |
+| Guest GET/POST `/api/plates` | 401 `sign_in_required` |
+| Signed teacher smoke | skipped (no safe cookie; do not steal family LIVE) |
 
 ## Held
 
