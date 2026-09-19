@@ -21,7 +21,8 @@ export function OverlayLock({overlay}: {overlay: Overlay}) {
           fontFamily: displayFace,
           fontWeight: 700,
           fontSize: 22,
-          letterSpacing: "-0.02em",
+          letterSpacing: "0em",
+          wordSpacing: "0.12em",
           lineHeight: `${overlay.h}px`,
           color: ink,
           textAlign: "right",
@@ -166,9 +167,11 @@ export function Karaoke({captions}: {captions: Caption[]}) {
         fontFamily: sansFace,
         fontSize: 28,
         lineHeight: 1.35,
+        letterSpacing: "0em",
+        wordSpacing: "0.12em",
         display: "flex",
         flexWrap: "wrap",
-        gap: 10,
+        gap: 14,
       }}
     >
       {words.map((word) => {
@@ -245,7 +248,8 @@ export function Title({children}: {children: React.ReactNode}) {
         fontFamily: displayFace,
         fontWeight: 700,
         fontSize: 56,
-        letterSpacing: "-0.03em",
+        letterSpacing: "0em",
+        wordSpacing: "0.12em",
         lineHeight: 1.12,
         color: ink,
         maxWidth: 1000,
@@ -263,6 +267,8 @@ export function Claim({children, color = ink}: {children: React.ReactNode; color
         fontFamily: bodyFace,
         fontSize: 36,
         lineHeight: 1.3,
+        letterSpacing: "0em",
+        wordSpacing: "0.12em",
         color,
         maxWidth: 960,
       }}
