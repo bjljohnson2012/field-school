@@ -52,3 +52,16 @@ Four-model hotfix interrogate of the restacked tip is required before any deploy
 - Revive course-mcp-server, portal-course-builder, or certification workers
 - Deploy until four-model PASS on this restack
 - Fight another VPS extract race
+
+## 2026-09-19 four-model readiness (no deploy)
+
+SHA `58671a3789a7270925765545d59703985c2e724b` (PR 63 on main). Suite: `cd app && node --experimental-strip-types --test scripts/wave3-composer.test.mjs` then `node scripts/wave3-four-model-readiness.mjs`.
+
+| Gate | Result |
+|---|---|
+| Wave3 composer suite | **PASS** 6/6 |
+| Live guest Isolation (`/api/me` guest, Grok Bot 200, events 401, composer 401, teach 401) | **PASS** |
+| Four-model ship gate (independent Isolation / Item-bank / Factory / Goal) | **FAIL** — farm not spawned |
+| Campus cutover | **not done** |
+
+Dated table: [FOUR_MODEL.md](./FOUR_MODEL.md). Guest `/api/composer/*` is now 401 `sign_in_required` (18 Sep note of 404 is stale). Do not package or extract campus from this readout.
