@@ -51,6 +51,26 @@ Do not deploy this SHA as a Wave3 cutover. Live composer guest-401 is an observa
 
 WAVE3.md (18 Sep) said live `/api/composer` was 404 on pack `62acfd0`. Guest probes on 19 Sep return **401** `sign_in_required` for `/api/composer/catalog` and `/api/composer/lessons`, and 401 for `/o/household/teach`. That does not authorize a wipe/extract. Family LIVE `bc-4765f2f0` was not used beyond guest smoke.
 
+## Farm target (2026-09-19, coordinator-owned)
+
+Official farm is coordinator-owned. **Do not spawn Isolation / Item-bank / Factory / Goal workers from a builder.**
+
+| Field | Value |
+|---|---|
+| Target SHA | `e24b0127804cf387594ac38eb9cb6255efe98348` |
+| Provenance | PR 64 merge; HEAD was `7a68b01951f2afe1b26f10c7ae1b0a3985221e77` |
+| On | `origin/main` |
+| Branch recording this | `cursor/prelaunch-wave3-four-model-farm` |
+| Ship gate | **FAIL** — farm not run; target recorded only |
+| Cutover | **not done** |
+
+Proof command that pinned the target:
+
+```bash
+git fetch origin main && git rev-parse origin/main
+# e24b0127804cf387594ac38eb9cb6255efe98348
+```
+
 ## Held
 
-No Wave3 campus cutover. No AUTH_URL / university 301 change. No Isolation / Item-bank / Factory / Goal farm. No Remotion-in-Next. No Cleaning / Publish. No Cap take. No Just remake. No Stripe / metering UI. No family steal.
+No Wave3 campus cutover. No AUTH_URL / university 301 change. No Isolation / Item-bank / Factory / Goal worker spawn. No Remotion-in-Next. No Cleaning / Publish. No Cap take. No Just remake. No Stripe / metering UI. No family steal.
