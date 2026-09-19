@@ -1,52 +1,41 @@
-# Status — 2026-09-18
+# Status — 2026-09-19
 
-Wave 1 is live on the VPS and in `app/`. Wave 2 tenants + picker + Field Pattern is proven in [WAVE2.md](./WAVE2.md).
+Wave 1 is live. Wave 2 tenants + picker + Field Pattern is proven in [WAVE2.md](./WAVE2.md). Family v1 operator writes are LIVE on FamilyV1Home. Remotion Wave 5 plates + LessonSpine + checklist + `0012` are in `main` and `plate_renders` is on `field-school-campus-db`. Proof: [WAVE5.md](./WAVE5.md).
 
-- Postgres `field-school-campus-db`, orgs `field-school` and `household`
-- APIs: GET /api/me, GET /api/progress, POST /api/events
-- Guest Grok Bot still works. AUTH_URL is portal.fieldschool.ai. university.benjohnson.ai 301s to portal.
-- Live docs: https://portal.fieldschool.ai/docs/api
-- Proof: WAVE1.md
+- Postgres `field-school-campus-db`, database `campus`. Do not write leftover `field-school-db`.
+- Guest Grok Bot still works. `GET /api/me` guest `{ authenticated: false, guest: true }`. `POST /api/events` guest 401.
+- AUTH_URL is `https://portal.fieldschool.ai`. `university.benjohnson.ai` 301s there. Do not flip AUTH_URL back.
+- Factory (Cap / edit / melt) left running. Just `27pn9xs0zk8a73g` locked. `https://edit.fieldschool.ai/health` 200.
 
-Grok Build was given two prompts tonight for the next run. Code for that run may still be in flight when you open this.
-
-## Current run (not Wave 1)
+## Current
 
 Read in this order:
 
 1. This file
-2. TENANTS_AND_COURSES.md
-3. ASSESSMENTS_AND_PICKER.md
-4. FIELD_PATTERN.md
-5. fp-50-v1.md (full item table + living profile)
-6. CURRENT_RUN.md (the prompt Build should follow)
+2. [WAVE5.md](./WAVE5.md)
+3. [PLATE_RENDERS.md](./PLATE_RENDERS.md)
+4. [../remotion-vox-standards.md](../remotion-vox-standards.md)
 
-Gym wording is retired. First student orgs: household and sales.
+Gym wording is retired. Student orgs: household and sales.
 
 ## Done
 
-Wave 1 identity + Grok Bot station 01 events. Factory (Cap / edit / melt) left running. Just locked.
+- Wave 1 identity + Grok Bot station 01 events.
+- Wave 2 household + sales, `/o/:slug`, picker, invites, fp-50-v1, org-scoped skills. [WAVE2.md](./WAVE2.md).
+- Family v1 operator writes on FamilyV1Home (save intent version, accept path, lock next portion). Child ≠ User. No child login. Do not steal `bc-4765f2f0`.
+- Wave 5 Remotion plates in `plates/` (not campus Next): Opener, RecapCard, DefinitionBoard, QuizBumper, TalkingHeadCard, LessonSpine. Order lock: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up.
+- LessonSpine encode + Cleaning checklist (exit 0 PASS, `hold_cleaning: true`, `--flip` refused). No live Cleaning / Publish flip.
+- `app/db/0012_plate_renders.sql` applied on `field-school-campus-db` / `campus` (0012 only; 0001–0011 untouched). Table `plate_renders` exists. No Next pack extract; live `/api/plates` is 404 until a later pack. Guest unsigned contract stays `POST /api/events` 401.
 
-## Landed this run
+## Held (not this readout)
 
-Wave 2 is proven. Household + sales orgs, `/o/:slug`, org picker, invites, fixture welcome lessons, child on household, Field Pattern correspondences + import override, org-scoped skill diagnostics. AUTH_URL is portal.fieldschool.ai. university.benjohnson.ai 301s to portal. TanStack not deployed. Remotion and adaptive generation not started. Proof: [WAVE2.md](./WAVE2.md). Family v1 operator writes landed on FamilyV1Home (save intent version, accept path, lock next portion). Child ≠ User. No child login.
+- Cap take / Just remake / second melt
+- Live Cleaning auto-flip and Publish/Distribute (future CDM seal when ship 1 and ship 6 can go green)
+- Remotion packaged into Next player / player rail UI
+- AUTH_URL flip, Stripe / metering prices
+- Wave 3 four-model cutover (composer SQL exists; live `/api/composer` still 404 on the current pack)
+- CNC vault `2.24.64.248`
 
-## In flight / next
+## Not a launch gate
 
-Wave 3 waits on a human. Not started.
-
-- Artifact STT nudges on the profile (Wave 5)
-- Composer text / upload / book / link (Wave 3, not this run)
-
-## Not this run
-
-TanStack deploy, Remotion plates, adaptive generation, Notion publish, campus MCP, wildcard DNS. AUTH_URL flip is a separate ship: [AUTH_URL_FLIP.md](./AUTH_URL_FLIP.md).
-
-## Tomorrow morning checklist
-
-1. `git log -5 --oneline` on main. If Build committed, read WAVE2.md / new app/ files.
-2. Signed-out: https://portal.fieldschool.ai/api/me should still be guest.
-3. https://edit.fieldschool.ai/health and cap login.
-4. If picker exists: one login, flip household / sales, confirm events do not cross.
-5. If Pattern exists: take fp-50-v1, open the profile narrative.
-6. If nothing new landed, paste CURRENT_RUN.md into Grok Build again.
+Do not invent LAUNCH_GATE 8/8 from this refresh.
