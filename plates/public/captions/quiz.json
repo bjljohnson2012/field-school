@@ -1,0 +1,7 @@
+[
+  {"text": "What", "startMs": 400, "endMs": 700},
+  {"text": "did", "startMs": 700, "endMs": 900},
+  {"text": "the", "startMs": 900, "endMs": 1100},
+  {"text": "card", "startMs": 1100, "endMs": 1500},
+  {"text": "draw?", "startMs": 1500, "endMs": 2200}
+]

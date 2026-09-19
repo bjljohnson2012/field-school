@@ -1,0 +1,8 @@
+[
+  {"text": "Explanatory", "startMs": 0, "endMs": 900},
+  {"text": "motion", "startMs": 900, "endMs": 1600},
+  {"text": "One", "startMs": 2000, "endMs": 2300},
+  {"text": "idea", "startMs": 2300, "endMs": 2800},
+  {"text": "per", "startMs": 2800, "endMs": 3000},
+  {"text": "beat", "startMs": 3000, "endMs": 3600}
+]

@@ -61,3 +61,7 @@ export function isSceneMotion(value: string): value is SceneMotionName {
 export function clampPlateSec(sec: number): number {
   return Math.min(12, Math.max(8, sec));
 }
+
+export function clampBand(sec: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, sec));
+}

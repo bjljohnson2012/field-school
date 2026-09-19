@@ -22,27 +22,39 @@ test("SceneMotion constants match factory", () => {
   }
 });
 
-test("Opener and RecapCard only, 1920x1080@30, 8-12s", () => {
+test("five compositions register 1920x1080@30 with length bands", () => {
   const rootTsx = src("src", "Root.tsx");
   assert.match(rootTsx, /id="Opener"/);
   assert.match(rootTsx, /id="RecapCard"/);
-  assert.doesNotMatch(rootTsx, /DefinitionBoard|QuizBumper|TalkingHeadCard/);
+  assert.match(rootTsx, /id="DefinitionBoard"/);
+  assert.match(rootTsx, /id="QuizBumper"/);
+  assert.match(rootTsx, /id="TalkingHeadCard"/);
   assert.match(rootTsx, /width=\{1920\}/);
   assert.match(rootTsx, /height=\{1080\}/);
   assert.match(rootTsx, /fps=\{30\}/);
   assert.match(rootTsx, /durationSec: 10/);
+  assert.match(rootTsx, /durationSec: 6/);
+  assert.match(rootTsx, /durationSec: 7/);
+  assert.match(rootTsx, /durationSec: 8/);
   assert.match(src("src", "sceneMotionMath.ts"), /Math.min\(12, Math.max\(8/);
 });
 
 test("useCurrentFrame R7 and brand lock", () => {
   const opener = src("src", "Opener.tsx");
   const recap = src("src", "RecapCard.tsx");
+  const definition = src("src", "DefinitionBoard.tsx");
+  const quiz = src("src", "QuizBumper.tsx");
+  const head = src("src", "TalkingHeadCard.tsx");
   const layers = src("src", "layers.tsx");
   const brand = src("src", "brand.ts");
   assert.match(opener, /useCurrentFrame/);
   assert.match(recap, /useCurrentFrame/);
-  assert.doesNotMatch(`${opener}${recap}${layers}`, /animation:|transition:|animate-/);
-  assert.doesNotMatch(`${opener}${recap}${layers}`, /setTimeout|setInterval/);
+  assert.match(definition, /useCurrentFrame/);
+  assert.match(quiz, /useCurrentFrame/);
+  assert.match(head, /useCurrentFrame/);
+  const blob = `${opener}${recap}${definition}${quiz}${head}${layers}`;
+  assert.doesNotMatch(blob, /animation:|transition:|animate-/);
+  assert.doesNotMatch(blob, /setTimeout|setInterval/);
   assert.match(brand, /#EFE7D6/);
   assert.match(brand, /#1A1A16/);
   assert.match(brand, /#C4A35A/);
@@ -56,6 +68,9 @@ test("useCurrentFrame R7 and brand lock", () => {
 test("captions path and antagonist docs exist", () => {
   assert.equal(existsSync(join(root, "public", "captions", "opener.json")), true);
   assert.equal(existsSync(join(root, "public", "captions", "recap.json")), true);
+  assert.equal(existsSync(join(root, "public", "captions", "definition.json")), true);
+  assert.equal(existsSync(join(root, "public", "captions", "quiz.json")), true);
+  assert.equal(existsSync(join(root, "public", "captions", "talking-head.json")), true);
   assert.match(src("AGENTS.md"), /docs\/remotion-vox-standards\.md/);
   assert.match(src("README.md"), /docs\/remotion-vox-standards\.md/);
 });
