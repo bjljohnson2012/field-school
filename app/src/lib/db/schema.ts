@@ -611,3 +611,148 @@ export const progressLedgerUnits = pgTable(
   ],
 );
 
+export const growthUnits = pgTable(
+  "growth_units",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id").references(() => memberships.id),
+    kind: text("kind").notNull(),
+    title: text("title").notNull().default(""),
+    status: text("status").notNull().default("current"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("growth_units_child_idx").on(t.orgId, t.kind, t.childMembershipId),
+    index("growth_units_parent_idx").on(t.orgId, t.parentMembershipId, t.kind),
+  ],
+);
+
+export const knowledgeBrains = pgTable(
+  "knowledge_brains",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    growthUnitId: uuid("growth_unit_id")
+      .notNull()
+      .references(() => growthUnits.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id").references(() => memberships.id),
+    version: integer("version").notNull(),
+    status: text("status").notNull().default("current"),
+    intent: jsonb("intent").notNull().default({}),
+    paths: jsonb("paths").notNull().default({}),
+    progress: jsonb("progress").notNull().default({}),
+    summary: jsonb("summary").notNull().default({}),
+    supersedesId: uuid("supersedes_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("knowledge_brains_unit_version").on(t.orgId, t.growthUnitId, t.version),
+    index("knowledge_brains_unit_idx").on(t.orgId, t.growthUnitId, t.version),
+    index("knowledge_brains_child_idx").on(t.orgId, t.childMembershipId, t.version),
+  ],
+);
+
+export const brainSources = pgTable(
+  "brain_sources",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    growthUnitId: uuid("growth_unit_id")
+      .notNull()
+      .references(() => growthUnits.id),
+    brainId: uuid("brain_id")
+      .notNull()
+      .references(() => knowledgeBrains.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id").references(() => memberships.id),
+    sortOrder: integer("sort_order").notNull(),
+    title: text("title").notNull().default(""),
+    body: text("body").notNull().default(""),
+    uri: text("uri").notNull().default(""),
+    composerSourceId: uuid("composer_source_id"),
+    composerUnitId: uuid("composer_unit_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("brain_sources_order").on(t.brainId, t.sortOrder),
+    index("brain_sources_unit_idx").on(t.orgId, t.growthUnitId, t.brainId, t.sortOrder),
+  ],
+);
+
+export const brainNotes = pgTable(
+  "brain_notes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    growthUnitId: uuid("growth_unit_id")
+      .notNull()
+      .references(() => growthUnits.id),
+    brainId: uuid("brain_id")
+      .notNull()
+      .references(() => knowledgeBrains.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id").references(() => memberships.id),
+    sortOrder: integer("sort_order").notNull(),
+    title: text("title").notNull().default(""),
+    body: text("body").notNull().default(""),
+    uri: text("uri").notNull().default(""),
+    composerSourceId: uuid("composer_source_id"),
+    composerUnitId: uuid("composer_unit_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("brain_notes_order").on(t.brainId, t.sortOrder),
+    index("brain_notes_unit_idx").on(t.orgId, t.growthUnitId, t.brainId, t.sortOrder),
+  ],
+);
+
+export const brainArtifacts = pgTable(
+  "brain_artifacts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    growthUnitId: uuid("growth_unit_id")
+      .notNull()
+      .references(() => growthUnits.id),
+    brainId: uuid("brain_id")
+      .notNull()
+      .references(() => knowledgeBrains.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id").references(() => memberships.id),
+    sortOrder: integer("sort_order").notNull(),
+    title: text("title").notNull().default(""),
+    body: text("body").notNull().default(""),
+    uri: text("uri").notNull().default(""),
+    composerSourceId: uuid("composer_source_id"),
+    composerUnitId: uuid("composer_unit_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("brain_artifacts_order").on(t.brainId, t.sortOrder),
+    index("brain_artifacts_unit_idx").on(t.orgId, t.growthUnitId, t.brainId, t.sortOrder),
+  ],
+);
+
