@@ -124,3 +124,35 @@ export function brainSummary(counts: { sources: number; notes: number; artifacts
     artifacts: counts.artifacts,
   };
 }
+
+export const CAMPUS_URI_PREFIX = "campus://";
+
+export function campusUri(kind: string, id: string) {
+  const name = kind.trim().slice(0, 40);
+  const key = id.trim().slice(0, 80);
+  return name && key ? `${CAMPUS_URI_PREFIX}${name}/${key}` : "";
+}
+
+export function isCampusUri(uri: unknown) {
+  return typeof uri === "string" && uri.startsWith(CAMPUS_URI_PREFIX);
+}
+
+export type CampusSynced = {
+  intent: boolean;
+  path: boolean;
+  portion: boolean;
+  ledger: boolean;
+  parentNotes: number;
+  catalog: number;
+};
+
+export function campusSynced(flags: CampusSynced) {
+  return {
+    intent: Boolean(flags.intent),
+    path: Boolean(flags.path),
+    portion: Boolean(flags.portion),
+    ledger: Boolean(flags.ledger),
+    parentNotes: Number(flags.parentNotes) || 0,
+    catalog: Number(flags.catalog) || 0,
+  };
+}

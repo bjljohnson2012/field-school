@@ -23,10 +23,13 @@ import {
   asSnapshotBag,
   asTitle,
   brainSummary,
+  isCampusUri,
   isFamilyFirstKind,
   parseBrainItems,
   snapshotHasKeys,
 } from "./rules";
+import { campusSnapshotBags, materializeCampusDrafts, publicCampusBundle } from "./campus";
+import { collectCampusObjects } from "./sync";
 
 export class BrainAccessError extends IntentAccessError {
   constructor(status: 403 | 404, code: string) {
@@ -516,7 +519,15 @@ async function insertItems(
   );
 }
 
-export async function writeKnowledgeBrain(opts: {
+function keepParentAuthored(rows: ItemRow[]): BrainItemDraft[] {
+  return draftsFromRows(rows.filter((row) => !isCampusUri(row.uri)));
+}
+
+function mergeCampusItems(previous: BrainItemDraft[], incoming: BrainItemDraft[]) {
+  return previous.concat(incoming).slice(0, 128).map((item, index) => ({ ...item, sortOrder: index + 1 }));
+}
+
+async function resolveWriteUnit(opts: {
   actor: LearnerIdentity;
   staff: boolean;
   body: Record<string, unknown>;
@@ -529,9 +540,8 @@ export async function writeKnowledgeBrain(opts: {
     (typeof opts.body.childMembershipId === "string" && opts.body.childMembershipId.trim()) ||
     (typeof opts.body.child_membership_id === "string" && opts.body.child_membership_id.trim()) ||
     "";
-  let unit: typeof growthUnits.$inferSelect;
   if (growthUnitId) {
-    unit = await loadUnitById({
+    let unit = await loadUnitById({
       actor: opts.actor,
       staff: opts.staff,
       growthUnitId,
@@ -545,22 +555,80 @@ export async function writeKnowledgeBrain(opts: {
         .returning();
       unit = updated ?? unit;
     }
-  } else {
-    const rawKind =
-      typeof opts.body.kind === "string" ? opts.body.kind.trim() : childMembershipId ? "child" : "family";
-    if (rawKind === "person" || rawKind === "team" || rawKind === "org") {
-      throw new BrainAccessError(403, "family_mode_only");
-    }
-    if (!isFamilyFirstKind(rawKind)) throw new BrainFieldsError("invalid_kind");
-    unit = await ensureUnit({
-      actor: opts.actor,
-      staff: opts.staff,
-      kind: rawKind,
-      childMembershipId: childMembershipId || undefined,
-      title: asTitle(opts.body.title),
-    });
+    return unit;
   }
+  const rawKind =
+    typeof opts.body.kind === "string" ? opts.body.kind.trim() : childMembershipId ? "child" : "family";
+  if (rawKind === "person" || rawKind === "team" || rawKind === "org") {
+    throw new BrainAccessError(403, "family_mode_only");
+  }
+  if (!isFamilyFirstKind(rawKind)) throw new BrainFieldsError("invalid_kind");
+  return ensureUnit({
+    actor: opts.actor,
+    staff: opts.staff,
+    kind: rawKind,
+    childMembershipId: childMembershipId || undefined,
+    title: asTitle(opts.body.title),
+  });
+}
 
+async function commitBrainVersion(opts: {
+  actor: LearnerIdentity;
+  unit: typeof growthUnits.$inferSelect;
+  intent: BrainSnapshot;
+  paths: BrainSnapshot;
+  progress: BrainSnapshot;
+  sources: BrainItemDraft[];
+  notes: BrainItemDraft[];
+  artifacts: BrainItemDraft[];
+  summary?: Record<string, unknown>;
+}) {
+  const previous = await latestBrain(opts.actor.orgId, opts.unit.id);
+  const db = getDb();
+  const [row] = await db
+    .insert(knowledgeBrains)
+    .values({
+      orgId: opts.actor.orgId,
+      growthUnitId: opts.unit.id,
+      parentMembershipId: opts.actor.membershipId,
+      childMembershipId: opts.unit.childMembershipId,
+      version: (previous?.version ?? 0) + 1,
+      status: "current",
+      intent: opts.intent,
+      paths: opts.paths,
+      progress: opts.progress,
+      summary: opts.summary ?? brainSummary({
+        sources: opts.sources.length,
+        notes: opts.notes.length,
+        artifacts: opts.artifacts.length,
+      }),
+      supersedesId: previous?.id ?? null,
+    })
+    .returning();
+  if (!row) throw new BrainFieldsError("invalid_json");
+  const bind = {
+    orgId: opts.actor.orgId,
+    growthUnitId: opts.unit.id,
+    brainId: row.id,
+    parentMembershipId: opts.actor.membershipId,
+    childMembershipId: opts.unit.childMembershipId,
+  };
+  await insertItems(brainSources, { ...bind, items: opts.sources });
+  await insertItems(brainNotes, { ...bind, items: opts.notes });
+  await insertItems(brainArtifacts, { ...bind, items: opts.artifacts });
+  const items = await loadItems(opts.actor.orgId, [row.id]);
+  return {
+    unit: publicUnit(opts.unit),
+    current: publicBrain(row, itemsForBrain(row.id, items)),
+  };
+}
+
+export async function writeKnowledgeBrain(opts: {
+  actor: LearnerIdentity;
+  staff: boolean;
+  body: Record<string, unknown>;
+}) {
+  const unit = await resolveWriteUnit(opts);
   const previous = await latestBrain(opts.actor.orgId, unit.id);
   const previousItems = previous
     ? await loadItems(opts.actor.orgId, [previous.id])
@@ -604,42 +672,117 @@ export async function writeKnowledgeBrain(opts: {
     if (!snapshotHasKeys(progress)) progress = asSnapshotBag(previous.progress);
   }
 
-  const db = getDb();
-  const [row] = await db
-    .insert(knowledgeBrains)
-    .values({
-      orgId: opts.actor.orgId,
-      growthUnitId: unit.id,
-      parentMembershipId: opts.actor.membershipId,
-      childMembershipId: unit.childMembershipId,
-      version: (previous?.version ?? 0) + 1,
-      status: "current",
-      intent,
-      paths,
-      progress,
-      summary: brainSummary({
+  return commitBrainVersion({
+    actor: opts.actor,
+    unit,
+    intent,
+    paths,
+    progress,
+    sources,
+    notes,
+    artifacts,
+  });
+}
+
+export async function previewCampusSync(opts: {
+  actor: LearnerIdentity;
+  staff: boolean;
+  growthUnitId?: string;
+  childMembershipId?: string;
+  kind?: string;
+}) {
+  let unit: typeof growthUnits.$inferSelect | null = null;
+  let kind: FamilyFirstKind = "family";
+  let childMembershipId = opts.childMembershipId || "";
+  if (opts.growthUnitId) {
+    unit = await loadUnitById({
+      actor: opts.actor,
+      staff: opts.staff,
+      growthUnitId: opts.growthUnitId,
+    });
+    if (!isFamilyFirstKind(unit.kind)) throw new BrainAccessError(403, "family_mode_only");
+    kind = unit.kind;
+    childMembershipId = unit.childMembershipId || "";
+  } else if (opts.kind === "person" || opts.kind === "team" || opts.kind === "org") {
+    throw new BrainAccessError(403, "family_mode_only");
+  } else if (opts.childMembershipId || opts.kind === "child") {
+    if (!opts.childMembershipId) throw new BrainFieldsError("child_membership_id_required");
+    await assertChildInHousehold({
+      actor: opts.actor,
+      childMembershipId: opts.childMembershipId,
+      staff: opts.staff,
+    });
+    kind = "child";
+    unit = await findChildUnit(opts.actor.orgId, opts.childMembershipId);
+  } else {
+    unit = await findFamilyUnit(opts.actor.orgId, opts.actor.membershipId);
+    kind = "family";
+  }
+  const bundle = await collectCampusObjects({
+    orgId: opts.actor.orgId,
+    kind,
+    childMembershipId: kind === "child" ? childMembershipId : null,
+  });
+  const bags = campusSnapshotBags(bundle);
+  const drafts = materializeCampusDrafts(bundle);
+  return {
+    unit: unit ? publicUnit(unit) : null,
+    campus: publicCampusBundle(bundle),
+    preview: {
+      intent: bags.intent,
+      paths: bags.paths,
+      progress: bags.progress,
+      synced: bags.synced,
+      sources: drafts.sources,
+      notes: drafts.notes,
+      artifacts: drafts.artifacts,
+    },
+  };
+}
+
+export async function syncKnowledgeBrain(opts: {
+  actor: LearnerIdentity;
+  staff: boolean;
+  body: Record<string, unknown>;
+}) {
+  const unit = await resolveWriteUnit(opts);
+  if (!isFamilyFirstKind(unit.kind)) throw new BrainAccessError(403, "family_mode_only");
+  const bundle = await collectCampusObjects({
+    orgId: opts.actor.orgId,
+    kind: unit.kind,
+    childMembershipId: unit.childMembershipId,
+  });
+  const bags = campusSnapshotBags(bundle);
+  const drafts = materializeCampusDrafts(bundle);
+  const previous = await latestBrain(opts.actor.orgId, unit.id);
+  const previousItems = previous
+    ? await loadItems(opts.actor.orgId, [previous.id])
+    : { sources: [], notes: [], artifacts: [] };
+  const sources = mergeCampusItems(keepParentAuthored(previousItems.sources), drafts.sources);
+  const notes = mergeCampusItems(keepParentAuthored(previousItems.notes), drafts.notes);
+  const artifacts = mergeCampusItems(keepParentAuthored(previousItems.artifacts), drafts.artifacts);
+  const written = await commitBrainVersion({
+    actor: opts.actor,
+    unit,
+    intent: bags.intent,
+    paths: bags.paths,
+    progress: bags.progress,
+    sources,
+    notes,
+    artifacts,
+    summary: {
+      ...brainSummary({
         sources: sources.length,
         notes: notes.length,
         artifacts: artifacts.length,
       }),
-      supersedesId: previous?.id ?? null,
-    })
-    .returning();
-  if (!row) throw new BrainFieldsError("invalid_json");
-  const bind = {
-    orgId: opts.actor.orgId,
-    growthUnitId: unit.id,
-    brainId: row.id,
-    parentMembershipId: opts.actor.membershipId,
-    childMembershipId: unit.childMembershipId,
-  };
-  await insertItems(brainSources, { ...bind, items: sources });
-  await insertItems(brainNotes, { ...bind, items: notes });
-  await insertItems(brainArtifacts, { ...bind, items: artifacts });
-  const items = await loadItems(opts.actor.orgId, [row.id]);
+      synced: bags.synced,
+    },
+  });
   return {
-    unit: publicUnit(unit),
-    current: publicBrain(row, itemsForBrain(row.id, items)),
+    ...written,
+    synced: bags.synced,
+    campus: publicCampusBundle(bundle),
   };
 }
 
