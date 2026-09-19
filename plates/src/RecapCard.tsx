@@ -1,0 +1,62 @@
+import React from "react";
+import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from "remotion";
+import {cream, gold, ink} from "./brand";
+import {Bed, Claim, GoldRule, Karaoke, Kicker, Letterbox, LowerThird, OverlayLock, TalkingHeadCard, Title, TypeCard} from "./layers";
+import {Layer, Stack} from "./Stack";
+import {lumaVeil} from "./sceneMotionMath";
+import type {RecapProps} from "./types";
+
+export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, durationSec, overlay, captions}) => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const now = frame / fps;
+  const veil = lumaVeil(now, 0, durationSec, 0.5, "glide");
+
+  return (
+    <AbsoluteFill style={{backgroundColor: cream}}>
+      <Stack>
+        <Layer name="bed">
+          <Bed />
+        </Layer>
+        <Layer name="screen">
+          <TypeCard motion="glide" sceneFrame={frame}>
+            <Kicker>{kicker}</Kicker>
+            <Title>{title}</Title>
+            <GoldRule />
+            {points.slice(0, 3).map((point, i) => (
+              <div
+                key={point}
+                style={{
+                  opacity: interpolate(frame, [24 + i * 36, 40 + i * 36], [0, 1], {
+                    extrapolateLeft: "clamp",
+                    extrapolateRight: "clamp",
+                  }),
+                  marginBottom: 14,
+                }}
+              >
+                <Claim color={frame >= 24 + i * 36 && frame < 60 + i * 36 ? gold : ink}>
+                  {i + 1}. {point}
+                </Claim>
+              </div>
+            ))}
+          </TypeCard>
+        </Layer>
+        <Layer name="talking-head card">
+          <TalkingHeadCard motion="glide" sceneFrame={frame} />
+        </Layer>
+        <Layer name="lower third">
+          <LowerThird label="Recap" />
+        </Layer>
+        <Layer name="captions">
+          <Karaoke captions={captions} />
+        </Layer>
+        <Layer name="letterbox">
+          <Letterbox />
+        </Layer>
+        <Layer name="audio" />
+      </Stack>
+      {veil > 0 ? <AbsoluteFill style={{backgroundColor: cream, opacity: veil}} /> : null}
+      <OverlayLock overlay={overlay} />
+    </AbsoluteFill>
+  );
+};
