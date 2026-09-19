@@ -1,0 +1,24 @@
+{
+  "name": "field-school-lesson-remotion",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FieldSchoolLesson edit-stack compositions. SceneMotion: spring | interpolate | glide | takeover.",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@remotion/cli": "4.0.526",
+    "@remotion/google-fonts": "4.0.526",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.526"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "compositions": "remotion compositions",
+    "still": "remotion still",
+    "render": "remotion render",
+    "test": "node ../scripts/scene-motion.test.mjs"
+  }
+}
