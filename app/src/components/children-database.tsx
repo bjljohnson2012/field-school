@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { FamilyV1Home } from "@/components/family-v1-home";
 
 const HOUSEHOLD_HEADERS = { "x-fs-org": "household" } as const;
 
@@ -688,6 +689,14 @@ export function ChildrenDatabase({
               </tbody>
             </table>
           </div>
+          {selectedMembershipId ? (
+            <FamilyV1Home
+              child={children.find((row) => row.membershipId === selectedMembershipId) ?? null}
+              household={children}
+              onSwitchChild={(membershipId) => void selectChild(membershipId)}
+              onChildSaved={() => void loadChildren()}
+            />
+          ) : null}
           {selectedMembershipId ? (
             <div className="mt-6 rounded-xl border border-border px-4 py-4">
               <h3 className="font-display text-xl">Learning intent</h3>
