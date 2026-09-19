@@ -459,3 +459,78 @@ export const curriculumPathItems = pgTable(
   ],
 );
 
+export const nextPortions = pgTable(
+  "next_portions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    pathId: uuid("path_id").references(() => curriculumPaths.id),
+    intentId: uuid("intent_id").references(() => learningIntents.id),
+    version: integer("version").notNull(),
+    status: text("status").notNull().default("suggested"),
+    horizon: text("horizon").notNull().default("week"),
+    title: text("title").notNull(),
+    reason: text("reason").notNull().default(""),
+    remaining: jsonb("remaining").notNull().default({}),
+    progress: jsonb("progress").notNull().default({}),
+    supersedesId: uuid("supersedes_id"),
+    lockedAt: timestamp("locked_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("next_portions_child_version").on(t.orgId, t.childMembershipId, t.version),
+    index("next_portions_child_idx").on(t.orgId, t.childMembershipId, t.version),
+    index("next_portions_parent_child_idx").on(
+      t.orgId,
+      t.parentMembershipId,
+      t.childMembershipId,
+      t.version,
+    ),
+  ],
+);
+
+export const nextPortionItems = pgTable(
+  "next_portion_items",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    portionId: uuid("portion_id")
+      .notNull()
+      .references(() => nextPortions.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    pathItemId: uuid("path_item_id"),
+    sortOrder: integer("sort_order").notNull(),
+    title: text("title").notNull(),
+    subject: text("subject").notNull().default(""),
+    reason: text("reason").notNull().default(""),
+    source: text("source").notNull().default("remaining"),
+    composerLessonId: uuid("composer_lesson_id"),
+    composerUnitId: uuid("composer_unit_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("next_portion_items_order").on(t.portionId, t.sortOrder),
+    index("next_portion_items_child_idx").on(
+      t.orgId,
+      t.childMembershipId,
+      t.portionId,
+      t.sortOrder,
+    ),
+  ],
+);
+
