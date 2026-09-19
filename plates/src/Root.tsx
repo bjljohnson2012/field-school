@@ -1,11 +1,15 @@
 import React from "react";
 import {Composition} from "remotion";
 import {DefinitionBoard} from "./DefinitionBoard";
+import {LessonSpine} from "./LessonSpine";
 import {Opener} from "./Opener";
 import {QuizBumper} from "./QuizBumper";
 import {RecapCard} from "./RecapCard";
 import {TalkingHeadCard} from "./TalkingHeadCard";
+import {LOCK} from "./brand";
+import {spineDurationFrames} from "./lessonSpine";
 import {clampBand, clampPlateSec} from "./sceneMotionMath";
+import type {LessonSpineProps} from "./types";
 
 function plateMetadata({props}: {props: {durationSec?: number}}) {
   const sec = clampPlateSec(props.durationSec ?? 10);
@@ -36,6 +40,111 @@ function bumperMetadata({props}: {props: {durationSec?: number}}) {
     height: 1080,
   };
 }
+
+function spineMetadata() {
+  return {
+    durationInFrames: spineDurationFrames(),
+    fps: 30,
+    width: 1920,
+    height: 1080,
+  };
+}
+
+const overlay = {
+  title: LOCK.title,
+  x: LOCK.x,
+  y: LOCK.y,
+  w: LOCK.w,
+  h: LOCK.h,
+};
+
+const spineDefaults: LessonSpineProps = {
+  sting: {
+    kicker: "Lesson",
+    title: "You Can Just Do Things",
+    claim: "Type draws the idea. The head stays docked.",
+    durationSec: 10,
+    overlay,
+    captions: [
+      {text: "You", startMs: 0, endMs: 280},
+      {text: "Can", startMs: 280, endMs: 520},
+      {text: "Just", startMs: 520, endMs: 860},
+      {text: "Do", startMs: 860, endMs: 1100},
+      {text: "Things", startMs: 1100, endMs: 1700},
+      {text: "Type", startMs: 2200, endMs: 2600},
+      {text: "draws", startMs: 2600, endMs: 3000},
+      {text: "the", startMs: 3000, endMs: 3180},
+      {text: "idea.", startMs: 3180, endMs: 3800},
+    ],
+  },
+  slate: {
+    name: "Teacher",
+    role: "Operator",
+    line: "The face stays docked. Type keeps the left.",
+    dock: "dock-right",
+    durationSec: 8,
+    overlay,
+    captions: [
+      {text: "Docked", startMs: 400, endMs: 900},
+      {text: "not", startMs: 900, endMs: 1100},
+      {text: "full-bleed", startMs: 1100, endMs: 1800},
+      {text: "Type", startMs: 2200, endMs: 2500},
+      {text: "keeps", startMs: 2500, endMs: 2900},
+      {text: "the", startMs: 2900, endMs: 3100},
+      {text: "left.", startMs: 3100, endMs: 3600},
+    ],
+  },
+  objective: {
+    term: "Explanatory motion",
+    definition: "Each beat draws one idea. Type is the lesson, not a caption dump.",
+    durationSec: 6,
+    overlay,
+    captions: [
+      {text: "Explanatory", startMs: 0, endMs: 900},
+      {text: "motion", startMs: 900, endMs: 1600},
+      {text: "One", startMs: 2000, endMs: 2300},
+      {text: "idea", startMs: 2300, endMs: 2800},
+      {text: "per", startMs: 2800, endMs: 3000},
+      {text: "beat", startMs: 3000, endMs: 3600},
+    ],
+  },
+  recap: {
+    kicker: "Recap",
+    title: "What stays on the card",
+    points: [
+      "One claim per beat",
+      "Head docked, never on type",
+      "Cream, ink, Fraunces",
+    ],
+    durationSec: 10,
+    overlay,
+    captions: [
+      {text: "One", startMs: 800, endMs: 1100},
+      {text: "claim", startMs: 1100, endMs: 1600},
+      {text: "per", startMs: 1600, endMs: 1840},
+      {text: "beat", startMs: 1840, endMs: 2400},
+      {text: "Head", startMs: 2800, endMs: 3100},
+      {text: "docked", startMs: 3100, endMs: 3700},
+      {text: "Cream", startMs: 4800, endMs: 5300},
+      {text: "ink", startMs: 5400, endMs: 5800},
+      {text: "Fraunces", startMs: 5900, endMs: 6800},
+    ],
+  },
+  nextUp: {
+    prompt: "What did the card draw?",
+    sourceUnitTitle: "Explanatory motion",
+    sourceUnitId: "lesson-opener",
+    durationSec: 7,
+    overlay,
+    captions: [
+      {text: "What", startMs: 400, endMs: 700},
+      {text: "did", startMs: 700, endMs: 900},
+      {text: "the", startMs: 900, endMs: 1100},
+      {text: "card", startMs: 1100, endMs: 1500},
+      {text: "draw?", startMs: 1500, endMs: 2200},
+    ],
+  },
+};
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -199,6 +308,16 @@ export const RemotionRoot: React.FC = () => {
           ],
         }}
         calculateMetadata={plateMetadata}
+      />
+      <Composition
+        id="LessonSpine"
+        component={LessonSpine}
+        durationInFrames={1230}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={spineDefaults}
+        calculateMetadata={spineMetadata}
       />
     </>
   );

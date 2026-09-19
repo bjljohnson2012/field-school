@@ -56,3 +56,12 @@ export type TalkingHeadProps = {
   overlay: Overlay;
   captions: Caption[];
 };
+
+/** Fixture lesson spine: sting → slate → objective → recap → next-up. */
+export type LessonSpineProps = {
+  sting: OpenerProps;
+  slate: TalkingHeadProps;
+  objective: DefinitionProps;
+  recap: RecapProps;
+  nextUp: QuizBumperProps;
+};

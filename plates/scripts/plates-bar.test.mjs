@@ -29,6 +29,7 @@ test("five compositions register 1920x1080@30 with length bands", () => {
   assert.match(rootTsx, /id="DefinitionBoard"/);
   assert.match(rootTsx, /id="QuizBumper"/);
   assert.match(rootTsx, /id="TalkingHeadCard"/);
+  assert.match(rootTsx, /id="LessonSpine"/);
   assert.match(rootTsx, /width=\{1920\}/);
   assert.match(rootTsx, /height=\{1080\}/);
   assert.match(rootTsx, /fps=\{30\}/);
