@@ -34,7 +34,7 @@ Gym wording is retired. Student orgs: household and sales.
 - Live Cleaning auto-flip and Publish/Distribute (future CDM seal when ship 1 and ship 6 can go green)
 - Remotion packaged into Next player / player rail UI
 - AUTH_URL flip, Stripe / metering prices
-- Wave 3 four-model cutover (composer SQL exists; live `/api/composer` still 404 on the current pack)
+- Wave 3 four-model cutover (composer SQL + routes on tip; live guest `/api/composer` is 401; ship farm not run; no campus package this readout)
 - CNC vault `2.24.64.248`
 
 ## Not a launch gate
