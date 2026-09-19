@@ -92,20 +92,25 @@ export async function PATCH(request: Request) {
   if (!canCreateChild(auth.identity, isStaffEmail(auth.identity.email))) {
     return NextResponse.json({ ok: false, error: "household_guardian_only" }, { status: 403 });
   }
-  let body: { membershipId?: string; note?: string; welcomeWatched?: boolean };
+  let body: { membershipId?: string; note?: string; welcomeWatched?: boolean; name?: string };
   try {
     body = (await request.json()) as {
       membershipId?: string;
       note?: string;
       welcomeWatched?: boolean;
+      name?: string;
     };
   } catch {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
   const membershipId = body.membershipId?.trim() || "";
   const note = typeof body.note === "string" ? body.note.trim() : null;
+  const nextName = typeof body.name === "string" ? body.name.trim() : null;
   if (!membershipId) {
     return NextResponse.json({ ok: false, error: "membership_id_required" }, { status: 400 });
+  }
+  if (nextName !== null && !nextName) {
+    return NextResponse.json({ ok: false, error: "name_required" }, { status: 400 });
   }
   const db = getDb();
   const [ward] = await db
@@ -146,7 +151,22 @@ export async function PATCH(request: Request) {
       raw: { notes: note },
     });
   }
-  return NextResponse.json({ ok: true });
+  if (nextName !== null) {
+    const [membership] = await db
+      .select({ memberId: memberships.memberId, kind: members.kind })
+      .from(memberships)
+      .innerJoin(members, eq(members.id, memberships.memberId))
+      .where(eq(memberships.id, membershipId))
+      .limit(1);
+    if (!membership || membership.kind !== "child") {
+      return NextResponse.json({ ok: false, error: "not_your_child" }, { status: 403 });
+    }
+    await db.update(members).set({ name: nextName }).where(eq(members.id, membership.memberId));
+  }
+  return NextResponse.json({
+    ok: true,
+    child: nextName ? { name: nextName, membershipId, login: "none" } : undefined,
+  });
 }
 
 export async function POST(request: Request) {
