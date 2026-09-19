@@ -61,7 +61,7 @@ Live `GET https://portal.fieldschool.ai/api/plates` is **401** `sign_in_required
 | Pack | `/opt/field-school-packs/plates-api-campus-pack-20260919T202200Z.tar.gz` |
 | sha256 | `75ab10d322ae872cfb9aea0989bf2ff243a9b65178f17aa474cca7080a4ecfcb` |
 | Main merge under pack | `5abfa4ab356e65c60defb63062e5c5a1e1fca47c` (PR 59) |
-| Overlay PR tip | see PR 60 |
+| Overlay PR tip | PR 60 `ccb3f1b1bb5e932575ffc3fb53214ed2a01f4418` |
 | Guest GET/POST `/api/plates` | 401 `sign_in_required` |
 | Signed teacher smoke | skipped (no safe cookie; do not steal family LIVE) |
 
