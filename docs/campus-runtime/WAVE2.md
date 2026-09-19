@@ -1,128 +1,108 @@
-# Wave 2 — Tenants, invites, household
+# Wave 2 proof — tenants, picker, Field Pattern
 
-2026-09-11
+2026-09-18. Deployed `cursor/wave-2-tenants-ca6e` `ea09fd1` to VPS `2.24.70.248` with `app/deploy/deploy.sh` only. Wave 1 guest Grok Bot still works. AUTH_URL is still `https://university.benjohnson.ai`. No university 301. No vault `2.24.64.248`. No TanStack. No composer. No Remotion. Leftover `field-school-db` was not written.
 
-Wave 1 is live: two orgs in Postgres, Grok Bot station 01 events, guest still localStorage. `GET /api/me` always attaches a signed-in user to `field-school`. Household exists and is empty.
+Packaging note: first `deploy.sh` image 500'd on `/o/*` and signed-in `/api/me` with `pinned_bank_missing:docs/campus-runtime/fp-50-v1.md`. `deploy.sh` now stages that pinned bank into the Next context; Dockerfile copies `/app/docs` + `/app/db` into the runner. Redeployed. Proofs below are from the second ship.
 
-Wave 2 makes household a real campus without flipping AUTH_URL and without requiring `*.fieldschool.ai` on day one.
+Command log: `/opt/cursor/artifacts/wave2_deploy_proof.json`. Narrative: `/opt/cursor/artifacts/wave2-deploy-proof.md`.
 
-## Goal
+## What shipped
 
-A member can belong to more than one org. Path `/o/:slug` picks the org. Invites add people to household. Children exist under a guardian. Gym events stay out of household. Household events stay out of gym.
+- Orgs `household` (homeschool, strict) and `sales` (company, platform_plus). Operator org `field-school` stays.
+- Staff email is joined to field-school (admin), household (guardian), and sales (trainer) so one login flips with the picker.
+- Non-staff with no memberships still get field-school learner. Household/sales members are not force-joined to field-school.
+- `GET /api/me` returns all memberships plus `activeOrg`.
+- Org picker chrome and `/o/:slug`. Unknown slug 404. Signed-in uninvited `/o/:slug` 403. Guest `/o/household` 401, no roster.
+- Invites at `/invite/:token`. Household stances: guardian, learner. Sales stances: trainer, learner. Child cannot invite or `/admin`.
+- Child + ward on household only. Trainer on sales.
+- Fixture lessons `home:welcome` and `sales:welcome`. Household catalog does not inherit Grok Bot.
+- Field Pattern `fp-50-v1` from `fp-50-v1.md`: 50 Likert items, child subset from the table (26 `y` flags), eight Bearing dimensions, correspondence distributions, import override, `member_profiles` + append-only revisions, template narrative.
+- Org-scoped skills: 3 parent-editable household skills, 3 seeded sales skills.
+- SQL `0002`-`0004` applied by deploy.
 
-Wildcard hosts are a later step in this wave, after `/o/:slug` proves isolation. Ben owns DNS. The app must work on `portal.fieldschool.ai/o/household` before any new host exists.
+## Manual cheat sheet A–L
 
-## Do not
-
-- Flip AUTH_URL or 301 university
-- Deploy TanStack `src/`
-- Touch CNC vault, Just, melt, Cap compose
-- Start Wave 3 Notion publish
-- Build `/today`, MCP, autogen, Cap add-on
-- Auto-join every login to household
-- Let a child mint tokens or open `/admin`
-
-## Schema add (`app/db/0002_wave2.sql`)
-
-Keep Wave 1 tables. Add columns / tables. Do not rename `assignments` (that table is field-work). Stances stay on `memberships.stance`.
-
-```
-members.kind            text not null default 'adult'   -- adult | child
-members.auth_user_id    text                            -- Auth.js id when present
-organizations.host      text unique                     -- later: acme.fieldschool.ai
-organizations.features  jsonb default '{}'
-
-invites
-  id, org_id, email, stance, token unique, invited_by_membership_id,
-  status (pending|accepted|revoked|expired), expires_at, created_at
-
-wards
-  guardian_membership_id, child_membership_id
-  unique pair, both memberships must share org_id
-```
-
-Seed: household `features.cap = false`. Optional test org `acme` (strict). Delete after proof if not wanted.
-
-## Steps
-
-### Step 1 — Org context on the existing host
-
-`/o/:slug` is the active org. Otherwise default `field-school`. Guest `/c/grok-bot` stays Org 0.
-
-`GET /api/me` returns all memberships plus `activeOrg`. Unknown slug 404. Cross-org POST /api/events is 403.
-
-Tests:
-1. Signed in `/api/me` — field-school. No household until invited.
-2. `/o/does-not-exist` — 404, no emails in HTML.
-3. `/o/field-school/c/grok-bot` — same course as `/c/grok-bot`.
-4. `/o/household` while gym-only — 403, not the roster.
-
-### Step 2 — Invite into household
-
-Admin/guardian `POST /api/invites`. Accept at `/invite/:token` after sign-in. Gym membership stays.
-
-Tests:
-1. Invite second email to household as learner.
-2. Incognito token — login then accept.
-3. `/api/me` lists field-school and household.
-4. Expired/reused token — no second row.
-5. Random token — 404, no user enumeration.
-
-### Step 3 — Household campus is private
-
-No inherited Grok Bot catalog. Fixture lesson `home:welcome` so household can write one watch.
-
-Tests:
-1. Household `GET /api/progress?course=grok-bot` empty.
-2. Gym watch briefing — household progress still empty.
-3. Household watch `home:welcome` — gym progress unchanged.
-4. Gym-only second browser cannot see `home:welcome`.
-
-### Step 4 — Child + guardian
-
-Adult creates child `kind=child`. Ward row. Child cannot `/admin` or `POST /api/invites`.
-
-Tests:
-1. Child + ward in household.
-2. Child `/admin` 403/307.
-3. Child cannot invite.
-4. Child `/api/me` household only, stance learner.
-5. Gym admin cannot list household children.
-
-### Step 5 — Dummy org acme
-
-`/o/acme` forbidden to household parent. Acme progress has neither briefing nor welcome.
-
-### Step 6 — Wildcard (Ben DNS first)
-
-Skip if `*.fieldschool.ai` is not pointed. Host maps to org slug. Child cookie host-only. Cap/edit unchanged.
-
-## Proof
-
-1. One user, two memberships, `/api/me` lists both.
-2. Gym watch absent from household progress.
-3. Household welcome absent from gym progress.
-4. Uninvited user cannot open `/o/household`.
-5. Child cannot admin or invite.
-6. Guest Grok Bot works. Guest POST 401.
-7. Anonymous `/admin` 307, no PII.
-8. cap + edit health up.
-9. AUTH_URL still university.
-10. This file updated with A–J pass/fail.
-
-## Manual cheat sheet
-
-Two Chrome profiles: Gym (staff Google) and Home (second email). One incognito guest.
+Credentials fixture this ship (university host, AUTH_URL unchanged): gym `wave2.gym.20260918185627@example.com` (field-school learner only), parent granted household guardian in SQL then minted invite, home accepted as household guardian.
 
 | # | Browser | Action | Expect | Result |
 |---|---|---|---|---|
-| A | Guest | `/c/grok-bot` | works, no Postgres write | |
-| B | Gym | `/api/me` | field-school only at first | |
-| C | Gym | invite Home to household | pending invite | |
-| D | Home | accept invite | two orgs on `/api/me` | |
-| E | Gym | watch briefing | household progress empty | |
-| F | Home | `/o/household` watch welcome | gym progress unchanged | |
-| G | Gym | `/o/household` | 403 unless that account was invited | |
-| H | Home | create child | listed, no admin | |
-| I | Guest | `/o/household` | no roster, no events | |
-| J | any | `/admin` logged out | 307 | |
+| A | Guest | `/c/grok-bot` | works, no Postgres write | **pass**. `GET https://portal.fieldschool.ai/c/grok-bot` 200. `learning_events` count 9 → 9. |
+| B | Gym | `/api/me` | field-school only at first | **pass**. After credentials login: `activeOrg.slug=field-school`, memberships `[field-school:learner]` only. |
+| C | Gym/parent | invite Home to household | pending invite | **pass**. `POST /api/invites` `{org:household,email:home,stance:guardian}` 200 `status` pending, token minted. (Gym-only learner cannot mint; parent SQL-granted household guardian minted.) |
+| D | Home | accept invite | two orgs on `/api/me` | **pass**. `POST /api/invites/accept` 200 `{ok:true,org:household}`. `/api/me` lists `field-school:learner` + `household:guardian`. |
+| E | Gym | watch briefing | household progress empty | **pass**. `POST /api/events` watch `grok-bot:briefing` 200 `org=field-school`. Household `grok-bot%` event count 0. |
+| F | Home | `/o/household` watch welcome | gym progress unchanged | **pass**. `POST /api/events` `x-fs-org: household` watch `home:welcome` 200. Gym `field-school` `home:%` count 0. Household watch of `grok-bot` 403 `cross_org`. |
+| G | Gym | `/o/household` | 403 unless that account was invited | **pass**. Gym (not invited) `GET /o/household` 403. |
+| H | Home | create child | listed, no admin | **pass**. `POST /api/children` 200 `Wave2 Deploy Child`. SQL `kind=child` household learner `child.d872b0fa7bee@household.local`. Home `/admin` 307 `/request-access?from=admin`. |
+| I | Guest | `/o/household` | no roster, no events | **pass**. Guest `GET /o/household` 401. Guest `POST /api/events` 401 `sign_in_required`. |
+| J | any | `/admin` logged out | 307 | **pass**. Guest `GET /admin` 307 `Location: /login?next=%2Fadmin`. |
+| K | any | `cap.fieldschool.ai/login` | 200 | **pass**. `GET https://cap.fieldschool.ai/login` 200. |
+| L | any | `edit.fieldschool.ai/health` | ok | **pass**. `GET https://edit.fieldschool.ai/health` 200 `{"ok": true, "service": "fieldschool-edit"}`. |
+
+## Live commands (this ship)
+
+```text
+AUTH_URL                   https://university.benjohnson.ai   (unchanged)
+guest GET /api/me          200 {"authenticated":false,"guest":true}
+guest /c/grok-bot          200; events 9→9
+guest /o/household         401
+guest /o/does-not-exist    404
+guest /admin               307 /login?next=%2Fadmin
+guest POST /api/events     401 sign_in_required
+cap /login                 200
+edit /health               200 {"ok": true, "service": "fieldschool-edit"}
+pattern instrument         200 slug=fp-50-v1 count=50 child=26
+orgs                       field-school gym public_catalog;
+                           household homeschool strict {"cap": false};
+                           sales company platform_plus {"cap": false}
+skills                     household morning/chores/read;
+                           sales discovery/qualification/next-step
+gym /api/me                field-school learner only
+gym /o/household           403
+gym watch briefing         200 org=field-school
+invite Home                200 pending household guardian
+home accept                200 org=household; two memberships
+home watch welcome         200 org=household
+home watch grok-bot        403 cross_org
+SQL events                 field-school gym grok-bot:briefing;
+                           household home home:welcome
+home create child          200 household learner child
+```
+
+## Reprobe 2026-09-18 19:59Z (live VPS, no redeploy)
+
+Guest still matches A, I, J, K, L. Pattern instrument still `fp-50-v1` 50 / child 26. AUTH_URL still `https://university.benjohnson.ai` (credentials callback lands there).
+
+Signed-in picker email still lists `household:guardian` + `sales:trainer` only (not forced onto field-school). `POST /api/org/active` flips household ↔ sales. `/o/household` 200, `/o/sales` 200, `/o/field-school` 403. Household watch `home:welcome` 200; household watch `grok-bot` or `sales:welcome` 403 `cross_org`. Skills: household `morning/chores/read`, sales `discovery/qualification/next-step`. Pattern profile still reads Bearing `drive`. Invites mint household learner and sales trainer 200.
+
+Child kind account: `child_cannot_invite` 403, `/admin` 307 `/request-access?from=admin`, `/o/household` 403, `/o/sales` 403.
+
+Logs: `/opt/cursor/artifacts/wave2_live_reprobe.log`, `/opt/cursor/artifacts/wave2_signedin_reprobe.json`.
+
+## Chrome (reviewed tip live)
+
+Campus at 20:08Z serves reviewed chrome from `7618b2d`, not unreviewed `700f4f9`. `/children` is still 404. AUTH_URL still `https://university.benjohnson.ai`. No deploy of `700f4f9` from this worker.
+
+Guest: `/` 200 Continue as guest + Join free beta + About, no Instant demo. `/c/grok-bot` 200, Admin → Inbox (no Notifications). `/admin` 307 `/login?next=%2Fadmin`. `/o/household` 401. `/api/children` 401 `sign_in_required`. Pattern 50 / child 26.
+
+Signed-in picker (`household:guardian` + `sales:trainer`):
+
+- `/` 307 `/dashboard`
+- `/people` 200 View all / which org; child rows `login: none`
+- `POST /api/children` 200; `PATCH` parent-note 200
+- `/o/household` 200, `/o/sales` 200, `/o/field-school` 403
+- sales watch `grok-bot` 403 `cross_org`; sales watch `sales:welcome` 200
+
+Logs: `/opt/cursor/artifacts/wave2_deploy_check.json`, `/opt/cursor/artifacts/wave2_signedin_chrome_check.json`, `/opt/cursor/artifacts/wave2_signedin_chrome_check2.json`.
+
+## Pattern + lock reprobe 2026-09-18 20:09Z
+
+Picker run `fp-50-v1` 200. Eight Bearing dims. Narratives all present: `how_you_learn`, `how_you_approach`, `how_you_handle_conflict`, `how_you_take_feedback`, `how_you_show_up_in_a_group`, `working_title` (`Duty / Pace`). Import 200 `imported: true`; Bearing stayed duty / pace. Paper ingest 200 `reset: false`; drive nudged 33.3 → 37. Child lock before profile 409 `profile_required`; child 26-item run 200; lock 200 `locked: true`. Chooser `wrotePack: false`, `reason: live_profile`. Skills household `morning/chores/read` editable; sales `discovery/qualification/next-step` not editable. Invites household learner + sales trainer 200.
+
+Log: `/opt/cursor/artifacts/wave2_remaining_live_audit.json`.
+
+Ben’s recordings are still open. Staff Admin Start here HTML was not exercised (picker is not staff).
+
+## Stop
+
+No composer. No Remotion. No AUTH_URL flip. Wave 3 waits on a human. Do not deploy `700f4f9`.

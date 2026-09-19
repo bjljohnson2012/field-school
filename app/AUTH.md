@@ -13,7 +13,9 @@ This campus uses [Auth.js / NextAuth v5](https://authjs.dev) for Google, X (Twit
 
 Random Google or X users are **never** auto-elevated to admin. A staff email used with email + password is still a member. Credentials cannot open `/admin`.
 
-If someone expected staff access and is not on the allowlist, they see **Request Access** (not a dead error). Submitting it stores the request for `/admin/access-requests` and emails the dean when SMTP is configured.
+If someone expected staff access and is not on the allowlist, they see **Request Access** (not a dead error). Submitting it stores the request for `/admin/access-requests` and emails the dean when SMTP or Resend is configured. New free-beta enrollments file the same desk (kind `enrollment`) and notify that address.
+
+Public `/signup`, `/request-access`, `POST /api/forms`, and `POST /api/tools/email` drop honeypot posts (`website` filled) and rate-limit by IP and email. No third-party spam vendor.
 
 ## Required environment variables
 
@@ -22,7 +24,7 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | Variable | Required for | Notes |
 |----------|--------------|-------|
 | `AUTH_SECRET` | Any Auth.js session | Random string; `openssl rand -base64 32`. Also accepts legacy `NEXTAUTH_SECRET`. |
-| `AUTH_URL` | Production OAuth callbacks | Public site origin, e.g. `https://university.field.school`. Also accepts `NEXTAUTH_URL`. |
+| `AUTH_URL` | Production OAuth callbacks | Public site origin. Live value is `https://portal.fieldschool.ai`. Also accepts `NEXTAUTH_URL`. |
 | `GOOGLE_CLIENT_ID` | Google sign-in | OAuth 2.0 client from Google Cloud Console. |
 | `GOOGLE_CLIENT_SECRET` | Google sign-in | Paired secret for the Google client. |
 | `AUTH_TWITTER_ID` or `X_CLIENT_ID` | X sign-in | X developer app OAuth 2.0 client ID. |
@@ -30,7 +32,7 @@ Set these in your host environment or `.env.local` (never commit secrets).
 | `STAFF_ADMIN_EMAILS` | Optional | Comma-separated staff allowlist. Defaults to the dean email baked into `src/lib/campus.ts`. |
 | `DEMO_LINK_TOKEN` | Optional | Secret for the shareable Jordan walk. `/demo?token=` must match this value. If unset, the campus derives a stable token from `AUTH_SECRET`. Staff copy the full URL from `/admin/demo` (“Copy demo link”). Do not put this button on `/login`. |
 | `MEMBER_STORE_PATH` | Optional | JSON file for member password hashes, access requests, and public form submissions. Defaults to `.data/campus-store.json` in development and `/app/data/campus-store.json` in production. |
-| `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests are emailed. Defaults to `bjljohnson2012@gmail.com`. |
+| `ACCESS_REQUEST_NOTIFY_EMAIL` | Optional | Where staff-access requests and new enrollments are emailed. Defaults to `bjljohnson2012@gmail.com`. |
 | `RESEND_API_KEY` | Optional email send | Preferred. Sends checkout confirmations and other transactional mail. Lives in `/opt/field-school.env`. Never commit it. |
 | `RESEND_FROM` | Optional | Defaults to `Field School <note@fieldschool.ai>`. Domain must be verified in Resend. |
 | `SMTP_HOST` | Optional email notify | Fallback if Resend is unset. If both are unset, requests are still stored; email is skipped. |
@@ -62,7 +64,7 @@ If `AUTH_SECRET` is missing:
 - **No one is elevated to admin** via OAuth or localStorage shortcuts.
 - `/admin*` remains hard-gated (middleware proxy redirects unsigned browsers to `/login`).
 
-If OAuth credentials are missing but `AUTH_SECRET` is set, email + password still works.
+If OAuth credentials are missing but `AUTH_SECRET` is set (credentials-only), email + password still works for members, but staff sign-in has no path (credentials never grant `admin`), so `/admin*` still redirects everyone. Either way, `/admin*` is gated on a real Auth.js session, never on a client-writable cookie.
 
 ## Sign-in flow
 
@@ -70,7 +72,7 @@ If OAuth credentials are missing but `AUTH_SECRET` is set, email + password stil
 2. Auth.js mints a session. Role is `admin` only when the provider is Google or X **and** the email is allowlisted. Otherwise the role is `member`.
 3. `/login/complete` syncs the browser portal. Staff land on `/admin`. Members land on `/dashboard`.
 4. A member who aimed at `/admin` is sent to `/request-access`.
-5. The admin proxy allows `/admin*` only when a valid Auth.js **staff** session exists (when OAuth is configured). Members are redirected to Request Access.
+5. The admin proxy allows `/admin*` only when a valid Auth.js **staff** session exists — in every deploy shape, including credentials-only (`AUTH_SECRET` set, no Google/X). There is no cookie-based fallback: the browser-only `fsu_admin_gate` marker (used by the demo portal UI to show/hide nav) is never trusted by the proxy. Since credentials sign-in never grants the `admin` role, a credentials-only deploy has no staff session at all and `/admin*` stays redirected for everyone. Members with a real session are redirected to Request Access.
 
 Local **Keep a dashboard** and **Continue as guest** paths are unchanged and cannot attach the dean seat.
 
@@ -87,7 +89,7 @@ To send the walk to someone without putting a button on login:
 Example (after you set the env):
 
 ```
-https://university.benjohnson.ai/demo?token=YOUR_DEMO_LINK_TOKEN
+https://portal.fieldschool.ai/demo?token=YOUR_DEMO_LINK_TOKEN
 ```
 
 Random visitors do not see this URL on the homepage. It is not a staff login and never grants `/admin`.
@@ -98,15 +100,17 @@ Failed OAuth or Auth.js errors use `pages.error` → `/signup?error=…` (never 
 
 Public policy URLs (must stay reachable without a login):
 
-- Privacy Policy: `https://university.benjohnson.ai/privacy`
-- Terms of Service: `https://university.benjohnson.ai/terms`
+- Privacy Policy: `https://fieldschool.ai/privacy`
+- Terms of Service: `https://fieldschool.ai/terms`
+
+`university.benjohnson.ai` 301s to `https://portal.fieldschool.ai{uri}`. Portal `/privacy` and `/terms` 308 to the apex pages.
 
 ## Callback URLs
 
-Register these redirect URIs with each provider (replace origin with yours):
+Live `AUTH_URL` is `https://portal.fieldschool.ai`. Register these redirect URIs (keep the old university rows until Google/X no longer show them):
 
-- Google: `{AUTH_URL}/api/auth/callback/google`
-- X: `{AUTH_URL}/api/auth/callback/twitter`
+- Google: `https://portal.fieldschool.ai/api/auth/callback/google`
+- X: `https://portal.fieldschool.ai/api/auth/callback/twitter`
 
 ## Local development
 
@@ -128,7 +132,9 @@ Run `npm run dev` and open `/signup`. Without real client IDs, Google/X stay dis
 
 ## Pricing
 
-Paid seats use live Stripe Payment Links on the `fieldschool.ai` account. `/checkout?plan=` redirects to the matching link. After pay, Stripe sends people to `/checkout/success?session_id={CHECKOUT_SESSION_ID}`.
+Paid seats use live Stripe Payment Links on the `fieldschool.ai` account. `/checkout?plan=` still opens Stripe for that plan. If `STRIPE_SECRET_KEY` is set, the campus tries a Checkout Session first (plan metadata on the session) and falls back to the Payment Link if Stripe is down. After pay, Stripe sends people to `/checkout/success?session_id={CHECKOUT_SESSION_ID}`.
+
+Portal seats ($10 / $50 / $1,059) review on `/cart` before that same `/checkout?plan=` path. Learn with Ben ($100 / $200 / $1,000) stays a direct checkout from Pricing and fieldschool.ai.
 
 The webhook at `/api/stripe/webhook` grants the matching seat on that email, stores the purchase, and emails a confirmation when SMTP is set. Online cohort and in-the-room seats also say a second email is coming. In the room is Dayton, Ohio and the towns around it. Farther away, the buyer covers travel and stay.
 
@@ -137,6 +143,7 @@ A new paid email can set a password on the success page or from `/login/claim?to
 | Variable | Required for | Notes |
 |----------|--------------|-------|
 | `STRIPE_WEBHOOK_SECRET` | Paid seat fulfillment | Signing secret for `/api/stripe/webhook`. Lives in `/opt/field-school.env`. Never commit it. |
+| `STRIPE_SECRET_KEY` | Optional Checkout Sessions | Restricted or secret key. When unset, `/checkout?plan=` uses the live Payment Link. Never commit it. |
 | `PORTAL_PUBLIC_URL` | Optional claim links | Defaults to `https://portal.fieldschool.ai`. |
 
 Seat after pay:

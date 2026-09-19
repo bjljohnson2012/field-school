@@ -58,3 +58,56 @@ CREATE TABLE IF NOT EXISTS skill_items (
   sort_order integer NOT NULL DEFAULT 0,
   created_at timestamptz NOT NULL DEFAULT now()
 );
+
+INSERT INTO groups (org_id, slug, name)
+SELECT id, 'desk', 'Sales desk' FROM organizations WHERE slug = 'sales'
+ON CONFLICT (org_id, slug) DO NOTHING;
+
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'morning', 'Morning start', '{"prompt":"Can they start the day without a fight?"}'::jsonb
+FROM organizations WHERE slug = 'household'
+ON CONFLICT (org_id, slug) DO NOTHING;
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'chores', 'Named chores', '{"prompt":"Can they finish one named chore without a reminder loop?"}'::jsonb
+FROM organizations WHERE slug = 'household'
+ON CONFLICT (org_id, slug) DO NOTHING;
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'read', 'Read and tell', '{"prompt":"Can they read a page and tell you what happened?"}'::jsonb
+FROM organizations WHERE slug = 'household'
+ON CONFLICT (org_id, slug) DO NOTHING;
+
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'discovery', 'Discovery', '{"prompt":"Can they run a discovery call and name the pain in one sentence?"}'::jsonb
+FROM organizations WHERE slug = 'sales'
+ON CONFLICT (org_id, slug) DO NOTHING;
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'qualification', 'Qualification', '{"prompt":"Can they qualify next step vs. noise?"}'::jsonb
+FROM organizations WHERE slug = 'sales'
+ON CONFLICT (org_id, slug) DO NOTHING;
+INSERT INTO skills (org_id, slug, name, rubric)
+SELECT id, 'next-step', 'Next step', '{"prompt":"Can they leave a dated next step on every live deal?"}'::jsonb
+FROM organizations WHERE slug = 'sales'
+ON CONFLICT (org_id, slug) DO NOTHING;
+
+-- One staff email on household + sales so the picker has both orgs before first login.
+INSERT INTO members (email, name, kind)
+VALUES ('bjljohnson2012@gmail.com', 'Benjamin Johnson', 'adult')
+ON CONFLICT (email) DO NOTHING;
+
+INSERT INTO memberships (org_id, member_id, stance)
+SELECT o.id, m.id, 'admin'
+FROM organizations o, members m
+WHERE o.slug = 'field-school' AND m.email = 'bjljohnson2012@gmail.com'
+ON CONFLICT (org_id, member_id) DO NOTHING;
+
+INSERT INTO memberships (org_id, member_id, stance)
+SELECT o.id, m.id, 'guardian'
+FROM organizations o, members m
+WHERE o.slug = 'household' AND m.email = 'bjljohnson2012@gmail.com'
+ON CONFLICT (org_id, member_id) DO NOTHING;
+
+INSERT INTO memberships (org_id, member_id, stance)
+SELECT o.id, m.id, 'trainer'
+FROM organizations o, members m
+WHERE o.slug = 'sales' AND m.email = 'bjljohnson2012@gmail.com'
+ON CONFLICT (org_id, member_id) DO NOTHING;

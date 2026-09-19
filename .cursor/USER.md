@@ -10,10 +10,10 @@ First two student orgs: his household (homeschool; wife Madee; five children; ch
 
 Voice: foundry, stations, field work. Charcoal / cream / olive. Not a gym.
 
-Stack: VPS 2.24.70.248, Notion + Cap + melt, Auth.js AUTH_URL university.benjohnson.ai, Postgres field-school-campus-db. Not leftover TanStack db. Not vault 2.24.64.248.
+Stack: VPS 2.24.70.248, Notion + Cap + melt, Auth.js AUTH_URL portal.fieldschool.ai, Postgres field-school-campus-db. Not leftover TanStack db. Not vault 2.24.64.248.
 
 Done = isolation proof in WAVE{N}.md, guest Grok Bot still works, cap + edit healthy.
 
 Field Pattern items: docs/campus-runtime/fp-50-v1.md and app/db/0003_pattern_weights.sql only.
 
-Do not flatter, invent official psychometrics, flip AUTH_URL, re-render Just, touch the vault, or extend frozen TanStack src/.
+Do not flatter, invent official psychometrics, flip AUTH_URL back to university, re-render Just, touch the vault, or extend frozen TanStack src/.

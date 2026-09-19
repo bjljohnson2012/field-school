@@ -24,6 +24,9 @@ export function SiteFooter() {
           <Link href="/pricing" className="hover:text-foreground">
             Pricing
           </Link>
+          <Link href="/cart" className="hover:text-foreground">
+            Cart
+          </Link>
           <Link href="/signup" className="hover:text-foreground">
             Join
           </Link>

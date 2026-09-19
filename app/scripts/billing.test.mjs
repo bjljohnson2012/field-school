@@ -37,10 +37,15 @@ test("checkout, pricing, and marketing paid seats point at Stripe", () => {
     assert.match(marketing, new RegExp(`/checkout\\?plan=${id}`));
   }
   assert.match(checkout, /getPaidPlan/);
-  assert.match(checkout, /redirect\(plan\.checkoutUrl\)/);
+  assert.match(checkout, /resolveCheckoutDestination/);
   assert.match(success, /CheckoutSuccessClient/);
   assert.match(success, /You're in/);
-  assert.match(pricing, /checkoutPath\("10"\)/);
+  assert.match(pricing, /cartPath\("10"\)/);
+  assert.match(pricing, /cartPath\("50"\)/);
+  assert.match(pricing, /cartPath\("1059"\)/);
+  assert.match(pricing, /checkoutPath\("100"\)/);
+  assert.match(pricing, /checkoutPath\("200"\)/);
+  assert.match(pricing, /checkoutPath\("1000"\)/);
   assert.match(pricing, /Stripe/);
   assert.doesNotMatch(pricing, /invoice/i);
   assert.match(signup, /if \(paid\) redirect/);
@@ -51,6 +56,35 @@ test("checkout, pricing, and marketing paid seats point at Stripe", () => {
   assert.match(pricing, /travel and stay/);
   assert.doesNotMatch(marketing, /Invoice later/);
   assert.doesNotMatch(coaching, /Invoice later/);
+});
+
+test("portal cart reviews $10 / $50 / $1,059 and Learn with Ben stays $100 / $200 / $1,000", () => {
+  const plans = readSrc("src/lib/billing/plans.ts");
+  const pricing = readSrc("src/app/pricing/page.tsx");
+  const cart = readSrc("src/app/cart/cart-client.tsx");
+  const header = readSrc("src/components/site-header.tsx");
+  const marketing = readSrc("marketing-site/pricing.html");
+  const coaching = readSrc("marketing-site/coaching.html");
+
+  assert.match(plans, /priceLabel: "\$10"/);
+  assert.match(plans, /priceLabel: "\$50"/);
+  assert.match(plans, /priceLabel: "\$1,059"/);
+  assert.match(plans, /priceLabel: "\$100"/);
+  assert.match(plans, /priceLabel: "\$200"/);
+  assert.match(plans, /priceLabel: "\$1,000"/);
+  assert.match(pricing, /price: "\$10"/);
+  assert.match(pricing, /price: "\$50"/);
+  assert.match(pricing, /price: "\$1,059"/);
+  assert.match(pricing, /price: "\$100"/);
+  assert.match(pricing, /price: "\$200"/);
+  assert.match(pricing, /price: "\$1,000"/);
+  assert.match(cart, /checkoutPath\(plan\.id\)/);
+  assert.match(cart, /Pay \{plan\.priceLabel\}/);
+  assert.match(header, /label: "Cart"/);
+  assert.match(marketing, /checkout\?plan=100/);
+  assert.match(marketing, /checkout\?plan=200/);
+  assert.match(marketing, /checkout\?plan=1000/);
+  assert.match(coaching, /checkout\?plan=100/);
 });
 
 test("paid seats, webhook, and claim login are wired", () => {
@@ -65,6 +99,9 @@ test("paid seats, webhook, and claim login are wired", () => {
   const claimPage = readSrc("src/app/login/claim/page.tsx");
   const dashboard = readSrc("src/app/dashboard/page.tsx");
   const auth = readSrc("src/auth.ts");
+  const destination = readSrc("src/lib/billing/checkout-destination.ts");
+  const cartPage = readSrc("src/app/cart/page.tsx");
+  const sessionApi = readSrc("src/app/api/checkout/session/route.ts");
 
   assert.match(seats, /coach_online/);
   assert.match(seats, /coach_room/);
@@ -87,6 +124,11 @@ test("paid seats, webhook, and claim login are wired", () => {
   assert.match(claimPage, /Set your password/);
   assert.match(dashboard, /seatLabel/);
   assert.match(auth, /seatKind/);
+  assert.match(destination, /STRIPE_SECRET_KEY/);
+  assert.match(destination, /payment_link/);
+  assert.doesNotMatch(destination, /payment_method_types/);
+  assert.match(cartPage, /CartClient/);
+  assert.match(sessionApi, /resolveCheckoutDestination/);
 });
 
 test("transactional mail uses the Field School lockup", () => {

@@ -1,10 +1,10 @@
-# Status — 2026-09-11 evening
+# Status — 2026-09-18
 
-Wave 1 is live on the VPS and in `app/`.
+Wave 1 is live on the VPS and in `app/`. Wave 2 tenants + picker + Field Pattern is proven in [WAVE2.md](./WAVE2.md).
 
 - Postgres `field-school-campus-db`, orgs `field-school` and `household`
 - APIs: GET /api/me, GET /api/progress, POST /api/events
-- Guest Grok Bot still works. AUTH_URL still university.benjohnson.ai
+- Guest Grok Bot still works. AUTH_URL is portal.fieldschool.ai. university.benjohnson.ai 301s to portal.
 - Live docs: https://portal.fieldschool.ai/docs/api
 - Proof: WAVE1.md
 
@@ -29,19 +29,18 @@ Wave 1 identity + Grok Bot station 01 events. Factory (Cap / edit / melt) left r
 
 ## Landed this run
 
-Household + sales orgs, `/o/:slug`, org picker, invites, fixture welcome lessons, child on household, Field Pattern correspondences + import override, org-scoped skill diagnostics. AUTH_URL not flipped. TanStack not deployed. Remotion and adaptive generation not started.
+Wave 2 is proven. Household + sales orgs, `/o/:slug`, org picker, invites, fixture welcome lessons, child on household, Field Pattern correspondences + import override, org-scoped skill diagnostics. AUTH_URL is portal.fieldschool.ai. university.benjohnson.ai 301s to portal. TanStack not deployed. Remotion and adaptive generation not started. Proof: [WAVE2.md](./WAVE2.md).
 
 ## In flight / next
 
-- Org picker + /o/:slug + one email on household AND sales
-- Invites, child/guardian on household, trainer on sales
-- Field Pattern fp-50-v1 + member_profiles + revisions
-- Org-scoped skill diagnostics
-- Artifact STT nudges on the profile
+Wave 3 waits on a human. Not started.
+
+- Artifact STT nudges on the profile (Wave 5)
+- Composer text / upload / book / link (Wave 3, not this run)
 
 ## Not this run
 
-AUTH_URL flip, TanStack deploy, Remotion plates, adaptive generation, Notion publish, campus MCP, wildcard DNS.
+TanStack deploy, Remotion plates, adaptive generation, Notion publish, campus MCP, wildcard DNS. AUTH_URL flip is a separate ship: [AUTH_URL_FLIP.md](./AUTH_URL_FLIP.md).
 
 ## Tomorrow morning checklist
 

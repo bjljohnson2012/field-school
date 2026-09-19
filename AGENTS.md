@@ -18,7 +18,7 @@ Wave 1 is done. Proof: `docs/campus-runtime/WAVE1.md`.
 
 - Extend frozen TanStack `src/` or deploy `vite.config.ts`.
 - Touch CNC vault 2.24.64.248.
-- Flip AUTH_URL through Wave 5.
+- Flip AUTH_URL back to university.benjohnson.ai. Canonical is portal.fieldschool.ai; university 301s there.
 - Re-render Just (Cap id 27pn9xs0zk8a73g).
 - Add Notion Member / Quiz / Personality databases.
 - Invent a second Pattern item bank or official MBTI / Enneagram / Gallup / Wiley items.

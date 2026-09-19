@@ -4,11 +4,13 @@ import { isStaffEmail } from "@/lib/auth/staff";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import { members, memberships, organizations } from "@/lib/db/schema";
 import { normalizeEmail } from "@/lib/members/policy";
+import { syncFamilyMode } from "@/lib/intent/family-mode";
 import {
   ensureTenantOrgs,
   membershipsForMember,
   pickActiveSlug,
   requestedOrgSlug,
+  shouldForceOperatorOrg,
 } from "./org";
 
 export const ORG0_SLUG = "field-school";
@@ -20,6 +22,7 @@ export type LearnerIdentity = {
   email: string;
   name: string;
   kind: string;
+  mode: string;
   membershipId: string;
   orgId: string;
   orgSlug: string;
@@ -102,6 +105,7 @@ export async function ensureLearner(
     email: member.email,
     name: member.name,
     kind: member.kind ?? "adult",
+    mode: member.mode ?? "none",
     membershipId: membership.id,
     orgId: org.id,
     orgSlug: org.slug,
@@ -115,7 +119,22 @@ export async function loadSession(request?: Request) {
   if (!user) return null;
   await ensureTenantOrgs();
   const member = await upsertMember(user.email, user.name);
-  const rows = await membershipsForMember(member.id);
+  let rows = await membershipsForMember(member.id);
+  const staff = isStaffEmail(user.email);
+  if (staff && (member.kind ?? "adult") !== "child") {
+    await ensureMembership(member.id, ORG0_SLUG, "admin");
+    await ensureMembership(member.id, HOUSEHOLD_SLUG, "guardian");
+    await ensureMembership(member.id, SALES_SLUG, "trainer");
+    rows = await membershipsForMember(member.id);
+  } else if (
+    shouldForceOperatorOrg({
+      staff: false,
+      slugs: rows.map((r) => r.orgSlug),
+    })
+  ) {
+    await ensureMembership(member.id, ORG0_SLUG, "learner");
+    rows = await membershipsForMember(member.id);
+  }
   const requested = await requestedOrgSlug(request);
   const slug = pickActiveSlug(
     requested,
@@ -123,7 +142,8 @@ export async function loadSession(request?: Request) {
     member.kind ?? "adult",
   );
   const active = rows.find((r) => r.orgSlug === slug) ?? null;
-  return { user, member, rows, requested, active };
+  const synced = await syncFamilyMode(member);
+  return { user, member: synced, rows, requested, active };
 }
 
 export async function identityFromRequest(request?: Request): Promise<
@@ -152,6 +172,7 @@ export async function identityFromRequest(request?: Request): Promise<
         email: member.email,
         name: member.name,
         kind: member.kind ?? "adult",
+        mode: member.mode ?? "none",
         membershipId: active.membershipId,
         orgId: active.orgId,
         orgSlug: active.orgSlug,

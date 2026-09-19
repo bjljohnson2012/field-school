@@ -23,14 +23,6 @@ function isAdminRoute(pathname) {
   return pathname === "/admin" || pathname.startsWith("/admin/");
 }
 
-function adminCookieIsValid(value) {
-  return value === "1";
-}
-
-function signedOutAdminAccess(cookieValue) {
-  return adminCookieIsValid(cookieValue) ? "allow" : "redirect";
-}
-
 function sanitizeLocalSignInEmail(email) {
   const mail = (email ?? "").trim();
   if (!mail || isDeanEmail(mail)) return "";
@@ -65,12 +57,7 @@ test("dean email matches the Google admin", () => {
   assert.equal(isDeanEmail("maya@field.school"), false);
 });
 
-test("signed-out admin access is blocked without a staff cookie", () => {
-  assert.equal(signedOutAdminAccess(undefined), "redirect");
-  assert.equal(signedOutAdminAccess(null), "redirect");
-  assert.equal(signedOutAdminAccess(""), "redirect");
-  assert.equal(signedOutAdminAccess("guest"), "redirect");
-  assert.equal(signedOutAdminAccess("1"), "allow");
+test("admin route matcher covers /admin and nested paths only", () => {
   assert.equal(isAdminRoute("/admin"), true);
   assert.equal(isAdminRoute("/admin/users"), true);
   assert.equal(isAdminRoute("/admin/notifications"), true);
@@ -138,9 +125,7 @@ test("privacy and terms pages are public, real policies linked from chrome", () 
 
 test("proxy and admin layout redirect guests away from staff HTML", () => {
   const proxy = readSrc("src/proxy.ts");
-  assert.match(proxy, /signedOutAdminAccess/);
   assert.match(proxy, /loginRedirectForAdmin/);
-  assert.match(proxy, /authIsConfigured/);
   assert.match(proxy, /isStaffSession/);
   assert.match(proxy, /request-access/);
   assert.match(proxy, /edgeAuth/);
@@ -148,6 +133,20 @@ test("proxy and admin layout redirect guests away from staff HTML", () => {
   assert.match(proxy, /export async function proxy/);
   assert.doesNotMatch(proxy, /from \"@\/auth\"/);
   assert.doesNotMatch(proxy, /from \"@\/lib\/members\/store\"/);
+
+  // Regression guard for the forgeable-cookie /admin bypass: the proxy must
+  // check a real Auth.js staff session unconditionally, never fall back to
+  // trusting the client-writable fsu_admin_gate cookie when OAuth env is
+  // unset (credentials-only deploys are supported and must still gate
+  // /admin on a real staff session).
+  assert.doesNotMatch(proxy, /authIsConfigured/);
+  assert.doesNotMatch(proxy, /signedOutAdminAccess/);
+  assert.doesNotMatch(proxy, /ADMIN_GATE_COOKIE/);
+  assert.doesNotMatch(proxy, /request\.cookies/);
+
+  const gate = readSrc("src/lib/admin-gate.ts");
+  assert.doesNotMatch(gate, /export function signedOutAdminAccess/);
+  assert.doesNotMatch(gate, /export function adminCookieIsValid/);
 
   const layout = readSrc("src/app/admin/layout.tsx");
   assert.match(layout, /loginRedirectForAdmin/);
@@ -210,12 +209,52 @@ test("OAuth scaffolding exists but fake localStorage dean shortcut does not", ()
     assert.doesNotMatch(src, /GoogleSignInButton/);
   }
 
-  const home = readSrc("src/app/page.tsx");
+  const home = readSrc("src/app/campus-home.tsx");
+  assert.match(readSrc("src/app/page.tsx"), /redirect\("\/dashboard"\)/);
   assert.match(home, /Continue as guest/);
   assert.match(home, /Join free beta/);
   const gateIdx = home.indexOf("ready && isStaff");
   const adminIdx = home.indexOf('href="/admin"');
   assert.ok(gateIdx >= 0 && adminIdx > gateIdx, "home Admin CTA is staff-only");
+});
+
+function visibleLoginProviderError(code, oauth) {
+  if (!code) return null;
+  if (code === "Configuration" && (oauth.google || oauth.configured)) {
+    return null;
+  }
+  if (code === "Configuration") {
+    return "Campus sign-in is missing a provider setting. Use email and password, or try again later.";
+  }
+  return "Sign-in did not finish.";
+}
+
+test("false Configuration banner is hidden when Google is wired", () => {
+  const wired = { google: true, configured: true };
+  const missing = { google: false, configured: false };
+
+  assert.equal(visibleLoginProviderError("Configuration", wired), null);
+  assert.equal(visibleLoginProviderError(null, wired), null);
+  assert.match(
+    visibleLoginProviderError("Configuration", missing) ?? "",
+    /missing a provider setting/,
+  );
+
+  const env = readSrc("src/lib/auth/env.ts");
+  assert.match(env, /AUTH_GOOGLE_ID/);
+  assert.match(env, /AUTH_GOOGLE_SECRET/);
+  assert.match(env, /export function googleClientId/);
+
+  const login = readSrc("src/app/login/login-form.tsx");
+  assert.match(login, /visibleLoginProviderError/);
+  assert.doesNotMatch(login, /authErrorMessage\(/);
+
+  const helper = readSrc("src/lib/auth/provider-error.ts");
+  assert.match(helper, /code === "Configuration"/);
+  assert.match(helper, /oauth\.google/);
+  assert.doesNotMatch(helper, /AUTH_URL\s*=/);
+  assert.doesNotMatch(readSrc("src/lib/auth/config.ts"), /AUTH_URL\s*=/);
+  assert.doesNotMatch(readSrc("src/lib/auth/env.ts"), /AUTH_URL\s*=/);
 });
 
 test("Auth.js wiring is present and env-gated", () => {
@@ -233,7 +272,8 @@ test("Auth.js wiring is present and env-gated", () => {
   assert.match(oauthButtons, /nextPath = "\/dashboard"/);
 
   const config = readSrc("src/lib/auth/config.ts");
-  assert.match(config, /error:\s*"\/signup"/);
+  assert.match(config, /error:\s*"\/login"/);
+  assert.match(config, /googleClientId/);
   assert.match(config, /roleForAuth/);
   assert.doesNotMatch(config, /return isStaffEmail\(email\)/);
   assert.match(readSrc("src/auth.ts"), /Credentials/);
@@ -361,6 +401,8 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(signup, /\/api\/members\/register/);
   assert.match(signup, /signIn\("credentials"/);
   assert.match(signup, /authErrorMessage/);
+  assert.match(signup, /signup-website/);
+  assert.match(signup, /website/);
   assert.doesNotMatch(signup, /Enter as Jordan/);
   assert.doesNotMatch(signup, /STUDENT_ID/);
   assert.doesNotMatch(signup, /lorem ipsum/i);
@@ -376,7 +418,7 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.match(pricing, /One-on-one hour/);
   assert.match(pricing, /Start free/);
   assert.match(pricing, /Stripe/);
-  assert.match(pricing, /checkoutPath\("10"\)/);
+  assert.match(pricing, /cartPath\("10"\)/);
   assert.match(pricing, /checkoutPath\("1000"\)/);
   assert.doesNotMatch(pricing, /invoice/i);
   assert.doesNotMatch(pricing, /University/);
@@ -387,6 +429,8 @@ test("free beta signup, pricing, and request-access pages exist", () => {
 
   assert.match(request, /\/api\/access-requests/);
   assert.match(request, /Request access/);
+  assert.match(request, /access-website/);
+  assert.match(request, /website/);
   assert.match(complete, /request-access/);
   assert.match(complete, /activateMemberFromAuth/);
   assert.match(complete, /\/signup\?error=/);
@@ -397,6 +441,10 @@ test("free beta signup, pricing, and request-access pages exist", () => {
   assert.doesNotMatch(store, /localStorage/);
   assert.match(notify, /ACCESS_REQUEST_NOTIFY_EMAIL|accessRequestNotifyEmail/);
   assert.match(notify, /SMTP_HOST/);
+  assert.match(notify, /notifyEnrollment/);
+  assert.match(readSrc("src/lib/members/enroll.ts"), /recordNewEnrollment/);
+  assert.match(readSrc("src/app/api/members/register/route.ts"), /guardPublicSubmit/);
+  assert.match(readSrc("src/app/api/access-requests/route.ts"), /guardPublicSubmit/);
 
   assert.match(compose, /field-school-data/);
   assert.match(compose, /MEMBER_STORE_PATH/);
@@ -449,7 +497,7 @@ function demoWalkPath(token) {
 test("login and signup never show the Jordan student-demo button", () => {
   const login = readSrc("src/app/login/login-form.tsx");
   const signup = readSrc("src/app/signup/signup-form.tsx");
-  const home = readSrc("src/app/page.tsx");
+  const home = readSrc("src/app/campus-home.tsx");
 
   assert.match(login, /Continue as guest/);
   assert.match(login, /Join the free beta/);

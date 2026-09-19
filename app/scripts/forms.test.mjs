@@ -93,6 +93,8 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
   assert.match(api, /validateFormInput/);
   assert.match(api, /createFormSubmission/);
   assert.match(api, /corsHeadersForOrigin/);
+  assert.match(api, /guardPublicSubmit/);
+  assert.match(forms, /isHoneypotSpam/);
   assert.match(adminApi, /isStaffSession/);
   assert.match(adminApi, /listFormSubmissions/);
   assert.match(adminPage, /role="tablist"/);

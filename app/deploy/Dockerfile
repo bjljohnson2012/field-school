@@ -21,7 +21,10 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
+COPY --from=builder --chown=nextjs:nodejs /app/db ./db
+COPY --from=builder --chown=nextjs:nodejs /app/docs ./docs
+RUN mkdir -p /app/data /opt/field-school/uploads \
+  && chown nextjs:nodejs /app/data /opt/field-school/uploads
 USER nextjs
 EXPOSE 3000
 CMD ["node", "server.js"]

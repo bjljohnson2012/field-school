@@ -29,6 +29,7 @@ export const members = pgTable("members", {
   name: text("name").notNull(),
   kind: text("kind").notNull().default("adult"),
   authUserId: text("auth_user_id"),
+  mode: text("mode").notNull().default("none"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -345,3 +346,39 @@ export const skillItems = pgTable("skill_items", {
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+export const learningIntents = pgTable(
+  "learning_intents",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    version: integer("version").notNull(),
+    goals: jsonb("goals").notNull().default([]),
+    subjects: jsonb("subjects").notNull().default([]),
+    themes: jsonb("themes").notNull().default([]),
+    timeHorizon: text("time_horizon").notNull().default(""),
+    constraints: jsonb("constraints").notNull().default([]),
+    tags: jsonb("tags").notNull().default({}),
+    supersedesId: uuid("supersedes_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("learning_intents_child_version").on(t.orgId, t.childMembershipId, t.version),
+    index("learning_intents_child_idx").on(t.orgId, t.childMembershipId, t.version),
+    index("learning_intents_parent_child_idx").on(
+      t.orgId,
+      t.parentMembershipId,
+      t.childMembershipId,
+      t.version,
+    ),
+  ],
+);
+

@@ -1,7 +1,8 @@
 #!/bin/bash
 # Deploy the Field School Next campus (Wave 1) to the Hostinger VPS.
 # Do not run this from the GitHub TanStack root. This tree is app/.
-# Public campus: https://university.benjohnson.ai and https://portal.fieldschool.ai
+# Public campus: https://portal.fieldschool.ai (university.benjohnson.ai 301s here)
+# AUTH_URL lives in /opt/field-school.env. Flip it with flip-auth-url.sh, not this wipe.
 set -euo pipefail
 VPS_HOST="${VPS_HOST:-root@2.24.70.248}"
 KEY="${VPS_SSH_KEY:-$HOME/.ssh/field-school-agent}"
@@ -28,8 +29,11 @@ fi
 
 echo "==> packing Next source"
 TMP_TAR="$(mktemp /tmp/field-school-next.XXXXXX.tar.gz)"
-trap 'rm -f "$TMP_TAR"' EXIT
-tar -C "$ROOT" -czf "$TMP_TAR" \
+STAGE="$(mktemp -d /tmp/field-school-next-stage.XXXXXX)"
+trap 'rm -rf "$TMP_TAR" "$STAGE"' EXIT
+# Standalone image reads the pinned bank at /app/docs/campus-runtime.
+# That file lives at repo docs/, not inside app/.
+tar -C "$ROOT" -cf - \
   --exclude node_modules \
   --exclude .git \
   --exclude .next \
@@ -37,10 +41,13 @@ tar -C "$ROOT" -czf "$TMP_TAR" \
   --exclude postgres \
   --exclude deploy/.vps.env \
   --exclude .data \
-  .
+  . | tar -C "$STAGE" -xf -
+mkdir -p "$STAGE/docs/campus-runtime"
+cp "$ROOT/../docs/campus-runtime/fp-50-v1.md" "$STAGE/docs/campus-runtime/fp-50-v1.md"
+tar -C "$STAGE" -czf "$TMP_TAR" .
 
-echo "==> uploading to $VPS_HOST:$REMOTE_DIR (keeping postgres data)"
-"${SSH[@]}" "$VPS_HOST" "mkdir -p '$REMOTE_DIR/postgres' && find '$REMOTE_DIR' -mindepth 1 -maxdepth 1 ! -name postgres -exec rm -rf {} +"
+echo "==> uploading to $VPS_HOST:$REMOTE_DIR (keeping postgres data and composer uploads)"
+"${SSH[@]}" "$VPS_HOST" "mkdir -p '$REMOTE_DIR/postgres' '$REMOTE_DIR/uploads' && chown 1001:1001 '$REMOTE_DIR/uploads' && find '$REMOTE_DIR' -mindepth 1 -maxdepth 1 ! -name postgres ! -name uploads -exec rm -rf {} +"
 cat "$TMP_TAR" | "${SSH[@]}" "$VPS_HOST" "tar -xzf - -C '$REMOTE_DIR'"
 
 echo "==> env, compose, migrate"
@@ -65,11 +72,11 @@ for i in \$(seq 1 40); do
   fi
   sleep 2
 done
-for f in 0001_wave1.sql 0002_field_pattern.sql 0003_pattern_weights.sql 0004_tenants.sql; do
+for f in 0001_wave1.sql 0002_field_pattern.sql 0003_pattern_weights.sql 0004_tenants.sql 0005_composer.sql 0006_learning_intents.sql; do
   docker exec -i field-school-campus-db psql -U campus -d campus < "$REMOTE_DIR/db/\$f"
 done
 docker compose --env-file "\$ENV_FILE" ps
 REMOTE
 
-echo "Campus: https://university.benjohnson.ai"
-echo "Portal: https://portal.fieldschool.ai"
+echo "Campus: https://portal.fieldschool.ai"
+echo "University 301: https://university.benjohnson.ai -> https://portal.fieldschool.ai"

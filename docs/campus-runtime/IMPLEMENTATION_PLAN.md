@@ -24,4 +24,4 @@ Grok Build: read this file, then `01-current-state.md`, `02-destination-and-sche
 9. Tenant A cannot read tenant B.
 10. Cap is a paid add-on, not the default lesson type.
 11. Deploy only via Cloud Agent + vps_deploy.
-12. Do not flip AUTH_URL or 301 university until portal OAuth callback rows exist.
+12. AUTH_URL is portal.fieldschool.ai. university.benjohnson.ai 301s to portal. Keep portal Google/X callback rows. Do not flip AUTH_URL back.

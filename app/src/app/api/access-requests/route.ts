@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { notifyAccessRequest } from "@/lib/members/notify";
+import { guardPublicSubmit } from "@/lib/members/spam";
 import { createAccessRequest } from "@/lib/members/store";
 
 export const runtime = "nodejs";
@@ -12,6 +13,7 @@ export async function POST(request: Request) {
     email?: string;
     provider?: string;
     note?: string;
+    website?: string;
   };
   try {
     body = (await request.json()) as typeof body;
@@ -19,11 +21,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
+  const blocked = guardPublicSubmit(
+    request,
+    {
+      website: body.website,
+      email: body.email || session?.user?.email || "",
+    },
+    "access",
+  );
+  if (blocked) return blocked;
+
   const result = await createAccessRequest({
     name: body.name || session?.user?.name || "",
     email: body.email || session?.user?.email || "",
     provider: body.provider || session?.user?.provider || "unknown",
     note: body.note,
+    kind: "staff",
   });
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: 400 });

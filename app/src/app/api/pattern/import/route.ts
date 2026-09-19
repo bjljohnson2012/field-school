@@ -32,6 +32,9 @@ export async function POST(request: Request) {
     clusters: body.clusters ?? null,
   };
   const profile = await getLiveProfile(auth.identity.orgId, auth.identity.membershipId);
+  if (!profile) {
+    return NextResponse.json({ ok: false, error: "profile_required" }, { status: 409 });
+  }
   const current = (profile.correspondence ?? {}) as Record<string, unknown>;
   const next = { ...current, estimates: current.estimates ?? current, imported };
   const db = getDb();

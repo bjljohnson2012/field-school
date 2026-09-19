@@ -24,6 +24,9 @@ export async function GET(request: Request) {
     }
   }
   const profile = await getLiveProfile(auth.identity.orgId, membershipId);
+  if (!profile) {
+    return NextResponse.json({ ok: true, profile: null, revisions: [] });
+  }
   const revisions = await listRevisions(profile.id, 12);
   return NextResponse.json({
     ok: true,

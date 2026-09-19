@@ -28,7 +28,7 @@ export function StudentDemoClient({
       </h1>
       <p className="mt-4 text-muted-foreground">
         Four beats. Impersonate the demo student, open the course, send
-        feedback, then come back to staff notifications. Login never shows this
+        feedback, then come back to staff Inbox. Login never shows this
         walk — share the token link when someone else should try it.
       </p>
 
@@ -84,7 +84,7 @@ export function StudentDemoClient({
         </Step>
         <Step n="03" title="Submit feedback">
           On the course page, scroll to “Send feedback to staff.” Write a note
-          about a station. That creates an unread admin notification.
+          about a station. That creates an unread Inbox item.
           <div className="mt-4">
             <Link
               href="/c/grok-bot#feedback"
@@ -95,7 +95,7 @@ export function StudentDemoClient({
           </div>
         </Step>
         <Step n="04" title="See it as admin">
-          Stop impersonating and open Notifications. Unread count is on the
+          Stop impersonating and open Inbox. Unread count is on the
           Admin nav.
           <div className="mt-4 flex flex-wrap gap-3">
             <button
@@ -107,7 +107,7 @@ export function StudentDemoClient({
                 router.push("/admin/notifications");
               }}
             >
-              Back to staff notifications
+              Back to staff Inbox
               {unreadNotices > 0 ? ` (${unreadNotices})` : ""}
             </button>
           </div>

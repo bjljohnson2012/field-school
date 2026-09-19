@@ -1,7 +1,7 @@
 # Wave 1 campus API
 
 Live page: https://portal.fieldschool.ai/docs/api  
-Same origin as the campus: https://university.benjohnson.ai/docs/api  
+Legacy university host 301s here.  
 OpenAPI: [`openapi-wave1.json`](./openapi-wave1.json)  
 SQL: [`app/db/0001_wave1.sql`](../../app/db/0001_wave1.sql)  
 Proof: [`WAVE1.md`](./WAVE1.md)
@@ -16,9 +16,9 @@ This is the learner plane shipped in Wave 1. It is not the factory (Cap / edit M
 4. `GET /api/progress?course=grok-bot` rebuilds that membership’s station map from `learning_events`. Queries are always scoped by `org_id` + `membership_id`.
 5. Org `household` exists and is empty of Field School events. Tenant A cannot read tenant B.
 
-Auth cookies are Auth.js session cookies on the portal origin. `AUTH_URL` is still `https://university.benjohnson.ai`. Do not flip it in Wave 1.
+Auth cookies are Auth.js session cookies on the portal origin. `AUTH_URL` is `https://portal.fieldschool.ai`. `university.benjohnson.ai` 301s to portal.
 
-Base URL: `https://portal.fieldschool.ai` (also served at `https://university.benjohnson.ai`).
+Base URL: `https://portal.fieldschool.ai`.
 
 ## Seed
 
@@ -235,7 +235,7 @@ Set in `/opt/field-school.env`. Compose injects `DATABASE_URL`.
 |---|---|
 | `CAMPUS_POSTGRES_PASSWORD` | campus-db + `DATABASE_URL` |
 | `DATABASE_URL` | `postgres://campus:…@campus-db:5432/campus` |
-| `AUTH_SECRET` / `AUTH_URL` | Auth.js. `AUTH_URL` stays university |
+| `AUTH_SECRET` / `AUTH_URL` | Auth.js. `AUTH_URL` is `https://portal.fieldschool.ai` |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google sign-in |
 | `AUTH_TWITTER_ID` / `AUTH_TWITTER_SECRET` | X sign-in |
 | `MEMBER_STORE_PATH` | JSON member store, not Wave 1 tables |

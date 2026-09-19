@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ChildrenDatabase } from "@/components/children-database";
+import { canTeach } from "@/lib/composer/rules";
 
 type Me = {
   authenticated: boolean;
@@ -16,30 +18,48 @@ export default function OrgHomePage() {
   const [me, setMe] = useState<Me | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const [email, setEmail] = useState("");
-  const [childName, setChildName] = useState("");
+  const [stance, setStance] = useState("");
   const [inviteUrl, setInviteUrl] = useState<string | null>(null);
 
   useEffect(() => {
     void fetch("/api/org/active", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-fs-org": slug },
       body: JSON.stringify({ slug }),
     }).then((res) => {
       if (res.status === 403 || res.status === 404) setNote("You cannot open this org.");
-      return fetch(`/api/me?org=${slug}`);
+      return fetch(`/api/me?org=${slug}`, { headers: { "x-fs-org": slug } });
     }).then((r) => r?.json()).then((data) => setMe(data));
   }, [slug]);
 
   const lessonHref = slug === "household" ? "/o/household/welcome" : slug === "sales" ? "/o/sales/welcome" : "/c/grok-bot";
-  const canInvite = me?.member?.kind !== "child";
+  const teacher = canTeach({
+    kind: me?.member?.kind || "",
+    stance: me?.activeOrg?.stance || "",
+  });
+  const canInvite =
+    me?.member?.kind !== "child" &&
+    ["admin", "guardian", "trainer"].includes(me?.activeOrg?.stance || "");
   const household = slug === "household";
   const sales = slug === "sales";
+  const inviteStance = stance || (household ? "guardian" : sales ? "trainer" : "learner");
+  const stanceOptions = household
+    ? [
+        { value: "guardian", label: "Guardian" },
+        { value: "learner", label: "Learner" },
+      ]
+    : sales
+      ? [
+          { value: "trainer", label: "Trainer" },
+          { value: "learner", label: "Learner" },
+        ]
+      : [{ value: "learner", label: "Learner" }];
 
   async function invite() {
     const res = await fetch("/api/invites", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ org: slug, email, stance: household ? "learner" : "learner" }),
+      headers: { "Content-Type": "application/json", "x-fs-org": slug },
+      body: JSON.stringify({ org: slug, email, stance: inviteStance }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -48,16 +68,6 @@ export default function OrgHomePage() {
     }
     setInviteUrl(data.invite.url);
     setNote(`Invite created for ${email}`);
-  }
-
-  async function addChild() {
-    const res = await fetch("/api/children", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: childName }),
-    });
-    const data = await res.json();
-    setNote(res.ok ? `Child ${data.child.name} added.` : data.error);
   }
 
   if (note === "You cannot open this org.") {
@@ -70,7 +80,7 @@ export default function OrgHomePage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
+    <main className={`mx-auto px-4 py-12 ${household ? "max-w-5xl" : "max-w-3xl"}`}>
       <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
         {household ? "Household" : sales ? "Sales team" : slug}
       </p>
@@ -89,13 +99,26 @@ export default function OrgHomePage() {
           Open welcome
         </Link>
         {household ? (
-          <Link href="/pattern" className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
-            Field Pattern
-          </Link>
+          <>
+            <Link href="/children" className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+              Children database
+            </Link>
+            <Link href="/pattern" className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+              Field Pattern
+            </Link>
+          </>
         ) : null}
         <Link href="/skills" className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
           Skill diagnostic
         </Link>
+        <Link href={`/o/${slug}/l`} className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+          Lessons
+        </Link>
+        {teacher ? (
+          <Link href={`/o/${slug}/teach`} className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+            Teach
+          </Link>
+        ) : null}
       </div>
 
       {canInvite ? (
@@ -108,6 +131,17 @@ export default function OrgHomePage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            <select
+              className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
+              value={inviteStance}
+              onChange={(e) => setStance(e.target.value)}
+            >
+              {stanceOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
             <Button onClick={() => void invite()}>Send invite</Button>
           </div>
           {inviteUrl ? (
@@ -119,18 +153,9 @@ export default function OrgHomePage() {
       ) : null}
 
       {household && canInvite ? (
-        <section className="mt-6 rounded-xl border border-border bg-card px-5 py-5">
-          <h2 className="font-display text-2xl">Add a child</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <input
-              className="h-11 flex-1 rounded-xl border border-border bg-background px-3 text-sm"
-              placeholder="Name"
-              value={childName}
-              onChange={(e) => setChildName(e.target.value)}
-            />
-            <Button onClick={() => void addChild()}>Create child</Button>
-          </div>
-        </section>
+        <div className="mt-6">
+          <ChildrenDatabase />
+        </div>
       ) : null}
 
       {note && note !== "You cannot open this org." ? (

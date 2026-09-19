@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import { resolveCheckoutDestination } from "@/lib/billing/checkout-destination";
 import { getPaidPlan } from "@/lib/billing/plans";
 
 export const dynamic = "force-dynamic";
@@ -18,5 +20,11 @@ export default async function CheckoutPage({
 }) {
   const plan = getPaidPlan(firstValue((await searchParams).plan));
   if (!plan) redirect("/pricing");
-  redirect(plan.checkoutUrl);
+
+  const session = await auth().catch(() => null);
+  const destination = await resolveCheckoutDestination({
+    plan,
+    email: session?.user?.email,
+  });
+  redirect(destination.url);
 }

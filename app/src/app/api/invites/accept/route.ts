@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { getAuthUser, upsertMember, ensureMembership } from "@/lib/campus-runtime/identity";
 import { setActiveOrgCookie } from "@/lib/campus-runtime/org";
+import { HOUSEHOLD_SLUG } from "@/lib/campus-runtime/rules";
 import { getDb } from "@/lib/db/client";
+import { syncFamilyMode } from "@/lib/intent/family-mode";
+import { applyIntentSqlIfConfigured } from "@/lib/intent/sql";
 import { invites, organizations } from "@/lib/db/schema";
 import { normalizeEmail } from "@/lib/members/policy";
 
@@ -38,6 +41,14 @@ export async function POST(request: Request) {
     .limit(1);
   if (!org) return NextResponse.json({ ok: false, error: "unknown_org" }, { status: 404 });
   await ensureMembership(member.id, org.slug, invite.stance);
+  if (
+    org.slug === HOUSEHOLD_SLUG &&
+    (invite.stance === "guardian" || invite.stance === "admin") &&
+    member.kind !== "child"
+  ) {
+    await applyIntentSqlIfConfigured();
+    await syncFamilyMode(member);
+  }
   await db
     .update(invites)
     .set({ status: "accepted" })
