@@ -10,6 +10,7 @@ PASS notes:
 - [antagonist-definition-quiz-head.md](./antagonist-definition-quiz-head.md) — DefinitionBoard + QuizBumper + TalkingHeadCard
 - [antagonist-full-set.md](./antagonist-full-set.md) — all five
 - [antagonist-lesson-spine.md](./antagonist-lesson-spine.md) — LessonSpine (sting / slate / objective / recap / next-up)
+- [antagonist-captions-lower-third.md](./antagonist-captions-lower-third.md) — CaptionsBand + LowerThird
 
 1920×1080@30. `useCurrentFrame` only. Cream / ink / Fraunces. Isolated seal at `1576,24` / `80×64`.
 `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`.
@@ -28,6 +29,8 @@ Do not re-render Just `27pn9xs0zk8a73g`. Do not overwrite Aug 30 `vox/everything
 | **QuizBumper** | 6–8s (default 7s) | 210 | glide |
 | **TalkingHeadCard** | 8s docked, not full-bleed | 240 | takeover |
 | **LessonSpine** | 41s fixture (10+8+6+10+7) | 1230 | Opener → TalkingHeadCard → DefinitionBoard → RecapCard → QuizBumper |
+| **LowerThirdDemo** | 8s craft | 240 | takeover head + lower third |
+| **CaptionsDemo** | 8s craft | 240 | lower third then captions band |
 
 ## Render lock
 
@@ -43,7 +46,7 @@ CPU cap `--concurrency=2` (2/4). Dry-run does not encode.
 npm ci
 npx remotion compositions
 node scripts/render-plate.mjs --comp LessonSpine --dry-run --lock /tmp/absent.render.lock --meminfo /proc/meminfo
-node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs
+node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4
 ```
 
