@@ -16,7 +16,7 @@ export default async function ChildrenPage() {
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">Children</h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
-        Parent-facing children/subusers database. Say child, not student. Kids have no own login. You record welcome, Field Pattern, notes, and lock.
+        Parent-facing children/subusers database. Say child, not student. Kids have no own login. You record welcome, Field Pattern, notes, lock, and a curriculum path.
       </p>
       <p className="mt-3 text-sm">
         <Link href="/o/household" className="underline underline-offset-2">
