@@ -29,7 +29,7 @@ Wave 1 identity + Grok Bot station 01 events. Factory (Cap / edit / melt) left r
 
 ## Landed this run
 
-Wave 2 is proven. Household + sales orgs, `/o/:slug`, org picker, invites, fixture welcome lessons, child on household, Field Pattern correspondences + import override, org-scoped skill diagnostics. AUTH_URL is portal.fieldschool.ai. university.benjohnson.ai 301s to portal. TanStack not deployed. Remotion and adaptive generation not started. Proof: [WAVE2.md](./WAVE2.md).
+Wave 2 is proven. Household + sales orgs, `/o/:slug`, org picker, invites, fixture welcome lessons, child on household, Field Pattern correspondences + import override, org-scoped skill diagnostics. AUTH_URL is portal.fieldschool.ai. university.benjohnson.ai 301s to portal. TanStack not deployed. Remotion and adaptive generation not started. Proof: [WAVE2.md](./WAVE2.md). Family v1 operator writes landed on FamilyV1Home (save intent version, accept path, lock next portion). Child ≠ User. No child login.
 
 ## In flight / next
 
