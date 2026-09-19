@@ -28,8 +28,10 @@ export class CreditsAccessError extends IntentAccessError {
 }
 
 export class CreditsFieldsError extends Error {
-  constructor(public code: string) {
+  code: string;
+  constructor(code: string) {
     super(code);
+    this.code = code;
     this.name = "CreditsFieldsError";
   }
 }

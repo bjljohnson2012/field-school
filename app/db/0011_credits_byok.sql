@@ -1,5 +1,5 @@
 -- FR-KB-3 credits ledger + encrypted BYOK key store.
--- Parent writes. Child ≠ User. Not Stripe seats. Not composer. Not Pattern.
+-- Parent writes. Child ≠ User. Not seats. Not composer. Not Pattern.
 -- Units are opaque integers. Revenue fills amounts later. No currency columns.
 -- Envelope-at-rest on campus Postgres. Not leftover TanStack db.
 -- Do not alter 0001-0010.

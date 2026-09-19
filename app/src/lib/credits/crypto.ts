@@ -1,9 +1,11 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
-import { BYOK_WRAP_ALG, BYOK_WRAP_KID, last4FromSecret } from "./rules";
+import { BYOK_WRAP_ALG, BYOK_WRAP_KID, last4FromSecret } from "./rules.ts";
 
 export class WrapKeyError extends Error {
-  constructor(public code: string) {
+  code: string;
+  constructor(code: string) {
     super(code);
+    this.code = code;
     this.name = "WrapKeyError";
   }
 }
