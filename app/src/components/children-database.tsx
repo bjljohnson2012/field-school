@@ -91,6 +91,32 @@ export function ChildrenDatabase({
     Array<{ id: string; version: number; status: string; title: string }>
   >([]);
   const [portionOverride, setPortionOverride] = useState("");
+  const [ledgerCurrent, setLedgerCurrent] = useState<{
+    id: string;
+    version: number;
+    summary: { completed?: number; inProgress?: number; recommended?: number; next?: string | null };
+    units: Array<{
+      id: string;
+      sortOrder: number;
+      title: string;
+      subject: string;
+      status: string;
+      childMembershipId: string;
+    }>;
+  } | null>(null);
+  const [ledgerCompleted, setLedgerCompleted] = useState<
+    Array<{ title: string; subject: string; status: string; confidence?: string; flag?: string }>
+  >([]);
+  const [ledgerInProgress, setLedgerInProgress] = useState<
+    Array<{ title: string; subject: string; status: string; confidence?: string; flag?: string }>
+  >([]);
+  const [ledgerRecommended, setLedgerRecommended] = useState<
+    Array<{ title: string; subject: string; status: string; confidence?: string; flag?: string }>
+  >([]);
+  const [ledgerNext, setLedgerNext] = useState<{ title: string; subject: string } | null>(null);
+  const [ledgerVersions, setLedgerVersions] = useState<
+    Array<{ id: string; version: number; status: string }>
+  >([]);
 
   function lines(value: string) {
     return value
@@ -140,6 +166,29 @@ export function ChildrenDatabase({
     setPortionRemaining((data.remaining ?? []) as typeof portionRemaining);
     setPortionVersions((data.versions ?? []) as typeof portionVersions);
     setPortionOverride((current?.items ?? []).map((item) => item.title).join("\n"));
+  }
+
+  async function loadLedger(membershipId: string) {
+    const res = await fetch(
+      `/api/ledger?child_membership_id=${encodeURIComponent(membershipId)}`,
+      { headers: HOUSEHOLD_HEADERS },
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      setLedgerCurrent(null);
+      setLedgerCompleted([]);
+      setLedgerInProgress([]);
+      setLedgerRecommended([]);
+      setLedgerNext(null);
+      setLedgerVersions([]);
+      return;
+    }
+    setLedgerCurrent((data.current ?? null) as typeof ledgerCurrent);
+    setLedgerCompleted((data.completed ?? []) as typeof ledgerCompleted);
+    setLedgerInProgress((data.inProgress ?? []) as typeof ledgerInProgress);
+    setLedgerRecommended((data.recommended ?? []) as typeof ledgerRecommended);
+    setLedgerNext((data.next ?? null) as typeof ledgerNext);
+    setLedgerVersions((data.versions ?? []) as typeof ledgerVersions);
   }
 
   async function loadIntent(membershipId: string) {
@@ -251,6 +300,7 @@ export function ChildrenDatabase({
     await loadIntent(membershipId);
     await loadPath(membershipId);
     await loadPortion(membershipId);
+    await loadLedger(membershipId);
   }
 
   async function saveIntent() {
@@ -273,6 +323,7 @@ export function ChildrenDatabase({
       await loadIntent(selectedMembershipId);
       await loadPath(selectedMembershipId);
       await loadPortion(selectedMembershipId);
+      await loadLedger(selectedMembershipId);
     }
   }
 
@@ -294,6 +345,7 @@ export function ChildrenDatabase({
     if (res.ok) {
       await loadPath(selectedMembershipId);
       await loadPortion(selectedMembershipId);
+      await loadLedger(selectedMembershipId);
     }
   }
 
@@ -309,6 +361,7 @@ export function ChildrenDatabase({
     if (res.ok) {
       await loadPath(selectedMembershipId);
       await loadPortion(selectedMembershipId);
+      await loadLedger(selectedMembershipId);
     }
   }
 
@@ -328,6 +381,7 @@ export function ChildrenDatabase({
     if (res.ok) {
       await loadPath(selectedMembershipId);
       await loadPortion(selectedMembershipId);
+      await loadLedger(selectedMembershipId);
     }
   }
 
@@ -348,6 +402,7 @@ export function ChildrenDatabase({
       setPathPrompt("");
       await loadPath(selectedMembershipId);
       await loadPortion(selectedMembershipId);
+      await loadLedger(selectedMembershipId);
     }
   }
 
@@ -370,7 +425,10 @@ export function ChildrenDatabase({
               ? "No remaining stations on the accepted path."
               : data.error || "Could not suggest next portion.",
     );
-    if (res.ok) await loadPortion(selectedMembershipId);
+    if (res.ok) {
+      await loadPortion(selectedMembershipId);
+      await loadLedger(selectedMembershipId);
+    }
   }
 
   async function lockPortion() {
@@ -388,7 +446,10 @@ export function ChildrenDatabase({
           ? "Suggest a next portion before locking."
           : data.error || "Could not lock next portion.",
     );
-    if (res.ok) await loadPortion(selectedMembershipId);
+    if (res.ok) {
+      await loadPortion(selectedMembershipId);
+      await loadLedger(selectedMembershipId);
+    }
   }
 
   async function overridePortion() {
@@ -408,7 +469,103 @@ export function ChildrenDatabase({
         ? `Next portion v${data.portion?.version ?? data.current?.version} overridden for this child.`
         : data.error || "Could not override next portion.",
     );
-    if (res.ok) await loadPortion(selectedMembershipId);
+    if (res.ok) {
+      await loadPortion(selectedMembershipId);
+      await loadLedger(selectedMembershipId);
+    }
+  }
+
+  async function refreshLedger() {
+    if (!selectedMembershipId) return;
+    const res = await fetch("/api/ledger", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({ childMembershipId: selectedMembershipId }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Progress ledger v${data.ledger?.version ?? data.current?.version} refreshed for this child.`
+        : data.error === "units_required"
+          ? "Accept a path or record a unit before refreshing the ledger."
+          : data.error || "Could not refresh ledger.",
+    );
+    if (res.ok) await loadLedger(selectedMembershipId);
+  }
+
+  async function markUnit(action: "start" | "complete", title: string) {
+    if (!selectedMembershipId || !title) return;
+    const res = await fetch("/api/ledger", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({
+        childMembershipId: selectedMembershipId,
+        action,
+        title,
+      }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? action === "complete"
+          ? `${title} marked complete for this child.`
+          : `${title} marked in progress for this child.`
+        : data.error === "title_required"
+          ? "Pick a unit to record."
+          : data.error || "Could not record unit.",
+    );
+    if (res.ok) {
+      await loadLedger(selectedMembershipId);
+      await loadPortion(selectedMembershipId);
+    }
+  }
+
+  async function markConfidence(title: string, confidence: string, flag = "") {
+    if (!selectedMembershipId || !title) return;
+    const res = await fetch("/api/ledger", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
+      body: JSON.stringify({
+        childMembershipId: selectedMembershipId,
+        action: "confidence",
+        title,
+        confidence,
+        flag,
+      }),
+    });
+    const data = await res.json();
+    setNote(
+      res.ok
+        ? `Parent confidence recorded for ${title}.`
+        : data.error === "confidence_required"
+          ? "Pick Not yet, Getting there, or Ready."
+          : data.error || "Could not record confidence.",
+    );
+    if (res.ok) await loadLedger(selectedMembershipId);
+  }
+
+  function confidenceButtons(item: { title: string; confidence?: string; flag?: string }) {
+    const current = item.confidence || "";
+    return (
+      <span className="mt-2 flex flex-wrap gap-2">
+        {(
+          [
+            ["not_yet", "Not yet"],
+            ["getting_there", "Getting there"],
+            ["ready", "Ready"],
+          ] as const
+        ).map(([value, label]) => (
+          <Button
+            key={`${item.title}-${value}`}
+            type="button"
+            variant={current === value ? "default" : "outline"}
+            onClick={() => void markConfidence(item.title, value, item.flag || "")}
+          >
+            {label}
+          </Button>
+        ))}
+      </span>
+    );
   }
 
   return (
@@ -749,6 +906,115 @@ export function ChildrenDatabase({
                   {portionVersions.map((row) => (
                     <li key={row.id}>
                       v{row.version} · {row.status} · {row.title}
+                    </li>
+                  ))}
+                </ol>
+              ) : null}
+            </div>
+          ) : null}
+          {selectedMembershipId ? (
+            <div className="mt-6 rounded-xl border border-border px-4 py-4">
+              <h3 className="font-display text-xl">Progress ledger</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Parent-supervised unit ledger for the selected child. Completed, in progress,
+                recommended next, and parent confidence (Not yet / Getting there / Ready). This is
+                not session progress and not Pattern chooser.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button type="button" onClick={() => void refreshLedger()}>
+                  Refresh ledger
+                </Button>
+              </div>
+              {ledgerNext ? (
+                <p className="mt-4 text-sm">
+                  Recommended next: {ledgerNext.title}
+                  {ledgerNext.subject ? ` · ${ledgerNext.subject}` : ""}
+                </p>
+              ) : (
+                <p className="mt-4 text-sm text-muted-foreground">No recommended next unit yet.</p>
+              )}
+              {ledgerInProgress.length ? (
+                <div className="mt-3">
+                  <p className="text-sm text-muted-foreground">In progress</p>
+                  <ol className="mt-2 space-y-2 text-sm">
+                    {ledgerInProgress.map((item) => (
+                      <li key={`in-${item.title}`}>
+                        <p>
+                          {item.title}
+                          {item.subject ? ` · ${item.subject}` : ""}
+                        </p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="mt-2"
+                          onClick={() => void markUnit("complete", item.title)}
+                        >
+                          Complete unit
+                        </Button>
+                        {confidenceButtons(item)}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : null}
+              {ledgerCompleted.length ? (
+                <div className="mt-3">
+                  <p className="text-sm text-muted-foreground">Completed</p>
+                  <ol className="mt-2 space-y-2 text-sm">
+                    {ledgerCompleted.map((item) => (
+                      <li key={`done-${item.title}`}>
+                        <p>
+                          {item.title}
+                          {item.subject ? ` · ${item.subject}` : ""}
+                        </p>
+                        {confidenceButtons(item)}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : null}
+              {ledgerRecommended.length ? (
+                <div className="mt-3">
+                  <p className="text-sm text-muted-foreground">Recommended</p>
+                  <ol className="mt-2 space-y-2 text-sm">
+                    {ledgerRecommended.map((item) => (
+                      <li key={`rec-${item.title}`}>
+                        <p>
+                          {item.title}
+                          {item.subject ? ` · ${item.subject}` : ""}
+                        </p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="mt-2"
+                          onClick={() => void markUnit("start", item.title)}
+                        >
+                          Start unit
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="mt-2 ml-2"
+                          onClick={() => void markUnit("complete", item.title)}
+                        >
+                          Complete unit
+                        </Button>
+                        {confidenceButtons(item)}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : null}
+              <p className="mt-3 text-sm text-muted-foreground">
+                {ledgerCurrent
+                  ? `Ledger v${ledgerCurrent.version} on this child.`
+                  : "Refresh after an accepted path, or start a unit while you sit with this child."}
+              </p>
+              {ledgerVersions.length ? (
+                <ol className="mt-4 space-y-2 text-sm">
+                  {ledgerVersions.map((row) => (
+                    <li key={row.id}>
+                      v{row.version} · {row.status}
                     </li>
                   ))}
                 </ol>

@@ -534,3 +534,80 @@ export const nextPortionItems = pgTable(
   ],
 );
 
+export const progressLedgers = pgTable(
+  "progress_ledgers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    pathId: uuid("path_id").references(() => curriculumPaths.id),
+    portionId: uuid("portion_id").references(() => nextPortions.id),
+    intentId: uuid("intent_id").references(() => learningIntents.id),
+    version: integer("version").notNull(),
+    status: text("status").notNull().default("current"),
+    summary: jsonb("summary").notNull().default({}),
+    progress: jsonb("progress").notNull().default({}),
+    supersedesId: uuid("supersedes_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("progress_ledgers_child_version").on(t.orgId, t.childMembershipId, t.version),
+    index("progress_ledgers_child_idx").on(t.orgId, t.childMembershipId, t.version),
+    index("progress_ledgers_parent_child_idx").on(
+      t.orgId,
+      t.parentMembershipId,
+      t.childMembershipId,
+      t.version,
+    ),
+  ],
+);
+
+export const progressLedgerUnits = pgTable(
+  "progress_ledger_units",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    ledgerId: uuid("ledger_id")
+      .notNull()
+      .references(() => progressLedgers.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    childMembershipId: uuid("child_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    pathItemId: uuid("path_item_id"),
+    portionItemId: uuid("portion_item_id"),
+    sortOrder: integer("sort_order").notNull(),
+    title: text("title").notNull(),
+    subject: text("subject").notNull().default(""),
+    status: text("status").notNull().default("recommended"),
+    source: text("source").notNull().default("refresh"),
+    confidence: text("confidence").notNull().default(""),
+    flag: text("flag").notNull().default(""),
+    composerLessonId: uuid("composer_lesson_id"),
+    composerUnitId: uuid("composer_unit_id"),
+    startedAt: timestamp("started_at", { withTimezone: true }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("progress_ledger_units_order").on(t.ledgerId, t.sortOrder),
+    index("progress_ledger_units_child_idx").on(
+      t.orgId,
+      t.childMembershipId,
+      t.ledgerId,
+      t.sortOrder,
+    ),
+  ],
+);
+
