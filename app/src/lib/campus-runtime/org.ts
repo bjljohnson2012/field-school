@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { eq } from "drizzle-orm";
 import { applyWave2SqlIfConfigured } from "@/lib/db/apply-wave2-sql";
+import { applyIntentSqlIfConfigured } from "@/lib/intent/sql";
 import { getDb } from "@/lib/db/client";
 import { memberships, organizations } from "@/lib/db/schema";
 import {
@@ -78,6 +79,7 @@ export async function setActiveOrgCookie(slug: string) {
 
 export async function ensureTenantOrgs() {
   await applyWave2SqlIfConfigured();
+  await applyIntentSqlIfConfigured();
   const db = getDb();
   await db
     .insert(organizations)
@@ -87,7 +89,7 @@ export async function ensureTenantOrgs() {
         name: "Household",
         kind: "homeschool",
         isolation: "strict",
-        features: { cap: false },
+        features: { cap: false, mode: "family" },
       },
       {
         slug: SALES_SLUG,

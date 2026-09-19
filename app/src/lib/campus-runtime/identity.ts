@@ -4,6 +4,7 @@ import { isStaffEmail } from "@/lib/auth/staff";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import { members, memberships, organizations } from "@/lib/db/schema";
 import { normalizeEmail } from "@/lib/members/policy";
+import { syncFamilyMode } from "@/lib/intent/family-mode";
 import {
   ensureTenantOrgs,
   membershipsForMember,
@@ -21,6 +22,7 @@ export type LearnerIdentity = {
   email: string;
   name: string;
   kind: string;
+  mode: string;
   membershipId: string;
   orgId: string;
   orgSlug: string;
@@ -103,6 +105,7 @@ export async function ensureLearner(
     email: member.email,
     name: member.name,
     kind: member.kind ?? "adult",
+    mode: member.mode ?? "none",
     membershipId: membership.id,
     orgId: org.id,
     orgSlug: org.slug,
@@ -139,7 +142,8 @@ export async function loadSession(request?: Request) {
     member.kind ?? "adult",
   );
   const active = rows.find((r) => r.orgSlug === slug) ?? null;
-  return { user, member, rows, requested, active };
+  const synced = await syncFamilyMode(member);
+  return { user, member: synced, rows, requested, active };
 }
 
 export async function identityFromRequest(request?: Request): Promise<
@@ -168,6 +172,7 @@ export async function identityFromRequest(request?: Request): Promise<
         email: member.email,
         name: member.name,
         kind: member.kind ?? "adult",
+        mode: member.mode ?? "none",
         membershipId: active.membershipId,
         orgId: active.orgId,
         orgSlug: active.orgSlug,

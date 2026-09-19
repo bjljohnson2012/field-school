@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { loadSession } from "@/lib/campus-runtime/identity";
+import { featureMode } from "@/lib/intent/family-mode";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ export async function GET(request: Request) {
       email: session.member.email,
       name: session.member.name,
       kind: session.member.kind,
+      mode: session.member.mode ?? "none",
     },
     activeOrg: active
       ? {
@@ -36,6 +38,7 @@ export async function GET(request: Request) {
           isolation: active.isolation,
           stance: active.stance,
           membershipId: active.membershipId,
+          mode: featureMode(active.features),
         }
       : null,
     org: active
