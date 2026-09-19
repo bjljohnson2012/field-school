@@ -1,38 +1,19 @@
 # Around-the-clock briefs
 
+Owner: Grok Bot Chief Decision Maker.
+Hands: CTO → Cursor Gate → Field School PM.
+Plan lives in this repo. Orchestration lives on Grok Bot routines. Do not run these as Grok chat automations.
+
 Timezone: America/New_York. Daily. Launch stays closed.
 
-These Grok automations write the brief. CDM routes. Cursor Gate pastes the sealed brief into Field School PM.
-
-| Clock | Name | Job |
+| Clock | Routine name on CDM | Job |
 |---|---|---|
-| 06:00 | Cursor harvest | What PM shipped overnight. Today's one stream. |
-| 15:00 | Mid-course | Keep, redirect, or stop that stream. |
-| 21:00 | Close | Score the day. Overnight potato brief. |
+| 06:00 | FS 06 harvest | What Field School PM shipped overnight. Today's one sealed brief. |
+| 15:00 | FS 15 mid-course | Keep, redirect, or stop that stream. |
+| 21:00 | FS 21 close | Score the day. Overnight potato brief for Gate. |
 
-Replaces the paused 9 AM PM-CTO check-in and the 10 PM nightly brief. Notion Ops may copy each run onto a Team Dashboard Tables page. The automation output is the source.
+Replaces the paused 9 AM PM-CTO check-in and the 10 PM nightly brief.
 
-## 06:00 — Cursor harvest
+Notion Ops copies each CDM brief onto a Team Dashboard Tables page after the run. The CDM message is source of truth.
 
-Owner of the text: automation `Field School 6am Cursor brief`.
-Owner of the decision: CDM.
-Hands: CTO → Cursor Gate → Field School PM.
-
-Must include: overnight PRs, health curls, eight-node scores, one sealed brief, Human needed.
-
-## 15:00 — Mid-course
-
-Did the 06:00 brief move. Keep / redirect / stop. No second wave.
-
-## 21:00 — Close
-
-Shipped vs asked. Updated scores. Overnight brief safe to run while Ben sleeps. First line for tomorrow 06:00.
-
-## Matching Grok Bot routines (optional twin)
-
-If CDM should also wake in-app:
-- 06:15 ET: read the harvest brief, send the sealed brief to CTO.
-- 15:15 ET: read mid-course, keep or redirect Gate.
-- 21:15 ET: read close, authorize overnight stream or idle.
-
-Offset 15 minutes so the automation finishes first.
+Exact routine text: `docs/staff/ROUTINES.md`.
