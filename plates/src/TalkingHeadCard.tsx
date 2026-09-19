@@ -40,7 +40,7 @@ export const TalkingHeadCard: React.FC<TalkingHeadProps> = ({
           <HeadDock motion="takeover" sceneFrame={frame} dock={dock} />
         </Layer>
         <Layer name="lower third">
-          <LowerThird label="Talking head" />
+          <LowerThird name={name} role={role} />
         </Layer>
         <Layer name="captions">
           <Karaoke captions={captions} />

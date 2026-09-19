@@ -1,0 +1,9 @@
+[
+  {"text": "Type", "startMs": 400, "endMs": 800},
+  {"text": "keeps", "startMs": 800, "endMs": 1200},
+  {"text": "the", "startMs": 1200, "endMs": 1400},
+  {"text": "left.", "startMs": 1400, "endMs": 2000},
+  {"text": "Head", "startMs": 2400, "endMs": 2800},
+  {"text": "stays", "startMs": 2800, "endMs": 3200},
+  {"text": "docked.", "startMs": 3200, "endMs": 4000}
+]

@@ -136,26 +136,66 @@ export function HeadDock({
   );
 }
 
-export function LowerThird({label}: {label: string}) {
+export function LowerThird({
+  name,
+  role,
+  label,
+}: {
+  name?: string;
+  role?: string;
+  label?: string;
+}) {
+  const frame = useCurrentFrame();
+  const glide = glideCard(frame);
+  const title = (name || label || "").trim();
+  const sub = (role || "").trim();
+  if (!title) return null;
   return (
     <div
       style={{
         position: "absolute",
         left: 72,
-        bottom: 48,
-        fontFamily: sansFace,
-        fontSize: 20,
-        letterSpacing: "0.14em",
-        textTransform: "uppercase",
-        color: gold,
+        bottom: 36,
+        width: 720,
+        opacity: glide.opacity,
+        translate: `${glide.x}px 0px`,
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+        padding: "16px 28px 18px",
       }}
     >
-      {label}
+      <div
+        style={{
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 36,
+          letterSpacing: "0em",
+          wordSpacing: "0.12em",
+          lineHeight: 1.1,
+          color: ink,
+        }}
+      >
+        {title}
+      </div>
+      {sub ? (
+        <div
+          style={{
+            marginTop: 8,
+            fontFamily: sansFace,
+            fontSize: 18,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: gold,
+          }}
+        >
+          {sub}
+        </div>
+      ) : null}
     </div>
   );
 }
 
-export function Karaoke({captions}: {captions: Caption[]}) {
+export function CaptionsBand({captions}: {captions: Caption[]}) {
   const frame = useCurrentFrame();
   const nowMs = (frame / 30) * 1000;
   const words = useMemo(() => captions, [captions]);
@@ -165,15 +205,19 @@ export function Karaoke({captions}: {captions: Caption[]}) {
         position: "absolute",
         left: 72,
         right: 820,
-        bottom: 96,
-        fontFamily: sansFace,
-        fontSize: 28,
-        lineHeight: 1.35,
+        bottom: 168,
+        minHeight: 72,
+        padding: "12px 8px 4px 0",
+        fontFamily: displayFace,
+        fontWeight: 700,
+        fontSize: 32,
+        lineHeight: 1.3,
         letterSpacing: "0em",
         wordSpacing: "0.12em",
+        whiteSpace: "pre",
         display: "flex",
         flexWrap: "wrap",
-        gap: 14,
+        gap: 12,
       }}
     >
       {words.map((word) => {
@@ -197,6 +241,11 @@ export function Karaoke({captions}: {captions: Caption[]}) {
       })}
     </div>
   );
+}
+
+/** Alias kept for checklist / existing plates. Captions layer is CaptionsBand. */
+export function Karaoke({captions}: {captions: Caption[]}) {
+  return <CaptionsBand captions={captions} />;
 }
 
 export function Letterbox() {

@@ -72,6 +72,7 @@ test("captions path and antagonist docs exist", () => {
   assert.equal(existsSync(join(root, "public", "captions", "definition.json")), true);
   assert.equal(existsSync(join(root, "public", "captions", "quiz.json")), true);
   assert.equal(existsSync(join(root, "public", "captions", "talking-head.json")), true);
+  assert.equal(existsSync(join(root, "public", "captions", "captions-demo.json")), true);
   assert.match(src("AGENTS.md"), /docs\/remotion-vox-standards\.md/);
   assert.match(src("README.md"), /docs\/remotion-vox-standards\.md/);
 });
