@@ -48,12 +48,19 @@ test("LessonSpine registers and sequences existing plates", () => {
 });
 
 test("README and antagonist cite the spine and the only bar", () => {
-  assert.match(src("README.md"), /LessonSpine/);
-  assert.match(src("README.md"), /antagonist-lesson-spine\.md/);
-  assert.match(src("README.md"), /docs\/remotion-vox-standards\.md/);
+  const readme = src("README.md");
+  assert.match(readme, /LessonSpine/);
+  assert.match(readme, /antagonist-lesson-spine\.md/);
+  assert.match(readme, /docs\/remotion-vox-standards\.md/);
+  assert.match(
+    readme,
+    /Locked pedagogical order: Opener\/sting → TalkingHead\/slate → DefinitionBoard\/objective → RecapCard → QuizBumper\/next-up/,
+  );
   assert.equal(existsSync(join(root, "antagonist-lesson-spine.md")), true);
+  assert.equal(existsSync(join(root, "encode-lesson-spine.md")), true);
   assert.match(src("antagonist-lesson-spine.md"), /docs\/remotion-vox-standards\.md/);
   assert.match(src("AGENTS.md"), /LessonSpine/);
+  assert.doesNotMatch(src("src", "lessonSpine.ts"), /Opener→DefinitionBoard→TalkingHeadCard/);
 });
 
 test("render-lock still gates LessonSpine dry-run", () => {
@@ -80,4 +87,52 @@ test("render-lock still gates LessonSpine dry-run", () => {
   assert.equal(body.ok, true);
   assert.equal(body.composition, "LessonSpine");
   assert.equal(body.concurrency, 2);
+});
+
+test("render-plate dry-run forwards a new dated dest and still refuses Just", () => {
+  const dir = mkdtempSync(join(tmpdir(), "spine-dest-"));
+  const missingLock = join(dir, "absent.render.lock");
+  const meminfo = join(dir, "meminfo");
+  const dated = join(dir, "2026-09-19", "LessonSpine.mp4");
+  writeFileSync(meminfo, "MemAvailable: 8192000 kB\n");
+  const ok = spawnSync(
+    process.execPath,
+    [
+      join(here, "render-plate.mjs"),
+      "--comp",
+      "LessonSpine",
+      "--dest",
+      dated,
+      "--lock",
+      missingLock,
+      "--meminfo",
+      meminfo,
+      "--dry-run",
+    ],
+    {encoding: "utf8"},
+  );
+  assert.equal(ok.status, 0, ok.stderr);
+  const body = JSON.parse(ok.stdout);
+  assert.equal(body.ok, true);
+  assert.equal(body.dest, dated);
+  const just = spawnSync(
+    process.execPath,
+    [
+      join(here, "render-plate.mjs"),
+      "--comp",
+      "LessonSpine",
+      "--cap-id",
+      "27pn9xs0zk8a73g",
+      "--dest",
+      dated,
+      "--lock",
+      missingLock,
+      "--meminfo",
+      meminfo,
+      "--dry-run",
+    ],
+    {encoding: "utf8"},
+  );
+  assert.equal(just.status, 2);
+  assert.equal(JSON.parse(just.stdout).error, "locked_dest");
 });

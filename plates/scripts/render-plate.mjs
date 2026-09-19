@@ -44,6 +44,7 @@ if (dry) {
       ok: true,
       composition,
       concurrency: CPU_CONCURRENCY,
+      dest: dest || null,
       skipped: "dry_run",
     }),
   );
@@ -61,10 +62,10 @@ for (let i = 0; i < args.length; i += 1) {
   passthrough.push(args[i]);
 }
 
-const rendered = spawnSync(
-  "npx",
-  ["remotion", "render", composition, ...passthrough, `--concurrency=${CPU_CONCURRENCY}`],
-  {cwd: root, stdio: "inherit"},
-);
+const remotionArgs = ["remotion", "render", composition];
+if (dest) remotionArgs.push(dest);
+remotionArgs.push(...passthrough, `--concurrency=${CPU_CONCURRENCY}`);
+
+const rendered = spawnSync("npx", remotionArgs, {cwd: root, stdio: "inherit"});
 
 process.exit(rendered.status ?? 1);
