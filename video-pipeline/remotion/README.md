@@ -8,3 +8,8 @@ Operator Remotion edit stack. `SceneMotion` words:
 Legacy: `spring` | `interpolate`. Luma 0.5s on scene **exits** only.
 
 Proof composition is a non-Just fixture (`src: "fixture"`, `introSec: 0`). Do not re-render Just `27pn9xs0zk8a73g`.
+
+In-tree operator docs (copy/align; do not invent a second bar):
+
+- [Remotion VOX standards + Independent Antagonist bar](../../docs/remotion-vox-standards.md)
+- [SceneMotion glide / takeover constants + PR 49 fixture proofs](../../docs/remotion-scenemotion-glide-takeover.md)
