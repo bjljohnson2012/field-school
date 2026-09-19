@@ -1,0 +1,11 @@
+[
+  {"text": "One", "startMs": 800, "endMs": 1100},
+  {"text": "claim", "startMs": 1100, "endMs": 1600},
+  {"text": "per", "startMs": 1600, "endMs": 1840},
+  {"text": "beat", "startMs": 1840, "endMs": 2400},
+  {"text": "Head", "startMs": 2800, "endMs": 3100},
+  {"text": "docked", "startMs": 3100, "endMs": 3700},
+  {"text": "Cream", "startMs": 4800, "endMs": 5300},
+  {"text": "ink", "startMs": 5400, "endMs": 5800},
+  {"text": "Fraunces", "startMs": 5900, "endMs": 6800}
+]
