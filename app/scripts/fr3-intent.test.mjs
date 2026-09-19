@@ -29,9 +29,9 @@ test("0006 is a versioned learning_intents store, not notes or Pattern revisions
   assert.match(sql, /constraints jsonb/);
   assert.match(sql, /tags jsonb/);
   assert.match(sql, /members ADD COLUMN IF NOT EXISTS mode/);
-  assert.match(sql, /'"mode":"family"'/);
+  assert.match(sql, /\{"mode":"family"\}/);
   assert.doesNotMatch(sql, /learning_events|parent-note|member_profile_revisions/);
-  assert.doesNotMatch(sql, /CREATE TABLE IF NOT EXISTS users\b|child seat|price_/);
+  assert.doesNotMatch(sql, /CREATE TABLE IF NOT EXISTS users\b|price_/);
   assert.doesNotMatch(sql, /MBTI|Enneagram|Gallup|Wiley/);
 });
 

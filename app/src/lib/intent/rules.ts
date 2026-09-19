@@ -1,6 +1,5 @@
-import { HOUSEHOLD_SLUG } from "@/lib/campus-runtime/rules";
-
 export const FAMILY_MODE = "family";
+export const HOUSEHOLD_SLUG = "household";
 export const INTENT_TAG_KEYS = ["knowledge", "confidence", "development", "next"] as const;
 export const INTENT_CONFIDENCE = ["not_yet", "getting_there", "ready", ""] as const;
 

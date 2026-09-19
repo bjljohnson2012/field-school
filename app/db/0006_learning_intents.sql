@@ -1,6 +1,5 @@
 -- FR-3 parent-owned learning intent versions.
--- Family mode only. Child ≠ User. Not learning_events parent-note.
--- Not member_profile_revisions. Not a fourth SKU. Not a child seat.
+-- Family mode only. Child ≠ User. No fourth SKU.
 -- Idempotent. Do not write leftover TanStack db.
 
 ALTER TABLE members ADD COLUMN IF NOT EXISTS mode text NOT NULL DEFAULT 'none';
