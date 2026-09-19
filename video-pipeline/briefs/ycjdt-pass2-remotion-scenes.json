@@ -1,0 +1,70 @@
+{
+  "asset_id": "3c9fe86f6dee81299337e318cfef6982",
+  "cap_id": "j013r823wx9ecaf",
+  "pass": 2,
+  "engine": "remotion",
+  "fallback": "melt",
+  "composition": "FieldSchoolLesson",
+  "just_locked": "27pn9xs0zk8a73g",
+  "duration": 651.878,
+  "proposed_cuts": [{"in": 0, "out": 651.878}],
+  "cuts": [],
+  "chapters": [],
+  "overlay": {
+    "logo": "/opt/field-school/edit/brand/logo.png",
+    "title": "You Can Just Do Things",
+    "x": 1576,
+    "y": 24,
+    "w": 80,
+    "h": 64
+  },
+  "transitions": [{"type": "luma", "duration": 0.5}],
+  "audio": {"sfx": false, "music": false, "vo_from_aroll": true},
+  "cards": "/opt/fieldschool-video/edit/cards/ycjdt",
+  "source": "https://cap.fieldschool.ai/hls/j013r823wx9ecaf/master.mp4",
+  "existing_pass2_master": "/opt/fieldschool-video/hls/j013r823wx9ecaf/vox/everything-made-up.mp4",
+  "encode_dest": "/opt/fieldschool-video/hls/j013r823wx9ecaf/remotion/pass2-scenes.mp4",
+  "do_not_overwrite": [
+    "/opt/fieldschool-video/hls/j013r823wx9ecaf/vox/everything-made-up.mp4",
+    "/opt/fieldschool-video/hls/27pn9xs0zk8a73g/master.mp4"
+  ],
+  "proposed_chapters": [
+    {"title": "The Waiting Trap", "start": 0},
+    {"title": "You Can Just Do Things", "start": 25},
+    {"title": "Made Up Is Not Fake", "start": 45},
+    {"title": "Authored Rules Have Consequences", "start": 75},
+    {"title": "Contrast With Natural Laws", "start": 105},
+    {"title": "That's How We've Always Done It", "start": 130},
+    {"title": "Ask Five Questions", "start": 234},
+    {"title": "The 60 Days", "start": 370},
+    {"title": "Two Sides", "start": 503},
+    {"title": "God's Law or a Memo", "start": 595}
+  ],
+  "remotion": {
+    "plan": "talking-head-over-slide",
+    "title_cards": [
+      {"at": 0, "text": "Waiting on a playbook, a meeting, a title.", "card": "01-the-waiting-trap.png"},
+      {"at": 25, "text": "Most of what blocks you was made up.", "card": "02-you-can-just-do-things.png"},
+      {"at": 45, "text": "A quota is real. A policy is real.", "card": "03-made-up-is-not-fake.png"},
+      {"at": 75, "text": "A person wrote it. Do it wrong and the work stops.", "card": "04-authored-rules-have-consequences.png"},
+      {"at": 105, "text": "Gravity is a law. God made that.", "card": "05-contrast-with-natural-laws.png"},
+      {"at": 130, "text": "A person made it. A person can change it.", "card": "06-thats-how-weve-always-done-it.png"},
+      {"at": 234, "text": "Why they wrote it. What started it. What they left out. What is best now. What to keep.", "card": "07-ask-five-questions.png"},
+      {"at": 370, "text": "Name why it is 60. Then ask if 30 or five would do.", "card": "08-the-60-days.png"},
+      {"at": 503, "text": "Waiting is failure. Vandal is failure. Start, then ask.", "card": "09-two-sides.png"},
+      {"at": 595, "text": "Look at the problem. Then take the next step.", "card": "10-gods-law-or-a-memo.png"}
+    ],
+    "scenes": [
+      {"id": "s1", "label": "The Waiting Trap", "in": 0, "out": 25, "x": 72, "y": 160, "scale": 1, "motion": "takeover", "text": "Waiting on a playbook, a meeting, a title.", "card": "01-the-waiting-trap.png"},
+      {"id": "s2", "label": "You Can Just Do Things", "in": 25, "out": 45, "x": 72, "y": 160, "scale": 1, "motion": "glide", "text": "Most of what blocks you was made up.", "card": "02-you-can-just-do-things.png"},
+      {"id": "s3", "label": "Made Up Is Not Fake", "in": 45, "out": 75, "x": 72, "y": 160, "scale": 1, "motion": "takeover", "text": "A quota is real. A policy is real.", "card": "03-made-up-is-not-fake.png"},
+      {"id": "s4", "label": "Authored Rules Have Consequences", "in": 75, "out": 105, "x": 72, "y": 160, "scale": 1, "motion": "glide", "text": "A person wrote it. Do it wrong and the work stops.", "card": "04-authored-rules-have-consequences.png"},
+      {"id": "s5", "label": "Contrast With Natural Laws", "in": 105, "out": 130, "x": 72, "y": 160, "scale": 1, "motion": "takeover", "text": "Gravity is a law. God made that.", "card": "05-contrast-with-natural-laws.png"},
+      {"id": "s6", "label": "That's How We've Always Done It", "in": 130, "out": 234, "x": 72, "y": 160, "scale": 1, "motion": "glide", "text": "A person made it. A person can change it.", "card": "06-thats-how-weve-always-done-it.png"},
+      {"id": "s7", "label": "Ask Five Questions", "in": 234, "out": 370, "x": 72, "y": 160, "scale": 1, "motion": "takeover", "text": "Why they wrote it. What started it. What they left out. What is best now. What to keep.", "card": "07-ask-five-questions.png"},
+      {"id": "s8", "label": "The 60 Days", "in": 370, "out": 503, "x": 72, "y": 160, "scale": 1, "motion": "glide", "text": "Name why it is 60. Then ask if 30 or five would do.", "card": "08-the-60-days.png"},
+      {"id": "s9", "label": "Two Sides", "in": 503, "out": 595, "x": 72, "y": 160, "scale": 1, "motion": "takeover", "text": "Waiting is failure. Vandal is failure. Start, then ask.", "card": "09-two-sides.png"},
+      {"id": "s10", "label": "God's Law or a Memo", "in": 595, "out": 651.878, "x": 72, "y": 160, "scale": 1, "motion": "glide", "text": "Look at the problem. Then take the next step.", "card": "10-gods-law-or-a-memo.png"}
+    ]
+  }
+}
