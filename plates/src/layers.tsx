@@ -104,12 +104,14 @@ export function HeadFixture() {
   );
 }
 
-export function TalkingHeadCard({
+export function HeadDock({
   motion,
   sceneFrame,
+  dock = "dock-right",
 }: {
   motion: "glide" | "takeover";
   sceneFrame: number;
+  dock?: "dock-right" | "dock-left";
 }) {
   const head = takeoverHead(sceneFrame);
   const opacity = motion === "takeover" ? head.opacity : 1;
@@ -118,7 +120,7 @@ export function TalkingHeadCard({
     <div
       style={{
         position: "absolute",
-        left: 1160,
+        left: dock === "dock-left" ? 60 : 1160,
         top: 150,
         width: 700,
         height: 820,

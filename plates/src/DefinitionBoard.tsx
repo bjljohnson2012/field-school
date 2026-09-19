@@ -1,12 +1,18 @@
 import React from "react";
-import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from "remotion";
-import {cream, gold, ink} from "./brand";
+import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
+import {cream} from "./brand";
 import {Bed, Claim, GoldRule, HeadDock, Karaoke, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
-import type {RecapProps} from "./types";
+import type {DefinitionProps} from "./types";
 
-export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, durationSec, overlay, captions}) => {
+export const DefinitionBoard: React.FC<DefinitionProps> = ({
+  term,
+  definition,
+  durationSec,
+  overlay,
+  captions,
+}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const now = frame / fps;
@@ -19,33 +25,18 @@ export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, duration
           <Bed />
         </Layer>
         <Layer name="screen">
-          <TypeCard motion="glide" sceneFrame={frame}>
-            <Kicker>{kicker}</Kicker>
-            <Title>{title}</Title>
+          <TypeCard motion="glide" sceneFrame={24}>
+            <Kicker>Definition</Kicker>
+            <Title>{term}</Title>
             <GoldRule />
-            {points.slice(0, 3).map((point, i) => (
-              <div
-                key={point}
-                style={{
-                  opacity: interpolate(frame, [24 + i * 36, 40 + i * 36], [0, 1], {
-                    extrapolateLeft: "clamp",
-                    extrapolateRight: "clamp",
-                  }),
-                  marginBottom: 14,
-                }}
-              >
-                <Claim color={frame >= 24 + i * 36 && frame < 60 + i * 36 ? gold : ink}>
-                  {i + 1}. {point}
-                </Claim>
-              </div>
-            ))}
+            <Claim>{definition}</Claim>
           </TypeCard>
         </Layer>
         <Layer name="talking-head card">
           <HeadDock motion="glide" sceneFrame={frame} />
         </Layer>
         <Layer name="lower third">
-          <LowerThird label="Recap" />
+          <LowerThird label="Definition" />
         </Layer>
         <Layer name="captions">
           <Karaoke captions={captions} />

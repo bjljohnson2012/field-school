@@ -1,13 +1,20 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
-import {Claim, GoldRule, Kicker, Karaoke, Letterbox, LowerThird, OverlayLock, HeadDock, Title, TypeCard} from "./layers";
-import {Bed} from "./layers";
+import {cream} from "./brand";
+import {Bed, Claim, GoldRule, HeadDock, Karaoke, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
-import {cream} from "./brand";
-import type {OpenerProps} from "./types";
+import type {TalkingHeadProps} from "./types";
 
-export const Opener: React.FC<OpenerProps> = ({kicker, title, claim, durationSec, overlay, captions}) => {
+export const TalkingHeadCard: React.FC<TalkingHeadProps> = ({
+  name,
+  role,
+  line,
+  dock,
+  durationSec,
+  overlay,
+  captions,
+}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const now = frame / fps;
@@ -21,17 +28,19 @@ export const Opener: React.FC<OpenerProps> = ({kicker, title, claim, durationSec
         </Layer>
         <Layer name="screen">
           <TypeCard motion="takeover" sceneFrame={frame}>
-            <Kicker>{kicker}</Kicker>
-            <Title>{title}</Title>
+            <Kicker>
+              {name} · {role}
+            </Kicker>
+            <Title>Docked, not full-bleed</Title>
             <GoldRule />
-            <Claim>{claim}</Claim>
+            <Claim>{line}</Claim>
           </TypeCard>
         </Layer>
         <Layer name="talking-head card">
-          <HeadDock motion="takeover" sceneFrame={frame} />
+          <HeadDock motion="takeover" sceneFrame={frame} dock={dock} />
         </Layer>
         <Layer name="lower third">
-          <LowerThird label="Opener" />
+          <LowerThird label="Talking head" />
         </Layer>
         <Layer name="captions">
           <Karaoke captions={captions} />

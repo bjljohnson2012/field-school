@@ -1,11 +1,34 @@
 import React from "react";
 import {Composition} from "remotion";
+import {DefinitionBoard} from "./DefinitionBoard";
 import {Opener} from "./Opener";
+import {QuizBumper} from "./QuizBumper";
 import {RecapCard} from "./RecapCard";
-import {clampPlateSec} from "./sceneMotionMath";
+import {TalkingHeadCard} from "./TalkingHeadCard";
+import {clampBand, clampPlateSec} from "./sceneMotionMath";
 
 function plateMetadata({props}: {props: {durationSec?: number}}) {
   const sec = clampPlateSec(props.durationSec ?? 10);
+  return {
+    durationInFrames: Math.max(1, Math.round(sec * 30)),
+    fps: 30,
+    width: 1920,
+    height: 1080,
+  };
+}
+
+function boardMetadata({props}: {props: {durationSec?: number}}) {
+  const sec = clampBand(props.durationSec ?? 6, 6, 6);
+  return {
+    durationInFrames: Math.max(1, Math.round(sec * 30)),
+    fps: 30,
+    width: 1920,
+    height: 1080,
+  };
+}
+
+function bumperMetadata({props}: {props: {durationSec?: number}}) {
+  const sec = clampBand(props.durationSec ?? 7, 6, 8);
   return {
     durationInFrames: Math.max(1, Math.round(sec * 30)),
     fps: 30,
@@ -83,6 +106,96 @@ export const RemotionRoot: React.FC = () => {
             {text: "Cream", startMs: 4800, endMs: 5300},
             {text: "ink", startMs: 5400, endMs: 5800},
             {text: "Fraunces", startMs: 5900, endMs: 6800},
+          ],
+        }}
+        calculateMetadata={plateMetadata}
+      />
+      <Composition
+        id="DefinitionBoard"
+        component={DefinitionBoard}
+        durationInFrames={180}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          term: "Explanatory motion",
+          definition: "Each beat draws one idea. Type is the lesson, not a caption dump.",
+          durationSec: 6,
+          overlay: {
+            title: "You Can Just Do Things",
+            x: 1576,
+            y: 24,
+            w: 80,
+            h: 64,
+          },
+          captions: [
+            {text: "Explanatory", startMs: 0, endMs: 900},
+            {text: "motion", startMs: 900, endMs: 1600},
+            {text: "One", startMs: 2000, endMs: 2300},
+            {text: "idea", startMs: 2300, endMs: 2800},
+            {text: "per", startMs: 2800, endMs: 3000},
+            {text: "beat", startMs: 3000, endMs: 3600},
+          ],
+        }}
+        calculateMetadata={boardMetadata}
+      />
+      <Composition
+        id="QuizBumper"
+        component={QuizBumper}
+        durationInFrames={210}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          prompt: "What did the card draw?",
+          sourceUnitTitle: "Explanatory motion",
+          sourceUnitId: "lesson-opener",
+          durationSec: 7,
+          overlay: {
+            title: "You Can Just Do Things",
+            x: 1576,
+            y: 24,
+            w: 80,
+            h: 64,
+          },
+          captions: [
+            {text: "What", startMs: 400, endMs: 700},
+            {text: "did", startMs: 700, endMs: 900},
+            {text: "the", startMs: 900, endMs: 1100},
+            {text: "card", startMs: 1100, endMs: 1500},
+            {text: "draw?", startMs: 1500, endMs: 2200},
+          ],
+        }}
+        calculateMetadata={bumperMetadata}
+      />
+      <Composition
+        id="TalkingHeadCard"
+        component={TalkingHeadCard}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          name: "Teacher",
+          role: "Operator",
+          line: "The face stays docked. Type keeps the left.",
+          dock: "dock-right",
+          durationSec: 8,
+          overlay: {
+            title: "You Can Just Do Things",
+            x: 1576,
+            y: 24,
+            w: 80,
+            h: 64,
+          },
+          captions: [
+            {text: "Docked", startMs: 400, endMs: 900},
+            {text: "not", startMs: 900, endMs: 1100},
+            {text: "full-bleed", startMs: 1100, endMs: 1800},
+            {text: "Type", startMs: 2200, endMs: 2500},
+            {text: "keeps", startMs: 2500, endMs: 2900},
+            {text: "the", startMs: 2900, endMs: 3100},
+            {text: "left.", startMs: 3100, endMs: 3600},
           ],
         }}
         calculateMetadata={plateMetadata}

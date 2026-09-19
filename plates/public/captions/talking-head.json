@@ -1,0 +1,9 @@
+[
+  {"text": "Docked", "startMs": 400, "endMs": 900},
+  {"text": "not", "startMs": 900, "endMs": 1100},
+  {"text": "full-bleed", "startMs": 1100, "endMs": 1800},
+  {"text": "Type", "startMs": 2200, "endMs": 2500},
+  {"text": "keeps", "startMs": 2500, "endMs": 2900},
+  {"text": "the", "startMs": 2900, "endMs": 3100},
+  {"text": "left.", "startMs": 3100, "endMs": 3600}
+]
