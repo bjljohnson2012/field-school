@@ -19,7 +19,8 @@ Cites:
 - [antagonist-lesson-spine-edu-s01-encode.md](./antagonist-lesson-spine-edu-s01-encode.md) — EDU-S01 LessonSpine encode (archived prior)
 - [antagonist-lesson-spine-edu-s02-encode.md](./antagonist-lesson-spine-edu-s02-encode.md) — EDU-S02 LessonSpine encode (archived prior)
 - [antagonist-lesson-spine-slate-encode.md](./antagonist-lesson-spine-slate-encode.md) — LessonSpine slate encode (archived prior)
-- [antagonist-lesson-spine-typecard-objectiveslate-encode.md](./antagonist-lesson-spine-typecard-objectiveslate-encode.md) — LessonSpine TypeCard + ObjectiveSlate encode (current master)
+- [antagonist-lesson-spine-typecard-objectiveslate-encode.md](./antagonist-lesson-spine-typecard-objectiveslate-encode.md) — LessonSpine TypeCard + ObjectiveSlate encode (archived prior)
+- [antagonist-lesson-spine-progress-chapter-encode.md](./antagonist-lesson-spine-progress-chapter-encode.md) — LessonSpine ProgressRail + ChapterChip encode (current master)
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -89,7 +90,8 @@ stills: /opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/
 | `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` | `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` | EDU-S01 slate — archived prior |
 | `/opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4` | `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` | EDU-S02 signaling — archived prior |
 | `/opt/cursor/artifacts/lesson-spine-slate-encode/2026-09-20/LessonSpine.mp4` | `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` | slate polish — archived prior |
-| `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` | `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` | **current master** (TypeCard + ObjectiveSlate) |
+| `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` | `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` | TypeCard + ObjectiveSlate — archived prior |
+| `/opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4` | `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7` | **current master** (ProgressRail + ChapterChip) |
 
 Just `27pn9xs0zk8a73g` and Aug 30 `vox/everything-made-up.mp4` not written. No Cap A-roll.
 
@@ -346,7 +348,7 @@ SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). Opener
 
 ## LessonSpine typecard-objectiveslate encode 2026-09-20
 
-Dated **2026-09-20**. New dated dest `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5`. **Current master.** Slate `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` archived prior, **untouched**. PRs 85–98. Stills `/opt/cursor/artifacts/remotion-lesson-spine-typecard-objectiveslate-encode/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+Dated **2026-09-20**. New dated dest `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5`. Archived prior dest (file **untouched**). Slate `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` archived prior, **untouched**. PRs 85–98. Stills `/opt/cursor/artifacts/remotion-lesson-spine-typecard-objectiveslate-encode/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
 
 ```
 verdict: PASS
@@ -545,6 +547,28 @@ gates: {
 ```
 
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). ChapterChip factory PASS. Launch stays CLOSED 0/8.
+
+## LessonSpine progress-chapter encode 2026-09-20
+
+Dated **2026-09-20**. New dated dest `/opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4` sha256 `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7`. **Current master dest.** Typecard-objectiveslate dest `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` archived prior, **untouched**. PRs 85–104. After PR 104 merge `0dab60b9e62ff24e093cea43d8d2ce3a31488fc5`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-progress-chapter-encode/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+rendering: /opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4
+sha256: a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7
+stills: /opt/cursor/artifacts/remotion-lesson-spine-progress-chapter-encode/2026-09-20/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT, EDU-S04: PASS
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`.
 
 ## Held
 
