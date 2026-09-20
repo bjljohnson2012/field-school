@@ -2,7 +2,7 @@
 
 2026-09-20 overnight close-sync. 2026-09-20 pre-0600 status sync. Operator Remotion in `plates/` only. No Remotion campus package. No player rail. No live Cleaning / Publish flip. No Cap take. AUTH_URL stays `https://portal.fieldschool.ai`. Family LIVE `bc-4765f2f0` not stolen. Just `27pn9xs0zk8a73g` locked.
 
-Current master LessonSpine dest: `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf`. EDU-S01 objective slate. TypeCard VOX-S04 polish. AudioBed landed. Wave3 campus pack LIVE. Karaoke gold. Letterbox stack complete. Archived prior typecard-encode `/opt/cursor/artifacts/lesson-spine-typecard-encode/2026-09-20/LessonSpine.mp4` sha256 `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0`. Archived prior audiobed-encode `/opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4` sha256 `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f` (same as karaoke gold when AudioBed volume 0). Karaoke dest file archived, not deleted.
+Current master LessonSpine dest: `/opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4` sha256 `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8`. EDU-S01 objective slate. DefinitionBoard EDU-S02. QuizBumper next-up. TypeCard VOX-S04 polish. AudioBed landed. Wave3 campus pack LIVE. Karaoke gold. Letterbox stack complete. Archived prior edu-s01-encode `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf`. Archived prior typecard-encode `/opt/cursor/artifacts/lesson-spine-typecard-encode/2026-09-20/LessonSpine.mp4` sha256 `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0`. Archived prior audiobed-encode `/opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4` sha256 `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f` (same as karaoke gold when AudioBed volume 0). Karaoke dest file archived, not deleted.
 
 Bar: [remotion-vox-standards.md](../remotion-vox-standards.md). Independent Antagonist v2 is the only bar.
 
@@ -67,6 +67,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | EDU-S01 LessonSpine encode | PR 86 `2bfafed` / tip `0c35205` |
 | EDU-S01 master dest reaudit | PR 87 `c2e9dad` / tip `b4b96c3` |
 | EDU-S02 DefinitionBoard | PR 88 `253a638` / tip `4859ca4` |
+| QuizBumper next-up | PR 89 `a29231f` / tip `7da8be2` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -82,7 +83,9 @@ AudioBed LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-audiobed-e
 
 TypeCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-typecard-encode/2026-09-20/LessonSpine.mp4` sha256 `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0` (h264 1920×1080@30, 41.000s). TypeCard VOX-S04 polish on DefinitionBoard/objective + full stack. Prior dests **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-typecard-encode.md](../../plates/antagonist-lesson-spine-typecard-encode.md). Archived prior typecard-encode (not deleted). Audiobed / karaoke dests remain archived priors (not deleted).
 
-EDU-S01 LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` (h264 1920×1080@30, 41.000s). PR 85 objective slate on sting + recap. Typecard dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-edu-s01-encode.md](../../plates/antagonist-lesson-spine-edu-s01-encode.md). **Current master dest.**
+EDU-S01 LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` (h264 1920×1080@30, 41.000s). PR 85 objective slate on sting + recap. Typecard dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-edu-s01-encode.md](../../plates/antagonist-lesson-spine-edu-s01-encode.md). Archived prior edu-s01-encode (file **untouched**). New master dest is edu-s02-encode.
+
+EDU-S02 LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4` sha256 `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` (h264 1920×1080@30, 41.000s). PRs 85–89. EDU-S01 slate + DefinitionBoard EDU-S02 + QuizBumper next-up. EDU-S01 dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-edu-s02-encode.md](../../plates/antagonist-lesson-spine-edu-s02-encode.md). **Current master dest.**
 
 ## Letterbox stack (complete)
 
@@ -114,7 +117,7 @@ PRs 79–84 harvested. PR 85 merged tip `a97167a`. Opener sting carries Mayer pr
 
 ## EDU-S01 LessonSpine encode (PASS)
 
-PR 86 merge `2bfafed` / tip `0c35205` (PR 85 slate `a97167a`). New dated dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf`. **Current master dest.** Typecard `27cc5bf3…` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-edu-s01-encode.md`. Stills: `/opt/cursor/artifacts/remotion-edu-s01-spine-encode/2026-09-20/`. `hold_cleaning: true`. `--flip` refused.
+PR 86 merge `2bfafed` / tip `0c35205` (PR 85 slate `a97167a`). New dated dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf`. Archived prior edu-s01-encode (file **untouched**). Typecard `27cc5bf3…` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-edu-s01-encode.md`. Stills: `/opt/cursor/artifacts/remotion-edu-s01-spine-encode/2026-09-20/`. `hold_cleaning: true`. `--flip` refused.
 
 ## EDU-S01 master dest reaudit (PASS)
 
@@ -126,7 +129,11 @@ PR 87 merge `c2e9dad` / tip `b4b96c3` harvested. PR 88 merge `253a638` / tip `48
 
 ## QuizBumper next-up (PASS)
 
-PR 88 merge `253a638` / tip `4859ca4` harvested. QuizBumper kicker “Next up” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “What did the card draw?”. Karaoke already gold-ticks “draw?” 1500–2200ms (plate f54 / spine f1074). ORDER LOCK unchanged. Current master dest edu-s01-encode sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` **untouched** (plate-level stills only). Evidence: `plates/antagonist-quizbumper-next-up.md`. Stills: `/opt/cursor/artifacts/remotion-quizbumper-next-up/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
+PR 88 merge `253a638` / tip `4859ca4` harvested. PR 89 merge `a29231f` / tip `7da8be2`. QuizBumper kicker “Next up” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “What did the card draw?”. Karaoke already gold-ticks “draw?” 1500–2200ms (plate f54 / spine f1074). ORDER LOCK unchanged. Current master dest edu-s01-encode sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` **untouched** (plate-level stills only). Evidence: `plates/antagonist-quizbumper-next-up.md`. Stills: `/opt/cursor/artifacts/remotion-quizbumper-next-up/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
+
+## EDU-S02 LessonSpine encode (PASS)
+
+PRs 85–89 harvested. PR 89 merge `a29231f` / tip `7da8be2`. New dated dest `/opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4` sha256 `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8`. **Current master dest.** EDU-S01 dest `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-edu-s02-encode.md`. Stills: `/opt/cursor/artifacts/remotion-edu-s02-spine-encode/2026-09-20/`. `hold_cleaning: true`. `--flip` refused.
 
 ## Karaoke gold (VOX-S01 PASS)
 
