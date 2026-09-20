@@ -92,6 +92,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | CaptionDensity karaoke line packing | PR 111 `37fbe4d` / tip `3fa4511` |
 | OverlayLock logo+title lock | PR 112 `41f775d` / tip `018ad3d` |
 | CaptionDensity+OverlayLock encode | PR 113 `61e6a76` / tip `2ed00dd` |
+| Caption-overlay master dest reaudit | PR 114 `c2a63b7` / tip `58334d6` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -119,7 +120,7 @@ ProgressRail+ChapterChip LessonSpine encode dest: `/opt/cursor/artifacts/lesson-
 
 LowerThird+CalloutCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-lower-callout-encode/2026-09-20/LessonSpine.mp4` sha256 `68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92` (h264 1920×1080@30, 41.000s). PRs 85–108. LowerThird speaker/context + CalloutCard tip/aside on the progress-chapter stack. Progress-chapter dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-lower-callout-encode.md](../../plates/antagonist-lesson-spine-lower-callout-encode.md). Archived prior dest (file **untouched**). PR 108 merge `f15642f` / tip `e2b3181` harvested.
 
-CaptionDensity+OverlayLock LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-caption-overlay-encode/2026-09-20/LessonSpine.mp4` sha256 `5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c` (h264 1920×1080@30, 41.000s). PRs 85–112. CaptionDensity packing + OverlayLock logo+title lock on the lower-callout stack. Lower-callout dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-caption-overlay-encode.md](../../plates/antagonist-lesson-spine-caption-overlay-encode.md). **Current master dest.** PR 112 merge `41f775d` / tip `018ad3d` harvested. PR 113 merge `61e6a76` / tip `2ed00dd` harvested. Independent Antagonist v2 reaudit **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-caption-overlay-master.md`.
+CaptionDensity+OverlayLock LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-caption-overlay-encode/2026-09-20/LessonSpine.mp4` sha256 `5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c` (h264 1920×1080@30, 41.000s). PRs 85–112. CaptionDensity packing + OverlayLock logo+title lock on the lower-callout stack. Lower-callout dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-caption-overlay-encode.md](../../plates/antagonist-lesson-spine-caption-overlay-encode.md). **Current master dest.** PR 112 merge `41f775d` / tip `018ad3d` harvested. PR 113 merge `61e6a76` / tip `2ed00dd` harvested. PR 114 merge `c2a63b7` / tip `58334d6` harvested. Independent Antagonist v2 reaudit **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-caption-overlay-master.md`.
 
 ## Letterbox stack (complete)
 
@@ -263,7 +264,11 @@ PRs 85–112 harvested. PR 112 merge `41f775d` / tip `018ad3d`. New dated dest `
 
 ## LessonSpine caption-overlay master dest reaudit (PASS)
 
-Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-caption-overlay-encode/2026-09-20/LessonSpine.mp4` sha256 `5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c` plus CaptionDensity/OverlayLock plates. PR 113 merge `61e6a76` / tip `2ed00dd`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Lower-callout dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-caption-overlay-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-caption-overlay-master/2026-09-20/`.
+Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-caption-overlay-encode/2026-09-20/LessonSpine.mp4` sha256 `5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c` plus CaptionDensity/OverlayLock plates. PR 113 merge `61e6a76` / tip `2ed00dd`. PR 114 merge `c2a63b7` / tip `58334d6`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Lower-callout dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-caption-overlay-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-caption-overlay-master/2026-09-20/`.
+
+## TransitionLuma (PASS)
+
+PR 114 merge `c2a63b7` / tip `58334d6` harvested. TransitionLuma soft craft beat: beat-to-beat wipe (`TRANSITION_LUMA_FRAMES = 18` cream luma + gold 6px leading edge). Craft beat on `TransitionLumaDemo`. TransitionLuma path only. No Cap take. ORDER LOCK unchanged. Current master dest caption-overlay-encode sha256 `5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c` **untouched** (plate-level stills only). Evidence: `plates/antagonist-transition-luma.md`. Stills: `/opt/cursor/artifacts/remotion-transition-luma/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 

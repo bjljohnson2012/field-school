@@ -3,7 +3,7 @@
 Operator-only. Cap + Remotion + Edit-spec. Not a campus or student product.
 Not the factory hour-master melt path except as fallback.
 
-Wave 5 compositions: Opener, RecapCard, **DefinitionBoard**, **QuizBumper**, **TalkingHeadCard**, **LessonSpine**, plus craft demos **LowerThirdDemo** / **CaptionsDemo** / **CaptionDensityDemo** / **OverlayLockDemo** / **LetterboxDemo** / **AudioBedDemo** / **ProgressRailDemo** / **ChapterChipDemo** / **CalloutCardDemo**. Remotion is default. Melt fallback only. Do not re-render Asset Just (`27pn9xs0zk8a73g`).
+Wave 5 compositions: Opener, RecapCard, **DefinitionBoard**, **QuizBumper**, **TalkingHeadCard**, **LessonSpine**, plus craft demos **LowerThirdDemo** / **CaptionsDemo** / **CaptionDensityDemo** / **OverlayLockDemo** / **LetterboxDemo** / **AudioBedDemo** / **ProgressRailDemo** / **ChapterChipDemo** / **CalloutCardDemo** / **TransitionLumaDemo**. Remotion is default. Melt fallback only. Do not re-render Asset Just (`27pn9xs0zk8a73g`).
 
 Do not add campus UI. Do not add a student-facing AI builder. Do not campus-package Remotion into `app/`. Do not accept Cleaning flip or Publish/Distribute from this package.
 
@@ -29,7 +29,8 @@ Later sibling sits on top. No z-index.
 7. progress
 8. chapter
 9. callout
-10. audio
+10. transition
+11. audio
 
 Dock the talking-head card to ~38% width (`dock-right` or `dock-left`). Never full-bleed over type.
 
@@ -69,6 +70,8 @@ npx remotion still ChapterChipDemo --frame=0
 npx remotion still ChapterChipDemo --frame=60
 npx remotion still CalloutCardDemo --frame=0
 npx remotion still CalloutCardDemo --frame=60
+npx remotion still TransitionLumaDemo --frame=0
+npx remotion still TransitionLumaDemo --frame=60
 npx remotion still TalkingHeadCard --frame=90
 npx remotion still LessonSpine --frame=330
 ```

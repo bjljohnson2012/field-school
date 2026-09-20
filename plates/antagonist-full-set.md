@@ -45,6 +45,7 @@ Cites:
 - [antagonist-callout-card.md](./antagonist-callout-card.md) — CalloutCard tip / aside signal
 - [antagonist-caption-density.md](./antagonist-caption-density.md) — CaptionDensity karaoke line packing
 - [antagonist-overlay-lock.md](./antagonist-overlay-lock.md) — OverlayLock logo+title lock
+- [antagonist-transition-luma.md](./antagonist-transition-luma.md) — TransitionLuma beat-to-beat wipe
 
 ```
 verdict: PASS
@@ -766,6 +767,25 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `CaptionDensityDemo-f0.png`, `CaptionDensityDemo-f60.png`, `OverlayLockDemo-f0.png`, `OverlayLockDemo-f60.png`.
+
+## TransitionLuma 2026-09-20
+
+Dated **2026-09-20**. TransitionLuma soft craft beat. Beat-to-beat wipe on `TransitionLuma` (`TRANSITION_LUMA_FRAMES = 18`). Craft beat on `TransitionLumaDemo`. After PR 114 merge `c2a63b7997773147bb0f50bd163a675fc942f25c`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-caption-overlay-encode/2026-09-20/LessonSpine.mp4` sha256 `5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-transition-luma/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-transition-luma/2026-09-20/
+sha256: 5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT, EDU-S04: PASS
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). TransitionLuma factory PASS. Launch stays CLOSED 0/8.
 
 ## Held
 

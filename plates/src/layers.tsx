@@ -469,6 +469,43 @@ export function CalloutCard({beat}: {beat: ProgressRailBeat}) {
   );
 }
 
+/** Beat-to-beat wipe. After callout, before audio. Cream luma + gold leading edge. */
+export const TRANSITION_LUMA_FRAMES = 18;
+
+export function TransitionLuma() {
+  const frame = useCurrentFrame();
+  const width = interpolate(frame, [0, TRANSITION_LUMA_FRAMES], [1920, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  if (width <= 0) {
+    return null;
+  }
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 0,
+        top: 0,
+        width,
+        height: 1080,
+        backgroundColor: cream,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          width: 6,
+          height: 1080,
+          backgroundColor: gold,
+        }}
+      />
+    </div>
+  );
+}
+
 /** Soft-unmuted silent fixture bed. Last sibling after letterbox. Volume 0. No Cap A-roll. */
 export const AUDIO_BED_FILE = "audio-bed-silence.wav";
 export const AUDIO_BED_VOLUME = 0;
