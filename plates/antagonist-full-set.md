@@ -27,6 +27,7 @@ Cites:
 - [antagonist-talkinghead-slate.md](./antagonist-talkinghead-slate.md) — TalkingHead slate signaling
 - [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md) — RecapCard slate signaling
 - [antagonist-opener-slate.md](./antagonist-opener-slate.md) — Opener slate signaling
+- [antagonist-objectiveslate-slate.md](./antagonist-objectiveslate-slate.md) — ObjectiveSlate slate signaling
 
 ```
 verdict: PASS
@@ -334,6 +335,25 @@ gates: {
 ```
 
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). Opener slate factory PASS. Launch stays CLOSED 0/8.
+
+## ObjectiveSlate slate 2026-09-20
+
+Dated **2026-09-20**. ObjectiveSlate keeps “You will be able to” plus last-word gold `#C4A35A` tick (`Keyword`) on fixture `draw one idea per beat` (“beat”). LessonSpine objective beat stays DefinitionBoard. After PR 96 merge `c4aa0a44d82602f47d64d8b28b0bf1bf07ff2780`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-slate-encode/2026-09-20/LessonSpine.mp4` sha256 `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-objectiveslate-slate/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-objectiveslate-slate/2026-09-20/
+sha256: d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). ObjectiveSlate slate factory PASS. Launch stays CLOSED 0/8.
 
 ## LessonSpine slate encode 2026-09-20
 

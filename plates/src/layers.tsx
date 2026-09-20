@@ -386,7 +386,7 @@ export function Claim({children, color = ink}: {children: React.ReactNode; color
   );
 }
 
-/** EDU-S01 pre-training slate. Prefix is always "You will be able to". */
+/** EDU-S01 pre-training slate. Prefix is always "You will be able to". Last-word EDU-S02 gold tick. */
 export function ObjectiveSlate({
   objective,
   sceneFrame,
@@ -400,6 +400,9 @@ export function ObjectiveSlate({
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
+  const words = objective.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? objective;
+  const lead = words.slice(0, -1).join(" ");
   return (
     <div style={{opacity, marginTop: 28, maxWidth: 960}}>
       <div
@@ -422,12 +425,12 @@ export function ObjectiveSlate({
           letterSpacing: "0.01em",
           wordSpacing: "0.14em",
           color: ink,
-          borderBottom: `3px solid ${gold}`,
           display: "inline-block",
           paddingBottom: 4,
         }}
       >
-        {objective}
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
       </div>
     </div>
   );
