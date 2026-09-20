@@ -32,6 +32,7 @@ Opener + RecapCard unchanged from PR 52.
 
 - `VOX-S02` / `EDU-S01` — plates, not a full lesson spine
 - `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md)
+- `EDU-S02` — **PASS** gold keyword tick on DefinitionBoard Title last word. See [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md)
 - `EDU-S03` — olive fixture, not gesturing A-roll (no Cap take)
 - Quiz `sourceUnitId` is operator copy (`lesson-opener`), not a second Pattern bank
 
@@ -42,6 +43,10 @@ Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Stills `De
 ## TypeCard VOX-S04 2026-09-20
 
 Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
+
+## EDU-S02 DefinitionBoard 2026-09-20
+
+DefinitionBoard Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “motion”. Karaoke already gold-ticks the same word 900–1600ms. Evidence: [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md). Stills `/opt/cursor/artifacts/remotion-definitionboard-edu-s02/2026-09-20/`. Locked master dest `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` **untouched**. `hold_cleaning: true`. ORDER LOCK intact.
 
 ## Held
 

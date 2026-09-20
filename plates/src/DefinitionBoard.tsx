@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream} from "./brand";
-import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
+import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Keyword, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {DefinitionProps} from "./types";
@@ -17,6 +17,9 @@ export const DefinitionBoard: React.FC<DefinitionProps> = ({
   const {fps} = useVideoConfig();
   const now = frame / fps;
   const veil = lumaVeil(now, 0, durationSec, 0.5, "glide");
+  const words = term.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? term;
+  const lead = words.slice(0, -1).join(" ");
 
   return (
     <AbsoluteFill style={{backgroundColor: cream}}>
@@ -27,7 +30,10 @@ export const DefinitionBoard: React.FC<DefinitionProps> = ({
         <Layer name="screen">
           <TypeCard motion="glide" sceneFrame={24}>
             <Kicker>Definition</Kicker>
-            <Title>{term}</Title>
+            <Title>
+              {lead ? `${lead} ` : null}
+              <Keyword>{keyword}</Keyword>
+            </Title>
             <GoldRule />
             <Claim>{definition}</Claim>
           </TypeCard>
