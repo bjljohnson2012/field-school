@@ -15,6 +15,7 @@ PASS notes:
 - [antagonist-lesson-spine-reencode-captions.md](./antagonist-lesson-spine-reencode-captions.md) — LessonSpine re-encode with captions/LT
 - [antagonist-letterbox-layer.md](./antagonist-letterbox-layer.md) — Letterbox (after captions, before audio)
 - [antagonist-audio-bed-layer.md](./antagonist-audio-bed-layer.md) — AudioBed silent fixture (after letterbox)
+- [antagonist-lesson-spine-audiobed-encode.md](./antagonist-lesson-spine-audiobed-encode.md) — LessonSpine AudioBed encode
 - [antagonist-soft-polish-vox-s05.md](./antagonist-soft-polish-vox-s05.md) — OverlayLock + TypeCard VOX-S05 polish
 - [antagonist-lesson-spine-letterbox-encode.md](./antagonist-lesson-spine-letterbox-encode.md) — LessonSpine letterbox + soft-polish encode
 
@@ -23,7 +24,7 @@ PASS notes:
 
 Locked pedagogical order: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up.
 
-Do not re-render Just `27pn9xs0zk8a73g`. Do not overwrite Aug 30 `vox/everything-made-up.mp4`. No Cap take. No second melt. No Publish/Distribute. No campus Remotion package. Encode only to a new dated dest (see [encode-lesson-spine.md](./encode-lesson-spine.md)). Captions/lower-third re-encode: [encode-lesson-spine-reencode-captions.md](./encode-lesson-spine-reencode-captions.md). Letterbox + soft-polish re-encode: [encode-lesson-spine-letterbox.md](./encode-lesson-spine-letterbox.md). Karaoke gold encode: [encode-lesson-spine-karaoke-gold.md](./encode-lesson-spine-karaoke-gold.md). Prior dests stay: karaoke `9f89f9a9…`, letterbox `028d16e4…`, first `a5d08284…`, captions `ec88d257…`.
+Do not re-render Just `27pn9xs0zk8a73g`. Do not overwrite Aug 30 `vox/everything-made-up.mp4`. No Cap take. No second melt. No Publish/Distribute. No campus Remotion package. Encode only to a new dated dest (see [encode-lesson-spine.md](./encode-lesson-spine.md)). Captions/lower-third re-encode: [encode-lesson-spine-reencode-captions.md](./encode-lesson-spine-reencode-captions.md). Letterbox + soft-polish re-encode: [encode-lesson-spine-letterbox.md](./encode-lesson-spine-letterbox.md). Karaoke gold encode: [encode-lesson-spine-karaoke-gold.md](./encode-lesson-spine-karaoke-gold.md). AudioBed encode: [encode-lesson-spine-audiobed.md](./encode-lesson-spine-audiobed.md). Prior dests stay: karaoke `9f89f9a9…`, letterbox `028d16e4…`, first `a5d08284…`, captions `ec88d257…`.
 
 ## Catalog
 
@@ -54,9 +55,10 @@ CPU cap `--concurrency=2` (2/4). Dry-run does not encode.
 npm ci
 npx remotion compositions
 node scripts/render-plate.mjs --comp LessonSpine --dry-run --lock /tmp/absent.render.lock --meminfo /proc/meminfo
-node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs scripts/soft-polish-vox-s05.test.mjs scripts/lesson-spine-letterbox-encode.test.mjs scripts/captions-karaoke-gold.test.mjs scripts/audio-bed-layer.test.mjs
+node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs scripts/soft-polish-vox-s05.test.mjs scripts/lesson-spine-letterbox-encode.test.mjs scripts/captions-karaoke-gold.test.mjs scripts/audio-bed-layer.test.mjs scripts/lesson-spine-audiobed-encode.test.mjs
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-letterbox-encode/2026-09-20/LessonSpine.mp4 --report cleaning-checklist-lesson-spine-letterbox-encode.md
+node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4 --report cleaning-checklist-lesson-spine-audiobed-encode.md
 ```
 
 ## Cleaning checklist (no live flip)
