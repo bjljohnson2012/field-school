@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream} from "./brand";
-import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
+import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Keyword, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {TalkingHeadProps} from "./types";
@@ -19,6 +19,10 @@ export const TalkingHeadCard: React.FC<TalkingHeadProps> = ({
   const {fps} = useVideoConfig();
   const now = frame / fps;
   const veil = lumaVeil(now, 0, durationSec, 0.5, "takeover");
+  const title = "Docked, not full-bleed";
+  const words = title.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? title;
+  const lead = words.slice(0, -1).join(" ");
 
   return (
     <AbsoluteFill style={{backgroundColor: cream}}>
@@ -28,10 +32,11 @@ export const TalkingHeadCard: React.FC<TalkingHeadProps> = ({
         </Layer>
         <Layer name="screen">
           <TypeCard motion="takeover" sceneFrame={frame}>
-            <Kicker>
-              {name} · {role}
-            </Kicker>
-            <Title>Docked, not full-bleed</Title>
+            <Kicker>Slate</Kicker>
+            <Title>
+              {lead ? `${lead} ` : null}
+              <Keyword>{keyword}</Keyword>
+            </Title>
             <GoldRule />
             <Claim>{line}</Claim>
           </TypeCard>
