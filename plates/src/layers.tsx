@@ -506,6 +506,54 @@ export function TransitionLuma() {
   );
 }
 
+/** Application / try-this. After Recap/Quiz path, before end. Cream + gold 6px rail. */
+export const PRACTICE_CARD_KICKER = "Try this";
+export const PRACTICE_CARD_LINE = "Apply one idea now.";
+
+export function PracticeCard() {
+  const words = PRACTICE_CARD_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? PRACTICE_CARD_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 128,
+        maxWidth: 480,
+        padding: "14px 22px 16px 18px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {PRACTICE_CARD_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+    </div>
+  );
+}
+
 /** Lesson close signal. After QuizBumper/next-up, before audio. Cream + gold 6px rail. */
 export const END_CARD_KICKER = "Close";
 export const END_CARD_LINE = "The lesson holds.";
