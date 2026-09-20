@@ -33,6 +33,7 @@ PASS notes:
 - [antagonist-lesson-spine-reencode-captions.md](./antagonist-lesson-spine-reencode-captions.md) — LessonSpine re-encode with captions/LT
 - [antagonist-letterbox-layer.md](./antagonist-letterbox-layer.md) — Letterbox (after captions, before audio)
 - [antagonist-audio-bed-layer.md](./antagonist-audio-bed-layer.md) — AudioBed silent fixture (after letterbox)
+- [antagonist-audio-bed-unmute.md](./antagonist-audio-bed-unmute.md) — AudioBed soft unmute craft beat 2026-09-20
 - [antagonist-lesson-spine-audiobed-encode.md](./antagonist-lesson-spine-audiobed-encode.md) — LessonSpine AudioBed encode
 - [antagonist-soft-polish-vox-s05.md](./antagonist-soft-polish-vox-s05.md) — OverlayLock + TypeCard VOX-S05 polish
 - [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md) — TypeCard factory VOX-S04 PASS (cream + gold rail; no Ernest PNG)
@@ -59,7 +60,7 @@ Do not re-render Just `27pn9xs0zk8a73g`. Do not overwrite Aug 30 `vox/everything
 | **LowerThirdDemo** | 8s craft | 240 | takeover head + lower third |
 | **CaptionsDemo** | 8s craft | 240 | lower third then captions band |
 | **LetterboxDemo** | 8s craft | 240 | captions then letterbox close-in |
-| **AudioBedDemo** | 8s craft | 240 | letterbox then silent fixture bed |
+| **AudioBedDemo** | 8s craft | 240 | letterbox then soft-unmuted silent fixture bed |
 
 ## Render lock
 

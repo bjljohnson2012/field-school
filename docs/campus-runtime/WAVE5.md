@@ -79,6 +79,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | TypeCard slate | PR 98 `9e29744` / tip `e897db1` |
 | TypeCard+ObjectiveSlate encode | PR 99 `7186244` / tip `88b892c` |
 | TypeCard+ObjectiveSlate master dest reaudit | PR 100 `f8000e0` / tip `494d520` |
+| DefinitionBoard slate | PR 101 `707a2d5` / tip `6295647` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -193,6 +194,10 @@ Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cur
 ## DefinitionBoard slate (PASS)
 
 PR 100 merge `f8000e0` / tip `494d520` harvested. DefinitionBoard kicker stays “Definition”. EDU-S02 last-word gold `#C4A35A` tick (`Keyword`) now on Claim last word (“dump.”) plus Title last word (“motion”). Karaoke already gold-ticks “motion” 900–1600ms (plate f30 / spine f570). ORDER LOCK unchanged. Current master dest typecard-objectiveslate-encode sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` **untouched** (plate-level stills only). Evidence: `plates/antagonist-definitionboard-slate.md`. Stills: `/opt/cursor/artifacts/remotion-definitionboard-slate/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
+
+## AudioBed unmute (PASS)
+
+PR 101 merge `707a2d5` / tip `6295647` harvested. Soft unmute of the silent fixture bed: `AUDIO_BED_MUTED=false`, `AUDIO_BED_VOLUME=0`, still `public/audio-bed-silence.wav`. Craft beat on `AudioBedDemo`. No Cap take. No real Cap A-roll audio. ORDER LOCK unchanged. Current master dest typecard-objectiveslate-encode sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` **untouched** (plate-level stills only). Evidence: `plates/antagonist-audio-bed-unmute.md`. Stills: `/opt/cursor/artifacts/remotion-audio-bed-unmute/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked. `EDU-S04` volume 0.
 
 ## Karaoke gold (VOX-S01 PASS)
 

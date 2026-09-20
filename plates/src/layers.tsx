@@ -317,14 +317,15 @@ export function Letterbox() {
   );
 }
 
-/** Silent fixture bed. Last sibling after letterbox. No Cap A-roll. */
+/** Soft-unmuted silent fixture bed. Last sibling after letterbox. Volume 0. No Cap A-roll. */
 export const AUDIO_BED_FILE = "audio-bed-silence.wav";
 export const AUDIO_BED_VOLUME = 0;
+export const AUDIO_BED_MUTED = false;
 
 export function AudioBed({
   src = staticFile(AUDIO_BED_FILE),
   volume = AUDIO_BED_VOLUME,
-  muted = true,
+  muted = AUDIO_BED_MUTED,
 }: {
   src?: string;
   volume?: number;
