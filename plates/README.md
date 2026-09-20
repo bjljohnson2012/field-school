@@ -22,6 +22,7 @@ PASS notes:
 - [antagonist-slate-master.md](./antagonist-slate-master.md) — LessonSpine slate master dest reaudit 2026-09-20
 - [antagonist-typecard-objectiveslate-master.md](./antagonist-typecard-objectiveslate-master.md) — LessonSpine typecard-objectiveslate master dest reaudit 2026-09-20
 - [antagonist-progress-chapter-master.md](./antagonist-progress-chapter-master.md) — LessonSpine progress-chapter master dest reaudit 2026-09-20
+- [antagonist-lower-callout-master.md](./antagonist-lower-callout-master.md) — LessonSpine lower-callout master dest reaudit 2026-09-20
 - [antagonist-lower-third.md](./antagonist-lower-third.md) — LowerThird speaker / context label 2026-09-20
 - [antagonist-callout-card.md](./antagonist-callout-card.md) — CalloutCard tip / aside signal 2026-09-20
 - [antagonist-definitionboard-slate.md](./antagonist-definitionboard-slate.md) — DefinitionBoard slate signaling 2026-09-20
