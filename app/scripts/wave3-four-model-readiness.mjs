@@ -8,7 +8,7 @@
  * Ship/cutover stays blocked until those four independent lenses PASS.
  */
 import {spawnSync} from "node:child_process";
-import {writeFileSync} from "node:fs";
+import {readFileSync, writeFileSync} from "node:fs";
 import {dirname, join} from "node:path";
 import {fileURLToPath} from "node:url";
 
@@ -78,26 +78,51 @@ row("FAC-UNIVERSITY", live.university.status === 301 && live.university.location
 row("FAC-EDIT", live.edit.status === 200 && live.edit.body.includes("fieldschool-edit"), live.edit.body);
 row("FAC-CAP", live.cap.status === 200, `cap ${live.cap.status}`);
 row("GOAL-NO-CUTOVER", true, "this runner never calls deploy.sh / overlay / flip-auth-url");
-row("SHIP-FARM", false, "Isolation/Item-bank/Factory/Goal workers not spawned (CDM). Standing gate stays FAIL for deploy.");
+
+function farmProof(name) {
+  try {
+    const path = `/opt/cursor/artifacts/wave3-four-model-${name}-50b776a.json`;
+    const body = JSON.parse(readFileSync(path, "utf8"));
+    return body.verdict === "PASS" && body.sha === sha;
+  } catch {
+    return false;
+  }
+}
+
+const farm = {
+  isolation: farmProof("isolation"),
+  itembank: farmProof("itembank"),
+  factory: farmProof("factory"),
+  goal: farmProof("goal"),
+};
+const farmPass = Object.values(farm).every(Boolean);
+row(
+  "SHIP-FARM",
+  farmPass,
+  farmPass
+    ? "four independent lens proofs PASS on this SHA; cutover still not_done"
+    : "Isolation/Item-bank/Factory/Goal proofs missing or not PASS on this SHA",
+);
 
 const readiness = checks.filter((c) => c.id !== "SHIP-FARM").every((c) => c.result === "PASS");
 const report = {
-  dated: "2026-09-19",
+  dated: "2026-09-20",
   sha,
   command: "node scripts/wave3-four-model-readiness.mjs",
   readiness: readiness ? "PASS" : "FAIL",
-  ship_gate: "FAIL",
+  ship_gate: farmPass ? "PASS" : "FAIL",
   cutover: "not_done",
+  farm,
   checks,
   live,
   suite_tail: (suite.stdout || "").trim().split("\n").slice(-12),
 };
 
-const dest = process.env.PROOF_JSON || "/opt/cursor/artifacts/wave3-four-model-readiness-2026-09-19.json";
+const dest = process.env.PROOF_JSON || "/opt/cursor/artifacts/wave3-four-model-readiness-2026-09-20.json";
 try {
   writeFileSync(dest, `${JSON.stringify(report, null, 2)}\n`);
 } catch {
-  writeFileSync("/tmp/wave3-four-model-readiness-2026-09-19.json", `${JSON.stringify(report, null, 2)}\n`);
+  writeFileSync("/tmp/wave3-four-model-readiness-2026-09-20.json", `${JSON.stringify(report, null, 2)}\n`);
 }
 
 console.log(JSON.stringify(report, null, 2));
