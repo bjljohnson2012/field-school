@@ -53,15 +53,21 @@ Four-model hotfix interrogate of the restacked tip is required before any deploy
 - Deploy until four-model PASS on this restack
 - Fight another VPS extract race
 
-## 2026-09-19 four-model readiness (no deploy)
+## 2026-09-20 four-model farm (no cutover)
 
-SHA `58671a3789a7270925765545d59703985c2e724b` (PR 63 on main). Suite: `cd app && node --experimental-strip-types --test scripts/wave3-composer.test.mjs` then `node scripts/wave3-four-model-readiness.mjs`.
+SHA `50b776a1b4152af606c46e9664f54f8e50d98042` (PR 73 on main). Four independent lenses spawned and ran. Old PASS on `7a68b01` does not carry. PR 65 closed SUPERSEDED, unmerged.
 
 | Gate | Result |
 |---|---|
-| Wave3 composer suite | **PASS** 6/6 |
-| Live guest Isolation (`/api/me` guest, Grok Bot 200, events 401, composer 401, teach 401) | **PASS** |
-| Four-model ship gate (independent Isolation / Item-bank / Factory / Goal) | **FAIL** — farm not spawned |
+| Isolation | **PASS** |
+| Item-bank | **PASS** |
+| Factory | **PASS** |
+| Goal | **PASS** |
+| Four-model ship gate | **PASS** — all four green |
 | Campus cutover | **not done** |
 
-Dated table: [FOUR_MODEL.md](./FOUR_MODEL.md). Guest `/api/composer/*` is now 401 `sign_in_required` (18 Sep note of 404 is stale). Do not package or extract campus from this readout.
+Dated table: [FOUR_MODEL.md](./FOUR_MODEL.md). Guest `/api/composer/*` is 401 `sign_in_required`. Do not package or extract campus from this farm. CDM seals cutover separately.
+
+## 2026-09-19 four-model readiness (superseded SHA)
+
+SHA `58671a3789a7270925765545d59703985c2e724b` (PR 63 on main). Suite then readiness runner. Ship gate was **FAIL** — farm not spawned on that readout. Do not use as the standing SHA.
