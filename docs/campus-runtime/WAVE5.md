@@ -65,6 +65,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | TypeCard master dest reaudit | PR 84 `f3d0918` / tip `7074f21` |
 | EDU-S01 objective slate | PR 85 `a97167a` / tip `1a47d48` |
 | EDU-S01 LessonSpine encode | PR 86 `2bfafed` / tip `0c35205` |
+| EDU-S01 master dest reaudit | PR 87 `c2e9dad` / tip `b4b96c3` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -116,7 +117,11 @@ PR 86 merge `2bfafed` / tip `0c35205` (PR 85 slate `a97167a`). New dated dest `/
 
 ## EDU-S01 master dest reaudit (PASS)
 
-Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` plus EDU-S01 plates. PR 86 merge `2bfafed`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS on this dest. `hold_cleaning: true`. `--flip` refused. Typecard dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-edu-s01-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-edu-s01-master/2026-09-20/`.
+Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` plus EDU-S01 plates. PR 86 merge `2bfafed`. PR 87 merge `c2e9dad` / tip `b4b96c3`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS on this dest. `hold_cleaning: true`. `--flip` refused. Typecard dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-edu-s01-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-edu-s01-master/2026-09-20/`.
+
+## EDU-S02 DefinitionBoard (PASS)
+
+PR 87 merge `c2e9dad` / tip `b4b96c3` harvested. DefinitionBoard Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “Explanatory motion”. Karaoke already gold-ticks “motion” 900–1600ms (plate f30 / spine f570). ORDER LOCK unchanged. Current master dest edu-s01-encode sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` **untouched** (plate-level stills only). Evidence: `plates/antagonist-definitionboard-edu-s02.md`. Stills: `/opt/cursor/artifacts/remotion-definitionboard-edu-s02/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 

@@ -432,3 +432,18 @@ export function ObjectiveSlate({
     </div>
   );
 }
+
+/** EDU-S02 signaling. Gold color + 3px gold tick on the keyword. */
+export function Keyword({children}: {children: React.ReactNode}) {
+  return (
+    <span
+      style={{
+        color: gold,
+        borderBottom: `3px solid ${gold}`,
+        paddingBottom: 4,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
