@@ -42,7 +42,7 @@ Hands rule: Cursor Gate alone contacts Field School PM / Cursor cloud agents. CT
 
 ## Remotion (critical)
 
-Remotion Wave 5 factory is **PASS** in `plates/` only. That is factory evidence under Product, not a launch Product PASS.
+Remotion Wave 5 factory is **PASS** in `plates/` only. That is factory evidence under Product, not a launch Product PASS. TypeCard VOX-S04 **PASS** (factory TypeCard-only; no Cap / Ernest PNG). Wave3 campus pack is LIVE (composer/teach) on campus — not Remotion-in-Next.
 
 - Stay in `plates/`. No Remotion-in-Next. No player rail.
 - ORDER LOCK: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up.
@@ -75,7 +75,7 @@ Weekday 09:00 ET. Already named in the 2026-09-19 morning brief. Full clock text
 
 1. Notion Ops posts or refreshes the morning brief page.
 2. Project Manager reads `docs/prelaunch/STATUS.md` and the morning brief. Sends CDM one score table.
-3. CDM picks one launch node. Default while composer teach UI is unshipped: Product.
+3. CDM picks one launch node. Default: Product. Wave3 campus pack is LIVE (composer/teach). Remotion stays in `plates/` only (Remotion-in-Next held).
 4. If the node needs code or a repo file: CDM → CTO → Cursor Gate → one Field School PM stream.
 5. If the node is company prose only: CDM → Writer (and Marketer or Revenue as raisers). Gate only when a PR is required.
 6. Max two Cursor streams. Second stream only if Gate has spare capacity and the files cannot conflict.
@@ -110,7 +110,7 @@ Human needed: none | Cap take | legal sign | launch gate
 - No second melt while `render.lock` exists.
 - Publish / Distribute on VOX stays held until a ship packet.
 - No Remotion-in-Next. Remotion stays in `plates/`.
-- No Wave3 four-model campus cutover. PR 65 stays unmerged (SUPERSEDED / held).
+- Wave3 campus pack LIVE (composer/teach). Remotion stays in `plates/` (Remotion-in-Next held). PR 65 stays unmerged (SUPERSEDED / held).
 - Do not steal family LIVE `bc-4765f2f0`.
 - No second Field Pattern bank. No official psychometric item banks.
 - Do not inherit Grok Bot into the household catalog.
