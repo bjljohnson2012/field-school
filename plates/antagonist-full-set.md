@@ -15,6 +15,7 @@ Cites:
 - [antagonist-lesson-spine-letterbox-encode.md](./antagonist-lesson-spine-letterbox-encode.md) — letterbox LessonSpine encode (archived prior)
 - [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md) — TypeCard factory VOX-S04
 - [antagonist-lesson-spine-typecard-encode.md](./antagonist-lesson-spine-typecard-encode.md) — locked LessonSpine master (TypeCard)
+- [antagonist-edu-s01-objective-slate.md](./antagonist-edu-s01-objective-slate.md) — EDU-S01 Opener / Recap objective slate
 
 ```
 verdict: PASS
@@ -126,6 +127,24 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (no Cap take); `VOX-S05` OverlayLock can look smashed at 0.5 still downsample — lock crop is the pixel proof. Historical PR 71 gates block above keeps `VOX-S04: SOFT`. This dest seals factory TypeCard-only **PASS**. No new HARD gate fail. Launch stays CLOSED 0/8.
 
 Stills from the locked master: `LessonSpine-sting-f30.png`, `LessonSpine-slate-f330.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`. Plate stills: `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`.
+
+## EDU-S01 objective slate 2026-09-20
+
+Dated **2026-09-20**. Opener sting carries Mayer pre-training “You will be able to” + `draw one idea per beat`. RecapCard returns that same objective as signaling, not a new claim. ORDER LOCK unchanged. Locked master dest `27cc5bf3…` **untouched**. Stills `/opt/cursor/artifacts/remotion-edu-s01-objective-slate/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-edu-s01-objective-slate/2026-09-20/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture (no Cap take). Historical opener-recap note keeps `VOX-S02` / `EDU-S01` as the plate-not-spine record. This dest seals EDU-S01 **PASS**. Launch stays CLOSED 0/8.
 
 ## Held
 

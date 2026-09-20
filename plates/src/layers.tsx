@@ -385,3 +385,50 @@ export function Claim({children, color = ink}: {children: React.ReactNode; color
     </div>
   );
 }
+
+/** EDU-S01 pre-training slate. Prefix is always "You will be able to". */
+export function ObjectiveSlate({
+  objective,
+  sceneFrame,
+  from = 30,
+}: {
+  objective: string;
+  sceneFrame: number;
+  from?: number;
+}) {
+  const opacity = interpolate(sceneFrame, [from, from + 18], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  return (
+    <div style={{opacity, marginTop: 28, maxWidth: 960}}>
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 20,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+          marginBottom: 10,
+        }}
+      >
+        You will be able to
+      </div>
+      <div
+        style={{
+          fontFamily: bodyFace,
+          fontSize: 32,
+          lineHeight: 1.28,
+          letterSpacing: "0.01em",
+          wordSpacing: "0.14em",
+          color: ink,
+          borderBottom: `3px solid ${gold}`,
+          display: "inline-block",
+          paddingBottom: 4,
+        }}
+      >
+        {objective}
+      </div>
+    </div>
+  );
+}

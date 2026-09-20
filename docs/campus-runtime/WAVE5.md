@@ -56,6 +56,13 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Wave3 campus pack LIVE | PR 75 `241808b` / tip `8e992e3` |
 | AudioBed layer | PR 76 `87c6ed6` / tip `9edf763` |
 | AudioBed LessonSpine encode | PR 77 `8992d0b` / tip `5bd6681` |
+| pre-0600 status sync | PR 78 `856b8c0` / tip `658ee36` |
+| TypeCard VOX-S04 | PR 79 `482d3eb` / tip `cf4021f` |
+| GRAPH Wave3 LIVE sync | PR 80 `1206457` / tip `378d588` |
+| TypeCard LessonSpine encode | PR 81 `85b30cd` / tip `35569a4` |
+| Wave3 teach live smoke | PR 82 `0be697c` / tip `5be8fd7` |
+| Master dest TypeCard | PR 83 `e2d3cf6` / tip `96455a0` |
+| TypeCard master dest reaudit | PR 84 `f3d0918` / tip `7074f21` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -85,7 +92,7 @@ PR 66. `OverlayLock` 30px / `0.02em` / `0.2em` nowrap. Seal `1576,24` / `80×64`
 
 ## VOX-S04 TypeCard (PASS)
 
-PR 79 (open). Factory TypeCard-only PASS without Cap / Ernest PNG. `TypeCard` is cream `#EFE7D6` paper + gold `#C4A35A` 6px left rail + padding (same factory card signal as LowerThird). OverlayLock stays 30px / `0.02em` / `0.2em` nowrap. Spec `cards/` unused. Soft re-score dated 2026-09-20. Evidence: `plates/antagonist-typecard-vox-s04.md`. Stills: `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior encode dests **untouched** (`a5d08284…` / `ec88d257…` / `028d16e4…` / `9f89f9a9…`). Checklist `hold_cleaning: true`. `--flip` refused. Historical S05 line above keeps `(VOX-S04 SOFT)` as the PR 66 record. Factory evidence only — not a launch Product PASS.
+PR 79 merge `482d3eb`. Factory TypeCard-only PASS without Cap / Ernest PNG. `TypeCard` is cream `#EFE7D6` paper + gold `#C4A35A` 6px left rail + padding (same factory card signal as LowerThird). OverlayLock stays 30px / `0.02em` / `0.2em` nowrap. Spec `cards/` unused. Soft re-score dated 2026-09-20. Evidence: `plates/antagonist-typecard-vox-s04.md`. Stills: `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior encode dests **untouched** (`a5d08284…` / `ec88d257…` / `028d16e4…` / `9f89f9a9…`). Checklist `hold_cleaning: true`. `--flip` refused. Historical S05 line above keeps `(VOX-S04 SOFT)` as the PR 66 record. Factory evidence only — not a launch Product PASS.
 
 ## Antagonist full-set reaudit (PASS)
 
@@ -94,6 +101,10 @@ PR 71. Dated 2026-09-20. Independent Antagonist v2 against Opener, RecapCard, De
 ## TypeCard master dest reaudit (PASS)
 
 Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-typecard-encode/2026-09-20/LessonSpine.mp4` sha256 `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0` plus TypeCard VOX-S04 plates. **PASS.** SOFT notes only (`EDU-S03`). `VOX-S04` factory TypeCard-only PASS on this dest. `hold_cleaning: true`. `--flip` refused. Prior dests untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-typecard-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-typecard-master/2026-09-20/`.
+
+## EDU-S01 objective slate (PASS)
+
+PRs 79–84 harvested on `main` (`f3d0918`). Opener sting carries Mayer pre-training “You will be able to” + `draw one idea per beat`. RecapCard returns that same objective as signaling, not a new claim. ORDER LOCK unchanged. Current master dest remains typecard-encode sha256 `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0` (**untouched**). No new LessonSpine encode. Evidence: `plates/antagonist-edu-s01-objective-slate.md`. Stills: `/opt/cursor/artifacts/remotion-edu-s01-objective-slate/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS.
 
 ## Karaoke gold (VOX-S01 PASS)
 
