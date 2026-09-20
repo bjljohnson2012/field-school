@@ -13,6 +13,7 @@ PASS notes:
 - [antagonist-captions-lower-third.md](./antagonist-captions-lower-third.md) — CaptionsBand + LowerThird
 - [antagonist-lesson-spine-reencode-captions.md](./antagonist-lesson-spine-reencode-captions.md) — LessonSpine re-encode with captions/LT
 - [antagonist-letterbox-layer.md](./antagonist-letterbox-layer.md) — Letterbox (after captions, before audio)
+- [antagonist-soft-polish-vox-s05.md](./antagonist-soft-polish-vox-s05.md) — OverlayLock + TypeCard VOX-S05 polish
 
 1920×1080@30. `useCurrentFrame` only. Cream / ink / Fraunces. Isolated seal at `1576,24` / `80×64`.
 `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`.
@@ -49,7 +50,7 @@ CPU cap `--concurrency=2` (2/4). Dry-run does not encode.
 npm ci
 npx remotion compositions
 node scripts/render-plate.mjs --comp LessonSpine --dry-run --lock /tmp/absent.render.lock --meminfo /proc/meminfo
-node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs
+node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs scripts/soft-polish-vox-s05.test.mjs
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4
 ```
 
