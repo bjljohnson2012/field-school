@@ -388,6 +388,56 @@ export function ChapterChip({beat}: {beat: ProgressRailBeat}) {
   );
 }
 
+/** Tip / aside signal. After chapter, before audio. */
+export const CALLOUT_CARD_COPY: Record<ProgressRailBeat, {kicker: string; line: string}> = {
+  sting: {kicker: "Tip", line: "One idea per beat"},
+  slate: {kicker: "Aside", line: "Head stays docked"},
+  objective: {kicker: "Tip", line: "Type is the lesson"},
+  recap: {kicker: "Aside", line: "Return the same claim"},
+  "next-up": {kicker: "Tip", line: "Next beat, not a dump"},
+};
+
+export function CalloutCard({beat}: {beat: ProgressRailBeat}) {
+  const {kicker, line} = CALLOUT_CARD_COPY[beat];
+  return (
+    <div
+      style={{
+        position: "absolute",
+        right: 64,
+        bottom: LETTERBOX_H + 28,
+        maxWidth: 420,
+        padding: "12px 20px 14px 16px",
+        backgroundColor: cream,
+        borderLeft: `4px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {kicker}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 22,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {line}
+      </div>
+    </div>
+  );
+}
+
 /** Soft-unmuted silent fixture bed. Last sibling after letterbox. Volume 0. No Cap A-roll. */
 export const AUDIO_BED_FILE = "audio-bed-silence.wav";
 export const AUDIO_BED_VOLUME = 0;
