@@ -21,6 +21,7 @@ PASS notes:
 - [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md) — RecapCard slate signaling 2026-09-20
 - [antagonist-opener-slate.md](./antagonist-opener-slate.md) — Opener slate signaling 2026-09-20
 - [antagonist-objectiveslate-slate.md](./antagonist-objectiveslate-slate.md) — ObjectiveSlate slate signaling 2026-09-20
+- [antagonist-typecard-slate.md](./antagonist-typecard-slate.md) — TypeCard slate signaling 2026-09-20
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick 2026-09-20
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling 2026-09-20
 - [antagonist-lesson-spine.md](./antagonist-lesson-spine.md) — LessonSpine (sting / slate / objective / recap / next-up)

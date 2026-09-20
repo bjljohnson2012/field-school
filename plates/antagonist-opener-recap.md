@@ -72,6 +72,10 @@ Opener kicker “Lesson” plus Title last-word gold `#C4A35A` tick (`Keyword`) 
 
 ObjectiveSlate keeps “You will be able to” plus last-word gold `#C4A35A` tick (`Keyword`) on fixture “beat”. LessonSpine objective beat stays DefinitionBoard. Evidence: [antagonist-objectiveslate-slate.md](./antagonist-objectiveslate-slate.md). Stills `/opt/cursor/artifacts/remotion-objectiveslate-slate/2026-09-20/`. Locked master dest `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` **untouched**. `hold_cleaning: true`. ORDER LOCK intact.
 
+## TypeCard slate 2026-09-20
+
+TypeCard stays cream + gold 6px rail. EDU-S02 last-word gold `#C4A35A` tick (`Keyword`) on TypeCard claim copy (Opener “docked.”, Recap points “beat” / “type” / “Fraunces”). Evidence: [antagonist-typecard-slate.md](./antagonist-typecard-slate.md). Stills `/opt/cursor/artifacts/remotion-typecard-slate/2026-09-20/`. Locked master dest `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` **untouched**. `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just `27pn9xs0zk8a73g`. No melt. No campus Remotion package. No Publish/Distribute. No AUTH_URL / Stripe. No family chrome. No `run-91af199b`.

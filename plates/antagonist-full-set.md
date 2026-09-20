@@ -28,6 +28,7 @@ Cites:
 - [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md) — RecapCard slate signaling
 - [antagonist-opener-slate.md](./antagonist-opener-slate.md) — Opener slate signaling
 - [antagonist-objectiveslate-slate.md](./antagonist-objectiveslate-slate.md) — ObjectiveSlate slate signaling
+- [antagonist-typecard-slate.md](./antagonist-typecard-slate.md) — TypeCard slate signaling
 
 ```
 verdict: PASS
@@ -335,6 +336,25 @@ gates: {
 ```
 
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). Opener slate factory PASS. Launch stays CLOSED 0/8.
+
+## TypeCard slate 2026-09-20
+
+Dated **2026-09-20**. TypeCard stays cream + gold 6px rail. EDU-S02 last-word gold `#C4A35A` tick (`Keyword`) on TypeCard claim copy: Opener “docked.”, TalkingHead “left.”, Recap points “beat” / “type” / “Fraunces”. After PR 97 merge `2581d9d1cdbcf0078d0013a34258daad90da2d42`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-slate-encode/2026-09-20/LessonSpine.mp4` sha256 `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-typecard-slate/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-typecard-slate/2026-09-20/
+sha256: d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). TypeCard slate factory PASS. Launch stays CLOSED 0/8.
 
 ## ObjectiveSlate slate 2026-09-20
 

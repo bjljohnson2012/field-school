@@ -72,6 +72,7 @@ export function TypeCard({
   sceneFrame: number;
   children: React.ReactNode;
 }) {
+  // VOX-S04 cream + 6px gold rail. EDU-S02 last-word ticks live in children (`Keyword`).
   const glide = glideCard(sceneFrame);
   const opacity = motion === "glide" ? glide.opacity : 1;
   const x = motion === "glide" ? glide.x : 0;

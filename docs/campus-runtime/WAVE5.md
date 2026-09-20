@@ -75,6 +75,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Opener slate | PR 94 `90f22b8` / tip `b073c145` |
 | LessonSpine slate encode | PR 95 `99b706c` / tip `d7a05e1` |
 | Slate master dest reaudit | PR 96 `c4aa0a4` / tip `78d3f55` |
+| ObjectiveSlate slate | PR 97 `2581d9d` / tip `2c8ddd0` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -171,6 +172,10 @@ Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cur
 ## ObjectiveSlate slate (PASS)
 
 PR 96 merge `c4aa0a4` / tip `78d3f55` harvested. ObjectiveSlate keeps “You will be able to” plus Title-style last-word gold `#C4A35A` tick (`Keyword`) on fixture `draw one idea per beat` (“beat”). LessonSpine objective beat stays DefinitionBoard. ORDER LOCK unchanged. Current master dest slate-encode sha256 `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` **untouched** (plate-level stills only). Evidence: `plates/antagonist-objectiveslate-slate.md`. Stills: `/opt/cursor/artifacts/remotion-objectiveslate-slate/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
+
+## TypeCard slate (PASS)
+
+PR 97 merge `2581d9d` / tip `2c8ddd0` harvested. TypeCard stays cream + gold 6px rail. EDU-S02 last-word gold `#C4A35A` tick (`Keyword`) now on TypeCard claim copy: Opener “docked.”, TalkingHead “left.”, Recap points “beat” / “type” / “Fraunces”. ORDER LOCK unchanged. Current master dest slate-encode sha256 `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` **untouched** (plate-level stills only). Evidence: `plates/antagonist-typecard-slate.md`. Stills: `/opt/cursor/artifacts/remotion-typecard-slate/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
