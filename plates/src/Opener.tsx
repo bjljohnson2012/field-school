@@ -15,6 +15,9 @@ export const Opener: React.FC<OpenerProps> = ({kicker, title, claim, objective, 
   const words = title.trim().split(/\s+/);
   const keyword = words[words.length - 1] ?? title;
   const lead = words.slice(0, -1).join(" ");
+  const claimWords = claim.trim().split(/\s+/);
+  const claimKeyword = claimWords[claimWords.length - 1] ?? claim;
+  const claimLead = claimWords.slice(0, -1).join(" ");
 
   return (
     <AbsoluteFill style={{backgroundColor: cream}}>
@@ -30,7 +33,10 @@ export const Opener: React.FC<OpenerProps> = ({kicker, title, claim, objective, 
               <Keyword>{keyword}</Keyword>
             </Title>
             <GoldRule />
-            <Claim>{claim}</Claim>
+            <Claim>
+              {claimLead ? `${claimLead} ` : null}
+              <Keyword>{claimKeyword}</Keyword>
+            </Claim>
             <ObjectiveSlate objective={objective} sceneFrame={frame} from={12} />
           </TypeCard>
         </Layer>

@@ -23,6 +23,9 @@ export const TalkingHeadCard: React.FC<TalkingHeadProps> = ({
   const words = title.trim().split(/\s+/);
   const keyword = words[words.length - 1] ?? title;
   const lead = words.slice(0, -1).join(" ");
+  const lineWords = line.trim().split(/\s+/);
+  const lineKeyword = lineWords[lineWords.length - 1] ?? line;
+  const lineLead = lineWords.slice(0, -1).join(" ");
 
   return (
     <AbsoluteFill style={{backgroundColor: cream}}>
@@ -38,7 +41,10 @@ export const TalkingHeadCard: React.FC<TalkingHeadProps> = ({
               <Keyword>{keyword}</Keyword>
             </Title>
             <GoldRule />
-            <Claim>{line}</Claim>
+            <Claim>
+              {lineLead ? `${lineLead} ` : null}
+              <Keyword>{lineKeyword}</Keyword>
+            </Claim>
           </TypeCard>
         </Layer>
         <Layer name="talking-head card">

@@ -30,22 +30,28 @@ export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, objectiv
             </Title>
             <GoldRule />
             <ObjectiveSlate objective={objective} sceneFrame={frame} from={24} />
-            {points.slice(0, 3).map((point, i) => (
-              <div
-                key={point}
-                style={{
-                  opacity: interpolate(frame, [24 + i * 36, 40 + i * 36], [0, 1], {
-                    extrapolateLeft: "clamp",
-                    extrapolateRight: "clamp",
-                  }),
-                  marginBottom: 14,
-                }}
-              >
-                <Claim color={frame >= 24 + i * 36 && frame < 60 + i * 36 ? gold : ink}>
-                  {i + 1}. {point}
-                </Claim>
-              </div>
-            ))}
+            {points.slice(0, 3).map((point, i) => {
+              const pointWords = point.trim().split(/\s+/);
+              const pointKeyword = pointWords[pointWords.length - 1] ?? point;
+              const pointLead = pointWords.slice(0, -1).join(" ");
+              return (
+                <div
+                  key={point}
+                  style={{
+                    opacity: interpolate(frame, [24 + i * 36, 40 + i * 36], [0, 1], {
+                      extrapolateLeft: "clamp",
+                      extrapolateRight: "clamp",
+                    }),
+                    marginBottom: 14,
+                  }}
+                >
+                  <Claim color={frame >= 24 + i * 36 && frame < 60 + i * 36 ? gold : ink}>
+                    {i + 1}. {pointLead ? `${pointLead} ` : null}
+                    <Keyword>{pointKeyword}</Keyword>
+                  </Claim>
+                </div>
+              );
+            })}
           </TypeCard>
         </Layer>
         <Layer name="talking-head card">
