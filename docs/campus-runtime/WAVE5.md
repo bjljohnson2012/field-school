@@ -80,6 +80,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | TypeCard+ObjectiveSlate encode | PR 99 `7186244` / tip `88b892c` |
 | TypeCard+ObjectiveSlate master dest reaudit | PR 100 `f8000e0` / tip `494d520` |
 | DefinitionBoard slate | PR 101 `707a2d5` / tip `6295647` |
+| AudioBed unmute | PR 102 `684a98a` / tip `63882ac` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -198,6 +199,10 @@ PR 100 merge `f8000e0` / tip `494d520` harvested. DefinitionBoard kicker stays �
 ## AudioBed unmute (PASS)
 
 PR 101 merge `707a2d5` / tip `6295647` harvested. Soft unmute of the silent fixture bed: `AUDIO_BED_MUTED=false`, `AUDIO_BED_VOLUME=0`, still `public/audio-bed-silence.wav`. Craft beat on `AudioBedDemo`. No Cap take. No real Cap A-roll audio. ORDER LOCK unchanged. Current master dest typecard-objectiveslate-encode sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` **untouched** (plate-level stills only). Evidence: `plates/antagonist-audio-bed-unmute.md`. Stills: `/opt/cursor/artifacts/remotion-audio-bed-unmute/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked. `EDU-S04` volume 0.
+
+## ProgressRail (PASS)
+
+PR 102 merge `684a98a` / tip `63882ac` harvested. ProgressRail soft craft beat: five ORDER LOCK ticks (`sting` / `slate` / `objective` / `recap` / `next-up`) after letterbox, before audio. Active gold `#C4A35A`; inactive ink opacity `0.18`. Craft beat on `ProgressRailDemo`. Wired on the five spine plates only. No Cap take. ORDER LOCK unchanged. Current master dest typecard-objectiveslate-encode sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` **untouched** (plate-level stills only). Evidence: `plates/antagonist-progress-rail.md`. Stills: `/opt/cursor/artifacts/remotion-progress-rail/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 

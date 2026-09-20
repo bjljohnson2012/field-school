@@ -8,6 +8,7 @@ import {RecapCard} from "./RecapCard";
 import {CaptionsDemo} from "./CaptionsDemo";
 import {AudioBedDemo} from "./AudioBedDemo";
 import {LetterboxDemo} from "./LetterboxDemo";
+import {ProgressRailDemo} from "./ProgressRailDemo";
 import {LowerThirdDemo} from "./LowerThirdDemo";
 import {TalkingHeadCard} from "./TalkingHeadCard";
 import {LOCK} from "./brand";
@@ -385,6 +386,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="AudioBedDemo"
         component={AudioBedDemo}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="ProgressRailDemo"
+        component={ProgressRailDemo}
         durationInFrames={240}
         fps={30}
         width={1920}

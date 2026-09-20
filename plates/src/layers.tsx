@@ -317,6 +317,39 @@ export function Letterbox() {
   );
 }
 
+/** Lesson position signal. After letterbox, before audio. Five ORDER LOCK ticks. */
+export const PROGRESS_RAIL_BEATS = ["sting", "slate", "objective", "recap", "next-up"] as const;
+export type ProgressRailBeat = (typeof PROGRESS_RAIL_BEATS)[number];
+export const PROGRESS_RAIL_H = 4;
+
+export function ProgressRail({beat}: {beat: ProgressRailBeat}) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        right: 64,
+        bottom: LETTERBOX_H + 12,
+        height: PROGRESS_RAIL_H,
+        display: "flex",
+        gap: 8,
+      }}
+    >
+      {PROGRESS_RAIL_BEATS.map((id) => (
+        <div
+          key={id}
+          style={{
+            flex: 1,
+            height: PROGRESS_RAIL_H,
+            backgroundColor: id === beat ? gold : ink,
+            opacity: id === beat ? 1 : 0.18,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /** Soft-unmuted silent fixture bed. Last sibling after letterbox. Volume 0. No Cap A-roll. */
 export const AUDIO_BED_FILE = "audio-bed-silence.wav";
 export const AUDIO_BED_VOLUME = 0;
