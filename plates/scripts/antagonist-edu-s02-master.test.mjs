@@ -43,7 +43,7 @@ test("full-set EDU-S02 master reaudit is dated PASS with hold_cleaning", () => {
   assert.match(wave5, /## EDU-S02 master dest reaudit \(PASS\)/);
   assert.match(wave5, /PR 90 merge `b4aeb1e`/);
   assert.match(wave5, /eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8/);
-  assert.match(wave5, /\*\*Current master dest\*\./);
+  assert.match(wave5, /\*\*Current master dest\.\*\*/);
   assert.match(campus, /PR 90 merge `b4aeb1e`/);
   assert.match(campus, /EDU-S02 master dest reaudit \*\*PASS\*\*/);
   assert.match(campus, /eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8/);
