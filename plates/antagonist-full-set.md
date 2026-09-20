@@ -27,6 +27,7 @@ Cites:
 - [antagonist-edu-s02-master.md](./antagonist-edu-s02-master.md) — EDU-S02 master dest reaudit
 - [antagonist-slate-master.md](./antagonist-slate-master.md) — LessonSpine slate master dest reaudit
 - [antagonist-typecard-objectiveslate-master.md](./antagonist-typecard-objectiveslate-master.md) — LessonSpine typecard-objectiveslate master dest reaudit
+- [antagonist-progress-chapter-master.md](./antagonist-progress-chapter-master.md) — LessonSpine progress-chapter master dest reaudit
 - [antagonist-talkinghead-slate.md](./antagonist-talkinghead-slate.md) — TalkingHead slate signaling
 - [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md) — RecapCard slate signaling
 - [antagonist-opener-slate.md](./antagonist-opener-slate.md) — Opener slate signaling
@@ -569,6 +570,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`.
+
+## LessonSpine progress-chapter master dest reaudit 2026-09-20
+
+Dated **2026-09-20** Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4` sha256 `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7` plus ProgressRail/ChapterChip plates. After PR 105 merge `9052d6a8346525a854d556d31fccb70ed52c6716`. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Typecard-objectiveslate dest **untouched** (`3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5`). Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-20
+rendering: /opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4
+sha256: a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7
+stills: /opt/cursor/artifacts/remotion-antagonist-progress-chapter-master/2026-09-20/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f30.png`, `LessonSpine-slate-f330.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `Opener-f30.png`, `RecapCard-f144.png`, `ProgressRailDemo-f60.png`, `ChapterChipDemo-f60.png`.
 
 ## Held
 
