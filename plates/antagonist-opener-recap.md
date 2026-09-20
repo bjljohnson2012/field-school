@@ -43,7 +43,7 @@ In-round REVISE: `letterSpacing: -0.03em` smashed lock + titles (`VOX-S05`). Fix
 ## SOFT notes only
 
 - `VOX-S02` / `EDU-S01` — plate, not a full lesson spine
-- `VOX-S04` — TypeCard, no Ernest PNG
+- `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md)
 - `EDU-S03` — olive fixture, not gesturing A-roll (no Cap take this round)
 - `RM-S01` — `--concurrency=1` for RAM, not a flicker hide
 - `RM-S08` — stills at keyframes; no full master encode
@@ -51,6 +51,10 @@ In-round REVISE: `letterSpacing: -0.03em` smashed lock + titles (`VOX-S05`). Fix
 ## Reaudit 2026-09-20
 
 Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Stills `Opener-f30.png` / `RecapCard-f144.png` under `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`. HARD gates unchanged. `hold_cleaning: true`. ORDER LOCK intact.
+
+## TypeCard VOX-S04 2026-09-20
+
+Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
 
 ## Held
 

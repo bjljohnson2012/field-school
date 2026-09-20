@@ -81,6 +81,10 @@ Layer order (later sibling on top): bed → screen → talking-head card → low
 
 PR 66. `OverlayLock` 30px / `0.02em` / `0.2em` nowrap. Seal `1576,24` / `80×64`. Antagonist `plates/antagonist-soft-polish-vox-s05.md` **PASS** (VOX-S04 SOFT). Factory evidence only — not a launch Product PASS.
 
+## VOX-S04 TypeCard (PASS)
+
+Factory TypeCard-only PASS without Cap / Ernest PNG. `TypeCard` is cream `#EFE7D6` paper + gold `#C4A35A` 6px left rail + padding (same factory card signal as LowerThird). OverlayLock stays 30px / `0.02em` / `0.2em` nowrap. Spec `cards/` unused. Soft re-score dated 2026-09-20. Evidence: `plates/antagonist-typecard-vox-s04.md`. Stills: `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior encode dests **untouched** (`a5d08284…` / `ec88d257…` / `028d16e4…` / `9f89f9a9…`). Checklist `hold_cleaning: true`. `--flip` refused. Historical S05 line above keeps `(VOX-S04 SOFT)` as the PR 66 record. Factory evidence only — not a launch Product PASS.
+
 ## Antagonist full-set reaudit (PASS)
 
 PR 71. Dated 2026-09-20. Independent Antagonist v2 against Opener, RecapCard, DefinitionBoard, QuizBumper, TalkingHeadCard, LessonSpine (current letterbox encode), plus Captions/LT/Letterbox demos. **PASS.** SOFT notes only (`VOX-S04`, `EDU-S03`). No HARD_FAIL. Evidence: `plates/antagonist-full-set.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`.

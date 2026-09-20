@@ -59,3 +59,5 @@ npx remotion still AudioBedDemo --frame=60
 npx remotion still TalkingHeadCard --frame=90
 npx remotion still LessonSpine --frame=330
 ```
+
+TypeCard VOX-S04 stills dest (do not overwrite prior LessonSpine encodes): `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`.

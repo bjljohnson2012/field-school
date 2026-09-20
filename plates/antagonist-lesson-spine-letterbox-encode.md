@@ -26,7 +26,7 @@ Slate uses `LowerThird` name/role + `CaptionsBand` (via `Karaoke`) + `Letterbox`
 
 ## SOFT notes only
 
-- `VOX-S04` — TypeCard, no Ernest PNG
+- `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md)
 - `VOX-S05` — OverlayLock tracking 0.02em / 0.2em nowrap (full-res lock crop is the smash proof)
 - `EDU-S03` — olive fixture head, not gesturing A-roll
 - Ship 1 HOLD (no Cap take). Ship 6 HOLD (Publish/HLS). Cleaning stays held.
@@ -34,6 +34,10 @@ Slate uses `LowerThird` name/role + `CaptionsBand` (via `Karaoke`) + `Letterbox`
 ## Reaudit 2026-09-20
 
 Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Dest sha256 `028d16e4…` confirmed. Prior `a5d08284…` / `ec88d257…` confirmed untouched. `hold_cleaning: true`. ORDER LOCK intact.
+
+## TypeCard VOX-S04 2026-09-20
+
+Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
 
 ## Held
 

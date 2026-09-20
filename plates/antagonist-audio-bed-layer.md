@@ -31,13 +31,17 @@ Prior encode dests **untouched**: karaoke `9f89f9a9…`, letterbox `028d16e4…`
 ## SOFT notes only
 
 - `VOX-S02` / `EDU-S01` — craft layer + short demo, not a new spine
-- `VOX-S04` — no Ernest PNG
+- `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md)
 - `EDU-S03` — olive fixture head, not gesturing A-roll (no Cap take)
 - `RM-H07` — silent fixture `<Audio>`, not A-roll / VO
 - `EDU-S04` — volume 0; no random SFX (YCJDT `sfx: false`)
 - `VOX-S08` — letterbox 48px foundry bars stay; audio has no picture
 
 Stills: `AudioBedDemo-f0.png`, `AudioBedDemo-f60.png`, `LessonSpine-slate-f330.png`. Compositions: AudioBedDemo 240f @30 plus existing LessonSpine 1230f.
+
+## TypeCard VOX-S04 2026-09-20
+
+Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
 
 ## Held
 

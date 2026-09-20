@@ -27,7 +27,7 @@ Demo compositions `LowerThirdDemo` + `CaptionsDemo` (8s / 240f). Wired on `Talki
 ## SOFT notes only
 
 - `VOX-S02` / `EDU-S01` — craft layers + short demos, not a new spine
-- `VOX-S04` — no Ernest PNG
+- `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md)
 - `VOX-S05` — OverlayLock title at 22px can read tight at 0.5 still scale; wordSpacing 0.12em stays
 - `EDU-S03` — olive fixture head, not gesturing A-roll (no Cap take)
 - `EDU-S05` — band is karaoke/signaling, not a transcript dump
@@ -42,6 +42,10 @@ Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Stills `Lo
 ## Karaoke gold 2026-09-20
 
 Soft re-score of CaptionsBand only. `wordClock` drives word-level karaoke; active word gold `#C4A35A` + gold tick. `VOX-S01` PASS on fixture times (no WhisperX). No new HARD_FAIL. See [antagonist-captions-karaoke-gold.md](./antagonist-captions-karaoke-gold.md).
+
+## TypeCard VOX-S04 2026-09-20
+
+Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
 
 ## Held
 

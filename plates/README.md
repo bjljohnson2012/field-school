@@ -17,6 +17,7 @@ PASS notes:
 - [antagonist-audio-bed-layer.md](./antagonist-audio-bed-layer.md) — AudioBed silent fixture (after letterbox)
 - [antagonist-lesson-spine-audiobed-encode.md](./antagonist-lesson-spine-audiobed-encode.md) — LessonSpine AudioBed encode
 - [antagonist-soft-polish-vox-s05.md](./antagonist-soft-polish-vox-s05.md) — OverlayLock + TypeCard VOX-S05 polish
+- [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md) — TypeCard factory VOX-S04 PASS (cream + gold rail; no Ernest PNG)
 - [antagonist-lesson-spine-letterbox-encode.md](./antagonist-lesson-spine-letterbox-encode.md) — LessonSpine letterbox + soft-polish encode
 
 1920×1080@30. `useCurrentFrame` only. Cream / ink / Fraunces. Isolated seal at `1576,24` / `80×64`.
@@ -55,7 +56,7 @@ CPU cap `--concurrency=2` (2/4). Dry-run does not encode.
 npm ci
 npx remotion compositions
 node scripts/render-plate.mjs --comp LessonSpine --dry-run --lock /tmp/absent.render.lock --meminfo /proc/meminfo
-node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs scripts/soft-polish-vox-s05.test.mjs scripts/lesson-spine-letterbox-encode.test.mjs scripts/captions-karaoke-gold.test.mjs scripts/audio-bed-layer.test.mjs scripts/lesson-spine-audiobed-encode.test.mjs
+node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs scripts/soft-polish-vox-s05.test.mjs scripts/soft-polish-vox-s04.test.mjs scripts/lesson-spine-letterbox-encode.test.mjs scripts/captions-karaoke-gold.test.mjs scripts/audio-bed-layer.test.mjs scripts/lesson-spine-audiobed-encode.test.mjs
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-letterbox-encode/2026-09-20/LessonSpine.mp4 --report cleaning-checklist-lesson-spine-letterbox-encode.md
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4 --report cleaning-checklist-lesson-spine-audiobed-encode.md

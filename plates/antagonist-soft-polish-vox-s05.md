@@ -29,7 +29,7 @@ LessonSpine ORDER LOCK unchanged: Opener/sting → TalkingHead/slate → Definit
 
 ## SOFT notes only
 
-- `VOX-S04` — live TypeCard; spec `cards/` unused (accepted)
+- `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md). Historical gates block above keeps `VOX-S04: SOFT` as the PR 66 record.
 - `VOX-S02` / `EDU-S01` — polish on existing comps, not a new spine
 - `EDU-S03` — olive fixture head, not gesturing A-roll
 - `RM-H07` — no A-roll media; fixture stills only
@@ -39,6 +39,10 @@ Prior stills that called VOX-S05 at 22px / 0.5 scale are superseded by this dest
 ## Reaudit 2026-09-20
 
 Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. VOX-S05 stays PASS at OverlayLock 30px. Current LessonSpine master `028d16e4…`. Prior dests untouched. `hold_cleaning: true`. ORDER LOCK intact.
+
+## TypeCard VOX-S04 2026-09-20
+
+Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. OverlayLock stays 30px. Prior dests untouched. `hold_cleaning: true`.
 
 ## Held
 
