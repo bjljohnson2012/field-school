@@ -7,6 +7,7 @@ import {QuizBumper} from "./QuizBumper";
 import {RecapCard} from "./RecapCard";
 import {CaptionsDemo} from "./CaptionsDemo";
 import {CaptionDensityDemo} from "./CaptionDensityDemo";
+import {OverlayLockDemo} from "./OverlayLockDemo";
 import {AudioBedDemo} from "./AudioBedDemo";
 import {LetterboxDemo} from "./LetterboxDemo";
 import {ProgressRailDemo} from "./ProgressRailDemo";
@@ -381,6 +382,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="CaptionDensityDemo"
         component={CaptionDensityDemo}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="OverlayLockDemo"
+        component={OverlayLockDemo}
         durationInFrames={240}
         fps={30}
         width={1920}
