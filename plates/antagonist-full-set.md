@@ -31,6 +31,7 @@ Cites:
 - [antagonist-typecard-objectiveslate-master.md](./antagonist-typecard-objectiveslate-master.md) — LessonSpine typecard-objectiveslate master dest reaudit
 - [antagonist-progress-chapter-master.md](./antagonist-progress-chapter-master.md) — LessonSpine progress-chapter master dest reaudit
 - [antagonist-lower-callout-master.md](./antagonist-lower-callout-master.md) — LessonSpine lower-callout master dest reaudit
+- [antagonist-caption-overlay-master.md](./antagonist-caption-overlay-master.md) — LessonSpine caption-overlay master dest reaudit
 - [antagonist-talkinghead-slate.md](./antagonist-talkinghead-slate.md) — TalkingHead slate signaling
 - [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md) — RecapCard slate signaling
 - [antagonist-opener-slate.md](./antagonist-opener-slate.md) — Opener slate signaling
@@ -743,6 +744,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`.
+
+## LessonSpine caption-overlay master dest reaudit 2026-09-20
+
+Dated **2026-09-20** Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-caption-overlay-encode/2026-09-20/LessonSpine.mp4` sha256 `5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c` plus CaptionDensity/OverlayLock plates. After PR 113 merge `61e6a76ca7219e2dae7479eb7722e49d2fe53f86`. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Lower-callout dest **untouched** (`68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92`). Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-20
+rendering: /opt/cursor/artifacts/lesson-spine-caption-overlay-encode/2026-09-20/LessonSpine.mp4
+sha256: 5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c
+stills: /opt/cursor/artifacts/remotion-antagonist-caption-overlay-master/2026-09-20/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `CaptionDensityDemo-f0.png`, `CaptionDensityDemo-f60.png`, `OverlayLockDemo-f0.png`, `OverlayLockDemo-f60.png`.
 
 ## Held
 
