@@ -23,4 +23,6 @@ test("launch gate is CLOSED at 0/8 and does not invent 8/8", () => {
   assert.match(gate, /Wave3 farm \/ cutover/);
   assert.match(stub, /CLOSED/);
   assert.match(campus, /prelaunch\/LAUNCH_GATE\.md/);
+  assert.match(campus, /staff\/GRAPH\.md/);
+  assert.match(campus, /staff\/ROUTINES\.md/);
 });

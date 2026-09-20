@@ -1,8 +1,10 @@
 # Wave 5 proof — Remotion plates + 0012 gate
 
-2026-09-19. Operator Remotion in `plates/` only. No Remotion campus package. No player rail. No live Cleaning / Publish flip. No Cap take. AUTH_URL stays `https://portal.fieldschool.ai`. Family LIVE `bc-4765f2f0` not stolen. Just `27pn9xs0zk8a73g` locked.
+2026-09-20 overnight sync. Operator Remotion in `plates/` only. No Remotion campus package. No player rail. No live Cleaning / Publish flip. No Cap take. AUTH_URL stays `https://portal.fieldschool.ai`. Family LIVE `bc-4765f2f0` not stolen. Just `27pn9xs0zk8a73g` locked.
 
 Bar: [remotion-vox-standards.md](../remotion-vox-standards.md). Independent Antagonist v2 is the only bar.
+
+Plan SoT: [../prelaunch/LAUNCH_GATE.md](../prelaunch/LAUNCH_GATE.md) — **CLOSED**, **0/8**. Do not invent **8/8**. Hub: [../staff/GRAPH.md](../staff/GRAPH.md) (CDM → CTO → Cursor Gate → Field School PM). Clocks: [../staff/ROUTINES.md](../staff/ROUTINES.md) (06 / 09 / 15 / 22 / 02 ET). Campus SoT: [STATUS.md](./STATUS.md).
 
 ## Order lock (CDM ACCEPT)
 
@@ -35,8 +37,28 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | LessonSpine encode | PR 56 `f35c77c` / tip `5722104` |
 | Cleaning checklist | PR 57 `43821f3` / tip `2132cee` |
 | plate_renders 0012 | PR 58 `79334ab` / tip `0695396` |
+| WAVE5 / STATUS refresh | PR 59 `5abfa4a` / tip `f4e2ee2` |
+| plates API campus pack | PR 60 `f140353` / tip `b7c5aaf` |
+| CaptionsBand + LowerThird | PR 61 `0bcb0e1` / tip `0cba86a` |
+| LessonSpine captions re-encode | PR 62 `63c2d0a` / tip `0ccc4ee` |
+| Letterbox | PR 63 `58671a3` / tip `280bbe5` |
+| VOX-S05 OverlayLock polish | PR 66 `c021d3b` / tip `ba2b708` |
+| LAUNCH_GATE CLOSED 0/8 | PR 67 `b74c8e9` / tip `2ed8bda` |
+| Staff GRAPH + ROUTINES | PR 68 `50f0ea9` / tip `0498456` |
 
-Encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s).
+Encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests untouched by later docs.
+
+## Letterbox stack (complete)
+
+Layer order (later sibling on top): bed → screen → talking-head card → lower third → captions → letterbox → audio.
+
+- CaptionsBand + LowerThird on every LessonSpine plate (PR 61).
+- Letterbox ink bars `LETTERBOX_H=48`, gold inner rule, close-in over `TAKEOVER_EASE_FRAMES` (PR 63).
+- Stack is factory-complete in `plates/`. No Remotion-in-Next. No player rail.
+
+## VOX-S05 soft-polish (PASS)
+
+PR 66. `OverlayLock` 30px / `0.02em` / `0.2em` nowrap. Seal `1576,24` / `80×64`. Antagonist `plates/antagonist-soft-polish-vox-s05.md` **PASS** (VOX-S04 SOFT). Factory evidence only — not a launch Product PASS.
 
 ## Checklist gate
 
@@ -67,4 +89,4 @@ Live `GET https://portal.fieldschool.ai/api/plates` is **401** `sign_in_required
 
 ## Held
 
-No Remotion in Next. No player rail. No Cap take. No Just remake. No second melt. No Cleaning / Publish flip. No AUTH_URL / Stripe. No four-model Wave 3 cutover. No LAUNCH_GATE 8/8.
+No Remotion in Next. No player rail. No Cap take. No Just remake. No second melt. No Cleaning / Publish flip. No AUTH_URL / Stripe. No Wave 3 cutover (PR 65 closed SUPERSEDED, unmerged). No LAUNCH_GATE 8/8. Launch stays **CLOSED**, **0/8**.
