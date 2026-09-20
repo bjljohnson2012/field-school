@@ -53,6 +53,10 @@ Cites [antagonist-full-set.md](./antagonist-full-set.md) for the five plates.
 - `RM-S08` — stills at keyframes; no full master encode
 - Quiz `sourceUnitId` is operator copy (`lesson-opener`), not a second Pattern bank
 
+## Reaudit 2026-09-20
+
+Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Current master is the letterbox encode (`028d16e4…`). Stills sting/slate/objective/recap/next-up under `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`. Prior dests `a5d08284…` / `ec88d257…` untouched. `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just `27pn9xs0zk8a73g`. No melt. No campus Remotion package. No `0006_plates.sql`. No Publish/Distribute. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`.

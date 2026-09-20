@@ -8,7 +8,7 @@ PASS notes:
 
 - [antagonist-opener-recap.md](./antagonist-opener-recap.md) — Opener + RecapCard
 - [antagonist-definition-quiz-head.md](./antagonist-definition-quiz-head.md) — DefinitionBoard + QuizBumper + TalkingHeadCard
-- [antagonist-full-set.md](./antagonist-full-set.md) — all five
+- [antagonist-full-set.md](./antagonist-full-set.md) — full-set reaudit 2026-09-20 (nine comps + letterbox encode)
 - [antagonist-lesson-spine.md](./antagonist-lesson-spine.md) — LessonSpine (sting / slate / objective / recap / next-up)
 - [antagonist-captions-lower-third.md](./antagonist-captions-lower-third.md) — CaptionsBand + LowerThird
 - [antagonist-lesson-spine-reencode-captions.md](./antagonist-lesson-spine-reencode-captions.md) — LessonSpine re-encode with captions/LT

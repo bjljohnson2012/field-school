@@ -36,6 +36,10 @@ LessonSpine ORDER LOCK unchanged: Opener/sting → TalkingHead/slate → Definit
 
 Prior stills that called VOX-S05 at 22px / 0.5 scale are superseded by this dest. Prior LessonSpine encodes (`a5d08284…`, captions re-encode `ec88d257…`) untouched.
 
+## Reaudit 2026-09-20
+
+Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. VOX-S05 stays PASS at OverlayLock 30px. Current LessonSpine master `028d16e4…`. Prior dests untouched. `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just. No melt. No campus Remotion package. No player rail. No Cleaning / Publish flip. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`. No Wave3 farm / cutover. No PR 65 merge.
