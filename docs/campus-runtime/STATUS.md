@@ -1,6 +1,8 @@
 # Status — 2026-09-20
 
-Wave 1 is live. Wave 2 tenants + picker + Field Pattern is proven in [WAVE2.md](./WAVE2.md). Family v1 operator writes are LIVE on FamilyV1Home. Remotion Wave 5 plates + LessonSpine + checklist + `0012` + letterbox stack + VOX-S05 + antagonist full-set reaudit are in `main` and `plate_renders` is on `field-school-campus-db`. Proof: [WAVE5.md](./WAVE5.md).
+Wave 1 is live. Wave 2 tenants + picker + Field Pattern is proven in [WAVE2.md](./WAVE2.md). Family v1 operator writes are LIVE on FamilyV1Home. Remotion Wave 5 plates + LessonSpine + checklist + `0012` + letterbox stack + VOX-S05 + antagonist full-set reaudit + AudioBed are in `main` and `plate_renders` is on `field-school-campus-db`. Proof: [WAVE5.md](./WAVE5.md).
+
+2026-09-20 pre-0600 status sync. Current master LessonSpine dest is audiobed-encode sha256 `9f89f9a9…` (same as karaoke gold when AudioBed volume 0). Wave3 campus pack **LIVE**. Karaoke gold. Letterbox stack complete. Launch **CLOSED**, **0/8**.
 
 - Postgres `field-school-campus-db`, database `campus`. Do not write leftover `field-school-db`.
 - Guest Grok Bot still works. `GET /api/me` guest `{ authenticated: false, guest: true }`. `POST /api/events` guest 401.
