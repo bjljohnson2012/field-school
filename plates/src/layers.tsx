@@ -156,9 +156,11 @@ export function LowerThird({
 }) {
   const frame = useCurrentFrame();
   const glide = glideCard(frame);
-  const title = (name || label || "").trim();
-  const sub = (role || "").trim();
-  if (!title) return null;
+  // Speaker / context label
+  // After talking-head, before captions
+  const speaker = (name || "Teacher").trim();
+  const context = (role || label || "").trim();
+  if (!speaker) return null;
   return (
     <div
       style={{
@@ -184,9 +186,9 @@ export function LowerThird({
           color: ink,
         }}
       >
-        {title}
+        {speaker}
       </div>
-      {sub ? (
+      {context ? (
         <div
           style={{
             marginTop: 8,
@@ -197,7 +199,7 @@ export function LowerThird({
             color: gold,
           }}
         >
-          {sub}
+          {context}
         </div>
       ) : null}
     </div>
