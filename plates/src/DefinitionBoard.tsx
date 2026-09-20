@@ -20,6 +20,9 @@ export const DefinitionBoard: React.FC<DefinitionProps> = ({
   const words = term.trim().split(/\s+/);
   const keyword = words[words.length - 1] ?? term;
   const lead = words.slice(0, -1).join(" ");
+  const claimWords = definition.trim().split(/\s+/);
+  const claimKeyword = claimWords[claimWords.length - 1] ?? definition;
+  const claimLead = claimWords.slice(0, -1).join(" ");
 
   return (
     <AbsoluteFill style={{backgroundColor: cream}}>
@@ -35,7 +38,10 @@ export const DefinitionBoard: React.FC<DefinitionProps> = ({
               <Keyword>{keyword}</Keyword>
             </Title>
             <GoldRule />
-            <Claim>{definition}</Claim>
+            <Claim>
+              {claimLead ? `${claimLead} ` : null}
+              <Keyword>{claimKeyword}</Keyword>
+            </Claim>
           </TypeCard>
         </Layer>
         <Layer name="talking-head card">

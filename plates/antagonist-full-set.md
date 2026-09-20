@@ -31,6 +31,7 @@ Cites:
 - [antagonist-opener-slate.md](./antagonist-opener-slate.md) — Opener slate signaling
 - [antagonist-objectiveslate-slate.md](./antagonist-objectiveslate-slate.md) — ObjectiveSlate slate signaling
 - [antagonist-typecard-slate.md](./antagonist-typecard-slate.md) — TypeCard slate signaling
+- [antagonist-definitionboard-slate.md](./antagonist-definitionboard-slate.md) — DefinitionBoard slate signaling
 
 ```
 verdict: PASS
@@ -465,6 +466,25 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f30.png`, `LessonSpine-slate-f330.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `Opener-f30.png`, `RecapCard-f144.png`.
+
+## DefinitionBoard slate 2026-09-20
+
+Dated **2026-09-20**. DefinitionBoard kicker stays “Definition”. EDU-S02 last-word gold `#C4A35A` tick (`Keyword`) on Title “motion” plus Claim “dump.”. After PR 100 merge `f8000e0e402fe5c4f71438dc82ef8d626d663118`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-definitionboard-slate/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-definitionboard-slate/2026-09-20/
+sha256: 3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). DefinitionBoard slate factory PASS. Launch stays CLOSED 0/8.
 
 ## Held
 

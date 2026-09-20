@@ -19,6 +19,7 @@ PASS notes:
 - [antagonist-edu-s02-master.md](./antagonist-edu-s02-master.md) — EDU-S02 master dest reaudit 2026-09-20
 - [antagonist-slate-master.md](./antagonist-slate-master.md) — LessonSpine slate master dest reaudit 2026-09-20
 - [antagonist-typecard-objectiveslate-master.md](./antagonist-typecard-objectiveslate-master.md) — LessonSpine typecard-objectiveslate master dest reaudit 2026-09-20
+- [antagonist-definitionboard-slate.md](./antagonist-definitionboard-slate.md) — DefinitionBoard slate signaling 2026-09-20
 - [antagonist-talkinghead-slate.md](./antagonist-talkinghead-slate.md) — TalkingHead slate signaling 2026-09-20
 - [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md) — RecapCard slate signaling 2026-09-20
 - [antagonist-opener-slate.md](./antagonist-opener-slate.md) — Opener slate signaling 2026-09-20

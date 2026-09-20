@@ -56,6 +56,10 @@ QuizBumper kicker “Next up” plus Title last-word gold `#C4A35A` tick (`Keywo
 
 TalkingHeadCard kicker “Slate” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “full-bleed”. Karaoke already gold-ticks the same word 1100–1800ms (plate f45 / spine f345). Evidence: [antagonist-talkinghead-slate.md](./antagonist-talkinghead-slate.md). Stills `/opt/cursor/artifacts/remotion-talkinghead-slate/2026-09-20/`. Locked master dest `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` **untouched**. `hold_cleaning: true`. ORDER LOCK intact.
 
+## DefinitionBoard slate 2026-09-20
+
+DefinitionBoard kicker “Definition” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “motion” and Claim last-word tick on “dump.”. Karaoke already gold-ticks “motion” 900–1600ms (plate f30 / spine f570). Evidence: [antagonist-definitionboard-slate.md](./antagonist-definitionboard-slate.md). Stills `/opt/cursor/artifacts/remotion-definitionboard-slate/2026-09-20/`. Locked master dest `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` **untouched**. `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just. No melt. No campus Remotion package. No Publish/Distribute. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`.
