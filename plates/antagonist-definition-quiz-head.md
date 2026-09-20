@@ -35,6 +35,10 @@ Opener + RecapCard unchanged from PR 52.
 - `EDU-S03` — olive fixture, not gesturing A-roll (no Cap take)
 - Quiz `sourceUnitId` is operator copy (`lesson-opener`), not a second Pattern bank
 
+## Reaudit 2026-09-20
+
+Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Stills `DefinitionBoard-f30.png` / `QuizBumper-f30.png` / `TalkingHeadCard-f90.png` under `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`. HARD gates unchanged. `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just. No melt. No campus Remotion package. No Publish/Distribute. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`.

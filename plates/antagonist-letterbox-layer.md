@@ -37,6 +37,10 @@ Demo composition `LetterboxDemo` (8s / 240f). Wired on every spine plate. Lesson
 
 Stills: `LetterboxDemo-f0.png`, `LetterboxDemo-f60.png`, `LessonSpine-slate-f330.png`. Compositions: LetterboxDemo 240f @30 plus existing LessonSpine 1230f.
 
+## Reaudit 2026-09-20
+
+Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Still `LetterboxDemo-f60.png` under `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`. OverlayLock now 30px (VOX-S05 22px note superseded). `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just. No melt. No campus Remotion package. No player rail. No Cleaning / Publish flip. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`. No Wave3.

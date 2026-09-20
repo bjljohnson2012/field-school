@@ -35,6 +35,10 @@ Demo compositions `LowerThirdDemo` + `CaptionsDemo` (8s / 240f). Wired on `Talki
 
 Stills: `LowerThirdDemo-f60.png`, `CaptionsDemo-f90.png`, `TalkingHeadCard-f90.png`. Compositions: LowerThirdDemo + CaptionsDemo 240f @30 plus existing LessonSpine 1230f.
 
+## Reaudit 2026-09-20
+
+Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Stills `LowerThirdDemo-f60.png` / `CaptionsDemo-f90.png` under `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`. OverlayLock now 30px (VOX-S05 22px note superseded). `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just. No melt. No campus Remotion package. No player rail. No Cleaning / Publish flip. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`.

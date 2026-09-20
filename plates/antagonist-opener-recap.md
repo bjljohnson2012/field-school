@@ -48,6 +48,10 @@ In-round REVISE: `letterSpacing: -0.03em` smashed lock + titles (`VOX-S05`). Fix
 - `RM-S01` — `--concurrency=1` for RAM, not a flicker hide
 - `RM-S08` — stills at keyframes; no full master encode
 
+## Reaudit 2026-09-20
+
+Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Stills `Opener-f30.png` / `RecapCard-f144.png` under `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`. HARD gates unchanged. `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just `27pn9xs0zk8a73g`. No melt. No campus Remotion package. No Publish/Distribute. No AUTH_URL / Stripe. No family chrome. No `run-91af199b`.

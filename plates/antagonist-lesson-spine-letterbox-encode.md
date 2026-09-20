@@ -31,6 +31,10 @@ Slate uses `LowerThird` name/role + `CaptionsBand` (via `Karaoke`) + `Letterbox`
 - `EDU-S03` — olive fixture head, not gesturing A-roll
 - Ship 1 HOLD (no Cap take). Ship 6 HOLD (Publish/HLS). Cleaning stays held.
 
+## Reaudit 2026-09-20
+
+Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Dest sha256 `028d16e4…` confirmed. Prior `a5d08284…` / `ec88d257…` confirmed untouched. `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just remake. No second melt. No live Cleaning / Publish flip. No campus Remotion package. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`.
