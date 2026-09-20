@@ -12,6 +12,7 @@ PASS notes:
 - [antagonist-typecard-master.md](./antagonist-typecard-master.md) — TypeCard master dest reaudit 2026-09-20
 - [antagonist-edu-s01-objective-slate.md](./antagonist-edu-s01-objective-slate.md) — EDU-S01 Opener / Recap objective slate 2026-09-20
 - [antagonist-lesson-spine-edu-s01-encode.md](./antagonist-lesson-spine-edu-s01-encode.md) — LessonSpine EDU-S01 encode (current master)
+- [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit 2026-09-20
 - [antagonist-lesson-spine.md](./antagonist-lesson-spine.md) — LessonSpine (sting / slate / objective / recap / next-up)
 - [antagonist-captions-lower-third.md](./antagonist-captions-lower-third.md) — CaptionsBand + LowerThird
 - [antagonist-captions-karaoke-gold.md](./antagonist-captions-karaoke-gold.md) — CaptionsBand karaoke gold (VOX-S01)

@@ -64,6 +64,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Master dest TypeCard | PR 83 `e2d3cf6` / tip `96455a0` |
 | TypeCard master dest reaudit | PR 84 `f3d0918` / tip `7074f21` |
 | EDU-S01 objective slate | PR 85 `a97167a` / tip `1a47d48` |
+| EDU-S01 LessonSpine encode | PR 86 `2bfafed` / tip `0c35205` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -111,7 +112,11 @@ PRs 79–84 harvested. PR 85 merged tip `a97167a`. Opener sting carries Mayer pr
 
 ## EDU-S01 LessonSpine encode (PASS)
 
-PR 85 merge `a97167a` / tip `1a47d48`. New dated dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf`. **Current master dest.** Typecard `27cc5bf3…` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-edu-s01-encode.md`. Stills: `/opt/cursor/artifacts/remotion-edu-s01-spine-encode/2026-09-20/`. `hold_cleaning: true`. `--flip` refused.
+PR 86 merge `2bfafed` / tip `0c35205` (PR 85 slate `a97167a`). New dated dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf`. **Current master dest.** Typecard `27cc5bf3…` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-edu-s01-encode.md`. Stills: `/opt/cursor/artifacts/remotion-edu-s01-spine-encode/2026-09-20/`. `hold_cleaning: true`. `--flip` refused.
+
+## EDU-S01 master dest reaudit (PASS)
+
+Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` plus EDU-S01 plates. PR 86 merge `2bfafed`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS on this dest. `hold_cleaning: true`. `--flip` refused. Typecard dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-edu-s01-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-edu-s01-master/2026-09-20/`.
 
 ## Karaoke gold (VOX-S01 PASS)
 

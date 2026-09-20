@@ -17,6 +17,7 @@ Cites:
 - [antagonist-lesson-spine-typecard-encode.md](./antagonist-lesson-spine-typecard-encode.md) — locked LessonSpine master (TypeCard)
 - [antagonist-edu-s01-objective-slate.md](./antagonist-edu-s01-objective-slate.md) — EDU-S01 Opener / Recap objective slate
 - [antagonist-lesson-spine-edu-s01-encode.md](./antagonist-lesson-spine-edu-s01-encode.md) — EDU-S01 LessonSpine encode (current master)
+- [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 
 ```
 verdict: PASS
@@ -165,6 +166,28 @@ gates: {
   EDU-S01: PASS, EDU-S03: SOFT
 }
 ```
+
+## EDU-S01 master dest reaudit 2026-09-20
+
+Dated **2026-09-20** Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` plus EDU-S01 plates. After PR 86 merge `2bfafed7b332fe5eba6bc364ba7bc404faa3c912`. ffprobe: h264 1920×1080@30, 41.000s. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Typecard dest **untouched** (`27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0`).
+
+```
+verdict: PASS
+dated: 2026-09-20
+rendering: /opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4
+sha256: cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf
+stills: /opt/cursor/artifacts/remotion-antagonist-edu-s01-master/2026-09-20/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` factory PASS on this dest. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f30.png`, `LessonSpine-slate-f330.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `Opener-f30.png`, `RecapCard-f144.png`.
 
 ## Held
 
