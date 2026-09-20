@@ -14,7 +14,7 @@ Dated 2026-09-20. Plan source of truth for public launch. Campus runtime SoT sta
 
 | Node | Status | Evidence (one line) | Hold |
 |---|---|---|---|
-| Product | HELD | Campus Wave 1–2 live; Wave3 campus pack LIVE (composer/teach); Remotion Wave 5 factory **PASS** in `plates/` ([WAVE5.md](../campus-runtime/WAVE5.md), VOX-S05 PR 66). Not a launch Product PASS. | Remotion-in-Next; Cap take; Cleaning / Publish; AUTH_URL; Stripe prices; PR 65 SUPERSEDED, unmerged |
+| Product | HELD | Campus Wave 1–2 live; Wave3 campus pack LIVE (composer/teach); Remotion Wave 5 factory **PASS** in `plates/` (AudioBed landed; karaoke gold; letterbox stack complete; master dest audiobed-encode sha256 `9f89f9a9…`). Not a launch Product PASS. | Remotion-in-Next; Cap take; Cleaning / Publish; AUTH_URL; Stripe prices; PR 65 SUPERSEDED, unmerged |
 | ICP | HELD | Household + sales orgs exist ([WAVE2.md](../campus-runtime/WAVE2.md)). No sealed ICP launch readout. | Do not invent ICP 8/8 |
 | Brand | HELD | Factory cream / ink / Fraunces + seal lock in `plates/`. No sealed Brand launch readout. | Do not invent Brand 8/8 |
 | Offer | HELD | Learn with Ben checkout exists on campus; Stripe / SKUs / metering UI not a launch seal. | Stripe / prices / SKUs |
@@ -25,7 +25,7 @@ Dated 2026-09-20. Plan source of truth for public launch. Campus runtime SoT sta
 
 ## Product factory note (not a launch PASS)
 
-Remotion Wave 5 factory trail is **PASS** under Product: compositions, LessonSpine ORDER LOCK, encode dests, Cleaning checklist `hold_cleaning: true`, plates API guest 401. That is factory evidence only.
+Remotion Wave 5 factory trail is **PASS** under Product: compositions, LessonSpine ORDER LOCK, AudioBed landed, karaoke gold, letterbox stack complete, encode dests, Cleaning checklist `hold_cleaning: true`, plates API guest 401. Current master dest is audiobed-encode (sha256 same as karaoke when volume 0). That is factory evidence only.
 
 Still **HELD** under Product: Remotion packaged into Next / player rail; Cap take; Just remake `27pn9xs0zk8a73g`; Cleaning / Publish / Distribute flip; AUTH_URL flip; Stripe / prices. Wave3 campus pack is LIVE (composer/teach); PR 65 stays closed SUPERSEDED, unmerged.
 

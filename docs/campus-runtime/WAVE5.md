@@ -1,6 +1,8 @@
 # Wave 5 proof — Remotion plates + 0012 gate
 
-2026-09-20 overnight close-sync. Operator Remotion in `plates/` only. No Remotion campus package. No player rail. No live Cleaning / Publish flip. No Cap take. AUTH_URL stays `https://portal.fieldschool.ai`. Family LIVE `bc-4765f2f0` not stolen. Just `27pn9xs0zk8a73g` locked.
+2026-09-20 overnight close-sync. 2026-09-20 pre-0600 status sync. Operator Remotion in `plates/` only. No Remotion campus package. No player rail. No live Cleaning / Publish flip. No Cap take. AUTH_URL stays `https://portal.fieldschool.ai`. Family LIVE `bc-4765f2f0` not stolen. Just `27pn9xs0zk8a73g` locked.
+
+Current master LessonSpine dest: `/opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4` sha256 `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f` (same as karaoke gold when AudioBed volume 0). AudioBed landed. Wave3 campus pack LIVE. Karaoke gold. Letterbox stack complete.
 
 Bar: [remotion-vox-standards.md](../remotion-vox-standards.md). Independent Antagonist v2 is the only bar.
 
@@ -49,6 +51,11 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | LessonSpine letterbox encode | PR 70 `4f66e6d` / tip `1b279d2` |
 | Antagonist full-set reaudit | PR 71 `da967d2` / tip `579737a` |
 | WAVE5 overnight close-sync | PR 72 `9957486` / tip `f1c55bf` |
+| Karaoke gold | PR 73 `50b776a` / tip `1c7d0cb` |
+| Four-model farm PASS | PR 74 `5b05d33` / tip `0d3335e` |
+| Wave3 campus pack LIVE | PR 75 `241808b` / tip `8e992e3` |
+| AudioBed layer | PR 76 `87c6ed6` / tip `9edf763` |
+| AudioBed LessonSpine encode | PR 77 `8992d0b` / tip `5bd6681` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
