@@ -21,8 +21,11 @@ test("launch gate is CLOSED at 0/8 and does not invent 8/8", () => {
   assert.match(gate, /Remotion Wave 5 factory \*\*PASS\*\*/);
   assert.match(gate, /Remotion-in-Next/);
   assert.match(gate, /Wave3 campus pack LIVE/);
+  assert.match(gate, /TypeCard VOX-S04 PASS/);
   assert.match(stub, /CLOSED/);
   assert.match(campus, /prelaunch\/LAUNCH_GATE\.md/);
   assert.match(campus, /staff\/GRAPH\.md/);
   assert.match(campus, /staff\/ROUTINES\.md/);
+  assert.match(campus, /TypeCard VOX-S04 \*\*PASS\*\*/);
+  assert.match(campus, /Wave 3 campus pack \*\*LIVE\*\*/);
 });

@@ -17,7 +17,11 @@ test("staff GRAPH is the locked hub; launch stays CLOSED 0/8", () => {
   assert.match(graph, /Do not spawn new Product \/ Marketer \/ Revenue agents/);
   assert.match(graph, /Remotion Wave 5 factory is \*\*PASS\*\* in `plates\/` only/);
   assert.match(graph, /No Remotion-in-Next/);
+  assert.match(graph, /Wave3 campus pack is LIVE \(composer\/teach\)/);
+  assert.match(graph, /TypeCard VOX-S04 \*\*PASS\*\*/);
+  assert.match(graph, /Remotion-in-Next held/);
   assert.match(graph, /\*\*CLOSED\*\*, \*\*0\/8\*\*/);
+  assert.doesNotMatch(graph, /unshipped/);
   assert.doesNotMatch(graph, /8\/8 PASS|launch OPEN|launch is open/i);
 });
 
