@@ -9,6 +9,7 @@ PASS notes:
 - [antagonist-opener-recap.md](./antagonist-opener-recap.md) — Opener + RecapCard
 - [antagonist-definition-quiz-head.md](./antagonist-definition-quiz-head.md) — DefinitionBoard + QuizBumper + TalkingHeadCard
 - [antagonist-full-set.md](./antagonist-full-set.md) — full-set reaudit 2026-09-20 (nine comps + letterbox encode)
+- [antagonist-typecard-master.md](./antagonist-typecard-master.md) — TypeCard master dest reaudit 2026-09-20
 - [antagonist-lesson-spine.md](./antagonist-lesson-spine.md) — LessonSpine (sting / slate / objective / recap / next-up)
 - [antagonist-captions-lower-third.md](./antagonist-captions-lower-third.md) — CaptionsBand + LowerThird
 - [antagonist-captions-karaoke-gold.md](./antagonist-captions-karaoke-gold.md) — CaptionsBand karaoke gold (VOX-S01)
