@@ -17,18 +17,19 @@ export function OverlayLock({overlay}: {overlay: Overlay}) {
       <div
         style={{
           position: "absolute",
-          left: overlay.x - 420,
+          left: overlay.x - 520,
           top: overlay.y,
-          width: 410,
+          width: 508,
           height: overlay.h,
           fontFamily: displayFace,
           fontWeight: 700,
-          fontSize: 22,
-          letterSpacing: "0em",
-          wordSpacing: "0.12em",
+          fontSize: 30,
+          letterSpacing: "0.02em",
+          wordSpacing: "0.2em",
           lineHeight: `${overlay.h}px`,
           color: ink,
           textAlign: "right",
+          whiteSpace: "nowrap",
         }}
       >
         {overlay.title}
@@ -172,9 +173,9 @@ export function LowerThird({
           fontFamily: displayFace,
           fontWeight: 700,
           fontSize: 36,
-          letterSpacing: "0em",
-          wordSpacing: "0.12em",
-          lineHeight: 1.1,
+          letterSpacing: "0.01em",
+          wordSpacing: "0.16em",
+          lineHeight: 1.12,
           color: ink,
         }}
       >
@@ -335,9 +336,9 @@ export function Title({children}: {children: React.ReactNode}) {
         fontFamily: displayFace,
         fontWeight: 700,
         fontSize: 56,
-        letterSpacing: "0em",
-        wordSpacing: "0.12em",
-        lineHeight: 1.12,
+        letterSpacing: "0.01em",
+        wordSpacing: "0.16em",
+        lineHeight: 1.16,
         color: ink,
         maxWidth: 1000,
       }}
@@ -353,9 +354,9 @@ export function Claim({children, color = ink}: {children: React.ReactNode; color
       style={{
         fontFamily: bodyFace,
         fontSize: 36,
-        lineHeight: 1.3,
-        letterSpacing: "0em",
-        wordSpacing: "0.12em",
+        lineHeight: 1.32,
+        letterSpacing: "0.01em",
+        wordSpacing: "0.14em",
         color,
         maxWidth: 960,
       }}
