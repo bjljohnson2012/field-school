@@ -32,6 +32,7 @@ Cites:
 - [antagonist-objectiveslate-slate.md](./antagonist-objectiveslate-slate.md) — ObjectiveSlate slate signaling
 - [antagonist-typecard-slate.md](./antagonist-typecard-slate.md) — TypeCard slate signaling
 - [antagonist-definitionboard-slate.md](./antagonist-definitionboard-slate.md) — DefinitionBoard slate signaling
+- [antagonist-audio-bed-unmute.md](./antagonist-audio-bed-unmute.md) — AudioBed soft unmute craft beat
 
 ```
 verdict: PASS
@@ -485,6 +486,25 @@ gates: {
 ```
 
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). DefinitionBoard slate factory PASS. Launch stays CLOSED 0/8.
+
+## AudioBed unmute 2026-09-20
+
+Dated **2026-09-20**. Soft unmute of the silent fixture bed. `AUDIO_BED_MUTED=false`, `AUDIO_BED_VOLUME=0`, still `public/audio-bed-silence.wav`. Craft beat on `AudioBedDemo`. After PR 101 merge `707a2d5af7276a3a4ec5cba272053914c23680cd`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-audio-bed-unmute/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused. No Cap A-roll audio.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-audio-bed-unmute/2026-09-20/
+sha256: 3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT, EDU-S04: PASS
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S04` volume 0 silent fixture. AudioBed unmute factory PASS. Launch stays CLOSED 0/8.
 
 ## Held
 
