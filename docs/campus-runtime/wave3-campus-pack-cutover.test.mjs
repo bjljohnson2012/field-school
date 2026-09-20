@@ -1,0 +1,42 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {dirname, join} from "node:path";
+import {fileURLToPath} from "node:url";
+import test from "node:test";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const wave3 = readFileSync(join(here, "WAVE3.md"), "utf8");
+const campus = readFileSync(join(here, "STATUS.md"), "utf8");
+const four = readFileSync(join(here, "FOUR_MODEL.md"), "utf8");
+const gate = readFileSync(join(here, "..", "prelaunch", "LAUNCH_GATE.md"), "utf8");
+const script = readFileSync(join(here, "..", "..", "app", "deploy", "overlay-wave3-composer.sh"), "utf8");
+
+test("Wave3 campus pack LIVE; four-model PASS cited; launch stays CLOSED 0/8", () => {
+  assert.match(wave3, /2026-09-20 campus pack LIVE/);
+  assert.match(wave3, /wave3-composer-campus-pack-20260920T063800Z\.tar\.gz/);
+  assert.match(wave3, /baec863d121b67e2fdd59f097fcbfffc432af68703d679a9289c7a11bfcb7163/);
+  assert.match(wave3, /5b05d33595f66b3164e4f6b8e46c2eef8be94dad/);
+  assert.match(wave3, /Four-model ship gate \| \*\*PASS\*\*/);
+  assert.match(wave3, /Campus cutover \| \*\*not done\*\*/);
+  assert.match(wave3, /GET \/api\/me/);
+  assert.match(wave3, /sign_in_required/);
+  assert.match(wave3, /\/c\/grok-bot/);
+  assert.match(wave3, /edit\.fieldschool\.ai\/health/);
+  assert.match(wave3, /\/api\/plates/);
+  assert.match(wave3, /e352f5ad/);
+  assert.match(wave3, /\*\*CLOSED\*\*, \*\*0\/8\*\*/);
+  assert.match(campus, /Wave 3 campus pack \*\*LIVE\*\*/);
+  assert.match(campus, /farm \*\*PASS\*\* on `50b776a`/);
+  assert.match(campus, /PR 65 closed SUPERSEDED, unmerged/);
+  assert.match(campus, /baec863d121b67e2fdd59f097fcbfffc432af68703d679a9289c7a11bfcb7163/);
+  assert.match(four, /Campus pack LIVE/);
+  assert.match(four, /Wave3 campus cutover \| \*\*not done\*\*/);
+  assert.match(four, /baec863d121b67e2fdd59f097fcbfffc432af68703d679a9289c7a11bfcb7163/);
+  assert.match(script, /without a deploy\.sh wipe/);
+  assert.match(script, /--no-deps app/);
+  assert.match(gate, /\*\*Launch is CLOSED\.\*\*/);
+  assert.match(gate, /\*\*0\/8\*\*/);
+  assert.doesNotMatch(wave3, /8\/8 PASS|launch OPEN/i);
+  assert.doesNotMatch(campus, /8\/8 PASS|launch OPEN/i);
+  assert.doesNotMatch(four, /8\/8 PASS|launch OPEN/i);
+});

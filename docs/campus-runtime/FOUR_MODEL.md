@@ -24,7 +24,22 @@ Four independent lenses spawned and ran against that tip (not a docs-only supers
 | Four-model ship gate | **PASS** — all four green on `50b776a` |
 | Wave3 campus cutover | **not done** — CDM seals cutover separately |
 
-Do not deploy this SHA as a Wave3 cutover. Ship-gate PASS is not a package/extract. Live composer guest-401 is an observation, not a ship.
+Do not treat this farm readout as the campus pack. Ship-gate PASS is not a package/extract. Live composer guest-401 on that day was an observation, not a ship.
+
+## Campus pack LIVE (2026-09-20 overlay, after this farm)
+
+Separate CDM seal. Wave3 campus pack **LIVE**. Four-model ship gate **PASS** on `50b776a` cited. Overlay only — no `deploy.sh` wipe. Launch **CLOSED**, **0/8**.
+
+| Item | Value |
+|---|---|
+| Pack | `/opt/field-school-packs/wave3-composer-campus-pack-20260920T063800Z.tar.gz` |
+| sha256 | `baec863d121b67e2fdd59f097fcbfffc432af68703d679a9289c7a11bfcb7163` |
+| Main tip | `5b05d33595f66b3164e4f6b8e46c2eef8be94dad` |
+| Scope | `/api/composer` + `/o/:slug/teach` + `/o/:slug/l` |
+| Family | `e352f5ad…` / `71b3245b…` unchanged |
+| PR 65 | closed SUPERSEDED, unmerged |
+
+Farm table above stays **Wave3 campus cutover | not done** as the farm-time readout.
 
 ## Farm commands (ran)
 
@@ -39,7 +54,7 @@ Each lens used a detached worktree at `50b776a`. Builder packet / WAVE3.md / thi
 
 ## Held
 
-No Wave3 campus cutover. No AUTH_URL / university 301 change. No Remotion-in-Next. No Cleaning / Publish. No Cap take. No Just remake. No Stripe / metering UI. No family steal `bc-4765f2f0`. Launch stays CLOSED 0/8.
+Farm-time: no Wave3 campus pack on that readout. No AUTH_URL / university 301 change. No Remotion-in-Next. No Cleaning / Publish. No Cap take. No Just remake. No Stripe / metering UI. No family steal `bc-4765f2f0`. Launch stays CLOSED 0/8.
 
 ## Prior readout (2026-09-19)
 
