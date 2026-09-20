@@ -74,6 +74,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | RecapCard slate | PR 93 `809ac5e` / tip `d415e42` |
 | Opener slate | PR 94 `90f22b8` / tip `b073c145` |
 | LessonSpine slate encode | PR 95 `99b706c` / tip `d7a05e1` |
+| Slate master dest reaudit | PR 96 `c4aa0a4` / tip `78d3f55` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -165,7 +166,11 @@ PRs 85–94 harvested. PR 94 merge `90f22b8` / tip `b073c145`. PR 95 merge `99b7
 
 ## LessonSpine slate master dest reaudit (PASS)
 
-Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-slate-encode/2026-09-20/LessonSpine.mp4` sha256 `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` plus Opener/TalkingHead/RecapCard slate + EDU plates. PR 95 merge `99b706c` / tip `d7a05e1`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. EDU-S02 dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-slate-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-slate-master/2026-09-20/`.
+Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-slate-encode/2026-09-20/LessonSpine.mp4` sha256 `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` plus Opener/TalkingHead/RecapCard slate + EDU plates. PR 95 merge `99b706c` / tip `d7a05e1`. PR 96 merge `c4aa0a4` / tip `78d3f55`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. EDU-S02 dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-slate-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-slate-master/2026-09-20/`.
+
+## ObjectiveSlate slate (PASS)
+
+PR 96 merge `c4aa0a4` / tip `78d3f55` harvested. ObjectiveSlate keeps “You will be able to” plus Title-style last-word gold `#C4A35A` tick (`Keyword`) on fixture `draw one idea per beat` (“beat”). LessonSpine objective beat stays DefinitionBoard. ORDER LOCK unchanged. Current master dest slate-encode sha256 `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` **untouched** (plate-level stills only). Evidence: `plates/antagonist-objectiveslate-slate.md`. Stills: `/opt/cursor/artifacts/remotion-objectiveslate-slate/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
