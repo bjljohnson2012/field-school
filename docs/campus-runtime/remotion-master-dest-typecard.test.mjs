@@ -26,17 +26,15 @@ function sha256(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
 }
 
-test("WAVE5 and STATUS lock TypeCard encode as current master dest", () => {
-  assert.match(
-    wave5,
-    /Current master LessonSpine dest: `\/opt\/cursor\/artifacts\/lesson-spine-typecard-encode\/2026-09-20\/LessonSpine\.mp4`/,
-  );
+test("WAVE5 and STATUS lock TypeCard encode as archived prior dest", () => {
+  assert.match(wave5, /lesson-spine-typecard-encode\/2026-09-20/);
   assert.match(wave5, /27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0/);
+  assert.match(wave5, /Archived prior typecard-encode/);
   assert.match(wave5, /\*\*Current master dest\.\*\*/);
   assert.match(wave5, /Archived prior audiobed-encode/);
   assert.match(wave5, /lesson-spine-audiobed-encode\/2026-09-20/);
   assert.match(wave5, /9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f/);
-  assert.match(campus, /Current master LessonSpine dest is typecard-encode/);
+  assert.match(campus, /Archived prior typecard-encode/);
   assert.match(campus, /27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0/);
   assert.match(campus, /Archived prior audiobed-encode/);
   assert.match(campus, /9f89f9a9…/);

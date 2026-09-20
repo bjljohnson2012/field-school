@@ -11,6 +11,7 @@ PASS notes:
 - [antagonist-full-set.md](./antagonist-full-set.md) — full-set reaudit 2026-09-20 (nine comps + letterbox encode)
 - [antagonist-typecard-master.md](./antagonist-typecard-master.md) — TypeCard master dest reaudit 2026-09-20
 - [antagonist-edu-s01-objective-slate.md](./antagonist-edu-s01-objective-slate.md) — EDU-S01 Opener / Recap objective slate 2026-09-20
+- [antagonist-lesson-spine-edu-s01-encode.md](./antagonist-lesson-spine-edu-s01-encode.md) — LessonSpine EDU-S01 encode (current master)
 - [antagonist-lesson-spine.md](./antagonist-lesson-spine.md) — LessonSpine (sting / slate / objective / recap / next-up)
 - [antagonist-captions-lower-third.md](./antagonist-captions-lower-third.md) — CaptionsBand + LowerThird
 - [antagonist-captions-karaoke-gold.md](./antagonist-captions-karaoke-gold.md) — CaptionsBand karaoke gold (VOX-S01)
@@ -28,7 +29,7 @@ PASS notes:
 
 Locked pedagogical order: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up.
 
-Do not re-render Just `27pn9xs0zk8a73g`. Do not overwrite Aug 30 `vox/everything-made-up.mp4`. No Cap take. No second melt. No Publish/Distribute. No campus Remotion package. Encode only to a new dated dest (see [encode-lesson-spine.md](./encode-lesson-spine.md)). Captions/lower-third re-encode: [encode-lesson-spine-reencode-captions.md](./encode-lesson-spine-reencode-captions.md). Letterbox + soft-polish re-encode: [encode-lesson-spine-letterbox.md](./encode-lesson-spine-letterbox.md). Karaoke gold encode: [encode-lesson-spine-karaoke-gold.md](./encode-lesson-spine-karaoke-gold.md). AudioBed encode: [encode-lesson-spine-audiobed.md](./encode-lesson-spine-audiobed.md). TypeCard encode: [encode-lesson-spine-typecard.md](./encode-lesson-spine-typecard.md). Prior dests stay: karaoke / audiobed `9f89f9a9…`, letterbox `028d16e4…`, first `a5d08284…`, captions `ec88d257…`. TypeCard dest `27cc5bf3…`.
+Do not re-render Just `27pn9xs0zk8a73g`. Do not overwrite Aug 30 `vox/everything-made-up.mp4`. No Cap take. No second melt. No Publish/Distribute. No campus Remotion package. Encode only to a new dated dest (see [encode-lesson-spine.md](./encode-lesson-spine.md)). Captions/lower-third re-encode: [encode-lesson-spine-reencode-captions.md](./encode-lesson-spine-reencode-captions.md). Letterbox + soft-polish re-encode: [encode-lesson-spine-letterbox.md](./encode-lesson-spine-letterbox.md). Karaoke gold encode: [encode-lesson-spine-karaoke-gold.md](./encode-lesson-spine-karaoke-gold.md). AudioBed encode: [encode-lesson-spine-audiobed.md](./encode-lesson-spine-audiobed.md). TypeCard encode: [encode-lesson-spine-typecard.md](./encode-lesson-spine-typecard.md). EDU-S01 encode: [encode-lesson-spine-edu-s01.md](./encode-lesson-spine-edu-s01.md). Prior dests stay: karaoke / audiobed `9f89f9a9…`, letterbox `028d16e4…`, first `a5d08284…`, captions `ec88d257…`, TypeCard `27cc5bf3…`. Current master dest `cab8bd91…`.
 
 ## Catalog
 
