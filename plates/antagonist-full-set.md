@@ -48,6 +48,7 @@ Cites:
 - [antagonist-caption-density.md](./antagonist-caption-density.md) — CaptionDensity karaoke line packing
 - [antagonist-overlay-lock.md](./antagonist-overlay-lock.md) — OverlayLock logo+title lock
 - [antagonist-transition-luma.md](./antagonist-transition-luma.md) — TransitionLuma beat-to-beat wipe
+- [antagonist-end-card.md](./antagonist-end-card.md) — EndCard lesson close signal
 
 ```
 verdict: PASS
@@ -833,6 +834,27 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `TransitionLumaDemo-f0.png`, `TransitionLumaDemo-f9.png`, `TransitionLumaDemo-f60.png`.
+
+## EndCard 2026-09-20
+
+Dated **2026-09-20** reaudit. EndCard soft craft beat. Lesson close signal on `EndCard` (`END_CARD_KICKER = "Close"`; `END_CARD_LINE = "The lesson holds."`; cream + gold 6px left rail). Craft beat on `EndCardDemo`. Sequenced after QuizBumper/next-up, before audio. After PR 117 merge `37d7fded486f027974599daabe71ebb7ce7c126f`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-transition-luma-encode/2026-09-20/LessonSpine.mp4` sha256 `f631402a6dfbb2ca2218ea9617c7b2af527eb7e88f8df5547dc6584c9ef5a96e` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-end-card/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-end-card/2026-09-20/
+sha256: f631402a6dfbb2ca2218ea9617c7b2af527eb7e88f8df5547dc6584c9ef5a96e
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT, EDU-S04: PASS
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
+
+Stills: `EndCardDemo-f0.png`, `EndCardDemo-f60.png`, `LessonSpine-nextup-f1050.png`.
 
 ## Held
 

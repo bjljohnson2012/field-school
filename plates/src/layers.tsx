@@ -506,6 +506,54 @@ export function TransitionLuma() {
   );
 }
 
+/** Lesson close signal. After QuizBumper/next-up, before audio. Cream + gold 6px rail. */
+export const END_CARD_KICKER = "Close";
+export const END_CARD_LINE = "The lesson holds.";
+
+export function EndCard() {
+  const words = END_CARD_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? END_CARD_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 28,
+        maxWidth: 480,
+        padding: "14px 22px 16px 18px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {END_CARD_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+    </div>
+  );
+}
+
 /** Soft-unmuted silent fixture bed. Last sibling after letterbox. Volume 0. No Cap A-roll. */
 export const AUDIO_BED_FILE = "audio-bed-silence.wav";
 export const AUDIO_BED_VOLUME = 0;
