@@ -7,6 +7,9 @@
 set -euo pipefail
 VPS_HOST="${VPS_HOST:-root@2.24.70.248}"
 KEY="${VPS_SSH_KEY:-$HOME/.ssh/vps_deploy}"
+if [ ! -f "$KEY" ] && [ -f "$HOME/.ssh/vps_deploy" ]; then
+  KEY="$HOME/.ssh/vps_deploy"
+fi
 if [ ! -f "$KEY" ] && [ -f "$HOME/.ssh/field-school-agent" ]; then
   KEY="$HOME/.ssh/field-school-agent"
 fi

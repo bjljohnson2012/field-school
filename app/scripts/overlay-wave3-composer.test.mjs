@@ -46,6 +46,7 @@ test("overlay script refuses a TanStack root", () => {
   assert.match(src, /--no-deps app/);
   assert.match(src, /0005 tables present — skip migrate/);
   assert.match(src, /without a deploy\.sh wipe/);
+  assert.match(src, /\$HOME\/\.ssh\/vps_deploy/);
   assert.doesNotMatch(src, /2\.24\.64\.248/);
   assert.doesNotMatch(src, /AUTH_URL=/);
 });
