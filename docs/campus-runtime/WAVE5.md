@@ -83,6 +83,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | AudioBed unmute | PR 102 `684a98a` / tip `63882ac` |
 | ProgressRail | PR 103 `a0cc86d` / tip `8d1cfed` |
 | ChapterChip | PR 104 `0dab60b` / tip `c83962c` |
+| ProgressRail+ChapterChip encode | PR 105 `9052d6a` / tip `5825052` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -215,6 +216,10 @@ PR 103 merge `a0cc86d` / tip `8d1cfed` harvested. ChapterChip soft craft beat: b
 ## LessonSpine progress-chapter encode (PASS)
 
 PRs 85–104 harvested. PR 104 merge `0dab60b` / tip `c83962c`. New dated dest `/opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4` sha256 `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7`. **Current master dest.** Typecard-objectiveslate dest `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-progress-chapter-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-progress-chapter-encode/2026-09-20/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine progress-chapter master dest reaudit (PASS)
+
+Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4` sha256 `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7` plus ProgressRail/ChapterChip plates. PR 105 merge `9052d6a` / tip `5825052`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Typecard-objectiveslate dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-progress-chapter-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-progress-chapter-master/2026-09-20/`.
 
 ## Karaoke gold (VOX-S01 PASS)
 
