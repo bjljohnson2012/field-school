@@ -33,6 +33,7 @@ Cites:
 - [antagonist-progress-chapter-master.md](./antagonist-progress-chapter-master.md) — LessonSpine progress-chapter master dest reaudit
 - [antagonist-lower-callout-master.md](./antagonist-lower-callout-master.md) — LessonSpine lower-callout master dest reaudit
 - [antagonist-caption-overlay-master.md](./antagonist-caption-overlay-master.md) — LessonSpine caption-overlay master dest reaudit
+- [antagonist-transition-luma-master.md](./antagonist-transition-luma-master.md) — LessonSpine transition-luma master dest reaudit
 - [antagonist-talkinghead-slate.md](./antagonist-talkinghead-slate.md) — TalkingHead slate signaling
 - [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md) — RecapCard slate signaling
 - [antagonist-opener-slate.md](./antagonist-opener-slate.md) — Opener slate signaling
@@ -810,6 +811,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine transition-luma master dest reaudit 2026-09-20
+
+Dated **2026-09-20** Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-transition-luma-encode/2026-09-20/LessonSpine.mp4` sha256 `f631402a6dfbb2ca2218ea9617c7b2af527eb7e88f8df5547dc6584c9ef5a96e` plus TransitionLuma plates. After PR 116 merge `e5e46db240fd5251b3e3996da746f50e08697625`. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Caption-overlay dest **untouched** (`5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c`). Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-20
+rendering: /opt/cursor/artifacts/lesson-spine-transition-luma-encode/2026-09-20/LessonSpine.mp4
+sha256: f631402a6dfbb2ca2218ea9617c7b2af527eb7e88f8df5547dc6584c9ef5a96e
+stills: /opt/cursor/artifacts/remotion-antagonist-transition-luma-master/2026-09-20/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `TransitionLumaDemo-f0.png`, `TransitionLumaDemo-f9.png`, `TransitionLumaDemo-f60.png`.
 
 ## Held
 
