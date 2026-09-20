@@ -21,7 +21,7 @@ Dated 2026-09-20. Plan source of truth for public launch. Campus runtime SoT sta
 | Marketing | HELD | Marketing site ships separately (`deploy-site.sh`). No sealed Marketing launch readout. | No public launch flip |
 | Sales | HELD | Sales org + trainer stance exist. No sealed Sales launch readout. | Do not invent Sales 8/8 |
 | Legal | HELD | `/privacy` and `/terms` are listed on portal ([DEPLOY.md](../../app/DEPLOY.md)). No sealed Legal launch readout. | Do not invent Legal 8/8 |
-| Plan | HELD | This file is the plan SoT. It records CLOSED, not a go. | No outer loop / auto-next |
+| Plan | HELD | This file is the plan SoT. It records CLOSED, not a go. Staff hub: [../staff/GRAPH.md](../staff/GRAPH.md). Clocks: [../staff/ROUTINES.md](../staff/ROUTINES.md) (06 / 09 / 15 / 22 / 02 ET). | No outer loop / auto-next; do not invent agents |
 
 ## Product factory note (not a launch PASS)
 
