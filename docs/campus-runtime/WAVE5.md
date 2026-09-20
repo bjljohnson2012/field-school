@@ -87,6 +87,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Progress-chapter master dest reaudit | PR 106 `815a35c` / tip `3915694` |
 | LowerThird speaker/context | PR 107 `a8585c2` / tip `be42c80` |
 | CalloutCard tip/aside | PR 108 `f15642f` / tip `e2b3181` |
+| LowerThird+CalloutCard encode | PR 109 `7bb2ac6` / tip `1c4e304` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -237,6 +238,10 @@ PR 107 merge `a8585c` / tip `be42c80` harvested. CalloutCard soft craft beat: ti
 ## LessonSpine lower-callout encode (PASS)
 
 PRs 85–108 harvested. PR 108 merge `f15642f` / tip `e2b3181`. New dated dest `/opt/cursor/artifacts/lesson-spine-lower-callout-encode/2026-09-20/LessonSpine.mp4` sha256 `68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92`. **Current master dest.** Progress-chapter dest `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-lower-callout-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-lower-callout-encode/2026-09-20/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine lower-callout master dest reaudit (PASS)
+
+Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-lower-callout-encode/2026-09-20/LessonSpine.mp4` sha256 `68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92` plus LowerThird/CalloutCard plates. PR 109 merge `7bb2ac6` / tip `1c4e304`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Progress-chapter dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-lower-callout-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-lower-callout-master/2026-09-20/`.
 
 ## Karaoke gold (VOX-S01 PASS)
 
