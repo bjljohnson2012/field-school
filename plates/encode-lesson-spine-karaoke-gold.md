@@ -27,11 +27,11 @@ Clear lock + enough RAM → exit 0. Melt lock or MemAvailable < 3072 MiB → exi
 Encoded 2026-09-20:
 
 - dest: `/opt/cursor/artifacts/lesson-spine-karaoke-gold/2026-09-20/LessonSpine.mp4`
-- sha256: pending encode
-- ffprobe: pending encode
-- render-lock exit pending
-- checklist pending (`hold_cleaning: true`, `auto_flip: false`)
-- `--flip` refused
+- sha256: `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f`
+- ffprobe: h264 1920×1080 30/1 duration 41.000000
+- render-lock exit 0
+- checklist exit 0 (`hold_cleaning: true`, `auto_flip: false`)
+- `--flip` exit 2
 - prior dests untouched: `a5d08284…`, `ec88d257…`, `028d16e4…`
 
 Score (no live flip):

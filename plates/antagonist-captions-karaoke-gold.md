@@ -5,12 +5,13 @@ Bar: [../docs/remotion-vox-standards.md](../docs/remotion-vox-standards.md). Do 
 Soft re-score of **CaptionsBand / LessonSpine only**. Other comps stay on [antagonist-full-set.md](./antagonist-full-set.md).
 
 ```
-verdict: pending stills
+verdict: PASS
 dated: 2026-09-20
 hold_cleaning: true
 auto_flip: false
 escalate: false
 rendering: /opt/cursor/artifacts/lesson-spine-karaoke-gold/2026-09-20/LessonSpine.mp4
+sha256: 9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f
 stills: /opt/cursor/artifacts/remotion-captions-karaoke-gold/2026-09-20/
 ```
 
@@ -24,14 +25,31 @@ LessonSpine letterbox stack unchanged: CaptionsBand + LowerThird + Letterbox + O
 
 **PASS** (fixture word clock). Active word is gold `#C4A35A`. Align is fixture `startMs`, not WhisperX. Note only: live A-roll align is a later stream.
 
+## Stills (2026-09-20)
+
+`/opt/cursor/artifacts/remotion-captions-karaoke-gold/2026-09-20/`
+
+| Comp / beat | File | Score |
+|---|---|---|
+| CaptionsDemo 18 | `CaptionsDemo-f18.png` | Active **Type** gold + tick |
+| CaptionsDemo 90 | `CaptionsDemo-f90.png` | Active **stays** gold + tick |
+| Spine sting 20 | `LessonSpine-sting-f20.png` | Active **Just** gold; OverlayLock + letterbox |
+| Spine slate 318 | `LessonSpine-slate-f318.png` | Active **Docked** gold; LT + captions + letterbox |
+| Spine objective 555 | `LessonSpine-objective-f555.png` | Active **Explanatory** gold |
+| Spine recap 760 | `LessonSpine-recap-f760.png` | Active **claim** gold |
+| Spine next-up 1056 | `LessonSpine-nextup-f1056.png` | Active **card** gold |
+
 ## SOFT notes only
 
 - `VOX-S01` — PASS on fixture gold; WhisperX ingest not this stream
 - `VOX-S04` — TypeCard live; spec `cards/` unused
+- `VOX-S05` — OverlayLock 30px lock crop is the pixel proof; 0.5 still downsample can smash title
 - `EDU-S02` — gold active word + tick
 - `EDU-S03` — olive fixture head, not gesturing A-roll (no Cap take)
 - `EDU-S05` — karaoke/signaling, not a transcript dump
 - No new HARD_FAIL
+
+Checklist on karaoke dest: exit **0**, `verdict: PASS`, `hold_cleaning: true`. `--flip` exit 2. Prior dests `a5d08284…` / `ec88d257…` / `028d16e4…` untouched.
 
 ## Held
 
