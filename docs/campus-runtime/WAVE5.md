@@ -1,6 +1,6 @@
 # Wave 5 proof — Remotion plates + 0012 gate
 
-2026-09-20 overnight sync. Operator Remotion in `plates/` only. No Remotion campus package. No player rail. No live Cleaning / Publish flip. No Cap take. AUTH_URL stays `https://portal.fieldschool.ai`. Family LIVE `bc-4765f2f0` not stolen. Just `27pn9xs0zk8a73g` locked.
+2026-09-20 overnight close-sync. Operator Remotion in `plates/` only. No Remotion campus package. No player rail. No live Cleaning / Publish flip. No Cap take. AUTH_URL stays `https://portal.fieldschool.ai`. Family LIVE `bc-4765f2f0` not stolen. Just `27pn9xs0zk8a73g` locked.
 
 Bar: [remotion-vox-standards.md](../remotion-vox-standards.md). Independent Antagonist v2 is the only bar.
 
@@ -45,8 +45,13 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | VOX-S05 OverlayLock polish | PR 66 `c021d3b` / tip `ba2b708` |
 | LAUNCH_GATE CLOSED 0/8 | PR 67 `b74c8e9` / tip `2ed8bda` |
 | Staff GRAPH + ROUTINES | PR 68 `50f0ea9` / tip `0498456` |
+| WAVE5 overnight status | PR 69 `fb01f7c` / tip `20960af` |
+| LessonSpine letterbox encode | PR 70 `4f66e6d` / tip `1b279d2` |
+| Antagonist full-set reaudit | PR 71 `da967d2` / tip `579737a` |
 
-Encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests untouched by later docs.
+First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
+
+Current LessonSpine dest: `/opt/cursor/artifacts/lesson-spine-letterbox-encode/2026-09-20/LessonSpine.mp4` sha256 `028d16e402e64f445b315b735d1d74f77273d941f9d9b66ea508c2e8ba577e98` (h264 1920×1080@30, 41.000s). Letterbox + CaptionsBand + LowerThird + OverlayLock 30px.
 
 ## Letterbox stack (complete)
 
@@ -60,9 +65,13 @@ Layer order (later sibling on top): bed → screen → talking-head card → low
 
 PR 66. `OverlayLock` 30px / `0.02em` / `0.2em` nowrap. Seal `1576,24` / `80×64`. Antagonist `plates/antagonist-soft-polish-vox-s05.md` **PASS** (VOX-S04 SOFT). Factory evidence only — not a launch Product PASS.
 
+## Antagonist full-set reaudit (PASS)
+
+PR 71. Dated 2026-09-20. Independent Antagonist v2 against Opener, RecapCard, DefinitionBoard, QuizBumper, TalkingHeadCard, LessonSpine (current letterbox encode), plus Captions/LT/Letterbox demos. **PASS.** SOFT notes only (`VOX-S04`, `EDU-S03`). No HARD_FAIL. Evidence: `plates/antagonist-full-set.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`.
+
 ## Checklist gate
 
-`plates/scripts/cleaning-checklist-lesson-spine.mjs` against that dest: exit **0**, `verdict: PASS`, `hold_cleaning: true`, `auto_flip: false`. `--flip` exit 2. Missing dest exit 1. Evidence: `plates/cleaning-checklist-lesson-spine.md`.
+`plates/scripts/cleaning-checklist-lesson-spine.mjs` against the current letterbox dest: exit **0**, `verdict: PASS`, `hold_cleaning: true`, `auto_flip: false`. `--flip` exit 2. Missing dest exit 1. Evidence: `plates/cleaning-checklist-lesson-spine-letterbox-encode.md`.
 
 Ship 1 HOLD (no Cap take). Ship 6 HOLD (Publish/HLS). First live Cleaning auto-flip is a later CDM seal.
 

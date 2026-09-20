@@ -1,6 +1,6 @@
 # Status — 2026-09-20
 
-Wave 1 is live. Wave 2 tenants + picker + Field Pattern is proven in [WAVE2.md](./WAVE2.md). Family v1 operator writes are LIVE on FamilyV1Home. Remotion Wave 5 plates + LessonSpine + checklist + `0012` + letterbox stack + VOX-S05 are in `main` and `plate_renders` is on `field-school-campus-db`. Proof: [WAVE5.md](./WAVE5.md).
+Wave 1 is live. Wave 2 tenants + picker + Field Pattern is proven in [WAVE2.md](./WAVE2.md). Family v1 operator writes are LIVE on FamilyV1Home. Remotion Wave 5 plates + LessonSpine + checklist + `0012` + letterbox stack + VOX-S05 + antagonist full-set reaudit are in `main` and `plate_renders` is on `field-school-campus-db`. Proof: [WAVE5.md](./WAVE5.md).
 
 - Postgres `field-school-campus-db`, database `campus`. Do not write leftover `field-school-db`.
 - Guest Grok Bot still works. `GET /api/me` guest `{ authenticated: false, guest: true }`. `POST /api/events` guest 401.
@@ -26,7 +26,7 @@ Gym wording is retired. Student orgs: household and sales.
 - Family v1 operator writes on FamilyV1Home (save intent version, accept path, lock next portion). Child ≠ User. No child login. Do not steal `bc-4765f2f0`.
 - Wave 5 Remotion plates in `plates/` (not campus Next): Opener, RecapCard, DefinitionBoard, QuizBumper, TalkingHeadCard, LessonSpine. Order lock: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up.
 - Letterbox stack complete (CaptionsBand + LowerThird + Letterbox). VOX-S05 OverlayLock polish **PASS** in `plates/` (PR 66). Factory evidence only.
-- LessonSpine encode + Cleaning checklist (exit 0 PASS, `hold_cleaning: true`, `--flip` refused). No live Cleaning / Publish flip.
+- Current LessonSpine letterbox encode dest sha256 `028d16e4…` (PR 70). Antagonist full-set reaudit **PASS** (SOFT only, PR 71). Cleaning checklist exit 0 PASS, `hold_cleaning: true`, `--flip` refused. No live Cleaning / Publish flip.
 - `app/db/0012_plate_renders.sql` applied on `field-school-campus-db` / `campus` (0012 only; 0001–0011 untouched). Table `plate_renders` exists.
 - Plates API campus pack (routes only) overlay on `/opt/field-school`. No `deploy.sh` wipe. Family operator-writes chrome hashes unchanged. Live guest unsigned `GET`/`POST /api/plates` is **401** `sign_in_required` (was 404). `GET /api/me` `{guest:true}`. `POST /api/events` 401. Pack: `/opt/field-school-packs/plates-api-campus-pack-20260919T202200Z.tar.gz` sha256 `75ab10d322ae872cfb9aea0989bf2ff243a9b65178f17aa474cca7080a4ecfcb`.
 
