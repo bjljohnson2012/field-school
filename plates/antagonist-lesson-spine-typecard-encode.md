@@ -40,7 +40,7 @@ Checklist on this dest: exit **0**, `verdict: PASS`, `hold_cleaning: true`, `aut
 
 ## Master dest 2026-09-20
 
-WAVE5 + campus STATUS lock this dest as current LessonSpine master (`27cc5bf3…`). Audiobed / karaoke dests remain archived priors (not deleted). Launch stays CLOSED 0/8.
+WAVE5 + campus STATUS recorded this dest as current LessonSpine master (`27cc5bf3…`) until the EDU-S01 encode. Audiobed / karaoke dests remain archived priors (not deleted). This dest is now an archived prior (file **untouched**). Launch stays CLOSED 0/8.
 
 ## Held
 
