@@ -23,6 +23,7 @@ Cites:
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
 - [antagonist-edu-s02-master.md](./antagonist-edu-s02-master.md) — EDU-S02 master dest reaudit
 - [antagonist-talkinghead-slate.md](./antagonist-talkinghead-slate.md) — TalkingHead slate signaling
+- [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md) — RecapCard slate signaling
 
 ```
 verdict: PASS
@@ -291,6 +292,25 @@ gates: {
 ```
 
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). TalkingHead slate factory PASS. Launch stays CLOSED 0/8.
+
+## RecapCard slate 2026-09-20
+
+Dated **2026-09-20**. RecapCard kicker “Recap” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “What stays on the card”. ObjectiveSlate still returns `draw one idea per beat`. After PR 92 merge `b40ea28331b16d3eacb1443c08b7b90f60564a87`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4` sha256 `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-recapcard-slate/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-recapcard-slate/2026-09-20/
+sha256: eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). RecapCard slate factory PASS. Launch stays CLOSED 0/8.
 
 ## Held
 

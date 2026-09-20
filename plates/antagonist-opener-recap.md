@@ -60,6 +60,10 @@ Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG
 
 Opener sting now carries explicit “You will be able to” + `draw one idea per beat`. RecapCard returns the same objective (signaling, not a fourth numbered claim). Historical SOFT line above keeps `VOX-S02` / `EDU-S01` as the plate-not-spine record. This note seals EDU-S01 **PASS**. Evidence: [antagonist-edu-s01-objective-slate.md](./antagonist-edu-s01-objective-slate.md). Stills `/opt/cursor/artifacts/remotion-edu-s01-objective-slate/2026-09-20/`. `hold_cleaning: true`. ORDER LOCK intact.
 
+## RecapCard slate 2026-09-20
+
+RecapCard kicker “Recap” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “card”. ObjectiveSlate still returns `draw one idea per beat`. Evidence: [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md). Stills `/opt/cursor/artifacts/remotion-recapcard-slate/2026-09-20/`. Locked master dest `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` **untouched**. `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just `27pn9xs0zk8a73g`. No melt. No campus Remotion package. No Publish/Distribute. No AUTH_URL / Stripe. No family chrome. No `run-91af199b`.
