@@ -39,4 +39,4 @@ Gym wording is retired. Student orgs: household and sales.
 
 ## Not a launch gate
 
-Do not invent LAUNCH_GATE 8/8 from this refresh.
+Do not invent LAUNCH_GATE 8/8 from this refresh. Plan SoT: [../prelaunch/LAUNCH_GATE.md](../prelaunch/LAUNCH_GATE.md) — **CLOSED**, **0/8**.
