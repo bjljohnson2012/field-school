@@ -11,9 +11,12 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 const src = (...parts) => readFileSync(join(root, ...parts), "utf8");
 const NEW_DEST =
+  "/opt/cursor/artifacts/lesson-spine-slate-encode/2026-09-20/LessonSpine.mp4";
+const NEW_SHA = "d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5";
+const STILLS = "/opt/cursor/artifacts/remotion-lesson-spine-slate-encode/2026-09-20";
+const EDU_S02 =
   "/opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4";
-const NEW_SHA = "eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8";
-const STILLS = "/opt/cursor/artifacts/remotion-edu-s02-spine-encode/2026-09-20";
+const EDU_S02_SHA = "eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8";
 const EDU_S01 =
   "/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4";
 const EDU_S01_SHA = "cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf";
@@ -22,6 +25,7 @@ const TYPECARD =
 const TYPECARD_SHA = "27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0";
 
 const PRIORS = {
+  [EDU_S02]: EDU_S02_SHA,
   [EDU_S01]: EDU_S01_SHA,
   [TYPECARD]: TYPECARD_SHA,
   "/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4":
@@ -40,28 +44,28 @@ function sha256(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
 }
 
-test("WAVE5 and STATUS archive EDU-S02 encode as prior dest", () => {
+test("WAVE5 and STATUS promote slate encode as current master dest", () => {
   const wave5 = src("..", "docs", "campus-runtime", "WAVE5.md");
   const campus = src("..", "docs", "campus-runtime", "STATUS.md");
-  const note = src("antagonist-lesson-spine-edu-s02-encode.md");
+  const note = src("antagonist-lesson-spine-slate-encode.md");
   assert.match(
     wave5,
-    /Archived prior edu-s02-encode `\/opt\/cursor\/artifacts\/lesson-spine-edu-s02-encode\/2026-09-20\/LessonSpine\.mp4`/,
+    /Current master LessonSpine dest: `\/opt\/cursor\/artifacts\/lesson-spine-slate-encode\/2026-09-20\/LessonSpine\.mp4`/,
   );
+  assert.match(wave5, /d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5/);
+  assert.match(wave5, /## LessonSpine slate encode \(PASS\)/);
+  assert.match(wave5, /PRs 85–94/);
   assert.match(wave5, /eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8/);
-  assert.match(wave5, /## EDU-S02 LessonSpine encode \(PASS\)/);
-  assert.match(wave5, /PRs 85–89/);
-  assert.match(wave5, /cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf/);
-  assert.match(wave5, /Archived prior edu-s01-encode/);
+  assert.match(wave5, /Archived prior edu-s02-encode/);
+  assert.match(campus, /Current master LessonSpine dest is slate-encode/);
+  assert.match(campus, /d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5/);
+  assert.match(campus, /PRs 85–94/);
   assert.match(campus, /Archived prior edu-s02-encode/);
   assert.match(campus, /eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8/);
-  assert.match(campus, /PRs 85–89/);
-  assert.match(campus, /Archived prior edu-s01-encode/);
-  assert.match(campus, /cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf/);
   assert.match(campus, /\*\*CLOSED\*\*, \*\*0\/8\*\*/);
   assert.match(note, /EDU-S01: PASS/);
   assert.match(note, /EDU-S02: PASS/);
-  assert.match(note, /eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8/);
+  assert.match(note, /d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5/);
   assert.match(note, /hold_cleaning: true/);
   assert.match(
     note,
@@ -72,18 +76,18 @@ test("WAVE5 and STATUS archive EDU-S02 encode as prior dest", () => {
   assert.doesNotMatch(src("antagonist-full-set.md"), /8\/8 PASS|launch OPEN|HARD_FAIL/);
 });
 
-test("new dest exists; edu-s01 and other priors untouched", () => {
+test("new dest exists; edu-s02 and other priors untouched", () => {
   assert.equal(existsSync(NEW_DEST), true);
   assert.equal(sha256(NEW_DEST), NEW_SHA);
-  assert.notEqual(NEW_DEST, EDU_S01);
-  assert.notEqual(NEW_SHA, EDU_S01_SHA);
+  assert.notEqual(NEW_DEST, EDU_S02);
+  assert.notEqual(NEW_SHA, EDU_S02_SHA);
   for (const [dest, hash] of Object.entries(PRIORS)) {
     assert.equal(existsSync(dest), true, dest);
     assert.equal(sha256(dest), hash, dest);
   }
   for (const name of [
-    "LessonSpine-sting-f30.png",
-    "LessonSpine-slate-f330.png",
+    "LessonSpine-sting-f42.png",
+    "LessonSpine-slate-f345.png",
     "LessonSpine-objective-f570.png",
     "LessonSpine-recap-f864.png",
     "LessonSpine-nextup-f1050.png",
@@ -92,8 +96,8 @@ test("new dest exists; edu-s01 and other priors untouched", () => {
   }
 });
 
-test("render-lock dry-run forwards the EDU-S02 dest and refuses Just", () => {
-  const dir = mkdtempSync(join(tmpdir(), "edu-s02-encode-lock-"));
+test("render-lock dry-run forwards the slate dest and refuses Just", () => {
+  const dir = mkdtempSync(join(tmpdir(), "slate-encode-lock-"));
   const missingLock = join(dir, "absent.render.lock");
   const meminfo = join(dir, "meminfo");
   writeFileSync(meminfo, "MemAvailable: 8192000 kB\n");
@@ -139,7 +143,7 @@ test("render-lock dry-run forwards the EDU-S02 dest and refuses Just", () => {
   assert.equal(JSON.parse(just.stdout).error, "locked_dest");
 });
 
-test("checklist on EDU-S02 dest holds; --flip refused", () => {
+test("checklist on slate dest holds; --flip refused", () => {
   const checklist = join(here, "cleaning-checklist-lesson-spine.mjs");
   const flip = spawnSync(process.execPath, [checklist, "--dest", NEW_DEST, "--flip", "--no-write"], {
     encoding: "utf8",
