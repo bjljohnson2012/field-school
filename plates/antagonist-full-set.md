@@ -16,7 +16,8 @@ Cites:
 - [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md) — TypeCard factory VOX-S04
 - [antagonist-lesson-spine-typecard-encode.md](./antagonist-lesson-spine-typecard-encode.md) — locked LessonSpine master (TypeCard)
 - [antagonist-edu-s01-objective-slate.md](./antagonist-edu-s01-objective-slate.md) — EDU-S01 Opener / Recap objective slate
-- [antagonist-lesson-spine-edu-s01-encode.md](./antagonist-lesson-spine-edu-s01-encode.md) — EDU-S01 LessonSpine encode (current master)
+- [antagonist-lesson-spine-edu-s01-encode.md](./antagonist-lesson-spine-edu-s01-encode.md) — EDU-S01 LessonSpine encode (archived prior)
+- [antagonist-lesson-spine-edu-s02-encode.md](./antagonist-lesson-spine-edu-s02-encode.md) — EDU-S02 LessonSpine encode (current master)
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -71,7 +72,8 @@ stills: /opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/
 | `/opt/cursor/artifacts/lesson-spine-karaoke-gold/2026-09-20/LessonSpine.mp4` | `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f` | karaoke gold — archived prior |
 | `/opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4` | `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f` | AudioBed silent — archived prior |
 | `/opt/cursor/artifacts/lesson-spine-typecard-encode/2026-09-20/LessonSpine.mp4` | `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0` | TypeCard VOX-S04 — archived prior |
-| `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` | `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` | **current master** (EDU-S01 slate) |
+| `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` | `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` | EDU-S01 slate — archived prior |
+| `/opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4` | `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` | **current master** (EDU-S02 signaling) |
 
 Just `27pn9xs0zk8a73g` and Aug 30 `vox/everything-made-up.mp4` not written. No Cap A-roll.
 
@@ -153,7 +155,7 @@ SOFT notes only: `EDU-S03` olive fixture (no Cap take). Historical opener-recap 
 
 ## EDU-S01 LessonSpine encode 2026-09-20
 
-Dated **2026-09-20**. New dated dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf`. **Current master.** Typecard `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0` archived prior, **untouched**. Stills `/opt/cursor/artifacts/remotion-edu-s01-spine-encode/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+Dated **2026-09-20**. New dated dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf`. Archived prior (file **untouched**). Typecard `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0` archived prior, **untouched**. Stills `/opt/cursor/artifacts/remotion-edu-s01-spine-encode/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
 
 ```
 verdict: PASS
@@ -228,6 +230,24 @@ gates: {
 ```
 
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). QuizBumper next-up factory PASS. Launch stays CLOSED 0/8.
+
+## EDU-S02 LessonSpine encode 2026-09-20
+
+Dated **2026-09-20**. New dated dest `/opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4` sha256 `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8`. **Current master.** EDU-S01 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` archived prior, **untouched**. PRs 85–89. Stills `/opt/cursor/artifacts/remotion-edu-s02-spine-encode/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+rendering: /opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4
+sha256: eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8
+stills: /opt/cursor/artifacts/remotion-edu-s02-spine-encode/2026-09-20/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
 
 ## Held
 
