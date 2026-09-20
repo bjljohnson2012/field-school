@@ -19,6 +19,7 @@ Cites:
 - [antagonist-lesson-spine-edu-s01-encode.md](./antagonist-lesson-spine-edu-s01-encode.md) — EDU-S01 LessonSpine encode (current master)
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
+- [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
 
 ```
 verdict: PASS
@@ -208,6 +209,25 @@ gates: {
 ```
 
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S02` factory PASS on DefinitionBoard. Launch stays CLOSED 0/8.
+
+## QuizBumper next-up 2026-09-20
+
+Dated **2026-09-20**. QuizBumper kicker “Next up” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “What did the card draw?”. Karaoke already gold-ticks “draw?” 1500–2200ms (plate f54 / spine f1074). After PR 88 merge `253a638bb5d89847b2255b42e8d02ab8859f97ed`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-edu-s01-encode/2026-09-20/LessonSpine.mp4` sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-quizbumper-next-up/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-quizbumper-next-up/2026-09-20/
+sha256: cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). QuizBumper next-up factory PASS. Launch stays CLOSED 0/8.
 
 ## Held
 

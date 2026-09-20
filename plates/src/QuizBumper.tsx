@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream} from "./brand";
-import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
+import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Keyword, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {QuizBumperProps} from "./types";
@@ -18,6 +18,9 @@ export const QuizBumper: React.FC<QuizBumperProps> = ({
   const {fps} = useVideoConfig();
   const now = frame / fps;
   const veil = lumaVeil(now, 0, durationSec, 0.5, "glide");
+  const words = prompt.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? prompt;
+  const lead = words.slice(0, -1).join(" ");
 
   return (
     <AbsoluteFill style={{backgroundColor: cream}}>
@@ -27,8 +30,11 @@ export const QuizBumper: React.FC<QuizBumperProps> = ({
         </Layer>
         <Layer name="screen">
           <TypeCard motion="glide" sceneFrame={frame}>
-            <Kicker>Check yourself</Kicker>
-            <Title>{prompt}</Title>
+            <Kicker>Next up</Kicker>
+            <Title>
+              {lead ? `${lead} ` : null}
+              <Keyword>{keyword}</Keyword>
+            </Title>
             <GoldRule />
             <Claim>
               From {sourceUnitTitle}. Unit {sourceUnitId}.
