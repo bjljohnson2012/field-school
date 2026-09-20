@@ -47,7 +47,7 @@ Cites [antagonist-full-set.md](./antagonist-full-set.md) for the five plates.
 
 ## SOFT notes only
 
-- `VOX-S04` — TypeCard, no Ernest PNG
+- `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md)
 - `EDU-S03` — olive fixture, not gesturing A-roll (no Cap take)
 - `RM-S01` — factory may set concurrency 1 for RAM; plate script caps 2
 - `RM-S08` — stills at keyframes; no full master encode
@@ -60,6 +60,10 @@ Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Current ma
 ## Karaoke gold 2026-09-20
 
 Soft re-score of LessonSpine captions only. CaptionsBand on every beat uses `wordClock`; active word gold `#C4A35A`. Letterbox stack kept. `VOX-S01` PASS (fixture). No new HARD_FAIL. New dest only — prior `028d16e4…` / `a5d08284…` / `ec88d257…` untouched. See [antagonist-captions-karaoke-gold.md](./antagonist-captions-karaoke-gold.md).
+
+## TypeCard VOX-S04 2026-09-20
+
+Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
 
 ## Held
 

@@ -88,10 +88,14 @@ Checklist on current dest: exit **0**, `verdict: PASS`, `hold_cleaning: true`, `
 
 ## SOFT notes only
 
-- `VOX-S04` — TypeCard live; spec `cards/` unused
+- `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md). Historical gates block above keeps `VOX-S04: SOFT` as the PR 71 record.
 - `VOX-S05` — OverlayLock 30px / `0.02em` / `0.2em` nowrap PASS at lock; 0.5 still downsample can look smashed
 - `EDU-S03` — olive fixture head, not gesturing A-roll (no Cap take)
 - Ship 1 HOLD (no Cap take). Ship 6 HOLD (Publish/HLS). Cleaning stays held.
+
+## TypeCard VOX-S04 2026-09-20
+
+Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
 
 ## Held
 

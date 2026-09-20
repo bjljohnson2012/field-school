@@ -29,7 +29,7 @@ Demo composition `LetterboxDemo` (8s / 240f). Wired on every spine plate. Lesson
 ## SOFT notes only
 
 - `VOX-S02` / `EDU-S01` — craft layer + short demo, not a new spine
-- `VOX-S04` — no Ernest PNG
+- `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md)
 - `VOX-S05` — OverlayLock title at 22px can read tight at 0.5 still scale; wordSpacing 0.12em stays
 - `EDU-S03` — olive fixture head, not gesturing A-roll (no Cap take)
 - `RM-H07` — no A-roll media; fixture stills only
@@ -40,6 +40,10 @@ Stills: `LetterboxDemo-f0.png`, `LetterboxDemo-f60.png`, `LessonSpine-slate-f330
 ## Reaudit 2026-09-20
 
 Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Still `LetterboxDemo-f60.png` under `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`. OverlayLock now 30px (VOX-S05 22px note superseded). `hold_cleaning: true`. ORDER LOCK intact.
+
+## TypeCard VOX-S04 2026-09-20
+
+Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
 
 ## Held
 

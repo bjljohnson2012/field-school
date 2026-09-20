@@ -84,6 +84,9 @@ export function TypeCard({
         width: 1040,
         opacity,
         translate: `${x}px 0px`,
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+        padding: "24px 32px 28px",
       }}
     >
       {children}

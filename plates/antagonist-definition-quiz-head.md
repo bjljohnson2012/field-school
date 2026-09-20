@@ -31,13 +31,17 @@ Opener + RecapCard unchanged from PR 52.
 ## SOFT notes only
 
 - `VOX-S02` / `EDU-S01` — plates, not a full lesson spine
-- `VOX-S04` — TypeCard, no Ernest PNG
+- `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md)
 - `EDU-S03` — olive fixture, not gesturing A-roll (no Cap take)
 - Quiz `sourceUnitId` is operator copy (`lesson-opener`), not a second Pattern bank
 
 ## Reaudit 2026-09-20
 
 Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Stills `DefinitionBoard-f30.png` / `QuizBumper-f30.png` / `TalkingHeadCard-f90.png` under `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`. HARD gates unchanged. `hold_cleaning: true`. ORDER LOCK intact.
+
+## TypeCard VOX-S04 2026-09-20
+
+Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
 
 ## Held
 

@@ -42,7 +42,7 @@ LessonSpine letterbox stack unchanged: CaptionsBand + LowerThird + Letterbox + O
 ## SOFT notes only
 
 - `VOX-S01` — PASS on fixture gold; WhisperX ingest not this stream
-- `VOX-S04` — TypeCard live; spec `cards/` unused
+- `VOX-S04` — factory TypeCard-only PASS (cream + gold rail); no Ernest PNG. See [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md)
 - `VOX-S05` — OverlayLock 30px lock crop is the pixel proof; 0.5 still downsample can smash title
 - `EDU-S02` — gold active word + tick
 - `EDU-S03` — olive fixture head, not gesturing A-roll (no Cap take)
@@ -50,6 +50,10 @@ LessonSpine letterbox stack unchanged: CaptionsBand + LowerThird + Letterbox + O
 - No new HARD_FAIL
 
 Checklist on karaoke dest: exit **0**, `verdict: PASS`, `hold_cleaning: true`. `--flip` exit 2. Prior dests `a5d08284…` / `ec88d257…` / `028d16e4…` untouched.
+
+## TypeCard VOX-S04 2026-09-20
+
+Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
 
 ## Held
 
