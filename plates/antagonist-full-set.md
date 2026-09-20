@@ -12,7 +12,9 @@ Cites:
 - [antagonist-captions-lower-third.md](./antagonist-captions-lower-third.md) — CaptionsBand + LowerThird
 - [antagonist-letterbox-layer.md](./antagonist-letterbox-layer.md) — Letterbox
 - [antagonist-soft-polish-vox-s05.md](./antagonist-soft-polish-vox-s05.md) — OverlayLock VOX-S05
-- [antagonist-lesson-spine-letterbox-encode.md](./antagonist-lesson-spine-letterbox-encode.md) — current LessonSpine encode
+- [antagonist-lesson-spine-letterbox-encode.md](./antagonist-lesson-spine-letterbox-encode.md) — letterbox LessonSpine encode (archived prior)
+- [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md) — TypeCard factory VOX-S04
+- [antagonist-lesson-spine-typecard-encode.md](./antagonist-lesson-spine-typecard-encode.md) — locked LessonSpine master (TypeCard)
 
 ```
 verdict: PASS
@@ -60,7 +62,10 @@ stills: /opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/
 |---|---|---|
 | `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` | `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` | first encode — **untouched** |
 | `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` | `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211` | captions/LT — **untouched** |
-| `/opt/cursor/artifacts/lesson-spine-letterbox-encode/2026-09-20/LessonSpine.mp4` | `028d16e402e64f445b315b735d1d74f77273d941f9d9b66ea508c2e8ba577e98` | current master (letterbox + soft-polish) |
+| `/opt/cursor/artifacts/lesson-spine-letterbox-encode/2026-09-20/LessonSpine.mp4` | `028d16e402e64f445b315b735d1d74f77273d941f9d9b66ea508c2e8ba577e98` | letterbox + soft-polish — archived prior |
+| `/opt/cursor/artifacts/lesson-spine-karaoke-gold/2026-09-20/LessonSpine.mp4` | `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f` | karaoke gold — archived prior |
+| `/opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4` | `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f` | AudioBed silent — archived prior |
+| `/opt/cursor/artifacts/lesson-spine-typecard-encode/2026-09-20/LessonSpine.mp4` | `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0` | **current master** (TypeCard VOX-S04) |
 
 Just `27pn9xs0zk8a73g` and Aug 30 `vox/everything-made-up.mp4` not written. No Cap A-roll.
 
@@ -96,6 +101,31 @@ Checklist on current dest: exit **0**, `verdict: PASS`, `hold_cleaning: true`, `
 ## TypeCard VOX-S04 2026-09-20
 
 Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
+
+## TypeCard master dest reaudit 2026-09-20
+
+Dated **2026-09-20** Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-typecard-encode/2026-09-20/LessonSpine.mp4` sha256 `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0` plus TypeCard VOX-S04 plates. ffprobe: h264 1920×1080@30, 41.000s. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Prior dests **untouched** (`9f89f9a9…` / `028d16e4…` / `a5d08284…` / `ec88d257…`).
+
+```
+verdict: PASS
+dated: 2026-09-20
+rendering: /opt/cursor/artifacts/lesson-spine-typecard-encode/2026-09-20/LessonSpine.mp4
+sha256: 27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0
+stills: /opt/cursor/artifacts/remotion-antagonist-typecard-master/2026-09-20/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  VOX-H01: PASS, VOX-H02: PASS, VOX-H03: PASS, VOX-H04: PASS, VOX-H05: PASS,
+  VOX-H06: PASS, VOX-H07: PASS, VOX-H08: PASS, VOX-H09: PASS, VOX-H10: PASS,
+  VOX-S04: PASS, VOX-S05: PASS,
+  EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (no Cap take); `VOX-S05` OverlayLock can look smashed at 0.5 still downsample — lock crop is the pixel proof. Historical PR 71 gates block above keeps `VOX-S04: SOFT`. This dest seals factory TypeCard-only **PASS**. No new HARD gate fail. Launch stays CLOSED 0/8.
+
+Stills from the locked master: `LessonSpine-sting-f30.png`, `LessonSpine-slate-f330.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`. Plate stills: `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`.
 
 ## Held
 

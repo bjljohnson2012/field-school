@@ -91,6 +91,10 @@ PR 79 (open). Factory TypeCard-only PASS without Cap / Ernest PNG. `TypeCard` is
 
 PR 71. Dated 2026-09-20. Independent Antagonist v2 against Opener, RecapCard, DefinitionBoard, QuizBumper, TalkingHeadCard, LessonSpine (current letterbox encode), plus Captions/LT/Letterbox demos. **PASS.** SOFT notes only (`VOX-S04`, `EDU-S03`). No HARD_FAIL. Evidence: `plates/antagonist-full-set.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`.
 
+## TypeCard master dest reaudit (PASS)
+
+Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-typecard-encode/2026-09-20/LessonSpine.mp4` sha256 `27cc5bf3e37f8496257b4efb0f8b1ef2938af35a287aa1530f00db60d984a9a0` plus TypeCard VOX-S04 plates. **PASS.** SOFT notes only (`EDU-S03`). `VOX-S04` factory TypeCard-only PASS on this dest. `hold_cleaning: true`. `--flip` refused. Prior dests untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-typecard-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-typecard-master/2026-09-20/`.
+
 ## Karaoke gold (VOX-S01 PASS)
 
 `CaptionsBand` drives word-level karaoke via `wordClock`. Active word gold `#C4A35A` plus gold tick (`EDU-S02`). Fixture times. No WhisperX. No Cap take. CaptionsDemo + LessonSpine stills: `/opt/cursor/artifacts/remotion-captions-karaoke-gold/2026-09-20/`. Soft re-score: `plates/antagonist-captions-karaoke-gold.md` **PASS**. No new HARD_FAIL.
