@@ -32,6 +32,7 @@ PASS notes:
 - [antagonist-caption-density.md](./antagonist-caption-density.md) — CaptionDensity karaoke line packing 2026-09-20
 - [antagonist-overlay-lock.md](./antagonist-overlay-lock.md) — OverlayLock logo+title lock 2026-09-20
 - [antagonist-transition-luma.md](./antagonist-transition-luma.md) — TransitionLuma beat-to-beat wipe 2026-09-20
+- [antagonist-end-card.md](./antagonist-end-card.md) — EndCard lesson close signal 2026-09-20
 - [antagonist-definitionboard-slate.md](./antagonist-definitionboard-slate.md) — DefinitionBoard slate signaling 2026-09-20
 - [antagonist-talkinghead-slate.md](./antagonist-talkinghead-slate.md) — TalkingHead slate signaling 2026-09-20
 - [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md) — RecapCard slate signaling 2026-09-20
@@ -82,6 +83,7 @@ Do not re-render Just `27pn9xs0zk8a73g`. Do not overwrite Aug 30 `vox/everything
 | **CaptionDensityDemo** | 8s craft | 240 | karaoke line packing (6 words / line) |
 | **OverlayLockDemo** | 8s craft | 240 | logo+title lock (30px + seal) |
 | **TransitionLumaDemo** | 8s craft | 240 | beat-to-beat wipe (cream luma + gold edge) |
+| **EndCardDemo** | 8s craft | 240 | lesson close after next-up (cream + gold rail) |
 
 ## Render lock
 
@@ -97,7 +99,7 @@ CPU cap `--concurrency=2` (2/4). Dry-run does not encode.
 npm ci
 npx remotion compositions
 node scripts/render-plate.mjs --comp LessonSpine --dry-run --lock /tmp/absent.render.lock --meminfo /proc/meminfo
-node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs scripts/soft-polish-vox-s05.test.mjs scripts/soft-polish-vox-s04.test.mjs scripts/lesson-spine-letterbox-encode.test.mjs scripts/captions-karaoke-gold.test.mjs scripts/audio-bed-layer.test.mjs scripts/lesson-spine-audiobed-encode.test.mjs scripts/lesson-spine-typecard-encode.test.mjs scripts/progress-rail.test.mjs scripts/chapter-chip.test.mjs scripts/lesson-spine-progress-chapter-encode.test.mjs scripts/lesson-spine-lower-callout-encode.test.mjs scripts/lower-third.test.mjs scripts/callout-card.test.mjs scripts/caption-density.test.mjs scripts/overlay-lock.test.mjs scripts/lesson-spine-caption-overlay-encode.test.mjs scripts/transition-luma.test.mjs scripts/antagonist-caption-overlay-master.test.mjs scripts/lesson-spine-transition-luma-encode.test.mjs scripts/antagonist-transition-luma-master.test.mjs
+node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs scripts/soft-polish-vox-s05.test.mjs scripts/soft-polish-vox-s04.test.mjs scripts/lesson-spine-letterbox-encode.test.mjs scripts/captions-karaoke-gold.test.mjs scripts/audio-bed-layer.test.mjs scripts/lesson-spine-audiobed-encode.test.mjs scripts/lesson-spine-typecard-encode.test.mjs scripts/progress-rail.test.mjs scripts/chapter-chip.test.mjs scripts/lesson-spine-progress-chapter-encode.test.mjs scripts/lesson-spine-lower-callout-encode.test.mjs scripts/lower-third.test.mjs scripts/callout-card.test.mjs scripts/caption-density.test.mjs scripts/overlay-lock.test.mjs scripts/lesson-spine-caption-overlay-encode.test.mjs scripts/transition-luma.test.mjs scripts/antagonist-caption-overlay-master.test.mjs scripts/lesson-spine-transition-luma-encode.test.mjs scripts/antagonist-transition-luma-master.test.mjs scripts/end-card.test.mjs
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-letterbox-encode/2026-09-20/LessonSpine.mp4 --report cleaning-checklist-lesson-spine-letterbox-encode.md
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4 --report cleaning-checklist-lesson-spine-audiobed-encode.md
