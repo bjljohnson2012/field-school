@@ -18,7 +18,9 @@ test("CaptionsBand and LowerThird craft exist; Karaoke aliases the band", () => 
   assert.match(layers, /useCurrentFrame/);
   assert.match(layers, /glideCard/);
   assert.match(layers, /displayFace/);
-  assert.match(layers, /#7a746a/);
+  assert.match(layers, /wordClock/);
+  assert.match(layers, /wordColor/);
+  assert.match(layers, /3px solid \$\{gold\}/);
   assert.match(layers, /whiteSpace: "pre"/);
   assert.match(layers, /return <CaptionsBand captions=\{captions\} \/>/);
   assert.doesNotMatch(layers, /zIndex|z-index/);

@@ -57,6 +57,10 @@ Cites [antagonist-full-set.md](./antagonist-full-set.md) for the five plates.
 
 Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Current master is the letterbox encode (`028d16e4…`). Stills sting/slate/objective/recap/next-up under `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`. Prior dests `a5d08284…` / `ec88d257…` untouched. `hold_cleaning: true`. ORDER LOCK intact.
 
+## Karaoke gold 2026-09-20
+
+Soft re-score of LessonSpine captions only. CaptionsBand on every beat uses `wordClock`; active word gold `#C4A35A`. Letterbox stack kept. `VOX-S01` PASS (fixture). No new HARD_FAIL. New dest only — prior `028d16e4…` / `a5d08284…` / `ec88d257…` untouched. See [antagonist-captions-karaoke-gold.md](./antagonist-captions-karaoke-gold.md).
+
 ## Held
 
 No Cap take. No Just `27pn9xs0zk8a73g`. No melt. No campus Remotion package. No `0006_plates.sql`. No Publish/Distribute. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`.

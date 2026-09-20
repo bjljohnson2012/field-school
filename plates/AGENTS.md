@@ -50,6 +50,7 @@ npx remotion still LessonSpine --frame=570
 npx remotion still LessonSpine --frame=864
 npx remotion still LessonSpine --frame=1050
 npx remotion still LowerThirdDemo --frame=60
+npx remotion still CaptionsDemo --frame=18
 npx remotion still CaptionsDemo --frame=90
 npx remotion still LetterboxDemo --frame=0
 npx remotion still LetterboxDemo --frame=60

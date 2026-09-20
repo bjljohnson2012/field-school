@@ -39,6 +39,10 @@ Stills: `LowerThirdDemo-f60.png`, `CaptionsDemo-f90.png`, `TalkingHeadCard-f90.p
 
 Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Stills `LowerThirdDemo-f60.png` / `CaptionsDemo-f90.png` under `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`. OverlayLock now 30px (VOX-S05 22px note superseded). `hold_cleaning: true`. ORDER LOCK intact.
 
+## Karaoke gold 2026-09-20
+
+Soft re-score of CaptionsBand only. `wordClock` drives word-level karaoke; active word gold `#C4A35A` + gold tick. `VOX-S01` PASS on fixture times (no WhisperX). No new HARD_FAIL. See [antagonist-captions-karaoke-gold.md](./antagonist-captions-karaoke-gold.md).
+
 ## Held
 
 No Cap take. No Just. No melt. No campus Remotion package. No player rail. No Cleaning / Publish flip. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`.

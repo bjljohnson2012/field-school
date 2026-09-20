@@ -3,6 +3,7 @@ import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame} from "remot
 import {bodyFace, charcoal, cream, displayFace, gold, ink, olive, sansFace} from "./brand";
 import {glideCard, TAKEOVER_EASE_FRAMES, takeoverHead} from "./sceneMotionMath";
 import type {Caption, Overlay} from "./types";
+import {wordClock, wordColor} from "./wordClock";
 
 /** Ink bars + gold inner rule. Close-in over TAKEOVER_EASE_FRAMES. After captions, before audio. */
 export const LETTERBOX_H = 48;
@@ -202,7 +203,7 @@ export function LowerThird({
 export function CaptionsBand({captions}: {captions: Caption[]}) {
   const frame = useCurrentFrame();
   const nowMs = (frame / 30) * 1000;
-  const words = useMemo(() => captions, [captions]);
+  const clock = useMemo(() => wordClock(captions, nowMs), [captions, nowMs]);
   return (
     <div
       style={{
@@ -224,15 +225,15 @@ export function CaptionsBand({captions}: {captions: Caption[]}) {
         gap: 12,
       }}
     >
-      {words.map((word) => {
+      {clock.words.map((word) => {
         const from = Math.round((word.startMs / 1000) * 30);
-        const spoken = nowMs >= word.startMs && nowMs < word.endMs;
-        const done = nowMs >= word.endMs;
+        const active = word.state === "active";
         return (
           <span
             key={`${word.startMs}-${word.text}`}
             style={{
-              color: spoken ? gold : done ? ink : "#7a746a",
+              color: wordColor(word.state),
+              borderBottom: active ? `3px solid ${gold}` : "3px solid transparent",
               opacity: interpolate(frame, [from, from + 6], [0.35, 1], {
                 extrapolateLeft: "clamp",
                 extrapolateRight: "clamp",

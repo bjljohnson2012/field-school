@@ -48,10 +48,13 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | WAVE5 overnight status | PR 69 `fb01f7c` / tip `20960af` |
 | LessonSpine letterbox encode | PR 70 `4f66e6d` / tip `1b279d2` |
 | Antagonist full-set reaudit | PR 71 `da967d2` / tip `579737a` |
+| WAVE5 overnight close-sync | PR 72 `9957486` / tip `f1c55bf` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
-Current LessonSpine dest: `/opt/cursor/artifacts/lesson-spine-letterbox-encode/2026-09-20/LessonSpine.mp4` sha256 `028d16e402e64f445b315b735d1d74f77273d941f9d9b66ea508c2e8ba577e98` (h264 1920×1080@30, 41.000s). Letterbox + CaptionsBand + LowerThird + OverlayLock 30px.
+Letterbox LessonSpine dest: `/opt/cursor/artifacts/lesson-spine-letterbox-encode/2026-09-20/LessonSpine.mp4` sha256 `028d16e402e64f445b315b735d1d74f77273d941f9d9b66ea508c2e8ba577e98` (h264 1920×1080@30, 41.000s). Letterbox + CaptionsBand + LowerThird + OverlayLock 30px. **Untouched** by karaoke encode.
+
+Karaoke LessonSpine dest: `/opt/cursor/artifacts/lesson-spine-karaoke-gold/2026-09-20/LessonSpine.mp4` sha256 `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f` (h264 1920×1080@30, 41.000s). Word-level karaoke gold `#C4A35A`.
 
 ## Letterbox stack (complete)
 
@@ -69,9 +72,15 @@ PR 66. `OverlayLock` 30px / `0.02em` / `0.2em` nowrap. Seal `1576,24` / `80×64`
 
 PR 71. Dated 2026-09-20. Independent Antagonist v2 against Opener, RecapCard, DefinitionBoard, QuizBumper, TalkingHeadCard, LessonSpine (current letterbox encode), plus Captions/LT/Letterbox demos. **PASS.** SOFT notes only (`VOX-S04`, `EDU-S03`). No HARD_FAIL. Evidence: `plates/antagonist-full-set.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/`.
 
+## Karaoke gold (VOX-S01 PASS)
+
+`CaptionsBand` drives word-level karaoke via `wordClock`. Active word gold `#C4A35A` plus gold tick (`EDU-S02`). Fixture times. No WhisperX. No Cap take. CaptionsDemo + LessonSpine stills: `/opt/cursor/artifacts/remotion-captions-karaoke-gold/2026-09-20/`. Soft re-score: `plates/antagonist-captions-karaoke-gold.md` **PASS**. No new HARD_FAIL.
+
 ## Checklist gate
 
 `plates/scripts/cleaning-checklist-lesson-spine.mjs` against the current letterbox dest: exit **0**, `verdict: PASS`, `hold_cleaning: true`, `auto_flip: false`. `--flip` exit 2. Missing dest exit 1. Evidence: `plates/cleaning-checklist-lesson-spine-letterbox-encode.md`.
+
+Karaoke dest checklist: exit **0**, `hold_cleaning: true`. Evidence: `plates/cleaning-checklist-lesson-spine-karaoke-gold.md`.
 
 Ship 1 HOLD (no Cap take). Ship 6 HOLD (Publish/HLS). First live Cleaning auto-flip is a later CDM seal.
 
