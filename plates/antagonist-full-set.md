@@ -41,6 +41,7 @@ Cites:
 - [antagonist-chapter-chip.md](./antagonist-chapter-chip.md) — ChapterChip beat label signal
 - [antagonist-lower-third.md](./antagonist-lower-third.md) — LowerThird speaker / context label
 - [antagonist-callout-card.md](./antagonist-callout-card.md) — CalloutCard tip / aside signal
+- [antagonist-caption-density.md](./antagonist-caption-density.md) — CaptionDensity karaoke line packing
 
 ```
 verdict: PASS
@@ -679,6 +680,25 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LowerThirdDemo-f0.png`, `LowerThirdDemo-f60.png`, `CalloutCardDemo-f0.png`, `CalloutCardDemo-f60.png`.
+
+## CaptionDensity 2026-09-20
+
+Dated **2026-09-20**. CaptionDensity soft craft beat. Karaoke line packing on `CaptionsBand` (`CAPTION_DENSITY_WORDS = 6`). Craft beat on `CaptionDensityDemo`. After PR 110 merge `380b36d41922951e04e0d96f1400dff1ced036e3`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-lower-callout-encode/2026-09-20/LessonSpine.mp4` sha256 `68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-caption-density/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-caption-density/2026-09-20/
+sha256: 68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT, EDU-S04: PASS
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). CaptionDensity factory PASS. Launch stays CLOSED 0/8.
 
 ## Held
 

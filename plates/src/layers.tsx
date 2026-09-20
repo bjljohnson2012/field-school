@@ -206,10 +206,36 @@ export function LowerThird({
   );
 }
 
+/** Karaoke line packing — Caption density. Six words per visible line. */
+export const CAPTION_DENSITY_WORDS = 6;
+
+export function packCaptionLines<T>(words: readonly T[], size = CAPTION_DENSITY_WORDS): T[][] {
+  const packed: T[][] = [];
+  for (let i = 0; i < words.length; i += size) {
+    packed.push(words.slice(i, i + size));
+  }
+  return packed;
+}
+
+export function packedCaptionLine<T extends {state?: string}>(
+  words: readonly T[],
+  size = CAPTION_DENSITY_WORDS,
+): T[] {
+  const lines = packCaptionLines(words, size);
+  if (lines.length === 0) return [];
+  const active = lines.find((line) => line.some((word) => word.state === "active"));
+  if (active) return active;
+  for (let i = lines.length - 1; i >= 0; i--) {
+    if (lines[i].some((word) => word.state === "spoken")) return lines[i];
+  }
+  return lines[0];
+}
+
 export function CaptionsBand({captions}: {captions: Caption[]}) {
   const frame = useCurrentFrame();
   const nowMs = (frame / 30) * 1000;
   const clock = useMemo(() => wordClock(captions, nowMs), [captions, nowMs]);
+  const line = packedCaptionLine(clock.words);
   return (
     <div
       style={{
@@ -231,7 +257,7 @@ export function CaptionsBand({captions}: {captions: Caption[]}) {
         gap: 12,
       }}
     >
-      {clock.words.map((word) => {
+      {line.map((word) => {
         const from = Math.round((word.startMs / 1000) * 30);
         const active = word.state === "active";
         return (

@@ -3,7 +3,7 @@
 Operator-only. Cap + Remotion + Edit-spec. Not a campus or student product.
 Not the factory hour-master melt path except as fallback.
 
-Wave 5 compositions: Opener, RecapCard, **DefinitionBoard**, **QuizBumper**, **TalkingHeadCard**, **LessonSpine**, plus craft demos **LowerThirdDemo** / **CaptionsDemo** / **LetterboxDemo** / **AudioBedDemo** / **ProgressRailDemo** / **ChapterChipDemo** / **CalloutCardDemo**. Remotion is default. Melt fallback only. Do not re-render Asset Just (`27pn9xs0zk8a73g`).
+Wave 5 compositions: Opener, RecapCard, **DefinitionBoard**, **QuizBumper**, **TalkingHeadCard**, **LessonSpine**, plus craft demos **LowerThirdDemo** / **CaptionsDemo** / **CaptionDensityDemo** / **LetterboxDemo** / **AudioBedDemo** / **ProgressRailDemo** / **ChapterChipDemo** / **CalloutCardDemo**. Remotion is default. Melt fallback only. Do not re-render Asset Just (`27pn9xs0zk8a73g`).
 
 Do not add campus UI. Do not add a student-facing AI builder. Do not campus-package Remotion into `app/`. Do not accept Cleaning flip or Publish/Distribute from this package.
 
@@ -55,6 +55,8 @@ npx remotion still LessonSpine --frame=1050
 npx remotion still LowerThirdDemo --frame=60
 npx remotion still CaptionsDemo --frame=18
 npx remotion still CaptionsDemo --frame=90
+npx remotion still CaptionDensityDemo --frame=0
+npx remotion still CaptionDensityDemo --frame=60
 npx remotion still LetterboxDemo --frame=0
 npx remotion still LetterboxDemo --frame=60
 npx remotion still AudioBedDemo --frame=0

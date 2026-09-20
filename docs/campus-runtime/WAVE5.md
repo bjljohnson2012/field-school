@@ -88,6 +88,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | LowerThird speaker/context | PR 107 `a8585c2` / tip `be42c80` |
 | CalloutCard tip/aside | PR 108 `f15642f` / tip `e2b3181` |
 | LowerThird+CalloutCard encode | PR 109 `7bb2ac6` / tip `1c4e304` |
+| Lower-callout master dest reaudit | PR 110 `380b36d` / tip `ce1021a` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -242,6 +243,10 @@ PRs 85–108 harvested. PR 108 merge `f15642f` / tip `e2b3181`. New dated dest `
 ## LessonSpine lower-callout master dest reaudit (PASS)
 
 Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-lower-callout-encode/2026-09-20/LessonSpine.mp4` sha256 `68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92` plus LowerThird/CalloutCard plates. PR 109 merge `7bb2ac6` / tip `1c4e304`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Progress-chapter dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-lower-callout-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-lower-callout-master/2026-09-20/`.
+
+## CaptionDensity (PASS)
+
+PR 110 merge `380b36d` / tip `ce1021a` harvested. CaptionDensity soft craft beat: karaoke line packing on `CaptionsBand` (`CAPTION_DENSITY_WORDS = 6`; `packCaptionLines` / `packedCaptionLine`). Craft beat on `CaptionDensityDemo`. Caption density path only. No Cap take. ORDER LOCK unchanged. Current master dest lower-callout-encode sha256 `68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92` **untouched** (plate-level stills only). Evidence: `plates/antagonist-caption-density.md`. Stills: `/opt/cursor/artifacts/remotion-caption-density/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
