@@ -38,6 +38,7 @@ Cites:
 - [antagonist-progress-rail.md](./antagonist-progress-rail.md) — ProgressRail lesson position signal
 - [antagonist-chapter-chip.md](./antagonist-chapter-chip.md) — ChapterChip beat label signal
 - [antagonist-lower-third.md](./antagonist-lower-third.md) — LowerThird speaker / context label
+- [antagonist-callout-card.md](./antagonist-callout-card.md) — CalloutCard tip / aside signal
 
 ```
 verdict: PASS
@@ -612,6 +613,25 @@ gates: {
 ```
 
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). LowerThird factory PASS. Launch stays CLOSED 0/8.
+
+## CalloutCard 2026-09-20
+
+Dated **2026-09-20**. CalloutCard soft craft beat. Tip / aside signal (`Tip` / `Aside`) after chapter, before audio. Cream card + gold 4px left rail. Craft beat on `CalloutCardDemo`. After PR 107 merge `a8585c203b3186d1434430e686e27c8f7a8b2c8a`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4` sha256 `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-callout-card/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-callout-card/2026-09-20/
+sha256: a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT, EDU-S04: PASS
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). CalloutCard factory PASS. Launch stays CLOSED 0/8.
 
 ## Held
 

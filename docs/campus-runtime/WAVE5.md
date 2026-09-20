@@ -85,6 +85,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | ChapterChip | PR 104 `0dab60b` / tip `c83962c` |
 | ProgressRail+ChapterChip encode | PR 105 `9052d6a` / tip `5825052` |
 | Progress-chapter master dest reaudit | PR 106 `815a35c` / tip `3915694` |
+| LowerThird speaker/context | PR 107 `a8585c2` / tip `be42c80` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -225,6 +226,10 @@ Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cur
 ## LowerThird (PASS)
 
 PR 106 merge `815a35c` / tip `3915694` harvested. LowerThird soft craft beat: speaker / context label after talking-head, before captions. Speaker Fraunces title; gold uppercase context (`role` or `label`; default speaker `Teacher` when only a context label). Craft beat on `LowerThirdDemo`. Wired on the five spine plates in the existing `lower third` layer. No Cap take. ORDER LOCK unchanged. Current master dest progress-chapter-encode sha256 `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7` **untouched** (plate-level stills only). Evidence: `plates/antagonist-lower-third.md`. Stills: `/opt/cursor/artifacts/remotion-lower-third/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
+
+## CalloutCard (PASS)
+
+PR 107 merge `a8585c` / tip `be42c80` harvested. CalloutCard soft craft beat: tip / aside signal after chapter, before audio. Cream card + gold 4px left rail. `Tip` / `Aside` kickers on the five ORDER LOCK beats. Craft beat on `CalloutCardDemo`. Wired on the five spine plates only. No Cap take. ORDER LOCK unchanged. Current master dest progress-chapter-encode sha256 `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7` **untouched** (plate-level stills only). Evidence: `plates/antagonist-callout-card.md`. Stills: `/opt/cursor/artifacts/remotion-callout-card/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
