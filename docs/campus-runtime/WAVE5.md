@@ -66,6 +66,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | EDU-S01 objective slate | PR 85 `a97167a` / tip `1a47d48` |
 | EDU-S01 LessonSpine encode | PR 86 `2bfafed` / tip `0c35205` |
 | EDU-S01 master dest reaudit | PR 87 `c2e9dad` / tip `b4b96c3` |
+| EDU-S02 DefinitionBoard | PR 88 `253a638` / tip `4859ca4` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -121,7 +122,11 @@ Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cur
 
 ## EDU-S02 DefinitionBoard (PASS)
 
-PR 87 merge `c2e9dad` / tip `b4b96c3` harvested. DefinitionBoard Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “Explanatory motion”. Karaoke already gold-ticks “motion” 900–1600ms (plate f30 / spine f570). ORDER LOCK unchanged. Current master dest edu-s01-encode sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` **untouched** (plate-level stills only). Evidence: `plates/antagonist-definitionboard-edu-s02.md`. Stills: `/opt/cursor/artifacts/remotion-definitionboard-edu-s02/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
+PR 87 merge `c2e9dad` / tip `b4b96c3` harvested. PR 88 merge `253a638` / tip `4859ca4`. DefinitionBoard Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “Explanatory motion”. Karaoke already gold-ticks “motion” 900–1600ms (plate f30 / spine f570). ORDER LOCK unchanged. Current master dest edu-s01-encode sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` **untouched** (plate-level stills only). Evidence: `plates/antagonist-definitionboard-edu-s02.md`. Stills: `/opt/cursor/artifacts/remotion-definitionboard-edu-s02/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
+
+## QuizBumper next-up (PASS)
+
+PR 88 merge `253a638` / tip `4859ca4` harvested. QuizBumper kicker “Next up” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “What did the card draw?”. Karaoke already gold-ticks “draw?” 1500–2200ms (plate f54 / spine f1074). ORDER LOCK unchanged. Current master dest edu-s01-encode sha256 `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` **untouched** (plate-level stills only). Evidence: `plates/antagonist-quizbumper-next-up.md`. Stills: `/opt/cursor/artifacts/remotion-quizbumper-next-up/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
