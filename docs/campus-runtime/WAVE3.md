@@ -108,6 +108,39 @@ Separate CDM seal after four-model ship gate **PASS** on `50b776a`. Overlay of `
 
 Farm section above stays **Campus cutover | not done** as the farm-time readout.
 
+## 2026-09-20 teach live smoke
+
+Dated live re-smoke of Wave3 on campus. Guest/unsigned composer stays 401 `sign_in_required`. Signed-path checks that do not need Cap: route exists (not 404); teach / learner HTML 401 without cookie; POST-only composer routes GET 405 / POST 401. Teacher 200 catalog / publish / child-cannot-teach skipped — no safe cookie; do not steal family LIVE `bc-4765f2f0`. Family operator-writes + `/api/plates` still live. Remotion-in-Next held. No AUTH flip. Launch stays **CLOSED**, **0/8**. Log: `/opt/cursor/artifacts/wave3-teach-live-smoke/2026-09-20/`.
+
+| Check | Expect | Result |
+|---|---|---|
+| `GET /api/me` | 200 `{authenticated:false,guest:true}` | **pass** |
+| unsigned `GET /api/composer/catalog` | 401 `sign_in_required` | **pass** |
+| unsigned `GET /api/composer/lessons` | 401 `sign_in_required` | **pass** |
+| unsigned `GET /api/composer/files/x` | 401 `sign_in_required` | **pass** |
+| unsigned `POST /api/composer/lessons` | 401 `sign_in_required` | **pass** |
+| unsigned `POST /api/composer/sources` | 401 `sign_in_required` | **pass** |
+| unsigned `POST /api/composer/publish` | 401 `sign_in_required` | **pass** |
+| unsigned `POST /api/composer/quiz` | 401 `sign_in_required` | **pass** |
+| unsigned `GET /api/composer/publish` `/quiz` `/sources` | 405 (POST-only; not 404) | **pass** |
+| unsigned `GET /o/household/teach` `/l` `/o/sales/teach` | 401 (HTML; not 404) | **pass** |
+| unsigned `GET`/`POST /api/plates` | 401 `sign_in_required` | **pass** |
+| `GET /c/grok-bot` | 200 | **pass** |
+| `POST /api/events` | 401 `sign_in_required` guest | **pass** |
+| `GET https://edit.fieldschool.ai/health` | 200 `fieldschool-edit` | **pass** |
+| university | 301 to portal | **pass** |
+| AUTH_URL | `https://portal.fieldschool.ai` | **pass** |
+| family-v1-home | `e352f5ad…` unchanged | **pass** |
+| FAMILY_V1_SHA | `71b3245b…` unchanged | **pass** |
+| Wave3 pack sha256 | `baec863d…` | **pass** |
+| overlay composer / teach / l / plates routes | present on `/opt/field-school` | **pass** |
+| `lessons` + `courses` + `plate_renders` | present on `campus` | **pass** |
+| Remotion in campus `package.json` | absent | **pass** |
+| signed teacher 200 catalog / publish | skipped (no safe cookie; do not steal `bc-4765f2f0`) | **skipped** |
+| HARD fail | none | **none** |
+
+No in-round code fix. Docs-only.
+
 ## 2026-09-19 four-model readiness (superseded SHA)
 
 SHA `58671a3789a7270925765545d59703985c2e724b` (PR 63 on main). Suite then readiness runner. Ship gate was **FAIL** — farm not spawned on that readout. Do not use as the standing SHA.
