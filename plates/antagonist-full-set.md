@@ -34,6 +34,7 @@ Cites:
 - [antagonist-definitionboard-slate.md](./antagonist-definitionboard-slate.md) — DefinitionBoard slate signaling
 - [antagonist-audio-bed-unmute.md](./antagonist-audio-bed-unmute.md) — AudioBed soft unmute craft beat
 - [antagonist-progress-rail.md](./antagonist-progress-rail.md) — ProgressRail lesson position signal
+- [antagonist-chapter-chip.md](./antagonist-chapter-chip.md) — ChapterChip beat label signal
 
 ```
 verdict: PASS
@@ -525,6 +526,25 @@ gates: {
 ```
 
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). ProgressRail factory PASS. Launch stays CLOSED 0/8.
+
+## ChapterChip 2026-09-20
+
+Dated **2026-09-20**. ChapterChip soft craft beat. Beat label signal (`Sting` / `Slate` / `Objective` / `Recap` / `Next up`) after progress, before audio. Cream chip + gold 4px left rail. Craft beat on `ChapterChipDemo`. After PR 103 merge `a0cc86d13f6b5b85004e74a6ae84251b47a9d1ae`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-chapter-chip/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-chapter-chip/2026-09-20/
+sha256: 3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT, EDU-S04: PASS
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). ChapterChip factory PASS. Launch stays CLOSED 0/8.
 
 ## Held
 

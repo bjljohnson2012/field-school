@@ -35,6 +35,7 @@ PASS notes:
 - [antagonist-audio-bed-layer.md](./antagonist-audio-bed-layer.md) — AudioBed silent fixture (after letterbox)
 - [antagonist-audio-bed-unmute.md](./antagonist-audio-bed-unmute.md) — AudioBed soft unmute craft beat 2026-09-20
 - [antagonist-progress-rail.md](./antagonist-progress-rail.md) — ProgressRail lesson position signal 2026-09-20
+- [antagonist-chapter-chip.md](./antagonist-chapter-chip.md) — ChapterChip beat label signal 2026-09-20
 - [antagonist-lesson-spine-audiobed-encode.md](./antagonist-lesson-spine-audiobed-encode.md) — LessonSpine AudioBed encode
 - [antagonist-soft-polish-vox-s05.md](./antagonist-soft-polish-vox-s05.md) — OverlayLock + TypeCard VOX-S05 polish
 - [antagonist-typecard-vox-s04.md](./antagonist-typecard-vox-s04.md) — TypeCard factory VOX-S04 PASS (cream + gold rail; no Ernest PNG)
@@ -63,6 +64,7 @@ Do not re-render Just `27pn9xs0zk8a73g`. Do not overwrite Aug 30 `vox/everything
 | **LetterboxDemo** | 8s craft | 240 | captions then letterbox close-in |
 | **AudioBedDemo** | 8s craft | 240 | letterbox then soft-unmuted silent fixture bed |
 | **ProgressRailDemo** | 8s craft | 240 | letterbox then five-tick lesson position rail |
+| **ChapterChipDemo** | 8s craft | 240 | progress then beat-label chapter chip |
 
 ## Render lock
 
@@ -78,7 +80,7 @@ CPU cap `--concurrency=2` (2/4). Dry-run does not encode.
 npm ci
 npx remotion compositions
 node scripts/render-plate.mjs --comp LessonSpine --dry-run --lock /tmp/absent.render.lock --meminfo /proc/meminfo
-node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs scripts/soft-polish-vox-s05.test.mjs scripts/soft-polish-vox-s04.test.mjs scripts/lesson-spine-letterbox-encode.test.mjs scripts/captions-karaoke-gold.test.mjs scripts/audio-bed-layer.test.mjs scripts/lesson-spine-audiobed-encode.test.mjs scripts/lesson-spine-typecard-encode.test.mjs scripts/progress-rail.test.mjs
+node --test scripts/render-lock.test.mjs scripts/plates-bar.test.mjs scripts/lesson-spine.test.mjs scripts/captions-lower-third.test.mjs scripts/letterbox-layer.test.mjs scripts/soft-polish-vox-s05.test.mjs scripts/soft-polish-vox-s04.test.mjs scripts/lesson-spine-letterbox-encode.test.mjs scripts/captions-karaoke-gold.test.mjs scripts/audio-bed-layer.test.mjs scripts/lesson-spine-audiobed-encode.test.mjs scripts/lesson-spine-typecard-encode.test.mjs scripts/progress-rail.test.mjs scripts/chapter-chip.test.mjs
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-letterbox-encode/2026-09-20/LessonSpine.mp4 --report cleaning-checklist-lesson-spine-letterbox-encode.md
 node scripts/cleaning-checklist-lesson-spine.mjs --dest /opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4 --report cleaning-checklist-lesson-spine-audiobed-encode.md

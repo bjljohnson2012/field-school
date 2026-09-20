@@ -1,6 +1,6 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
-import {AudioBed, Claim, GoldRule, Kicker, Karaoke, Keyword, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, HeadDock, ProgressRail, Title, TypeCard} from "./layers";
+import {AudioBed, ChapterChip, Claim, GoldRule, Kicker, Karaoke, Keyword, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, HeadDock, ProgressRail, Title, TypeCard} from "./layers";
 import {Bed} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
@@ -54,6 +54,9 @@ export const Opener: React.FC<OpenerProps> = ({kicker, title, claim, objective, 
         </Layer>
         <Layer name="progress">
           <ProgressRail beat="sting" />
+        </Layer>
+        <Layer name="chapter">
+          <ChapterChip beat="sting" />
         </Layer>
         <Layer name="audio">
           <AudioBed />
