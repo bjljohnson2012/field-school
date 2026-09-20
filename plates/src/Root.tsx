@@ -6,6 +6,7 @@ import {Opener} from "./Opener";
 import {QuizBumper} from "./QuizBumper";
 import {RecapCard} from "./RecapCard";
 import {CaptionsDemo} from "./CaptionsDemo";
+import {CaptionDensityDemo} from "./CaptionDensityDemo";
 import {AudioBedDemo} from "./AudioBedDemo";
 import {LetterboxDemo} from "./LetterboxDemo";
 import {ProgressRailDemo} from "./ProgressRailDemo";
@@ -372,6 +373,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="CaptionsDemo"
         component={CaptionsDemo}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="CaptionDensityDemo"
+        component={CaptionDensityDemo}
         durationInFrames={240}
         fps={30}
         width={1920}
