@@ -29,6 +29,7 @@ Gym wording is retired. Student orgs: household and sales.
 - Current LessonSpine letterbox encode dest sha256 `028d16e4…` (PR 70). Antagonist full-set reaudit **PASS** (SOFT only, PR 71). Karaoke gold dest sha256 `9f89f9a9…` — CaptionsBand word-level karaoke gold `#C4A35A` (`VOX-S01` PASS fixture). Cleaning checklist exit 0 PASS, `hold_cleaning: true`, `--flip` refused. No live Cleaning / Publish flip.
 - `app/db/0012_plate_renders.sql` applied on `field-school-campus-db` / `campus` (0012 only; 0001–0011 untouched). Table `plate_renders` exists.
 - Plates API campus pack (routes only) overlay on `/opt/field-school`. No `deploy.sh` wipe. Family operator-writes chrome hashes unchanged. Live guest unsigned `GET`/`POST /api/plates` is **401** `sign_in_required` (was 404). `GET /api/me` `{guest:true}`. `POST /api/events` 401. Pack: `/opt/field-school-packs/plates-api-campus-pack-20260919T202200Z.tar.gz` sha256 `75ab10d322ae872cfb9aea0989bf2ff243a9b65178f17aa474cca7080a4ecfcb`.
+- Wave 3 campus pack **LIVE** (composer/teach/l overlay on `/opt/field-school`; main tip `5b05d33`; four-model farm **PASS** on `50b776a` 2026-09-20; guest `/api/composer` 401 `sign_in_required`; PR 65 closed SUPERSEDED, unmerged). Pack: `/opt/field-school-packs/wave3-composer-campus-pack-20260920T063800Z.tar.gz` sha256 `baec863d121b67e2fdd59f097fcbfffc432af68703d679a9289c7a11bfcb7163`. No `deploy.sh` wipe. Family hashes unchanged. Launch stays **CLOSED**, **0/8**. Proof: [WAVE3.md](./WAVE3.md).
 
 ## Held (not this readout)
 
@@ -36,7 +37,6 @@ Gym wording is retired. Student orgs: household and sales.
 - Live Cleaning auto-flip and Publish/Distribute (future CDM seal when ship 1 and ship 6 can go green)
 - Remotion packaged into Next player / player rail UI
 - AUTH_URL flip, Stripe / metering prices
-- Wave 3 four-model cutover (farm **PASS** on `50b776a` 2026-09-20; composer SQL + routes on tip; live guest `/api/composer` is 401; PR 65 closed SUPERSEDED, unmerged; no campus package this readout)
 - CNC vault `2.24.64.248`
 
 ## Not a launch gate

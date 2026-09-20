@@ -66,7 +66,47 @@ SHA `50b776a1b4152af606c46e9664f54f8e50d98042` (PR 73 on main). Four independent
 | Four-model ship gate | **PASS** — all four green |
 | Campus cutover | **not done** |
 
-Dated table: [FOUR_MODEL.md](./FOUR_MODEL.md). Guest `/api/composer/*` is 401 `sign_in_required`. Do not package or extract campus from this farm. CDM seals cutover separately.
+Dated table: [FOUR_MODEL.md](./FOUR_MODEL.md). Guest `/api/composer/*` is 401 `sign_in_required`. Farm-time readout only. CDM sealed the campus pack separately below.
+
+## 2026-09-20 campus pack LIVE
+
+Separate CDM seal after four-model ship gate **PASS** on `50b776a`. Overlay of `/api/composer`, `/o/:slug/teach`, `/o/:slug/l` onto live campus Next. No `deploy.sh` wipe. `0005` skipped (`lessons` already present). Family operator-writes chrome hashes unchanged. Launch stays **CLOSED**, **0/8**.
+
+| Item | Value |
+|---|---|
+| Pack | `/opt/field-school-packs/wave3-composer-campus-pack-20260920T063800Z.tar.gz` |
+| sha256 | `baec863d121b67e2fdd59f097fcbfffc432af68703d679a9289c7a11bfcb7163` |
+| Main tip | `5b05d33595f66b3164e4f6b8e46c2eef8be94dad` (PR 74 on main) |
+| Script | `app/deploy/overlay-wave3-composer.sh` |
+| Scope | composer / teach / learner catalog only |
+| Four-model ship gate | **PASS** on `50b776a` (PR 74) |
+| Launch | **CLOSED**, **0/8** |
+| PR 65 | closed SUPERSEDED, unmerged |
+
+### Smoke
+
+| Check | Expect | Result |
+|---|---|---|
+| `GET /api/me` | 200 `{authenticated:false,guest:true}` | **pass** |
+| unsigned `GET /api/composer/catalog` | 401 `sign_in_required` | **pass** |
+| unsigned `GET /api/composer/lessons` | 401 `sign_in_required` | **pass** |
+| unsigned `GET /api/composer/files/x` | 401 `sign_in_required` | **pass** |
+| unsigned `POST /api/composer/lessons` | 401 `sign_in_required` | **pass** |
+| unsigned `POST /api/composer/sources` | 401 `sign_in_required` | **pass** |
+| unsigned `POST /api/composer/publish` | 401 `sign_in_required` | **pass** |
+| unsigned `POST /api/composer/quiz` | 401 `sign_in_required` | **pass** |
+| unsigned `GET /o/household/teach` `/l` | 401 | **pass** |
+| `GET /c/grok-bot` | 200 | **pass** |
+| `POST /api/events` | 401 `sign_in_required` guest | **pass** |
+| `GET https://edit.fieldschool.ai/health` | 200 `fieldschool-edit` | **pass** |
+| unsigned `GET`/`POST /api/plates` | 401 `sign_in_required` | **pass** |
+| `plate_renders` + `lessons` | present on `campus` | **pass** |
+| family-v1-home | `e352f5ad…` unchanged | **pass** |
+| FAMILY_V1_SHA | `71b3245b…` unchanged | **pass** |
+| AUTH_URL | `https://portal.fieldschool.ai` | **pass** |
+| university | 301 to portal | **pass** |
+
+Farm section above stays **Campus cutover | not done** as the farm-time readout.
 
 ## 2026-09-19 four-model readiness (superseded SHA)
 
