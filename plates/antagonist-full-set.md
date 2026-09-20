@@ -37,6 +37,7 @@ Cites:
 - [antagonist-audio-bed-unmute.md](./antagonist-audio-bed-unmute.md) — AudioBed soft unmute craft beat
 - [antagonist-progress-rail.md](./antagonist-progress-rail.md) — ProgressRail lesson position signal
 - [antagonist-chapter-chip.md](./antagonist-chapter-chip.md) — ChapterChip beat label signal
+- [antagonist-lower-third.md](./antagonist-lower-third.md) — LowerThird speaker / context label
 
 ```
 verdict: PASS
@@ -592,6 +593,25 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f30.png`, `LessonSpine-slate-f330.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `Opener-f30.png`, `RecapCard-f144.png`, `ProgressRailDemo-f60.png`, `ChapterChipDemo-f60.png`.
+
+## LowerThird 2026-09-20
+
+Dated **2026-09-20**. LowerThird soft craft beat. Speaker / context label after talking-head, before captions. Speaker Fraunces title; gold uppercase context (`role` or `label`; default speaker `Teacher` when only a context label). Craft beat on `LowerThirdDemo`. After PR 106 merge `815a35c7fad81473bce0c74e09f106fe45872308`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4` sha256 `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-lower-third/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-lower-third/2026-09-20/
+sha256: a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT, EDU-S04: PASS
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). LowerThird factory PASS. Launch stays CLOSED 0/8.
 
 ## Held
 

@@ -84,6 +84,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | ProgressRail | PR 103 `a0cc86d` / tip `8d1cfed` |
 | ChapterChip | PR 104 `0dab60b` / tip `c83962c` |
 | ProgressRail+ChapterChip encode | PR 105 `9052d6a` / tip `5825052` |
+| Progress-chapter master dest reaudit | PR 106 `815a35c` / tip `3915694` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -220,6 +221,10 @@ PRs 85–104 harvested. PR 104 merge `0dab60b` / tip `c83962c`. New dated dest `
 ## LessonSpine progress-chapter master dest reaudit (PASS)
 
 Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4` sha256 `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7` plus ProgressRail/ChapterChip plates. PR 105 merge `9052d6a` / tip `5825052`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Typecard-objectiveslate dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-progress-chapter-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-progress-chapter-master/2026-09-20/`.
+
+## LowerThird (PASS)
+
+PR 106 merge `815a35c` / tip `3915694` harvested. LowerThird soft craft beat: speaker / context label after talking-head, before captions. Speaker Fraunces title; gold uppercase context (`role` or `label`; default speaker `Teacher` when only a context label). Craft beat on `LowerThirdDemo`. Wired on the five spine plates in the existing `lower third` layer. No Cap take. ORDER LOCK unchanged. Current master dest progress-chapter-encode sha256 `a11e31a38774266b80a8f64e088ff4eb0b59d80bc7b710e9240b6ee076e61ce7` **untouched** (plate-level stills only). Evidence: `plates/antagonist-lower-third.md`. Stills: `/opt/cursor/artifacts/remotion-lower-third/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 

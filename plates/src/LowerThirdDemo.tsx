@@ -5,7 +5,7 @@ import {AudioBed, Bed, HeadDock, Letterbox, LowerThird, OverlayLock} from "./lay
 import {Layer, Stack} from "./Stack";
 import {LOCK} from "./brand";
 
-/** Isolate lower-third craft. Does not change LessonSpine beat order. */
+/** Isolate lower-third speaker / context label. Does not change LessonSpine beat order. */
 export const LowerThirdDemo: React.FC = () => {
   const frame = useCurrentFrame();
   return (
