@@ -97,6 +97,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | TransitionLuma LessonSpine encode | PR 116 `e5e46db` / tip `9b7c804` |
 | Transition-luma master dest reaudit | PR 117 `37d7fde` / tip `fc1e8fe` |
 | EndCard lesson close signal | PR 118 `db636a3` / tip `79e1cb2` |
+| EndCard LessonSpine encode | PR 119 `9f762bf` / tip `e4df17e` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -128,7 +129,7 @@ CaptionDensity+OverlayLock LessonSpine encode dest: `/opt/cursor/artifacts/lesso
 
 TransitionLuma LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-transition-luma-encode/2026-09-20/LessonSpine.mp4` sha256 `f631402a6dfbb2ca2218ea9617c7b2af527eb7e88f8df5547dc6584c9ef5a96e` (h264 1920×1080@30, 41.000s). PRs 85–115. TransitionLuma beat-to-beat wipe on the caption-overlay stack. Caption-overlay dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-transition-luma-encode.md](../../plates/antagonist-lesson-spine-transition-luma-encode.md). Archived prior dest. PR 115 merge `8626a76` / tip `5e466e9` harvested. PR 116 merge `e5e46db` / tip `9b7c804` harvested. PR 117 merge `37d7fde` / tip `fc1e8fe` harvested. PR 118 merge `db636a3` / tip `79e1cb2` harvested. Independent Antagonist v2 reaudit **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-transition-luma-master.md`.
 
-EndCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-end-card-encode/2026-09-20/LessonSpine.mp4` sha256 `073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693` (h264 1920×1080@30, 41.000s). PRs 85–118. EndCard lesson close signal on the transition-luma stack. Transition-luma dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-end-card-encode.md](../../plates/antagonist-lesson-spine-end-card-encode.md). **Current master dest.** PR 118 merge `db636a3` / tip `79e1cb2` harvested.
+EndCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-end-card-encode/2026-09-20/LessonSpine.mp4` sha256 `073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693` (h264 1920×1080@30, 41.000s). PRs 85–118. EndCard lesson close signal on the transition-luma stack. Transition-luma dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-end-card-encode.md](../../plates/antagonist-lesson-spine-end-card-encode.md). **Current master dest.** PR 118 merge `db636a3` / tip `79e1cb2` harvested. PR 119 merge `9f762bf` / tip `e4df17e` harvested. Independent Antagonist v2 reaudit **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-end-card-master.md`.
 
 ## Letterbox stack (complete)
 
@@ -294,6 +295,11 @@ PR 117 merge `37d7fde` / tip `fc1e8fe` harvested. PR 118 merge `db636a3` / tip `
 ## LessonSpine end-card encode (PASS)
 
 PRs 85–118 harvested. PR 118 merge `db636a3` / tip `79e1cb2`. New dated dest `/opt/cursor/artifacts/lesson-spine-end-card-encode/2026-09-20/LessonSpine.mp4` sha256 `073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693`. **Current master dest.** Transition-luma dest `f631402a6dfbb2ca2218ea9617c7b2af527eb7e88f8df5547dc6584c9ef5a96e` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-end-card-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-end-card-encode/2026-09-20/`. `hold_cleaning: true`. `--flip` refused.
+
+
+## LessonSpine end-card master dest reaudit (PASS)
+
+Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-end-card-encode/2026-09-20/LessonSpine.mp4` sha256 `073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693` plus EndCard plates. PR 119 merge `9f762bf` / tip `e4df17e`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Transition-luma dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-end-card-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-end-card-master/2026-09-20/`.
 
 ## Karaoke gold (VOX-S01 PASS)
 
