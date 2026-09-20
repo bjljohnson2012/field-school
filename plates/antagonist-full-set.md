@@ -25,6 +25,7 @@ Cites:
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
 - [antagonist-edu-s02-master.md](./antagonist-edu-s02-master.md) — EDU-S02 master dest reaudit
 - [antagonist-slate-master.md](./antagonist-slate-master.md) — LessonSpine slate master dest reaudit
+- [antagonist-typecard-objectiveslate-master.md](./antagonist-typecard-objectiveslate-master.md) — LessonSpine typecard-objectiveslate master dest reaudit
 - [antagonist-talkinghead-slate.md](./antagonist-talkinghead-slate.md) — TalkingHead slate signaling
 - [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md) — RecapCard slate signaling
 - [antagonist-opener-slate.md](./antagonist-opener-slate.md) — Opener slate signaling
@@ -431,6 +432,28 @@ dated: 2026-09-20
 rendering: /opt/cursor/artifacts/lesson-spine-slate-encode/2026-09-20/LessonSpine.mp4
 sha256: d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5
 stills: /opt/cursor/artifacts/remotion-antagonist-slate-master/2026-09-20/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f30.png`, `LessonSpine-slate-f330.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `Opener-f30.png`, `RecapCard-f144.png`.
+
+## LessonSpine typecard-objectiveslate master dest reaudit 2026-09-20
+
+Dated **2026-09-20** Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` plus TypeCard/ObjectiveSlate plates. After PR 99 merge `7186244f76d15f6c3fdeb4e91ed7b889ac0228fb`. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Slate dest **untouched** (`d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5`). Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-20
+rendering: /opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4
+sha256: 3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5
+stills: /opt/cursor/artifacts/remotion-antagonist-typecard-objectiveslate-master/2026-09-20/
 hold_cleaning: true
 auto_flip: false
 escalate: false

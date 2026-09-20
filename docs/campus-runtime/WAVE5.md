@@ -77,6 +77,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Slate master dest reaudit | PR 96 `c4aa0a4` / tip `78d3f55` |
 | ObjectiveSlate slate | PR 97 `2581d9d` / tip `2c8ddd0` |
 | TypeCard slate | PR 98 `9e29744` / tip `e897db1` |
+| TypeCard+ObjectiveSlate encode | PR 99 `7186244` / tip `88b892c` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -98,7 +99,7 @@ EDU-S02 LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-edu-s02-enc
 
 Slate LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-slate-encode/2026-09-20/LessonSpine.mp4` sha256 `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` (h264 1920×1080@30, 41.000s). PRs 85–94. Opener+TalkingHead+RecapCard slate polish + EDU-S01/S02 + QuizBumper. EDU-S02 dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-slate-encode.md](../../plates/antagonist-lesson-spine-slate-encode.md). Archived prior slate-encode (file **untouched**).
 
-TypeCard+ObjectiveSlate LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` (h264 1920×1080@30, 41.000s). PRs 85–98. TypeCard claim last-word ticks + ObjectiveSlate last-word “beat” + DefinitionBoard objective path. Slate dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-typecard-objectiveslate-encode.md](../../plates/antagonist-lesson-spine-typecard-objectiveslate-encode.md). **Current master dest.**
+TypeCard+ObjectiveSlate LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` (h264 1920×1080@30, 41.000s). PRs 85–98. TypeCard claim last-word ticks + ObjectiveSlate last-word “beat” + DefinitionBoard objective path. Slate dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-typecard-objectiveslate-encode.md](../../plates/antagonist-lesson-spine-typecard-objectiveslate-encode.md). **Current master dest.** PR 99 merge `7186244` / tip `88b892c` harvested. Independent Antagonist v2 reaudit **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-typecard-objectiveslate-master.md`.
 
 ## Letterbox stack (complete)
 
@@ -183,6 +184,10 @@ PR 97 merge `2581d9d` / tip `2c8ddd0` harvested. TypeCard stays cream + gold 6px
 ## LessonSpine typecard-objectiveslate encode (PASS)
 
 PRs 85–98 harvested. PR 98 merge `9e29744` / tip `e897db1`. New dated dest `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5`. **Current master dest.** Slate dest `d0a09896aa1ea6fc8cf5b5898bc83ddb54faccaa0957c8529a3de0d49a10efc5` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-typecard-objectiveslate-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-typecard-objectiveslate-encode/2026-09-20/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine typecard-objectiveslate master dest reaudit (PASS)
+
+Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-typecard-objectiveslate-encode/2026-09-20/LessonSpine.mp4` sha256 `3f42545633b331c184febe17349c9d3162295c97dabeec5458bebd2007aa95e5` plus TypeCard/ObjectiveSlate plates. PR 99 merge `7186244` / tip `88b892c`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Slate dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-typecard-objectiveslate-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-typecard-objectiveslate-master/2026-09-20/`.
 
 ## Karaoke gold (VOX-S01 PASS)
 
