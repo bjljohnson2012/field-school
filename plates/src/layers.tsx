@@ -350,6 +350,42 @@ export function ProgressRail({beat}: {beat: ProgressRailBeat}) {
   );
 }
 
+/** Beat label signal. After progress, before audio. ORDER LOCK chapter chip. */
+export const CHAPTER_CHIP_LABELS: Record<ProgressRailBeat, string> = {
+  sting: "Sting",
+  slate: "Slate",
+  objective: "Objective",
+  recap: "Recap",
+  "next-up": "Next up",
+};
+
+export function ChapterChip({beat}: {beat: ProgressRailBeat}) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        top: LETTERBOX_H + 16,
+        padding: "8px 16px 8px 14px",
+        backgroundColor: cream,
+        borderLeft: `4px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {CHAPTER_CHIP_LABELS[beat]}
+      </div>
+    </div>
+  );
+}
+
 /** Soft-unmuted silent fixture bed. Last sibling after letterbox. Volume 0. No Cap A-roll. */
 export const AUDIO_BED_FILE = "audio-bed-silence.wav";
 export const AUDIO_BED_VOLUME = 0;
