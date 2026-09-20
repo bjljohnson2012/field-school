@@ -42,6 +42,7 @@ Cites:
 - [antagonist-lower-third.md](./antagonist-lower-third.md) — LowerThird speaker / context label
 - [antagonist-callout-card.md](./antagonist-callout-card.md) — CalloutCard tip / aside signal
 - [antagonist-caption-density.md](./antagonist-caption-density.md) — CaptionDensity karaoke line packing
+- [antagonist-overlay-lock.md](./antagonist-overlay-lock.md) — OverlayLock logo+title lock
 
 ```
 verdict: PASS
@@ -699,6 +700,25 @@ gates: {
 ```
 
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). CaptionDensity factory PASS. Launch stays CLOSED 0/8.
+
+## OverlayLock 2026-09-20
+
+Dated **2026-09-20**. OverlayLock soft craft beat. Logo+title lock (`OVERLAY_LOCK_TITLE_PX = 30` + isolated seal). Craft beat on `OverlayLockDemo`. After PR 111 merge `37fbe4d4f66ef6fe27e2f11ee646f297e53334fc`. ORDER LOCK intact. Locked master dest `/opt/cursor/artifacts/lesson-spine-lower-callout-encode/2026-09-20/LessonSpine.mp4` sha256 `68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-overlay-lock/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+stills: /opt/cursor/artifacts/remotion-overlay-lock/2026-09-20/
+sha256: 68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT, EDU-S04: PASS
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). OverlayLock factory PASS. Launch stays CLOSED 0/8.
 
 ## Held
 

@@ -12,6 +12,11 @@ export function Bed() {
   return <AbsoluteFill style={{backgroundColor: cream}} />;
 }
 
+/** Logo+title lock — OverlayLock title + isolated seal at LOCK. */
+export const OVERLAY_LOCK_TITLE_PX = 30;
+export const OVERLAY_LOCK_LETTER = "0.02em";
+export const OVERLAY_LOCK_WORD = "0.2em";
+
 export function OverlayLock({overlay}: {overlay: Overlay}) {
   return (
     <>
