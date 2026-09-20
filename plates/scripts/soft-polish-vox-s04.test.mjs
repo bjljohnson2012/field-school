@@ -89,6 +89,18 @@ test("prior encode dests stay distinct and untouched", () => {
   }
 });
 
+test("TypeCard stills land under the new dated dest", () => {
+  for (const name of [
+    "Opener-f30.png",
+    "RecapCard-f144.png",
+    "TalkingHeadCard-f90.png",
+    "LessonSpine-f30.png",
+    "LessonSpine-f330.png",
+  ]) {
+    assert.equal(existsSync(join(STILLS, name)), true, name);
+  }
+});
+
 test("cleaning checklist holds; --flip refused", () => {
   const checklist = join(here, "cleaning-checklist-lesson-spine.mjs");
   const flip = spawnSync(process.execPath, [checklist, "--dest", AUDIOBED, "--flip", "--no-write"], {
