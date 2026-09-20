@@ -56,6 +56,10 @@ Letterbox LessonSpine dest: `/opt/cursor/artifacts/lesson-spine-letterbox-encode
 
 Karaoke LessonSpine dest: `/opt/cursor/artifacts/lesson-spine-karaoke-gold/2026-09-20/LessonSpine.mp4` sha256 `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f` (h264 1920×1080@30, 41.000s). Word-level karaoke gold `#C4A35A`.
 
+## Audio bed (silent fixture)
+
+`AudioBed` on the last stack sibling after letterbox. Silent `public/audio-bed-silence.wav`, volume 0, muted. Demo `AudioBedDemo`. Wired on every LessonSpine plate. No Cap A-roll. Karaoke gold + letterbox stack + ORDER LOCK intact. Prior encode dests **untouched** (`9f89f9a9…` / `028d16e4…` / `a5d08284…` / `ec88d257…`). Soft note: [../../plates/antagonist-audio-bed-layer.md](../../plates/antagonist-audio-bed-layer.md).
+
 ## Letterbox stack (complete)
 
 Layer order (later sibling on top): bed → screen → talking-head card → lower third → captions → letterbox → audio.

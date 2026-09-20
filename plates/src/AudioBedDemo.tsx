@@ -6,16 +6,16 @@ import {Layer, Stack} from "./Stack";
 import type {Caption} from "./types";
 
 const DEMO_CAPTIONS: Caption[] = [
-  {text: "Bars", startMs: 400, endMs: 800},
-  {text: "close", startMs: 800, endMs: 1200},
-  {text: "in.", startMs: 1200, endMs: 1800},
-  {text: "Captions", startMs: 2200, endMs: 2800},
-  {text: "stay", startMs: 2800, endMs: 3200},
+  {text: "Bed", startMs: 400, endMs: 800},
+  {text: "is", startMs: 800, endMs: 1000},
+  {text: "silent.", startMs: 1000, endMs: 1800},
+  {text: "Letterbox", startMs: 2200, endMs: 2800},
+  {text: "stays", startMs: 2800, endMs: 3200},
   {text: "above.", startMs: 3200, endMs: 4000},
 ];
 
-/** Isolate letterbox over captions. LessonSpine order is untouched. */
-export const LetterboxDemo: React.FC = () => {
+/** Isolate the audio layer after letterbox. LessonSpine order is untouched. */
+export const AudioBedDemo: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill style={{backgroundColor: cream}}>

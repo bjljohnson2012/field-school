@@ -1,6 +1,6 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
-import {Claim, GoldRule, Kicker, Karaoke, Letterbox, LowerThird, OverlayLock, HeadDock, Title, TypeCard} from "./layers";
+import {AudioBed, Claim, GoldRule, Kicker, Karaoke, Letterbox, LowerThird, OverlayLock, HeadDock, Title, TypeCard} from "./layers";
 import {Bed} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
@@ -39,7 +39,9 @@ export const Opener: React.FC<OpenerProps> = ({kicker, title, claim, durationSec
         <Layer name="letterbox">
           <Letterbox />
         </Layer>
-        <Layer name="audio" />
+        <Layer name="audio">
+          <AudioBed />
+        </Layer>
       </Stack>
       {veil > 0 ? <AbsoluteFill style={{backgroundColor: cream, opacity: veil}} /> : null}
       <OverlayLock overlay={overlay} />

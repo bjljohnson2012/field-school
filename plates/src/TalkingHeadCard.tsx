@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream} from "./brand";
-import {Bed, Claim, GoldRule, HeadDock, Karaoke, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
+import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {TalkingHeadProps} from "./types";
@@ -48,7 +48,9 @@ export const TalkingHeadCard: React.FC<TalkingHeadProps> = ({
         <Layer name="letterbox">
           <Letterbox />
         </Layer>
-        <Layer name="audio" />
+        <Layer name="audio">
+          <AudioBed />
+        </Layer>
       </Stack>
       {veil > 0 ? <AbsoluteFill style={{backgroundColor: cream, opacity: veil}} /> : null}
       <OverlayLock overlay={overlay} />

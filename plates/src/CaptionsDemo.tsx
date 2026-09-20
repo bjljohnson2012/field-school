@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame} from "remotion";
 import {cream, LOCK} from "./brand";
-import {Bed, CaptionsBand, HeadDock, Letterbox, LowerThird, OverlayLock} from "./layers";
+import {AudioBed, Bed, CaptionsBand, HeadDock, Letterbox, LowerThird, OverlayLock} from "./layers";
 import {Layer, Stack} from "./Stack";
 import type {Caption} from "./types";
 
@@ -37,7 +37,9 @@ export const CaptionsDemo: React.FC = () => {
         <Layer name="letterbox">
           <Letterbox />
         </Layer>
-        <Layer name="audio" />
+        <Layer name="audio">
+          <AudioBed />
+        </Layer>
       </Stack>
       <OverlayLock
         overlay={{title: LOCK.title, x: LOCK.x, y: LOCK.y, w: LOCK.w, h: LOCK.h}}
