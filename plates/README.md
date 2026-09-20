@@ -14,6 +14,7 @@ PASS notes:
 - [antagonist-lesson-spine-edu-s01-encode.md](./antagonist-lesson-spine-edu-s01-encode.md) — LessonSpine EDU-S01 encode (archived prior)
 - [antagonist-lesson-spine-edu-s02-encode.md](./antagonist-lesson-spine-edu-s02-encode.md) — LessonSpine EDU-S02 encode (current master)
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit 2026-09-20
+- [antagonist-edu-s02-master.md](./antagonist-edu-s02-master.md) — EDU-S02 master dest reaudit 2026-09-20
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick 2026-09-20
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling 2026-09-20
 - [antagonist-lesson-spine.md](./antagonist-lesson-spine.md) — LessonSpine (sting / slate / objective / recap / next-up)

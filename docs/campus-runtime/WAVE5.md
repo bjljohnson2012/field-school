@@ -68,6 +68,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | EDU-S01 master dest reaudit | PR 87 `c2e9dad` / tip `b4b96c3` |
 | EDU-S02 DefinitionBoard | PR 88 `253a638` / tip `4859ca4` |
 | QuizBumper next-up | PR 89 `a29231f` / tip `7da8be2` |
+| EDU-S02 LessonSpine encode | PR 90 `b4aeb1e` / tip `f62e0cb` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -134,6 +135,10 @@ PR 88 merge `253a638` / tip `4859ca4` harvested. PR 89 merge `a29231f` / tip `7d
 ## EDU-S02 LessonSpine encode (PASS)
 
 PRs 85–89 harvested. PR 89 merge `a29231f` / tip `7da8be2`. New dated dest `/opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4` sha256 `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8`. **Current master dest.** EDU-S01 dest `cab8bd9115d1782158bafeba5c36c820039bd05da3f4fc96412efe9932b86ebf` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-edu-s02-encode.md`. Stills: `/opt/cursor/artifacts/remotion-edu-s02-spine-encode/2026-09-20/`. `hold_cleaning: true`. `--flip` refused.
+
+## EDU-S02 master dest reaudit (PASS)
+
+Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-edu-s02-encode/2026-09-20/LessonSpine.mp4` sha256 `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` plus EDU-S01/S02 + QuizBumper plates. PR 90 merge `b4aeb1e` / tip `f62e0cb`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. EDU-S01 dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-edu-s02-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-edu-s02-master/2026-09-20/`.
 
 ## Karaoke gold (VOX-S01 PASS)
 

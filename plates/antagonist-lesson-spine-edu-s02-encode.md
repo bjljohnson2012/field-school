@@ -38,6 +38,10 @@ ffprobe: h264 1920×1080@30 duration 41.000s, video only. Sting still shows “Y
 - `VOX-S05` — OverlayLock 30px lock crop is the pixel proof; 0.5 still downsample can smash title
 - Ship 1 HOLD. Ship 6 HOLD. Cleaning stays held.
 
+## EDU-S02 master dest reaudit 2026-09-20
+
+Independent reaudit [antagonist-edu-s02-master.md](./antagonist-edu-s02-master.md). Full-set [antagonist-full-set.md](./antagonist-full-set.md) `## EDU-S02 master dest reaudit 2026-09-20`. Dest **untouched**. `hold_cleaning: true`. Launch stays CLOSED 0/8.
+
 ## Held
 
 No Cap take. No Just remake. No second melt. No live Cleaning / Publish flip. No campus Remotion package. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`. Launch stays CLOSED 0/8.
