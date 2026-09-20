@@ -70,6 +70,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | QuizBumper next-up | PR 89 `a29231f` / tip `7da8be2` |
 | EDU-S02 LessonSpine encode | PR 90 `b4aeb1e` / tip `f62e0cb` |
 | EDU-S02 master dest reaudit | PR 91 `73f5401` / tip `552b2c4` |
+| TalkingHead slate | PR 92 `b40ea28` / tip `2ef015c` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -143,7 +144,11 @@ Dated 2026-09-20. Independent Antagonist v2 against locked master dest `/opt/cur
 
 ## TalkingHead slate (PASS)
 
-PR 91 merge `73f5401` / tip `552b2c4` harvested. TalkingHeadCard kicker “Slate” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “Docked, not full-bleed”. Karaoke already gold-ticks “full-bleed” 1100–1800ms (plate f45 / spine f345). ORDER LOCK unchanged. Current master dest edu-s02-encode sha256 `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` **untouched** (plate-level stills only). Evidence: `plates/antagonist-talkinghead-slate.md`. Stills: `/opt/cursor/artifacts/remotion-talkinghead-slate/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
+PR 91 merge `73f5401` / tip `552b2c4` harvested. PR 92 merge `b40ea28` / tip `2ef015c`. TalkingHeadCard kicker “Slate” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “Docked, not full-bleed”. Karaoke already gold-ticks “full-bleed” 1100–1800ms (plate f45 / spine f345). ORDER LOCK unchanged. Current master dest edu-s02-encode sha256 `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` **untouched** (plate-level stills only). Evidence: `plates/antagonist-talkinghead-slate.md`. Stills: `/opt/cursor/artifacts/remotion-talkinghead-slate/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
+
+## RecapCard slate (PASS)
+
+PR 92 merge `b40ea28` / tip `2ef015c` harvested. RecapCard kicker “Recap” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “What stays on the card”. ObjectiveSlate still returns `draw one idea per beat`. ORDER LOCK unchanged. Current master dest edu-s02-encode sha256 `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` **untouched** (plate-level stills only). Evidence: `plates/antagonist-recapcard-slate.md`. Stills: `/opt/cursor/artifacts/remotion-recapcard-slate/2026-09-20/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 

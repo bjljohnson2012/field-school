@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream, gold, ink} from "./brand";
-import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Kicker, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, Title, TypeCard} from "./layers";
+import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Keyword, Kicker, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, Title, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {RecapProps} from "./types";
@@ -11,6 +11,9 @@ export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, objectiv
   const {fps} = useVideoConfig();
   const now = frame / fps;
   const veil = lumaVeil(now, 0, durationSec, 0.5, "glide");
+  const words = title.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? title;
+  const lead = words.slice(0, -1).join(" ");
 
   return (
     <AbsoluteFill style={{backgroundColor: cream}}>
@@ -21,7 +24,10 @@ export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, objectiv
         <Layer name="screen">
           <TypeCard motion="glide" sceneFrame={frame}>
             <Kicker>{kicker}</Kicker>
-            <Title>{title}</Title>
+            <Title>
+              {lead ? `${lead} ` : null}
+              <Keyword>{keyword}</Keyword>
+            </Title>
             <GoldRule />
             <ObjectiveSlate objective={objective} sceneFrame={frame} from={24} />
             {points.slice(0, 3).map((point, i) => (
