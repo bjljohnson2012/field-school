@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame} from "remotion";
 import {cream} from "./brand";
-import {Bed, HeadDock, Letterbox, LowerThird, OverlayLock} from "./layers";
+import {AudioBed, Bed, HeadDock, Letterbox, LowerThird, OverlayLock} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {LOCK} from "./brand";
 
@@ -25,7 +25,9 @@ export const LowerThirdDemo: React.FC = () => {
         <Layer name="letterbox">
           <Letterbox />
         </Layer>
-        <Layer name="audio" />
+        <Layer name="audio">
+          <AudioBed />
+        </Layer>
       </Stack>
       <OverlayLock
         overlay={{title: LOCK.title, x: LOCK.x, y: LOCK.y, w: LOCK.w, h: LOCK.h}}

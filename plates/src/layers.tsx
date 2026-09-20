@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame} from "remotion";
+import {AbsoluteFill, Audio, Img, interpolate, staticFile, useCurrentFrame} from "remotion";
 import {bodyFace, charcoal, cream, displayFace, gold, ink, olive, sansFace} from "./brand";
 import {glideCard, TAKEOVER_EASE_FRAMES, takeoverHead} from "./sceneMotionMath";
 import type {Caption, Overlay} from "./types";
@@ -311,6 +311,22 @@ export function Letterbox() {
       />
     </>
   );
+}
+
+/** Silent fixture bed. Last sibling after letterbox. No Cap A-roll. */
+export const AUDIO_BED_FILE = "audio-bed-silence.wav";
+export const AUDIO_BED_VOLUME = 0;
+
+export function AudioBed({
+  src = staticFile(AUDIO_BED_FILE),
+  volume = AUDIO_BED_VOLUME,
+  muted = true,
+}: {
+  src?: string;
+  volume?: number;
+  muted?: boolean;
+} = {}) {
+  return <Audio src={src} volume={muted ? 0 : volume} loop muted={muted} />;
 }
 
 export function Kicker({children}: {children: React.ReactNode}) {
