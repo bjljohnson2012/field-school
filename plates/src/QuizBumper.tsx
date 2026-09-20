@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream} from "./brand";
-import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Keyword, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
+import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Keyword, Kicker, Letterbox, LowerThird, OverlayLock, ProgressRail, Title, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {QuizBumperProps} from "./types";
@@ -52,6 +52,9 @@ export const QuizBumper: React.FC<QuizBumperProps> = ({
         </Layer>
         <Layer name="letterbox">
           <Letterbox />
+        </Layer>
+        <Layer name="progress">
+          <ProgressRail beat="next-up" />
         </Layer>
         <Layer name="audio">
           <AudioBed />

@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream} from "./brand";
-import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Keyword, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
+import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Keyword, Kicker, Letterbox, LowerThird, OverlayLock, ProgressRail, Title, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {TalkingHeadProps} from "./types";
@@ -58,6 +58,9 @@ export const TalkingHeadCard: React.FC<TalkingHeadProps> = ({
         </Layer>
         <Layer name="letterbox">
           <Letterbox />
+        </Layer>
+        <Layer name="progress">
+          <ProgressRail beat="slate" />
         </Layer>
         <Layer name="audio">
           <AudioBed />
