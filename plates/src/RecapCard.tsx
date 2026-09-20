@@ -1,12 +1,12 @@
 import React from "react";
 import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream, gold, ink} from "./brand";
-import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Kicker, Letterbox, LowerThird, OverlayLock, Title, TypeCard} from "./layers";
+import {AudioBed, Bed, Claim, GoldRule, HeadDock, Karaoke, Kicker, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, Title, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {RecapProps} from "./types";
 
-export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, durationSec, overlay, captions}) => {
+export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, objective, durationSec, overlay, captions}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const now = frame / fps;
@@ -23,6 +23,7 @@ export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, duration
             <Kicker>{kicker}</Kicker>
             <Title>{title}</Title>
             <GoldRule />
+            <ObjectiveSlate objective={objective} sceneFrame={frame} from={24} />
             {points.slice(0, 3).map((point, i) => (
               <div
                 key={point}

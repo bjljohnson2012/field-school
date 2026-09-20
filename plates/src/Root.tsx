@@ -12,6 +12,7 @@ import {LowerThirdDemo} from "./LowerThirdDemo";
 import {TalkingHeadCard} from "./TalkingHeadCard";
 import {LOCK} from "./brand";
 import {spineDurationFrames} from "./lessonSpine";
+import {EDU_S01_OBJECTIVE} from "./objectiveSlate";
 import {clampBand, clampPlateSec} from "./sceneMotionMath";
 import type {LessonSpineProps} from "./types";
 
@@ -67,6 +68,7 @@ const spineDefaults: LessonSpineProps = {
     kicker: "Lesson",
     title: "You Can Just Do Things",
     claim: "Type draws the idea. The head stays docked.",
+    objective: EDU_S01_OBJECTIVE,
     durationSec: 10,
     overlay,
     captions: [
@@ -79,6 +81,16 @@ const spineDefaults: LessonSpineProps = {
       {text: "draws", startMs: 2600, endMs: 3000},
       {text: "the", startMs: 3000, endMs: 3180},
       {text: "idea.", startMs: 3180, endMs: 3800},
+      {text: "You", startMs: 4200, endMs: 4480},
+      {text: "will", startMs: 4480, endMs: 4720},
+      {text: "be", startMs: 4720, endMs: 4900},
+      {text: "able", startMs: 4900, endMs: 5200},
+      {text: "to", startMs: 5200, endMs: 5400},
+      {text: "draw", startMs: 5400, endMs: 5720},
+      {text: "one", startMs: 5720, endMs: 5960},
+      {text: "idea", startMs: 5960, endMs: 6300},
+      {text: "per", startMs: 6300, endMs: 6500},
+      {text: "beat", startMs: 6500, endMs: 7200},
     ],
   },
   slate: {
@@ -120,6 +132,7 @@ const spineDefaults: LessonSpineProps = {
       "Head docked, never on type",
       "Cream, ink, Fraunces",
     ],
+    objective: EDU_S01_OBJECTIVE,
     durationSec: 10,
     overlay,
     captions: [
@@ -132,6 +145,16 @@ const spineDefaults: LessonSpineProps = {
       {text: "Cream", startMs: 4800, endMs: 5300},
       {text: "ink", startMs: 5400, endMs: 5800},
       {text: "Fraunces", startMs: 5900, endMs: 6800},
+      {text: "You", startMs: 7400, endMs: 7680},
+      {text: "will", startMs: 7680, endMs: 7900},
+      {text: "be", startMs: 7900, endMs: 8080},
+      {text: "able", startMs: 8080, endMs: 8360},
+      {text: "to", startMs: 8360, endMs: 8540},
+      {text: "draw", startMs: 8540, endMs: 8840},
+      {text: "one", startMs: 8840, endMs: 9080},
+      {text: "idea", startMs: 9080, endMs: 9380},
+      {text: "per", startMs: 9380, endMs: 9560},
+      {text: "beat", startMs: 9560, endMs: 10000},
     ],
   },
   nextUp: {
@@ -164,6 +187,7 @@ export const RemotionRoot: React.FC = () => {
           kicker: "Lesson",
           title: "You Can Just Do Things",
           claim: "Type draws the idea. The head stays docked.",
+          objective: EDU_S01_OBJECTIVE,
           durationSec: 10,
           overlay: {
             title: "You Can Just Do Things",
@@ -182,6 +206,16 @@ export const RemotionRoot: React.FC = () => {
             {text: "draws", startMs: 2600, endMs: 3000},
             {text: "the", startMs: 3000, endMs: 3180},
             {text: "idea.", startMs: 3180, endMs: 3800},
+            {text: "You", startMs: 4200, endMs: 4480},
+            {text: "will", startMs: 4480, endMs: 4720},
+            {text: "be", startMs: 4720, endMs: 4900},
+            {text: "able", startMs: 4900, endMs: 5200},
+            {text: "to", startMs: 5200, endMs: 5400},
+            {text: "draw", startMs: 5400, endMs: 5720},
+            {text: "one", startMs: 5720, endMs: 5960},
+            {text: "idea", startMs: 5960, endMs: 6300},
+            {text: "per", startMs: 6300, endMs: 6500},
+            {text: "beat", startMs: 6500, endMs: 7200},
           ],
         }}
         calculateMetadata={plateMetadata}
@@ -201,6 +235,7 @@ export const RemotionRoot: React.FC = () => {
             "Head docked, never on type",
             "Cream, ink, Fraunces",
           ],
+          objective: EDU_S01_OBJECTIVE,
           durationSec: 10,
           overlay: {
             title: "You Can Just Do Things",
@@ -219,6 +254,16 @@ export const RemotionRoot: React.FC = () => {
             {text: "Cream", startMs: 4800, endMs: 5300},
             {text: "ink", startMs: 5400, endMs: 5800},
             {text: "Fraunces", startMs: 5900, endMs: 6800},
+            {text: "You", startMs: 7400, endMs: 7680},
+            {text: "will", startMs: 7680, endMs: 7900},
+            {text: "be", startMs: 7900, endMs: 8080},
+            {text: "able", startMs: 8080, endMs: 8360},
+            {text: "to", startMs: 8360, endMs: 8540},
+            {text: "draw", startMs: 8540, endMs: 8840},
+            {text: "one", startMs: 8840, endMs: 9080},
+            {text: "idea", startMs: 9080, endMs: 9380},
+            {text: "per", startMs: 9380, endMs: 9560},
+            {text: "beat", startMs: 9560, endMs: 10000},
           ],
         }}
         calculateMetadata={plateMetadata}

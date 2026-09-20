@@ -16,6 +16,8 @@ export type OpenerProps = {
   kicker: string;
   title: string;
   claim: string;
+  /** Mayer pre-training objective (EDU-S01). Same string RecapCard returns. */
+  objective: string;
   durationSec: number;
   overlay: Overlay;
   captions: Caption[];
@@ -25,6 +27,8 @@ export type RecapProps = {
   kicker: string;
   title: string;
   points: string[];
+  /** Returned opener objective (signaling, not a new claim). */
+  objective: string;
   durationSec: number;
   overlay: Overlay;
   captions: Caption[];

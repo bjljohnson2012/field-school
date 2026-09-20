@@ -56,6 +56,10 @@ Full-set [antagonist-full-set.md](./antagonist-full-set.md) **PASS**. Stills `Op
 
 Factory TypeCard-only **PASS**. Cream paper + gold 6px rail. No Cap / Ernest PNG. Stills `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`. Prior dests untouched. `hold_cleaning: true`.
 
+## EDU-S01 objective slate 2026-09-20
+
+Opener sting now carries explicit “You will be able to” + `draw one idea per beat`. RecapCard returns the same objective (signaling, not a fourth numbered claim). Historical SOFT line above keeps `VOX-S02` / `EDU-S01` as the plate-not-spine record. This note seals EDU-S01 **PASS**. Evidence: [antagonist-edu-s01-objective-slate.md](./antagonist-edu-s01-objective-slate.md). Stills `/opt/cursor/artifacts/remotion-edu-s01-objective-slate/2026-09-20/`. `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just `27pn9xs0zk8a73g`. No melt. No campus Remotion package. No Publish/Distribute. No AUTH_URL / Stripe. No family chrome. No `run-91af199b`.
