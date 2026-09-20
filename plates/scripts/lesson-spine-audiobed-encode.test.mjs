@@ -47,6 +47,10 @@ test("LessonSpine plates keep AudioBed + karaoke + letterbox + OverlayLock; ORDE
     /Locked pedagogical order: Opener\/sting → TalkingHead\/slate → DefinitionBoard\/objective → RecapCard → QuizBumper\/next-up/,
   );
   assert.match(src("encode-lesson-spine-audiobed.md"), /lesson-spine-audiobed-encode\/2026-09-20/);
+  assert.match(
+    src("encode-lesson-spine-audiobed.md"),
+    /9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f/,
+  );
   assert.notEqual(NEW_DEST, OLD_ENCODE);
   assert.notEqual(NEW_DEST, OLD_CAPTIONS);
   assert.notEqual(NEW_DEST, OLD_LETTERBOX);

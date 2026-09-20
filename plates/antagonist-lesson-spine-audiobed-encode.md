@@ -17,12 +17,12 @@ hold_cleaning: true
 auto_flip: false
 escalate: false
 rendering: /opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4
-sha256: pending encode
+sha256: 9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f
 ```
 
 ORDER LOCK: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up.
 
-Every plate uses `AudioBed` (silent fixture, volume 0) after `Letterbox` + `CaptionsBand` karaoke gold + `LowerThird` + `OverlayLock` 30px. Encode via `render-plate.mjs`. Prior dests untouched (`9f89f9a9…`, `028d16e4…`, `a5d08284…`, `ec88d257…`). No Cap A-roll. No Just / Aug 30 overwrite.
+Every plate uses `AudioBed` (silent fixture, volume 0) after `Letterbox` + `CaptionsBand` karaoke gold + `LowerThird` + `OverlayLock` 30px. Encode via `render-plate.mjs` exit 0. ffprobe: h264 1920×1080@30 duration 41.000s, video only. Checklist exit 0. Prior dest **files** untouched (`9f89f9a9…` karaoke path, `028d16e4…`, `a5d08284…`, `ec88d257…`). New dest sha256 matches karaoke gold because the bed is silent. No Cap A-roll. No Just / Aug 30 overwrite.
 
 ## SOFT notes only
 

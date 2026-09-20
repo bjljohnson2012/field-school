@@ -28,12 +28,13 @@ Clear lock + enough RAM → exit 0. Melt lock or MemAvailable < 3072 MiB → exi
 Encoded 2026-09-20:
 
 - dest: `/opt/cursor/artifacts/lesson-spine-audiobed-encode/2026-09-20/LessonSpine.mp4`
-- sha256: pending encode
-- ffprobe: pending encode
-- render-lock: pending encode
-- checklist: pending encode
+- sha256: `9f89f9a9a89670c6bac382d1f97b3d7283c47a8a06e7c2c069314bf59ea2d59f`
+- ffprobe: h264 1920×1080 30/1 duration 41.000000 (video only; silent AudioBed muxes no audio stream)
+- render-lock exit 0
+- checklist exit 0 (`hold_cleaning: true`, `auto_flip: false`)
 - `--flip` exit 2
-- prior dests untouched: `9f89f9a9…`, `028d16e4…`, `a5d08284…`, `ec88d257…`
+- prior dest **files** untouched: karaoke path still `9f89f9a9…`, letterbox `028d16e4…`, first `a5d08284…`, captions `ec88d257…`
+- note: dest bytes match karaoke gold because AudioBed is muted volume 0. New path + inode. Karaoke dest file not overwritten.
 
 Score (no live flip):
 
