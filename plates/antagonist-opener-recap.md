@@ -64,6 +64,10 @@ Opener sting now carries explicit “You will be able to” + `draw one idea per
 
 RecapCard kicker “Recap” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “card”. ObjectiveSlate still returns `draw one idea per beat`. Evidence: [antagonist-recapcard-slate.md](./antagonist-recapcard-slate.md). Stills `/opt/cursor/artifacts/remotion-recapcard-slate/2026-09-20/`. Locked master dest `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` **untouched**. `hold_cleaning: true`. ORDER LOCK intact.
 
+## Opener slate 2026-09-20
+
+Opener kicker “Lesson” plus Title last-word gold `#C4A35A` tick (`Keyword`) on fixture “Things”. Karaoke already gold-ticks the same word 1100–1700ms (plate f42 / spine f42). ObjectiveSlate still carries `draw one idea per beat`. Evidence: [antagonist-opener-slate.md](./antagonist-opener-slate.md). Stills `/opt/cursor/artifacts/remotion-opener-slate/2026-09-20/`. Locked master dest `eaf6f84a5363b23f512c0c07f82f90464f11b8c3b57d69a0fa23af951d9798e8` **untouched**. `hold_cleaning: true`. ORDER LOCK intact.
+
 ## Held
 
 No Cap take. No Just `27pn9xs0zk8a73g`. No melt. No campus Remotion package. No Publish/Distribute. No AUTH_URL / Stripe. No family chrome. No `run-91af199b`.

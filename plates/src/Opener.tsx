@@ -1,6 +1,6 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
-import {AudioBed, Claim, GoldRule, Kicker, Karaoke, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, HeadDock, Title, TypeCard} from "./layers";
+import {AudioBed, Claim, GoldRule, Kicker, Karaoke, Keyword, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, HeadDock, Title, TypeCard} from "./layers";
 import {Bed} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
@@ -12,6 +12,9 @@ export const Opener: React.FC<OpenerProps> = ({kicker, title, claim, objective, 
   const {fps} = useVideoConfig();
   const now = frame / fps;
   const veil = lumaVeil(now, 0, durationSec, 0.5, "takeover");
+  const words = title.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? title;
+  const lead = words.slice(0, -1).join(" ");
 
   return (
     <AbsoluteFill style={{backgroundColor: cream}}>
@@ -22,7 +25,10 @@ export const Opener: React.FC<OpenerProps> = ({kicker, title, claim, objective, 
         <Layer name="screen">
           <TypeCard motion="takeover" sceneFrame={frame}>
             <Kicker>{kicker}</Kicker>
-            <Title>{title}</Title>
+            <Title>
+              {lead ? `${lead} ` : null}
+              <Keyword>{keyword}</Keyword>
+            </Title>
             <GoldRule />
             <Claim>{claim}</Claim>
             <ObjectiveSlate objective={objective} sceneFrame={frame} from={12} />
