@@ -38,6 +38,10 @@ Every plate uses factory `TypeCard` (cream `#EFE7D6` + gold `#C4A35A` 6px left r
 
 Checklist on this dest: exit **0**, `verdict: PASS`, `hold_cleaning: true`, `auto_flip: false`. `--flip` refused (exit 2).
 
+## Master dest 2026-09-20
+
+WAVE5 + campus STATUS lock this dest as current LessonSpine master (`27cc5bf3…`). Audiobed / karaoke dests remain archived priors (not deleted). Launch stays CLOSED 0/8.
+
 ## Held
 
 No Cap take. No Just remake. No second melt. No live Cleaning / Publish flip. No campus Remotion package. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`. Launch stays CLOSED 0/8.
