@@ -38,6 +38,10 @@ After PR 173 merge `ba62e6b76597d6ad3da1d11ec58b978db17018bf` / tip `be93fa81910
 - `VOX-S05` — OverlayLock 30px lock crop is the pixel proof; 0.5 still downsample can smash title
 - Ship 1 HOLD. Ship 6 HOLD. Cleaning stays held.
 
+## Next node (propose only)
+
+`remotion-lesson-spine-rubric-encode` — encode LessonSpine with RubricCard, then antagonist master dest reaudit. Notes-only until CDM GO. No auto-next from this builder.
+
 ## Held
 
 No Cap take. No Just remake. No second melt. No live Cleaning / Publish flip. No campus Remotion package. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`. No encode this round. Launch stays CLOSED 0/8.
