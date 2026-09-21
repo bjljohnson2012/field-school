@@ -506,6 +506,54 @@ export function TransitionLuma() {
   );
 }
 
+/** Thesis / claim lock. After sting/objective path, before practice. Cream + gold 6px rail. */
+export const KEY_CLAIM_KICKER = "Thesis";
+export const KEY_CLAIM_LINE = "Lock one claim.";
+
+export function KeyClaim() {
+  const words = KEY_CLAIM_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? KEY_CLAIM_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 28,
+        maxWidth: 480,
+        padding: "14px 22px 16px 18px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {KEY_CLAIM_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+    </div>
+  );
+}
+
 /** Application / try-this. After Recap/Quiz path, before end. Cream + gold 6px rail. */
 export const PRACTICE_CARD_KICKER = "Try this";
 export const PRACTICE_CARD_LINE = "Apply one idea now.";
