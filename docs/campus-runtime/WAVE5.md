@@ -158,6 +158,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | EvidenceCard evidence / warrant rows | PR 177 `db231de` |
 | EvidenceCard LessonSpine encode | PR 178 `ff24f5e` |
 | EvidenceCard encode master dest reaudit | PR 179 `b4ef177` |
+| AnalogyCard analogy / like-this transfer pair | this PR |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -614,6 +615,10 @@ PRs 85–177 harvested. PR 178 this encode. PR 177 merge `fa8182f` / tip `e7066f
 ## LessonSpine evidence encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-evidence-encode/2026-09-21/LessonSpine.mp4` sha256 `5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b` plus EvidenceCard plates. PR 179 this reaudit. PR 178 merge `053c4ce` / tip `abd17a8` (`053c4cee5934b02b25cbe6c2092033d614788c38` / `abd17a85cbd2e1cd0af2a14aa59c3d560d757f2c`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Rubric dest untouched. Threshold dest untouched. Spectrum dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-evidence-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-evidence-encode-master/2026-09-21/`. **Current master dest.**
+
+## AnalogyCard (PASS)
+
+PR this craft. PR 179 merge `222d4de` / tip `5bc0024` harvested (`222d4de9061aa3d2e09acea68fba6117b8aed1bd` / `5bc002479ad3273fb1c4dbcbdb5379011cb49003`). AnalogyCard soft craft beat: analogy / like-this transfer pair distinct from CompareBoard two claims and ExampleCard show-the-work after sting/objective path (`ANALOGY_CARD_KICKER = "Analogy"`; `ANALOGY_CARD_LINE = "Map like this."`; `ANALOGY_CARD_ONE = "Like a seed."`; `ANALOGY_CARD_TWO = "So a type."`; cream + gold 6px left rail; gold transfer chevron). Craft beat on `AnalogyCardDemo`. Sequenced after sting/objective path, after EvidenceCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Analogy path only. No Cap take. ORDER LOCK intact. Current master dest evidence-encode sha256 `5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-analogy-card.md`. Stills: `/opt/cursor/artifacts/remotion-analogy-card/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
