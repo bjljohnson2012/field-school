@@ -69,6 +69,7 @@ Cites:
 - [antagonist-reflection-prompt.md](./antagonist-reflection-prompt.md) — ReflectionPrompt learner pause / think-then-answer
 - [antagonist-timeline-rail.md](./antagonist-timeline-rail.md) — TimelineRail sequence of beats / ordered milestones
 - [antagonist-source-chip.md](./antagonist-source-chip.md) — SourceChip citation chip
+- [antagonist-spectrum-bar.md](./antagonist-spectrum-bar.md) — SpectrumBar continuum / contrast bar
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1991,6 +1992,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SourceChip last-word “source.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `SourceChipDemo-f0.png`, `SourceChipDemo-f60.png`.
+
+## SpectrumBar 2026-09-21
+
+Dated **2026-09-21** reaudit. SpectrumBar soft craft beat. Continuum / contrast bar distinct from CompareBoard on `SpectrumBar` (`SPECTRUM_BAR_KICKER = "Spectrum"`; `SPECTRUM_BAR_LINE = "Hold the range."`; `SPECTRUM_BAR_LOW = "Low."`; `SPECTRUM_BAR_HIGH = "High."`; cream + gold 6px left rail). Craft beat on `SpectrumBarDemo`. Sequenced after sting/objective path, after SourceChip, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). After PR 167 merge `e7a948605b0d3e574f59bacc99053398db756298` / tip `282eb66a3fa46bf1f46c4b0b00625a5c7203bf6c`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. SourceChip after sting/objective path, after TimelineRail, before PracticeCard. SpectrumBar after sting/objective path, after SourceChip, before PracticeCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-source-encode/2026-09-21/LessonSpine.mp4` sha256 `833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478` **Current master dest.** **untouched** (plate-level stills only). Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-source-encode/2026-09-21/LessonSpine.mp4
+sha256: 833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478
+stills: /opt/cursor/artifacts/remotion-spectrum-bar/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SpectrumBar last-word “range.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `SpectrumBarDemo-f0.png`, `SpectrumBarDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 

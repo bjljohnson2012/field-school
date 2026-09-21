@@ -146,6 +146,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | SourceChip citation chip | PR 165 `897ac3b` |
 | SourceChip LessonSpine encode | PR 166 `a2f529f` |
 | SourceChip encode master dest reaudit | PR 167 `f604af7` |
+| SpectrumBar continuum / contrast bar | PR 168 `19f93ba` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -554,6 +555,10 @@ PRs 85–165 harvested. PR 166 this encode. PR 165 merge `a84b24d` / tip `841745
 ## LessonSpine source encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-source-encode/2026-09-21/LessonSpine.mp4` sha256 `833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478` plus SourceChip plates. PR 167 this reaudit. PR 166 merge `9b7dc9f` / tip `d6ae94c` (`9b7dc9f5ead981bdc6789184f6f51b1ea8f58845` / `d6ae94cdbe46959fc75cfec521bcd4adee22c90b`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Timeline dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-source-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-source-encode-master/2026-09-21/`. **Current master dest.**
+
+## SpectrumBar (PASS)
+
+PR 168 this craft. PR 167 merge `e7a9486` / tip `282eb66` harvested (`e7a948605b0d3e574f59bacc99053398db756298` / `282eb66a3fa46bf1f46c4b0b00625a5c7203bf6c`). SpectrumBar soft craft beat: continuum / contrast bar distinct from CompareBoard after sting/objective path (`SPECTRUM_BAR_KICKER = "Spectrum"`; `SPECTRUM_BAR_LINE = "Hold the range."`; `SPECTRUM_BAR_LOW = "Low."`; `SPECTRUM_BAR_HIGH = "High."`; cream + gold 6px left rail). Craft beat on `SpectrumBarDemo`. Sequenced after sting/objective path, after SourceChip, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Spectrum path only. No Cap take. ORDER LOCK intact. Current master dest source-encode sha256 `833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-spectrum-bar.md`. Stills: `/opt/cursor/artifacts/remotion-spectrum-bar/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 

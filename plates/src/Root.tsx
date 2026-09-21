@@ -30,6 +30,7 @@ import {StepsCardDemo} from "./StepsCardDemo";
 import {CaveatCardDemo} from "./CaveatCardDemo";
 import {ReflectionPromptDemo} from "./ReflectionPromptDemo";
 import {SourceChipDemo} from "./SourceChipDemo";
+import {SpectrumBarDemo} from "./SpectrumBarDemo";
 import {TimelineRailDemo} from "./TimelineRailDemo";
 import {LowerThirdDemo} from "./LowerThirdDemo";
 import {TalkingHeadCard} from "./TalkingHeadCard";
@@ -592,6 +593,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="SourceChipDemo"
         component={SourceChipDemo}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="SpectrumBarDemo"
+        component={SpectrumBarDemo}
         durationInFrames={240}
         fps={30}
         width={1920}
