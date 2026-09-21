@@ -118,6 +118,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | GlossaryChip LessonSpine encode | PR 137 `a5c9544` / tip `cd3e594` |
 | Glossary encode master dest reaudit | PR 138 `87a80f8` / tip `e8c859a` |
 | ObjectionCard steelman / respond | PR 139 `19e4d28` / tip `e4099bf` |
+| ObjectionCard LessonSpine encode | PR 140 `357ea04` / tip `14e85a8` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -163,7 +164,7 @@ SectionTitle LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-sectio
 
 GlossaryChip LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4` sha256 `247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c` (h264 1920×1080@30, 41.000s). PRs 85–136. GlossaryChip term / definition pop on the SectionTitle stack. Section dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-glossary-encode.md](../../plates/antagonist-lesson-spine-glossary-encode.md). Archived prior dest. PR 136 merge `71fb9fd` / tip `f08f57d` harvested. PR 137 merge `a5c9544` / tip `cd3e594` harvested. Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-glossary-encode.md`. Evidence: `plates/antagonist-glossary-encode-master.md`.
 
-ObjectionCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-objection-encode/2026-09-21/LessonSpine.mp4` sha256 `4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee` (h264 1920×1080@30, 41.000s). PRs 85–139. ObjectionCard steelman / respond on the GlossaryChip stack. Glossary dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-objection-encode.md](../../plates/antagonist-lesson-spine-objection-encode.md). **Current master dest.** PR 139 merge `19e4d28` / tip `e4099bf` harvested (`19e4d28225f89cc3ab36d35817355a62382223a8`). Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-objection-encode.md`.
+ObjectionCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-objection-encode/2026-09-21/LessonSpine.mp4` sha256 `4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee` (h264 1920×1080@30, 41.000s). PRs 85–139. ObjectionCard steelman / respond on the GlossaryChip stack. Glossary dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-objection-encode.md](../../plates/antagonist-lesson-spine-objection-encode.md). **Current master dest.** PR 139 merge `19e4d28` / tip `e4099bf` harvested (`19e4d28225f89cc3ab36d35817355a62382223a8`). PR 140 merge `357ea04` / tip `14e85a8` harvested (`357ea04125a9dc15df606d041280f0afbc2d4a85`). Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-objection-encode.md`.
 
 ## Letterbox stack (complete)
 
@@ -413,7 +414,11 @@ PR 138 merge `87a80f8` / tip `e8c859a` harvested. PR 139 merge `19e4d28` / tip `
 
 ## LessonSpine objection encode (PASS)
 
-PRs 85–139 harvested. PR 139 merge `19e4d28` / tip `e4099bf` (`19e4d28225f89cc3ab36d35817355a62382223a8`). New dated dest `/opt/cursor/artifacts/lesson-spine-objection-encode/2026-09-21/LessonSpine.mp4` sha256 `4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee`. **Current master dest.** Glossary dest `247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-objection-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-objection-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+PRs 85–139 harvested. PR 139 merge `19e4d28` / tip `e4099bf` (`19e4d28225f89cc3ab36d35817355a62382223a8`). PR 140 merge `357ea04` / tip `14e85a8` (`357ea04125a9dc15df606d041280f0afbc2d4a85`). New dated dest `/opt/cursor/artifacts/lesson-spine-objection-encode/2026-09-21/LessonSpine.mp4` sha256 `4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee`. **Current master dest.** Glossary dest `247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-objection-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-objection-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## Sting cold open (PASS)
+
+PR 140 merge `357ea04` / tip `14e85a8` harvested (`357ea04125a9dc15df606d041280f0afbc2d4a85`). Sting / Opener cold-open soft craft beat: hook on the ORDER LOCK first beat (`STING_COLD_OPEN_KICKER = "Cold open"`; `STING_COLD_OPEN_LINE = "Start on the hook."`; cream + gold 6px left rail). Craft beat on `StingColdOpenDemo`. Sequenced on Opener/sting only. Downstream craft unchanged. Sting path only. No Cap take. ORDER LOCK intact. Current master dest objection-encode sha256 `4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee` **untouched** (plate-level stills only). Evidence: `plates/antagonist-sting-cold-open.md`. Stills: `/opt/cursor/artifacts/remotion-sting-cold-open/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
