@@ -180,7 +180,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Hire-path sync | PR 199 `0a10678` |
 | Sources and notes | PR 202 `ce32eef` |
 | Brain confidence | PR 203 `9086cc8` |
-| Composer plates readiness | PR this seal |
+| Composer plates readiness | PR this seal `57bf834` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -731,7 +731,7 @@ Dated 2026-09-21. Parent sees and updates FR-6 confidence on the FR-KB-1/FR-KB-2
 
 ## Composer plates readiness (PASS)
 
-Dated 2026-09-21. Campus edit tools work for the parent/operator hire path so Learn with Ben can assemble and maintain curriculum without Wave3 LIVE drift blocking composer or plates. `GET /api/composer` is a Wave3 readiness route (200, not 404). Guest `/api/composer/catalog` and `/api/plates` stay `401 sign_in_required`. Signed-in Play Parent `/api/composer/catalog` and `/api/plates` return 200. Family LIVE `bc-4765f2f0` not stolen. Does not write `knowledge_brains` or `growth_units`. PR this seal. PR 203 merge `9086cc8`. PR 203 tip `536828e` (`9086cc88bc32f561fe2571f699dc1b574561119b` / `536828e7d439945ff0ff1109b3d4859e33bd0b82`). **Current master dest.** **untouched**. AUTH signed-in still holds. Ready / HLS still 200. Stripe three-plan still 200. `/metering` fr-kb-3 still 200. `/operator/publish` published true distribute false. `/operator/launch-gate` CLOSED 0/8. Webhook hire dry-run path still holds. `/progress` FR-6 / FR-2 still holds. `/intent` FR-3 still holds. `/path` FR-4 still holds. `/portion` FR-5 still holds. `/brain` FR-KB-1 + FR-KB-2 + sources/notes + confidence still holds. No live Cleaning / Publish flip. No new dollars. Distribute HELD. Launch **CLOSED**, **0/8**. Overlay pack pending this seal. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
+Dated 2026-09-21. Campus edit tools work for the parent/operator hire path so Learn with Ben can assemble and maintain curriculum without Wave3 LIVE drift blocking composer or plates. `GET /api/composer` is a Wave3 readiness route (200, not 404). Guest `/api/composer/catalog` and `/api/plates` stay `401 sign_in_required`. Signed-in Play Parent `/api/composer/catalog` and `/api/plates` return 200. Family LIVE `bc-4765f2f0` not stolen. Does not write `knowledge_brains` or `growth_units`. PR this seal `57bf834`. PR 203 merge `9086cc8`. PR 203 tip `536828e` (`9086cc88bc32f561fe2571f699dc1b574561119b` / `536828e7d439945ff0ff1109b3d4859e33bd0b82`). **Current master dest.** **untouched**. AUTH signed-in still holds. Ready / HLS still 200. Stripe three-plan still 200. `/metering` fr-kb-3 still 200. `/operator/publish` published true distribute false. `/operator/launch-gate` CLOSED 0/8. Webhook hire dry-run path still holds. `/progress` FR-6 / FR-2 still holds. `/intent` FR-3 still holds. `/path` FR-4 still holds. `/portion` FR-5 still holds. `/brain` FR-KB-1 + FR-KB-2 + sources/notes + confidence still holds. No live Cleaning / Publish flip. No new dollars. Distribute HELD. Launch **CLOSED**, **0/8**. Overlay pack pending this seal. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
 
 ## Karaoke gold (VOX-S01 PASS)
 
