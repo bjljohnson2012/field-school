@@ -144,7 +144,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | TimelineRail LessonSpine encode | PR 163 `9225118` / tip `ff03100` |
 | TimelineRail encode master dest reaudit | PR 164 `86a32f2` / tip `b915ed3` |
 | SourceChip citation chip | PR 165 `897ac3b` |
-| SourceChip LessonSpine encode | this PR |
+| SourceChip LessonSpine encode | PR 166 `a2f529f` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -548,7 +548,7 @@ PR 165 this craft. PR 164 merge `86a32f2` / tip `b915ed3` harvested (`86a32f23f3
 
 ## LessonSpine source encode (PASS)
 
-PRs 85–165 harvested. PR 165 merge `a84b24d` / tip `8417458` (`a84b24d706e8dcccbfce02fb88ac9026b38ddd04` / `84174587904c5f2ac831825ad93b6133dce1344b`). New dated dest `/opt/cursor/artifacts/lesson-spine-source-encode/2026-09-21/LessonSpine.mp4` sha256 `833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478`. **Current master dest.** Timeline dest `2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-source-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-source-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+PRs 85–165 harvested. PR 166 this encode. PR 165 merge `a84b24d` / tip `8417458` (`a84b24d706e8dcccbfce02fb88ac9026b38ddd04` / `84174587904c5f2ac831825ad93b6133dce1344b`). New dated dest `/opt/cursor/artifacts/lesson-spine-source-encode/2026-09-21/LessonSpine.mp4` sha256 `833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478`. **Current master dest.** Timeline dest `2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-source-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-source-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
 
 ## Karaoke gold (VOX-S01 PASS)
 
