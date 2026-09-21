@@ -15,6 +15,10 @@ export function LessonSpineHirePath() {
         <Link href="/metering" className="underline">
           See use / metering
         </Link>
+        {" · "}
+        <Link href="/progress" className="underline">
+          Parent progress
+        </Link>
         .
       </p>
       <ul className="mt-4 flex flex-wrap gap-3">

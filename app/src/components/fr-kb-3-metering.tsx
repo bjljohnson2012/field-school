@@ -140,6 +140,10 @@ export function FrKb3Metering() {
         <Link href="/play/lesson-spine" className="underline">
           /play/lesson-spine
         </Link>
+        . Parent-supervised progress is{" "}
+        <Link href="/progress" className="underline">
+          /progress
+        </Link>
         . Distribute held. Launch closed.
       </p>
     </section>
