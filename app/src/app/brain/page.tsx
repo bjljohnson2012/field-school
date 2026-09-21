@@ -5,7 +5,7 @@ import { FrKb1ParentBrain } from "@/components/fr-kb-1-parent-brain";
 export const metadata: Metadata = {
   title: "Knowledge brain",
   description:
-    "Parent starts and sees a knowledge brain under the selected Child. FR-KB-1. Child is not a User.",
+    "Parent starts and sees a knowledge brain under the selected Child. FR-KB-1 plus hire-path sync FR-KB-2. Child is not a User.",
 };
 
 export const dynamic = "force-dynamic";

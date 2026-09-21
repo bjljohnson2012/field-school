@@ -72,7 +72,7 @@ export function FrKb1ParentBrain() {
       .catch(() => setPayload(null));
   }, [childParam]);
 
-  async function postAction(action: "start" | "update") {
+  async function postAction(action: "start" | "update" | "sync") {
     if (!selectedId) return;
     const notes = noteText
       .split("\n")
@@ -96,7 +96,7 @@ export function FrKb1ParentBrain() {
     }
     setPayload(body);
     setTitle(body.selected?.title || title);
-    setSaved(action === "start" ? "started" : "updated");
+    setSaved(action === "start" ? "started" : action === "sync" ? "synced" : "updated");
   }
 
   async function onStart(event: FormEvent) {
@@ -110,7 +110,7 @@ export function FrKb1ParentBrain() {
   }
 
   return (
-    <section data-brain="fr-kb-1">
+    <section data-brain="fr-kb-1" data-hire-path-sync="fr-kb-2">
       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
         Knowledge brain
       </p>
@@ -119,7 +119,7 @@ export function FrKb1ParentBrain() {
       </h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
         Parent starts and sees a durable knowledge brain for the family hire.
-        Curriculum and confidence attach here, not to a one-off page. Child is
+        Intent, path, and portion persist here after hire-path use. Child is
         not a User. Family LIVE chrome stays untouched.
       </p>
 
@@ -197,23 +197,33 @@ export function FrKb1ParentBrain() {
                 className="rounded-xl border border-border bg-background px-3 py-2"
               />
             </label>
-            {selected.status === "suggested" ? (
+            <div className="flex flex-wrap gap-2">
+              {selected.status === "suggested" ? (
+                <button
+                  type="submit"
+                  data-brain-start="true"
+                  className="inline-flex h-11 w-fit items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
+                >
+                  Start knowledge brain
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  data-brain-update="true"
+                  className="inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
+                >
+                  Update knowledge brain
+                </button>
+              )}
               <button
-                type="submit"
-                data-brain-start="true"
-                className="inline-flex h-11 w-fit items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
-              >
-                Start knowledge brain
-              </button>
-            ) : (
-              <button
-                type="submit"
-                data-brain-update="true"
+                type="button"
+                data-brain-sync="true"
+                onClick={() => void postAction("sync")}
                 className="inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
               >
-                Update knowledge brain
+                Sync from hire path
               </button>
-            )}
+            </div>
           </form>
           {saved ? (
             <p className="text-sm text-muted-foreground" data-brain-saved={saved}>
@@ -221,7 +231,9 @@ export function FrKb1ParentBrain() {
                 ? "Knowledge brain started under the selected Child."
                 : saved === "updated"
                   ? "Knowledge brain updated under the selected Child."
-                  : saved}
+                  : saved === "synced"
+                    ? "Hire path synced into the knowledge brain under the selected Child."
+                    : saved}
             </p>
           ) : null}
         </div>

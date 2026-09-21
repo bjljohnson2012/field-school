@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 export const HIRE_PATH_CHILD_IDS = ["play-child", "hire-child"] as const;
 export type HirePathChildId = (typeof HIRE_PATH_CHILD_IDS)[number];
-export const SUPERVISED_BRAIN_FR = ["FR-KB-1"] as const;
+export const SUPERVISED_BRAIN_FR = ["FR-KB-1", "FR-KB-2"] as const;
 export const BRAIN_STATUSES = ["suggested", "started", "updated"] as const;
 export type BrainStatus = (typeof BRAIN_STATUSES)[number];
 
@@ -283,6 +283,7 @@ function parseBrain(raw: string): SupervisedBrain | null {
     return {
       ...emptySupervisedBrain(),
       ...body,
+      fr: SUPERVISED_BRAIN_FR,
       distribute: false,
       launch: "CLOSED 0/8",
       selected_child_id: selected,
@@ -342,7 +343,7 @@ export function selectSupervisedBrain(
     null;
   const id = (isHirePathChildId(wanted) ? wanted : stored?.id) as HirePathChildId | undefined;
   let selected = stored;
-  if (id && (!stored || stored.status === "suggested")) {
+  if (id) {
     selected = suggestedChild(id, stored || undefined, hint || {});
   }
   return {
@@ -371,13 +372,15 @@ export function writeSupervisedBrain(
     return { ok: false as const, error: "unknown_child" };
   }
   const op = String(action || "").trim().toLowerCase();
-  if (op !== "start" && op !== "create" && op !== "update") {
+  if (op !== "start" && op !== "create" && op !== "update" && op !== "sync") {
     return { ok: false as const, error: "action_required" };
   }
   const current = readSupervisedBrain();
   const existing = current.children.find((child) => child.id === id);
   const nextChild = suggestedChild(id, existing, opts || {});
-  nextChild.status = op === "update" && existing?.status && existing.status !== "suggested" ? "updated" : "started";
+  const alreadyHeld = Boolean(existing?.status && existing.status !== "suggested");
+  nextChild.status =
+    (op === "update" || op === "sync") && alreadyHeld ? "updated" : "started";
   nextChild.version = (existing?.version || 0) + 1;
   const children = existing
     ? current.children.map((child) => (child.id === id ? nextChild : child))
