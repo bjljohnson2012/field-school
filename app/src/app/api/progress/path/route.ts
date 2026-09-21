@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { syncHirePathBrain } from "@/lib/progress/hire-path-brain-sync";
 import { selectSupervisedIntent } from "@/lib/progress/supervised-intent";
 import {
   assembleSupervisedPath,
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
   if (!assembled.ok) {
     return NextResponse.json({ ok: false, error: assembled.error }, { status: 400 });
   }
+  syncHirePathBrain(childId);
   return NextResponse.json({
     ...publicPath(selectSupervisedPath(childId)),
     selected: assembled.selected,

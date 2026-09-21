@@ -75,6 +75,7 @@ test("overlay-player-rail pack is HTML5 player only", () => {
   assert.match(list, /src\/app\/portion\/page\.tsx/);
   assert.match(list, /public\/lessons\/hls\/supervised-portion\.json/);
   assert.match(list, /src\/lib\/progress\/supervised-brain\.ts/);
+  assert.match(list, /src\/lib\/progress\/hire-path-brain-sync\.ts/);
   assert.match(list, /src\/app\/api\/progress\/brain\/route\.ts/);
   assert.match(list, /src\/components\/fr-kb-1-parent-brain\.tsx/);
   assert.match(list, /src\/app\/brain\/page\.tsx/);

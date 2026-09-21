@@ -89,6 +89,7 @@ MEMBERS=(
   src/components/fr-5-parent-portion.tsx
   src/app/portion/page.tsx
   src/lib/progress/supervised-brain.ts
+  src/lib/progress/hire-path-brain-sync.ts
   src/app/api/progress/brain/route.ts
   src/components/fr-kb-1-parent-brain.tsx
   src/app/brain/page.tsx

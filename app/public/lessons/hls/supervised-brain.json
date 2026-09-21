@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "fr": ["FR-KB-1"],
+  "fr": ["FR-KB-1", "FR-KB-2"],
   "distribute": false,
   "launch": "CLOSED 0/8",
   "selected_child_id": "play-child",

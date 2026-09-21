@@ -72,6 +72,10 @@ Parent sees the next slice of the assembled path under the selected Child, bound
 
 Parent starts and sees a durable knowledge brain under the selected Child so curriculum and confidence attach to that brain, not a one-off page. Page [`/brain`](https://portal.fieldschool.ai/brain). Unsigned `GET /api/progress/brain`. Parent `POST /api/progress/brain` starts or updates hire-path children `play-child` / `hire-child` only. File `public/lessons/hls/supervised-brain.json`. Child ≠ User. No child login. Does not call family `/api/brain` or `/api/portion`. Does not write `knowledge_brains`, `growth_units`, or `next_portions`. Does not edit FamilyV1Home or children-database. Family LIVE `bc-4765f2f0` not stolen. Distribute HELD. Launch **CLOSED**, **0/8**.
 
+## Hire-path sync (FR-KB-2)
+
+Parent hire path writes into and reads from the knowledge brain under the selected Child so private curriculum and confidence stay on that brain. Page [`/brain`](https://portal.fieldschool.ai/brain). Unsigned `GET /api/progress/brain` reflects intent / path / portion after hire-path use. Parent `POST`/`PUT /api/progress/brain` with action `sync` persists those snapshots for hire-path children `play-child` / `hire-child` only. Intent, path, and portion POSTs also sync. File `public/lessons/hls/supervised-brain.json`. Child ≠ User. No child login. Does not call family campus object sync. Does not write `knowledge_brains` or `growth_units`. Does not edit FamilyV1Home or children-database. Family LIVE `bc-4765f2f0` not stolen. Distribute HELD. Launch **CLOSED**, **0/8**.
+
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T185900Z.tar.gz` sha256 `fd77a76824b519805a50dfdc6f1a16df1f700e7af60f01453368dc3fd64ea38a`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T192300Z.tar.gz` sha256 `646968ef1265a1701df9b6f46dc99a6f341bf7f0886d04cd2a77f5f19a240a15`.
