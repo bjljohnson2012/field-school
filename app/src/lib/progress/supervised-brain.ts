@@ -128,14 +128,14 @@ function asList(value: unknown, max = 16) {
     .map((item) => item.slice(0, 400));
 }
 
-function parseNotes(value: unknown): BrainNote[] {
+function parseNotes(value: unknown, fallbackTitle = "Parent note"): BrainNote[] {
   if (!Array.isArray(value)) return [];
   const notes: BrainNote[] = [];
   for (const entry of value) {
     if (typeof entry === "string") {
       const body = entry.trim().slice(0, 2000);
       if (!body) continue;
-      notes.push({ title: "Parent note", body });
+      notes.push({ title: fallbackTitle, body });
       continue;
     }
     if (!entry || typeof entry !== "object") continue;
@@ -143,7 +143,7 @@ function parseNotes(value: unknown): BrainNote[] {
     const title = typeof raw.title === "string" ? raw.title.trim().slice(0, 200) : "";
     const body = typeof raw.body === "string" ? raw.body.trim().slice(0, 2000) : "";
     if (!title && !body) continue;
-    notes.push({ title: title || "Note", body });
+    notes.push({ title: title || fallbackTitle, body });
   }
   return notes.slice(0, 16);
 }
@@ -214,8 +214,8 @@ function suggestedChild(
   const portionItems = parsePathItems(hint.portion?.items || existing?.portion.items || pathItems);
   const progressHint = hint.progress;
   const fallback = existing?.progress || defaultProgress(id);
-  const sources = hint.sources !== undefined ? parseNotes(hint.sources) : existing?.sources || [];
-  const notes = hint.notes !== undefined ? parseNotes(hint.notes) : existing?.notes || [];
+  const sources = hint.sources !== undefined ? parseNotes(hint.sources, "Parent source") : existing?.sources || [];
+  const notes = hint.notes !== undefined ? parseNotes(hint.notes, "Parent note") : existing?.notes || [];
   return {
     id,
     name,
