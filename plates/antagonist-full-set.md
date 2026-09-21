@@ -28,7 +28,8 @@ Cites:
 - [antagonist-lesson-spine-practice-encode.md](./antagonist-lesson-spine-practice-encode.md) — LessonSpine PracticeCard encode (archived prior)
 - [antagonist-lesson-spine-key-claim-encode.md](./antagonist-lesson-spine-key-claim-encode.md) — LessonSpine KeyClaim encode (archived prior)
 - [antagonist-lesson-spine-scripture-encode.md](./antagonist-lesson-spine-scripture-encode.md) — LessonSpine ScriptureCard encode (archived prior)
-- [antagonist-lesson-spine-compare-encode.md](./antagonist-lesson-spine-compare-encode.md) — LessonSpine CompareBoard encode (current master)
+- [antagonist-lesson-spine-compare-encode.md](./antagonist-lesson-spine-compare-encode.md) — LessonSpine CompareBoard encode (archived prior)
+- [antagonist-lesson-spine-section-encode.md](./antagonist-lesson-spine-section-encode.md) — LessonSpine SectionTitle encode (current master)
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
@@ -127,7 +128,8 @@ stills: /opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/
 | `/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4` | `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf` | PracticeCard — archived prior |
 | `/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4` | `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` | KeyClaim — archived prior |
 | `/opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4` | `cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79` | ScriptureCard — archived prior |
-| `/opt/cursor/artifacts/lesson-spine-compare-encode/2026-09-21/LessonSpine.mp4` | `917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d` | **current master** (CompareBoard) |
+| `/opt/cursor/artifacts/lesson-spine-compare-encode/2026-09-21/LessonSpine.mp4` | `917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d` | CompareBoard — archived prior |
+| `/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4` | `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` | **current master** (SectionTitle) |
 
 Just `27pn9xs0zk8a73g` and Aug 30 `vox/everything-made-up.mp4` not written. No Cap A-roll.
 
@@ -1142,7 +1144,7 @@ Stills: `CompareBoardDemo-f0.png`, `CompareBoardDemo-f60.png`, `LessonSpine-obje
 
 ## LessonSpine compare encode 2026-09-21
 
-Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-compare-encode/2026-09-21/LessonSpine.mp4` sha256 `917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d`. **Current master dest.** Scripture dest `cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79` archived prior, **untouched**. PRs 85–130. After PR 130 merge `0b7eb24d1d53a3e7a8fbe9fd0ebc12efbaca0c8a`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-compare-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-compare-encode/2026-09-21/LessonSpine.mp4` sha256 `917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d`. Archived prior dest. Scripture dest `cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79` archived prior, **untouched**. PRs 85–130. After PR 130 merge `0b7eb24d1d53a3e7a8fbe9fd0ebc12efbaca0c8a`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-compare-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
 
 ```
 verdict: PASS
@@ -1205,6 +1207,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SectionTitle last-word “section.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `SectionTitleDemo-f0.png`, `SectionTitleDemo-f60.png`, `LessonSpine-objective-f570.png`.
+
+## LessonSpine section encode 2026-09-21
+
+Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4` sha256 `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7`. **Current master dest.** Compare dest `917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d` archived prior, **untouched**. PRs 85–133. After PR 133 merge `e619df3e64a45b150e4d947fe741b88ba92136e8`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-section-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4
+sha256: f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7
+stills: /opt/cursor/artifacts/remotion-lesson-spine-section-encode/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SectionTitle last-word “section.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
 
 ## Held
 

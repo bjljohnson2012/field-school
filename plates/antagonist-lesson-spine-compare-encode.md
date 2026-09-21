@@ -41,4 +41,6 @@ ffprobe: h264 1920×1080@30 duration 41.000s, video only. Mid-wipe still f9 show
 
 ## Held
 
+This dest is now an archived prior (file **untouched**). Current master dest is section-encode.
+
 No Cap take. No Just remake. No second melt. No live Cleaning / Publish flip. No campus Remotion package. No AUTH_URL / Stripe. No family chrome. No `bc-4765f2f0`. Launch stays CLOSED 0/8.
