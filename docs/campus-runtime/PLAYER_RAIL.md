@@ -62,4 +62,4 @@ Parent captures and owns intent under the selected Child so path planning starts
 
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T162559Z.tar.gz` sha256 `21d44f1961d06282dd1e943691ea94bb465105395898f850a54d461f85bb416f`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T164937Z.tar.gz` sha256 `11d474e9e3a33bb698d455faad84490a2f5898b93da460bcbf21a07ddf0a8076`.
