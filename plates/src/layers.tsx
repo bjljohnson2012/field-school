@@ -937,6 +937,54 @@ export function CheckpointCard() {
   );
 }
 
+/** Worked example / show-how. After sting/objective path, after checkpoint, before practice. Cream + gold 6px rail. */
+export const EXAMPLE_CARD_KICKER = "Example";
+export const EXAMPLE_CARD_LINE = "Show the work.";
+
+export function ExampleCard() {
+  const words = EXAMPLE_CARD_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? EXAMPLE_CARD_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 478,
+        maxWidth: 400,
+        padding: "12px 20px 14px 16px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {EXAMPLE_CARD_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+    </div>
+  );
+}
+
 /** Application / try-this. After Recap/Quiz path, before end. Cream + gold 6px rail. */
 export const PRACTICE_CARD_KICKER = "Try this";
 export const PRACTICE_CARD_LINE = "Apply one idea now.";
