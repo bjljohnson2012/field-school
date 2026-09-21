@@ -1,0 +1,79 @@
+{
+  "ok": true,
+  "fr": ["FR-5"],
+  "distribute": false,
+  "launch": "CLOSED 0/8",
+  "selected_child_id": "play-child",
+  "children": [
+    {
+      "id": "play-child",
+      "name": "Play Child",
+      "kind": "child",
+      "login": "none",
+      "user": false,
+      "horizon": "this hire",
+      "status": "suggested",
+      "items": [
+        {
+          "sortOrder": 1,
+          "title": "LessonSpine Ready / HLS",
+          "subject": "LessonSpine",
+          "kind": "station",
+          "source": "path",
+          "play": "/play/lesson-spine"
+        },
+        {
+          "sortOrder": 2,
+          "title": "Hold LessonSpine from parent intent",
+          "subject": "LessonSpine",
+          "kind": "station",
+          "source": "path",
+          "play": "/play/lesson-spine"
+        },
+        {
+          "sortOrder": 3,
+          "title": "parent-owned plan through LessonSpine",
+          "subject": "LessonSpine",
+          "kind": "station",
+          "source": "path",
+          "play": "/progress"
+        }
+      ]
+    },
+    {
+      "id": "hire-child",
+      "name": "Hire Child",
+      "kind": "child",
+      "login": "none",
+      "user": false,
+      "horizon": "next portion",
+      "status": "suggested",
+      "items": [
+        {
+          "sortOrder": 1,
+          "title": "Learn with Ben hire",
+          "subject": "Learn with Ben",
+          "kind": "station",
+          "source": "path",
+          "play": "/metering"
+        },
+        {
+          "sortOrder": 2,
+          "title": "Start curriculum from parent intent after hire",
+          "subject": "Learn with Ben",
+          "kind": "station",
+          "source": "path",
+          "play": "/play/lesson-spine"
+        },
+        {
+          "sortOrder": 3,
+          "title": "hire path through Learn with Ben",
+          "subject": "Learn with Ben",
+          "kind": "station",
+          "source": "path",
+          "play": "/progress"
+        }
+      ]
+    }
+  ]
+}
