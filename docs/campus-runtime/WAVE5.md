@@ -136,7 +136,8 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | StepsCard encode master dest reaudit | PR 155 `0b0fe4d` / tip `2bd2010` |
 | CaveatCard watch-out / warning | PR 156 `feb5474` / tip `d5fa947` |
 | CaveatCard LessonSpine encode | PR 157 `5d39d68` / tip `aab37fd` |
-| CaveatCard encode master dest reaudit | PR 158 |
+| CaveatCard encode master dest reaudit | PR 158 `2a90b5a` / tip `e9e043d` |
+| ReflectionPrompt learner pause / think-then-answer | this PR |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -509,6 +510,10 @@ PRs 85–156 harvested. PR 156 merge `feb5474` / tip `d5fa947` (`feb547418731c77
 ## LessonSpine caveat encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-caveat-encode/2026-09-21/LessonSpine.mp4` sha256 `e23cadde85af2540d3c4f9c8a8434126655133b50c0cdc6c5783b16d9e446fd7` plus CaveatCard plates. PR 157 merge `5d39d68` / tip `aab37fd`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Steps dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-caveat-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-caveat-encode-master/2026-09-21/`. **Current master dest.**
+
+## ReflectionPrompt (PASS)
+
+PR 158 merge `2a90b5a` / tip `e9e043d` harvested (`2a90b5a05df9e441e72131fc39ab055caeb6011d` / `e9e043d83fe177ca5e0ccc6ea499196e49298dab`). ReflectionPrompt soft craft beat: learner pause / think-then-answer after sting/objective path (`REFLECTION_PROMPT_KICKER = "Reflect"`; `REFLECTION_PROMPT_LINE = "Think, then answer."`; cream + gold 6px left rail). Craft beat on `ReflectionPromptDemo`. Sequenced after sting/objective path, after CaveatCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Reflect path only. No Cap take. ORDER LOCK intact. Current master dest caveat-encode sha256 `e23cadde85af2540d3c4f9c8a8434126655133b50c0cdc6c5783b16d9e446fd7` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-reflection-prompt.md`. Stills: `/opt/cursor/artifacts/remotion-reflection-prompt/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 

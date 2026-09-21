@@ -60,6 +60,7 @@ Cites:
 - [antagonist-quote-card.md](./antagonist-quote-card.md) — QuoteCard pull quote / authority cite
 - [antagonist-steps-card.md](./antagonist-steps-card.md) — StepsCard numbered procedure / do-this-in-order
 - [antagonist-caveat-card.md](./antagonist-caveat-card.md) — CaveatCard watch-out / warning
+- [antagonist-reflection-prompt.md](./antagonist-reflection-prompt.md) — ReflectionPrompt learner pause / think-then-answer
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1784,6 +1785,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CaveatCard last-word “catch.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `CaveatCardDemo-f0.png`, `CaveatCardDemo-f60.png`.
+
+## ReflectionPrompt 2026-09-21
+
+Dated **2026-09-21** reaudit. ReflectionPrompt soft craft beat. Learner pause / think-then-answer on `ReflectionPrompt` (`REFLECTION_PROMPT_KICKER = "Reflect"`; `REFLECTION_PROMPT_LINE = "Think, then answer."`; cream + gold 6px left rail). Craft beat on `ReflectionPromptDemo`. Sequenced after sting/objective path, after CaveatCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). After PR 158 merge `2a90b5a05df9e441e72131fc39ab055caeb6011d` / tip `e9e043d83fe177ca5e0ccc6ea499196e49298dab`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. CaveatCard after sting/objective path, after StepsCard, before PracticeCard. ReflectionPrompt after sting/objective path, after CaveatCard, before PracticeCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-caveat-encode/2026-09-21/LessonSpine.mp4` sha256 `e23cadde85af2540d3c4f9c8a8434126655133b50c0cdc6c5783b16d9e446fd7` **untouched** (plate-level stills only). Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-caveat-encode/2026-09-21/LessonSpine.mp4
+sha256: e23cadde85af2540d3c4f9c8a8434126655133b50c0cdc6c5783b16d9e446fd7
+stills: /opt/cursor/artifacts/remotion-reflection-prompt/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ReflectionPrompt last-word “answer.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `ReflectionPromptDemo-f0.png`, `ReflectionPromptDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 
