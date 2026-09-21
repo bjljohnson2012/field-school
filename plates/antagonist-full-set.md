@@ -45,6 +45,7 @@ Cites:
 - [antagonist-glossary-chip.md](./antagonist-glossary-chip.md) — GlossaryChip term / definition pop
 - [antagonist-objection-card.md](./antagonist-objection-card.md) — ObjectionCard steelman / respond
 - [antagonist-sting-cold-open.md](./antagonist-sting-cold-open.md) — Sting / Opener cold open
+- [antagonist-checkpoint-card.md](./antagonist-checkpoint-card.md) — CheckpointCard formative check / confirm-understanding
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1439,6 +1440,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. StingColdOpen last-word “hook.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `StingColdOpenDemo-f0.png`, `StingColdOpenDemo-f60.png`.
+
+## CheckpointCard 2026-09-21
+
+Dated **2026-09-21** reaudit. CheckpointCard soft craft beat. Formative check / confirm-understanding on `CheckpointCard` (`CHECKPOINT_CARD_KICKER = "Check"`; `CHECKPOINT_CARD_LINE = "Confirm the idea."`; cream + gold 6px left rail). Craft beat on `CheckpointCardDemo`. Sequenced after sting/objective path, after ObjectionCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). After PR 143 merge `1c73749362cfa0111095aa95eacb9564bf4e4232` / tip `aec8b7752129e37b871d0189c27217d54937355b`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. KeyClaim after sting/objective path. ScriptureCard after sting/objective path, after KeyClaim. CompareBoard after sting/objective path, after ScriptureCard. SectionTitle after sting/objective path, after CompareBoard. GlossaryChip after sting/objective path, after SectionTitle. ObjectionCard after sting/objective path, after GlossaryChip. StingColdOpen on Opener/sting only. CheckpointCard after sting/objective path, after ObjectionCard, before PracticeCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-sting-encode/2026-09-21/LessonSpine.mp4` sha256 `325a41e775821c8576e14038d2076ee639d48a0fc29b3f84b223f4af9390f204` **Current master dest.** **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-checkpoint-card/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-sting-encode/2026-09-21/LessonSpine.mp4
+sha256: 325a41e775821c8576e14038d2076ee639d48a0fc29b3f84b223f4af9390f204
+stills: /opt/cursor/artifacts/remotion-checkpoint-card/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CheckpointCard last-word “idea.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `CheckpointCardDemo-f0.png`, `CheckpointCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 
