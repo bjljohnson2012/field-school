@@ -24,9 +24,10 @@ type BrainChild = {
   portion: { horizon: string; items: Array<{ title: string; play: string }> };
   progress: {
     now: { title: string; copy: string };
-    confidence: { state: string; label: string };
+    confidence: { state: string; label: string; owned?: "parent" | "hire_path" };
     next: { title: string; copy: string };
   };
+  confidence?: { state: string; label: string; owned?: "parent" | "hire_path" };
   sources: Array<{ title: string; body: string }>;
   notes: Array<{ title: string; body: string }>;
   summary: {
@@ -55,7 +56,14 @@ export function FrKb1ParentBrain() {
   const [title, setTitle] = useState("");
   const [sourceText, setSourceText] = useState("");
   const [noteText, setNoteText] = useState("");
+  const [confidenceState, setConfidenceState] = useState("getting_there");
   const [saved, setSaved] = useState("");
+
+  const CONFIDENCE = [
+    { state: "not_yet", label: "Not yet" },
+    { state: "getting_there", label: "Getting there" },
+    { state: "ready", label: "Ready" },
+  ] as const;
 
   const selected = payload?.selected ?? null;
   const children = payload?.children ?? [];
@@ -70,6 +78,9 @@ export function FrKb1ParentBrain() {
         setTitle(body.selected?.title || "");
         setSourceText((body.selected?.sources || []).map((source) => source.body || source.title).join("\n"));
         setNoteText((body.selected?.notes || []).map((note) => note.body || note.title).join("\n"));
+        setConfidenceState(
+          body.selected?.confidence?.state || body.selected?.progress.confidence.state || "getting_there",
+        );
         setSaved("");
       })
       .catch(() => setPayload(null));
@@ -96,6 +107,7 @@ export function FrKb1ParentBrain() {
         title,
         sources,
         notes,
+        confidence: confidenceState,
       }),
     });
     const body = (await res.json().catch(() => ({}))) as BrainPayload & { error?: string };
@@ -107,7 +119,30 @@ export function FrKb1ParentBrain() {
     setTitle(body.selected?.title || title);
     setSourceText((body.selected?.sources || []).map((source) => source.body || source.title).join("\n"));
     setNoteText((body.selected?.notes || []).map((note) => note.body || note.title).join("\n"));
+    setConfidenceState(body.selected?.confidence?.state || body.selected?.progress.confidence.state || confidenceState);
     setSaved(action === "start" ? "started" : action === "sync" ? "synced" : "updated");
+  }
+
+  async function postConfidence(state: string) {
+    if (!selectedId) return;
+    setConfidenceState(state);
+    const res = await fetch("/api/progress/brain", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        child: selectedId,
+        action: "confidence",
+        confidence: state,
+      }),
+    });
+    const body = (await res.json().catch(() => ({}))) as BrainPayload & { error?: string };
+    if (!res.ok || !body.ok) {
+      setSaved(body.error || "brain_failed");
+      return;
+    }
+    setPayload(body);
+    setConfidenceState(body.selected?.confidence?.state || state);
+    setSaved("confidence");
   }
 
   async function onStart(event: FormEvent) {
@@ -121,7 +156,7 @@ export function FrKb1ParentBrain() {
   }
 
   return (
-    <section data-brain="fr-kb-1" data-hire-path-sync="fr-kb-2" data-brain-sources-notes="true">
+    <section data-brain="fr-kb-1" data-hire-path-sync="fr-kb-2" data-brain-sources-notes="true" data-brain-confidence="fr-6">
       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
         Knowledge brain
       </p>
@@ -129,9 +164,9 @@ export function FrKb1ParentBrain() {
         Brain under selected Child
       </h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
-        Parent writes sources and notes into the family hire brain so private
-        curriculum and confidence stay on this brain, not a generic catalog.
-        Child is not a User. Family LIVE chrome stays untouched.
+        Parent writes sources, notes, and FR-6 confidence into the family hire
+        brain so private curriculum and confidence stay on this brain, not a
+        generic catalog. Child is not a User. Family LIVE chrome stays untouched.
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2" data-child-picker="fr-2">
@@ -171,8 +206,9 @@ export function FrKb1ParentBrain() {
             <h2 className="mt-2 font-display text-2xl tracking-tight">{selected.title}</h2>
             <p className="mt-2 text-sm">
               Bound to FR-3 intent, FR-4 path, and FR-5 portion. Confidence{" "}
-              {selected.progress.confidence.label}. Horizon {selected.portion.horizon}.
-              Sources {selected.summary.sources}. Notes {selected.summary.notes}.
+              {(selected.confidence || selected.progress.confidence).label}. Horizon{" "}
+              {selected.portion.horizon}. Sources {selected.summary.sources}. Notes{" "}
+              {selected.summary.notes}.
             </p>
           </article>
           <div
@@ -249,6 +285,27 @@ export function FrKb1ParentBrain() {
                 className="rounded-xl border border-border bg-background px-3 py-2"
               />
             </label>
+            <fieldset
+              className="grid gap-2"
+              data-brain-confidence="fr-6"
+              data-confidence={(selected.confidence || selected.progress.confidence).state}
+            >
+              <legend className="text-sm">FR-6 confidence</legend>
+              <div className="flex flex-wrap gap-2">
+                {CONFIDENCE.map((item) => (
+                  <button
+                    key={item.state}
+                    type="button"
+                    data-confidence-state={item.state}
+                    data-confidence-selected={confidenceState === item.state ? "true" : "false"}
+                    onClick={() => void postConfidence(item.state)}
+                    className="inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
             <div className="flex flex-wrap gap-2">
               {selected.status === "suggested" ? (
                 <button
@@ -285,7 +342,9 @@ export function FrKb1ParentBrain() {
                   ? "Knowledge brain updated under the selected Child."
                   : saved === "synced"
                     ? "Hire path synced into the knowledge brain under the selected Child."
-                    : saved}
+                    : saved === "confidence"
+                      ? "Parent confidence recorded on the knowledge brain under the selected Child."
+                      : saved}
             </p>
           ) : null}
         </div>
