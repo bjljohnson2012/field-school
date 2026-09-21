@@ -34,6 +34,7 @@ Cites:
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
 - [antagonist-compare-encode-master.md](./antagonist-compare-encode-master.md) — LessonSpine compare encode master dest reaudit
 - [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
+- [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1182,6 +1183,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CompareBoard last-word “claims.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `CompareBoardDemo-f0.png`, `CompareBoardDemo-f60.png`.
+
+## SectionTitle 2026-09-21
+
+Dated **2026-09-21** reaudit. SectionTitle soft craft beat. Section break / chapter title on `SectionTitle` (`SECTION_TITLE_KICKER = "Section"`; `SECTION_TITLE_LINE = "Name the section."`; cream + gold 6px left rail). Craft beat on `SectionTitleDemo`. Sequenced after sting/objective path, after CompareBoard, before PracticeCard. After PR 132 merge `cd0d493b6efb764508442e200780ea47340e8198`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. KeyClaim after sting/objective path. ScriptureCard after sting/objective path, after KeyClaim. CompareBoard after sting/objective path, after ScriptureCard. SectionTitle after sting/objective path, after CompareBoard. Locked master dest `/opt/cursor/artifacts/lesson-spine-compare-encode/2026-09-21/LessonSpine.mp4` sha256 `917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d` **Current master dest.** **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-section-title/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-compare-encode/2026-09-21/LessonSpine.mp4
+sha256: 917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d
+stills: /opt/cursor/artifacts/remotion-section-title/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SectionTitle last-word “section.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `SectionTitleDemo-f0.png`, `SectionTitleDemo-f60.png`, `LessonSpine-objective-f570.png`.
 
 ## Held
 
