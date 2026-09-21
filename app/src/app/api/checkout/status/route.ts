@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { findHireBySession, isHirePlanId } from "@/lib/billing/hire-activation";
 import { getPaidPlan } from "@/lib/billing/plans";
 import { getSeat, successNotes } from "@/lib/billing/seats";
 import { findPurchaseBySession } from "@/lib/members/store";
@@ -20,6 +21,10 @@ export async function GET(request: Request) {
   const plan = getPaidPlan(found.purchase.planId);
   const seat = getSeat(found.member.seatKind ?? found.purchase.seatKind);
 
+  const hire = isHirePlanId(found.purchase.planId)
+    ? findHireBySession(sessionId)
+    : null;
+
   return NextResponse.json({
     status: "granted",
     email: found.member.email,
@@ -29,5 +34,7 @@ export async function GET(request: Request) {
     planName: plan?.name ?? seat.label,
     hasPassword: Boolean(found.member.passwordHash),
     notes: successNotes(seat.kind),
+    hireActivated: Boolean(hire),
+    next: hire ? "/metering" : "/dashboard",
   });
 }

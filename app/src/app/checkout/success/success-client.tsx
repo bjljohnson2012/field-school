@@ -11,13 +11,16 @@ import { Label } from "@/components/ui/label";
 type StatusResponse =
   | { status: "pending" }
   | { status: "missing" }
-  | {
+      | {
       status: "granted";
       email: string;
       seatLabel: string;
       planName: string;
+      planId?: string;
       hasPassword: boolean;
       notes: string[];
+      hireActivated?: boolean;
+      next?: string;
     };
 
 export function CheckoutSuccessClient() {
@@ -107,14 +110,36 @@ export function CheckoutSuccessClient() {
               ))}
             </ul>
           ) : null}
+          {granted.hireActivated ? (
+            <p className="mt-4 text-sm" data-hire-activated="true">
+              Learn with Ben hire is on. Open metering, then the Ready play
+              rail.
+            </p>
+          ) : null}
           {granted.hasPassword ? (
             <div className="mt-8 flex flex-col gap-3">
               <Link
-                href="/login"
+                href={granted.next || "/metering"}
                 className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+                data-hire-next={granted.next || "/metering"}
               >
-                Sign in
+                {granted.hireActivated ? "See metering" : "Sign in"}
               </Link>
+              {granted.hireActivated ? (
+                <Link
+                  href="/play/lesson-spine"
+                  className="inline-flex h-12 items-center justify-center rounded-xl border border-border px-5 text-sm"
+                >
+                  Play LessonSpine
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  className="inline-flex h-12 items-center justify-center rounded-xl border border-border px-5 text-sm"
+                >
+                  Sign in
+                </Link>
+              )}
             </div>
           ) : (
             <form

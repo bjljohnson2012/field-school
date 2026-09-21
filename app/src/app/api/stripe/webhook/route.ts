@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { fulfillPaidCheckout } from "@/lib/billing/fulfill";
+import { activateLearnWithBenHire } from "@/lib/billing/hire-activation";
 import {
   parseCheckoutSession,
   parseStripeEventType,
@@ -44,7 +45,17 @@ export async function POST(request: Request) {
       console.info("[stripe-webhook] checkout not fulfilled", result.error);
       return NextResponse.json({ received: true, skipped: true });
     }
-    return NextResponse.json({ received: true, granted: result.created });
+    const hire = activateLearnWithBenHire({
+      planId: session.planId,
+      stripeSessionId: session.id,
+      amountTotal: session.amountTotal,
+    });
+    return NextResponse.json({
+      received: true,
+      granted: result.created,
+      hire: hire.ok,
+      hire_error: hire.ok ? undefined : hire.error,
+    });
   }
 
   if (
