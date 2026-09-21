@@ -40,6 +40,7 @@ Cites:
 - [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
 - [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-glossary-chip.md](./antagonist-glossary-chip.md) — GlossaryChip term / definition pop
+- [antagonist-objection-card.md](./antagonist-objection-card.md) — ObjectionCard steelman / respond
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1322,6 +1323,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. GlossaryChip last-word “term.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `GlossaryChipDemo-f0.png`, `GlossaryChipDemo-f60.png`.
+
+## ObjectionCard 2026-09-21
+
+Dated **2026-09-21** reaudit. ObjectionCard soft craft beat. Steelman / respond on `ObjectionCard` (`OBJECTION_CARD_KICKER = "Objection"`; `OBJECTION_CARD_LINE = "Steelman the reply."`; cream + gold 6px left rail). Craft beat on `ObjectionCardDemo`. Sequenced after sting/objective path, after GlossaryChip, before PracticeCard. After PR 138 merge `87a80f8276e9ba8338cf45b464caa655570af030`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. KeyClaim after sting/objective path. ScriptureCard after sting/objective path, after KeyClaim. CompareBoard after sting/objective path, after ScriptureCard. SectionTitle after sting/objective path, after CompareBoard. GlossaryChip after sting/objective path, after SectionTitle. ObjectionCard after sting/objective path, after GlossaryChip. Locked master dest `/opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4` sha256 `247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c` **Current master dest.** **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-objection-card/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4
+sha256: 247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c
+stills: /opt/cursor/artifacts/remotion-objection-card/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ObjectionCard last-word “reply.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `ObjectionCardDemo-f0.png`, `ObjectionCardDemo-f60.png`, `LessonSpine-objective-f570.png`.
 
 ## Held
 
