@@ -160,7 +160,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | EvidenceCard encode master dest reaudit | PR 179 `b4ef177` |
 | AnalogyCard analogy / like-this transfer pair | PR 180 `f8dd9ec` |
 | AnalogyCard LessonSpine encode | PR 181 `5cb5225` |
-| AnalogyCard encode master dest reaudit | this PR |
+| AnalogyCard encode master dest reaudit | PR 182 `260bc04` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
