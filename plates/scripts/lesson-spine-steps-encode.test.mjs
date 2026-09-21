@@ -11,12 +11,15 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 const src = (...parts) => readFileSync(join(root, ...parts), "utf8");
 const NEW_DEST =
-  "/opt/cursor/artifacts/lesson-spine-quote-encode/2026-09-21/LessonSpine.mp4";
-const NEW_SHA = "244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d";
-const STILLS = "/opt/cursor/artifacts/remotion-lesson-spine-quote-encode/2026-09-21";
+  "/opt/cursor/artifacts/lesson-spine-steps-encode/2026-09-21/LessonSpine.mp4";
+const NEW_SHA = "e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b";
+const STILLS = "/opt/cursor/artifacts/remotion-lesson-spine-steps-encode/2026-09-21";
 const PRIOR =
+  "/opt/cursor/artifacts/lesson-spine-quote-encode/2026-09-21/LessonSpine.mp4";
+const PRIOR_SHA = "244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d";
+const EXAMPLE =
   "/opt/cursor/artifacts/lesson-spine-example-encode/2026-09-21/LessonSpine.mp4";
-const PRIOR_SHA = "f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b";
+const EXAMPLE_SHA = "f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b";
 const CHECKPOINT =
   "/opt/cursor/artifacts/lesson-spine-checkpoint-encode/2026-09-21/LessonSpine.mp4";
 const CHECKPOINT_SHA = "19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a";
@@ -56,6 +59,7 @@ const CAPTION_SHA = "5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d
 
 const PRIORS = {
   [PRIOR]: PRIOR_SHA,
+  [EXAMPLE]: EXAMPLE_SHA,
   [CHECKPOINT]: CHECKPOINT_SHA,
   [STING]: STING_SHA,
   [OBJECTION]: OBJECTION_SHA,
@@ -98,43 +102,43 @@ function sha256(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
 }
 
-test("WAVE5 and STATUS archive quote encode as prior dest", () => {
+test("WAVE5 and STATUS promote steps encode as current master dest", () => {
   const wave5 = src("..", "docs", "campus-runtime", "WAVE5.md");
   const campus = src("..", "docs", "campus-runtime", "STATUS.md");
-  const note = src("antagonist-lesson-spine-quote-encode.md");
+  const note = src("antagonist-lesson-spine-steps-encode.md");
   assert.match(
     wave5,
-    /Archived prior quote-encode `\/opt\/cursor\/artifacts\/lesson-spine-quote-encode\/2026-09-21\/LessonSpine\.mp4`/,
+    /Current master LessonSpine dest: `\/opt\/cursor\/artifacts\/lesson-spine-steps-encode\/2026-09-21\/LessonSpine\.mp4`/,
   );
+  assert.match(wave5, /e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b/);
+  assert.match(wave5, /## LessonSpine steps encode \(PASS\)/);
+  assert.match(wave5, /PRs 85–153/);
+  assert.match(wave5, /PR 153 merge `c292ff3`/);
   assert.match(wave5, /244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d/);
-  assert.match(wave5, /## LessonSpine quote encode \(PASS\)/);
-  assert.match(wave5, /PRs 85–150/);
-  assert.match(wave5, /PR 150 merge `7b74439`/);
-  assert.match(wave5, /f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b/);
-  assert.match(wave5, /Archived prior example-encode/);
+  assert.match(wave5, /Archived prior quote-encode/);
   assert.match(wave5, /\*\*Current master dest\.\*\*/);
+  assert.match(campus, /Current master LessonSpine dest is steps-encode/);
+  assert.match(campus, /e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b/);
+  assert.match(campus, /PR 153 merge `c292ff3`/);
   assert.match(campus, /Archived prior quote-encode/);
   assert.match(campus, /244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d/);
-  assert.match(campus, /PR 150 merge `7b74439`/);
-  assert.match(campus, /Archived prior example-encode/);
-  assert.match(campus, /f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b/);
   assert.match(campus, /\*\*CLOSED\*\*, \*\*0\/8\*\*/);
   assert.match(note, /EDU-S01: PASS/);
   assert.match(note, /EDU-S02: PASS/);
-  assert.match(note, /244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d/);
-  assert.match(note, /PR 150 merge `7b744394e5aba9b801327e9bc17f5769c246a437`/);
+  assert.match(note, /e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b/);
+  assert.match(note, /PR 153 merge `c292ff37b31e7aaeae131d6a9a30ef5aa7192254`/);
   assert.match(note, /hold_cleaning: true/);
   assert.match(
     note,
     /Opener\/sting → TalkingHead\/slate → DefinitionBoard\/objective → RecapCard → QuizBumper\/next-up/,
   );
-  assert.match(src("README.md"), /antagonist-lesson-spine-quote-encode\.md/);
+  assert.match(src("README.md"), /antagonist-lesson-spine-steps-encode\.md/);
   assert.doesNotMatch(note, /8\/8 PASS|launch OPEN|HARD_FAIL/);
   assert.doesNotMatch(wave5, /8\/8 PASS|launch OPEN/i);
   assert.doesNotMatch(src("antagonist-full-set.md"), /8\/8 PASS|launch OPEN|HARD_FAIL/);
 });
 
-test("new dest exists; example-encode and other priors untouched", () => {
+test("new dest exists; quote-encode and other priors untouched", () => {
   assert.equal(existsSync(NEW_DEST), true);
   assert.equal(sha256(NEW_DEST), NEW_SHA);
   assert.notEqual(NEW_DEST, PRIOR);
@@ -155,7 +159,7 @@ test("new dest exists; example-encode and other priors untouched", () => {
 });
 
 test("render-lock dry-run forwards the new dest and refuses Just", () => {
-  const dir = mkdtempSync(join(tmpdir(), "quote-encode-lock-"));
+  const dir = mkdtempSync(join(tmpdir(), "steps-encode-lock-"));
   const missingLock = join(dir, "absent.render.lock");
   const meminfo = join(dir, "meminfo");
   writeFileSync(meminfo, "MemAvailable: 8192000 kB\n");
