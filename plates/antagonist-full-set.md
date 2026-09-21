@@ -48,6 +48,7 @@ Cites:
 - [antagonist-threshold-encode-master.md](./antagonist-threshold-encode-master.md) — LessonSpine threshold encode master dest reaudit 2026-09-21
 - [antagonist-threshold-card.md](./antagonist-threshold-card.md) — ThresholdCard cutoff / gate mark 2026-09-21
 - [antagonist-rubric-card.md](./antagonist-rubric-card.md) — RubricCard scoring bands / criteria 2026-09-21
+- [antagonist-lesson-spine-rubric-encode.md](./antagonist-lesson-spine-rubric-encode.md) — LessonSpine RubricCard encode 2026-09-21
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
@@ -2153,6 +2154,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. RubricCard last-word “bands.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `RubricCardDemo-f0.png`, `RubricCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
+
+## LessonSpine rubric encode 2026-09-21
+
+Dated **2026-09-21** reaudit. New dated LessonSpine encode bundling RubricCard scoring bands / criteria after ThresholdCard before PracticeCard. After PR 174 merge `80671dd714f2083af06987f65901b5923186d98b` / tip `9001af30693b99fbccbb26ac3bfbc0479d5f7951`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. RubricCard after sting/objective path, after ThresholdCard, before PracticeCard. New dest `/opt/cursor/artifacts/lesson-spine-rubric-encode/2026-09-21/LessonSpine.mp4` sha256 `4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337` **Current master dest.** Threshold dest `955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f` archived, not overwritten. Spectrum dest `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` **untouched**. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-rubric-encode/2026-09-21/LessonSpine.mp4
+sha256: 4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337
+stills: /opt/cursor/artifacts/remotion-lesson-spine-rubric-encode/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. RubricCard last-word “bands.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
 
 ## Held
 
