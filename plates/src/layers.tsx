@@ -1749,6 +1749,111 @@ export function EvidenceCard() {
   );
 }
 
+/** Analogy / like-this transfer pair distinct from two claims and show-the-work. After sting/objective path, after evidence, before practice. Cream + gold 6px rail. */
+export const ANALOGY_CARD_KICKER = "Analogy";
+export const ANALOGY_CARD_LINE = "Map like this.";
+export const ANALOGY_CARD_ONE = "Like a seed.";
+export const ANALOGY_CARD_TWO = "So a type.";
+
+export function AnalogyCard() {
+  const words = ANALOGY_CARD_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? ANALOGY_CARD_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  const oneWords = ANALOGY_CARD_ONE.trim().split(/\s+/);
+  const oneKeyword = oneWords[oneWords.length - 1] ?? ANALOGY_CARD_ONE;
+  const oneLead = oneWords.slice(0, -1).join(" ");
+  const twoWords = ANALOGY_CARD_TWO.trim().split(/\s+/);
+  const twoKeyword = twoWords[twoWords.length - 1] ?? ANALOGY_CARD_TWO;
+  const twoLead = twoWords.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 220,
+        maxWidth: 400,
+        padding: "12px 20px 14px 16px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {ANALOGY_CARD_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+      <div
+        style={{
+          marginTop: 8,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 22,
+          color: ink,
+        }}
+      >
+        {oneLead ? `${oneLead} ` : null}
+        <Keyword>{oneKeyword}</Keyword>
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <div
+          style={{
+            width: 18,
+            height: 2,
+            backgroundColor: gold,
+          }}
+        />
+        <div
+          style={{
+            width: 0,
+            height: 0,
+            borderTop: "6px solid transparent",
+            borderBottom: "6px solid transparent",
+            borderLeft: `10px solid ${gold}`,
+          }}
+        />
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 22,
+          color: ink,
+        }}
+      >
+        {twoLead ? `${twoLead} ` : null}
+        <Keyword>{twoKeyword}</Keyword>
+      </div>
+    </div>
+  );
+}
+
 /** Application / try-this. After Recap/Quiz path, before end. Cream + gold 6px rail. */
 export const PRACTICE_CARD_KICKER = "Try this";
 export const PRACTICE_CARD_LINE = "Apply one idea now.";
