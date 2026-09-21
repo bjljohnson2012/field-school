@@ -129,6 +129,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | ExampleCard LessonSpine encode | PR 148 `86b223a` / tip `9598947` |
 | Example encode master dest reaudit | PR 149 `f0514c1` / tip `f3ef203` |
 | QuoteCard pull quote / authority cite | PR 150 `7b74439` / tip `bbdfc84` |
+| QuoteCard LessonSpine encode | PR 151 `8cd8ded` / tip `e05c782` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -473,6 +474,10 @@ PR 149 merge `f0514c1` / tip `f3ef203` harvested (`f0514c1557ed965709c90044b7e89
 ## LessonSpine quote encode (PASS)
 
 PRs 85–150 harvested. PR 150 merge `7b74439` / tip `bbdfc84` (`7b744394e5aba9b801327e9bc17f5769c246a437` / `bbdfc849438d8d79ed7ec8dcf93b8a39c775086a`). New dated dest `/opt/cursor/artifacts/lesson-spine-quote-encode/2026-09-21/LessonSpine.mp4` sha256 `244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d`. **Current master dest.** Example dest `f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-quote-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-quote-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine quote encode master dest reaudit (PASS)
+
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-quote-encode/2026-09-21/LessonSpine.mp4` sha256 `244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d` plus QuoteCard plates. PR 151 merge `8cd8ded` / tip `e05c782`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Example dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-quote-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-quote-encode-master/2026-09-21/`. **Current master dest.**
 
 ## Karaoke gold (VOX-S01 PASS)
 
