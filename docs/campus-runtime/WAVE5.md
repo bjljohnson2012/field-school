@@ -154,6 +154,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | ThresholdCard encode master dest reaudit | PR 173 `4973a71` |
 | RubricCard scoring bands / criteria | PR 174 `c262cef` |
 | RubricCard LessonSpine encode | PR 175 `34e31fa` |
+| RubricCard encode master dest reaudit | PR 176 `e525d24` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -594,6 +595,10 @@ PR 174 this craft. PR 173 merge `ba62e6b` / tip `be93fa8` harvested (`ba62e6b765
 ## LessonSpine rubric encode (PASS)
 
 PRs 85–174 harvested. PR 175 this encode. PR 174 merge `80671dd` / tip `9001af3` (`80671dd714f2083af06987f65901b5923186d98b` / `9001af30693b99fbccbb26ac3bfbc0479d5f7951`). New dated dest `/opt/cursor/artifacts/lesson-spine-rubric-encode/2026-09-21/LessonSpine.mp4` sha256 `4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337`. **Current master dest.** Threshold dest `955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-rubric-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-rubric-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine rubric encode master dest reaudit (PASS)
+
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-rubric-encode/2026-09-21/LessonSpine.mp4` sha256 `4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337` plus RubricCard plates. PR 176 this reaudit. PR 175 merge `d9bcd4a` / tip `047fea5` (`d9bcd4a40397d31cd9ba7f962228df386fec9eae` / `047fea56b48b8d37bf434ad31e992841111ecc9d`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Threshold dest untouched. Spectrum dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-rubric-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-rubric-encode-master/2026-09-21/`. **Current master dest.**
 
 ## Karaoke gold (VOX-S01 PASS)
 
