@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "hire": "activated",
+  "plans": ["100", "200", "1000"],
+  "distribute": false,
+  "launch": "CLOSED 0/8",
+  "metering": "/metering",
+  "rows": []
+}

@@ -48,6 +48,10 @@ Operator evidence on the Ready HLS rail. File `public/lessons/hls/publish-polish
 
 Honest hire-path rows only. Page [`/operator/launch-gate`](https://portal.fieldschool.ai/operator/launch-gate). Unsigned `GET /api/media/lesson-spine/launch-gate` plus `public/lessons/hls/launch-gate.json`. Rows: play rail, AUTH signed-in, Stripe `$100`/`$200`/`$1,000`, `/metering` fr-kb-3, Publish polish. Each row `landed:true` and `launch_pass:false`. Eight nodes stay HELD. Product stays HELD. Distribute HELD. Launch **CLOSED**, **0/8**.
 
+## Stripe webhook hire activation
+
+After Parent pays Learn with Ben, `POST /api/stripe/webhook` activates the hire for `$100` / `$200` / `$1,000` only (`10000` / `20000` / `100000` cents). File evidence `public/lessons/hls/hire-activation.json` plus `/app/data/hire-activation.json`. Unsigned `GET /api/billing/hire`. Operator page [`/operator/hire`](https://portal.fieldschool.ai/operator/hire). Checkout status sets `hireActivated` and `next:"/metering"`. Success copy returns Parent to `/metering` and `/play/lesson-spine`. Credit ledger stays family-mode. No new dollars. Live card charge not run this round; signed-fixture dry-run is the proof. Distribute HELD. Launch **CLOSED**, **0/8**.
+
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T153253Z.tar.gz` sha256 `4552f4413d4d0aef14c8cac7de6f1fbf01eceb482d39305452c37cd05ddae7f5`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T155726Z.tar.gz` sha256 `3038c31d6ae9c0b2e3274abed20cd67df0b73ae4e70cb488d34ec07383f046e6`.

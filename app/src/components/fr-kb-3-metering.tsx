@@ -23,12 +23,24 @@ export function FrKb3Metering() {
   const { data, status } = useSession();
   const signedIn = status === "authenticated" && Boolean(data?.user?.email);
   const [credits, setCredits] = useState<CreditsPayload | null>(null);
+  const [hireCount, setHireCount] = useState(0);
 
   useEffect(() => {
     if (!signedIn) {
       setCredits(null);
+      setHireCount(0);
       return;
     }
+    fetch("/api/billing/hire")
+      .then(async (res) => {
+        const body = (await res.json().catch(() => ({}))) as {
+          rows?: Array<{ activated?: boolean }>;
+        };
+        setHireCount(Array.isArray(body.rows) ? body.rows.length : 0);
+      })
+      .catch(() => {
+        setHireCount(0);
+      });
     let cancelled = false;
     fetch("/api/credits")
       .then(async (res) => {
@@ -72,9 +84,13 @@ export function FrKb3Metering() {
               Platform ledger: {units} units · mode {ledgerMode || "platform"}.
             </span>
           ) : (
-            <span data-credit-scope="hire">
-              Hire metering is the monthly Learn with Ben seat. Household
-              family-mode holds the credit ledger.
+            <span
+              data-credit-scope="hire"
+              data-hire-activated={hireCount > 0 ? "true" : "false"}
+            >
+              {hireCount > 0
+                ? `Webhook hire activations on campus: ${hireCount}. Household family-mode still holds the credit ledger.`
+                : "Hire metering is the monthly Learn with Ben seat. Household family-mode holds the credit ledger."}
             </span>
           )}
         </p>
