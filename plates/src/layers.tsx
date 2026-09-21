@@ -602,6 +602,88 @@ export function ScriptureCard() {
   );
 }
 
+/** Two-claim / contrast. After sting/objective path, after scripture, before practice. Cream + gold 6px rail. */
+export const COMPARE_BOARD_KICKER = "Compare";
+export const COMPARE_BOARD_LINE = "Hold two claims.";
+export const COMPARE_BOARD_LEFT = "Type holds.";
+export const COMPARE_BOARD_RIGHT = "Head docks.";
+
+export function CompareBoard() {
+  const words = COMPARE_BOARD_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? COMPARE_BOARD_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  const leftWords = COMPARE_BOARD_LEFT.trim().split(/\s+/);
+  const leftKeyword = leftWords[leftWords.length - 1] ?? COMPARE_BOARD_LEFT;
+  const leftLead = leftWords.slice(0, -1).join(" ");
+  const rightWords = COMPARE_BOARD_RIGHT.trim().split(/\s+/);
+  const rightKeyword = rightWords[rightWords.length - 1] ?? COMPARE_BOARD_RIGHT;
+  const rightLead = rightWords.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 178,
+        width: 520,
+        padding: "14px 22px 16px 18px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {COMPARE_BOARD_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+      <div style={{marginTop: 10, display: "flex", flexDirection: "row", gap: 24}}>
+        <div
+          style={{
+            flex: 1,
+            fontFamily: displayFace,
+            fontWeight: 700,
+            fontSize: 22,
+            color: ink,
+          }}
+        >
+          {leftLead ? `${leftLead} ` : null}
+          <Keyword>{leftKeyword}</Keyword>
+        </div>
+        <div
+          style={{
+            flex: 1,
+            fontFamily: displayFace,
+            fontWeight: 700,
+            fontSize: 22,
+            color: ink,
+          }}
+        >
+          {rightLead ? `${rightLead} ` : null}
+          <Keyword>{rightKeyword}</Keyword>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Application / try-this. After Recap/Quiz path, before end. Cream + gold 6px rail. */
 export const PRACTICE_CARD_KICKER = "Try this";
 export const PRACTICE_CARD_LINE = "Apply one idea now.";
