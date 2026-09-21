@@ -132,7 +132,8 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | QuoteCard LessonSpine encode | PR 151 `8cd8ded` / tip `e05c782` |
 | QuoteCard encode master dest reaudit | PR 152 `2a28cda` / tip `31d63f9` |
 | StepsCard numbered procedure / do-this-in-order | PR 153 `f2f2857` |
-| StepsCard LessonSpine encode | PR 154 `a877779` |
+| StepsCard LessonSpine encode | PR 154 `e7d6862` / tip `da40899` |
+| StepsCard encode master dest reaudit | PR 155 `8a24fce` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -489,6 +490,10 @@ PR 152 merge `2a28cda` / tip `31d63f9` harvested (`2a28cdaf19396988145960a0d4344
 ## LessonSpine steps encode (PASS)
 
 PRs 85–153 harvested. PR 153 merge `c292ff3` / tip `b5851ab` (`c292ff37b31e7aaeae131d6a9a30ef5aa7192254` / `b5851aba9c573ce8975384e9575976ab4c38c2c9`). New dated dest `/opt/cursor/artifacts/lesson-spine-steps-encode/2026-09-21/LessonSpine.mp4` sha256 `e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b`. **Current master dest.** Quote dest `244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-steps-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-steps-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine steps encode master dest reaudit (PASS)
+
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-steps-encode/2026-09-21/LessonSpine.mp4` sha256 `e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b` plus StepsCard plates. PR 154 merge `e7d6862` / tip `da40899`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Quote dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-steps-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-steps-encode-master/2026-09-21/`. **Current master dest.**
 
 ## Karaoke gold (VOX-S01 PASS)
 
