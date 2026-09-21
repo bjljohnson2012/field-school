@@ -148,6 +148,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | SourceChip encode master dest reaudit | PR 167 `f604af7` |
 | SpectrumBar continuum / contrast bar | PR 168 `19f93ba` |
 | SpectrumBar LessonSpine encode | PR 169 `11ba0e7` |
+| SpectrumBar encode master dest reaudit | PR 170 `3a6b7fd` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -564,6 +565,10 @@ PR 168 this craft. PR 167 merge `e7a9486` / tip `282eb66` harvested (`e7a948605b
 ## LessonSpine spectrum encode (PASS)
 
 PRs 85–168 harvested. PR 169 this encode. PR 168 merge `e82ba60` / tip `2a9f3a7` (`e82ba601058b3e8b5765e6e0fb84ac21e8aa6d4f` / `2a9f3a7d3b7668c81e801e424517b7930ab14092`). New dated dest `/opt/cursor/artifacts/lesson-spine-spectrum-encode/2026-09-21/LessonSpine.mp4` sha256 `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0`. **Current master dest.** Source dest `833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-spectrum-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-spectrum-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine spectrum encode master dest reaudit (PASS)
+
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-spectrum-encode/2026-09-21/LessonSpine.mp4` sha256 `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` plus SpectrumBar plates. PR 170 this reaudit. PR 169 merge `6b98e60` / tip `3faad53` (`6b98e60673a3d665fda938c0f8d22896de8d99df` / `3faad53b1243a809178a753a76b1291210b52d66`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Source dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-spectrum-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-spectrum-encode-master/2026-09-21/`. **Current master dest.**
 
 ## Karaoke gold (VOX-S01 PASS)
 

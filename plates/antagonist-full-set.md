@@ -43,6 +43,7 @@ Cites:
 - [antagonist-lesson-spine-source-encode.md](./antagonist-lesson-spine-source-encode.md) — LessonSpine SourceChip encode (archived prior)
 - [antagonist-lesson-spine-spectrum-encode.md](./antagonist-lesson-spine-spectrum-encode.md) — LessonSpine SpectrumBar encode (current master)
 - [antagonist-source-encode-master.md](./antagonist-source-encode-master.md) — LessonSpine source encode master dest reaudit 2026-09-21
+- [antagonist-spectrum-encode-master.md](./antagonist-spectrum-encode-master.md) — LessonSpine spectrum encode master dest reaudit 2026-09-21
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
@@ -2037,6 +2038,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SpectrumBar last-word “range.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine spectrum encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-spectrum-encode/2026-09-21/LessonSpine.mp4` sha256 `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` plus SpectrumBar plates. After PR 169 merge `6b98e60673a3d665fda938c0f8d22896de8d99df`. **Current master dest.** Source dest `833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478` **untouched**. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Locked master dest **untouched**. No encode this round.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-spectrum-encode/2026-09-21/LessonSpine.mp4
+sha256: 496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0
+stills: /opt/cursor/artifacts/remotion-antagonist-spectrum-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SpectrumBar last-word “range.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `SpectrumBarDemo-f0.png`, `SpectrumBarDemo-f60.png`.
 
 ## Held
 
