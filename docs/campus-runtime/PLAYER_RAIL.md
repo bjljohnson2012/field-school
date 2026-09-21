@@ -46,4 +46,4 @@ Operator evidence on the Ready HLS rail. File `public/lessons/hls/publish-polish
 
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T151558Z.tar.gz` sha256 `bab1a68ae50344eb3259ac4b48a0eab7da1924e8234910cdb91a0241b7a31be9`.

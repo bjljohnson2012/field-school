@@ -673,7 +673,7 @@ Dated 2026-09-21. Parent sees knowledge-brain use at `/metering`. Platform credi
 
 ## Publish polish operator path (PASS)
 
-Dated 2026-09-21. Operator finishes Publish polish on Ready HLS LessonSpine. Route `/operator/publish`. Evidence `GET /api/media/lesson-spine/publish` plus `public/lessons/hls/publish-polish.json`. Ready JSON `published:true` `publish:"polished"`. Staff POST only. PR this seal. PR 190 merge `38912ed` / tip `25ee196` (`38912ed57aa71c1e4db5228457b1559d364ebcb4` / `25ee1966bf8be0ad0bb64f9ffd2116c73b35b2f7`). **Current master dest.** **untouched**. AUTH signed-in still holds. Ready / HLS still 200. Stripe three-plan still 200. `/metering` fr-kb-3 still 200. No new dollars. Distribute HELD. Launch **CLOSED**, **0/8**. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
+Dated 2026-09-21. Operator finishes Publish polish on Ready HLS LessonSpine. Route `/operator/publish`. Evidence `GET /api/media/lesson-spine/publish` plus `public/lessons/hls/publish-polish.json`. Ready JSON `published:true` `publish:"polished"`. Staff POST only. PR this seal. PR 190 merge `38912ed` / tip `25ee196` (`38912ed57aa71c1e4db5228457b1559d364ebcb4` / `25ee1966bf8be0ad0bb64f9ffd2116c73b35b2f7`). **Current master dest.** **untouched**. AUTH signed-in still holds. Ready / HLS still 200. Stripe three-plan still 200. `/metering` fr-kb-3 still 200. No new dollars. Distribute HELD. Launch **CLOSED**, **0/8**. Overlay pack `/opt/field-school-packs/player-rail-campus-pack-20260921T151558Z.tar.gz` sha256 `bab1a68ae50344eb3259ac4b48a0eab7da1924e8234910cdb91a0241b7a31be9`. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
 
 ## Karaoke gold (VOX-S01 PASS)
 
