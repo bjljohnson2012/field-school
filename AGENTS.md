@@ -1,9 +1,10 @@
 # Agents working in this repo
 
-Law: `FIELD-SCHOOL-ETHOS-MEMO.md` (21 Sep 2026 mid-build).
-Working job is development of people and of the organization, in a named room (household or team). Locks did not move.
+Law: `FIELD-SCHOOL-ETHOS-MEMO.md` (21 Sep 2026 mid-build tandem).
+Working job is development of people and of the organization. Two rooms: household and team. They run together. Household is not the default.
 Read that file before a ticket, a PR, or a PASS claim. It does not grant Launch PASS.
 Do not restart campus waves or merged hire-path work to match new wording. Seal what is already built.
+One ticket names one room. Two streams allowed only when files do not collide. Third stream waits.
 If a wave doc and the ethos memo disagree on User vs Child, prices, AUTH_URL, dest, or person-in-development-as-buyer, the ethos memo wins.
 
 User: `.cursor/USER.md` and `docs/campus-runtime/USER.md`.
@@ -30,3 +31,5 @@ Wave 1 is done. Proof: `docs/campus-runtime/WAVE1.md`.
 - Invent a second Pattern item bank or official MBTI / Enneagram / Gallup / Wiley items.
 - Install Remotion MCP.
 - Rebuild hire-path because the job sentence got wider.
+- Default to household and leave team for later.
+- Put household and team in one ticket.
