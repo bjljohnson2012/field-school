@@ -148,7 +148,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | SourceChip encode master dest reaudit | PR 167 `f604af7` |
 | SpectrumBar continuum / contrast bar | PR 168 `19f93ba` |
 | SpectrumBar LessonSpine encode | PR 169 `11ba0e7` |
-| SpectrumBar encode master dest reaudit | this PR |
+| SpectrumBar encode master dest reaudit | PR 170 `3a6b7fd` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
