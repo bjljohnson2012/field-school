@@ -39,7 +39,8 @@ Cites:
 - [antagonist-lesson-spine-steps-encode.md](./antagonist-lesson-spine-steps-encode.md) — LessonSpine StepsCard encode (archived prior)
 - [antagonist-lesson-spine-caveat-encode.md](./antagonist-lesson-spine-caveat-encode.md) — LessonSpine CaveatCard encode (archived prior)
 - [antagonist-lesson-spine-reflection-encode.md](./antagonist-lesson-spine-reflection-encode.md) — LessonSpine ReflectionPrompt encode (archived prior)
-- [antagonist-lesson-spine-timeline-encode.md](./antagonist-lesson-spine-timeline-encode.md) — LessonSpine TimelineRail encode (current master)
+- [antagonist-lesson-spine-timeline-encode.md](./antagonist-lesson-spine-timeline-encode.md) — LessonSpine TimelineRail encode (archived prior)
+- [antagonist-lesson-spine-source-encode.md](./antagonist-lesson-spine-source-encode.md) — LessonSpine SourceChip encode (current master)
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
@@ -1945,6 +1946,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SourceChip last-word “source.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `SourceChipDemo-f0.png`, `SourceChipDemo-f60.png`, `LessonSpine-recap-f864.png`.
+
+## LessonSpine source encode 2026-09-21
+
+Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-source-encode/2026-09-21/LessonSpine.mp4` sha256 `833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478`. **Current master dest.** Timeline dest `2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068` archived prior, **untouched**. PRs 85–165. After PR 165 merge `a84b24d706e8dcccbfce02fb88ac9026b38ddd04`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-source-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-source-encode/2026-09-21/LessonSpine.mp4
+sha256: 833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478
+stills: /opt/cursor/artifacts/remotion-lesson-spine-source-encode/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SourceChip last-word “source.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
 
 ## Held
 
