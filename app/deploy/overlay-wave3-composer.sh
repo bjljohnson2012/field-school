@@ -47,6 +47,7 @@ TMP_TAR="$(mktemp /tmp/wave3-composer-campus-pack.XXXXXX.tar.gz)"
 trap 'rm -rf "$STAGE" "$TMP_TAR"' EXIT
 
 MEMBERS=(
+  src/app/api/composer/route.ts
   src/app/api/composer/catalog/route.ts
   src/app/api/composer/files/[sourceId]/route.ts
   src/app/api/composer/lessons/route.ts
@@ -68,6 +69,7 @@ MEMBERS=(
 )
 
 mkdir -p \
+  "$STAGE/src/app/api/composer" \
   "$STAGE/src/app/api/composer/catalog" \
   "$STAGE/src/app/api/composer/files/[sourceId]" \
   "$STAGE/src/app/api/composer/lessons" \
