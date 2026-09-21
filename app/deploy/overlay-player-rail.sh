@@ -58,6 +58,7 @@ MEMBERS=(
   src/app/api/media/lesson-spine/route.ts
   src/components/lesson-spine-player.tsx
   src/components/lesson-spine-parent-session.tsx
+  src/components/lesson-spine-hire-path.tsx
   src/lib/player/lesson-spine.ts
   src/lib/player/lesson-spine-meta.ts
   src/app/campus-home.tsx

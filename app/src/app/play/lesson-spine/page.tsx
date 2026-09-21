@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LessonSpineHirePath } from "@/components/lesson-spine-hire-path";
 import { LessonSpineParentSession } from "@/components/lesson-spine-parent-session";
 import { LessonSpinePlayer } from "@/components/lesson-spine-player";
 
@@ -27,6 +28,7 @@ export default function LessonSpinePlayPage() {
         sha256 af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4
       </p>
       <LessonSpineParentSession />
+      <LessonSpineHirePath />
       <div className="mt-8">
         <LessonSpinePlayer />
       </div>

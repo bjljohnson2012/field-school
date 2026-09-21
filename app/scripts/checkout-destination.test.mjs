@@ -81,6 +81,7 @@ test("Checkout Session posts omit payment_method_types and tag the plan", async 
   assert.match(body, /client_reference_id=1000/);
   assert.match(body, /price_1U8SWZABZCvmsACo6SLipTTi/);
   assert.match(body, /mode=subscription/);
+  assert.match(body, /cancel_url=https%3A%2F%2Fportal\.fieldschool\.ai%2Fplay%2Flesson-spine|cancel_url=https:\/\/portal\.fieldschool\.ai\/play\/lesson-spine/);
   assert.doesNotMatch(body, /payment_method_types/);
   const source = readFileSync(join(root, "src/lib/billing/checkout-destination.ts"), "utf8");
   assert.doesNotMatch(source, /payment_method_types/);
