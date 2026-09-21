@@ -126,6 +126,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | CheckpointCard LessonSpine encode | PR 145 `aaa7dc2` / tip `9b78d83` |
 | Checkpoint encode master dest reaudit | PR 146 `7b57e89` / tip `6a8fce2` |
 | ExampleCard worked example / show-how | PR 147 `2a0befe` / tip `2168b74` |
+| ExampleCard LessonSpine encode | PR 148 `86b223a` / tip `9598947` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -458,6 +459,10 @@ PR 146 merge `7b57e89` / tip `6a8fce2` harvested (`7b57e896bc621123539c617c09609
 ## LessonSpine example encode (PASS)
 
 PRs 85–147 harvested. PR 147 merge `2a0befe` / tip `2168b74` (`2a0befe6578b2dee3b3359f4c34befdfd65a69e5` / `2168b748cd8c61cfde2afdce76777544c88c7c68`). New dated dest `/opt/cursor/artifacts/lesson-spine-example-encode/2026-09-21/LessonSpine.mp4` sha256 `f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b`. **Current master dest.** Checkpoint dest `19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-example-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-example-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine example encode master dest reaudit (PASS)
+
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-example-encode/2026-09-21/LessonSpine.mp4` sha256 `f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b` plus ExampleCard plates. PR 148 merge `86b223a` / tip `9598947`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Checkpoint dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-example-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-example-encode-master/2026-09-21/`. **Current master dest.**
 
 ## Karaoke gold (VOX-S01 PASS)
 
