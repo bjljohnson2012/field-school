@@ -39,6 +39,7 @@ Cites:
 - [antagonist-compare-encode-master.md](./antagonist-compare-encode-master.md) — LessonSpine compare encode master dest reaudit
 - [antagonist-section-encode-master.md](./antagonist-section-encode-master.md) — LessonSpine section encode master dest reaudit
 - [antagonist-glossary-encode-master.md](./antagonist-glossary-encode-master.md) — LessonSpine glossary encode master dest reaudit
+- [antagonist-sting-encode-master.md](./antagonist-sting-encode-master.md) — LessonSpine sting encode master dest reaudit
 - [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
 - [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-glossary-chip.md](./antagonist-glossary-chip.md) — GlossaryChip term / definition pop
@@ -1416,6 +1417,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. StingColdOpen last-word “hook.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine sting encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-sting-encode/2026-09-21/LessonSpine.mp4` sha256 `325a41e775821c8576e14038d2076ee639d48a0fc29b3f84b223f4af9390f204` plus StingColdOpen plates. After PR 142 merge `82192643d93aa3e103759ca2bbce7bc0b4a2d985`. **Current master dest.** Objection dest `4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee` **untouched**. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-sting-encode/2026-09-21/LessonSpine.mp4
+sha256: 325a41e775821c8576e14038d2076ee639d48a0fc29b3f84b223f4af9390f204
+stills: /opt/cursor/artifacts/remotion-antagonist-sting-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. StingColdOpen last-word “hook.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `StingColdOpenDemo-f0.png`, `StingColdOpenDemo-f60.png`.
 
 ## Held
 
