@@ -88,4 +88,4 @@ Parent sees and updates FR-6 confidence on the hire-path knowledge brain under t
 
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T200200Z.tar.gz` sha256 `8bde04c78f40de914aa7e49b83027d499a23ebbc9c8696a8fbdb6bb494184a29`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T201500Z.tar.gz` sha256 `496113b1595b828e9a5b3c340cecf10cd02c1d91293f86d9750d727c44719151`.
