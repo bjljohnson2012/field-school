@@ -127,6 +127,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Checkpoint encode master dest reaudit | PR 146 `7b57e89` / tip `6a8fce2` |
 | ExampleCard worked example / show-how | PR 147 `2a0befe` / tip `2168b74` |
 | ExampleCard LessonSpine encode | PR 148 `86b223a` / tip `9598947` |
+| Example encode master dest reaudit | PR 149 `f0514c1` / tip `f3ef203` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -463,6 +464,10 @@ PRs 85–147 harvested. PR 147 merge `2a0befe` / tip `2168b74` (`2a0befe6578b2de
 ## LessonSpine example encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-example-encode/2026-09-21/LessonSpine.mp4` sha256 `f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b` plus ExampleCard plates. PR 148 merge `86b223a` / tip `9598947`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Checkpoint dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-example-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-example-encode-master/2026-09-21/`. **Current master dest.**
+
+## QuoteCard (PASS)
+
+PR 149 merge `f0514c1` / tip `f3ef203` harvested (`f0514c1557ed965709c90044b7e8915d8ae90ed1` / `f3ef2035a08ae62573f9a291864cdce5eb017106`). QuoteCard soft craft beat: pull quote / authority cite after sting/objective path (`QUOTE_CARD_KICKER = "Quote"`; `QUOTE_CARD_LINE = "Hold the quote."`; cream + gold 6px left rail). Craft beat on `QuoteCardDemo`. Sequenced after sting/objective path, after ExampleCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Quote path only. No Cap take. ORDER LOCK intact. Current master dest example-encode sha256 `f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b` **untouched** (plate-level stills only). Evidence: `plates/antagonist-quote-card.md`. Stills: `/opt/cursor/artifacts/remotion-quote-card/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 

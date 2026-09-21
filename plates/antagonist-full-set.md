@@ -51,6 +51,7 @@ Cites:
 - [antagonist-sting-cold-open.md](./antagonist-sting-cold-open.md) — Sting / Opener cold open
 - [antagonist-checkpoint-card.md](./antagonist-checkpoint-card.md) — CheckpointCard formative check / confirm-understanding
 - [antagonist-example-card.md](./antagonist-example-card.md) — ExampleCard worked example / show-how
+- [antagonist-quote-card.md](./antagonist-quote-card.md) — QuoteCard pull quote / authority cite
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1577,6 +1578,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ExampleCard last-word “work.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `ExampleCardDemo-f0.png`, `ExampleCardDemo-f60.png`.
+
+## QuoteCard 2026-09-21
+
+Dated **2026-09-21** reaudit. QuoteCard soft craft beat. Pull quote / authority cite on `QuoteCard` (`QUOTE_CARD_KICKER = "Quote"`; `QUOTE_CARD_LINE = "Hold the quote."`; cream + gold 6px left rail). Craft beat on `QuoteCardDemo`. Sequenced after sting/objective path, after ExampleCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). After PR 149 merge `f0514c1557ed965709c90044b7e8915d8ae90ed1` / tip `f3ef2035a08ae62573f9a291864cdce5eb017106`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. KeyClaim after sting/objective path. ScriptureCard after sting/objective path, after KeyClaim. CompareBoard after sting/objective path, after ScriptureCard. SectionTitle after sting/objective path, after CompareBoard. GlossaryChip after sting/objective path, after SectionTitle. ObjectionCard after sting/objective path, after GlossaryChip. StingColdOpen on Opener/sting only. CheckpointCard after sting/objective path, after ObjectionCard, before PracticeCard. ExampleCard after sting/objective path, after CheckpointCard, before PracticeCard. QuoteCard after sting/objective path, after ExampleCard, before PracticeCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-example-encode/2026-09-21/LessonSpine.mp4` sha256 `f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b` **Current master dest.** **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-quote-card/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-example-encode/2026-09-21/LessonSpine.mp4
+sha256: f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b
+stills: /opt/cursor/artifacts/remotion-quote-card/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. QuoteCard last-word “quote.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `QuoteCardDemo-f0.png`, `QuoteCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 
