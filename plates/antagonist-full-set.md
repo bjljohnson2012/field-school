@@ -63,6 +63,7 @@ Cites:
 - [antagonist-steps-card.md](./antagonist-steps-card.md) — StepsCard numbered procedure / do-this-in-order
 - [antagonist-caveat-card.md](./antagonist-caveat-card.md) — CaveatCard watch-out / warning
 - [antagonist-reflection-prompt.md](./antagonist-reflection-prompt.md) — ReflectionPrompt learner pause / think-then-answer
+- [antagonist-timeline-rail.md](./antagonist-timeline-rail.md) — TimelineRail sequence of beats / ordered milestones
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1853,6 +1854,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ReflectionPrompt last-word “answer.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `ReflectionPromptDemo-f0.png`, `ReflectionPromptDemo-f60.png`.
+
+## TimelineRail 2026-09-21
+
+Dated **2026-09-21** reaudit. TimelineRail soft craft beat. Sequence of beats / ordered milestones on `TimelineRail` (`TIMELINE_RAIL_KICKER = "Timeline"`; `TIMELINE_RAIL_LINE = "Mark the beats."`; cream + gold 6px left rail). Craft beat on `TimelineRailDemo`. Sequenced after sting/objective path, after ReflectionPrompt, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). After PR 161 merge `123f60ac71d639fde6086805fbb36925cfcb036c` / tip `1444738b418f37e5b073c40b3840066b58c06cbb`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. ReflectionPrompt after sting/objective path, after CaveatCard, before PracticeCard. TimelineRail after sting/objective path, after ReflectionPrompt, before PracticeCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-reflection-encode/2026-09-21/LessonSpine.mp4` sha256 `1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17` **untouched** (plate-level stills only). Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-reflection-encode/2026-09-21/LessonSpine.mp4
+sha256: 1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17
+stills: /opt/cursor/artifacts/remotion-timeline-rail/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. TimelineRail last-word “beats.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `TimelineRailDemo-f0.png`, `TimelineRailDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 
