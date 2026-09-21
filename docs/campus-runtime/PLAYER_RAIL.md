@@ -93,4 +93,4 @@ Campus edit tools on the Wave3 LIVE hire path. Unsigned `GET /api/composer` retu
 
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T201500Z.tar.gz` sha256 `496113b1595b828e9a5b3c340cecf10cd02c1d91293f86d9750d727c44719151`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T202700Z.tar.gz` sha256 `6f91b296e2dac3055850068b9839fce9c1e38b7f13cef2d48ba7c696fcfef430`.
