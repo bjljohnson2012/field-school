@@ -35,6 +35,7 @@ export function SiteHeader() {
           { href: "/intent", label: "Intent", compact: true },
           { href: "/path", label: "Path", compact: true },
           { href: "/portion", label: "Portion", compact: true },
+          { href: "/brain", label: "Brain", compact: true },
         ]
       : []),
     ...(showAbout ? [{ href: "/about", label: "About", compact: false }] : []),

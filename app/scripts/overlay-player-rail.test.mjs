@@ -74,6 +74,11 @@ test("overlay-player-rail pack is HTML5 player only", () => {
   assert.match(list, /src\/components\/fr-5-parent-portion\.tsx/);
   assert.match(list, /src\/app\/portion\/page\.tsx/);
   assert.match(list, /public\/lessons\/hls\/supervised-portion\.json/);
+  assert.match(list, /src\/lib\/progress\/supervised-brain\.ts/);
+  assert.match(list, /src\/app\/api\/progress\/brain\/route\.ts/);
+  assert.match(list, /src\/components\/fr-kb-1-parent-brain\.tsx/);
+  assert.match(list, /src\/app\/brain\/page\.tsx/);
+  assert.match(list, /public\/lessons\/hls\/supervised-brain\.json/);
   assert.doesNotMatch(list, /family-v1-home|children-database|vite\.config|src\/routes\/|remotion/);
   assert.doesNotMatch(list, /src\/app\/o\/\[slug\]\/page\.tsx/);
 });
