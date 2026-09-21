@@ -35,7 +35,10 @@ function sessionFields(input: {
     "line_items[0][price]": input.plan.stripePriceId,
     "line_items[0][quantity]": "1",
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}/cart?plan=${input.plan.id}`,
+    cancel_url:
+      input.plan.id === "100" || input.plan.id === "200" || input.plan.id === "1000"
+        ? `${origin}/play/lesson-spine`
+        : `${origin}/cart?plan=${input.plan.id}`,
     "metadata[plan]": input.plan.id,
     client_reference_id: input.plan.id,
   };

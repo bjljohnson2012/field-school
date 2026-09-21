@@ -36,6 +36,10 @@ ORDER LOCK ticks only: Sting 0–10s → Slate 10–18s → Objective 18–24s �
 
 Live `AUTH_URL=https://portal.fieldschool.ai`. Providers: Google, X, credentials. Parent signs in and returns to `/play/lesson-spine`. Guest play stays open. Distribute HELD. Launch **CLOSED**, **0/8**.
 
+## Stripe live Learn with Ben
+
+Hire Learn with Ben on the play rail. Unlocked amounts only: `$100` `/checkout?plan=100`, `$200` `/checkout?plan=200`, `$1,000` `/checkout?plan=1000`. Live Payment Links on the fieldschool.ai Stripe account. `STRIPE_WEBHOOK_SECRET` is set; `STRIPE_SECRET_KEY` stays optional (Payment Link path). No new dollars. Guest play and AUTH signed-in stay. FR-KB-3 metering HELD. Distribute HELD. Launch **CLOSED**, **0/8**.
+
 ## Overlay
 
 `app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL.
