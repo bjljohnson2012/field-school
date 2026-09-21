@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream, gold, ink} from "./brand";
-import {AnalogyCard, AudioBed, Bed, CalloutCard, CaveatCard, ChapterChip, CheckpointCard, Claim, CompareBoard, EvidenceCard, ExampleCard, GlossaryChip, GoldRule, HeadDock, Karaoke, KeyClaim, Keyword, Kicker, Letterbox, LowerThird, ObjectionCard, ObjectiveSlate, OverlayLock, PracticeCard, ProgressRail, QuoteCard, ReflectionPrompt, RubricCard, ScriptureCard, SectionTitle, SourceChip, SpectrumBar, StepsCard, ThresholdCard, TimelineRail, Title, TransitionLuma, TypeCard} from "./layers";
+import {AnalogyCard, AudioBed, Bed, CalloutCard, CaveatCard, ChapterChip, CheckpointCard, Claim, CompareBoard, CounterexampleCard, EvidenceCard, ExampleCard, GlossaryChip, GoldRule, HeadDock, Karaoke, KeyClaim, Keyword, Kicker, Letterbox, LowerThird, ObjectionCard, ObjectiveSlate, OverlayLock, PracticeCard, ProgressRail, QuoteCard, ReflectionPrompt, RubricCard, ScriptureCard, SectionTitle, SourceChip, SpectrumBar, StepsCard, ThresholdCard, TimelineRail, Title, TransitionLuma, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {RecapProps} from "./types";
@@ -134,6 +134,9 @@ export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, objectiv
         </Layer>
         <Layer name="analogy">
           <AnalogyCard />
+        </Layer>
+        <Layer name="counterexample">
+          <CounterexampleCard />
         </Layer>
         <Layer name="practice">
           <PracticeCard />
