@@ -161,6 +161,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | AnalogyCard analogy / like-this transfer pair | PR 180 `f8dd9ec` |
 | AnalogyCard LessonSpine encode | PR 181 `5cb5225` |
 | AnalogyCard encode master dest reaudit | PR 182 `260bc04` |
+| CounterexampleCard counterexample / not-this foil | this PR |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -629,6 +630,10 @@ PRs 85–180 harvested. PR 181 this encode. PR 180 merge `dfca7ff` / tip `715941
 ## LessonSpine analogy encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-analogy-encode/2026-09-21/LessonSpine.mp4` sha256 `a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37` plus AnalogyCard plates. PR this reaudit. PR 181 merge `01775d8` / tip `dcddaa0` (`01775d88c1efa63ae97319b281e77aa71204c02d` / `dcddaa02945892d964652693bd7edb56f883e40e`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Evidence dest untouched. Rubric dest untouched. Threshold dest untouched. Spectrum dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-analogy-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-analogy-encode-master/2026-09-21/`. **Current master dest.**
+
+## CounterexampleCard (PASS)
+
+PR this craft. PR 182 merge `a464568` / tip `4cc07f4` harvested (`a464568e7a432ff6d03852170637515dbd4ac952` / `4cc07f44d1a2acaa40784950ac56937a2917d520`). CounterexampleCard soft craft beat: counterexample / not-this foil distinct from ExampleCard show-the-work and AnalogyCard like-this transfer after sting/objective path (`COUNTEREXAMPLE_CARD_KICKER = "Foil"`; `COUNTEREXAMPLE_CARD_LINE = "Name what is not."`; `COUNTEREXAMPLE_CARD_ONE = "Not this case."`; `COUNTEREXAMPLE_CARD_TWO = "A miss."`; cream + gold 6px left rail; gold foil slash / prohibition ring). Craft beat on `CounterexampleCardDemo`. Sequenced after sting/objective path, after AnalogyCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Counterexample path only. No Cap take. ORDER LOCK intact. Current master dest analogy-encode sha256 `a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-counterexample-card.md`. Stills: `/opt/cursor/artifacts/remotion-counterexample-card/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
