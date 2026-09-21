@@ -2,7 +2,7 @@
 
 Bar: [../docs/remotion-vox-standards.md](../docs/remotion-vox-standards.md). Do not invent a second bar. Soft notes accepted.
 
-Dated **2026-09-21**. New dated LessonSpine encode after PR 153 merge `c292ff37b31e7aaeae131d6a9a30ef5aa7192254` / tip `b5851aba9c573ce8975384e9575976ab4c38c2c9`. Bundles StepsCard numbered procedure / do-this-in-order onto the locked QuoteCard master stack. No Cap take. PRs 85–153 harvested.
+Dated **2026-09-21**. New dated LessonSpine encode after PR 153 merge `c292ff37b31e7aaeae131d6a9a30ef5aa7192254` / tip `b5851aba9c573ce8975384e9575976ab4c38c2c9`. Bundles StepsCard numbered procedure / do-this-in-order onto the locked QuoteCard master stack. No Cap take. PRs 85–153 harvested. Dated **2026-09-21** master dest reaudit after PR 154 merge `e7d686228dc64241e368c8e4e6cfc6f80850ce5b`. Locked dest **untouched**.
 
 ```
 verdict: PASS
