@@ -163,6 +163,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | AnalogyCard encode master dest reaudit | PR 182 `260bc04` |
 | CounterexampleCard counterexample / not-this foil | PR 183 `96a7b46` |
 | CounterexampleCard LessonSpine encode | PR 184 `94c5fd1` |
+| CounterexampleCard encode master dest reaudit | PR 185 `f2bf275` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -639,6 +640,10 @@ PR this craft. PR 182 merge `a464568` / tip `4cc07f4` harvested (`a464568e7a432f
 ## LessonSpine counterexample encode (PASS)
 
 PRs 85–183 harvested. PR this encode. PR 183 merge `ee6c92c` / tip `2bf51f7` (`ee6c92c9be8750eea202cbbf130280084785a201` / `2bf51f76a5ba1b19335ef89c58a9755d900271bb`). New dated dest `/opt/cursor/artifacts/lesson-spine-counterexample-encode/2026-09-21/LessonSpine.mp4` sha256 `af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4`. **Current master dest.** Analogy dest `a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-counterexample-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-counterexample-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine counterexample encode master dest reaudit (PASS)
+
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-counterexample-encode/2026-09-21/LessonSpine.mp4` sha256 `af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4` plus CounterexampleCard plates. PR this reaudit. PR 184 merge `7a8f010` / tip `e97a96c` (`7a8f010bd5e65948b55d3067a8262d1652e4975b` / `e97a96c34e5831032d36c5b797ad6c4aa0622a99`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Analogy dest untouched. Evidence dest untouched. Rubric dest untouched. Threshold dest untouched. Spectrum dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-counterexample-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-counterexample-encode-master/2026-09-21/`. **Current master dest.**
 
 ## Karaoke gold (VOX-S01 PASS)
 
