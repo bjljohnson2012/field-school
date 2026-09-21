@@ -113,6 +113,13 @@ export function Fr6SupervisedProgress() {
         >
           /intent
         </Link>
+        , assemble{" "}
+        <Link
+          href={selected ? `/path?child=${encodeURIComponent(selected.id)}` : "/path"}
+          className="underline"
+        >
+          /path
+        </Link>
         , then return to{" "}
         <Link href="/metering" className="underline">
           /metering

@@ -208,7 +208,11 @@ export function Fr3ParentIntent() {
       )}
 
       <p className="mt-8 text-sm text-muted-foreground">
-        After intent, see{" "}
+        After intent, assemble{" "}
+        <Link href={selectedId ? `/path?child=${encodeURIComponent(selectedId)}` : "/path"} className="underline">
+          /path
+        </Link>
+        , then see{" "}
         <Link href={selectedId ? `/progress?child=${encodeURIComponent(selectedId)}` : "/progress"} className="underline">
           /progress
         </Link>{" "}

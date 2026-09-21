@@ -60,6 +60,10 @@ Parent sees Now / Confidence / Next under the selected Child after hire and play
 
 Parent captures and owns intent under the selected Child so path planning starts from parent intent, not child login. Page [`/intent`](https://portal.fieldschool.ai/intent). Unsigned `GET /api/progress/intent`. Parent `POST /api/progress/intent` writes hire-path children `play-child` / `hire-child` only. File `public/lessons/hls/supervised-intent.json`. Child ≠ User. No child login. Does not call family `/api/intent` or write `learning_intents`. Does not edit FamilyV1Home or children-database. Family LIVE `bc-4765f2f0` not stolen. Distribute HELD. Launch **CLOSED**, **0/8**.
 
+## Parent-path assembly (FR-4 / FR-3)
+
+Parent gets a path assembled under the selected Child from parent-owned intent. Page [`/path`](https://portal.fieldschool.ai/path). Unsigned `GET /api/progress/path`. Parent `POST /api/progress/path` assembles hire-path children `play-child` / `hire-child` from FR-3 intent. File `public/lessons/hls/supervised-path.json`. Child ≠ User. No child login. Does not call family `/api/curriculum` or write `curriculum_paths`. Does not edit FamilyV1Home or children-database. Family LIVE `bc-4765f2f0` not stolen. Distribute HELD. Launch **CLOSED**, **0/8**.
+
 ## Overlay
 
 `app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T164937Z.tar.gz` sha256 `11d474e9e3a33bb698d455faad84490a2f5898b93da460bcbf21a07ddf0a8076`.
