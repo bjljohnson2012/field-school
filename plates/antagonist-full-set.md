@@ -36,6 +36,7 @@ Cites:
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
 - [antagonist-compare-encode-master.md](./antagonist-compare-encode-master.md) — LessonSpine compare encode master dest reaudit
 - [antagonist-section-encode-master.md](./antagonist-section-encode-master.md) — LessonSpine section encode master dest reaudit
+- [antagonist-glossary-encode-master.md](./antagonist-glossary-encode-master.md) — LessonSpine glossary encode master dest reaudit
 - [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
 - [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-glossary-chip.md](./antagonist-glossary-chip.md) — GlossaryChip term / definition pop
@@ -1299,6 +1300,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. GlossaryChip last-word “term.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine glossary encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4` sha256 `247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c` plus GlossaryChip plates. After PR 137 merge `a5c954491dc32a9e8ee88f4abe2e1fc90bdf2307`. **Current master dest.** Section dest `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` **untouched**. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4
+sha256: 247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c
+stills: /opt/cursor/artifacts/remotion-antagonist-glossary-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. GlossaryChip last-word “term.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `GlossaryChipDemo-f0.png`, `GlossaryChipDemo-f60.png`.
 
 ## Held
 

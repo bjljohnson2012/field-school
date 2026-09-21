@@ -115,7 +115,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | SectionTitle LessonSpine encode | PR 134 `03c5318` / tip `33d0190` |
 | Section encode master dest reaudit | PR 135 `a7facba` / tip `de74e64` |
 | GlossaryChip term / definition pop | PR 136 `71fb9fd` / tip `f08f57d` |
-| GlossaryChip LessonSpine encode | PR 137 tip `bcbb825` |
+| GlossaryChip LessonSpine encode | PR 137 `a5c9544` / tip `cd3e594` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -159,7 +159,7 @@ CompareBoard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-compar
 
 SectionTitle LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4` sha256 `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` (h264 1920×1080@30, 41.000s). PRs 85–133. SectionTitle section break / chapter title on the CompareBoard stack. Compare dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-section-encode.md](../../plates/antagonist-lesson-spine-section-encode.md). Archived prior dest. PR 133 merge `e619df3` / tip `2a7ce33` harvested. PR 134 merge `03c5318` / tip `33d0190` harvested. PR 136 merge `71fb9fd` / tip `f08f57d` harvested. Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-section-encode.md`. Evidence: `plates/antagonist-section-encode-master.md`.
 
-GlossaryChip LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4` sha256 `247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c` (h264 1920×1080@30, 41.000s). PRs 85–136. GlossaryChip term / definition pop on the SectionTitle stack. Section dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-glossary-encode.md](../../plates/antagonist-lesson-spine-glossary-encode.md). **Current master dest.** PR 136 merge `71fb9fd` / tip `f08f57d` harvested. Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-glossary-encode.md`.
+GlossaryChip LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4` sha256 `247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c` (h264 1920×1080@30, 41.000s). PRs 85–136. GlossaryChip term / definition pop on the SectionTitle stack. Section dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-glossary-encode.md](../../plates/antagonist-lesson-spine-glossary-encode.md). **Current master dest.** PR 136 merge `71fb9fd` / tip `f08f57d` harvested. PR 137 merge `a5c9544` / tip `cd3e594` harvested. Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-glossary-encode.md`. Evidence: `plates/antagonist-glossary-encode-master.md`.
 
 ## Letterbox stack (complete)
 
@@ -398,6 +398,10 @@ PR 135 merge `a7facba` / tip `de74e64` harvested. PR 136 merge `71fb9fd` / tip `
 ## LessonSpine glossary encode (PASS)
 
 PRs 85–136 harvested. PR 136 merge `71fb9fd` / tip `f08f57d`. New dated dest `/opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4` sha256 `247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c`. **Current master dest.** Section dest `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-glossary-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-glossary-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine glossary encode master dest reaudit (PASS)
+
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4` sha256 `247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c` plus GlossaryChip plates. PR 137 merge `a5c9544` / tip `cd3e594`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Section dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-glossary-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-glossary-encode-master/2026-09-21/`. **Current master dest.**
 
 ## Karaoke gold (VOX-S01 PASS)
 
