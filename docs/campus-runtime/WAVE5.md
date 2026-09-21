@@ -174,7 +174,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Stripe webhook hire activation | PR 193 `fcaa4d9` |
 | Parent-supervised progress | PR 194 `e1a5eaf` |
 | Parent-owned intent | PR 195 `6584268` |
-| Parent-path assembly | PR this seal `pending` |
+| Parent-path assembly | PR this seal `7bfa665` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
