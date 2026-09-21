@@ -36,6 +36,7 @@
     "vite.config.mts",
     "app.config.ts",
     "src/routes",
-    "src/routeTree.gen.ts"
+    "src/routeTree.gen.ts",
+    "public/lessons/hls"
   ]
 }

@@ -40,6 +40,14 @@ if [ ! -f "$ROOT/public/lessons/LessonSpine.mp4" ]; then
   echo "Refusing: campus LessonSpine archive missing in $ROOT" >&2
   exit 1
 fi
+if [ ! -f "$ROOT/public/lessons/hls/LessonSpine.m3u8" ]; then
+  echo "Refusing: Ready HLS playlist missing in $ROOT" >&2
+  exit 1
+fi
+if [ ! -f "$ROOT/public/lessons/hls/ready.json" ]; then
+  echo "Refusing: Ready manifest missing in $ROOT" >&2
+  exit 1
+fi
 
 STAGE="$(mktemp -d /tmp/player-rail-campus-pack.XXXXXX)"
 TMP_TAR="$(mktemp /tmp/player-rail-campus-pack.XXXXXX.tar.gz)"
@@ -54,19 +62,24 @@ MEMBERS=(
   src/app/campus-home.tsx
   src/components/site-header.tsx
   public/lessons/LessonSpine.mp4
+  src/app/api/media/lesson-spine/ready/route.ts
+  public/lessons/ready.json
 )
 
 mkdir -p \
   "$STAGE/src/app/play/lesson-spine" \
-  "$STAGE/src/app/api/media/lesson-spine" \
+  "$STAGE/src/app/api/media/lesson-spine/ready" \
   "$STAGE/src/components" \
   "$STAGE/src/lib/player" \
   "$STAGE/src/app" \
-  "$STAGE/public/lessons"
+  "$STAGE/public/lessons/hls"
 
 for member in "${MEMBERS[@]}"; do
+  mkdir -p "$(dirname "$STAGE/$member")"
   cp "$ROOT/$member" "$STAGE/$member"
 done
+cp -R "$ROOT/public/lessons/hls/." "$STAGE/public/lessons/hls/"
+mapfile -t HLS_MEMBERS < <(cd "$STAGE" && find public/lessons/hls -type f | sort)
 
 cat > "$STAGE/MANIFEST.txt" <<MANIFEST
 player-rail-campus-pack (HTML5 LessonSpine player)
@@ -74,7 +87,7 @@ main_sha=$MAIN_SHA
 stamp=$STAMP
 files:
 $(printf '  %s\n' "${MEMBERS[@]}")
-not in pack: remotion, family chrome, children-database, org home, vite.config, AUTH_URL, stripe, Cleaning flip
+not in pack: remotion, family chrome, children-database, org home, vite.config, AUTH_URL, stripe, Distribute
 MANIFEST
 
 cat > "$STAGE/PLAYER_RAIL_SHA" <<MARKER
@@ -86,6 +99,7 @@ MARKER
 
 tar -C "$STAGE" -czf "$TMP_TAR" \
   "${MEMBERS[@]}" \
+  "${HLS_MEMBERS[@]}" \
   MANIFEST.txt \
   PLAYER_RAIL_SHA
 PACK_SHA="$(sha256sum "$TMP_TAR" | awk '{print $1}')"
@@ -123,8 +137,10 @@ if tar -tzf "\$PACK" | grep -E '(^|/)(family-v1-home|children-database|src/route
   echo "Refusing pack: family, org home, Remotion, or TanStack paths present" >&2
   exit 1
 fi
-mkdir -p "\$REMOTE_DIR/src/app/play/lesson-spine" "\$REMOTE_DIR/src/app/api/media/lesson-spine" "\$REMOTE_DIR/src/lib/player" "\$REMOTE_DIR/public/lessons"
+mkdir -p "\$REMOTE_DIR/src/app/play/lesson-spine" "\$REMOTE_DIR/src/app/api/media/lesson-spine/ready" "\$REMOTE_DIR/src/lib/player" "\$REMOTE_DIR/public/lessons/hls"
+rm -f "\$REMOTE_DIR/public/lessons/hls/"*.ts
 tar -xzf "\$PACK" -C "\$REMOTE_DIR"
+rm -f "\$REMOTE_DIR/public/lessons/hls/"*.ts
 
 FAM_HOME2=\$(sha256sum "\$REMOTE_DIR/src/components/family-v1-home.tsx" | awk '{print \$1}')
 FAM_OP2=\$(sha256sum "\$REMOTE_DIR/src/lib/family/operator.ts" | awk '{print \$1}')

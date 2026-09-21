@@ -37,10 +37,12 @@ export function LessonSpinePlayer() {
           preload="metadata"
           src="/api/media/lesson-spine"
           data-master-sha256={LESSON_SPINE_MASTER_SHA256}
+          data-ready="hls"
           onTimeUpdate={(event) => setCurrent(event.currentTarget.currentTime)}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
         >
+          <source src="/lessons/hls/LessonSpine.m3u8" type="application/vnd.apple.mpegurl" />
           <source src="/api/media/lesson-spine" type="video/mp4" />
           <source src="/lessons/LessonSpine.mp4" type="video/mp4" />
         </video>
@@ -48,6 +50,7 @@ export function LessonSpinePlayer() {
       <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center justify-between gap-3 text-xs uppercase tracking-[0.16em] text-muted-foreground">
           <span>Player rail</span>
+          <span data-ready-chip="hls">Ready · HLS</span>
           <span>
             {playing ? "Playing" : "Paused"} · {active.label}
           </span>
