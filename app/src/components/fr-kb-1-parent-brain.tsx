@@ -27,6 +27,7 @@ type BrainChild = {
     confidence: { state: string; label: string };
     next: { title: string; copy: string };
   };
+  sources: Array<{ title: string; body: string }>;
   notes: Array<{ title: string; body: string }>;
   summary: {
     sources: number;
@@ -52,6 +53,7 @@ export function FrKb1ParentBrain() {
   const childParam = search.get("child")?.trim() || "";
   const [payload, setPayload] = useState<BrainPayload | null>(null);
   const [title, setTitle] = useState("");
+  const [sourceText, setSourceText] = useState("");
   const [noteText, setNoteText] = useState("");
   const [saved, setSaved] = useState("");
 
@@ -66,6 +68,7 @@ export function FrKb1ParentBrain() {
         const body = (await res.json().catch(() => ({}))) as BrainPayload;
         setPayload(body);
         setTitle(body.selected?.title || "");
+        setSourceText((body.selected?.sources || []).map((source) => source.body || source.title).join("\n"));
         setNoteText((body.selected?.notes || []).map((note) => note.body || note.title).join("\n"));
         setSaved("");
       })
@@ -74,6 +77,11 @@ export function FrKb1ParentBrain() {
 
   async function postAction(action: "start" | "update" | "sync") {
     if (!selectedId) return;
+    const sources = sourceText
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => ({ title: "Parent source", body: line }));
     const notes = noteText
       .split("\n")
       .map((line) => line.trim())
@@ -86,6 +94,7 @@ export function FrKb1ParentBrain() {
         child: selectedId,
         action,
         title,
+        sources,
         notes,
       }),
     });
@@ -96,6 +105,8 @@ export function FrKb1ParentBrain() {
     }
     setPayload(body);
     setTitle(body.selected?.title || title);
+    setSourceText((body.selected?.sources || []).map((source) => source.body || source.title).join("\n"));
+    setNoteText((body.selected?.notes || []).map((note) => note.body || note.title).join("\n"));
     setSaved(action === "start" ? "started" : action === "sync" ? "synced" : "updated");
   }
 
@@ -110,7 +121,7 @@ export function FrKb1ParentBrain() {
   }
 
   return (
-    <section data-brain="fr-kb-1" data-hire-path-sync="fr-kb-2">
+    <section data-brain="fr-kb-1" data-hire-path-sync="fr-kb-2" data-brain-sources-notes="true">
       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
         Knowledge brain
       </p>
@@ -118,9 +129,9 @@ export function FrKb1ParentBrain() {
         Brain under selected Child
       </h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
-        Parent starts and sees a durable knowledge brain for the family hire.
-        Intent, path, and portion persist here after hire-path use. Child is
-        not a User. Family LIVE chrome stays untouched.
+        Parent writes sources and notes into the family hire brain so private
+        curriculum and confidence stay on this brain, not a generic catalog.
+        Child is not a User. Family LIVE chrome stays untouched.
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2" data-child-picker="fr-2">
@@ -161,8 +172,39 @@ export function FrKb1ParentBrain() {
             <p className="mt-2 text-sm">
               Bound to FR-3 intent, FR-4 path, and FR-5 portion. Confidence{" "}
               {selected.progress.confidence.label}. Horizon {selected.portion.horizon}.
+              Sources {selected.summary.sources}. Notes {selected.summary.notes}.
             </p>
           </article>
+          <div
+            className="grid gap-4 md:grid-cols-2"
+            data-brain-source-count={selected.summary.sources}
+            data-brain-note-count={selected.summary.notes}
+          >
+            <article className="rounded-xl border border-border px-4 py-4">
+              <h2 className="font-display text-2xl tracking-tight">Sources</h2>
+              <ul className="mt-2 grid gap-2 text-sm">
+                {(selected.sources || []).length ? (
+                  (selected.sources || []).map((source, index) => (
+                    <li key={`${source.title}-${index}`}>{source.body || source.title}</li>
+                  ))
+                ) : (
+                  <li>No sources yet.</li>
+                )}
+              </ul>
+            </article>
+            <article className="rounded-xl border border-border px-4 py-4">
+              <h2 className="font-display text-2xl tracking-tight">Notes</h2>
+              <ul className="mt-2 grid gap-2 text-sm">
+                {(selected.notes || []).length ? (
+                  (selected.notes || []).map((note, index) => (
+                    <li key={`${note.title}-${index}`}>{note.body || note.title}</li>
+                  ))
+                ) : (
+                  <li>No notes yet.</li>
+                )}
+              </ul>
+            </article>
+          </div>
           <div className="grid gap-4 md:grid-cols-3">
             <article className="rounded-xl border border-border px-4 py-4">
               <h2 className="font-display text-2xl tracking-tight">Intent</h2>
@@ -184,6 +226,16 @@ export function FrKb1ParentBrain() {
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 data-brain-title="true"
+                className="rounded-xl border border-border bg-background px-3 py-2"
+              />
+            </label>
+            <label className="grid gap-2 text-sm">
+              Parent sources
+              <textarea
+                value={sourceText}
+                onChange={(event) => setSourceText(event.target.value)}
+                rows={4}
+                data-brain-sources="true"
                 className="rounded-xl border border-border bg-background px-3 py-2"
               />
             </label>
