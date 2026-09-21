@@ -684,6 +684,54 @@ export function CompareBoard() {
   );
 }
 
+/** Section break / chapter title. After sting/objective path, after compare, before practice. Cream + gold 6px rail. */
+export const SECTION_TITLE_KICKER = "Section";
+export const SECTION_TITLE_LINE = "Name the section.";
+
+export function SectionTitle() {
+  const words = SECTION_TITLE_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? SECTION_TITLE_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 228,
+        maxWidth: 480,
+        padding: "14px 22px 16px 18px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {SECTION_TITLE_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+    </div>
+  );
+}
+
 /** Application / try-this. After Recap/Quiz path, before end. Cream + gold 6px rail. */
 export const PRACTICE_CARD_KICKER = "Try this";
 export const PRACTICE_CARD_LINE = "Apply one idea now.";

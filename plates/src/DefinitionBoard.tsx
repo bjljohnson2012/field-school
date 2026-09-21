@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream} from "./brand";
-import {AudioBed, Bed, CalloutCard, ChapterChip, Claim, CompareBoard, GoldRule, HeadDock, Karaoke, KeyClaim, Keyword, Kicker, Letterbox, LowerThird, OverlayLock, ProgressRail, ScriptureCard, Title, TransitionLuma, TypeCard} from "./layers";
+import {AudioBed, Bed, CalloutCard, ChapterChip, Claim, CompareBoard, GoldRule, HeadDock, Karaoke, KeyClaim, Keyword, Kicker, Letterbox, LowerThird, OverlayLock, ProgressRail, ScriptureCard, SectionTitle, Title, TransitionLuma, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {DefinitionProps} from "./types";
@@ -76,6 +76,9 @@ export const DefinitionBoard: React.FC<DefinitionProps> = ({
         </Layer>
         <Layer name="compare">
           <CompareBoard />
+        </Layer>
+        <Layer name="section">
+          <SectionTitle />
         </Layer>
         <Layer name="audio">
           <AudioBed />
