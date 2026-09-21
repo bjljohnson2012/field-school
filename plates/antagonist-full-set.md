@@ -26,7 +26,8 @@ Cites:
 - [antagonist-lesson-spine-transition-luma-encode.md](./antagonist-lesson-spine-transition-luma-encode.md) — LessonSpine TransitionLuma encode (archived prior)
 - [antagonist-lesson-spine-end-card-encode.md](./antagonist-lesson-spine-end-card-encode.md) — LessonSpine EndCard encode (archived prior)
 - [antagonist-lesson-spine-practice-encode.md](./antagonist-lesson-spine-practice-encode.md) — LessonSpine PracticeCard encode (archived prior)
-- [antagonist-lesson-spine-key-claim-encode.md](./antagonist-lesson-spine-key-claim-encode.md) — LessonSpine KeyClaim encode (current master)
+- [antagonist-lesson-spine-key-claim-encode.md](./antagonist-lesson-spine-key-claim-encode.md) — LessonSpine KeyClaim encode (archived prior)
+- [antagonist-lesson-spine-scripture-encode.md](./antagonist-lesson-spine-scripture-encode.md) — LessonSpine ScriptureCard encode (current master)
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
@@ -119,7 +120,8 @@ stills: /opt/cursor/artifacts/remotion-antagonist-full-set-reaudit/2026-09-20/
 | `/opt/cursor/artifacts/lesson-spine-transition-luma-encode/2026-09-20/LessonSpine.mp4` | `f631402a6dfbb2ca2218ea9617c7b2af527eb7e88f8df5547dc6584c9ef5a96e` | TransitionLuma — archived prior |
 | `/opt/cursor/artifacts/lesson-spine-end-card-encode/2026-09-20/LessonSpine.mp4` | `073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693` | EndCard — archived prior |
 | `/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4` | `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf` | PracticeCard — archived prior |
-| `/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4` | `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` | **current master** (KeyClaim) |
+| `/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4` | `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` | KeyClaim — archived prior |
+| `/opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4` | `cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79` | **current master** (ScriptureCard) |
 
 Just `27pn9xs0zk8a73g` and Aug 30 `vox/everything-made-up.mp4` not written. No Cap A-roll.
 
@@ -1002,7 +1004,7 @@ Stills: `KeyClaimDemo-f0.png`, `KeyClaimDemo-f60.png`, `LessonSpine-objective-f5
 
 ## LessonSpine key-claim encode 2026-09-21
 
-Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4` sha256 `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606`. **Current master dest.** Practice dest `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf` archived prior, **untouched**. PRs 85–124. After PR 124 merge `f5dbcb9b14faf58f6399cc7b6523c91aba635752`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-key-claim-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4` sha256 `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606`. Archived prior dest. Practice dest `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf` archived prior, **untouched**. PRs 85–124. After PR 124 merge `f5dbcb9b14faf58f6399cc7b6523c91aba635752`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-key-claim-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
 
 ```
 verdict: PASS
@@ -1065,6 +1067,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ScriptureCard last-word “verse.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `ScriptureCardDemo-f0.png`, `ScriptureCardDemo-f60.png`, `LessonSpine-objective-f570.png`.
+
+## LessonSpine scripture encode 2026-09-21
+
+Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4` sha256 `cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79`. **Current master dest.** Key-claim dest `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` archived prior, **untouched**. PRs 85–127. After PR 127 merge `139e5f9600e167c9222833de7df219bb758f5274`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-scripture-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4
+sha256: cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79
+stills: /opt/cursor/artifacts/remotion-lesson-spine-scripture-encode/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ScriptureCard last-word “verse.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
 
 ## Held
 
