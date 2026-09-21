@@ -54,4 +54,4 @@ After Parent pays Learn with Ben, `POST /api/stripe/webhook` activates the hire 
 
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T153253Z.tar.gz` sha256 `4552f4413d4d0aef14c8cac7de6f1fbf01eceb482d39305452c37cd05ddae7f5`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T155726Z.tar.gz` sha256 `3038c31d6ae9c0b2e3274abed20cd67df0b73ae4e70cb488d34ec07383f046e6`.
