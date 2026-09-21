@@ -20,6 +20,7 @@ import {KeyClaimDemo} from "./KeyClaimDemo";
 import {ScriptureCardDemo} from "./ScriptureCardDemo";
 import {CompareBoardDemo} from "./CompareBoardDemo";
 import {SectionTitleDemo} from "./SectionTitleDemo";
+import {GlossaryChipDemo} from "./GlossaryChipDemo";
 import {LowerThirdDemo} from "./LowerThirdDemo";
 import {TalkingHeadCard} from "./TalkingHeadCard";
 import {LOCK} from "./brand";
@@ -493,6 +494,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="SectionTitleDemo"
         component={SectionTitleDemo}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="GlossaryChipDemo"
+        component={GlossaryChipDemo}
         durationInFrames={240}
         fps={30}
         width={1920}

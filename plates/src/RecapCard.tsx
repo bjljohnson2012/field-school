@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream, gold, ink} from "./brand";
-import {AudioBed, Bed, CalloutCard, ChapterChip, Claim, CompareBoard, GoldRule, HeadDock, Karaoke, KeyClaim, Keyword, Kicker, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, PracticeCard, ProgressRail, ScriptureCard, SectionTitle, Title, TransitionLuma, TypeCard} from "./layers";
+import {AudioBed, Bed, CalloutCard, ChapterChip, Claim, CompareBoard, GlossaryChip, GoldRule, HeadDock, Karaoke, KeyClaim, Keyword, Kicker, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, PracticeCard, ProgressRail, ScriptureCard, SectionTitle, Title, TransitionLuma, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {RecapProps} from "./types";
@@ -89,6 +89,9 @@ export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, objectiv
         </Layer>
         <Layer name="section">
           <SectionTitle />
+        </Layer>
+        <Layer name="glossary">
+          <GlossaryChip />
         </Layer>
         <Layer name="practice">
           <PracticeCard />
