@@ -32,7 +32,8 @@ Cites:
 - [antagonist-lesson-spine-section-encode.md](./antagonist-lesson-spine-section-encode.md) — LessonSpine SectionTitle encode (archived prior)
 - [antagonist-lesson-spine-glossary-encode.md](./antagonist-lesson-spine-glossary-encode.md) — LessonSpine GlossaryChip encode (archived prior)
 - [antagonist-lesson-spine-objection-encode.md](./antagonist-lesson-spine-objection-encode.md) — LessonSpine ObjectionCard encode (archived prior)
-- [antagonist-lesson-spine-sting-encode.md](./antagonist-lesson-spine-sting-encode.md) — LessonSpine StingColdOpen encode (current master)
+- [antagonist-lesson-spine-sting-encode.md](./antagonist-lesson-spine-sting-encode.md) — LessonSpine StingColdOpen encode (archived prior)
+- [antagonist-lesson-spine-checkpoint-encode.md](./antagonist-lesson-spine-checkpoint-encode.md) — LessonSpine CheckpointCard encode (current master)
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
@@ -1399,7 +1400,7 @@ Stills: `StingColdOpenDemo-f0.png`, `StingColdOpenDemo-f60.png`, `LessonSpine-st
 
 ## LessonSpine sting encode 2026-09-21
 
-Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-sting-encode/2026-09-21/LessonSpine.mp4` sha256 `325a41e775821c8576e14038d2076ee639d48a0fc29b3f84b223f4af9390f204`. **Current master dest.** Objection dest `4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee` archived prior, **untouched**. PRs 85–141. After PR 141 merge `d5ce8be45fc745207b75b89d63f919a5e0588afb`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-sting-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-sting-encode/2026-09-21/LessonSpine.mp4` sha256 `325a41e775821c8576e14038d2076ee639d48a0fc29b3f84b223f4af9390f204`. Archived prior dest. Objection dest `4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee` archived prior, **untouched**. PRs 85–141. After PR 141 merge `d5ce8be45fc745207b75b89d63f919a5e0588afb`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-sting-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
 
 ```
 verdict: PASS
@@ -1462,6 +1463,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CheckpointCard last-word “idea.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `CheckpointCardDemo-f0.png`, `CheckpointCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
+
+## LessonSpine checkpoint encode 2026-09-21
+
+Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-checkpoint-encode/2026-09-21/LessonSpine.mp4` sha256 `19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a`. **Current master dest.** Sting dest `325a41e775821c8576e14038d2076ee639d48a0fc29b3f84b223f4af9390f204` archived prior, **untouched**. PRs 85–144. After PR 144 merge `44ccaede6e78f49fd281d9019eb7c35d012a5f02`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-checkpoint-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-checkpoint-encode/2026-09-21/LessonSpine.mp4
+sha256: 19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a
+stills: /opt/cursor/artifacts/remotion-lesson-spine-checkpoint-encode/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CheckpointCard last-word “idea.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
 
 ## Held
 
