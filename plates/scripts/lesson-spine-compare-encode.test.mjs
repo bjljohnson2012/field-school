@@ -11,12 +11,15 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 const src = (...parts) => readFileSync(join(root, ...parts), "utf8");
 const NEW_DEST =
-  "/opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4";
-const NEW_SHA = "cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79";
-const STILLS = "/opt/cursor/artifacts/remotion-lesson-spine-scripture-encode/2026-09-21";
+  "/opt/cursor/artifacts/lesson-spine-compare-encode/2026-09-21/LessonSpine.mp4";
+const NEW_SHA = "917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d";
+const STILLS = "/opt/cursor/artifacts/remotion-lesson-spine-compare-encode/2026-09-21";
 const PRIOR =
+  "/opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4";
+const PRIOR_SHA = "cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79";
+const KEYCLAIM =
   "/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4";
-const PRIOR_SHA = "16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606";
+const KEYCLAIM_SHA = "16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606";
 const PRACTICE =
   "/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4";
 const PRACTICE_SHA = "8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf";
@@ -32,6 +35,7 @@ const CAPTION_SHA = "5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d
 
 const PRIORS = {
   [PRIOR]: PRIOR_SHA,
+  [KEYCLAIM]: KEYCLAIM_SHA,
   [PRACTICE]: PRACTICE_SHA,
   [ENDCARD]: ENDCARD_SHA,
   [TRANSITION]: TRANSITION_SHA,
@@ -66,43 +70,43 @@ function sha256(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
 }
 
-test("WAVE5 and STATUS archive scripture encode as prior dest", () => {
+test("WAVE5 and STATUS promote compare encode as current master dest", () => {
   const wave5 = src("..", "docs", "campus-runtime", "WAVE5.md");
   const campus = src("..", "docs", "campus-runtime", "STATUS.md");
-  const note = src("antagonist-lesson-spine-scripture-encode.md");
+  const note = src("antagonist-lesson-spine-compare-encode.md");
   assert.match(
     wave5,
-    /Archived prior scripture-encode `\/opt\/cursor\/artifacts\/lesson-spine-scripture-encode\/2026-09-21\/LessonSpine\.mp4`/,
+    /Current master LessonSpine dest: `\/opt\/cursor\/artifacts\/lesson-spine-compare-encode\/2026-09-21\/LessonSpine\.mp4`/,
   );
+  assert.match(wave5, /917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d/);
+  assert.match(wave5, /## LessonSpine compare encode \(PASS\)/);
+  assert.match(wave5, /PRs 85–130/);
+  assert.match(wave5, /PR 130 merge `0b7eb24`/);
   assert.match(wave5, /cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79/);
-  assert.match(wave5, /## LessonSpine scripture encode \(PASS\)/);
-  assert.match(wave5, /PRs 85–127/);
-  assert.match(wave5, /PR 127 merge `139e5f9`/);
-  assert.match(wave5, /16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606/);
-  assert.match(wave5, /Archived prior key-claim-encode/);
+  assert.match(wave5, /Archived prior scripture-encode/);
   assert.match(wave5, /\*\*Current master dest\.\*\*/);
+  assert.match(campus, /Current master LessonSpine dest is compare-encode/);
+  assert.match(campus, /917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d/);
+  assert.match(campus, /PR 130 merge `0b7eb24`/);
   assert.match(campus, /Archived prior scripture-encode/);
   assert.match(campus, /cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79/);
-  assert.match(campus, /PR 127 merge `139e5f9`/);
-  assert.match(campus, /Archived prior key-claim-encode/);
-  assert.match(campus, /16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606/);
   assert.match(campus, /\*\*CLOSED\*\*, \*\*0\/8\*\*/);
   assert.match(note, /EDU-S01: PASS/);
   assert.match(note, /EDU-S02: PASS/);
-  assert.match(note, /cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79/);
-  assert.match(note, /PR 127 merge `139e5f9600e167c9222833de7df219bb758f5274`/);
+  assert.match(note, /917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d/);
+  assert.match(note, /PR 130 merge `0b7eb24d1d53a3e7a8fbe9fd0ebc12efbaca0c8a`/);
   assert.match(note, /hold_cleaning: true/);
   assert.match(
     note,
     /Opener\/sting → TalkingHead\/slate → DefinitionBoard\/objective → RecapCard → QuizBumper\/next-up/,
   );
-  assert.match(src("README.md"), /antagonist-lesson-spine-scripture-encode\.md/);
+  assert.match(src("README.md"), /antagonist-lesson-spine-compare-encode\.md/);
   assert.doesNotMatch(note, /8\/8 PASS|launch OPEN|HARD_FAIL/);
   assert.doesNotMatch(wave5, /8\/8 PASS|launch OPEN/i);
   assert.doesNotMatch(src("antagonist-full-set.md"), /8\/8 PASS|launch OPEN|HARD_FAIL/);
 });
 
-test("new dest exists; key-claim-encode and other priors untouched", () => {
+test("new dest exists; scripture-encode and other priors untouched", () => {
   assert.equal(existsSync(NEW_DEST), true);
   assert.equal(sha256(NEW_DEST), NEW_SHA);
   assert.notEqual(NEW_DEST, PRIOR);
@@ -123,7 +127,7 @@ test("new dest exists; key-claim-encode and other priors untouched", () => {
 });
 
 test("render-lock dry-run forwards the new dest and refuses Just", () => {
-  const dir = mkdtempSync(join(tmpdir(), "scripture-encode-lock-"));
+  const dir = mkdtempSync(join(tmpdir(), "compare-encode-lock-"));
   const missingLock = join(dir, "absent.render.lock");
   const meminfo = join(dir, "meminfo");
   writeFileSync(meminfo, "MemAvailable: 8192000 kB\n");
