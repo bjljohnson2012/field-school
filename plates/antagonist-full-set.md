@@ -47,6 +47,7 @@ Cites:
 - [antagonist-spectrum-encode-master.md](./antagonist-spectrum-encode-master.md) — LessonSpine spectrum encode master dest reaudit 2026-09-21
 - [antagonist-threshold-encode-master.md](./antagonist-threshold-encode-master.md) — LessonSpine threshold encode master dest reaudit 2026-09-21
 - [antagonist-threshold-card.md](./antagonist-threshold-card.md) — ThresholdCard cutoff / gate mark 2026-09-21
+- [antagonist-rubric-card.md](./antagonist-rubric-card.md) — RubricCard scoring bands / criteria 2026-09-21
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
@@ -2130,6 +2131,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ThresholdCard last-word “cutoff.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `ThresholdCardDemo-f0.png`, `ThresholdCardDemo-f60.png`.
+
+## RubricCard 2026-09-21
+
+Dated **2026-09-21** reaudit. RubricCard soft craft beat. Scoring bands / criteria distinct from ThresholdCard single cutoff on `RubricCard` (`RUBRIC_CARD_KICKER = "Rubric"`; `RUBRIC_CARD_LINE = "Score the bands."`; `RUBRIC_CARD_ONE = "A. Holds."`; `RUBRIC_CARD_TWO = "B. Misses."`; cream + gold 6px left rail). Craft beat on `RubricCardDemo`. Sequenced after sting/objective path, after ThresholdCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). After PR 173 merge `ba62e6b76597d6ad3da1d11ec58b978db17018bf` / tip `be93fa81910c3c42dcdd8bc65b22ca73130abdd0`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. ThresholdCard after sting/objective path, after SpectrumBar, before PracticeCard. RubricCard after sting/objective path, after ThresholdCard, before PracticeCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-threshold-encode/2026-09-21/LessonSpine.mp4` sha256 `955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f` **Current master dest.** **untouched** (plate-level stills only). Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-threshold-encode/2026-09-21/LessonSpine.mp4
+sha256: 955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f
+stills: /opt/cursor/artifacts/remotion-rubric-card/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. RubricCard last-word “bands.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `RubricCardDemo-f0.png`, `RubricCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 
