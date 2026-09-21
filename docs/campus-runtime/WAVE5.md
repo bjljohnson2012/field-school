@@ -167,7 +167,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | LessonSpine Next player rail | PR 186 `fbc8d1d` |
 | LessonSpine play-rail Cleaning + Publish | PR 187 `df6f69c` |
 | AUTH_URL signed-in Parent | PR 188 `a8bb28f` |
-| Stripe live Learn with Ben | PR 189 `pending` |
+| Stripe live Learn with Ben | PR 189 `7f10edd` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
