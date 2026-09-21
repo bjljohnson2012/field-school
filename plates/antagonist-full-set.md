@@ -41,7 +41,8 @@ Cites:
 - [antagonist-lesson-spine-reflection-encode.md](./antagonist-lesson-spine-reflection-encode.md) — LessonSpine ReflectionPrompt encode (archived prior)
 - [antagonist-lesson-spine-timeline-encode.md](./antagonist-lesson-spine-timeline-encode.md) — LessonSpine TimelineRail encode (archived prior)
 - [antagonist-lesson-spine-source-encode.md](./antagonist-lesson-spine-source-encode.md) — LessonSpine SourceChip encode (archived prior)
-- [antagonist-lesson-spine-spectrum-encode.md](./antagonist-lesson-spine-spectrum-encode.md) — LessonSpine SpectrumBar encode (current master)
+- [antagonist-lesson-spine-spectrum-encode.md](./antagonist-lesson-spine-spectrum-encode.md) — LessonSpine SpectrumBar encode (archived prior)
+- [antagonist-lesson-spine-threshold-encode.md](./antagonist-lesson-spine-threshold-encode.md) — LessonSpine ThresholdCard encode (current master)
 - [antagonist-source-encode-master.md](./antagonist-source-encode-master.md) — LessonSpine source encode master dest reaudit 2026-09-21
 - [antagonist-spectrum-encode-master.md](./antagonist-spectrum-encode-master.md) — LessonSpine spectrum encode master dest reaudit 2026-09-21
 - [antagonist-threshold-card.md](./antagonist-threshold-card.md) — ThresholdCard cutoff / gate mark 2026-09-21
@@ -2084,6 +2085,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ThresholdCard last-word “cutoff.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `ThresholdCardDemo-f0.png`, `ThresholdCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
+
+## LessonSpine threshold encode 2026-09-21
+
+Dated **2026-09-21**. New dated dest `/opt/cursor/artifacts/lesson-spine-threshold-encode/2026-09-21/LessonSpine.mp4` sha256 `955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f`. **Current master dest.** Spectrum dest `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` archived prior, **untouched**. PRs 85–171. After PR 171 merge `c11b670c6a650d5df5d3ee664b4d678186a6c67b` / tip `4d8f25cdd3fe71ff0d0bb114e8b4181cdbb600b0`. Stills `/opt/cursor/artifacts/remotion-lesson-spine-threshold-encode/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-threshold-encode/2026-09-21/LessonSpine.mp4
+sha256: 955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f
+stills: /opt/cursor/artifacts/remotion-lesson-spine-threshold-encode/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ThresholdCard last-word “cutoff.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
 
 ## Held
 
