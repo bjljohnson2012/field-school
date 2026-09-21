@@ -51,6 +51,7 @@ Cites:
 - [antagonist-overlay-lock.md](./antagonist-overlay-lock.md) — OverlayLock logo+title lock
 - [antagonist-transition-luma.md](./antagonist-transition-luma.md) — TransitionLuma beat-to-beat wipe
 - [antagonist-end-card.md](./antagonist-end-card.md) — EndCard lesson close signal
+- [antagonist-practice-card.md](./antagonist-practice-card.md) — PracticeCard application / try-this
 
 ```
 verdict: PASS
@@ -902,6 +903,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `EndCardDemo-f0.png`, `EndCardDemo-f60.png`.
+
+## PracticeCard 2026-09-20
+
+Dated **2026-09-20** reaudit. PracticeCard soft craft beat. Application / try-this on `PracticeCard` (`PRACTICE_CARD_KICKER = "Try this"`; `PRACTICE_CARD_LINE = "Apply one idea now."`; cream + gold 6px left rail). Craft beat on `PracticeCardDemo`. Sequenced after Recap/Quiz path, before EndCard on QuizBumper. After PR 120 merge `e8e014bd79398968f85a7aaabcaf0099ff77f84f`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. Locked master dest `/opt/cursor/artifacts/lesson-spine-end-card-encode/2026-09-20/LessonSpine.mp4` sha256 `073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-practice-card/2026-09-20/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-20
+rendering: /opt/cursor/artifacts/lesson-spine-end-card-encode/2026-09-20/LessonSpine.mp4
+sha256: 073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693
+stills: /opt/cursor/artifacts/remotion-practice-card/2026-09-20/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. PracticeCard last-word “now.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `PracticeCardDemo-f0.png`, `PracticeCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 
