@@ -155,6 +155,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | RubricCard scoring bands / criteria | PR 174 `c262cef` |
 | RubricCard LessonSpine encode | PR 175 `34e31fa` |
 | RubricCard encode master dest reaudit | PR 176 `e525d24` |
+| EvidenceCard evidence / warrant rows | this PR |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -599,6 +600,10 @@ PRs 85–174 harvested. PR 175 this encode. PR 174 merge `80671dd` / tip `9001af
 ## LessonSpine rubric encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-rubric-encode/2026-09-21/LessonSpine.mp4` sha256 `4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337` plus RubricCard plates. PR 176 this reaudit. PR 175 merge `d9bcd4a` / tip `047fea5` (`d9bcd4a40397d31cd9ba7f962228df386fec9eae` / `047fea56b48b8d37bf434ad31e992841111ecc9d`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Threshold dest untouched. Spectrum dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-rubric-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-rubric-encode-master/2026-09-21/`. **Current master dest.**
+
+## EvidenceCard (PASS)
+
+PR 177 this craft. PR 176 merge `9e92f64` / tip `207db7b` harvested (`9e92f64e8b79a0dfb81ead8c5152481d19e6bbd3` / `207db7b1112edd81ec56cb89ae06cc1afb229c1c`). EvidenceCard soft craft beat: evidence / warrant rows distinct from RubricCard scoring bands and SourceChip citation chip after sting/objective path (`EVIDENCE_CARD_KICKER = "Evidence"`; `EVIDENCE_CARD_LINE = "Hold the warrant."`; `EVIDENCE_CARD_ONE = "The fact holds."`; `EVIDENCE_CARD_TWO = "The why shows."`; cream + gold 6px left rail; gold 8×8 squares). Craft beat on `EvidenceCardDemo`. Sequenced after sting/objective path, after RubricCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Evidence path only. No Cap take. ORDER LOCK intact. Current master dest rubric-encode sha256 `4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-evidence-card.md`. Stills: `/opt/cursor/artifacts/remotion-evidence-card/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 

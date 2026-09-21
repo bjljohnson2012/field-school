@@ -1639,6 +1639,116 @@ export function RubricCard() {
   );
 }
 
+/** Evidence / warrant rows distinct from bands and citation. After sting/objective path, after rubric, before practice. Cream + gold 6px rail. */
+export const EVIDENCE_CARD_KICKER = "Evidence";
+export const EVIDENCE_CARD_LINE = "Hold the warrant.";
+export const EVIDENCE_CARD_ONE = "The fact holds.";
+export const EVIDENCE_CARD_TWO = "The why shows.";
+
+export function EvidenceCard() {
+  const words = EVIDENCE_CARD_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? EVIDENCE_CARD_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  const oneWords = EVIDENCE_CARD_ONE.trim().split(/\s+/);
+  const oneKeyword = oneWords[oneWords.length - 1] ?? EVIDENCE_CARD_ONE;
+  const oneLead = oneWords.slice(0, -1).join(" ");
+  const twoWords = EVIDENCE_CARD_TWO.trim().split(/\s+/);
+  const twoKeyword = twoWords[twoWords.length - 1] ?? EVIDENCE_CARD_TWO;
+  const twoLead = twoWords.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 978,
+        maxWidth: 400,
+        padding: "12px 20px 14px 16px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {EVIDENCE_CARD_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+      <div
+        style={{
+          marginTop: 8,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <div
+          style={{
+            width: 8,
+            height: 8,
+            backgroundColor: gold,
+          }}
+        />
+        <div
+          style={{
+            fontFamily: displayFace,
+            fontWeight: 700,
+            fontSize: 22,
+            color: ink,
+          }}
+        >
+          {oneLead ? `${oneLead} ` : null}
+          <Keyword>{oneKeyword}</Keyword>
+        </div>
+      </div>
+      <div
+        style={{
+          marginTop: 4,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <div
+          style={{
+            width: 8,
+            height: 8,
+            backgroundColor: gold,
+          }}
+        />
+        <div
+          style={{
+            fontFamily: displayFace,
+            fontWeight: 700,
+            fontSize: 22,
+            color: ink,
+          }}
+        >
+          {twoLead ? `${twoLead} ` : null}
+          <Keyword>{twoKeyword}</Keyword>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Application / try-this. After Recap/Quiz path, before end. Cream + gold 6px rail. */
 export const PRACTICE_CARD_KICKER = "Try this";
 export const PRACTICE_CARD_LINE = "Apply one idea now.";

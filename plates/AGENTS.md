@@ -3,7 +3,7 @@
 Operator-only. Cap + Remotion + Edit-spec. Not a campus or student product.
 Not the factory hour-master melt path except as fallback.
 
-Wave 5 compositions: Opener, RecapCard, **DefinitionBoard**, **QuizBumper**, **TalkingHeadCard**, **LessonSpine**, plus craft demos **LowerThirdDemo** / **CaptionsDemo** / **CaptionDensityDemo** / **OverlayLockDemo** / **LetterboxDemo** / **AudioBedDemo** / **ProgressRailDemo** / **ChapterChipDemo** / **CalloutCardDemo** / **TransitionLumaDemo** / **EndCardDemo** / **PracticeCardDemo** / **KeyClaimDemo** / **ScriptureCardDemo** / **CompareBoardDemo** / **SectionTitleDemo** / **GlossaryChipDemo** / **ObjectionCardDemo** / **StingColdOpenDemo** / **CheckpointCardDemo** / **ExampleCardDemo** / **QuoteCardDemo** / **StepsCardDemo** / **CaveatCardDemo** / **ReflectionPromptDemo** / **TimelineRailDemo** / **SourceChipDemo** / **SpectrumBarDemo** / **ThresholdCardDemo** / **RubricCardDemo**. Remotion is default. Melt fallback only. Do not re-render Asset Just (`27pn9xs0zk8a73g`).
+Wave 5 compositions: Opener, RecapCard, **DefinitionBoard**, **QuizBumper**, **TalkingHeadCard**, **LessonSpine**, plus craft demos **LowerThirdDemo** / **CaptionsDemo** / **CaptionDensityDemo** / **OverlayLockDemo** / **LetterboxDemo** / **AudioBedDemo** / **ProgressRailDemo** / **ChapterChipDemo** / **CalloutCardDemo** / **TransitionLumaDemo** / **EndCardDemo** / **PracticeCardDemo** / **KeyClaimDemo** / **ScriptureCardDemo** / **CompareBoardDemo** / **SectionTitleDemo** / **GlossaryChipDemo** / **ObjectionCardDemo** / **StingColdOpenDemo** / **CheckpointCardDemo** / **ExampleCardDemo** / **QuoteCardDemo** / **StepsCardDemo** / **CaveatCardDemo** / **ReflectionPromptDemo** / **TimelineRailDemo** / **SourceChipDemo** / **SpectrumBarDemo** / **ThresholdCardDemo** / **RubricCardDemo** / **EvidenceCardDemo**. Remotion is default. Melt fallback only. Do not re-render Asset Just (`27pn9xs0zk8a73g`).
 
 Do not add campus UI. Do not add a student-facing AI builder. Do not campus-package Remotion into `app/`. Do not accept Cleaning flip or Publish/Distribute from this package.
 
@@ -48,9 +48,10 @@ Later sibling sits on top. No z-index.
 26. spectrum
 27. threshold
 28. rubric
-29. practice
-30. end
-31. audio
+29. evidence
+30. practice
+31. end
+32. audio
 
 Dock the talking-head card to ~38% width (`dock-right` or `dock-left`). Never full-bleed over type.
 
@@ -130,6 +131,10 @@ npx remotion still SpectrumBarDemo --frame=0
 npx remotion still SpectrumBarDemo --frame=60
 npx remotion still ThresholdCardDemo --frame=0
 npx remotion still ThresholdCardDemo --frame=60
+npx remotion still RubricCardDemo --frame=0
+npx remotion still RubricCardDemo --frame=60
+npx remotion still EvidenceCardDemo --frame=0
+npx remotion still EvidenceCardDemo --frame=60
 npx remotion still TalkingHeadCard --frame=90
 npx remotion still LessonSpine --frame=330
 ```
