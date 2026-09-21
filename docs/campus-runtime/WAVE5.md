@@ -159,7 +159,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | EvidenceCard LessonSpine encode | PR 178 `ff24f5e` |
 | EvidenceCard encode master dest reaudit | PR 179 `b4ef177` |
 | AnalogyCard analogy / like-this transfer pair | PR 180 `f8dd9ec` |
-| AnalogyCard LessonSpine encode | this PR |
+| AnalogyCard LessonSpine encode | PR 181 `5cb5225` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -623,7 +623,7 @@ PR 180 this craft. PR 179 merge `222d4de` / tip `5bc0024` harvested (`222d4de906
 
 ## LessonSpine analogy encode (PASS)
 
-PRs 85–180 harvested. PR this encode. PR 180 merge `dfca7ff` / tip `715941b` (`dfca7ff01e40f30b0df77dfca5ac1e0d36fab6ea` / `715941bb5c3a9998e7f9f4fea670ffcc7303b256`). New dated dest `/opt/cursor/artifacts/lesson-spine-analogy-encode/2026-09-21/LessonSpine.mp4` sha256 `a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37`. **Current master dest.** Evidence dest `5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-analogy-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-analogy-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+PRs 85–180 harvested. PR 181 this encode. PR 180 merge `dfca7ff` / tip `715941b` (`dfca7ff01e40f30b0df77dfca5ac1e0d36fab6ea` / `715941bb5c3a9998e7f9f4fea670ffcc7303b256`). New dated dest `/opt/cursor/artifacts/lesson-spine-analogy-encode/2026-09-21/LessonSpine.mp4` sha256 `a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37`. **Current master dest.** Evidence dest `5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-analogy-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-analogy-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
 
 ## Karaoke gold (VOX-S01 PASS)
 
