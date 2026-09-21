@@ -144,3 +144,8 @@ No in-round code fix. Docs-only.
 ## 2026-09-19 four-model readiness (superseded SHA)
 
 SHA `58671a3789a7270925765545d59703985c2e724b` (PR 63 on main). Suite then readiness runner. Ship gate was **FAIL** — farm not spawned on that readout. Do not use as the standing SHA.
+
+
+## Composer plates readiness (2026-09-21)
+
+`GET /api/composer` is the Wave3 LIVE campus path Gate verifies. It returns 200 readiness JSON (`wave3:LIVE`, `composer:ready`), not 404. Guest `/api/composer/catalog` and `/api/plates` stay `401 sign_in_required`. Signed-in Play Parent `/api/composer/catalog` and `/api/plates` return 200. Overlay pack only. Launch stays **CLOSED**, **0/8**.

@@ -86,6 +86,11 @@ Parent writes sources and notes into the hire-path knowledge brain under the sel
 
 Parent sees and updates FR-6 confidence on the hire-path knowledge brain under the selected Child so traceable confidence stays on that brain. Page [`/brain`](https://portal.fieldschool.ai/brain). Unsigned `GET /api/progress/brain` returns parent-owned confidence. Parent `POST /api/progress/brain` action `confidence` sets Not yet / Getting there / Ready for hire-path children `play-child` / `hire-child` only. File `public/lessons/hls/supervised-brain.json`. Child ≠ User. No child login. Does not call family `/api/brain`. Does not write `knowledge_brains` or `growth_units`. Does not edit FamilyV1Home or children-database. Family LIVE `bc-4765f2f0` not stolen. Distribute HELD. Launch **CLOSED**, **0/8**.
 
+
+## Composer plates readiness
+
+Campus edit tools on the Wave3 LIVE hire path. Unsigned `GET /api/composer` returns 200 Wave3 readiness (`composer:ready`, `launch:"CLOSED 0/8"`, `distribute:false`). Guest `/api/composer/catalog` and `/api/plates` stay `401 sign_in_required`. Signed-in Play Parent `/api/composer/catalog` and `/api/plates` return 200 (`ready:true` on plates). Does not edit FamilyV1Home or children-database. Family LIVE `bc-4765f2f0` not stolen. Distribute HELD. Launch **CLOSED**, **0/8**.
+
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T201500Z.tar.gz` sha256 `496113b1595b828e9a5b3c340cecf10cd02c1d91293f86d9750d727c44719151`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T202700Z.tar.gz` sha256 `6f91b296e2dac3055850068b9839fce9c1e38b7f13cef2d48ba7c696fcfef430`.

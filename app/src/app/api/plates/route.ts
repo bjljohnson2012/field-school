@@ -12,6 +12,7 @@ export async function GET(request: Request) {
   const plates = await listPlates(auth.identity);
   return NextResponse.json({
     ok: true,
+    ready: true,
     hold_cleaning: true,
     auto_flip: false,
     plates: plates.map((row) => ({
