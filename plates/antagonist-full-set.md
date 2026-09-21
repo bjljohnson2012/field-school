@@ -56,7 +56,8 @@ Cites:
 - [antagonist-counterexample-card.md](./antagonist-counterexample-card.md) — CounterexampleCard counterexample / not-this foil 2026-09-21
 - [antagonist-lesson-spine-rubric-encode.md](./antagonist-lesson-spine-rubric-encode.md) — LessonSpine RubricCard encode 2026-09-21
 - [antagonist-lesson-spine-evidence-encode.md](./antagonist-lesson-spine-evidence-encode.md) — LessonSpine EvidenceCard encode (archived prior)
-- [antagonist-lesson-spine-analogy-encode.md](./antagonist-lesson-spine-analogy-encode.md) — LessonSpine AnalogyCard encode (current master)
+- [antagonist-lesson-spine-analogy-encode.md](./antagonist-lesson-spine-analogy-encode.md) — LessonSpine AnalogyCard encode (archived prior)
+- [antagonist-lesson-spine-counterexample-encode.md](./antagonist-lesson-spine-counterexample-encode.md) — LessonSpine CounterexampleCard encode (current master)
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
@@ -2318,6 +2319,22 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CounterexampleCard last-word “not.” gold-ticked plus pair “case.” / “miss.” Launch stays CLOSED 0/8.
 
 Stills: `CounterexampleCardDemo-f0.png`, `CounterexampleCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
+
+## LessonSpine counterexample encode 2026-09-21
+
+Dated **2026-09-21** reaudit. New dated LessonSpine encode bundling CounterexampleCard counterexample / not-this foil after AnalogyCard before PracticeCard. After PR 183 merge `ee6c92c9be8750eea202cbbf130280084785a201` / tip `2bf51f76a5ba1b19335ef89c58a9755d900271bb`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. RubricCard after sting/objective path, after ThresholdCard, before PracticeCard. EvidenceCard after sting/objective path, after RubricCard, before PracticeCard. AnalogyCard after sting/objective path, after EvidenceCard, before PracticeCard. CounterexampleCard after sting/objective path, after AnalogyCard, before PracticeCard. New dest `/opt/cursor/artifacts/lesson-spine-counterexample-encode/2026-09-21/LessonSpine.mp4` sha256 `af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4` **Current master dest.** Analogy dest `a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37` archived, not overwritten. Evidence dest `5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b` **untouched**. Rubric dest `4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337` **untouched**. Threshold dest `955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f` **untouched**. Spectrum dest `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` **untouched**. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CounterexampleCard last-word “not.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
 
 ## Held
 
