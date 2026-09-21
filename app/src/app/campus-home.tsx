@@ -56,6 +56,12 @@ export function CampusHome() {
               >
                 Continue as guest
               </button>
+              <Link
+                href="/play/lesson-spine"
+                className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-5 text-sm"
+              >
+                Play LessonSpine
+              </Link>
               {ready && isStaff ? (
                 <>
                   <Link
