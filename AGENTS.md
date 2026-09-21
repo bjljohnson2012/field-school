@@ -1,8 +1,10 @@
 # Agents working in this repo
 
-Law for hire-path, parent/Child identity, locks, tickets, evaluators, and checkers: `FIELD-SCHOOL-ETHOS-MEMO.md`.
+Law: `FIELD-SCHOOL-ETHOS-MEMO.md` (21 Sep 2026 mid-build).
+Working job is development of people and of the organization, in a named room (household or team). Locks did not move.
 Read that file before a ticket, a PR, or a PASS claim. It does not grant Launch PASS.
-If a wave doc and the ethos memo disagree on User vs Child, prices, AUTH_URL, or dest, the ethos memo wins.
+Do not restart campus waves or merged hire-path work to match new wording. Seal what is already built.
+If a wave doc and the ethos memo disagree on User vs Child, prices, AUTH_URL, dest, or person-in-development-as-buyer, the ethos memo wins.
 
 User: `.cursor/USER.md` and `docs/campus-runtime/USER.md`.
 Entry: `docs/campus-runtime/CURSOR_AGENT_PROMPT.md`.
@@ -27,3 +29,4 @@ Wave 1 is done. Proof: `docs/campus-runtime/WAVE1.md`.
 - Add Notion Member / Quiz / Personality databases.
 - Invent a second Pattern item bank or official MBTI / Enneagram / Gallup / Wiley items.
 - Install Remotion MCP.
+- Rebuild hire-path because the job sentence got wider.
