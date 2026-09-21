@@ -149,6 +149,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | SpectrumBar continuum / contrast bar | PR 168 `19f93ba` |
 | SpectrumBar LessonSpine encode | PR 169 `11ba0e7` |
 | SpectrumBar encode master dest reaudit | PR 170 `3a6b7fd` |
+| ThresholdCard cutoff / gate mark | PR 171 `d44e016` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -569,6 +570,10 @@ PRs 85–168 harvested. PR 169 this encode. PR 168 merge `e82ba60` / tip `2a9f3a
 ## LessonSpine spectrum encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-spectrum-encode/2026-09-21/LessonSpine.mp4` sha256 `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` plus SpectrumBar plates. PR 170 this reaudit. PR 169 merge `6b98e60` / tip `3faad53` (`6b98e60673a3d665fda938c0f8d22896de8d99df` / `3faad53b1243a809178a753a76b1291210b52d66`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Source dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-spectrum-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-spectrum-encode-master/2026-09-21/`. **Current master dest.**
+
+## ThresholdCard (PASS)
+
+PR 171 this craft. PR 170 merge `cad9872` / tip `502ab85` harvested (`cad987229703b8ce6561ac7731f969faf233cd97` / `502ab85977c0b28daedeca43791ad8c2ee372269`). ThresholdCard soft craft beat: cutoff / gate mark distinct from SpectrumBar continuum after sting/objective path (`THRESHOLD_CARD_KICKER = "Threshold"`; `THRESHOLD_CARD_LINE = "Mark the cutoff."`; `THRESHOLD_CARD_MARK = "Here."`; cream + gold 6px left rail). Craft beat on `ThresholdCardDemo`. Sequenced after sting/objective path, after SpectrumBar, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Threshold path only. No Cap take. ORDER LOCK intact. Current master dest spectrum-encode sha256 `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-threshold-card.md`. Stills: `/opt/cursor/artifacts/remotion-threshold-card/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
