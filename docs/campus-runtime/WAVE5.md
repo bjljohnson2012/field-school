@@ -139,7 +139,8 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | CaveatCard encode master dest reaudit | PR 158 `2a90b5a` / tip `e9e043d` |
 | ReflectionPrompt learner pause / think-then-answer | PR 159 `ff30be0` / tip `9f1df22` |
 | ReflectionPrompt LessonSpine encode | PR 160 `907a799` / tip `bb2c989` |
-| ReflectionPrompt encode master dest reaudit | PR 161 |
+| ReflectionPrompt encode master dest reaudit | PR 161 `123f60a` / tip `1444738` |
+| TimelineRail sequence of beats / ordered milestones | this PR |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -524,6 +525,10 @@ PRs 85–159 harvested. PR 159 merge `ff30be0` / tip `9f1df22` (`ff30be00fe2f9ea
 ## LessonSpine reflection encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-reflection-encode/2026-09-21/LessonSpine.mp4` sha256 `1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17` plus ReflectionPrompt plates. PR 160 merge `907a799` / tip `bb2c989` (`907a79973420288bf6ece9315fd1d87d6b45b6a4` / `bb2c989afcad0d5b86f1a3655c32833f320b57de`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Caveat dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-reflection-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-reflection-encode-master/2026-09-21/`. **Current master dest.**
+
+## TimelineRail (PASS)
+
+PR 161 merge `123f60a` / tip `1444738` harvested (`123f60ac71d639fde6086805fbb36925cfcb036c` / `1444738b418f37e5b073c40b3840066b58c06cbb`). TimelineRail soft craft beat: sequence of beats / ordered milestones after sting/objective path (`TIMELINE_RAIL_KICKER = "Timeline"`; `TIMELINE_RAIL_LINE = "Mark the beats."`; cream + gold 6px left rail). Craft beat on `TimelineRailDemo`. Sequenced after sting/objective path, after ReflectionPrompt, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Timeline path only. No Cap take. ORDER LOCK intact. Current master dest reflection-encode sha256 `1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-timeline-rail.md`. Stills: `/opt/cursor/artifacts/remotion-timeline-rail/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
