@@ -70,4 +70,4 @@ Parent sees the next slice of the assembled path under the selected Child, bound
 
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T171330Z.tar.gz` sha256 `6b7f4e2d5ea6a15eb0ef59beaf6eda9b77a53601a1dbc2136ef837482df0d392`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T173800Z.tar.gz` sha256 `ea39dd8cfbf6f4ee171c98a36377440ea7808ae91ec748464d5cfed170f2eca4`.
