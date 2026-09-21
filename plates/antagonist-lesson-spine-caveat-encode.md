@@ -2,7 +2,7 @@
 
 Bar: [../docs/remotion-vox-standards.md](../docs/remotion-vox-standards.md). Do not invent a second bar. Soft notes accepted.
 
-Dated **2026-09-21**. New dated LessonSpine encode after PR 156 merge `feb547418731c77d14d2ad7dea069b7ab7b5ccef` / tip `d5fa9471f196818f96d08ff508b50dd84150513c`. Bundles CaveatCard watch-out / warning onto the locked StepsCard master stack. No Cap take. PRs 85–156 harvested.
+Dated **2026-09-21**. New dated LessonSpine encode after PR 156 merge `feb547418731c77d14d2ad7dea069b7ab7b5ccef` / tip `d5fa9471f196818f96d08ff508b50dd84150513c`. Bundles CaveatCard watch-out / warning onto the locked StepsCard master stack. No Cap take. PRs 85–156 harvested. Dated **2026-09-21** master dest reaudit after PR 157 merge `5d39d6831f98628df7b0b4ac7e3c9e778cfb4a41`. Locked dest **untouched**.
 
 ```
 verdict: PASS

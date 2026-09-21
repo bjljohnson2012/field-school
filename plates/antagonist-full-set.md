@@ -49,6 +49,7 @@ Cites:
 - [antagonist-example-encode-master.md](./antagonist-example-encode-master.md) — LessonSpine example encode master dest reaudit
 - [antagonist-quote-encode-master.md](./antagonist-quote-encode-master.md) — LessonSpine quote encode master dest reaudit
 - [antagonist-steps-encode-master.md](./antagonist-steps-encode-master.md) — LessonSpine steps encode master dest reaudit
+- [antagonist-caveat-encode-master.md](./antagonist-caveat-encode-master.md) — LessonSpine caveat encode master dest reaudit
 - [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
 - [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-glossary-chip.md](./antagonist-glossary-chip.md) — GlossaryChip term / definition pop
@@ -1761,6 +1762,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CaveatCard last-word “catch.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine caveat encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-caveat-encode/2026-09-21/LessonSpine.mp4` sha256 `e23cadde85af2540d3c4f9c8a8434126655133b50c0cdc6c5783b16d9e446fd7` plus CaveatCard plates. After PR 157 merge `5d39d6831f98628df7b0b4ac7e3c9e778cfb4a41`. **Current master dest.** Steps dest `e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b` **untouched**. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-caveat-encode/2026-09-21/LessonSpine.mp4
+sha256: e23cadde85af2540d3c4f9c8a8434126655133b50c0cdc6c5783b16d9e446fd7
+stills: /opt/cursor/artifacts/remotion-antagonist-caveat-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CaveatCard last-word “catch.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `CaveatCardDemo-f0.png`, `CaveatCardDemo-f60.png`.
 
 ## Held
 
