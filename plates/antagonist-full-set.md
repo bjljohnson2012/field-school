@@ -41,6 +41,7 @@ Cites:
 - [antagonist-section-encode-master.md](./antagonist-section-encode-master.md) — LessonSpine section encode master dest reaudit
 - [antagonist-glossary-encode-master.md](./antagonist-glossary-encode-master.md) — LessonSpine glossary encode master dest reaudit
 - [antagonist-sting-encode-master.md](./antagonist-sting-encode-master.md) — LessonSpine sting encode master dest reaudit
+- [antagonist-checkpoint-encode-master.md](./antagonist-checkpoint-encode-master.md) — LessonSpine checkpoint encode master dest reaudit
 - [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
 - [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-glossary-chip.md](./antagonist-glossary-chip.md) — GlossaryChip term / definition pop
@@ -1485,6 +1486,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CheckpointCard last-word “idea.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine checkpoint encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-checkpoint-encode/2026-09-21/LessonSpine.mp4` sha256 `19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a` plus CheckpointCard plates. After PR 145 merge `aaa7dc26ac74cd7a3827f9b8e223925e3fc631b8`. **Current master dest.** Sting dest `325a41e775821c8576e14038d2076ee639d48a0fc29b3f84b223f4af9390f204` **untouched**. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-checkpoint-encode/2026-09-21/LessonSpine.mp4
+sha256: 19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a
+stills: /opt/cursor/artifacts/remotion-antagonist-checkpoint-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CheckpointCard last-word “idea.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `CheckpointCardDemo-f0.png`, `CheckpointCardDemo-f60.png`.
 
 ## Held
 
