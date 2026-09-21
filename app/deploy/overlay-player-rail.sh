@@ -138,7 +138,9 @@ if tar -tzf "\$PACK" | grep -E '(^|/)(family-v1-home|children-database|src/route
   exit 1
 fi
 mkdir -p "\$REMOTE_DIR/src/app/play/lesson-spine" "\$REMOTE_DIR/src/app/api/media/lesson-spine/ready" "\$REMOTE_DIR/src/lib/player" "\$REMOTE_DIR/public/lessons/hls"
+rm -f "\$REMOTE_DIR/public/lessons/hls/"*.ts
 tar -xzf "\$PACK" -C "\$REMOTE_DIR"
+rm -f "\$REMOTE_DIR/public/lessons/hls/"*.ts
 
 FAM_HOME2=\$(sha256sum "\$REMOTE_DIR/src/components/family-v1-home.tsx" | awk '{print \$1}')
 FAM_OP2=\$(sha256sum "\$REMOTE_DIR/src/lib/family/operator.ts" | awk '{print \$1}')

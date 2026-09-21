@@ -34,6 +34,8 @@ test("Ready/HLS publish artifacts exist; master and priors untouched", () => {
   assert.equal(existsSync(playlist), true);
   assert.equal(existsSync(ready), true);
   assert.match(read("public/lessons/hls/LessonSpine.m3u8"), /#EXTM3U/);
+  assert.match(read("public/lessons/hls/LessonSpine.m3u8"), /\.m4s|LessonSpine-init\.mp4/);
+  assert.equal(existsSync(join(root, "public/lessons/hls/LessonSpine-000.ts")), false);
   const manifest = JSON.parse(read("public/lessons/hls/ready.json"));
   assert.equal(manifest.status, "Ready");
   assert.equal(manifest.kind, "HLS");

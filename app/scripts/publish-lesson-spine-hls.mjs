@@ -5,7 +5,7 @@
  * No Distribute. No Just remake. Master sha256 must stay af374d95….
  */
 import {createHash} from "node:crypto";
-import {existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, copyFileSync} from "node:fs";
+import {existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync, copyFileSync} from "node:fs";
 import {dirname, join, resolve} from "node:path";
 import {spawnSync} from "node:child_process";
 import {fileURLToPath, pathToFileURL} from "node:url";
@@ -101,6 +101,11 @@ export function publishLessonSpineHls({
   }
   mkdirSync(artifactDir, {recursive: true});
   mkdirSync(publicDir, {recursive: true});
+  for (const dir of [artifactDir, publicDir]) {
+    for (const name of readdirSync(dir)) {
+      if (/\.(ts|m4s|m3u8|mp4|json)$/.test(name)) rmSync(join(dir, name));
+    }
+  }
   const playlist = join(artifactDir, "LessonSpine.m3u8");
   const ran = spawnSync(
     "ffmpeg",
@@ -115,8 +120,12 @@ export function publishLessonSpineHls({
       "10",
       "-hls_playlist_type",
       "vod",
+      "-hls_segment_type",
+      "fmp4",
+      "-hls_fmp4_init_filename",
+      "LessonSpine-init.mp4",
       "-hls_segment_filename",
-      join(artifactDir, "LessonSpine-%03d.ts"),
+      join(artifactDir, "LessonSpine-%03d.m4s"),
       playlist,
     ],
     {encoding: "utf8"},
