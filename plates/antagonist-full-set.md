@@ -57,6 +57,7 @@ Cites:
 - [antagonist-end-card.md](./antagonist-end-card.md) — EndCard lesson close signal
 - [antagonist-practice-card.md](./antagonist-practice-card.md) — PracticeCard application / try-this
 - [antagonist-key-claim.md](./antagonist-key-claim.md) — KeyClaim thesis / claim lock
+- [antagonist-scripture-card.md](./antagonist-scripture-card.md) — ScriptureCard verse / citation lock
 
 ```
 verdict: PASS
@@ -1042,6 +1043,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. KeyClaim last-word “claim.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `KeyClaimDemo-f0.png`, `KeyClaimDemo-f60.png`.
+
+## ScriptureCard 2026-09-21
+
+Dated **2026-09-21** reaudit. ScriptureCard soft craft beat. Verse / citation lock on `ScriptureCard` (`SCRIPTURE_CARD_KICKER = "Verse"`; `SCRIPTURE_CARD_LINE = "Cite the verse."`; cream + gold 6px left rail). Craft beat on `ScriptureCardDemo`. Sequenced after sting/objective path, after KeyClaim, before PracticeCard. After PR 126 merge `ee8716976f873f44674877aca4ed5180d6ea9964`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. KeyClaim after sting/objective path. ScriptureCard after sting/objective path, after KeyClaim. Locked master dest `/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4` sha256 `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` **Current master dest.** **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-scripture-card/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4
+sha256: 16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606
+stills: /opt/cursor/artifacts/remotion-scripture-card/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ScriptureCard last-word “verse.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `ScriptureCardDemo-f0.png`, `ScriptureCardDemo-f60.png`, `LessonSpine-objective-f570.png`.
 
 ## Held
 
