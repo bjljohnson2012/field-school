@@ -1,5 +1,9 @@
 # Agents working in this repo
 
+Law for hire-path, parent/Child identity, locks, tickets, evaluators, and checkers: `FIELD-SCHOOL-ETHOS-MEMO.md`.
+Read that file before a ticket, a PR, or a PASS claim. It does not grant Launch PASS.
+If a wave doc and the ethos memo disagree on User vs Child, prices, AUTH_URL, or dest, the ethos memo wins.
+
 User: `.cursor/USER.md` and `docs/campus-runtime/USER.md`.
 Entry: `docs/campus-runtime/CURSOR_AGENT_PROMPT.md`.
 Worker names: `docs/campus-runtime/WORKER_RENAME.md`.
