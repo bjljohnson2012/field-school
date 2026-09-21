@@ -1161,6 +1161,54 @@ export function CaveatCard() {
   );
 }
 
+/** Learner pause / think-then-answer. After sting/objective path, after caveat, before practice. Cream + gold 6px rail. */
+export const REFLECTION_PROMPT_KICKER = "Reflect";
+export const REFLECTION_PROMPT_LINE = "Think, then answer.";
+
+export function ReflectionPrompt() {
+  const words = REFLECTION_PROMPT_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? REFLECTION_PROMPT_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 678,
+        maxWidth: 400,
+        padding: "12px 20px 14px 16px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {REFLECTION_PROMPT_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+    </div>
+  );
+}
+
 /** Application / try-this. After Recap/Quiz path, before end. Cream + gold 6px rail. */
 export const PRACTICE_CARD_KICKER = "Try this";
 export const PRACTICE_CARD_LINE = "Apply one idea now.";

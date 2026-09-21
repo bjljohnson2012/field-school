@@ -3,7 +3,7 @@
 Operator-only. Cap + Remotion + Edit-spec. Not a campus or student product.
 Not the factory hour-master melt path except as fallback.
 
-Wave 5 compositions: Opener, RecapCard, **DefinitionBoard**, **QuizBumper**, **TalkingHeadCard**, **LessonSpine**, plus craft demos **LowerThirdDemo** / **CaptionsDemo** / **CaptionDensityDemo** / **OverlayLockDemo** / **LetterboxDemo** / **AudioBedDemo** / **ProgressRailDemo** / **ChapterChipDemo** / **CalloutCardDemo** / **TransitionLumaDemo** / **EndCardDemo** / **PracticeCardDemo** / **KeyClaimDemo** / **ScriptureCardDemo** / **CompareBoardDemo** / **SectionTitleDemo** / **GlossaryChipDemo** / **ObjectionCardDemo** / **StingColdOpenDemo** / **CheckpointCardDemo** / **ExampleCardDemo** / **QuoteCardDemo** / **StepsCardDemo** / **CaveatCardDemo**. Remotion is default. Melt fallback only. Do not re-render Asset Just (`27pn9xs0zk8a73g`).
+Wave 5 compositions: Opener, RecapCard, **DefinitionBoard**, **QuizBumper**, **TalkingHeadCard**, **LessonSpine**, plus craft demos **LowerThirdDemo** / **CaptionsDemo** / **CaptionDensityDemo** / **OverlayLockDemo** / **LetterboxDemo** / **AudioBedDemo** / **ProgressRailDemo** / **ChapterChipDemo** / **CalloutCardDemo** / **TransitionLumaDemo** / **EndCardDemo** / **PracticeCardDemo** / **KeyClaimDemo** / **ScriptureCardDemo** / **CompareBoardDemo** / **SectionTitleDemo** / **GlossaryChipDemo** / **ObjectionCardDemo** / **StingColdOpenDemo** / **CheckpointCardDemo** / **ExampleCardDemo** / **QuoteCardDemo** / **StepsCardDemo** / **CaveatCardDemo** / **ReflectionPromptDemo**. Remotion is default. Melt fallback only. Do not re-render Asset Just (`27pn9xs0zk8a73g`).
 
 Do not add campus UI. Do not add a student-facing AI builder. Do not campus-package Remotion into `app/`. Do not accept Cleaning flip or Publish/Distribute from this package.
 
@@ -42,9 +42,10 @@ Later sibling sits on top. No z-index.
 20. quote
 21. steps
 22. caveat
-23. practice
-24. end
-25. audio
+23. reflect
+24. practice
+25. end
+26. audio
 
 Dock the talking-head card to ~38% width (`dock-right` or `dock-left`). Never full-bleed over type.
 
@@ -114,6 +115,8 @@ npx remotion still StepsCardDemo --frame=0
 npx remotion still StepsCardDemo --frame=60
 npx remotion still CaveatCardDemo --frame=0
 npx remotion still CaveatCardDemo --frame=60
+npx remotion still ReflectionPromptDemo --frame=0
+npx remotion still ReflectionPromptDemo --frame=60
 npx remotion still TalkingHeadCard --frame=90
 npx remotion still LessonSpine --frame=330
 ```
