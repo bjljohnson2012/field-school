@@ -50,4 +50,4 @@ Honest hire-path rows only. Page [`/operator/launch-gate`](https://portal.fields
 
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T151558Z.tar.gz` sha256 `bab1a68ae50344eb3259ac4b48a0eab7da1924e8234910cdb91a0241b7a31be9`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T153253Z.tar.gz` sha256 `4552f4413d4d0aef14c8cac7de6f1fbf01eceb482d39305452c37cd05ddae7f5`.
