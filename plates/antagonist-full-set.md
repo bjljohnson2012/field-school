@@ -54,6 +54,7 @@ Cites:
 - [antagonist-checkpoint-card.md](./antagonist-checkpoint-card.md) — CheckpointCard formative check / confirm-understanding
 - [antagonist-example-card.md](./antagonist-example-card.md) — ExampleCard worked example / show-how
 - [antagonist-quote-card.md](./antagonist-quote-card.md) — QuoteCard pull quote / authority cite
+- [antagonist-steps-card.md](./antagonist-steps-card.md) — StepsCard numbered procedure / do-this-in-order
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1646,6 +1647,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. QuoteCard last-word “quote.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `QuoteCardDemo-f0.png`, `QuoteCardDemo-f60.png`.
+
+## StepsCard 2026-09-21
+
+Dated **2026-09-21** reaudit. StepsCard soft craft beat. Numbered procedure / do-this-in-order on `StepsCard` (`STEPS_CARD_KICKER = "Steps"`; `STEPS_CARD_LINE = "Do this in order."`; `STEPS_CARD_ONE = "1. Name the beat."`; `STEPS_CARD_TWO = "2. Do the work."`; cream + gold 6px left rail). Craft beat on `StepsCardDemo`. Sequenced after sting/objective path, after QuoteCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). After PR 152 merge `2a28cdaf19396988145960a0d43443ccca451f79` / tip `31d63f9dce725cc1d44e32e950b106cffe55f564`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. StepsCard after sting/objective path, after QuoteCard, before PracticeCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-quote-encode/2026-09-21/LessonSpine.mp4` sha256 `244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d` **untouched** (plate-level stills only). Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-quote-encode/2026-09-21/LessonSpine.mp4
+sha256: 244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d
+stills: /opt/cursor/artifacts/remotion-steps-card/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. StepsCard last-word “order.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `StepsCardDemo-f0.png`, `StepsCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 

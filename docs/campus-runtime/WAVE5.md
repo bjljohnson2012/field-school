@@ -130,6 +130,8 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Example encode master dest reaudit | PR 149 `f0514c1` / tip `f3ef203` |
 | QuoteCard pull quote / authority cite | PR 150 `7b74439` / tip `bbdfc84` |
 | QuoteCard LessonSpine encode | PR 151 `8cd8ded` / tip `e05c782` |
+| QuoteCard encode master dest reaudit | PR 152 `2a28cda` / tip `31d63f9` |
+| StepsCard numbered procedure / do-this-in-order | PR 153 `f2f2857` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -478,6 +480,10 @@ PRs 85–150 harvested. PR 150 merge `7b74439` / tip `bbdfc84` (`7b744394e5aba9b
 ## LessonSpine quote encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-quote-encode/2026-09-21/LessonSpine.mp4` sha256 `244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d` plus QuoteCard plates. PR 151 merge `8cd8ded` / tip `e05c782`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Example dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-quote-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-quote-encode-master/2026-09-21/`. **Current master dest.**
+
+## StepsCard (PASS)
+
+PR 152 merge `2a28cda` / tip `31d63f9` harvested (`2a28cdaf19396988145960a0d43443ccca451f79` / `31d63f9dce725cc1d44e32e950b106cffe55f564`). StepsCard soft craft beat: numbered procedure / do-this-in-order after sting/objective path (`STEPS_CARD_KICKER = "Steps"`; `STEPS_CARD_LINE = "Do this in order."`; `STEPS_CARD_ONE = "1. Name the beat."`; `STEPS_CARD_TWO = "2. Do the work."`; cream + gold 6px left rail). Craft beat on `StepsCardDemo`. Sequenced after sting/objective path, after QuoteCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Steps path only. No Cap take. ORDER LOCK intact. Current master dest quote-encode sha256 `244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-steps-card.md`. Stills: `/opt/cursor/artifacts/remotion-steps-card/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
