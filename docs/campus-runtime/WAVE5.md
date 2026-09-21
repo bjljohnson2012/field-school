@@ -117,6 +117,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | GlossaryChip term / definition pop | PR 136 `71fb9fd` / tip `f08f57d` |
 | GlossaryChip LessonSpine encode | PR 137 `a5c9544` / tip `cd3e594` |
 | Glossary encode master dest reaudit | PR 138 `87a80f8` / tip `e8c859a` |
+| ObjectionCard steelman / respond | PR 139 tip `b436339` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
