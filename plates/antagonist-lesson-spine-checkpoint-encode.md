@@ -2,7 +2,7 @@
 
 Bar: [../docs/remotion-vox-standards.md](../docs/remotion-vox-standards.md). Do not invent a second bar. Soft notes accepted.
 
-Dated **2026-09-21**. New dated LessonSpine encode after PR 144 merge `44ccaede6e78f49fd281d9019eb7c35d012a5f02` / tip `dba2b86cf7f5b06458adb9f8e502a35f0ce286c3`. Bundles CheckpointCard formative check / confirm-understanding onto the locked StingColdOpen master stack. No Cap take. PRs 85–144 harvested.
+Dated **2026-09-21**. New dated LessonSpine encode after PR 144 merge `44ccaede6e78f49fd281d9019eb7c35d012a5f02` / tip `dba2b86cf7f5b06458adb9f8e502a35f0ce286c3`. Bundles CheckpointCard formative check / confirm-understanding onto the locked StingColdOpen master stack. No Cap take. PRs 85–144 harvested. Dated **2026-09-21** master dest reaudit after PR 145 merge `aaa7dc26ac74cd7a3827f9b8e223925e3fc631b8`. Locked dest **untouched**.
 
 ```
 verdict: PASS
