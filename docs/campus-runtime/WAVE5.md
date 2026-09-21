@@ -174,8 +174,8 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Stripe webhook hire activation | PR 193 `fcaa4d9` |
 | Parent-supervised progress | PR 194 `e1a5eaf` |
 | Parent-owned intent | PR 195 `6584268` |
-| Parent-path assembly | PR 196 `dbd57dc` |
-| Parent next-portion | PR this seal `685ca64` |
+| Parent-path assembly | PR 196 `7cb6686` |
+| Parent next-portion | PR this seal `8f83302` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -703,7 +703,7 @@ Dated 2026-09-21. Parent gets a path assembled under the selected Child from par
 
 ## Parent next-portion (PASS)
 
-Dated 2026-09-21. Parent sees the next slice under the selected Child from the assembled path and parent-owned intent. Route `/portion`. Evidence `GET`/`POST /api/progress/portion` plus `public/lessons/hls/supervised-portion.json`. FR-5 next-portion. Child ≠ User. No child login. Family LIVE `bc-4765f2f0` not stolen. Does not call `/api/curriculum`, `/api/intent`, or `/api/portion`. Does not write `curriculum_paths`, `learning_intents`, `next_portions`, or `next_portion_items`. PR this seal. PR 196 tip `dbd57dc` / first `7bfa665` (`dbd57dcf5f05ae50cdad1c07cc32e03de891c2d1` / `7bfa665a223f3baa0c2dd02db2c8bb2190078d77`). **Current master dest.** **untouched**. AUTH signed-in still holds. Ready / HLS still 200. Stripe three-plan still 200. `/metering` fr-kb-3 still 200. `/operator/publish` published true distribute false. `/operator/launch-gate` CLOSED 0/8. Webhook hire dry-run path still holds. `/progress` FR-6 / FR-2 still holds. `/intent` FR-3 still holds. `/path` FR-4 still holds. No live Cleaning / Publish flip. No new dollars. Distribute HELD. Launch **CLOSED**, **0/8**. Overlay pack `/opt/field-school-packs/player-rail-campus-pack-20260921T173800Z.tar.gz` sha256 `ea39dd8cfbf6f4ee171c98a36377440ea7808ae91ec748464d5cfed170f2eca4`. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
+Dated 2026-09-21. Parent sees the next slice under the selected Child from the assembled path and parent-owned intent. Route `/portion`. Evidence `GET`/`POST /api/progress/portion` plus `public/lessons/hls/supervised-portion.json`. FR-5 next-portion. Child ≠ User. No child login. Family LIVE `bc-4765f2f0` not stolen. Does not call `/api/curriculum`, `/api/intent`, or `/api/portion`. Does not write `curriculum_paths`, `learning_intents`, `next_portions`, or `next_portion_items`. PR this seal. PR 196 merge `7cb6686` / tip `dbd57dc` (`7cb6686e07b24dfb09a510080d38d394592bd338` / `dbd57dcf5f05ae50cdad1c07cc32e03de891c2d1`). **Current master dest.** **untouched**. AUTH signed-in still holds. Ready / HLS still 200. Stripe three-plan still 200. `/metering` fr-kb-3 still 200. `/operator/publish` published true distribute false. `/operator/launch-gate` CLOSED 0/8. Webhook hire dry-run path still holds. `/progress` FR-6 / FR-2 still holds. `/intent` FR-3 still holds. `/path` FR-4 still holds. No live Cleaning / Publish flip. No new dollars. Distribute HELD. Launch **CLOSED**, **0/8**. Overlay pack `/opt/field-school-packs/player-rail-campus-pack-20260921T173800Z.tar.gz` sha256 `ea39dd8cfbf6f4ee171c98a36377440ea7808ae91ec748464d5cfed170f2eca4`. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
 
 ## Karaoke gold (VOX-S01 PASS)
 

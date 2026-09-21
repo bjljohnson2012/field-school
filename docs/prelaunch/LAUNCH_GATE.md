@@ -37,7 +37,7 @@ These rows track real readiness work for Learn with Ben hire. They do **not** fl
 | Stripe webhook hire activation | yes | no | `/operator/hire` · PR 193 merge `ae8347d` |
 | Parent-supervised progress FR-6 / FR-2 | yes | no | `/progress` · PR 194 merge `3322e52` |
 | Parent-owned intent FR-3 | yes | no | `/intent` · PR 195 merge `d8f9d00` |
-| Parent-path assembly FR-4 | yes | no | `/path` · PR 196 tip `dbd57dc` |
+| Parent-path assembly FR-4 | yes | no | `/path` · PR 196 merge `7cb6686` |
 | Parent next-portion FR-5 | yes | no | `/portion` · this seal (next slice under selected Child from assembled path) |
 
 Master dest sha256 `af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4` **untouched**.
