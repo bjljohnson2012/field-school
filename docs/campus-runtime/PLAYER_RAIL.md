@@ -58,4 +58,4 @@ Parent sees Now / Confidence / Next under the selected Child after hire and play
 
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T155726Z.tar.gz` sha256 `3038c31d6ae9c0b2e3274abed20cd67df0b73ae4e70cb488d34ec07383f046e6`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T162559Z.tar.gz` sha256 `21d44f1961d06282dd1e943691ea94bb465105395898f850a54d461f85bb416f`.
