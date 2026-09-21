@@ -11,7 +11,11 @@ export function LessonSpineHirePath() {
       <h2 className="font-display text-2xl tracking-tight">Hire Learn with Ben</h2>
       <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
         Signed-in Parent checkout uses the unlocked amounts only — $100, $200,
-        and $1,000. Ready / HLS play stays open for guests. No new prices.
+        and $1,000. Ready / HLS play stays open for guests. No new prices.{" "}
+        <Link href="/metering" className="underline">
+          See use / metering
+        </Link>
+        .
       </p>
       <ul className="mt-4 flex flex-wrap gap-3">
         {LEARN_WITH_BEN_PLAN_IDS.map((id) => {
