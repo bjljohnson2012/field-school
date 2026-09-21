@@ -26,6 +26,7 @@ Cites:
 - [antagonist-lesson-spine-transition-luma-encode.md](./antagonist-lesson-spine-transition-luma-encode.md) — LessonSpine TransitionLuma encode (archived prior)
 - [antagonist-lesson-spine-end-card-encode.md](./antagonist-lesson-spine-end-card-encode.md) — LessonSpine EndCard encode (archived prior)
 - [antagonist-lesson-spine-practice-encode.md](./antagonist-lesson-spine-practice-encode.md) — LessonSpine PracticeCard encode (current master)
+- [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -949,6 +950,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. PracticeCard last-word “now.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine practice encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4` sha256 `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf` plus PracticeCard plates. After PR 122 merge `c4474d1789489b5bb18004fe70338ec8ccb92fd4`. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. End-card dest **untouched** (`073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693`). Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4
+sha256: 8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf
+stills: /opt/cursor/artifacts/remotion-antagonist-practice-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. PracticeCard last-word “now.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `PracticeCardDemo-f0.png`, `PracticeCardDemo-f60.png`.
 
 ## Held
 

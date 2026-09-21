@@ -100,6 +100,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | EndCard LessonSpine encode | PR 119 `9f762bf` / tip `e4df17e` |
 | End-card master dest reaudit | PR 120 `e8e014b` / tip `d615a35` |
 | PracticeCard application / try-this | PR 121 `e36897d` / tip `47def77` |
+| PracticeCard LessonSpine encode | PR 122 `c4474d1` / tip `db6f827` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -133,7 +134,7 @@ TransitionLuma LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-tran
 
 EndCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-end-card-encode/2026-09-20/LessonSpine.mp4` sha256 `073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693` (h264 1920×1080@30, 41.000s). PRs 85–118. EndCard lesson close signal on the transition-luma stack. Transition-luma dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-end-card-encode.md](../../plates/antagonist-lesson-spine-end-card-encode.md). Archived prior dest. PR 118 merge `db636a3` / tip `79e1cb2` harvested. PR 119 merge `9f762bf` / tip `e4df17e` harvested. PR 120 merge `e8e014b` / tip `d615a35` harvested. PR 121 merge `e36897d` / tip `47def77` harvested. Independent Antagonist v2 reaudit **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-end-card-master.md`.
 
-PracticeCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4` sha256 `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf` (h264 1920×1080@30, 41.000s). PRs 85–121. PracticeCard application / try-this on the EndCard stack. End-card dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-practice-encode.md](../../plates/antagonist-lesson-spine-practice-encode.md). **Current master dest.** PR 121 merge `e36897d` / tip `47def77` harvested. Independent Antagonist v2 reaudit **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-practice-encode.md`.
+PracticeCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4` sha256 `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf` (h264 1920×1080@30, 41.000s). PRs 85–121. PracticeCard application / try-this on the EndCard stack. End-card dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-practice-encode.md](../../plates/antagonist-lesson-spine-practice-encode.md). **Current master dest.** PR 121 merge `e36897d` / tip `47def77` harvested. PR 122 merge `c4474d1` / tip `db6f827` harvested. Independent Antagonist v2 reaudit **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-practice-encode-master.md`.
 
 ## Letterbox stack (complete)
 
@@ -311,7 +312,11 @@ PR 120 merge `e8e014b` / tip `d615a35` harvested. PR 121 merge `e36897d` / tip `
 
 ## LessonSpine practice encode (PASS)
 
-PRs 85–121 harvested. PR 121 merge `e36897d` / tip `47def77`. New dated dest `/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4` sha256 `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf`. **Current master dest.** End-card dest `073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-practice-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-practice-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+PRs 85–121 harvested. PR 121 merge `e36897d` / tip `47def77`. PR 122 merge `c4474d1` / tip `db6f827`. New dated dest `/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4` sha256 `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf`. **Current master dest.** End-card dest `073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-practice-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-practice-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine practice encode master dest reaudit (PASS)
+
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4` sha256 `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf` plus PracticeCard plates. PR 122 merge `c4474d1` / tip `db6f827`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. End-card dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-practice-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-practice-encode-master/2026-09-21/`.
 
 ## Karaoke gold (VOX-S01 PASS)
 
