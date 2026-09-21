@@ -44,6 +44,7 @@ Cites:
 - [antagonist-lesson-spine-spectrum-encode.md](./antagonist-lesson-spine-spectrum-encode.md) — LessonSpine SpectrumBar encode (current master)
 - [antagonist-source-encode-master.md](./antagonist-source-encode-master.md) — LessonSpine source encode master dest reaudit 2026-09-21
 - [antagonist-spectrum-encode-master.md](./antagonist-spectrum-encode-master.md) — LessonSpine spectrum encode master dest reaudit 2026-09-21
+- [antagonist-threshold-card.md](./antagonist-threshold-card.md) — ThresholdCard cutoff / gate mark 2026-09-21
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
@@ -72,6 +73,7 @@ Cites:
 - [antagonist-timeline-rail.md](./antagonist-timeline-rail.md) — TimelineRail sequence of beats / ordered milestones
 - [antagonist-source-chip.md](./antagonist-source-chip.md) — SourceChip citation chip
 - [antagonist-spectrum-bar.md](./antagonist-spectrum-bar.md) — SpectrumBar continuum / contrast bar
+- [antagonist-threshold-card.md](./antagonist-threshold-card.md) — ThresholdCard cutoff / gate mark
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -2060,6 +2062,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SpectrumBar last-word “range.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `SpectrumBarDemo-f0.png`, `SpectrumBarDemo-f60.png`.
+
+## ThresholdCard 2026-09-21
+
+Dated **2026-09-21** reaudit. ThresholdCard soft craft beat. Cutoff / gate mark distinct from SpectrumBar continuum on `ThresholdCard` (`THRESHOLD_CARD_KICKER = "Threshold"`; `THRESHOLD_CARD_LINE = "Mark the cutoff."`; `THRESHOLD_CARD_MARK = "Here."`; cream + gold 6px left rail). Craft beat on `ThresholdCardDemo`. Sequenced after sting/objective path, after SpectrumBar, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). After PR 170 merge `cad987229703b8ce6561ac7731f969faf233cd97` / tip `502ab85977c0b28daedeca43791ad8c2ee372269`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. SpectrumBar after sting/objective path, after SourceChip, before PracticeCard. ThresholdCard after sting/objective path, after SpectrumBar, before PracticeCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-spectrum-encode/2026-09-21/LessonSpine.mp4` sha256 `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` **Current master dest.** **untouched** (plate-level stills only). Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-spectrum-encode/2026-09-21/LessonSpine.mp4
+sha256: 496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0
+stills: /opt/cursor/artifacts/remotion-threshold-card/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ThresholdCard last-word “cutoff.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `ThresholdCardDemo-f0.png`, `ThresholdCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 

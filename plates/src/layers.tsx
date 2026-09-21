@@ -1436,6 +1436,99 @@ export function SpectrumBar() {
   );
 }
 
+/** Cutoff / gate mark distinct from continuum. After sting/objective path, after spectrum, before practice. Cream + gold 6px rail. */
+export const THRESHOLD_CARD_KICKER = "Threshold";
+export const THRESHOLD_CARD_LINE = "Mark the cutoff.";
+export const THRESHOLD_CARD_MARK = "Here.";
+
+export function ThresholdCard() {
+  const words = THRESHOLD_CARD_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? THRESHOLD_CARD_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 878,
+        maxWidth: 400,
+        padding: "12px 20px 14px 16px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {THRESHOLD_CARD_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+      <div style={{marginTop: 8}}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            height: 18,
+          }}
+        >
+          <div
+            style={{
+              flex: 58,
+              height: 4,
+              backgroundColor: ink,
+              opacity: 0.18,
+            }}
+          />
+          <div
+            style={{
+              width: 4,
+              height: 18,
+              backgroundColor: gold,
+            }}
+          />
+          <div
+            style={{
+              flex: 42,
+              height: 4,
+              backgroundColor: ink,
+              opacity: 0.18,
+            }}
+          />
+        </div>
+        <div
+          style={{
+            marginTop: 4,
+            fontFamily: displayFace,
+            fontWeight: 700,
+            fontSize: 22,
+            color: ink,
+          }}
+        >
+          <Keyword>{THRESHOLD_CARD_MARK}</Keyword>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Application / try-this. After Recap/Quiz path, before end. Cream + gold 6px rail. */
 export const PRACTICE_CARD_KICKER = "Try this";
 export const PRACTICE_CARD_LINE = "Apply one idea now.";
