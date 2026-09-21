@@ -169,6 +169,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | AUTH_URL signed-in Parent | PR 188 `a8bb28f` |
 | Stripe live Learn with Ben | PR 189 `7f10edd` |
 | FR-KB-3 metering UI | PR 190 `832212d` |
+| Publish polish operator path | PR this seal |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -670,6 +671,10 @@ Dated 2026-09-21. Signed-in Parent reaches live Stripe checkout for unlocked Lea
 
 Dated 2026-09-21. Parent sees knowledge-brain use at `/metering`. Platform credits + premium hire, or BYOK + monthly-only. Prices from the locked Learn with Ben market-research unlock `$100` / `$200` / `$1,000` only. PR this seal. PR 189 merge `90df7d4` / tip `821a34a` (`90df7d4312ccf86b7f259d3b546ce83077c127e5` / `821a34a1514923635d901ddb0a4f5fa199cae404`). **Current master dest.** **untouched**. AUTH signed-in still holds. Ready / HLS still 200. Stripe three-plan still 200. No new dollars. Distribute HELD. Launch **CLOSED**, **0/8**. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
 
+## Publish polish operator path (PASS)
+
+Dated 2026-09-21. Operator finishes Publish polish on Ready HLS LessonSpine. Route `/operator/publish`. Evidence `GET /api/media/lesson-spine/publish` plus `public/lessons/hls/publish-polish.json`. Ready JSON `published:true` `publish:"polished"`. Staff POST only. PR this seal. PR 190 merge `38912ed` / tip `25ee196` (`38912ed57aa71c1e4db5228457b1559d364ebcb4` / `25ee1966bf8be0ad0bb64f9ffd2116c73b35b2f7`). **Current master dest.** **untouched**. AUTH signed-in still holds. Ready / HLS still 200. Stripe three-plan still 200. `/metering` fr-kb-3 still 200. No new dollars. Distribute HELD. Launch **CLOSED**, **0/8**. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
+
 ## Karaoke gold (VOX-S01 PASS)
 
 `CaptionsBand` drives word-level karaoke via `wordClock`. Active word gold `#C4A35A` plus gold tick (`EDU-S02`). Fixture times. No WhisperX. No Cap take. CaptionsDemo + LessonSpine stills: `/opt/cursor/artifacts/remotion-captions-karaoke-gold/2026-09-20/`. Soft re-score: `plates/antagonist-captions-karaoke-gold.md` **PASS**. No new HARD_FAIL.
@@ -705,4 +710,4 @@ Live `GET https://portal.fieldschool.ai/api/plates` is **401** `sign_in_required
 
 ## Held
 
-No Remotion in Next. HTML5 player rail at `/play/lesson-spine`. Play-rail Cleaning auto-flip + Publish Ready/HLS for locked dest `af374d95…` only. AUTH_URL signed-in Parent landed at portal. Stripe live Learn with Ben landed at `$100` / `$200` / `$1,000`. FR-KB-3 metering UI landed at `/metering`. Global `--flip` refused. Distribute HELD. No Cap take. No Just remake. No second melt. No Wave 3 cutover (PR 65 closed SUPERSEDED, unmerged). No LAUNCH_GATE 8/8. Launch stays **CLOSED**, **0/8**.
+No Remotion in Next. HTML5 player rail at `/play/lesson-spine`. Play-rail Cleaning auto-flip + Publish Ready/HLS for locked dest `af374d95…` only. AUTH_URL signed-in Parent landed at portal. Stripe live Learn with Ben landed at `$100` / `$200` / `$1,000`. FR-KB-3 metering UI landed at `/metering`. Publish polish operator path landed at `/operator/publish`. Global `--flip` refused. Distribute HELD. No Cap take. No Just remake. No second melt. No Wave 3 cutover (PR 65 closed SUPERSEDED, unmerged). No LAUNCH_GATE 8/8. Launch stays **CLOSED**, **0/8**.

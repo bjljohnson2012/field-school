@@ -1,0 +1,23 @@
+{
+  "ok": true,
+  "status": "Published",
+  "kind": "HLS",
+  "polish": true,
+  "published": true,
+  "distribute": false,
+  "launch": "CLOSED 0/8",
+  "master_sha256": "af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4",
+  "play": "/play/lesson-spine",
+  "ready": "/api/media/lesson-spine/ready",
+  "rows": [
+    {
+      "at": "2026-09-21T15:10:00.000Z",
+      "dest_sha256": "af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4",
+      "published": true,
+      "distribute": false,
+      "launch": "CLOSED 0/8",
+      "actor": "operator",
+      "note": "Play-rail Publish polish. Cleaning→Publish real. Distribute HELD. Launch CLOSED 0/8."
+    }
+  ]
+}
