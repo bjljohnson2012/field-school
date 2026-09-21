@@ -51,6 +51,7 @@ Cites:
 - [antagonist-quote-encode-master.md](./antagonist-quote-encode-master.md) — LessonSpine quote encode master dest reaudit
 - [antagonist-steps-encode-master.md](./antagonist-steps-encode-master.md) — LessonSpine steps encode master dest reaudit
 - [antagonist-caveat-encode-master.md](./antagonist-caveat-encode-master.md) — LessonSpine caveat encode master dest reaudit
+- [antagonist-reflection-encode-master.md](./antagonist-reflection-encode-master.md) — LessonSpine reflection encode master dest reaudit
 - [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
 - [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-glossary-chip.md](./antagonist-glossary-chip.md) — GlossaryChip term / definition pop
@@ -1830,6 +1831,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ReflectionPrompt last-word “answer.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine reflection encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-reflection-encode/2026-09-21/LessonSpine.mp4` sha256 `1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17` plus ReflectionPrompt plates. After PR 160 merge `907a79973420288bf6ece9315fd1d87d6b45b6a4`. **Current master dest.** Caveat dest `e23cadde85af2540d3c4f9c8a8434126655133b50c0cdc6c5783b16d9e446fd7` **untouched**. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-reflection-encode/2026-09-21/LessonSpine.mp4
+sha256: 1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17
+stills: /opt/cursor/artifacts/remotion-antagonist-reflection-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ReflectionPrompt last-word “answer.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `ReflectionPromptDemo-f0.png`, `ReflectionPromptDemo-f60.png`.
 
 ## Held
 
