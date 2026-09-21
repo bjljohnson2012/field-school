@@ -1,6 +1,6 @@
 # Field School Ethos Memo
 For agents. Read this before writing a ticket, a store file, a PR, a score, or a PASS claim.
-Revision: 21 Sep 2026 mid-build. Job altitude widened. Locks did not move.
+Revision: 21 Sep 2026 mid-build tandem. Household and team run together. Locks did not move.
 Status: Ethos only. This file does not grant Launch PASS. Score stays 0/8.
 Staff wire: CDM → CTO → Cursor Gate → Field School PM
 Project: Field School PM (`bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133`)
@@ -13,6 +13,8 @@ Standing hashes live in `docs/prelaunch/LAUNCH_GATE.md`. Do not copy gate files 
 
 Mid-build rule: this revision names the job more accurately. It does not open a new product. Merged PRs 196 and 197 stay. Wave proofs stay. Family LIVE stays on its lane. Seal what is already built. Do not rebuild to fit the sentence.
 
+Rooms run in tandem. Household is not the default. Team is not "after household." A ticket still names one room. Field School PM may run two streams at once only when the files cannot collide. A third stream is forbidden.
+
 | You are | You do | You do not |
 | --- | --- | --- |
 | Grok / CDM | Translate the job into one ticket. Score leave-behind. | Edit the repo. Write PASS. |
@@ -21,7 +23,7 @@ Mid-build rule: this revision names the job more accurately. It does not open a 
 | Builder | One verb. One room. One branch. Stop on verify or budget. | Rewrite the job. Read eight seats and “improve” them. |
 | Evaluator | Grade the artefact against §1 and the seat’s done-when. | Rewrite the work. Grant Launch. |
 | Checker | Run verify or the yes/no list. Binary only. | Interpret. Coach. Expand scope. |
-| Notion / ops | Update company state when a SHA, contradiction, or `NEEDS YOU` lands. | Open a second code stream. |
+| Notion / ops | Update company state when a SHA, contradiction, or `NEEDS YOU` lands. | Open a third stream. Put two rooms on one branch. |
 
 If two documents disagree, this order wins: standing locks (§2) → job + room in the ticket (§1) → this memo → campus wave docs → the ticket. A ticket cannot override a lock. A wider job cannot authorize a child login or a fourth price.
 
@@ -51,21 +53,21 @@ That is the working job. ICP may sharpen it. Builder may not.
 | Household | The family | Parent | Child: `kind:child`, `login:none`, `user:false` | Learn with Ben at $100 / $200 / $1,000 |
 | Team | The book of business / the shop | Leader | Teammate. May sign in to work. Does not buy. Does not own the path. | Same portal, org-scoped membership |
 
-A ticket names one room. Household work does not invent teammate checkout. Team work does not rewrite Child identity.
+A ticket names one room. Household work does not invent teammate checkout. Team work does not rewrite Child identity. Both rooms may be in flight the same week.
 
-Learn with Ben is the household offer. It is not the whole company.
+Learn with Ben is the household offer. It is not the whole company. Team uses the same portal and org-scoped membership. Do not invent a team price this week.
 
 ### Trigger now in force
 
 The next step is missing or untrustworthy, and development stalls when the hirer leaves the room.
 
-“No next portion” is the household mechanism for that trigger. It is not the job.
+"No next portion" is the household mechanism for that trigger. It is not the job.
 
 ### Personalization (allowed meaning)
 
 Path and next portion use current state already in hand: intent, progress, existing Field Pattern / living profile, skill, what they just did.
 
-Not allowed unless Gate names it: a second item bank; official MBTI / Enneagram / Gallup / Wiley text; child login so they can “personalize themselves”; the person in development owning the path because a quiz said so.
+Not allowed unless Gate names it: a second item bank; official MBTI / Enneagram / Gallup / Wiley text; child login so they can "personalize themselves"; the person in development owning the path because a quiz said so.
 
 ### Four forces
 
@@ -76,20 +78,20 @@ Not allowed unless Gate names it: a second item bank; official MBTI / Enneagram 
 | Anxiety | Platform becomes the parent. Generic LMS. Quiz-as-product. Fourth SKU. Live card. Public claim. | Stop. Do not soothe with a new feature. |
 | Habit | Worksheets, hope, standup theater, another deck | Name these as alternatives. Do not copy them. |
 
-### Who we get after (order)
+### Who we get after (inside a room)
 
 1. Same hirer, same org, higher intensity
 2. Same hirer, second person in development
-3. Another hirer whose org already looks like the first
-4. An operator of many orgs — new ICP file, only after 1–3 have loops that take when the hirer is absent
+3. Another hirer whose org already looks like this room
+4. An operator of many orgs — new ICP file, only after that room has loops that take when the hirer is absent
 
-Do not skip to 4 because campus already has two orgs.
+Team is not step 4 of household. Team is the other room, already on campus. Grow both. Do not skip either room to chase operators.
 
 ### Illegal
 
 - Treating the person in development as the customer
 - Household: student, kid account, learner login, user seat, child user
-- “True personalized L&D” as a ticket goal
+- "True personalized L&D" as a ticket goal
 - A new SKU so the team room can have its own price this week
 
 Job story form: `When [situation], I want [progress], so I can [outcome].`
@@ -106,7 +108,7 @@ These do not move because the job got bigger.
 - Family LIVE stays on `bc-4765f2f0` (PR 50). Family files are a different lane.
 - Master dest sha256 `af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4` stays untouched.
 - Launch stays CLOSED. Count stays 0/8. This memo is not that PASS.
-- One hire-path code stream while that work is open: `bc-2ed44fed`. No second coder on that branch.
+- Hire-path household stream while that work is open: `bc-2ed44fed`. No second coder on that branch. A team stream may run in parallel only on files that do not overlap hire-path or family LIVE.
 - Hire-path `/intent` and `/progress` do not write `learning_intents`. Path assembly does not write `curriculum_paths`.
 - Guest `/api/me` stays `{guest:true}`. `edit/health` stays 200.
 - No second Field Pattern bank. No official psychometric item text.
@@ -117,7 +119,9 @@ A hold keeps the public claim closed. A hold does not stop the week’s work. A 
 
 ## 3. Countable inputs
 
-Household room (current product verb). Score these. Do not invent a seventh.
+Two rooms. Two scoreboards. Do not invent a seventh on either. Do not mix rooms in one ticket.
+
+### Household
 
 1. Hired parent signed in at AUTH_URL
 2. Child selected (progress record, not a seat)
@@ -126,11 +130,19 @@ Household room (current product verb). Score these. Do not invent a seventh.
 5. Path assembled for that Child
 6. Next portion shown, then locked or overridden by the parent
 
-The sixth event is “development continues when the parent is not talking.” If 1–5 work and 6 does not, the job is still open.
+### Team
 
-Team room gets its own six only when Gate names a team brief. Until then do not invent team metrics in a household ticket.
+1. Hired leader signed in at AUTH_URL
+2. Teammate selected (membership, not the buyer)
+3. Work / play completed on the locked LessonSpine
+4. Intent recorded as leader-owned
+5. Path assembled for that teammate
+6. Next portion shown, then locked or overridden by the leader
 
-Product done-when for the current node: one signed-in parent session emits all six. Tests that were unfilled on PR 196/197 get filled. Dest hash unchanged.
+The sixth event in both rooms is "development continues when the hirer is not talking." If 1–5 work and 6 does not, that room is still open.
+
+Household product seal: tests unfilled on PR 196/197 get filled. Dest hash unchanged.
+Team product seal: the same six in a leader session, on files that do not overlap the hire-path branch or family LIVE.
 
 ---
 
@@ -140,19 +152,21 @@ Each seat owns one artefact. Name the room. None of these artefacts is a Launch 
 
 ### Product
 Artefact: working loop in the named room, plus the ticket leave-behind.
-Household done-when: the six events fire in one session. Child stays `kind:child`. Guest stays guest. Next portion runs without a new conversation.
-Forbidden help: Remotion-in-Next, Cap take, Distribute, Launch 8/8, family files, FR-KB-1 unless Gate names it, a second Pattern bank.
+Household done-when: household six fire in one parent session. Child stays `kind:child`. Guest stays guest.
+Team done-when: team six fire in one leader session. Teammate is not the buyer. Teammate does not own the path.
+Both: next portion runs without a new conversation.
+Forbidden help: Remotion-in-Next, Cap take, Distribute, Launch 8/8, family files, FR-KB-1 unless Gate names it, a second Pattern bank, two rooms in one diff.
 
 ### ICP
-Artefact: `docs/icp-parent.md` (household) or `docs/icp-leader.md` (team, only if Gate names it).
+Artefact: `docs/icp-parent.md` and `docs/icp-leader.md`. Both may exist this week. Separate files.
 Headings: Hirer, Org, Person in development, Job, Anti-job, Trigger in force, Who we get after, Current-state fit, Quote.
 Anti-job: person-in-development as buyer, district/HR seat dump, quiz-as-product, fourth SKU, public-site-first.
-Do not write two ICPs in one file.
+Do not write two ICPs in one file. Do not wait for one room before starting the other file.
 
 ### Brand
 Artefact: `docs/brand-parent-hire.md` for household.
-Must use: foundry, stations, field work; charcoal / cream / olive; Fraunces where plates already lock it; “child” as a child; “development” as the job noun.
-Must never use: gym wording, street, neighborhood, student login, kid account, “formation” in parent-facing or sales-facing copy.
+Must use: foundry, stations, field work; charcoal / cream / olive; Fraunces where plates already lock it; "child" as a child; "development" as the job noun.
+Must never use: gym wording, street, neighborhood, student login, kid account, "formation" in parent-facing or sales-facing copy.
 Brand is distinctive assets. Not a new metaphor for the wider job.
 
 ### Offer
@@ -170,19 +184,19 @@ Public site unflipped.
 ### Sales
 Artefact: `docs/sales-learn-with-ben.md`
 Help the hirer invest. Household path: interest → `/checkout?plan=100|200|1000` → portal sign-in → select Child.
-Name alternatives: unstructured week, extra tutor SKU, child-login app, “we sent the course.”
-Questions: “Does this keep them moving when you are not in the room?” and “What would need to be true for you to invest this week?”
+Name alternatives: unstructured week, extra tutor SKU, child-login app, "we sent the course."
+Questions: "Does this keep them moving when you are not in the room?" and "What would need to be true for you to invest this week?"
 Stop: another household price, a child login, take the card, flip the public site. No ads.
 
 ### Legal
 Artefact: `docs/legal-parent-child.md`
 Household spine: FTC COPPA six-step. 2025 Rule amendments in force (22 Apr 2026).
 Yes/no: User is the parent; Child has no login; a name on a progress record can still be personal information; parent can review and delete; no third-party disclosure without separate consent; written retention; written security; counsel has not signed; `/privacy` and `/terms` stay until Ben signs a Gate brief.
-Team-room legal is a different file, later. Do not rewrite policy to “cover both” in one pass.
+Team-room legal is a different file, later. Do not rewrite policy to "cover both" in one pass.
 
 ### Plan
 Artefact: the week’s ExecPlan and Sunday’s twenty lines.
-Sunday asks: did a person move when the hirer was absent; did the job sentence get shorter; can the next hirer be named with the same forces; did anyone treat the person in development as the customer.
+Sunday scores both rooms. For each: did a person move when the hirer was absent; did anyone treat the person in development as the customer. Do not declare household "ahead" so team can wait.
 Store docs are evidence of work, not PASS.
 
 ---
@@ -190,7 +204,7 @@ Store docs are evidence of work, not PASS.
 ## 5. How the company runs the job
 
 ### Intelligent ops
-Keep work moving without the chair in every loop. That is the company version of the product clause “even when I am not talking to them.”
+Keep work moving without the chair in every loop. That is the company version of the product clause "even when I am not talking to them."
 Three stream types: Outcomes, Loops, Left Open. State that pages a human: `NEEDS YOU`.
 CDM is called for taste or a lock.
 
@@ -201,11 +215,12 @@ Company map: ExecPlan, store files, ticket, leave-behind, Sunday score, `NEEDS Y
 Cursor does not own Notion state.
 
 ### Scalability
-Add completed loops that take when the hirer is absent. Do not add seats, SKUs, login types, or parallel builders on the same branch.
+Add completed loops in both rooms that take when the hirer is absent. Do not add seats, SKUs, login types, or two builders on the same branch.
 Scale unit: one ticket, one room, one branch, ≤8 files, ≤12 rounds, stop on 2 identical verify failures.
+Tandem unit: two tickets, two rooms, two branches, files must not overlap. Third ticket waits.
 
 ### Data
-Household six inputs are the schema until Gate names team six.
+Household six and team six are both live schemas. Do not write household events into team rows or the reverse.
 Two lanes stay two datasets. Hire-path does not write `learning_intents`. Path assembly does not write `curriculum_paths`.
 
 ### Mathematics
@@ -217,7 +232,8 @@ Two lanes stay two datasets. Hire-path does not write `learning_intents`. Path a
 
 ### Engineering
 Implement the next slice in the named room.
-Household acceptance: “parent can lock or override the next portion for the selected Child, and that portion is available without a new conversation.”
+Household acceptance: parent can lock or override the next portion for the selected Child, and that portion is available without a new conversation.
+Team acceptance: leader can lock or override the next portion for the selected teammate, and that portion is available without a new conversation.
 One verb per ticket. Misses go into `AGENTS.md` or a skill.
 
 ### AI
@@ -227,7 +243,7 @@ Runs inner loops. Does not author the job.
 3. Checker then evaluator
 4. Notion / ops updates the map
 
-No fourth model “helps Brand.” No self-PASS.
+No fourth model "helps Brand." No self-PASS.
 
 ---
 
@@ -235,9 +251,10 @@ No fourth model “helps Brand.” No self-PASS.
 
 | Lane | Who writes | Leaves alone |
 | --- | --- | --- |
-| Hire path | `bc-2ed44fed` only | Family files, dest, AUTH_URL, public site, company store files, new prices |
-| Family | `bc-4765f2f0` on PR 50 | Hire-path branch, dest, Launch PASS lines, store files |
-| Eight functions + ops | Named seats, store files and this memo | `app/`, `plates/`, hire-path branch, family files, `deploy-site.sh`, `LAUNCH_GATE.md` |
+| Hire path (household) | `bc-2ed44fed` only | Family files, dest, AUTH_URL, public site, team-only files, company store files, new prices |
+| Team loop | Second Field School PM stream. Files that are not hire-path and not family LIVE. | Hire-path branch, family LIVE, dest, AUTH_URL, Child identity, new prices |
+| Family | `bc-4765f2f0` on PR 50 | Hire-path branch, team loop files, dest, Launch PASS lines, store files |
+| Eight functions + ops | Named seats, store files and this memo | `app/`, `plates/`, hire-path branch, team loop files, family files, `deploy-site.sh`, `LAUNCH_GATE.md` |
 
 Campus family-store (PR 42 and kin) stays undeployed and four-model held. It is not next-portion storage. It is not a second coder.
 PR 198 (FR-KB-1 knowledge brain) stays held until Gate names it. Knowledge brain is not the seal.
@@ -287,7 +304,7 @@ Exit 0 or 1. Raw output. No story.
 
 Code: guest `/api/me` is `{guest:true}`; `edit/health` is 200; named tests pass; dest unchanged; forbid paths absent.
 
-Prose: job sentence present; household prices only $100 / $200 / $1,000; no child login; brand must-never list clean; no PASS language; no “true personalized L&D” as a feature name.
+Prose: job sentence present; household prices only $100 / $200 / $1,000; no child login; brand must-never list clean; no PASS language; no "true personalized L&D" as a feature name.
 
 Two identical failures end the stream.
 
@@ -308,11 +325,11 @@ next-action: <one verb, one line>
 
 ## 8. Ticket shape
 
-One verb. One room. If the sentence contains “and then,” split it.
+One verb. One room. If the sentence contains "and then," split it.
 
 ```
 id:
-stream: bc-2ed44fed
+stream: bc-2ed44fed | team-stream
 room: household|team
 opens:
 goal: <one verb>
@@ -342,6 +359,7 @@ checker: check-binary
 ```
 
 Gate rejects a ticket that lacks `room`, `verify`, `forbid`, or `budget`.
+Household tickets use `bc-2ed44fed`. Team tickets use a different stream. A ticket that names both rooms is rejected.
 
 ---
 
@@ -355,12 +373,12 @@ Banned:
 - student login, kid account, learner user, child seat
 - gym, street, neighborhood (parent-facing copy)
 - formation (parent-facing or sales-facing)
-- “true personalized L&D” as a ticket or feature name
+- "true personalized L&D" as a ticket or feature name
 - fourth household price, live card charge, flip the public site
-- Launch PASS, 8/8, “ready to announce”
+- Launch PASS, 8/8, "ready to announce"
 - market count
 - em dashes in original prose
-- sentences that start with “I” in company prose
+- sentences that start with "I" in company prose
 
 ---
 
@@ -384,15 +402,19 @@ Agents score from this memo. Humans may load one URL.
 
 ---
 
-## 11. Current open node (facts, not a PASS)
+## 11. Current open nodes (facts, not a PASS)
 
-Mid-build. Do not restart.
+Mid-build tandem. Do not restart. Do not wait for one room.
 
-- Path assembly PR 196 merged. Next portion PR 197 merged. Tests on that work were still unfilled as of 21 Sep 2026.
-- Open product verb: seal those tests, confirm guest and health, then one household session against the six inputs. That is the household proof that development continues when the parent is not talking.
-- PR 198 FR-KB-1 stays held until Gate names it.
-- Open prose verb: write the store file for the named seat and room, to the headings in §4.
-- Launch remains CLOSED. Score remains 0/8.
+Household product: path assembly PR 196 merged. Next portion PR 197 merged. Tests still unfilled as of 21 Sep 2026. Seal those tests. Confirm guest and health. One parent session against the household six.
+
+Team product: same six in a leader session. Use campus household + sales org work already on campus. Do not steal `bc-2ed44fed` or `bc-4765f2f0`. Do not invent a team price.
+
+PR 198 FR-KB-1 stays held until Gate names it. Knowledge brain is not the seal of either room.
+
+Open prose: `docs/icp-parent.md` and `docs/icp-leader.md` may both be written this week.
+
+Launch remains CLOSED. Score remains 0/8.
 
 ---
 
@@ -400,16 +422,18 @@ Mid-build. Do not restart.
 
 Reject work that says any of the following:
 
-- “Also add a child login while we are here”
-- “A fourth tier for homeschool”
-- “Flip the public site so parents can find us”
-- “Write learning_intents from hire-path”
-- “Family store can hold next portion”
-- “This store doc is a node PASS”
-- “Launch is close enough”
-- “Rebuild hire-path to match the new job sentence”
-- “Add a second Pattern bank for personalization”
-- “The teammate should own the path”
-- “The child should personalize themselves”
+- "Also add a child login while we are here"
+- "A fourth tier for homeschool"
+- "Flip the public site so parents can find us"
+- "Write learning_intents from hire-path"
+- "Family store can hold next portion"
+- "This store doc is a node PASS"
+- "Launch is close enough"
+- "Rebuild hire-path to match the new job sentence"
+- "Add a second Pattern bank for personalization"
+- "The teammate should own the path"
+- "The child should personalize themselves"
+- "Default to household and do team later"
+- "Put household and team in one ticket"
 
-Accept work that keeps one hirer, one named room, one person in development who is not the buyer, three household prices when the room is household, and a next step that still runs when the hirer leaves the room.
+Accept work that keeps one hirer, one named room per ticket, both rooms allowed the same week, one person in development who is not the buyer, three household prices when the room is household, and a next step that still runs when the hirer leaves the room.
