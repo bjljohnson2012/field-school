@@ -53,7 +53,8 @@ Cites:
 - [antagonist-evidence-card.md](./antagonist-evidence-card.md) — EvidenceCard evidence / warrant rows 2026-09-21
 - [antagonist-analogy-card.md](./antagonist-analogy-card.md) — AnalogyCard analogy / like-this transfer pair 2026-09-21
 - [antagonist-lesson-spine-rubric-encode.md](./antagonist-lesson-spine-rubric-encode.md) — LessonSpine RubricCard encode 2026-09-21
-- [antagonist-lesson-spine-evidence-encode.md](./antagonist-lesson-spine-evidence-encode.md) — LessonSpine EvidenceCard encode (current master)
+- [antagonist-lesson-spine-evidence-encode.md](./antagonist-lesson-spine-evidence-encode.md) — LessonSpine EvidenceCard encode (archived prior)
+- [antagonist-lesson-spine-analogy-encode.md](./antagonist-lesson-spine-analogy-encode.md) — LessonSpine AnalogyCard encode (current master)
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
@@ -2267,6 +2268,22 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. AnalogyCard last-word “this.” gold-ticked plus pair “seed.” / “type.” Launch stays CLOSED 0/8.
 
 Stills: `AnalogyCardDemo-f0.png`, `AnalogyCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
+
+## LessonSpine analogy encode 2026-09-21
+
+Dated **2026-09-21** reaudit. New dated LessonSpine encode bundling AnalogyCard analogy / like-this transfer pair after EvidenceCard before PracticeCard. After PR 180 merge `dfca7ff01e40f30b0df77dfca5ac1e0d36fab6ea` / tip `715941bb5c3a9998e7f9f4fea670ffcc7303b256`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. RubricCard after sting/objective path, after ThresholdCard, before PracticeCard. EvidenceCard after sting/objective path, after RubricCard, before PracticeCard. AnalogyCard after sting/objective path, after EvidenceCard, before PracticeCard. New dest `/opt/cursor/artifacts/lesson-spine-analogy-encode/2026-09-21/LessonSpine.mp4` sha256 `a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37` **Current master dest.** Evidence dest `5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b` archived, not overwritten. Rubric dest `4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337` **untouched**. Threshold dest `955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f` **untouched**. Spectrum dest `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` **untouched**. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. AnalogyCard last-word “this.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
 
 ## Held
 

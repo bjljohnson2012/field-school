@@ -11,99 +11,65 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 const src = (...parts) => readFileSync(join(root, ...parts), "utf8");
 const NEW_DEST =
-  "/opt/cursor/artifacts/lesson-spine-evidence-encode/2026-09-21/LessonSpine.mp4";
-const NEW_SHA = "5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b";
-const STILLS = "/opt/cursor/artifacts/remotion-lesson-spine-evidence-encode/2026-09-21";
+  "/opt/cursor/artifacts/lesson-spine-analogy-encode/2026-09-21/LessonSpine.mp4";
+const NEW_SHA = "a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37";
+const STILLS = "/opt/cursor/artifacts/remotion-lesson-spine-analogy-encode/2026-09-21";
 const PRIOR =
+  "/opt/cursor/artifacts/lesson-spine-evidence-encode/2026-09-21/LessonSpine.mp4";
+const PRIOR_SHA = "5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b";
+const RUBRIC =
   "/opt/cursor/artifacts/lesson-spine-rubric-encode/2026-09-21/LessonSpine.mp4";
-const PRIOR_SHA = "4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337";
+const RUBRIC_SHA = "4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337";
 const THRESHOLD =
   "/opt/cursor/artifacts/lesson-spine-threshold-encode/2026-09-21/LessonSpine.mp4";
 const THRESHOLD_SHA = "955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f";
 const SPECTRUM =
   "/opt/cursor/artifacts/lesson-spine-spectrum-encode/2026-09-21/LessonSpine.mp4";
 const SPECTRUM_SHA = "496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0";
-const SOURCE =
-  "/opt/cursor/artifacts/lesson-spine-source-encode/2026-09-21/LessonSpine.mp4";
-const SOURCE_SHA = "833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478";
-const TIMELINE =
-  "/opt/cursor/artifacts/lesson-spine-timeline-encode/2026-09-21/LessonSpine.mp4";
-const TIMELINE_SHA = "2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068";
-const REFLECTION =
-  "/opt/cursor/artifacts/lesson-spine-reflection-encode/2026-09-21/LessonSpine.mp4";
-const REFLECTION_SHA = "1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17";
-const CAVEAT =
-  "/opt/cursor/artifacts/lesson-spine-caveat-encode/2026-09-21/LessonSpine.mp4";
-const CAVEAT_SHA = "e23cadde85af2540d3c4f9c8a8434126655133b50c0cdc6c5783b16d9e446fd7";
-const STEPS =
-  "/opt/cursor/artifacts/lesson-spine-steps-encode/2026-09-21/LessonSpine.mp4";
-const STEPS_SHA = "e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b";
-const QUOTE =
-  "/opt/cursor/artifacts/lesson-spine-quote-encode/2026-09-21/LessonSpine.mp4";
-const QUOTE_SHA = "244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d";
-const EXAMPLE =
-  "/opt/cursor/artifacts/lesson-spine-example-encode/2026-09-21/LessonSpine.mp4";
-const EXAMPLE_SHA = "f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b";
-const CHECKPOINT =
-  "/opt/cursor/artifacts/lesson-spine-checkpoint-encode/2026-09-21/LessonSpine.mp4";
-const CHECKPOINT_SHA = "19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a";
-const STING =
-  "/opt/cursor/artifacts/lesson-spine-sting-encode/2026-09-21/LessonSpine.mp4";
-const STING_SHA = "325a41e775821c8576e14038d2076ee639d48a0fc29b3f84b223f4af9390f204";
-const OBJECTION =
-  "/opt/cursor/artifacts/lesson-spine-objection-encode/2026-09-21/LessonSpine.mp4";
-const OBJECTION_SHA = "4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee";
-const GLOSSARY =
-  "/opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4";
-const GLOSSARY_SHA = "247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c";
-const SECTION =
-  "/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4";
-const SECTION_SHA = "f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7";
-const COMPARE =
-  "/opt/cursor/artifacts/lesson-spine-compare-encode/2026-09-21/LessonSpine.mp4";
-const COMPARE_SHA = "917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d";
-const SCRIPTURE =
-  "/opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4";
-const SCRIPTURE_SHA = "cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79";
-const KEYCLAIM =
-  "/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4";
-const KEYCLAIM_SHA = "16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606";
-const PRACTICE =
-  "/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4";
-const PRACTICE_SHA = "8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf";
-const ENDCARD =
-  "/opt/cursor/artifacts/lesson-spine-end-card-encode/2026-09-20/LessonSpine.mp4";
-const ENDCARD_SHA = "073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693";
-const TRANSITION =
-  "/opt/cursor/artifacts/lesson-spine-transition-luma-encode/2026-09-20/LessonSpine.mp4";
-const TRANSITION_SHA = "f631402a6dfbb2ca2218ea9617c7b2af527eb7e88f8df5547dc6584c9ef5a96e";
-const CAPTION =
-  "/opt/cursor/artifacts/lesson-spine-caption-overlay-encode/2026-09-20/LessonSpine.mp4";
-const CAPTION_SHA = "5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c";
 
 const PRIORS = {
   [PRIOR]: PRIOR_SHA,
+  [RUBRIC]: RUBRIC_SHA,
   [THRESHOLD]: THRESHOLD_SHA,
   [SPECTRUM]: SPECTRUM_SHA,
-  [SOURCE]: SOURCE_SHA,
-  [TIMELINE]: TIMELINE_SHA,
-  [REFLECTION]: REFLECTION_SHA,
-  [CAVEAT]: CAVEAT_SHA,
-  [STEPS]: STEPS_SHA,
-  [QUOTE]: QUOTE_SHA,
-  [EXAMPLE]: EXAMPLE_SHA,
-  [CHECKPOINT]: CHECKPOINT_SHA,
-  [STING]: STING_SHA,
-  [OBJECTION]: OBJECTION_SHA,
-  [GLOSSARY]: GLOSSARY_SHA,
-  [SECTION]: SECTION_SHA,
-  [COMPARE]: COMPARE_SHA,
-  [SCRIPTURE]: SCRIPTURE_SHA,
-  [KEYCLAIM]: KEYCLAIM_SHA,
-  [PRACTICE]: PRACTICE_SHA,
-  [ENDCARD]: ENDCARD_SHA,
-  [TRANSITION]: TRANSITION_SHA,
-  [CAPTION]: CAPTION_SHA,
+  "/opt/cursor/artifacts/lesson-spine-source-encode/2026-09-21/LessonSpine.mp4":
+    "833d39f430b657e09534b5ddd011e321ce2697f590738001c4c217af6aef1478",
+  "/opt/cursor/artifacts/lesson-spine-timeline-encode/2026-09-21/LessonSpine.mp4":
+    "2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068",
+  "/opt/cursor/artifacts/lesson-spine-reflection-encode/2026-09-21/LessonSpine.mp4":
+    "1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17",
+  "/opt/cursor/artifacts/lesson-spine-caveat-encode/2026-09-21/LessonSpine.mp4":
+    "e23cadde85af2540d3c4f9c8a8434126655133b50c0cdc6c5783b16d9e446fd7",
+  "/opt/cursor/artifacts/lesson-spine-steps-encode/2026-09-21/LessonSpine.mp4":
+    "e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b",
+  "/opt/cursor/artifacts/lesson-spine-quote-encode/2026-09-21/LessonSpine.mp4":
+    "244c485bbfd83e2138c4e499fc07a00f566be3d1ede1c5a3f03dfd57b04feb2d",
+  "/opt/cursor/artifacts/lesson-spine-example-encode/2026-09-21/LessonSpine.mp4":
+    "f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b",
+  "/opt/cursor/artifacts/lesson-spine-checkpoint-encode/2026-09-21/LessonSpine.mp4":
+    "19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a",
+  "/opt/cursor/artifacts/lesson-spine-sting-encode/2026-09-21/LessonSpine.mp4":
+    "325a41e775821c8576e14038d2076ee639d48a0fc29b3f84b223f4af9390f204",
+  "/opt/cursor/artifacts/lesson-spine-objection-encode/2026-09-21/LessonSpine.mp4":
+    "4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee",
+  "/opt/cursor/artifacts/lesson-spine-glossary-encode/2026-09-21/LessonSpine.mp4":
+    "247890d0529b635d8ad39317825c760fe76fe134274e2149e4ccbe9bcb1af32c",
+  "/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4":
+    "f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7",
+  "/opt/cursor/artifacts/lesson-spine-compare-encode/2026-09-21/LessonSpine.mp4":
+    "917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d",
+  "/opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4":
+    "cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79",
+  "/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4":
+    "16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606",
+  "/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4":
+    "8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf",
+  "/opt/cursor/artifacts/lesson-spine-end-card-encode/2026-09-20/LessonSpine.mp4":
+    "073e1e3b18f3c6f2bc1590991d5bee4059c33487a19ff083c55927480d7a7693",
+  "/opt/cursor/artifacts/lesson-spine-transition-luma-encode/2026-09-20/LessonSpine.mp4":
+    "f631402a6dfbb2ca2218ea9617c7b2af527eb7e88f8df5547dc6584c9ef5a96e",
+  "/opt/cursor/artifacts/lesson-spine-caption-overlay-encode/2026-09-20/LessonSpine.mp4":
+    "5b229fee3254426ba8b6dca0c7af23f2270b485b7b62f296b5ae6a31b4d5c61c",
   "/opt/cursor/artifacts/lesson-spine-lower-callout-encode/2026-09-20/LessonSpine.mp4":
     "68b8378a47d9eb57ed4b41f35bc2bf4ed6fd01a0694fca28c0a5ea90101fee92",
   "/opt/cursor/artifacts/lesson-spine-progress-chapter-encode/2026-09-20/LessonSpine.mp4":
@@ -134,43 +100,43 @@ function sha256(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
 }
 
-test("WAVE5 and STATUS archive evidence encode as prior dest", () => {
+test("WAVE5 and STATUS promote analogy encode as current master dest", () => {
   const wave5 = src("..", "docs", "campus-runtime", "WAVE5.md");
   const campus = src("..", "docs", "campus-runtime", "STATUS.md");
-  const note = src("antagonist-lesson-spine-evidence-encode.md");
+  const note = src("antagonist-lesson-spine-analogy-encode.md");
   assert.match(
     wave5,
-    /Archived prior evidence-encode `\/opt\/cursor\/artifacts\/lesson-spine-evidence-encode\/2026-09-21\/LessonSpine\.mp4`/,
+    /Current master LessonSpine dest: `\/opt\/cursor\/artifacts\/lesson-spine-analogy-encode\/2026-09-21\/LessonSpine\.mp4`/,
   );
+  assert.match(wave5, /a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37/);
+  assert.match(wave5, /## LessonSpine analogy encode \(PASS\)/);
+  assert.match(wave5, /PRs 85–180/);
+  assert.match(wave5, /PR 180 merge `dfca7ff`/);
   assert.match(wave5, /5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b/);
-  assert.match(wave5, /## LessonSpine evidence encode \(PASS\)/);
-  assert.match(wave5, /PRs 85–177/);
-  assert.match(wave5, /PR 177 merge `fa8182f`/);
-  assert.match(wave5, /4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337/);
-  assert.match(wave5, /Archived prior rubric-encode/);
+  assert.match(wave5, /Archived prior evidence-encode/);
   assert.match(wave5, /\*\*Current master dest\.\*\*/);
+  assert.match(campus, /Current master LessonSpine dest is analogy-encode/);
+  assert.match(campus, /a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37/);
+  assert.match(campus, /PR 180 merge `dfca7ff`/);
   assert.match(campus, /Archived prior evidence-encode/);
   assert.match(campus, /5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b/);
-  assert.match(campus, /PR 177 merge `fa8182f`/);
-  assert.match(campus, /Archived prior rubric-encode/);
-  assert.match(campus, /4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337/);
   assert.match(campus, /\*\*CLOSED\*\*, \*\*0\/8\*\*/);
   assert.match(note, /EDU-S01: PASS/);
   assert.match(note, /EDU-S02: PASS/);
-  assert.match(note, /5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b/);
-  assert.match(note, /PR 177 merge `fa8182fa86b8e070f100bc7aa9a00e4375ebe065`/);
+  assert.match(note, /a556a0b5a2beaec4b0cc44eadcbf6c092cd152a568282ce3eee06564be01af37/);
+  assert.match(note, /PR 180 merge `dfca7ff01e40f30b0df77dfca5ac1e0d36fab6ea`/);
   assert.match(note, /hold_cleaning: true/);
   assert.match(
     note,
     /Opener\/sting → TalkingHead\/slate → DefinitionBoard\/objective → RecapCard → QuizBumper\/next-up/,
   );
-  assert.match(src("README.md"), /antagonist-lesson-spine-evidence-encode\.md/);
+  assert.match(src("README.md"), /antagonist-lesson-spine-analogy-encode\.md/);
   assert.doesNotMatch(note, /8\/8 PASS|launch OPEN|HARD_FAIL/);
   assert.doesNotMatch(wave5, /8\/8 PASS|launch OPEN/i);
   assert.doesNotMatch(src("antagonist-full-set.md"), /8\/8 PASS|launch OPEN|HARD_FAIL/);
 });
 
-test("new dest exists; rubric-encode and other priors untouched", () => {
+test("new dest exists; evidence-encode and other priors untouched", () => {
   assert.equal(existsSync(NEW_DEST), true);
   assert.equal(sha256(NEW_DEST), NEW_SHA);
   assert.notEqual(NEW_DEST, PRIOR);
@@ -192,7 +158,7 @@ test("new dest exists; rubric-encode and other priors untouched", () => {
 });
 
 test("render-lock dry-run forwards the new dest and refuses Just", () => {
-  const dir = mkdtempSync(join(tmpdir(), "evidence-encode-lock-"));
+  const dir = mkdtempSync(join(tmpdir(), "analogy-encode-lock-"));
   const missingLock = join(dir, "absent.render.lock");
   const meminfo = join(dir, "meminfo");
   writeFileSync(meminfo, "MemAvailable: 8192000 kB\n");
