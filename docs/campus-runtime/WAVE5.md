@@ -154,7 +154,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | ThresholdCard encode master dest reaudit | PR 173 `4973a71` |
 | RubricCard scoring bands / criteria | PR 174 `c262cef` |
 | RubricCard LessonSpine encode | PR 175 `34e31fa` |
-| RubricCard encode master dest reaudit | this PR |
+| RubricCard encode master dest reaudit | PR 176 `e525d24` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
