@@ -143,7 +143,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | TimelineRail sequence of beats / ordered milestones | PR 162 `3179139` / tip `1d8e752` |
 | TimelineRail LessonSpine encode | PR 163 `9225118` / tip `ff03100` |
 | TimelineRail encode master dest reaudit | PR 164 `86a32f2` / tip `b915ed3` |
-| SourceChip citation chip | this PR |
+| SourceChip citation chip | PR 165 `897ac3b` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -543,7 +543,7 @@ Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cur
 
 ## SourceChip (PASS)
 
-PR 164 merge `86a32f2` / tip `b915ed3` harvested (`86a32f23f3a7ee00218d9b50a90fe916b01ff207` / `b915ed3e6955e1a85d4ac8c62525c7a82c90d466`). SourceChip soft craft beat: citation chip distinct from QuoteCard / ScriptureCard after sting/objective path (`SOURCE_CHIP_KICKER = "Source"`; `SOURCE_CHIP_CITE = "Field"`; `SOURCE_CHIP_LINE = "Name the source."`; cream + gold 6px left rail). Craft beat on `SourceChipDemo`. Sequenced after sting/objective path, after TimelineRail, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Source path only. No Cap take. ORDER LOCK intact. Current master dest timeline-encode sha256 `2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-source-chip.md`. Stills: `/opt/cursor/artifacts/remotion-source-chip/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
+PR 165 this craft. PR 164 merge `86a32f2` / tip `b915ed3` harvested (`86a32f23f3a7ee00218d9b50a90fe916b01ff207` / `b915ed3e6955e1a85d4ac8c62525c7a82c90d466`). SourceChip soft craft beat: citation chip distinct from QuoteCard / ScriptureCard after sting/objective path (`SOURCE_CHIP_KICKER = "Source"`; `SOURCE_CHIP_CITE = "Field"`; `SOURCE_CHIP_LINE = "Name the source."`; cream + gold 6px left rail). Craft beat on `SourceChipDemo`. Sequenced after sting/objective path, after TimelineRail, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Source path only. No Cap take. ORDER LOCK intact. Current master dest timeline-encode sha256 `2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-source-chip.md`. Stills: `/opt/cursor/artifacts/remotion-source-chip/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
