@@ -166,6 +166,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | CounterexampleCard encode master dest reaudit | PR 185 `f2bf275` |
 | LessonSpine Next player rail | PR 186 `fbc8d1d` |
 | LessonSpine play-rail Cleaning + Publish | PR 187 `df6f69c` |
+| AUTH_URL signed-in Parent | PR this seal |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -655,6 +656,10 @@ Dated 2026-09-21. Parent plays the locked counterexample-encode master in campus
 
 Dated 2026-09-21. Play-rail Cleaning auto-flip only on checklist PASS for locked dest `/opt/cursor/artifacts/lesson-spine-counterexample-encode/2026-09-21/LessonSpine.mp4` sha256 `af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4`. Publish Ready/HLS from campus archive copy to `/lessons/hls`. PR this seal. PR 186 merge `b8ba687` / tip `97d0779` (`b8ba6876a0e14766b1c83981f7fba8daad94dc8e` / `97d0779deb0ef87bf523ca1ece286cc25691d24d`). **Current master dest.** **untouched**. Global checklist `--flip` still refused. `cleaningAutoFlipReady` still false when holdCleaning true / shipGreen false. Distribute HELD. Launch **CLOSED**, **0/8**. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md) + `plates/cleaning-auto-flip-play-rail.md`.
 
+## AUTH_URL signed-in Parent (PASS)
+
+Dated 2026-09-21. Parent signs in at AUTH_URL `https://portal.fieldschool.ai` and plays Ready / HLS LessonSpine. PR this seal. PR 187 merge `a20feeb` / tip `b32f4ec` (`a20feeb46bc24d6274fb12d7908eb912af8e7663` / `b32f4ecfb53e314b9acb36a62235d358846877c0`). **Current master dest.** **untouched**. Guest `/api/me` stays `{guest:true}`. Signed-in `/api/me` is `{authenticated:true}`. `/login?next=/play/lesson-spine`. University 301s to portal. Distribute HELD. Launch **CLOSED**, **0/8**. Stripe still HELD. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
+
 ## Karaoke gold (VOX-S01 PASS)
 
 `CaptionsBand` drives word-level karaoke via `wordClock`. Active word gold `#C4A35A` plus gold tick (`EDU-S02`). Fixture times. No WhisperX. No Cap take. CaptionsDemo + LessonSpine stills: `/opt/cursor/artifacts/remotion-captions-karaoke-gold/2026-09-20/`. Soft re-score: `plates/antagonist-captions-karaoke-gold.md` **PASS**. No new HARD_FAIL.
@@ -690,4 +695,4 @@ Live `GET https://portal.fieldschool.ai/api/plates` is **401** `sign_in_required
 
 ## Held
 
-No Remotion in Next. HTML5 player rail at `/play/lesson-spine`. Play-rail Cleaning auto-flip + Publish Ready/HLS for locked dest `af374d95…` only. Global `--flip` refused. Distribute HELD. No Cap take. No Just remake. No second melt. No AUTH_URL / Stripe. No Wave 3 cutover (PR 65 closed SUPERSEDED, unmerged). No LAUNCH_GATE 8/8. Launch stays **CLOSED**, **0/8**.
+No Remotion in Next. HTML5 player rail at `/play/lesson-spine`. Play-rail Cleaning auto-flip + Publish Ready/HLS for locked dest `af374d95…` only. AUTH_URL signed-in Parent landed at portal. Global `--flip` refused. Distribute HELD. No Cap take. No Just remake. No second melt. Stripe still HELD. No Wave 3 cutover (PR 65 closed SUPERSEDED, unmerged). No LAUNCH_GATE 8/8. Launch stays **CLOSED**, **0/8**.
