@@ -76,6 +76,10 @@ MEMBERS=(
   src/app/api/progress/supervised/route.ts
   src/components/fr-6-supervised-progress.tsx
   src/app/progress/page.tsx
+  src/lib/progress/supervised-intent.ts
+  src/app/api/progress/intent/route.ts
+  src/components/fr-3-parent-intent.tsx
+  src/app/intent/page.tsx
   src/app/campus-home.tsx
   src/components/site-header.tsx
   public/lessons/LessonSpine.mp4
@@ -97,6 +101,8 @@ mkdir -p \
   "$STAGE/src/app/operator/hire" \
   "$STAGE/src/app/progress" \
   "$STAGE/src/app/api/progress/supervised" \
+  "$STAGE/src/app/intent" \
+  "$STAGE/src/app/api/progress/intent" \
   "$STAGE/src/lib/progress" \
   "$STAGE/src/app/api/stripe/webhook" \
   "$STAGE/src/app/api/billing/hire" \
@@ -171,7 +177,7 @@ if tar -tzf "\$PACK" | grep -E '(^|/)(family-v1-home|children-database|src/route
   echo "Refusing pack: family, org home, Remotion, or TanStack paths present" >&2
   exit 1
 fi
-mkdir -p "\$REMOTE_DIR/src/app/play/lesson-spine" "\$REMOTE_DIR/src/app/api/media/lesson-spine/ready" "\$REMOTE_DIR/src/app/api/media/lesson-spine/publish" "\$REMOTE_DIR/src/app/api/media/lesson-spine/launch-gate" "\$REMOTE_DIR/src/app/operator/publish" "\$REMOTE_DIR/src/app/operator/launch-gate" "\$REMOTE_DIR/src/app/operator/hire" "\$REMOTE_DIR/src/app/progress" "\$REMOTE_DIR/src/app/api/progress/supervised" "\$REMOTE_DIR/src/lib/progress" "\$REMOTE_DIR/src/app/api/stripe/webhook" "\$REMOTE_DIR/src/app/api/billing/hire" "\$REMOTE_DIR/src/app/api/checkout/status" "\$REMOTE_DIR/src/app/checkout/success" "\$REMOTE_DIR/src/lib/billing" "\$REMOTE_DIR/src/lib/player" "\$REMOTE_DIR/public/lessons/hls"
+mkdir -p "\$REMOTE_DIR/src/app/play/lesson-spine" "\$REMOTE_DIR/src/app/api/media/lesson-spine/ready" "\$REMOTE_DIR/src/app/api/media/lesson-spine/publish" "\$REMOTE_DIR/src/app/api/media/lesson-spine/launch-gate" "\$REMOTE_DIR/src/app/operator/publish" "\$REMOTE_DIR/src/app/operator/launch-gate" "\$REMOTE_DIR/src/app/operator/hire" "\$REMOTE_DIR/src/app/progress" "\$REMOTE_DIR/src/app/api/progress/supervised" "\$REMOTE_DIR/src/app/intent" "\$REMOTE_DIR/src/app/api/progress/intent" "\$REMOTE_DIR/src/lib/progress" "\$REMOTE_DIR/src/app/api/stripe/webhook" "\$REMOTE_DIR/src/app/api/billing/hire" "\$REMOTE_DIR/src/app/api/checkout/status" "\$REMOTE_DIR/src/app/checkout/success" "\$REMOTE_DIR/src/lib/billing" "\$REMOTE_DIR/src/lib/player" "\$REMOTE_DIR/public/lessons/hls"
 rm -f "\$REMOTE_DIR/public/lessons/hls/"*.ts
 tar -xzf "\$PACK" -C "\$REMOTE_DIR"
 rm -f "\$REMOTE_DIR/public/lessons/hls/"*.ts

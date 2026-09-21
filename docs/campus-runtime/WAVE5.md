@@ -172,7 +172,8 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Publish polish operator path | PR 191 `caa8af5` |
 | Launch-gate evidence rows | PR 192 `ebe6e4c` |
 | Stripe webhook hire activation | PR 193 `fcaa4d9` |
-| Parent-supervised progress | PR this seal `e1a5eaf` |
+| Parent-supervised progress | PR 194 `e1a5eaf` |
+| Parent-owned intent | PR this seal `pending` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -690,6 +691,10 @@ Dated 2026-09-21. After Parent pays Learn with Ben, campus webhook activates the
 
 Dated 2026-09-21. Parent sees Now / Confidence / Next under the selected Child after hire and play. Route `/progress`. Evidence `GET /api/progress/supervised` plus `public/lessons/hls/supervised-progress.json`. FR-6 ledger surface + FR-2 selected Child. Child ≠ User. No child login. Family LIVE `bc-4765f2f0` not stolen. PR this seal. PR 193 merge `ae8347d` / tip `c1deba8` (`ae8347d9cd2c0d2868b72c00c7eda16f3c8b3c01` / `c1deba8b64dac5369ef4eb8327924f9a371bbe26`). **Current master dest.** **untouched**. AUTH signed-in still holds. Ready / HLS still 200. Stripe three-plan still 200. `/metering` fr-kb-3 still 200. `/operator/publish` published true distribute false. `/operator/launch-gate` CLOSED 0/8. Webhook hire dry-run path still holds. No live Cleaning / Publish flip. No new dollars. Distribute HELD. Launch **CLOSED**, **0/8**. Overlay pack `/opt/field-school-packs/player-rail-campus-pack-20260921T162559Z.tar.gz` sha256 `21d44f1961d06282dd1e943691ea94bb465105395898f850a54d461f85bb416f`. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
 
+## Parent-owned intent (PASS)
+
+Dated 2026-09-21. Parent captures and owns intent under the selected Child so curriculum/path planning starts from parent intent, not child login. Route `/intent`. Evidence `GET`/`POST /api/progress/intent` plus `public/lessons/hls/supervised-intent.json`. FR-3 intent + FR-2 selected Child. Child ≠ User. No child login. Family LIVE `bc-4765f2f0` not stolen. Does not call `/api/intent` or write `learning_intents`. PR this seal. PR 194 merge `3322e52` / tip `ea32d80` (`3322e52ba6ef87683e116304f8baabaf17be21b4` / `ea32d80f30d8621080e0d8be0540f657c8b8739e`). **Current master dest.** **untouched**. AUTH signed-in still holds. Ready / HLS still 200. Stripe three-plan still 200. `/metering` fr-kb-3 still 200. `/operator/publish` published true distribute false. `/operator/launch-gate` CLOSED 0/8. Webhook hire dry-run path still holds. `/progress` FR-6 / FR-2 still holds. No live Cleaning / Publish flip. No new dollars. Distribute HELD. Launch **CLOSED**, **0/8**. Evidence: [PLAYER_RAIL.md](./PLAYER_RAIL.md).
+
 ## Karaoke gold (VOX-S01 PASS)
 
 `CaptionsBand` drives word-level karaoke via `wordClock`. Active word gold `#C4A35A` plus gold tick (`EDU-S02`). Fixture times. No WhisperX. No Cap take. CaptionsDemo + LessonSpine stills: `/opt/cursor/artifacts/remotion-captions-karaoke-gold/2026-09-20/`. Soft re-score: `plates/antagonist-captions-karaoke-gold.md` **PASS**. No new HARD_FAIL.
@@ -725,4 +730,4 @@ Live `GET https://portal.fieldschool.ai/api/plates` is **401** `sign_in_required
 
 ## Held
 
-No Remotion in Next. HTML5 player rail at `/play/lesson-spine`. Play-rail Cleaning auto-flip + Publish Ready/HLS for locked dest `af374d95…` only. AUTH_URL signed-in Parent landed at portal. Stripe live Learn with Ben landed at `$100` / `$200` / `$1,000`. Stripe webhook hire activation landed at `/operator/hire` for those three plans only. Parent-supervised progress landed at `/progress` as Now / Confidence / Next under the selected Child. FR-KB-3 metering UI landed at `/metering`. Publish polish operator path landed at `/operator/publish`. Launch-gate hire-path evidence rows landed at `/operator/launch-gate`. Global `--flip` refused. Distribute HELD. No Cap take. No Just remake. No second melt. No Wave 3 cutover (PR 65 closed SUPERSEDED, unmerged). No LAUNCH_GATE 8/8. Launch stays **CLOSED**, **0/8**.
+No Remotion in Next. HTML5 player rail at `/play/lesson-spine`. Play-rail Cleaning auto-flip + Publish Ready/HLS for locked dest `af374d95…` only. AUTH_URL signed-in Parent landed at portal. Stripe live Learn with Ben landed at `$100` / `$200` / `$1,000`. Stripe webhook hire activation landed at `/operator/hire` for those three plans only. Parent-supervised progress landed at `/progress` as Now / Confidence / Next under the selected Child. Parent-owned intent landed at `/intent` under the selected Child. FR-KB-3 metering UI landed at `/metering`. Publish polish operator path landed at `/operator/publish`. Launch-gate hire-path evidence rows landed at `/operator/launch-gate`. Global `--flip` refused. Distribute HELD. No Cap take. No Just remake. No second melt. No Wave 3 cutover (PR 65 closed SUPERSEDED, unmerged). No LAUNCH_GATE 8/8. Launch stays **CLOSED**, **0/8**.

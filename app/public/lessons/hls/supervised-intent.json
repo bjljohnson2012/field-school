@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "fr": ["FR-3", "FR-2"],
+  "distribute": false,
+  "launch": "CLOSED 0/8",
+  "selected_child_id": "play-child",
+  "children": [
+    {
+      "id": "play-child",
+      "name": "Play Child",
+      "kind": "child",
+      "login": "none",
+      "user": false,
+      "goals": ["Own the LessonSpine rail from parent intent"],
+      "subjects": ["LessonSpine"],
+      "themes": ["parent-owned plan"],
+      "timeHorizon": "this hire",
+      "constraints": ["Child is not a User", "No child login"]
+    },
+    {
+      "id": "hire-child",
+      "name": "Hire Child",
+      "kind": "child",
+      "login": "none",
+      "user": false,
+      "goals": ["Start curriculum from parent intent after hire"],
+      "subjects": ["Learn with Ben"],
+      "themes": ["hire path"],
+      "timeHorizon": "next portion",
+      "constraints": ["Parent owns intent", "Family LIVE not stolen"]
+    }
+  ]
+}

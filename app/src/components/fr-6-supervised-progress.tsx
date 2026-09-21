@@ -106,7 +106,14 @@ export function Fr6SupervisedProgress() {
       )}
 
       <p className="mt-8 text-sm text-muted-foreground">
-        After hire, return to{" "}
+        After hire, set{" "}
+        <Link
+          href={selected ? `/intent?child=${encodeURIComponent(selected.id)}` : "/intent"}
+          className="underline"
+        >
+          /intent
+        </Link>
+        , then return to{" "}
         <Link href="/metering" className="underline">
           /metering
         </Link>{" "}

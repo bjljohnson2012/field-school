@@ -14,7 +14,7 @@ Dated 2026-09-21. Plan source of truth for public launch. Campus runtime SoT sta
 
 | Node | Status | Evidence (one line) | Hold |
 |---|---|---|---|
-| Product | HELD | Hire-path evidence rows landed (play rail, AUTH, Stripe `$100`/`$200`/`$1,000`, `/metering`, Play-rail Publish polish, webhook hire activation, Parent-supervised progress). Factory dest `af374d95…`. Not a launch Product PASS. | Remotion-in-Next; Cap take; Distribute; Launch 8/8; PR 65 SUPERSEDED, unmerged |
+| Product | HELD | Hire-path evidence rows landed (play rail, AUTH, Stripe `$100`/`$200`/`$1,000`, `/metering`, Play-rail Publish polish, webhook hire activation, Parent-supervised progress, Parent-owned intent). Factory dest `af374d95…`. Not a launch Product PASS. | Remotion-in-Next; Cap take; Distribute; Launch 8/8; PR 65 SUPERSEDED, unmerged |
 | ICP | HELD | Household + sales orgs exist ([WAVE2.md](../campus-runtime/WAVE2.md)). No sealed ICP launch readout. | Do not invent ICP 8/8 |
 | Brand | HELD | Factory cream / ink / Fraunces + seal lock in `plates/`. No sealed Brand launch readout. | Do not invent Brand 8/8 |
 | Offer | HELD | Learn with Ben checkout + metering UI + webhook hire activation landed on campus hire path. Not a launch Offer PASS. | No new dollars; no launch SKU seal |
@@ -35,7 +35,8 @@ These rows track real readiness work for Learn with Ben hire. They do **not** fl
 | FR-KB-3 metering UI | yes | no | `/metering` · PR 190 merge `38912ed` |
 | Publish polish operator path | yes | no | `/operator/publish` published true · PR 191 merge `aa47d07` |
 | Stripe webhook hire activation | yes | no | `/operator/hire` · PR 193 merge `ae8347d` |
-| Parent-supervised progress FR-6 / FR-2 | yes | no | `/progress` · this seal (Now / Confidence / Next under selected Child) |
+| Parent-supervised progress FR-6 / FR-2 | yes | no | `/progress` · PR 194 merge `3322e52` |
+| Parent-owned intent FR-3 | yes | no | `/intent` · this seal (parent intent under selected Child) |
 
 Master dest sha256 `af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4` **untouched**.
 
@@ -43,7 +44,7 @@ Master dest sha256 `af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb22
 
 Remotion Wave 5 factory trail is **PASS** under Product: compositions, LessonSpine ORDER LOCK, TypeCard VOX-S04 PASS, AudioBed landed, karaoke gold, letterbox stack complete, encode dests, Cleaning checklist `hold_cleaning: true`, plates API guest 401. Current master dest is counterexample-encode sha256 `af374d95…`. That is factory evidence only.
 
-Hire-path rows above landed on campus (HTML5 play rail, AUTH portal, Stripe three-plan, `/metering`, Publish polish, webhook hire activation, Parent-supervised progress). They are **not** a launch Product PASS.
+Hire-path rows above landed on campus (HTML5 play rail, AUTH portal, Stripe three-plan, `/metering`, Publish polish, webhook hire activation, Parent-supervised progress, Parent-owned intent). They are **not** a launch Product PASS.
 
 Still **HELD** under Product: Remotion packaged into Next (`@remotion/*`); Cap take; Just remake `27pn9xs0zk8a73g`; Distribute; public marketing flip; Launch 8/8. Wave3 campus pack is LIVE (composer/teach); PR 65 stays closed SUPERSEDED, unmerged.
 
