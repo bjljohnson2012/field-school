@@ -51,6 +51,7 @@ Cites:
 - [antagonist-rubric-card.md](./antagonist-rubric-card.md) — RubricCard scoring bands / criteria 2026-09-21
 - [antagonist-evidence-card.md](./antagonist-evidence-card.md) — EvidenceCard evidence / warrant rows 2026-09-21
 - [antagonist-lesson-spine-rubric-encode.md](./antagonist-lesson-spine-rubric-encode.md) — LessonSpine RubricCard encode 2026-09-21
+- [antagonist-lesson-spine-evidence-encode.md](./antagonist-lesson-spine-evidence-encode.md) — LessonSpine EvidenceCard encode (current master)
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
@@ -2216,6 +2217,22 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. EvidenceCard last-word “warrant.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `EvidenceCardDemo-f0.png`, `EvidenceCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
+
+## LessonSpine evidence encode 2026-09-21
+
+Dated **2026-09-21** reaudit. New dated LessonSpine encode bundling EvidenceCard evidence / warrant rows after RubricCard before PracticeCard. After PR 177 merge `fa8182fa86b8e070f100bc7aa9a00e4375ebe065` / tip `e7066f30d8a54a30a2d771eddbc291ab23583360`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. RubricCard after sting/objective path, after ThresholdCard, before PracticeCard. EvidenceCard after sting/objective path, after RubricCard, before PracticeCard. New dest `/opt/cursor/artifacts/lesson-spine-evidence-encode/2026-09-21/LessonSpine.mp4` sha256 `5d0499f6cbff19149ce0b5da3c615a1ca0ab26fbbece2d9e26da0e78dd367c4b` **Current master dest.** Rubric dest `4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337` archived, not overwritten. Threshold dest `955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f` **untouched**. Spectrum dest `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` **untouched**. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. EvidenceCard last-word “warrant.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
 
 ## Held
 
