@@ -28,7 +28,12 @@ export function SiteHeader() {
     { href: "/play/lesson-spine", label: "Lesson", compact: true },
     { href: "/tools", label: "Tools", compact: true },
     { href: cartHref, label: "Cart", compact: true, badge: cart.planId ? 1 : 0 },
-    ...(loggedIn ? [{ href: "/children", label: "Children", compact: true }] : []),
+    ...(loggedIn
+      ? [
+          { href: "/children", label: "Children", compact: true },
+          { href: "/progress", label: "Progress", compact: true },
+        ]
+      : []),
     ...(showAbout ? [{ href: "/about", label: "About", compact: false }] : []),
     ...(isStaff
       ? [
