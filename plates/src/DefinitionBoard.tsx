@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream} from "./brand";
-import {AudioBed, Bed, CalloutCard, ChapterChip, CheckpointCard, Claim, CompareBoard, GlossaryChip, GoldRule, HeadDock, Karaoke, KeyClaim, Keyword, Kicker, Letterbox, LowerThird, ObjectionCard, OverlayLock, ProgressRail, ScriptureCard, SectionTitle, Title, TransitionLuma, TypeCard} from "./layers";
+import {AudioBed, Bed, CalloutCard, ChapterChip, CheckpointCard, Claim, CompareBoard, ExampleCard, GlossaryChip, GoldRule, HeadDock, Karaoke, KeyClaim, Keyword, Kicker, Letterbox, LowerThird, ObjectionCard, OverlayLock, ProgressRail, ScriptureCard, SectionTitle, Title, TransitionLuma, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {DefinitionProps} from "./types";
@@ -88,6 +88,9 @@ export const DefinitionBoard: React.FC<DefinitionProps> = ({
         </Layer>
         <Layer name="checkpoint">
           <CheckpointCard />
+        </Layer>
+        <Layer name="example">
+          <ExampleCard />
         </Layer>
         <Layer name="audio">
           <AudioBed />

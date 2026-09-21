@@ -124,6 +124,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Sting encode master dest reaudit | PR 143 `1c73749` / tip `aec8b77` |
 | CheckpointCard formative check | PR 144 `44ccaed` / tip `dba2b86` |
 | CheckpointCard LessonSpine encode | PR 145 `aaa7dc2` / tip `9b78d83` |
+| Checkpoint encode master dest reaudit | PR 146 `7b57e89` / tip `6a8fce2` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -448,6 +449,10 @@ PRs 85–144 harvested. PR 144 merge `44ccaed` / tip `dba2b86` (`44ccaede6e78f49
 ## LessonSpine checkpoint encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-checkpoint-encode/2026-09-21/LessonSpine.mp4` sha256 `19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a` plus CheckpointCard plates. PR 145 merge `aaa7dc2` / tip `9b78d83`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Sting dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-checkpoint-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-checkpoint-encode-master/2026-09-21/`. **Current master dest.**
+
+## ExampleCard (PASS)
+
+PR 146 merge `7b57e89` / tip `6a8fce2` harvested (`7b57e896bc621123539c617c0960924c10cd0a7d` / `6a8fce2958c816e620b13e278029baed15c48d78`). ExampleCard soft craft beat: worked example / show-how after sting/objective path (`EXAMPLE_CARD_KICKER = "Example"`; `EXAMPLE_CARD_LINE = "Show the work."`; cream + gold 6px left rail). Craft beat on `ExampleCardDemo`. Sequenced after sting/objective path, after CheckpointCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Example path only. No Cap take. ORDER LOCK intact. Current master dest checkpoint-encode sha256 `19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a` **untouched** (plate-level stills only). Evidence: `plates/antagonist-example-card.md`. Stills: `/opt/cursor/artifacts/remotion-example-card/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
