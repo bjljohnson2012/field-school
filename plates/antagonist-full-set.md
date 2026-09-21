@@ -30,6 +30,7 @@ Cites:
 - [antagonist-lesson-spine-scripture-encode.md](./antagonist-lesson-spine-scripture-encode.md) — LessonSpine ScriptureCard encode (current master)
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
+- [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1089,6 +1090,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ScriptureCard last-word “verse.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine scripture encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4` sha256 `cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79` plus ScriptureCard plates. After PR 128 merge `94c848e53a5c4cfa07e735b3fc24869d5a31ffcb`. **Current master dest.** Key-claim dest `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` **untouched**. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4
+sha256: cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79
+stills: /opt/cursor/artifacts/remotion-antagonist-scripture-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ScriptureCard last-word “verse.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `ScriptureCardDemo-f0.png`, `ScriptureCardDemo-f60.png`.
 
 ## Held
 
