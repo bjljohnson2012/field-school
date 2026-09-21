@@ -57,6 +57,7 @@ Cites:
 - [antagonist-example-card.md](./antagonist-example-card.md) — ExampleCard worked example / show-how
 - [antagonist-quote-card.md](./antagonist-quote-card.md) — QuoteCard pull quote / authority cite
 - [antagonist-steps-card.md](./antagonist-steps-card.md) — StepsCard numbered procedure / do-this-in-order
+- [antagonist-caveat-card.md](./antagonist-caveat-card.md) — CaveatCard watch-out / warning
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1715,6 +1716,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. StepsCard last-word “order.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `StepsCardDemo-f0.png`, `StepsCardDemo-f60.png`.
+
+## CaveatCard 2026-09-21
+
+Dated **2026-09-21** reaudit. CaveatCard soft craft beat. Watch-out / warning on `CaveatCard` (`CAVEAT_CARD_KICKER = "Caveat"`; `CAVEAT_CARD_LINE = "Watch the catch."`; cream + gold 6px left rail). Craft beat on `CaveatCardDemo`. Sequenced after sting/objective path, after StepsCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). After PR 155 merge `0b0fe4dd4fe4e69797c5d278f1e0afcfae6963b9` / tip `2bd2010778bcc648724939713bb7eed7154e3a61`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. CaveatCard after sting/objective path, after StepsCard, before PracticeCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-steps-encode/2026-09-21/LessonSpine.mp4` sha256 `e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b` **untouched** (plate-level stills only). Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-steps-encode/2026-09-21/LessonSpine.mp4
+sha256: e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b
+stills: /opt/cursor/artifacts/remotion-caveat-card/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CaveatCard last-word “catch.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `CaveatCardDemo-f0.png`, `CaveatCardDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 

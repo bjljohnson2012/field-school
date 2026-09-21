@@ -27,6 +27,7 @@ import {CheckpointCardDemo} from "./CheckpointCardDemo";
 import {ExampleCardDemo} from "./ExampleCardDemo";
 import {QuoteCardDemo} from "./QuoteCardDemo";
 import {StepsCardDemo} from "./StepsCardDemo";
+import {CaveatCardDemo} from "./CaveatCardDemo";
 import {LowerThirdDemo} from "./LowerThirdDemo";
 import {TalkingHeadCard} from "./TalkingHeadCard";
 import {LOCK} from "./brand";
@@ -556,6 +557,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="StepsCardDemo"
         component={StepsCardDemo}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="CaveatCardDemo"
+        component={CaveatCardDemo}
         durationInFrames={240}
         fps={30}
         width={1920}

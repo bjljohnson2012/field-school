@@ -133,7 +133,8 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | QuoteCard encode master dest reaudit | PR 152 `2a28cda` / tip `31d63f9` |
 | StepsCard numbered procedure / do-this-in-order | PR 153 `f2f2857` |
 | StepsCard LessonSpine encode | PR 154 `e7d6862` / tip `da40899` |
-| StepsCard encode master dest reaudit | PR 155 `8a24fce` |
+| StepsCard encode master dest reaudit | PR 155 `0b0fe4d` / tip `2bd2010` |
+| CaveatCard watch-out / warning | PR 156 `7ece92e` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -494,6 +495,10 @@ PRs 85–153 harvested. PR 153 merge `c292ff3` / tip `b5851ab` (`c292ff37b31e7aa
 ## LessonSpine steps encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-steps-encode/2026-09-21/LessonSpine.mp4` sha256 `e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b` plus StepsCard plates. PR 154 merge `e7d6862` / tip `da40899`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Quote dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-steps-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-steps-encode-master/2026-09-21/`. **Current master dest.**
+
+## CaveatCard (PASS)
+
+PR 155 merge `0b0fe4d` / tip `2bd2010` harvested (`0b0fe4dd4fe4e69797c5d278f1e0afcfae6963b9` / `2bd2010778bcc648724939713bb7eed7154e3a61`). CaveatCard soft craft beat: watch-out / warning after sting/objective path (`CAVEAT_CARD_KICKER = "Caveat"`; `CAVEAT_CARD_LINE = "Watch the catch."`; cream + gold 6px left rail). Craft beat on `CaveatCardDemo`. Sequenced after sting/objective path, after StepsCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Caveat path only. No Cap take. ORDER LOCK intact. Current master dest steps-encode sha256 `e0ead459d9505cd612403e8601ab1bfd9ef1acbfc3eba59d3640e19ce621935b` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-caveat-card.md`. Stills: `/opt/cursor/artifacts/remotion-caveat-card/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
