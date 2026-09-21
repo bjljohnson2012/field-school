@@ -113,6 +113,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Compare encode master dest reaudit | PR 132 `cd0d493` / tip `0c3eff2` |
 | SectionTitle section break / chapter title | PR 133 `e619df3` / tip `2a7ce33` |
 | SectionTitle LessonSpine encode | PR 134 `03c5318` / tip `33d0190` |
+| Section encode master dest reaudit | PR 135 `a7facba` / tip `de74e64` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -384,7 +385,11 @@ PRs 85–133 harvested. PR 133 merge `e619df3` / tip `2a7ce33`. New dated dest `
 
 ## LessonSpine section encode master dest reaudit (PASS)
 
-Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4` sha256 `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` plus SectionTitle plates. PR 134 merge `03c5318` / tip `33d0190`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Compare dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-section-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-section-encode-master/2026-09-21/`. **Current master dest.**
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4` sha256 `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` plus SectionTitle plates. PR 134 merge `03c5318` / tip `33d0190`. PR 135 merge `a7facba` / tip `de74e64`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Compare dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-section-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-section-encode-master/2026-09-21/`. **Current master dest.**
+
+## GlossaryChip (PASS)
+
+PR 135 merge `a7facba` / tip `de74e64` harvested. GlossaryChip soft craft beat: term / definition pop after sting/objective path (`GLOSSARY_CHIP_KICKER = "Glossary"`; `GLOSSARY_CHIP_TERM = "Type"`; `GLOSSARY_CHIP_LINE = "Define the term."`; cream + gold 6px left rail). Craft beat on `GlossaryChipDemo`. Sequenced after sting/objective path, after SectionTitle, before PracticeCard. GlossaryChip path only. No Cap take. ORDER LOCK intact. Current master dest section-encode sha256 `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` **untouched** (plate-level stills only). Evidence: `plates/antagonist-glossary-chip.md`. Stills: `/opt/cursor/artifacts/remotion-glossary-chip/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
