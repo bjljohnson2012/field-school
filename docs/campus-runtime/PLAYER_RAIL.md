@@ -10,7 +10,7 @@
 - HLS: [`/lessons/hls/LessonSpine.m3u8`](https://portal.fieldschool.ai/lessons/hls/LessonSpine.m3u8)
 - Static archive copy: [`/lessons/LessonSpine.mp4`](https://portal.fieldschool.ai/lessons/LessonSpine.mp4)
 
-Guest unsigned `GET /api/me` stays `{authenticated:false,guest:true}`. Guest `GET /api/plates` stays 401.
+Guest unsigned `GET /api/me` stays `{authenticated:false,guest:true}`. Signed-in Parent `/api/me` is `{authenticated:true}` (`guest` absent / false). Guest `GET /api/plates` stays 401. Sign-in return path: `/login?next=/play/lesson-spine`. AUTH_URL is `https://portal.fieldschool.ai`. `university.benjohnson.ai` 301s there.
 
 ## Master source (untouched)
 
@@ -32,6 +32,10 @@ ORDER LOCK ticks only: Sting 0–10s → Slate 10–18s → Objective 18–24s �
 
 `app/scripts/publish-lesson-spine-hls.mjs` ffmpeg HLS from the campus archive copy (not the source dest). Artifact `/opt/cursor/artifacts/lesson-spine-play-rail-hls/2026-09-21/`. Public `/lessons/hls/`. Ready manifest `public/lessons/hls/ready.json`. Distribute HELD.
 
+## AUTH_URL signed-in Parent
+
+Live `AUTH_URL=https://portal.fieldschool.ai`. Providers: Google, X, credentials. Parent signs in and returns to `/play/lesson-spine`. Guest play stays open. Distribute HELD. Launch **CLOSED**, **0/8**.
+
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL.
