@@ -56,6 +56,10 @@ After Parent pays Learn with Ben, `POST /api/stripe/webhook` activates the hire 
 
 Parent sees Now / Confidence / Next under the selected Child after hire and play. Page [`/progress`](https://portal.fieldschool.ai/progress). Unsigned `GET /api/progress/supervised`. File `public/lessons/hls/supervised-progress.json`. Child ≠ User. No child login. Does not edit FamilyV1Home or children-database. Family LIVE `bc-4765f2f0` not stolen. Distribute HELD. Launch **CLOSED**, **0/8**.
 
+## Parent-owned intent (FR-3 / FR-2)
+
+Parent captures and owns intent under the selected Child so path planning starts from parent intent, not child login. Page [`/intent`](https://portal.fieldschool.ai/intent). Unsigned `GET /api/progress/intent`. Parent `POST /api/progress/intent` writes hire-path children `play-child` / `hire-child` only. File `public/lessons/hls/supervised-intent.json`. Child ≠ User. No child login. Does not call family `/api/intent` or write `learning_intents`. Does not edit FamilyV1Home or children-database. Family LIVE `bc-4765f2f0` not stolen. Distribute HELD. Launch **CLOSED**, **0/8**.
+
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T162559Z.tar.gz` sha256 `21d44f1961d06282dd1e943691ea94bb465105395898f850a54d461f85bb416f`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T164937Z.tar.gz` sha256 `11d474e9e3a33bb698d455faad84490a2f5898b93da460bcbf21a07ddf0a8076`.
