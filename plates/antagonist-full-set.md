@@ -46,6 +46,7 @@ Cites:
 - [antagonist-source-encode-master.md](./antagonist-source-encode-master.md) — LessonSpine source encode master dest reaudit 2026-09-21
 - [antagonist-spectrum-encode-master.md](./antagonist-spectrum-encode-master.md) — LessonSpine spectrum encode master dest reaudit 2026-09-21
 - [antagonist-threshold-encode-master.md](./antagonist-threshold-encode-master.md) — LessonSpine threshold encode master dest reaudit 2026-09-21
+- [antagonist-rubric-encode-master.md](./antagonist-rubric-encode-master.md) — LessonSpine rubric encode master dest reaudit 2026-09-21
 - [antagonist-threshold-card.md](./antagonist-threshold-card.md) — ThresholdCard cutoff / gate mark 2026-09-21
 - [antagonist-rubric-card.md](./antagonist-rubric-card.md) — RubricCard scoring bands / criteria 2026-09-21
 - [antagonist-lesson-spine-rubric-encode.md](./antagonist-lesson-spine-rubric-encode.md) — LessonSpine RubricCard encode 2026-09-21
@@ -2176,6 +2177,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. RubricCard last-word “bands.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine rubric encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Soft Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-rubric-encode/2026-09-21/LessonSpine.mp4` sha256 `4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337` plus RubricCard plates. After PR 175 merge `d9bcd4a40397d31cd9ba7f962228df386fec9eae` / tip `047fea56b48b8d37bf434ad31e992841111ecc9d`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. RubricCard after sting/objective path, after ThresholdCard, before PracticeCard. Locked master dest **Current master dest.** **untouched**. Threshold dest `955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f` archived, not overwritten. Spectrum dest `496f506babd11a6e5247e87c3bbf926117b0de31feae5b6573fa891bdf6c68d0` **untouched**. Checklist `hold_cleaning: true`. `--flip` refused. No encode this round.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-rubric-encode/2026-09-21/LessonSpine.mp4
+sha256: 4aef4c713218247ebb4cad42b637f4b1331a02d6db4fcc13ac13e2bde156a337
+stills: /opt/cursor/artifacts/remotion-antagonist-rubric-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. RubricCard last-word “bands.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `RubricCardDemo-f0.png`, `RubricCardDemo-f60.png`.
 
 ## Held
 
