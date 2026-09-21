@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { selectSupervisedIntent } from "@/lib/progress/supervised-intent";
 import {
   assembleSupervisedPath,
   selectSupervisedPath,
@@ -32,7 +33,8 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
   const childId = String(body.child || body.child_id || "").trim();
-  const assembled = assembleSupervisedPath(childId);
+  const intent = selectSupervisedIntent(childId);
+  const assembled = assembleSupervisedPath(childId, intent.selected);
   if (!assembled.ok) {
     return NextResponse.json({ ok: false, error: assembled.error }, { status: 400 });
   }

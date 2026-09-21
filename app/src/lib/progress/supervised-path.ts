@@ -1,12 +1,20 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  isHirePathChildId,
-  selectSupervisedIntent,
-  type HirePathChildId,
-  type SupervisedIntentFields,
-} from "./supervised-intent.ts";
+export const HIRE_PATH_CHILD_IDS = ["play-child", "hire-child"] as const;
+export type HirePathChildId = (typeof HIRE_PATH_CHILD_IDS)[number];
+
+export type SupervisedIntentFields = {
+  goals: string[];
+  subjects: string[];
+  themes: string[];
+  timeHorizon: string;
+  constraints: string[];
+};
+
+function isHirePathChildId(value: string | null | undefined): value is HirePathChildId {
+  return Boolean(value && (HIRE_PATH_CHILD_IDS as readonly string[]).includes(value));
+}
 
 export const SUPERVISED_PATH_FR = ["FR-4", "FR-3", "FR-2"] as const;
 
@@ -285,25 +293,27 @@ function writeEvidence(evidence: SupervisedPath) {
   writeFileSync(dest, `${JSON.stringify(evidence, null, 2)}\n`);
 }
 
-export function assembleSupervisedPath(childId: string | null | undefined) {
+export function assembleSupervisedPath(
+  childId: string | null | undefined,
+  intent?: (SupervisedIntentFields & { name?: string }) | null,
+) {
   const id = String(childId || "").trim();
   if (!isHirePathChildId(id)) {
     return { ok: false as const, error: "unknown_child" };
   }
-  const intent = selectSupervisedIntent(id);
-  if (!intent.selected) {
-    return { ok: false as const, error: "unknown_child" };
+  if (!intent) {
+    return { ok: false as const, error: "intent_required" };
   }
   const current = readSupervisedPath();
   const existing = current.children.find((child) => child.id === id);
   const nextChild: SupervisedPathChild = {
     id,
-    name: existing?.name || intent.selected.name,
+    name: existing?.name || intent.name || (id === "hire-child" ? "Hire Child" : "Play Child"),
     kind: "child",
     login: "none",
     user: false,
-    intent: snapshotIntent(intent.selected),
-    items: assembleHirePathItems(intent.selected),
+    intent: snapshotIntent(intent),
+    items: assembleHirePathItems(intent),
   };
   const children = existing
     ? current.children.map((child) => (child.id === id ? nextChild : child))

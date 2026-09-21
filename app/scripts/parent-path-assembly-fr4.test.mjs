@@ -57,12 +57,25 @@ test("Path assembles under the selected Child from parent intent", () => {
   assert.equal(items[0].play, "/play/lesson-spine");
   const dest = join(mkdtempSync(join(tmpdir(), "supervised-path-")), "supervised-path.json");
   process.env.SUPERVISED_PATH_PATH = dest;
-  const assembled = assembleSupervisedPath("play-child");
+  const assembled = assembleSupervisedPath("play-child", {
+    name: "Play Child",
+    goals: ["Hold the rail from parent intent"],
+    subjects: ["LessonSpine"],
+    themes: ["parent-owned plan"],
+    timeHorizon: "this hire",
+    constraints: ["Child is not a User"],
+  });
   assert.equal(assembled.ok, true);
   assert.equal(assembled.selected?.id, "play-child");
   assert.equal(assembled.selected?.user, false);
   assert.match(assembled.selected?.items[0]?.title || "", /LessonSpine/);
-  const unknown = assembleSupervisedPath("not-a-child");
+  const unknown = assembleSupervisedPath("not-a-child", {
+    goals: ["no"],
+    subjects: [],
+    themes: [],
+    timeHorizon: "",
+    constraints: [],
+  });
   assert.equal(unknown.ok, false);
   delete process.env.SUPERVISED_PATH_PATH;
   rmSync(dirname(dest), { recursive: true, force: true });
