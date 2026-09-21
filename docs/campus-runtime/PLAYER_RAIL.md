@@ -74,4 +74,4 @@ Parent starts and sees a durable knowledge brain under the selected Child so cur
 
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T173800Z.tar.gz` sha256 `ea39dd8cfbf6f4ee171c98a36377440ea7808ae91ec748464d5cfed170f2eca4`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T185900Z.tar.gz` sha256 `fd77a76824b519805a50dfdc6f1a16df1f700e7af60f01453368dc3fd64ea38a`.
