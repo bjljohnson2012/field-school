@@ -68,6 +68,10 @@ export default function OperatorPublishPage() {
         <Link href="/play/lesson-spine" className="underline">
           /play/lesson-spine
         </Link>
+        . Launch-gate rows:{" "}
+        <Link href="/operator/launch-gate" className="underline">
+          /operator/launch-gate
+        </Link>
         . API:{" "}
         <Link href="/api/media/lesson-spine/publish" className="underline">
           /api/media/lesson-spine/publish

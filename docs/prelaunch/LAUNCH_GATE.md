@@ -1,6 +1,6 @@
 # Launch gate
 
-Dated 2026-09-20. Plan source of truth for public launch. Campus runtime SoT stays [../campus-runtime/STATUS.md](../campus-runtime/STATUS.md).
+Dated 2026-09-21. Plan source of truth for public launch. Campus runtime SoT stays [../campus-runtime/STATUS.md](../campus-runtime/STATUS.md).
 
 **Launch is CLOSED.** Do not claim launch. Do not invent **8/8**. Launch is never claimed until every node below is explicitly **PASS** with evidence. This file records **0/8**. Missing checks are **not invented**.
 
@@ -14,20 +14,36 @@ Dated 2026-09-20. Plan source of truth for public launch. Campus runtime SoT sta
 
 | Node | Status | Evidence (one line) | Hold |
 |---|---|---|---|
-| Product | HELD | Campus Wave 1–2 live; Wave3 campus pack LIVE (composer/teach); Remotion Wave 5 factory **PASS** in `plates/` (TypeCard VOX-S04 PASS; AudioBed landed; karaoke gold; letterbox stack complete; master dest counterexample-encode sha256 `af374d95…`). Play-rail Publish polish rows on Ready HLS (`/operator/publish`). Not a launch Product PASS. | Remotion-in-Next; Cap take; Distribute; Launch 8/8; PR 65 SUPERSEDED, unmerged |
+| Product | HELD | Hire-path evidence rows landed (play rail, AUTH, Stripe `$100`/`$200`/`$1,000`, `/metering`, Play-rail Publish polish). Factory dest `af374d95…`. Not a launch Product PASS. | Remotion-in-Next; Cap take; Distribute; Launch 8/8; PR 65 SUPERSEDED, unmerged |
 | ICP | HELD | Household + sales orgs exist ([WAVE2.md](../campus-runtime/WAVE2.md)). No sealed ICP launch readout. | Do not invent ICP 8/8 |
 | Brand | HELD | Factory cream / ink / Fraunces + seal lock in `plates/`. No sealed Brand launch readout. | Do not invent Brand 8/8 |
-| Offer | HELD | Learn with Ben checkout exists on campus; Stripe / SKUs / metering UI not a launch seal. | Stripe / prices / SKUs |
+| Offer | HELD | Learn with Ben checkout + metering UI landed on campus hire path. Not a launch Offer PASS. | No new dollars; no launch SKU seal |
 | Marketing | HELD | Marketing site ships separately (`deploy-site.sh`). No sealed Marketing launch readout. | No public launch flip |
 | Sales | HELD | Sales org + trainer stance exist. No sealed Sales launch readout. | Do not invent Sales 8/8 |
 | Legal | HELD | `/privacy` and `/terms` are listed on portal ([DEPLOY.md](../../app/DEPLOY.md)). No sealed Legal launch readout. | Do not invent Legal 8/8 |
 | Plan | HELD | This file is the plan SoT. It records CLOSED, not a go. Staff hub: [../staff/GRAPH.md](../staff/GRAPH.md). Clocks: [../staff/ROUTINES.md](../staff/ROUTINES.md) (06 / 09 / 15 / 22 / 02 ET). | No outer loop / auto-next; do not invent agents |
 
+## Hire-path evidence rows (not a launch PASS)
+
+These rows track real readiness work for Learn with Ben hire. They do **not** flip any of the eight launch nodes to PASS. Launch stays **CLOSED**, **0/8**. Distribute stays HELD. Campus mirror: [`/operator/launch-gate`](https://portal.fieldschool.ai/operator/launch-gate) and `GET /api/media/lesson-spine/launch-gate`.
+
+| Unlock | Landed | Launch node PASS | Cite |
+|---|---|---|---|
+| Ready HLS play rail | yes | no | `/play/lesson-spine` · PR 187 merge `b8ba687` |
+| AUTH signed-in Parent | yes | no | `/api/me` `{authenticated:true}` · PR 188 merge `d136a73` |
+| Stripe Learn with Ben `$100` / `$200` / `$1,000` | yes | no | `/checkout?plan=100\|200\|1000` · PR 189 merge `90df7d4` |
+| FR-KB-3 metering UI | yes | no | `/metering` · PR 190 merge `38912ed` |
+| Publish polish operator path | yes | no | `/operator/publish` published true · PR 191 merge `aa47d07` |
+
+Master dest sha256 `af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4` **untouched**.
+
 ## Product factory note (not a launch PASS)
 
-Remotion Wave 5 factory trail is **PASS** under Product: compositions, LessonSpine ORDER LOCK, TypeCard VOX-S04 PASS, AudioBed landed, karaoke gold, letterbox stack complete, encode dests, Cleaning checklist `hold_cleaning: true`, plates API guest 401. Current master dest is audiobed-encode (sha256 same as karaoke when volume 0). That is factory evidence only.
+Remotion Wave 5 factory trail is **PASS** under Product: compositions, LessonSpine ORDER LOCK, TypeCard VOX-S04 PASS, AudioBed landed, karaoke gold, letterbox stack complete, encode dests, Cleaning checklist `hold_cleaning: true`, plates API guest 401. Current master dest is counterexample-encode sha256 `af374d95…`. That is factory evidence only.
 
-Still **HELD** under Product: Remotion packaged into Next / player rail; Cap take; Just remake `27pn9xs0zk8a73g`; Cleaning / Publish / Distribute flip; AUTH_URL flip; Stripe / prices. Wave3 campus pack is LIVE (composer/teach); PR 65 stays closed SUPERSEDED, unmerged.
+Hire-path rows above landed on campus (HTML5 play rail, AUTH portal, Stripe three-plan, `/metering`, Publish polish). They are **not** a launch Product PASS.
+
+Still **HELD** under Product: Remotion packaged into Next (`@remotion/*`); Cap take; Just remake `27pn9xs0zk8a73g`; Distribute; public marketing flip; Launch 8/8. Wave3 campus pack is LIVE (composer/teach); PR 65 stays closed SUPERSEDED, unmerged.
 
 ## Rule
 
