@@ -38,11 +38,13 @@ test("Parent can set and see intent under the selected Child", () => {
   assert.equal(play.selected?.login, "none");
   assert.equal(play.selected?.user, false);
   assert.match(play.selected?.goals.join(" ") || "", /parent intent/i);
+  assert.equal(play.selected?.name, "Child");
+  assert.equal(play.children.length, 1);
   assert.equal(play.distribute, false);
   assert.equal(play.launch, "CLOSED 0/8");
   const hire = selectSupervisedIntent("hire-child");
-  assert.equal(hire.selected?.id, "hire-child");
-  assert.match(hire.selected?.subjects.join(" ") || "", /Learn with Ben/);
+  assert.equal(hire.selected?.id, "play-child");
+  assert.equal(hire.children.some((child) => child.id === "hire-child"), false);
   const dest = join(mkdtempSync(join(tmpdir(), "supervised-intent-")), "supervised-intent.json");
   process.env.SUPERVISED_INTENT_PATH = dest;
   const written = writeSupervisedIntent("play-child", {

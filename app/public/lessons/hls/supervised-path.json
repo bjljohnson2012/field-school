@@ -1,22 +1,35 @@
 {
   "ok": true,
-  "fr": ["FR-4", "FR-3", "FR-2"],
+  "fr": [
+    "FR-4",
+    "FR-3",
+    "FR-2"
+  ],
   "distribute": false,
   "launch": "CLOSED 0/8",
   "selected_child_id": "play-child",
   "children": [
     {
       "id": "play-child",
-      "name": "Play Child",
+      "name": "Child",
       "kind": "child",
       "login": "none",
       "user": false,
       "intent": {
-        "goals": ["Own the LessonSpine rail from parent intent"],
-        "subjects": ["LessonSpine"],
-        "themes": ["parent-owned plan"],
+        "goals": [
+          "Own the LessonSpine rail from parent intent"
+        ],
+        "subjects": [
+          "LessonSpine"
+        ],
+        "themes": [
+          "parent-owned plan"
+        ],
         "timeHorizon": "this hire",
-        "constraints": ["Child is not a User", "No child login"]
+        "constraints": [
+          "Child is not a User",
+          "No child login"
+        ]
       },
       "items": [
         {
@@ -41,49 +54,6 @@
           "sortOrder": 3,
           "title": "parent-owned plan through LessonSpine",
           "subject": "LessonSpine",
-          "kind": "station",
-          "reason": "From parent intent theme",
-          "source": "intent",
-          "play": "/progress"
-        }
-      ]
-    },
-    {
-      "id": "hire-child",
-      "name": "Hire Child",
-      "kind": "child",
-      "login": "none",
-      "user": false,
-      "intent": {
-        "goals": ["Start curriculum from parent intent after hire"],
-        "subjects": ["Learn with Ben"],
-        "themes": ["hire path"],
-        "timeHorizon": "next portion",
-        "constraints": ["Parent owns intent", "Family LIVE not stolen"]
-      },
-      "items": [
-        {
-          "sortOrder": 1,
-          "title": "Learn with Ben hire",
-          "subject": "Learn with Ben",
-          "kind": "station",
-          "reason": "Hire-path station bound from parent intent subject Learn with Ben",
-          "source": "catalog",
-          "play": "/metering"
-        },
-        {
-          "sortOrder": 2,
-          "title": "Start curriculum from parent intent after hire",
-          "subject": "Learn with Ben",
-          "kind": "station",
-          "reason": "From parent intent goal",
-          "source": "intent",
-          "play": "/play/lesson-spine"
-        },
-        {
-          "sortOrder": 3,
-          "title": "hire path through Learn with Ben",
-          "subject": "Learn with Ben",
           "kind": "station",
           "reason": "From parent intent theme",
           "source": "intent",

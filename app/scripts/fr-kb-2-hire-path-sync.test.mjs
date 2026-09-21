@@ -35,8 +35,8 @@ test("Hire-path intent/path/portion persist on the selected Child brain", () => 
   const dest = join(mkdtempSync(join(tmpdir(), "supervised-brain-sync-")), "supervised-brain.json");
   process.env.SUPERVISED_BRAIN_PATH = dest;
   const started = writeSupervisedBrain("play-child", "start", {
-    name: "Play Child",
-    title: "Play Child knowledge brain",
+    name: "Child",
+    title: "Child knowledge brain",
     intent: { goals: ["Hold LessonSpine from parent intent"], timeHorizon: "this hire" },
     pathItems: [{ title: "LessonSpine Ready / HLS" }],
     portion: { horizon: "this hire", items: [{ title: "LessonSpine Ready / HLS" }] },
@@ -52,7 +52,7 @@ test("Hire-path intent/path/portion persist on the selected Child brain", () => 
       goals: ["Keep private curriculum on this brain"],
       subjects: ["LessonSpine"],
       timeHorizon: "this hire",
-      name: "Play Child",
+      name: "Child",
     },
     pathItems: [{ title: "QuizBumper next-up", play: "/play/lesson-spine" }],
     portion: { horizon: "this hire", items: [{ title: "QuizBumper next-up" }] },
@@ -62,12 +62,12 @@ test("Hire-path intent/path/portion persist on the selected Child brain", () => 
   assert.equal(reflected.selected?.paths.items[0]?.title, "QuizBumper next-up");
   assert.equal(reflected.selected?.portion.items[0]?.title, "QuizBumper next-up");
   const synced = writeSupervisedBrain("play-child", "sync", {
-    name: "Play Child",
+    name: "Child",
     intent: { goals: ["Keep private curriculum on this brain"], timeHorizon: "this hire" },
     pathItems: [{ title: "QuizBumper next-up", play: "/play/lesson-spine" }],
     portion: { horizon: "this hire", items: [{ title: "QuizBumper next-up" }] },
     progress: {
-      now: { title: "LessonSpine Ready / HLS", copy: "Play Child is on the locked LessonSpine rail." },
+      now: { title: "LessonSpine Ready / HLS", copy: "Child is on the locked LessonSpine rail." },
       confidence: { state: "getting_there", label: "Getting there" },
       next: { title: "QuizBumper next-up", copy: "Next is the next-up beat." },
     },

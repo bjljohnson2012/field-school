@@ -1,7 +1,14 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-export const HIRE_PATH_CHILD_IDS = ["play-child", "hire-child"] as const;
+export const HIRE_PATH_CHILD_IDS = ["play-child"] as const;
+const DRIFT_CHILD_NAMES = /^(play child|hire child)$/i;
+
+function trackedChildName(name: unknown) {
+  const value = typeof name === "string" ? name.trim() : "";
+  if (!value || DRIFT_CHILD_NAMES.test(value)) return "Child";
+  return value.slice(0, 200);
+}
 export type HirePathChildId = (typeof HIRE_PATH_CHILD_IDS)[number];
 
 export type SupervisedIntentFields = {
@@ -240,7 +247,7 @@ function parsePath(raw: string): SupervisedPath | null {
       selected_child_id: selected,
       children: children.map((child) => ({
         id: child.id,
-        name: child.name,
+        name: trackedChildName(child.name),
         kind: "child",
         login: "none",
         user: false,
@@ -308,7 +315,7 @@ export function assembleSupervisedPath(
   const existing = current.children.find((child) => child.id === id);
   const nextChild: SupervisedPathChild = {
     id,
-    name: existing?.name || intent.name || (id === "hire-child" ? "Hire Child" : "Play Child"),
+    name: trackedChildName(existing?.name || intent.name),
     kind: "child",
     login: "none",
     user: false,

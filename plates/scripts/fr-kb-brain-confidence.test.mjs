@@ -71,23 +71,21 @@ function writeConfidence(childId, name, state, sourceBody, noteBody) {
   return selected;
 }
 
-test("Parent sets FR-6 confidence under Play Child and Hire Child on the brain", () => {
+test("Parent sets FR-6 confidence under the tracked Child on the brain", () => {
   const dest = join(mkdtempSync(join(tmpdir(), "supervised-brain-confidence-")), "supervised-brain.json");
   process.env.SUPERVISED_BRAIN_PATH = dest;
   writeConfidence(
     "play-child",
-    "Play Child",
+    "Child",
     "ready",
     "LessonSpine Ready / HLS private source",
-    "Play Child parent note on private curriculum",
+    "Child parent note on private curriculum",
   );
-  writeConfidence(
-    "hire-child",
-    "Hire Child",
-    "getting_there",
-    "Learn with Ben hire private source",
-    "Hire Child parent note on private curriculum",
-  );
+  const salesperson = writeSupervisedBrain("hire-child", "confidence", {
+    confidence: "getting_there",
+  });
+  assert.equal(salesperson.ok, false);
+  assert.equal(salesperson.error, "unknown_child");
   const unknown = writeSupervisedBrain("not-a-child", "confidence", {
     confidence: "ready",
   });
