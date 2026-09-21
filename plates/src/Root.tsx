@@ -17,6 +17,7 @@ import {TransitionLumaDemo} from "./TransitionLumaDemo";
 import {EndCardDemo} from "./EndCardDemo";
 import {PracticeCardDemo} from "./PracticeCardDemo";
 import {KeyClaimDemo} from "./KeyClaimDemo";
+import {ScriptureCardDemo} from "./ScriptureCardDemo";
 import {LowerThirdDemo} from "./LowerThirdDemo";
 import {TalkingHeadCard} from "./TalkingHeadCard";
 import {LOCK} from "./brand";
@@ -466,6 +467,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="KeyClaimDemo"
         component={KeyClaimDemo}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="ScriptureCardDemo"
+        component={ScriptureCardDemo}
         durationInFrames={240}
         fps={30}
         width={1920}

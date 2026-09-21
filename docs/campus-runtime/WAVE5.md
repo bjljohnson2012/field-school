@@ -104,6 +104,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | Practice encode master dest reaudit | PR 123 `0b8a7fd` / tip `ef73000` |
 | KeyClaim thesis / claim lock | PR 124 `f5dbcb9` / tip `7d916bc` |
 | KeyClaim LessonSpine encode | PR 125 `7f53d60` / tip `7e1914f` |
+| Key-claim encode master dest reaudit | PR 126 `ee87169` / tip `464b268` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -139,7 +140,7 @@ EndCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-end-card-en
 
 PracticeCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4` sha256 `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf` (h264 1920×1080@30, 41.000s). PRs 85–121. PracticeCard application / try-this on the EndCard stack. End-card dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-practice-encode.md](../../plates/antagonist-lesson-spine-practice-encode.md). Archived prior dest. PR 121 merge `e36897d` / tip `47def77` harvested. PR 122 merge `c4474d1` / tip `db6f827` harvested. PR 123 merge `0b8a7fd` / tip `ef73000` harvested. PR 124 merge `f5dbcb9` / tip `7d916bc` harvested. Independent Antagonist v2 reaudit **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-practice-encode-master.md`.
 
-KeyClaim LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4` sha256 `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` (h264 1920×1080@30, 41.000s). PRs 85–124. KeyClaim thesis / claim lock on the PracticeCard stack. Practice dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-key-claim-encode.md](../../plates/antagonist-lesson-spine-key-claim-encode.md). **Current master dest.** PR 124 merge `f5dbcb9` / tip `7d916bc` harvested. PR 125 merge `7f53d60` / tip `7e1914f` harvested. Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-key-claim-encode.md`.
+KeyClaim LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4` sha256 `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` (h264 1920×1080@30, 41.000s). PRs 85–124. KeyClaim thesis / claim lock on the PracticeCard stack. Practice dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-key-claim-encode.md](../../plates/antagonist-lesson-spine-key-claim-encode.md). **Current master dest.** PR 124 merge `f5dbcb9` / tip `7d916bc` harvested. PR 125 merge `7f53d60` / tip `7e1914f` harvested. PR 126 merge `ee87169` / tip `464b268` harvested. Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-key-claim-encode.md`.
 
 ## Letterbox stack (complete)
 
@@ -333,7 +334,11 @@ PRs 85–124 harvested. PR 124 merge `f5dbcb9` / tip `7d916bc`. New dated dest `
 
 ## LessonSpine key-claim encode master dest reaudit (PASS)
 
-Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4` sha256 `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` plus KeyClaim plates. PR 125 merge `7f53d60` / tip `7e1914f`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Practice dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-key-claim-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-key-claim-encode-master/2026-09-21/`. **Current master dest.**
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-key-claim-encode/2026-09-21/LessonSpine.mp4` sha256 `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` plus KeyClaim plates. PR 125 merge `7f53d60` / tip `7e1914f`. PR 126 merge `ee87169` / tip `464b268`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Practice dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-key-claim-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-key-claim-encode-master/2026-09-21/`. **Current master dest.**
+
+## ScriptureCard (PASS)
+
+PR 126 merge `ee87169` / tip `464b268` harvested. ScriptureCard soft craft beat: verse / citation lock after sting/objective path (`SCRIPTURE_CARD_KICKER = "Verse"`; `SCRIPTURE_CARD_LINE = "Cite the verse."`; cream + gold 6px left rail). Craft beat on `ScriptureCardDemo`. Sequenced after sting/objective path, after KeyClaim, before PracticeCard. ScriptureCard path only. No Cap take. ORDER LOCK intact. Current master dest key-claim-encode sha256 `16f516640c5cac4609862ae2436eb37dd118e56bc6633e3dd10d76290a588606` **untouched** (plate-level stills only). Evidence: `plates/antagonist-scripture-card.md`. Stills: `/opt/cursor/artifacts/remotion-scripture-card/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
