@@ -152,6 +152,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | ThresholdCard cutoff / gate mark | PR 171 `d44e016` |
 | ThresholdCard LessonSpine encode | PR 172 `c6a72d0` |
 | ThresholdCard encode master dest reaudit | PR 173 `4973a71` |
+| RubricCard scoring bands / criteria | PR 174 `c262cef` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -584,6 +585,10 @@ PRs 85–171 harvested. PR 172 this encode. PR 171 merge `c11b670` / tip `4d8f25
 ## LessonSpine threshold encode master dest reaudit (PASS)
 
 Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-threshold-encode/2026-09-21/LessonSpine.mp4` sha256 `955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f` plus ThresholdCard plates. PR 173 this reaudit. PR 172 merge `e58a798` / tip `620f6e1` (`e58a798acc98cf307b180234bfa171aaaeecc8f8` / `620f6e14fb24eb1328a436f5356f2c6f9883bcfe`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Spectrum dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-threshold-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-threshold-encode-master/2026-09-21/`. **Current master dest.**
+
+## RubricCard (PASS)
+
+PR 174 this craft. PR 173 merge `ba62e6b` / tip `be93fa8` harvested (`ba62e6b76597d6ad3da1d11ec58b978db17018bf` / `be93fa81910c3c42dcdd8bc65b22ca73130abdd0`). RubricCard soft craft beat: scoring bands / criteria distinct from ThresholdCard single cutoff after sting/objective path (`RUBRIC_CARD_KICKER = "Rubric"`; `RUBRIC_CARD_LINE = "Score the bands."`; `RUBRIC_CARD_ONE = "A. Holds."`; `RUBRIC_CARD_TWO = "B. Misses."`; cream + gold 6px left rail). Craft beat on `RubricCardDemo`. Sequenced after sting/objective path, after ThresholdCard, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). Rubric path only. No Cap take. ORDER LOCK intact. Current master dest threshold-encode sha256 `955f0256424fdc4ddb5ae5506a04a9ea877cb6a79ccb126ba1bb4884b9943a6f` **untouched** (plate-level stills only). **Current master dest.** Evidence: `plates/antagonist-rubric-card.md`. Stills: `/opt/cursor/artifacts/remotion-rubric-card/2026-09-21/`. `hold_cleaning: true`. `--flip` refused. Factory evidence only — not a launch Product PASS. `EDU-S03` Cap-blocked.
 
 ## Karaoke gold (VOX-S01 PASS)
 
