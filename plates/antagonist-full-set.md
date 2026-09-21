@@ -43,6 +43,7 @@ Cites:
 - [antagonist-glossary-encode-master.md](./antagonist-glossary-encode-master.md) — LessonSpine glossary encode master dest reaudit
 - [antagonist-sting-encode-master.md](./antagonist-sting-encode-master.md) — LessonSpine sting encode master dest reaudit
 - [antagonist-checkpoint-encode-master.md](./antagonist-checkpoint-encode-master.md) — LessonSpine checkpoint encode master dest reaudit
+- [antagonist-example-encode-master.md](./antagonist-example-encode-master.md) — LessonSpine example encode master dest reaudit
 - [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
 - [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-glossary-chip.md](./antagonist-glossary-chip.md) — GlossaryChip term / definition pop
@@ -1554,6 +1555,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ExampleCard last-word “work.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine example encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-example-encode/2026-09-21/LessonSpine.mp4` sha256 `f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b` plus ExampleCard plates. After PR 148 merge `86b223aaab708e117359a6f2c3f670e45f5a3689`. **Current master dest.** Checkpoint dest `19e5a19c47f72197bbf726707b839bdf287fd3f0111d105b2161fd694584246a` **untouched**. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-example-encode/2026-09-21/LessonSpine.mp4
+sha256: f52ae59972fb4c0945febfa8b3166a217822548f8db6eff3468062fe07c0c33b
+stills: /opt/cursor/artifacts/remotion-antagonist-example-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ExampleCard last-word “work.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `ExampleCardDemo-f0.png`, `ExampleCardDemo-f60.png`.
 
 ## Held
 
