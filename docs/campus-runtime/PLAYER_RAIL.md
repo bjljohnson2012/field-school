@@ -78,4 +78,4 @@ Parent hire path writes into and reads from the knowledge brain under the select
 
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T185900Z.tar.gz` sha256 `fd77a76824b519805a50dfdc6f1a16df1f700e7af60f01453368dc3fd64ea38a`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T192300Z.tar.gz` sha256 `646968ef1265a1701df9b6f46dc99a6f341bf7f0886d04cd2a77f5f19a240a15`.
