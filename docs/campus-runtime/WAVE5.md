@@ -112,6 +112,7 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | CompareBoard LessonSpine encode | PR 131 `3f55e15` / tip `809a5b4` |
 | Compare encode master dest reaudit | PR 132 `cd0d493` / tip `0c3eff2` |
 | SectionTitle section break / chapter title | PR 133 `e619df3` / tip `2a7ce33` |
+| SectionTitle LessonSpine encode | PR 134 `03c5318` / tip `33d0190` |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -153,7 +154,7 @@ ScriptureCard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-scrip
 
 CompareBoard LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-compare-encode/2026-09-21/LessonSpine.mp4` sha256 `917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d` (h264 1920×1080@30, 41.000s). PRs 85–130. CompareBoard two-claim / contrast on the ScriptureCard stack. Scripture dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-compare-encode.md](../../plates/antagonist-lesson-spine-compare-encode.md). Archived prior dest. PR 130 merge `0b7eb24` / tip `e1d40b7` harvested. PR 131 merge `3f55e15` / tip `809a5b4` harvested. PR 132 merge `cd0d493` / tip `0c3eff2` harvested. PR 133 merge `e619df3` / tip `2a7ce33` harvested. Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-compare-encode.md`. Evidence: `plates/antagonist-compare-encode-master.md`.
 
-SectionTitle LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4` sha256 `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` (h264 1920×1080@30, 41.000s). PRs 85–133. SectionTitle section break / chapter title on the CompareBoard stack. Compare dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-section-encode.md](../../plates/antagonist-lesson-spine-section-encode.md). **Current master dest.** PR 133 merge `e619df3` / tip `2a7ce33` harvested. Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-section-encode.md`.
+SectionTitle LessonSpine encode dest: `/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4` sha256 `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` (h264 1920×1080@30, 41.000s). PRs 85–133. SectionTitle section break / chapter title on the CompareBoard stack. Compare dest **untouched**. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Soft note: [../../plates/antagonist-lesson-spine-section-encode.md](../../plates/antagonist-lesson-spine-section-encode.md). **Current master dest.** PR 133 merge `e619df3` / tip `2a7ce33` harvested. PR 134 merge `03c5318` / tip `33d0190` harvested. Independent Antagonist v2 **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-section-encode.md`. Evidence: `plates/antagonist-section-encode-master.md`.
 
 ## Letterbox stack (complete)
 
@@ -380,6 +381,10 @@ PR 132 merge `cd0d493` / tip `0c3eff2` harvested. PR 133 merge `e619df3` / tip `
 ## LessonSpine section encode (PASS)
 
 PRs 85–133 harvested. PR 133 merge `e619df3` / tip `2a7ce33`. New dated dest `/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4` sha256 `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7`. **Current master dest.** Compare dest `917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-section-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-section-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine section encode master dest reaudit (PASS)
+
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4` sha256 `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` plus SectionTitle plates. PR 134 merge `03c5318` / tip `33d0190`. **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Compare dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-section-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-section-encode-master/2026-09-21/`. **Current master dest.**
 
 ## Karaoke gold (VOX-S01 PASS)
 

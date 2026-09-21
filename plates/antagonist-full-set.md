@@ -34,6 +34,7 @@ Cites:
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
 - [antagonist-compare-encode-master.md](./antagonist-compare-encode-master.md) — LessonSpine compare encode master dest reaudit
+- [antagonist-section-encode-master.md](./antagonist-section-encode-master.md) — LessonSpine section encode master dest reaudit
 - [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
 - [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
@@ -1229,6 +1230,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SectionTitle last-word “section.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine section encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4` sha256 `f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7` plus SectionTitle plates. After PR 134 merge `03c531830a46db72ab577b1487a55207fdd2ff27`. **Current master dest.** Compare dest `917efdb18684f7307ec63dd576b26f15eea207194ea9a6804d121878ff3f3a5d` **untouched**. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-section-encode/2026-09-21/LessonSpine.mp4
+sha256: f4bf345d6c0ec8c51941b3bb2d08c71589bc822632d935dc26b6d18c07a631e7
+stills: /opt/cursor/artifacts/remotion-antagonist-section-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SectionTitle last-word “section.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `SectionTitleDemo-f0.png`, `SectionTitleDemo-f60.png`.
 
 ## Held
 
