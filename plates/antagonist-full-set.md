@@ -53,6 +53,7 @@ Cites:
 - [antagonist-steps-encode-master.md](./antagonist-steps-encode-master.md) — LessonSpine steps encode master dest reaudit
 - [antagonist-caveat-encode-master.md](./antagonist-caveat-encode-master.md) — LessonSpine caveat encode master dest reaudit
 - [antagonist-reflection-encode-master.md](./antagonist-reflection-encode-master.md) — LessonSpine reflection encode master dest reaudit
+- [antagonist-timeline-encode-master.md](./antagonist-timeline-encode-master.md) — LessonSpine timeline encode master dest reaudit
 - [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
 - [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-glossary-chip.md](./antagonist-glossary-chip.md) — GlossaryChip term / definition pop
@@ -1899,6 +1900,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. TimelineRail last-word “beats.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## LessonSpine timeline encode master dest reaudit 2026-09-21
+
+Dated **2026-09-21** reaudit. Independent Antagonist v2 against the locked master dest `/opt/cursor/artifacts/lesson-spine-timeline-encode/2026-09-21/LessonSpine.mp4` sha256 `2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068` plus TimelineRail plates. After PR 163 merge `9225118420f3682afe18e4f47731d2fba37f5204`. **Current master dest.** Reflection dest `1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17` **untouched**. ffprobe: h264 1920×1080@30, 41.000s, video only. ORDER LOCK intact. Checklist exit 0, `hold_cleaning: true`, `--flip` refused. Locked master dest **untouched**.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-timeline-encode/2026-09-21/LessonSpine.mp4
+sha256: 2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068
+stills: /opt/cursor/artifacts/remotion-antagonist-timeline-encode-master/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. TimelineRail last-word “beats.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `TimelineRailDemo-f0.png`, `TimelineRailDemo-f60.png`.
 
 ## Held
 
