@@ -44,6 +44,10 @@ Hire Learn with Ben on the play rail. Unlocked amounts only: `$100` `/checkout?p
 
 Operator evidence on the Ready HLS rail. File `public/lessons/hls/publish-polish.json`. Unsigned `GET /api/media/lesson-spine/publish` returns `published:true`, `polish:true`, `distribute:false`, `launch:"CLOSED 0/8"`, and rows. Staff `POST` appends a row for dest sha256 `af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4` only; `distribute:true` is refused. Page [`/operator/publish`](https://portal.fieldschool.ai/operator/publish). Ready JSON keeps `published:true` `publish:"polished"`. Distribute HELD. Launch **CLOSED**, **0/8**.
 
+## Launch-gate evidence rows
+
+Honest hire-path rows only. Page [`/operator/launch-gate`](https://portal.fieldschool.ai/operator/launch-gate). Unsigned `GET /api/media/lesson-spine/launch-gate` plus `public/lessons/hls/launch-gate.json`. Rows: play rail, AUTH signed-in, Stripe `$100`/`$200`/`$1,000`, `/metering` fr-kb-3, Publish polish. Each row `landed:true` and `launch_pass:false`. Eight nodes stay HELD. Product stays HELD. Distribute HELD. Launch **CLOSED**, **0/8**.
+
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T151558Z.tar.gz` sha256 `bab1a68ae50344eb3259ac4b48a0eab7da1924e8234910cdb91a0241b7a31be9`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T153253Z.tar.gz` sha256 `4552f4413d4d0aef14c8cac7de6f1fbf01eceb482d39305452c37cd05ddae7f5`.

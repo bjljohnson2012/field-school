@@ -65,12 +65,15 @@ MEMBERS=(
   src/lib/player/lesson-spine.ts
   src/lib/player/lesson-spine-meta.ts
   src/lib/player/publish-polish.ts
+  src/lib/player/launch-gate.ts
   src/app/campus-home.tsx
   src/components/site-header.tsx
   public/lessons/LessonSpine.mp4
   src/app/api/media/lesson-spine/ready/route.ts
   src/app/api/media/lesson-spine/publish/route.ts
   src/app/operator/publish/page.tsx
+  src/app/api/media/lesson-spine/launch-gate/route.ts
+  src/app/operator/launch-gate/page.tsx
   public/lessons/ready.json
 )
 
@@ -78,7 +81,9 @@ mkdir -p \
   "$STAGE/src/app/play/lesson-spine" \
   "$STAGE/src/app/api/media/lesson-spine/ready" \
   "$STAGE/src/app/api/media/lesson-spine/publish" \
+  "$STAGE/src/app/api/media/lesson-spine/launch-gate" \
   "$STAGE/src/app/operator/publish" \
+  "$STAGE/src/app/operator/launch-gate" \
   "$STAGE/src/components" \
   "$STAGE/src/lib/player" \
   "$STAGE/src/app" \
@@ -147,7 +152,7 @@ if tar -tzf "\$PACK" | grep -E '(^|/)(family-v1-home|children-database|src/route
   echo "Refusing pack: family, org home, Remotion, or TanStack paths present" >&2
   exit 1
 fi
-mkdir -p "\$REMOTE_DIR/src/app/play/lesson-spine" "\$REMOTE_DIR/src/app/api/media/lesson-spine/ready" "\$REMOTE_DIR/src/app/api/media/lesson-spine/publish" "\$REMOTE_DIR/src/app/operator/publish" "\$REMOTE_DIR/src/lib/player" "\$REMOTE_DIR/public/lessons/hls"
+mkdir -p "\$REMOTE_DIR/src/app/play/lesson-spine" "\$REMOTE_DIR/src/app/api/media/lesson-spine/ready" "\$REMOTE_DIR/src/app/api/media/lesson-spine/publish" "\$REMOTE_DIR/src/app/api/media/lesson-spine/launch-gate" "\$REMOTE_DIR/src/app/operator/publish" "\$REMOTE_DIR/src/app/operator/launch-gate" "\$REMOTE_DIR/src/lib/player" "\$REMOTE_DIR/public/lessons/hls"
 rm -f "\$REMOTE_DIR/public/lessons/hls/"*.ts
 tar -xzf "\$PACK" -C "\$REMOTE_DIR"
 rm -f "\$REMOTE_DIR/public/lessons/hls/"*.ts
