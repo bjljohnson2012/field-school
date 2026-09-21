@@ -59,6 +59,9 @@ MEMBERS=(
   src/components/lesson-spine-player.tsx
   src/components/lesson-spine-parent-session.tsx
   src/components/lesson-spine-hire-path.tsx
+  src/components/fr-kb-3-metering.tsx
+  src/app/metering/page.tsx
+  src/lib/credits/metering-display.ts
   src/lib/player/lesson-spine.ts
   src/lib/player/lesson-spine-meta.ts
   src/app/campus-home.tsx
