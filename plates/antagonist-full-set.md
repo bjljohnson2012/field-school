@@ -54,6 +54,7 @@ Cites:
 - [antagonist-transition-luma.md](./antagonist-transition-luma.md) — TransitionLuma beat-to-beat wipe
 - [antagonist-end-card.md](./antagonist-end-card.md) — EndCard lesson close signal
 - [antagonist-practice-card.md](./antagonist-practice-card.md) — PracticeCard application / try-this
+- [antagonist-key-claim.md](./antagonist-key-claim.md) — KeyClaim thesis / claim lock
 
 ```
 verdict: PASS
@@ -972,6 +973,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. PracticeCard last-word “now.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `PracticeCardDemo-f0.png`, `PracticeCardDemo-f60.png`.
+
+## KeyClaim 2026-09-21
+
+Dated **2026-09-21** reaudit. KeyClaim soft craft beat. Thesis / claim lock on `KeyClaim` (`KEY_CLAIM_KICKER = "Thesis"`; `KEY_CLAIM_LINE = "Lock one claim."`; cream + gold 6px left rail). Craft beat on `KeyClaimDemo`. Sequenced after sting/objective path, before PracticeCard. After PR 123 merge `0b8a7fdc371aad35a4c03a6f8a84a621f7b1364e`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. KeyClaim after sting/objective path. Locked master dest `/opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4` sha256 `8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf` **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-key-claim/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-practice-encode/2026-09-21/LessonSpine.mp4
+sha256: 8c953707401f835551ceec5d96c090b133cd619b41c4b7ff543b1637edc44dbf
+stills: /opt/cursor/artifacts/remotion-key-claim/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. KeyClaim last-word “claim.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `KeyClaimDemo-f0.png`, `KeyClaimDemo-f60.png`, `LessonSpine-objective-f570.png`.
 
 ## Held
 
