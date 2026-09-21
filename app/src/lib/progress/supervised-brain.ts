@@ -7,6 +7,19 @@ export type HirePathChildId = (typeof HIRE_PATH_CHILD_IDS)[number];
 export const SUPERVISED_BRAIN_FR = ["FR-KB-1", "FR-KB-2"] as const;
 export const BRAIN_STATUSES = ["suggested", "started", "updated"] as const;
 export type BrainStatus = (typeof BRAIN_STATUSES)[number];
+export const BRAIN_CONFIDENCE_STATES = ["not_yet", "getting_there", "ready"] as const;
+export type BrainConfidenceState = (typeof BRAIN_CONFIDENCE_STATES)[number];
+export const BRAIN_CONFIDENCE_LABELS: Record<BrainConfidenceState, string> = {
+  not_yet: "Not yet",
+  getting_there: "Getting there",
+  ready: "Ready",
+};
+
+export type BrainConfidence = {
+  state: BrainConfidenceState;
+  label: string;
+  owned: "parent" | "hire_path";
+};
 
 export type BrainIntentHint = {
   goals?: string[];
@@ -58,7 +71,7 @@ export type SupervisedBrainChild = {
   portion: { horizon: string; items: Array<{ title: string; play: string }> };
   progress: {
     now: { title: string; copy: string };
-    confidence: { state: string; label: string };
+    confidence: BrainConfidence;
     next: { title: string; copy: string };
   };
   sources: BrainNote[];
@@ -128,6 +141,34 @@ function asList(value: unknown, max = 16) {
     .map((item) => item.slice(0, 400));
 }
 
+function parseConfidence(value: unknown, owned: BrainConfidence["owned"] = "hire_path"): BrainConfidence | undefined {
+  if (typeof value === "string") {
+    const state = value.trim().toLowerCase().replace(/\s+/g, "_");
+    if ((BRAIN_CONFIDENCE_STATES as readonly string[]).includes(state)) {
+      const key = state as BrainConfidenceState;
+      return { state: key, label: BRAIN_CONFIDENCE_LABELS[key], owned };
+    }
+    return undefined;
+  }
+  if (!value || typeof value !== "object") return undefined;
+  const raw = value as Record<string, unknown>;
+  const fromState = typeof raw.state === "string" ? raw.state.trim().toLowerCase().replace(/\s+/g, "_") : "";
+  const fromLabel = typeof raw.label === "string" ? raw.label.trim().toLowerCase() : "";
+  const mapped =
+    (BRAIN_CONFIDENCE_STATES as readonly string[]).includes(fromState)
+      ? (fromState as BrainConfidenceState)
+      : fromLabel === "not yet"
+        ? "not_yet"
+        : fromLabel === "getting there"
+          ? "getting_there"
+          : fromLabel === "ready"
+            ? "ready"
+            : undefined;
+  if (!mapped) return undefined;
+  const ownedRaw = raw.owned === "parent" || raw.owned === "hire_path" ? raw.owned : owned;
+  return { state: mapped, label: BRAIN_CONFIDENCE_LABELS[mapped], owned: ownedRaw };
+}
+
 function parseNotes(value: unknown, fallbackTitle = "Parent note"): BrainNote[] {
   if (!Array.isArray(value)) return [];
   const notes: BrainNote[] = [];
@@ -179,13 +220,13 @@ function defaultProgress(id: HirePathChildId): SupervisedBrainChild["progress"] 
   if (id === "hire-child") {
     return {
       now: { title: "Learn with Ben hire", copy: "Hire Child waits on the recorded hire. Child is not a User." },
-      confidence: { state: "not_yet", label: "Not yet" },
+      confidence: { state: "not_yet", label: "Not yet", owned: "hire_path" },
       next: { title: "Start from parent intent", copy: "Parent owns the plan after hire. No child login." },
     };
   }
   return {
     now: { title: "LessonSpine Ready / HLS", copy: "Play Child is on the locked LessonSpine rail. Parent owns the plan." },
-    confidence: { state: "getting_there", label: "Getting there" },
+    confidence: { state: "getting_there", label: "Getting there", owned: "hire_path" },
     next: { title: "QuizBumper next-up", copy: "Next is the next-up beat, then Parent review. No child login." },
   };
 }
@@ -202,6 +243,7 @@ function suggestedChild(
     title?: string;
     sources?: unknown;
     notes?: unknown;
+    confidence?: unknown;
   },
 ): SupervisedBrainChild {
   const name = defaultName(id, hint.name || hint.intent?.name || existing?.name);
@@ -216,6 +258,14 @@ function suggestedChild(
   const fallback = existing?.progress || defaultProgress(id);
   const sources = hint.sources !== undefined ? parseNotes(hint.sources, "Parent source") : existing?.sources || [];
   const notes = hint.notes !== undefined ? parseNotes(hint.notes, "Parent note") : existing?.notes || [];
+  const parentConfidence = parseConfidence(hint.confidence, "parent");
+  const existingConfidence = parseConfidence(existing?.progress.confidence);
+  const hireConfidence = parseConfidence(progressHint?.confidence, existingConfidence?.owned || "hire_path");
+  const confidence =
+    parentConfidence ||
+    (existingConfidence?.owned === "parent" ? existingConfidence : undefined) ||
+    hireConfidence ||
+    fallback.confidence;
   return {
     id,
     name,
@@ -242,10 +292,7 @@ function suggestedChild(
         title: progressHint?.now?.title || fallback.now.title,
         copy: progressHint?.now?.copy || fallback.now.copy,
       },
-      confidence: {
-        state: progressHint?.confidence?.state || fallback.confidence.state,
-        label: progressHint?.confidence?.label || fallback.confidence.label,
-      },
+      confidence,
       next: {
         title: progressHint?.next?.title || fallback.next.title,
         copy: progressHint?.next?.copy || fallback.next.copy,
@@ -365,6 +412,7 @@ export function writeSupervisedBrain(
     title?: string;
     sources?: unknown;
     notes?: unknown;
+    confidence?: unknown;
   },
 ) {
   const id = String(childId || "").trim();
@@ -372,7 +420,7 @@ export function writeSupervisedBrain(
     return { ok: false as const, error: "unknown_child" };
   }
   const op = String(action || "").trim().toLowerCase();
-  if (op !== "start" && op !== "create" && op !== "update" && op !== "sync") {
+  if (op !== "start" && op !== "create" && op !== "update" && op !== "sync" && op !== "confidence") {
     return { ok: false as const, error: "action_required" };
   }
   const current = readSupervisedBrain();
@@ -380,7 +428,7 @@ export function writeSupervisedBrain(
   const nextChild = suggestedChild(id, existing, opts || {});
   const alreadyHeld = Boolean(existing?.status && existing.status !== "suggested");
   nextChild.status =
-    (op === "update" || op === "sync") && alreadyHeld ? "updated" : "started";
+    (op === "update" || op === "sync" || op === "confidence") && alreadyHeld ? "updated" : "started";
   nextChild.version = (existing?.version || 0) + 1;
   const children = existing
     ? current.children.map((child) => (child.id === id ? nextChild : child))
