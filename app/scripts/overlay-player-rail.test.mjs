@@ -41,6 +41,10 @@ test("overlay-player-rail pack is HTML5 player only", () => {
   assert.match(list, /public\/lessons\/hls\/ready\.json/);
   assert.doesNotMatch(list, /LessonSpine-\d+\.ts/);
   assert.match(list, /src\/app\/api\/media\/lesson-spine\/ready\/route\.ts/);
+  assert.match(list, /src\/lib\/player\/publish-polish\.ts/);
+  assert.match(list, /src\/app\/api\/media\/lesson-spine\/publish\/route\.ts/);
+  assert.match(list, /src\/app\/operator\/publish\/page\.tsx/);
+  assert.match(list, /public\/lessons\/hls\/publish-polish\.json/);
   assert.doesNotMatch(list, /family-v1-home|children-database|vite\.config|src\/routes\/|remotion/);
   assert.doesNotMatch(list, /src\/app\/o\/\[slug\]\/page\.tsx/);
 });

@@ -14,7 +14,7 @@ Dated 2026-09-20. Plan source of truth for public launch. Campus runtime SoT sta
 
 | Node | Status | Evidence (one line) | Hold |
 |---|---|---|---|
-| Product | HELD | Campus Wave 1–2 live; Wave3 campus pack LIVE (composer/teach); Remotion Wave 5 factory **PASS** in `plates/` (TypeCard VOX-S04 PASS; AudioBed landed; karaoke gold; letterbox stack complete; master dest audiobed-encode sha256 `9f89f9a9…`). Not a launch Product PASS. | Remotion-in-Next; Cap take; Cleaning / Publish; AUTH_URL; Stripe prices; PR 65 SUPERSEDED, unmerged |
+| Product | HELD | Campus Wave 1–2 live; Wave3 campus pack LIVE (composer/teach); Remotion Wave 5 factory **PASS** in `plates/` (TypeCard VOX-S04 PASS; AudioBed landed; karaoke gold; letterbox stack complete; master dest counterexample-encode sha256 `af374d95…`). Play-rail Publish polish rows on Ready HLS (`/operator/publish`). Not a launch Product PASS. | Remotion-in-Next; Cap take; Distribute; Launch 8/8; PR 65 SUPERSEDED, unmerged |
 | ICP | HELD | Household + sales orgs exist ([WAVE2.md](../campus-runtime/WAVE2.md)). No sealed ICP launch readout. | Do not invent ICP 8/8 |
 | Brand | HELD | Factory cream / ink / Fraunces + seal lock in `plates/`. No sealed Brand launch readout. | Do not invent Brand 8/8 |
 | Offer | HELD | Learn with Ben checkout exists on campus; Stripe / SKUs / metering UI not a launch seal. | Stripe / prices / SKUs |

@@ -10,6 +10,8 @@
   "hls_public": "/lessons/hls/LessonSpine.m3u8",
   "mp4_fallback": "/api/media/lesson-spine",
   "static_mp4": "/lessons/LessonSpine.mp4",
+  "published": true,
+  "publish": "polished",
   "distribute": false,
   "launch": "CLOSED 0/8",
   "play": "/play/lesson-spine",
