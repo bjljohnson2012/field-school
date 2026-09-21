@@ -31,6 +31,7 @@ Cites:
 - [antagonist-practice-encode-master.md](./antagonist-practice-encode-master.md) — LessonSpine practice encode master dest reaudit
 - [antagonist-key-claim-encode-master.md](./antagonist-key-claim-encode-master.md) — LessonSpine key-claim encode master dest reaudit
 - [antagonist-scripture-encode-master.md](./antagonist-scripture-encode-master.md) — LessonSpine scripture encode master dest reaudit
+- [antagonist-compare-board.md](./antagonist-compare-board.md) — CompareBoard two-claim / contrast
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1112,6 +1113,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ScriptureCard last-word “verse.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `ScriptureCardDemo-f0.png`, `ScriptureCardDemo-f60.png`.
+
+## CompareBoard 2026-09-21
+
+Dated **2026-09-21** reaudit. CompareBoard soft craft beat. Two-claim / contrast on `CompareBoard` (`COMPARE_BOARD_KICKER = "Compare"`; `COMPARE_BOARD_LINE = "Hold two claims."`; cream + gold 6px left rail). Craft beat on `CompareBoardDemo`. Sequenced after sting/objective path, after ScriptureCard, before PracticeCard. After PR 129 merge `504595b435915b926c94233291c091a2653c8441`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. KeyClaim after sting/objective path. ScriptureCard after sting/objective path, after KeyClaim. CompareBoard after sting/objective path, after ScriptureCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4` sha256 `cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79` **Current master dest.** **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-compare-board/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-scripture-encode/2026-09-21/LessonSpine.mp4
+sha256: cb3a672da3871428548f2e6ec69da03b9c1d2e425058a1b4b856d928a6e43a79
+stills: /opt/cursor/artifacts/remotion-compare-board/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. CompareBoard last-word “claims.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `CompareBoardDemo-f0.png`, `CompareBoardDemo-f60.png`, `LessonSpine-objective-f570.png`.
 
 ## Held
 
