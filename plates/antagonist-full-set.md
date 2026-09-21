@@ -66,6 +66,7 @@ Cites:
 - [antagonist-caveat-card.md](./antagonist-caveat-card.md) — CaveatCard watch-out / warning
 - [antagonist-reflection-prompt.md](./antagonist-reflection-prompt.md) — ReflectionPrompt learner pause / think-then-answer
 - [antagonist-timeline-rail.md](./antagonist-timeline-rail.md) — TimelineRail sequence of beats / ordered milestones
+- [antagonist-source-chip.md](./antagonist-source-chip.md) — SourceChip citation chip
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1922,6 +1923,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. TimelineRail last-word “beats.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `TimelineRailDemo-f0.png`, `TimelineRailDemo-f60.png`.
+
+## SourceChip 2026-09-21
+
+Dated **2026-09-21** reaudit. SourceChip soft craft beat. Citation chip distinct from QuoteCard / ScriptureCard on `SourceChip` (`SOURCE_CHIP_KICKER = "Source"`; `SOURCE_CHIP_CITE = "Field"`; `SOURCE_CHIP_LINE = "Name the source."`; cream + gold 6px left rail). Craft beat on `SourceChipDemo`. Sequenced after sting/objective path, after TimelineRail, before PracticeCard. Wired on DefinitionBoard + RecapCard (after Recap before Quiz). After PR 164 merge `86a32f23f3a7ee00218d9b50a90fe916b01ff207` / tip `b915ed3e6955e1a85d4ac8c62525c7a82c90d466`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. TimelineRail after sting/objective path, after ReflectionPrompt, before PracticeCard. SourceChip after sting/objective path, after TimelineRail, before PracticeCard. Locked master dest `/opt/cursor/artifacts/lesson-spine-timeline-encode/2026-09-21/LessonSpine.mp4` sha256 `2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068` **untouched** (plate-level stills only). Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-timeline-encode/2026-09-21/LessonSpine.mp4
+sha256: 2b2dab3e239656e122d4dda3199e294ec836351a83120efaefe2aa54e4b8c068
+stills: /opt/cursor/artifacts/remotion-source-chip/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. SourceChip last-word “source.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `SourceChipDemo-f0.png`, `SourceChipDemo-f60.png`, `LessonSpine-recap-f864.png`.
 
 ## Held
 
