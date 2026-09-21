@@ -68,6 +68,10 @@ Parent gets a path assembled under the selected Child from parent-owned intent. 
 
 Parent sees the next slice of the assembled path under the selected Child, bound to parent-owned intent. Page [`/portion`](https://portal.fieldschool.ai/portion). Unsigned `GET /api/progress/portion`. Parent `POST /api/progress/portion` locks or overrides hire-path children `play-child` / `hire-child` only. File `public/lessons/hls/supervised-portion.json`. Child ≠ User. No child login. Does not call family `/api/curriculum`, `/api/intent`, or `/api/portion`. Does not write `curriculum_paths`, `learning_intents`, `next_portions`, or `next_portion_items`. Does not edit FamilyV1Home or children-database. Family LIVE `bc-4765f2f0` not stolen. Distribute HELD. Launch **CLOSED**, **0/8**.
 
+## Knowledge brain (FR-KB-1)
+
+Parent starts and sees a durable knowledge brain under the selected Child so curriculum and confidence attach to that brain, not a one-off page. Page [`/brain`](https://portal.fieldschool.ai/brain). Unsigned `GET /api/progress/brain`. Parent `POST /api/progress/brain` starts or updates hire-path children `play-child` / `hire-child` only. File `public/lessons/hls/supervised-brain.json`. Child ≠ User. No child login. Does not call family `/api/brain` or `/api/portion`. Does not write `knowledge_brains`, `growth_units`, or `next_portions`. Does not edit FamilyV1Home or children-database. Family LIVE `bc-4765f2f0` not stolen. Distribute HELD. Launch **CLOSED**, **0/8**.
+
 ## Overlay
 
-`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T173800Z.tar.gz` sha256 `ea39dd8cfbf6f4ee171c98a36377440ea7808ae91ec748464d5cfed170f2eca4`.
+`app/deploy/overlay-player-rail.sh` — family hash abort, `--no-deps app`, no `deploy.sh` wipe, no org home, no family chrome. Overlay does not rewrite AUTH_URL. Live pack `/opt/field-school-packs/player-rail-campus-pack-20260921T185900Z.tar.gz` sha256 `fd77a76824b519805a50dfdc6f1a16df1f700e7af60f01453368dc3fd64ea38a`.
