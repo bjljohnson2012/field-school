@@ -42,6 +42,7 @@ Cites:
 - [antagonist-section-title.md](./antagonist-section-title.md) — SectionTitle section break / chapter title
 - [antagonist-glossary-chip.md](./antagonist-glossary-chip.md) — GlossaryChip term / definition pop
 - [antagonist-objection-card.md](./antagonist-objection-card.md) — ObjectionCard steelman / respond
+- [antagonist-sting-cold-open.md](./antagonist-sting-cold-open.md) — Sting / Opener cold open
 - [antagonist-edu-s01-master.md](./antagonist-edu-s01-master.md) — EDU-S01 master dest reaudit
 - [antagonist-definitionboard-edu-s02.md](./antagonist-definitionboard-edu-s02.md) — EDU-S02 DefinitionBoard keyword tick
 - [antagonist-quizbumper-next-up.md](./antagonist-quizbumper-next-up.md) — QuizBumper next-up signaling
@@ -1369,6 +1370,28 @@ gates: {
 SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. ObjectionCard last-word “reply.” gold-ticked. Launch stays CLOSED 0/8.
 
 Stills: `LessonSpine-sting-f42.png`, `LessonSpine-slate-f345.png`, `LessonSpine-objective-f570.png`, `LessonSpine-recap-f864.png`, `LessonSpine-nextup-f1050.png`, `LessonSpine-sting-wipe-f9.png`.
+
+## Sting cold open 2026-09-21
+
+Dated **2026-09-21** reaudit. Sting / Opener cold-open soft craft beat. Hook on the ORDER LOCK first beat on `StingColdOpen` (`STING_COLD_OPEN_KICKER = "Cold open"`; `STING_COLD_OPEN_LINE = "Start on the hook."`; cream + gold 6px left rail). Craft beat on `StingColdOpenDemo`. Sequenced on Opener/sting only. Downstream craft unchanged. After PR 140 merge `357ea04125a9dc15df606d041280f0afbc2d4a85` / tip `14e85a8faa63a4205e4bcb0a327bd1d82fd902de`. ORDER LOCK intact: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up → EndCard. PracticeCard after Recap/Quiz path. KeyClaim after sting/objective path. ScriptureCard after sting/objective path, after KeyClaim. CompareBoard after sting/objective path, after ScriptureCard. SectionTitle after sting/objective path, after CompareBoard. GlossaryChip after sting/objective path, after SectionTitle. ObjectionCard after sting/objective path, after GlossaryChip. StingColdOpen on Opener/sting only. Locked master dest `/opt/cursor/artifacts/lesson-spine-objection-encode/2026-09-21/LessonSpine.mp4` sha256 `4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee` **Current master dest.** **untouched** (plate-level stills only). Stills `/opt/cursor/artifacts/remotion-sting-cold-open/2026-09-21/`. Checklist `hold_cleaning: true`. `--flip` refused.
+
+```
+verdict: PASS
+dated: 2026-09-21
+rendering: /opt/cursor/artifacts/lesson-spine-objection-encode/2026-09-21/LessonSpine.mp4
+sha256: 4a1317e0e6daf440958a81a7fb6dcda042751c9fda3ab44f1df1153d8fd66aee
+stills: /opt/cursor/artifacts/remotion-sting-cold-open/2026-09-21/
+hold_cleaning: true
+auto_flip: false
+escalate: false
+gates: {
+  EDU-S01: PASS, EDU-S02: PASS, EDU-S03: SOFT
+}
+```
+
+SOFT notes only: `EDU-S03` olive fixture head (Cap-blocked; no Cap take). `EDU-S01` and `EDU-S02` factory PASS on this dest. StingColdOpen last-word “hook.” gold-ticked. Launch stays CLOSED 0/8.
+
+Stills: `StingColdOpenDemo-f0.png`, `StingColdOpenDemo-f60.png`, `LessonSpine-sting-f42.png`.
 
 ## Held
 
