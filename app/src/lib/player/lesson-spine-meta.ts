@@ -9,6 +9,10 @@ export const LESSON_SPINE_ARCHIVE_DEST =
 
 export const LESSON_SPINE_PUBLIC_REL = "public/lessons/LessonSpine.mp4";
 
+export const LESSON_SPINE_HLS_PUBLIC = "/lessons/hls/LessonSpine.m3u8";
+
+export const LESSON_SPINE_READY_REL = "public/lessons/hls/ready.json";
+
 export const LESSON_SPINE_DURATION_SEC = 41;
 export const LESSON_SPINE_FRAMES = 1230;
 export const LESSON_SPINE_FPS = 30;

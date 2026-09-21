@@ -15,8 +15,9 @@ export default function LessonSpinePlayPage() {
       </p>
       <h1 className="mt-3 font-display text-4xl tracking-tight">LessonSpine</h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
-        Parent play of the locked counterexample-encode master. HTML5 player
-        rail only — no Remotion package in campus. Launch stays closed.
+        Ready / HLS play of the locked counterexample-encode master. HTML5
+        player rail only — no Remotion package in campus. Launch stays closed.
+        Distribute held.
       </p>
       <p
         className="mt-2 font-mono text-xs text-muted-foreground"

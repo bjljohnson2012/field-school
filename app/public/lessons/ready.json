@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "status": "Ready",
+  "kind": "HLS",
+  "master_sha256": "af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4",
+  "source": "/opt/cursor/artifacts/campus-lesson-spine-master/2026-09-21/LessonSpine.mp4",
+  "source_dest": "/opt/cursor/artifacts/lesson-spine-counterexample-encode/2026-09-21/LessonSpine.mp4",
+  "source_dest_untouched": true,
+  "hls_dir": "/opt/cursor/artifacts/lesson-spine-play-rail-hls/2026-09-21",
+  "hls_public": "/lessons/hls/LessonSpine.m3u8",
+  "mp4_fallback": "/api/media/lesson-spine",
+  "static_mp4": "/lessons/LessonSpine.mp4",
+  "distribute": false,
+  "launch": "CLOSED 0/8",
+  "play": "/play/lesson-spine",
+  "note": "Ready/HLS from campus archive copy. Source dest untouched. Distribute HELD."
+}
