@@ -138,7 +138,8 @@ Constants: `GLIDE_FRAMES=24` `TAKEOVER_HOLD_FRAMES=12` `TAKEOVER_EASE_FRAMES=18`
 | CaveatCard LessonSpine encode | PR 157 `5d39d68` / tip `aab37fd` |
 | CaveatCard encode master dest reaudit | PR 158 `2a90b5a` / tip `e9e043d` |
 | ReflectionPrompt learner pause / think-then-answer | PR 159 `ff30be0` / tip `9f1df22` |
-| ReflectionPrompt LessonSpine encode | PR 160 |
+| ReflectionPrompt LessonSpine encode | PR 160 `907a799` / tip `bb2c989` |
+| ReflectionPrompt encode master dest reaudit | this PR |
 
 First encode dest: `/opt/cursor/artifacts/lesson-spine-encode/2026-09-19/LessonSpine.mp4` sha256 `a5d082844afc1d2f9fbc0644705fad3e3663356638e906d4d9e27876a74c598a` (h264 1920×1080@30, 41.000s). Captions re-encode dest: `/opt/cursor/artifacts/lesson-spine-reencode-captions/2026-09-19/LessonSpine.mp4` sha256 `ec88d2576bf29adc70d3d66624765aa1547a76db0486b5e4fb93a9039a37e211`. Both dests **untouched**.
 
@@ -519,6 +520,10 @@ PR 158 merge `2a90b5a` / tip `e9e043d` harvested (`2a90b5a05df9e441e72131fc39ab0
 ## LessonSpine reflection encode (PASS)
 
 PRs 85–159 harvested. PR 159 merge `ff30be0` / tip `9f1df22` (`ff30be00fe2f9eab5ff7b9e257b0138990d93f13` / `9f1df22f608ea3819c549a9dc70dec443d9f1e94`). New dated dest `/opt/cursor/artifacts/lesson-spine-reflection-encode/2026-09-21/LessonSpine.mp4` sha256 `1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17`. **Current master dest.** Caveat dest `e23cadde85af2540d3c4f9c8a8434126655133b50c0cdc6c5783b16d9e446fd7` archived, not overwritten. Soft re-score **PASS.** SOFT only (`EDU-S03`). Evidence: `plates/antagonist-lesson-spine-reflection-encode.md`. Stills: `/opt/cursor/artifacts/remotion-lesson-spine-reflection-encode/2026-09-21/`. `hold_cleaning: true`. `--flip` refused.
+
+## LessonSpine reflection encode master dest reaudit (PASS)
+
+Dated 2026-09-21. Independent Antagonist v2 against locked master dest `/opt/cursor/artifacts/lesson-spine-reflection-encode/2026-09-21/LessonSpine.mp4` sha256 `1e244f82eabceff7e3b16f39d41ff8d49e002aec188c694257f5da9bb4e77f17` plus ReflectionPrompt plates. PR 160 merge `907a799` / tip `bb2c989` (`907a79973420288bf6ece9315fd1d87d6b45b6a4` / `bb2c989afcad0d5b86f1a3655c32833f320b57de`). **PASS.** SOFT notes only (`EDU-S03` Cap-blocked). `EDU-S01` PASS. `EDU-S02` PASS. `hold_cleaning: true`. `--flip` refused. Caveat dest untouched. Evidence: `plates/antagonist-full-set.md` + `plates/antagonist-reflection-encode-master.md`. Stills: `/opt/cursor/artifacts/remotion-antagonist-reflection-encode-master/2026-09-21/`. **Current master dest.**
 
 ## Karaoke gold (VOX-S01 PASS)
 
