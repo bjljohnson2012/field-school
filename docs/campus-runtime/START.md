@@ -1,11 +1,13 @@
 # Start here
 
-Cursor only needs this message:
+Waves 1–3 and plates Wave 5 are PASS. Do not resume Wave 2.
+
+Cursor / Field School PM, send only this:
 
 ```
-Read docs/campus-runtime/CURSOR_AGENT_PROMPT.md and follow the PROMPT section.
-Read every file it lists. Inspect the repo. Name the incomplete wave. Finish that wave only.
-Default: Wave 2.
+Read docs/LAW.md. Then docs/staff/BUILD_GRAPH.md. Then docs/staff/SHELLS.md.
+Inspect the repo. Name READY nodes. Spawn at most two whose files do not collide.
+Do not open a cursor/wave-N branch. Do not default to Wave 2.
 ```
 
-The prompt file lists the rest of the docs, SQL, locks, Remotion rules, and proofs.
+Law file lists the rest. Campus-runtime WAVE*.md files are proof, not tickets.
