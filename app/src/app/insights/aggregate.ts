@@ -158,6 +158,12 @@ export type InsightsModel = {
   };
   credits: InsightPoint[];
   assignments: InsightPoint[];
+  brainNext?: {
+    title: string;
+    name: string;
+    login: "none" | "member";
+    from: "outcomes" | "profile" | "stored";
+  } | null;
 };
 
 function norm(value: string) {

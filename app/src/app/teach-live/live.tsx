@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import { TeachDeck, type LessonSpec } from "@/components/teach-deck";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
+import { chooseNextStep, type LivingBrain } from "@/lib/living-brain/model";
 
 type Room = "household" | "sales";
 
 type Assignment = {
   id: string;
+  membershipId?: string;
   name: string;
   title: string;
   outcome: string;
@@ -46,6 +48,7 @@ function roomOf(slug: string): Room | null {
 
 export function TeachLive() {
   const [desk, setDesk] = useState<Desk>({ status: "loading" });
+  const [brainTitle, setBrainTitle] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -64,7 +67,26 @@ export function TeachLive() {
         const assignment = storedPortionForRoom(room, rows);
         const open =
           assignment && assignment.units && assignment.units.length > 0 ? assignment : null;
-        if (!cancelled) setDesk({ status: "room", room, assignment: open });
+        let brain: LivingBrain | null = null;
+        try {
+          const brainResponse = await fetch("/api/living-brain");
+          if (brainResponse.ok) {
+            const brainData = (await brainResponse.json()) as { brain?: LivingBrain };
+            brain = brainData.brain && brainData.brain.room === room ? brainData.brain : null;
+          }
+        } catch {
+          brain = null;
+        }
+        const chosen = chooseNextStep({
+          room,
+          brain,
+          storedTitle: open?.nextUnit,
+          membershipId: open?.membershipId,
+        });
+        if (!cancelled) {
+          setBrainTitle(chosen && chosen.from !== "stored" ? chosen.title : "");
+          setDesk({ status: "room", room, assignment: open });
+        }
       })
       .catch(() => {
         if (!cancelled) setDesk({ status: "fixture" });
@@ -131,7 +153,11 @@ export function TeachLive() {
           });
         }}
       />
-      <p className="mx-auto max-w-6xl px-4 pb-10 text-sm text-muted-foreground" data-next-portion={assignment.nextUnit || ""}>
+      <p
+        className="mx-auto max-w-6xl px-4 pb-10 text-sm text-muted-foreground"
+        data-next-portion={brainTitle || assignment.nextUnit || ""}
+        data-next-from={brainTitle ? "brain" : "stored"}
+      >
         {room === "sales"
           ? `Next step for ${assignment.name} stays on Learn when the leader leaves and comes back. The team member may sign in. The leader owns the path.`
           : `Next step for ${assignment.name} stays on Learn when the parent leaves and comes back. The child has no login.`}

@@ -114,6 +114,11 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
           <Bars points={model.movement} scale="count" onOpen={onOpen} />
         </ChartFrame>
         <ChartFrame id="next-step" title="Next-step" hint="No next portion, or no next unit." empty={model.empty}>
+          {model.brainNext ? (
+            <p className="mb-3 text-sm" data-next-from="brain" data-login={model.brainNext.login}>
+              {model.brainNext.name}: {model.brainNext.title}
+            </p>
+          ) : null}
           <Bars points={model.nextStep} scale="count" onOpen={onOpen} />
         </ChartFrame>
         <ChartFrame id="checks" title="Checks" hint="Quiz pass rate by unit." empty={model.empty}>

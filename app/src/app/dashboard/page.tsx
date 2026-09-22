@@ -6,8 +6,15 @@ import { useSession } from "next-auth/react";
 import { lessonForOrg } from "@/lib/campus-runtime/lessons";
 import { COURSE_NAME, COURSE_TAGLINE } from "@/lib/course/content";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
+import { chooseNextStep, type LivingBrain } from "@/lib/living-brain/model";
 
-type NextStep = { href: string; title: string; portion?: boolean; login?: "none" | "member" };
+type NextStep = {
+  href: string;
+  title: string;
+  portion?: boolean;
+  login?: "none" | "member";
+  from?: "outcomes" | "profile" | "stored";
+};
 
 type LearnHome = {
   org: string;
@@ -85,12 +92,29 @@ export default function LearnPage() {
             const desk = await deskResponse.json();
             const rows = Array.isArray(desk?.assignments) ? desk.assignments : [];
             const open = storedPortionForRoom(slug, rows);
-            if (open?.nextUnit) {
+            let brain: LivingBrain | null = null;
+            try {
+              const brainResponse = await fetch("/api/living-brain");
+              if (brainResponse.ok) {
+                const brainData = (await brainResponse.json()) as { brain?: LivingBrain };
+                brain = brainData.brain || null;
+              }
+            } catch {
+              brain = null;
+            }
+            const chosen = chooseNextStep({
+              room: slug,
+              brain,
+              storedTitle: open?.nextUnit,
+              membershipId: open?.membershipId,
+            });
+            if (chosen) {
               next = {
                 href: "/teach-live",
-                title: open.nextUnit,
+                title: chosen.title,
                 portion: true,
-                login: slug === "household" ? "none" : "member",
+                login: chosen.login,
+                from: chosen.from,
               };
             }
           } catch {
@@ -165,7 +189,11 @@ export default function LearnPage() {
           <p className="mt-2 text-sm text-muted-foreground">{card.willDo}</p>
           <h3 className="mt-6 text-sm font-medium">{nextStep?.portion ? "Next portion" : "Next step"}</h3>
           {nextStep?.portion ? (
-            <p className="mt-2 text-sm text-muted-foreground" data-next-portion={card.nextTitle}>
+            <p
+              className="mt-2 text-sm text-muted-foreground"
+              data-next-portion={card.nextTitle}
+              data-next-from={nextStep.from || "stored"}
+            >
               {nextStep.login === "member"
                 ? "This next step stays when the leader leaves and comes back. The team member may sign in. The leader owns the path."
                 : "This next step stays when the parent leaves and comes back. The child has no login."}
