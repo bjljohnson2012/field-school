@@ -1,44 +1,34 @@
 # Agents working in this repo
 
-Product plan: `docs/staff/THREE_LOOPS.md`.
+Read `docs/LAW.md`. Then `docs/staff/BUILD_GRAPH.md`. Then work the READY nodes.
+Launch stays CLOSED 0/8. None of those files is 8/8.
+
+Waves 1–3 and plates Wave 5 are PASS. Do not resume Wave 2. Do not open `cursor/wave-N-*`.
+
 Job and locks: `FIELD-SCHOOL-ETHOS-MEMO.md`.
-How Field School PM runs: `docs/staff/FIELD_SCHOOL_PM_LOOP.md`.
-Read those three before a ticket, a PR, or a PASS claim. None of them grants Launch PASS.
+Chrome: `docs/staff/SHELLS.md`.
+How PM runs: `docs/staff/FIELD_SCHOOL_PM_LOOP.md`.
+Staff wire: `docs/staff/GRAPH.md` (roster only).
 
-Field School is three loops: Library (any source to LessonSpec), Composer (spec to approved course), Portal (leader assigns; login salesperson or tracked child moves).
-Cap is one Library intake, not the whole kitchen.
-Week done-when lives in THREE_LOOPS. Tests and dest SHAs are not the week.
-
-Two rooms: household and sales. They run together. Household is not the default.
-One ticket names one room. Two streams only when files do not collide. Third waits.
-If a wave doc or GRAPH.md disagrees with THREE_LOOPS on what to build this week, THREE_LOOPS wins.
-If anything disagrees on User vs Child, prices, AUTH_URL, dest, or person-in-development-as-buyer, the ethos memo wins.
-
-User: `.cursor/USER.md` and `docs/campus-runtime/USER.md`.
-Entry: `docs/campus-runtime/CURSOR_AGENT_PROMPT.md`.
-
-Wave 1 is done. Proof: `docs/campus-runtime/WAVE1.md`.
+Two rooms: household and sales. Together. Household is not the default. One ticket, one room.
+If WAVE docs disagree with BUILD_GRAPH on what to build, BUILD_GRAPH wins.
+If anything disagrees on Child vs User, prices, AUTH_URL, dest, the ethos memo wins.
 
 ## Do
 
-- Build campus in `app/`. Remotion stays in `plates/`.
-- Scope learner queries by org_id / membership_id.
-- Keep guest Grok Bot. Keep factory (Cap, edit, melt) healthy.
+- Build in `app/`. Remotion stays in `plates/`.
+- Scope by org_id / membership_id.
+- Keep guest Grok Bot.
 - Quiz items need source_unit_id.
-- Label login learners vs tracked children. Never mix them.
-- Fold Wave 3 teach/catalog into Library and Learn shells.
+- Label login learners vs tracked children. Never mix them on one desk.
 
 ## Do not
 
-- Extend frozen TanStack `src/` or deploy `vite.config.ts`.
+- Extend frozen TanStack `src/`.
 - Touch CNC vault 2.24.64.248.
-- Flip AUTH_URL back to university.benjohnson.ai. Canonical is portal.fieldschool.ai.
-- Re-render Just (Cap id 27pn9xs0zk8a73g).
-- Invent a second Pattern item bank or official MBTI / Enneagram / Gallup / Wiley items.
-- Install Remotion MCP or package Remotion into Next.
-- Replace Next with Django. Put pages in FastAPI.
-- Add Qdrant or ClickHouse this week.
-- Child login. Treat a salesperson as a child.
-- Default to household and leave team for later.
-- Put household and team in one ticket.
-- Treat a dest SHA or hire-path test as the company end.
+- Flip AUTH_URL. Re-render Just. Steal `bc-4765f2f0`.
+- Official psychometric banks.
+- Remotion-in-Next. Django rewrite. Pages in FastAPI. Qdrant this week.
+- Child login. Salesperson as a child.
+- Default to household. Put both rooms in one ticket.
+- Treat dest SHA or hire-path tests as the end.
