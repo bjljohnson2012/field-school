@@ -8,6 +8,6 @@ Fixture audio `plates/fixtures/track-b-fixture.wav` stands in for a Cap take. `m
 
 This clock does not render. Asset Just `27pn9xs0zk8a73g` stays locked. The Aug 30 master stays locked. The planned master path is not written. Remotion stays in `plates/`. It is not added to the Next app, and it does not enter the Next player rail.
 
-Independent Antagonist bar on the fixture: PASS. The Track B cleaning checklist reads that dry-run. It flips Cleaning only when the checklist passes. It does not flip dest. Distribute stays held. Launch stays CLOSED 0/8.
+Independent Antagonist bar on the fixture: PASS. The Track B cleaning checklist reads that dry-run. It flips Cleaning only when the checklist passes. Publish evidence can then pass. `distribute` stays false. It does not flip dest. Launch stays CLOSED 0/8.
 
-Proof: `node --test scripts/track-b-cleaning.test.mjs scripts/track-b-export-ready.test.mjs scripts/track-b-master.test.mjs scripts/track-b-quality-path.test.mjs` from `plates/`.
+Proof: `node --test scripts/track-b-publish.test.mjs scripts/track-b-cleaning.test.mjs scripts/track-b-export-ready.test.mjs scripts/track-b-quality-path.test.mjs` from `plates/`.
