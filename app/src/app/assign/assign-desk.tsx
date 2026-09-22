@@ -371,8 +371,15 @@ export function AssignDesk() {
                     <p className="text-sm">{row.name}</p>
                     <p className="mt-1 font-display text-xl tracking-tight">{row.title}</p>
                     <p className="mt-2 text-sm text-muted-foreground">{row.outcome}</p>
-                    <p className="mt-2 text-sm">Next step: {row.nextUnit}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{copy.loginLine}</p>
+                    <p className="mt-2 text-sm" data-next-portion={row.nextUnit}>
+                      Next portion: {row.nextUnit}
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      This portion stays when you leave and return. {copy.loginLine}
+                    </p>
+                    <Link href="/teach-live" className="mt-3 inline-flex text-sm underline underline-offset-2">
+                      Teach this path
+                    </Link>
                   </li>
                 ))}
               </ul>

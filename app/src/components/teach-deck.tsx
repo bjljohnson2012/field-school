@@ -23,18 +23,32 @@ const MODE_LABEL: Record<LessonSpec["mode"], string> = {
 const JOB =
   "When I am accountable for people’s development and for the organization’s success, and I cannot sit with them every hour, I invest in Field School so each person keeps moving on a path fit to who they are now, they get better, the organization gets better, and the learning actually takes.";
 
-export function TeachDeck({ spec }: { spec: LessonSpec }) {
+export function TeachDeck({
+  spec,
+  startIndex = 0,
+  onArrive,
+}: {
+  spec: LessonSpec;
+  startIndex?: number;
+  onArrive?: (unitId: string) => void;
+}) {
   const count = spec.units.length;
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(() =>
+    count === 0 ? 0 : Math.max(0, Math.min(count - 1, startIndex)),
+  );
   const safeIndex = count === 0 ? 0 : Math.min(index, count - 1);
   const unit = count === 0 ? null : spec.units[safeIndex];
 
+  function go(nextIndex: number) {
+    if (count === 0) return;
+    const bounded = Math.max(0, Math.min(count - 1, nextIndex));
+    setIndex(bounded);
+    const unitId = spec.units[bounded]?.id;
+    if (unitId) onArrive?.(unitId);
+  }
+
   function step(delta: number) {
-    setIndex((current) => {
-      if (count === 0) return 0;
-      const bounded = Math.min(current, count - 1);
-      return Math.max(0, Math.min(count - 1, bounded + delta));
-    });
+    go(Math.min(index, count - 1) + delta);
   }
 
   useEffect(() => {
@@ -46,15 +60,15 @@ export function TeachDeck({ spec }: { spec: LessonSpec }) {
       }
       if (event.key === "ArrowRight" || event.key === "PageDown") {
         event.preventDefault();
-        setIndex((current) => (count === 0 ? 0 : Math.min(count - 1, current + 1)));
+        go(safeIndex + 1);
       } else if (event.key === "ArrowLeft" || event.key === "PageUp") {
         event.preventDefault();
-        setIndex((current) => (count === 0 ? 0 : Math.max(0, current - 1)));
+        go(safeIndex - 1);
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [count]);
+  }, [count, safeIndex, spec.units]);
 
   return (
     <main
@@ -68,8 +82,9 @@ export function TeachDeck({ spec }: { spec: LessonSpec }) {
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">{spec.title}</h1>
       <p className="mt-3 max-w-3xl text-sm text-muted-foreground">
-        Team room. Org {spec.org}. The leader presents. The teammate is in
-        development, is not the buyer, and does not own the path.
+        {spec.org === "household"
+          ? "Household. The parent presents. The tracked child has no login, is not the buyer, and does not own the path."
+          : "Team room. Org sales. The leader presents. The teammate is in development, is not the buyer, and does not own the path. This desk lists zero children."}
       </p>
       <p data-outcome="" className="mt-6 max-w-3xl text-lg leading-relaxed">
         {spec.outcome}
@@ -88,7 +103,7 @@ export function TeachDeck({ spec }: { spec: LessonSpec }) {
                     <button
                       type="button"
                       aria-current={current ? "step" : undefined}
-                      onClick={() => setIndex(itemIndex)}
+                      onClick={() => go(itemIndex)}
                       className={cn(
                         "w-full rounded-lg px-3 py-2 text-left text-sm",
                         current

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T12:37:56Z",
+  "updated": "2026-09-22T15:20:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -67,7 +67,7 @@
     },
     "N8": {
       "status": "PASS",
-      "evidence": "PR 223 MERGED 1abaa93ff"
+      "evidence": "PR 223 MERGED 1abaa93ff; both rooms keep the stored next step after leave and return. Home: child has no login. Sales: team member may sign in, leader owns the path, desk shows no children."
     },
     "N9": {
       "status": "PASS",
@@ -110,5 +110,5 @@
   "last_pick": [
     "N15"
   ],
-  "last_clock": "09-continue"
+  "last_clock": "09"
 }
