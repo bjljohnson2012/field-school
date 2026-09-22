@@ -91,6 +91,56 @@ export function shapeBrain(input: {
 
 const MECHANICAL_PROFILE = /^(Assigned|Taught|Learned|Progress saved)\. Next step is /;
 
+function onThisDesk(room: Room, person: { kind: string; login: "none" | "member"; ownsOutcomes?: boolean }) {
+  if (person.ownsOutcomes) return false;
+  if (room === "sales") return person.kind !== "child" && person.login === "member";
+  return person.kind === "child" && person.login === "none";
+}
+
+/** One line for the whole desk. Sales never names a child. */
+export function deskFacts(
+  room: Room,
+  people: Array<{ name: string; kind: string; login: "none" | "member"; outcomes: string; ownsOutcomes?: boolean }>,
+) {
+  const lines = people
+    .filter((person) => onThisDesk(room, person))
+    .map((person) => ({ name: clip(person.name) || "This person", outcomes: clip(person.outcomes) }))
+    .filter((person) => person.outcomes)
+    .sort((a, b) => a.name.localeCompare(b.name) || a.outcomes.localeCompare(b.outcomes));
+  if (!lines.length) return "";
+  return clip(`${lines.map((person) => `${person.name}: ${person.outcomes}`).join(". ")}.`);
+}
+
+export function assistFacts(input: {
+  room: Room;
+  facts: string;
+  people: Array<{ name: string; kind: string; login: "none" | "member"; outcomes: string; ownsOutcomes?: boolean }>;
+}): { ok: true; facts: string; changed: boolean } | { ok: false; error: string } {
+  const facts = deskFacts(input.room, input.people);
+  if (!facts) return { ok: false, error: "no_context" };
+  return { ok: true, facts, changed: facts !== input.facts.trim() };
+}
+
+export function applyFactsAssist(
+  brain: LivingBrain,
+  actor: BrainActor,
+): { ok: true; brain: LivingBrain } | { ok: false; error: string } {
+  if (actor.kind === "child") return { ok: false, error: "child_has_no_login" };
+  if (!actorMayWrite(actor)) return { ok: false, error: "not_leader" };
+  if (actor.org !== brain.room) return { ok: false, error: "wrong_desk" };
+  const drafted = assistFacts(brain);
+  if (!drafted.ok) return drafted;
+  const people = brain.people.map((row) => ({ ...row, ownsOutcomes: false as const }));
+  return {
+    ok: true,
+    brain: {
+      ...brain,
+      facts: drafted.facts,
+      people: brain.room === "sales" ? people.filter((row) => row.kind !== "child" && row.login === "member") : people,
+    },
+  };
+}
+
 export type AssistDraft = {
   profile: string;
   outcomes: string;
@@ -279,7 +329,7 @@ export function refreshFromUse(
     ok: true,
     brain: {
       ...brain,
-      facts: clip(`${name}: next step is ${step}.`),
+      facts: deskFacts(brain.room, people) || clip(`${name}: next step is ${step}.`),
       people,
     },
   };

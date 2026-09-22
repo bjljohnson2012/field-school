@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { assistDraft, brainBoard, type BrainBoard } from "@/lib/living-brain/model";
+import { assistDraft, assistFacts, brainBoard, type BrainBoard } from "@/lib/living-brain/model";
 import { EMPTY_COPY, type InsightPerson, type InsightPoint, type InsightsModel } from "./aggregate";
 
 type OpenState = {
@@ -110,6 +110,18 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
 
   const [board, setBoard] = useState<BrainBoard | null>(model.brainBoard ?? null);
 
+  async function saveFacts() {
+    if (!board) return;
+    const response = await fetch("/api/living-brain", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ assistFacts: true }),
+    });
+    const data = (await response.json()) as { brain?: BrainBoard };
+    if (!response.ok || !data.brain) return;
+    setBoard(brainBoard({ room: board.room, brain: data.brain }));
+  }
+
   async function saveSuggestion(person: BrainBoard["people"][number]) {
     if (!board) return;
     const response = await fetch("/api/living-brain", {
@@ -143,6 +155,18 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
           <p className="mt-4 text-sm" data-brain-facts={board.facts ? "yes" : "no"}>
             {board.facts || "No org facts yet."}
           </p>
+          {(() => {
+            const suggested = assistFacts(board);
+            if (!suggested.ok || !suggested.changed) return null;
+            return (
+              <p className="mt-2 text-sm" data-facts-assist="yes">
+                <span className="text-muted-foreground">Suggested: {suggested.facts}</span>
+                <button type="button" className="ml-2 text-xs underline underline-offset-4" data-save-facts="yes" onClick={() => void saveFacts()}>
+                  Save org facts
+                </button>
+              </p>
+            );
+          })()}
           {board.people.length ? (
             <div className="mt-4 overflow-x-auto">
               <table className="w-full border-collapse text-left text-sm">
