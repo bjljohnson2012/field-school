@@ -881,6 +881,7 @@ export const livingProfiles = pgTable(
     profile: text("profile").notNull().default(""),
     outcomes: text("outcomes").notNull().default(""),
     ownsOutcomes: boolean("owns_outcomes").notNull().default(false),
+    history: text("history").notNull().default("[]"),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [

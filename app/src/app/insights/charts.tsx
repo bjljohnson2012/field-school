@@ -207,6 +207,13 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                       </td>
                       <td className="px-2 py-2">
                         {person.outcomes || "—"}
+                        {person.history.length ? (
+                          <ol className="mt-1 space-y-0.5 text-xs text-muted-foreground" data-history={person.membershipId} data-history-count={person.history.length}>
+                            {person.history.map((mark, index) => (
+                              <li key={`${index}-${mark.outcomes}`}>{mark.outcomes}</li>
+                            ))}
+                          </ol>
+                        ) : null}
                         {draft ? (
                           <button
                             type="button"

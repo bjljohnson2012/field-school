@@ -175,6 +175,7 @@ export type InsightsModel = {
       profile: string;
       outcomes: string;
       ownsOutcomes: false;
+      history?: Array<{ outcomes: string }>;
     }>;
   } | null;
 };

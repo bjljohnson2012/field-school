@@ -31,6 +31,21 @@ function asLogin(value: string): "none" | "member" | null {
   return value === "none" || value === "member" ? value : null;
 }
 
+function parseHistory(value: string) {
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.flatMap((mark) => {
+      if (!mark || typeof mark !== "object") return [];
+      const outcomes = (mark as { outcomes?: unknown }).outcomes;
+      if (typeof outcomes !== "string" || !outcomes.trim()) return [];
+      return [{ outcomes }];
+    });
+  } catch {
+    return [];
+  }
+}
+
 export async function loadLivingBrain(orgId: string): Promise<LivingBrain | null> {
   const db = getDb();
   const [head] = await db.select().from(livingBrains).where(eq(livingBrains.orgId, orgId)).limit(1);
@@ -54,6 +69,7 @@ export async function loadLivingBrain(orgId: string): Promise<LivingBrain | null
           login,
           profile: row.profile,
           outcomes: row.outcomes,
+          history: parseHistory(row.history),
         },
       ];
     }),
@@ -84,6 +100,7 @@ export async function saveLivingBrain(brain: LivingBrain) {
         profile: person.profile,
         outcomes: person.outcomes,
         ownsOutcomes: false,
+        history: JSON.stringify(person.history ?? []),
         updatedAt: now,
       })
       .onConflictDoUpdate({
@@ -95,6 +112,7 @@ export async function saveLivingBrain(brain: LivingBrain) {
           profile: person.profile,
           outcomes: person.outcomes,
           ownsOutcomes: false,
+          history: JSON.stringify(person.history ?? []),
           updatedAt: now,
         },
       });
@@ -133,6 +151,7 @@ export async function writeOutcome(input: {
             profile: input.person.profile,
             outcomes: "",
             ownsOutcomes: false,
+            history: [],
           },
         ],
       };

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T20:05:00Z",
+  "updated": "2026-09-22T20:10:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "Finishing a step updates that person's outcome and the next step while the parent or leader is away. Home child has no login and cannot save. Sales teammate may sign in. Leader owns outcomes. Sales desk shows no children."
+      "evidence": "Insights shows each person's recent next steps from the living brain. Home child has no login. Sales desk shows no children. Leader owns outcomes."
     },
     "N15": {
       "status": "PASS",
@@ -114,5 +114,5 @@
   "last_pick": [
     "N15"
   ],
-  "last_clock": "15-follow"
+  "last_clock": "15"
 }
