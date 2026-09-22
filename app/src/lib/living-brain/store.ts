@@ -1,17 +1,21 @@
 import { and, eq } from "drizzle-orm";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import { assignments, livingBrains, livingProfiles, members, memberships } from "@/lib/db/schema";
+import { completeWithConfiguredAi } from "./ai";
 import {
   actorMayWrite,
   applyAssist,
   applyFactsAssist,
+  applyPreparedAssist,
   readForTool,
   refreshFromUse,
   shapeBrain,
+  suggestForPerson,
   updateOutcome,
   type BrainActor,
   type LivingBrain,
   type Room,
+  type SuggestionSource,
   type UseKind,
   type UseSignal,
 } from "./model";
@@ -148,10 +152,29 @@ export async function writeAssist(input: {
     current && current.room === input.actor.org
       ? current
       : { orgId: input.orgId, room: input.actor.org, facts: "", people: [] };
-  const next = applyAssist(base, input.actor, input.membershipId, input.context);
+  if (input.actor.kind === "child" || !actorMayWrite(input.actor) || input.actor.org !== base.room) {
+    const refused = applyAssist(base, input.actor, input.membershipId, input.context);
+    return refused.ok ? { ok: false as const, error: "not_leader" } : refused;
+  }
+  const person = base.people.find((row) => row.membershipId === input.membershipId);
+  if (!person) return { ok: false as const, error: "not_on_desk" };
+  const suggested = await suggestForPerson({
+    room: base.room,
+    person,
+    others: base.people.filter((row) => row.membershipId !== person.membershipId),
+    facts: base.facts,
+    context: input.context,
+    complete: (prompt) => completeWithConfiguredAi(input.orgId, prompt),
+  });
+  if (!suggested.ok) return suggested;
+  const next = applyPreparedAssist(base, input.actor, input.membershipId, suggested.draft);
   if (!next.ok) return next;
   await saveLivingBrain(next.brain);
-  return { ok: true as const, brain: readForTool(next.brain, input.orgId) };
+  return {
+    ok: true as const,
+    source: suggested.source as SuggestionSource,
+    brain: readForTool(next.brain, input.orgId),
+  };
 }
 
 export async function writeFactsAssist(input: { orgId: string; actor: BrainActor }) {

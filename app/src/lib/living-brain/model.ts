@@ -201,6 +201,139 @@ export function assistDraft(input: {
   };
 }
 
+export type SuggestionSource = "ai" | "fallback";
+
+const OWNS_PATH = /owns the (path|outcomes)/i;
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function mentionsSomeoneElse(text: string, selfName: string, others: string[]) {
+  const self = selfName.trim().toLowerCase();
+  for (const name of others) {
+    const trimmed = name.trim();
+    if (trimmed.length < 2 || trimmed.toLowerCase() === self) continue;
+    if (new RegExp(`\\b${escapeRegExp(trimmed)}\\b`, "i").test(text)) return true;
+  }
+  return false;
+}
+
+export function suggestionPrompt(input: {
+  room: Room;
+  person: { name: string; profile: string; outcomes: string };
+  facts: string;
+  context?: { pathTitle?: string; nextStep?: string };
+}) {
+  const name = clip(input.person.name) || "This person";
+  const step = clip(input.context?.nextStep || input.person.outcomes);
+  const path = pathForOnePerson(clip(input.context?.pathTitle || ""));
+  const roomLine =
+    input.room === "household"
+      ? "This is a home desk. The child has no login and cannot save. The parent owns the save."
+      : "This is a sales desk. There are no children. The team member may sign in. The leader owns the save.";
+  return [
+    "Write a clearer profile and the next step for one person.",
+    roomLine,
+    "Do not say this person owns the path or the outcomes.",
+    "Do not mention anyone else.",
+    `Person: ${name}.`,
+    `Current profile: ${clip(input.person.profile) || "none"}.`,
+    `Current next step: ${step || "none"}.`,
+    path ? `Path: ${path}.` : "",
+    clip(input.facts) ? `Org facts, for context only: ${clip(input.facts)}.` : "",
+    'Reply with JSON only: {"profile":"...","outcomes":"..."}',
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+export function parseAiSuggestion(raw: string): { profile: string; outcomes: string } | null {
+  let text = raw.trim();
+  const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fence) text = fence[1].trim();
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start < 0 || end <= start) return null;
+  try {
+    const parsed = JSON.parse(text.slice(start, end + 1)) as { profile?: unknown; outcomes?: unknown };
+    if (typeof parsed.profile !== "string" || typeof parsed.outcomes !== "string") return null;
+    const profile = clip(parsed.profile);
+    const outcomes = clip(parsed.outcomes);
+    if (!profile || !outcomes) return null;
+    return { profile, outcomes };
+  } catch {
+    return null;
+  }
+}
+
+/** BYOK uses only the org key. Any other mode uses the platform key. No key means no call. */
+export function pickSuggestionKey(mode: string | null, byokKey: string | null, platformKey: string | null) {
+  if (mode === "byok") {
+    const key = byokKey?.trim() || "";
+    return key || null;
+  }
+  const key = platformKey?.trim() || "";
+  return key || null;
+}
+
+/**
+ * Ask the configured model for one person's profile and next step.
+ * A missing, thrown, or unsafe reply keeps the current assist.
+ */
+export async function suggestForPerson(input: {
+  room: Room;
+  person: {
+    name: string;
+    kind: string;
+    login: "none" | "member";
+    profile: string;
+    outcomes: string;
+    ownsOutcomes?: boolean;
+  };
+  others?: Array<{ name: string }>;
+  facts: string;
+  context?: { pathTitle?: string; nextStep?: string };
+  complete: (prompt: string) => Promise<string | null>;
+}): Promise<{ ok: true; draft: AssistDraft; source: SuggestionSource } | { ok: false; error: string }> {
+  const fallback = assistDraft({
+    room: input.room,
+    person: input.person,
+    facts: input.facts,
+    context: input.context,
+  });
+  if (!fallback.ok) return fallback;
+  let raw: string | null = null;
+  try {
+    raw = await input.complete(
+      suggestionPrompt({
+        room: input.room,
+        person: input.person,
+        facts: input.facts,
+        context: input.context,
+      }),
+    );
+  } catch {
+    raw = null;
+  }
+  const parsed = raw ? parseAiSuggestion(raw) : null;
+  if (!parsed) return { ok: true, draft: fallback.draft, source: "fallback" };
+  const text = `${parsed.profile}\n${parsed.outcomes}`;
+  if (OWNS_PATH.test(text)) return { ok: true, draft: fallback.draft, source: "fallback" };
+  if (mentionsSomeoneElse(text, input.person.name, (input.others ?? []).map((row) => row.name))) {
+    return { ok: true, draft: fallback.draft, source: "fallback" };
+  }
+  return {
+    ok: true,
+    source: "ai",
+    draft: {
+      profile: parsed.profile,
+      outcomes: parsed.outcomes,
+      changed: parsed.profile !== input.person.profile.trim() || parsed.outcomes !== input.person.outcomes.trim(),
+    },
+  };
+}
+
 export function applyAssist(
   brain: LivingBrain,
   actor: BrainActor,
@@ -230,6 +363,40 @@ export function applyAssist(
           outcomes: drafted.draft.outcomes,
           ownsOutcomes: false as const,
         }
+      : { ...row, ownsOutcomes: false as const },
+  );
+  const listed = brain.room === "sales" ? people.filter((row) => row.kind !== "child" && row.login === "member") : people;
+  return {
+    ok: true,
+    brain: {
+      ...brain,
+      facts: deskFacts(brain.room, listed) || brain.facts,
+      people: listed,
+    },
+  };
+}
+
+/** Write an already chosen profile and next step, then refresh the org line. */
+export function applyPreparedAssist(
+  brain: LivingBrain,
+  actor: BrainActor,
+  membershipId: string,
+  draft: { profile: string; outcomes: string },
+): { ok: true; brain: LivingBrain } | { ok: false; error: string } {
+  if (actor.kind === "child") return { ok: false, error: "child_has_no_login" };
+  if (!actorMayWrite(actor)) return { ok: false, error: "not_leader" };
+  if (actor.org !== brain.room) return { ok: false, error: "wrong_desk" };
+  const person = brain.people.find((row) => row.membershipId === membershipId);
+  if (!person) return { ok: false, error: "not_on_desk" };
+  if (!personAllowed(brain.room, person, actor.membershipId)) {
+    return { ok: false, error: brain.room === "sales" ? "sales_has_no_children" : "child_has_no_login" };
+  }
+  const profile = clip(draft.profile);
+  const outcomes = clip(draft.outcomes);
+  if (!profile || !outcomes) return { ok: false, error: "no_context" };
+  const people = brain.people.map((row) =>
+    row.membershipId === membershipId
+      ? { ...row, profile, outcomes, ownsOutcomes: false as const }
       : { ...row, ownsOutcomes: false as const },
   );
   const listed = brain.room === "sales" ? people.filter((row) => row.kind !== "child" && row.login === "member") : people;
