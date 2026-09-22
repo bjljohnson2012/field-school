@@ -1,56 +1,30 @@
 # Field School PM loop
-Coordinator for Cursor Project `bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133`.
-Read `FIELD-SCHOOL-ETHOS-MEMO.md` then `docs/staff/THREE_LOOPS.md`.
-THREE_LOOPS is the product plan (Library, Composer, Portal). Ethos memo wins on Child vs User, prices, AUTH_URL, dest, person-in-development-as-buyer.
+Coordinator for `bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133`.
+You do not write `app/` yourself. You run `docs/staff/BUILD_GRAPH.md` in a loop.
 
-You do not write `app/` yourself. Spawn builder + checker + evaluator. Finish. Report. Open the next gap on the three loops.
+Read `docs/LAW.md` first. Ethos memo wins on Child vs User, prices, AUTH_URL, dest.
+SHELLS.md wins on chrome. BUILD_GRAPH wins on next node.
 
-## End
+## Every cycle
 
-Week done-when in THREE_LOOPS: one upload-or-text source and one Cap take become approved LessonSpecs. Assigned to one salesperson (login) and one tracked child (no login). Each has a visible next step. Teach live opens for the leader.
+1. Pull origin/main.
+2. Read LAW + BUILD_GRAPH + SHELLS.
+3. Restate desired state (four lines from BUILD_GRAPH).
+4. Print node table: PASS / IN_FLIGHT / READY / BLOCKED.
+5. Ready = deps PASS, files free, not HELD.
+6. Spawn ≤2 streams. Builder + checker + evaluator. One room per ticket.
+7. Finish. Dean reply. Flip node rows to PASS on main (docs commit or PR).
+8. Spawn the next ready set in the same chat. Do not wait.
 
-Launch stays CLOSED.
+Stop a stream: lock, budget, two identical verify fails, NEEDS YOU.
+Stop the project: N15 PASS or CDM hold.
 
-## Cadence
+Cycle 1 from the graph: N1 Chrome parallel N2 Insights (new files). Then N3 New menu. Not N1+N3 together (`site-header.tsx`).
 
-1. Pull origin/main. Read ethos + THREE_LOOPS.
-2. Restate the week done-when.
-3. List what still blocks Library, Composer, Portal.
-4. Spawn at most two streams. One room per ticket. One verb per ticket. Files must not collide.
-5. Finish. Dean reply.
-6. Queue Cycle 2 from THREE_LOOPS. Do not wait for a new chat.
+## Do not
 
-Stop a stream on lock, budget, two identical verify failures, or NEEDS YOU.
-
-## Stack rules for spawners
-
-- Product UI stays Next in `app/`.
-- Do not start a Django app.
-- FastAPI is a worker for extract / spec / embed / render only. Cycle 2, not Cycle 1, unless extract is the blocker.
-- Celery + Redis come with that worker. They replace `render.lock`.
-- pgvector stays. No Qdrant this week.
-- Remotion stays in `plates/`. HLS or player in Next. No Remotion-in-Next.
-- LessonSpec maps onto existing courses / lessons / knowledge_units / quiz_items. Do not invent a second lesson table if 0005 already holds it.
-
-## Unfinished map
-
-Library: ReviewRail on Wave 3 teach. Four intakes. LessonSpec. Teach live. Make video (queued).
-Composer: approve, units, source_unit_id.
-Portal Learn: NextCard home.
-Portal Lead: people, assign, EvalSheet.
-Brain: embed later.
-Held: dest hash, AUTH_URL, family LIVE `bc-4765f2f0`, Just, public site, Launch PASS, child login, Django rewrite.
-
-Store files for ICP/Brand wait until the week done-when is true.
-
-## Spawn rules
-
-- Two streams. Third waits.
-- Household tickets do not rewrite teammate identity. Team tickets do not rewrite Child identity.
-- Do not steal `bc-4765f2f0`.
-- Cap take and file upload are allowed inputs.
-- Builder never writes EVALUATOR. Checker is binary.
+Resume Wave 2. Open `cursor/wave-N-*`. Steal `bc-4765f2f0`. Django. Pages in FastAPI. Qdrant. Child login. Mix rooms on one desk. Invent Launch 8/8.
 
 ## Dean reply
 
-Week done-when. Library / Composer / Portal. FastAPI needed this cycle or not. Agents. PRs. Visible next step proof. Next two streams. Human needed.
+Desired (4 lines). Graph statuses. Spawned. PRs. Sales desk zero children? Five-item bar? Next ready. Human needed.
