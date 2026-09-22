@@ -21,6 +21,15 @@ const roster = [
     login: "member",
   },
   {
+    membershipId: "sales-trainer",
+    name: "Cara",
+    kind: "adult",
+    stance: "trainer",
+    org: "sales",
+    orgName: "Sales team",
+    login: "member",
+  },
+  {
     membershipId: "sales-child",
     name: "Wrong room",
     kind: "child",

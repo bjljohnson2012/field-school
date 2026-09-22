@@ -56,6 +56,7 @@ export function peopleForDesk(people: readonly PersonRow[], desk: Desk): PersonR
     return people.filter(
       (person) =>
         person.org === SALES_SLUG &&
+        person.stance === "learner" &&
         !isChild(person) &&
         !loginIsNone(person) &&
         person.login.trim().length > 0,
