@@ -1,0 +1,11 @@
+{
+  "segments": [
+    {
+      "words": [
+        {"word": "Keep", "start": 0.12, "end": 0.48, "score": 0.91, "speaker": "SPEAKER_00"},
+        {"word": " moving", "start": 0.5, "end": 0.92, "score": 0.88},
+        {"word": "today.", "start": 1.02, "end": 1.4}
+      ]
+    }
+  ]
+}

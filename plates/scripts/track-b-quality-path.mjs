@@ -1,3 +1,4 @@
+import {readFileSync} from "node:fs";
 import {destLocked, justRefused, LOCKED_JUST_ID} from "./render-lock.mjs";
 import {collectWhisperxWords, whisperxWordsToCaptions} from "./whisperx-to-captions.mjs";
 
@@ -17,6 +18,33 @@ function inNext(dest) {
   return value.includes("/app/") || value.includes("player-rail") || value.includes("node_modules/remotion");
 }
 
+/** WhisperX words become Caption[] on the Track B path. Speaker labels are dropped. */
+export function mapTrackBCaptions(words) {
+  return whisperxWordsToCaptions(collectWhisperxWords(words)).map((caption) => ({
+    text: caption.text,
+    startMs: caption.startMs,
+    endMs: caption.endMs,
+    timestampMs: null,
+    confidence: null,
+  }));
+}
+
+function fixtureWav(audio) {
+  const path = String(audio || "").trim();
+  if (!path.endsWith(".wav")) return {ok: false, error: "fixture_audio"};
+  if (destLocked(path) || justRefused(path)) return {ok: false, error: "locked_dest"};
+  let header;
+  try {
+    header = readFileSync(path).subarray(0, 12);
+  } catch {
+    return {ok: false, error: "fixture_audio"};
+  }
+  if (header.length < 12 || header.toString("ascii", 0, 4) !== "RIFF" || header.toString("ascii", 8, 12) !== "WAVE") {
+    return {ok: false, error: "fixture_audio"};
+  }
+  return {ok: true, audio: path};
+}
+
 /**
  * Plan one factory take. Does not render. Does not write a file.
  * Cap take → WhisperX words → four plates → master.mp4.
@@ -30,9 +58,11 @@ export function planQualityPath(input) {
   if (inNext(dest) || input?.target === "next") return {ok: false, error: "remotion_stays_in_plates"};
   if (!samePlates(plates)) return {ok: false, error: "four_plates"};
   if (!dest.endsWith("master.mp4")) return {ok: false, error: "master_mp4"};
+  const audio = input?.audio ? fixtureWav(input.audio) : {ok: true, audio: ""};
+  if (!audio.ok) return audio;
   let captions;
   try {
-    captions = whisperxWordsToCaptions(collectWhisperxWords(input.words));
+    captions = mapTrackBCaptions(input.words);
   } catch {
     return {ok: false, error: "whisperx_words"};
   }
@@ -41,6 +71,7 @@ export function planQualityPath(input) {
     ok: true,
     stages: TRACK_B_STAGES,
     capId,
+    audio: audio.audio,
     captions,
     plates: FOUR_PLATES,
     dest,
@@ -66,7 +97,19 @@ export function auditQualityPath(plan) {
     "VOX-H08":
       Array.isArray(plan?.captions) &&
       plan.captions.length > 0 &&
-      plan.captions.every((caption) => typeof caption.text === "string" && caption.text.startsWith(" ") && Number.isFinite(caption.startMs))
+      plan.captions.every(
+        (caption, index, all) =>
+          typeof caption.text === "string" &&
+          caption.text.startsWith(" ") &&
+          !caption.text.slice(1).startsWith(" ") &&
+          caption.timestampMs === null &&
+          caption.confidence === null &&
+          !("speaker" in caption) &&
+          Number.isFinite(caption.startMs) &&
+          Number.isFinite(caption.endMs) &&
+          caption.startMs < caption.endMs &&
+          (index === 0 || caption.startMs >= all[index - 1].startMs),
+      )
         ? "PASS"
         : "HARD_FAIL",
     "VOX-H10": plan?.target === "plates" && plan?.renders === false && !inNext(plan?.dest) ? "PASS" : "HARD_FAIL",
