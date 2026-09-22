@@ -453,7 +453,31 @@ export type UseSignal = {
   personKind: string;
   login: "none" | "member";
   step: string;
+  /** The step after the one just finished. Empty keeps the finished step as next. */
+  following?: string;
 };
+
+function finishing(kind: UseKind) {
+  return kind === "learn" || kind === "progress";
+}
+
+/** The open unit is today's step. Finishing it names the unit after it. The last unit does not move. */
+export function stepAfterFinish(input: {
+  units: Array<{ id: string; title: string }>;
+  currentId?: string;
+}): { finished: string; next: string } | null {
+  if (input.units.length === 0) return null;
+  const current =
+    (input.currentId ? input.units.find((unit) => unit.id === input.currentId) : undefined) || input.units[0];
+  const index = input.units.findIndex((unit) => unit.id === current.id);
+  if (index < 0) return null;
+  const next = input.units[index + 1];
+  if (!next) return null;
+  const finished = current.title.trim();
+  const following = next.title.trim();
+  if (!finished || !following) return null;
+  return { finished, next: following };
+}
 
 function useLabel(kind: UseKind) {
   if (kind === "assign") return "Assigned.";
@@ -482,20 +506,27 @@ export function refreshFromUse(
     }
     const leader = actorMayWrite(actor);
     if (leader && self) return { ok: false, error: "not_on_desk" };
-    if (!leader && (!self || (signal.kind !== "learn" && signal.kind !== "progress"))) {
+    if (!leader && (!self || !finishing(signal.kind))) {
       return { ok: false, error: "not_leader" };
     }
-  } else if (signal.personKind !== "child" || signal.login !== "none" || !actorMayWrite(actor) || self) {
+  } else if (signal.personKind !== "child" || signal.login !== "none" || self) {
     return { ok: false, error: signal.personKind === "child" && signal.login === "none" ? "not_leader" : "child_has_no_login" };
+  } else if (!finishing(signal.kind) && !actorMayWrite(actor)) {
+    return { ok: false, error: "not_leader" };
   }
   const name = clip(signal.name) || "This person";
+  const following = clip(signal.following || "");
+  const nextStep = following || step;
+  const profile = following
+    ? clip(`${useLabel(signal.kind)} Finished ${step}. Next step is ${following}.`)
+    : clip(`${useLabel(signal.kind)} Next step is ${step}.`);
   const nextPerson: LivingPerson = {
     membershipId: signal.membershipId,
     name,
     kind: signal.personKind,
     login: signal.login,
-    profile: clip(`${useLabel(signal.kind)} Next step is ${step}.`),
-    outcomes: step,
+    profile,
+    outcomes: nextStep,
     ownsOutcomes: false,
   };
   const merged = brain.people.some((row) => row.membershipId === signal.membershipId)
@@ -507,7 +538,7 @@ export function refreshFromUse(
     ok: true,
     brain: {
       ...brain,
-      facts: deskFacts(brain.room, people) || clip(`${name}: next step is ${step}.`),
+      facts: deskFacts(brain.room, people) || clip(`${name}: next step is ${nextStep}.`),
       people,
     },
   };

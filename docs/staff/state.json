@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T19:58:00Z",
+  "updated": "2026-09-22T20:05:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "A suggestion uses the org AI key when one is configured, and the current assist when it is not. The saved profile and next step stay on the living brain. Home child has no login and cannot save. Sales desk shows no children. Leader owns the save."
+      "evidence": "Finishing a step updates that person's outcome and the next step while the parent or leader is away. Home child has no login and cannot save. Sales teammate may sign in. Leader owns outcomes. Sales desk shows no children."
     },
     "N15": {
       "status": "PASS",
@@ -114,5 +114,5 @@
   "last_pick": [
     "N15"
   ],
-  "last_clock": "15-continue"
+  "last_clock": "15-follow"
 }
