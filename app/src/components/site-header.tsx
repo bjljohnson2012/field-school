@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
@@ -21,37 +20,25 @@ const linkClass =
   "flex h-11 items-center px-2 text-muted-foreground hover:text-foreground sm:px-2.5";
 
 function NewMenu() {
-  const pathname = usePathname();
-  const here = NEW_DOORS.some(
-    (door) => pathname === door.href || pathname.startsWith(`${door.href}/`),
-  );
-
   return (
     <details className="relative">
-      <summary
-        className={`${linkClass} cursor-pointer list-none ${here ? "text-foreground" : ""}`}
-      >
+      <summary className={`${linkClass} cursor-pointer list-none`}>
         New
       </summary>
       <div className="absolute right-0 z-40 mt-1 flex min-w-44 flex-col rounded-xl border border-border bg-background p-1 shadow-md">
-        {NEW_DOORS.map((door) => {
-          const current =
-            pathname === door.href || pathname.startsWith(`${door.href}/`);
-          return (
-            <Link
-              key={door.href}
-              href={door.href}
-              aria-current={current ? "page" : undefined}
-              className={`${linkClass} whitespace-nowrap ${current ? "text-foreground" : ""}`}
-              onClick={(event) => {
-                const root = event.currentTarget.closest("details");
-                if (root) root.open = false;
-              }}
-            >
-              {door.label}
-            </Link>
-          );
-        })}
+        {NEW_DOORS.map((door) => (
+          <Link
+            key={door.href}
+            href={door.href}
+            className={`${linkClass} whitespace-nowrap`}
+            onClick={(event) => {
+              const root = event.currentTarget.closest("details");
+              if (root) root.open = false;
+            }}
+          >
+            {door.label}
+          </Link>
+        ))}
       </div>
     </details>
   );
