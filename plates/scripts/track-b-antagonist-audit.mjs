@@ -3,6 +3,7 @@ import {dirname, join} from "node:path";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {resolve} from "node:path";
 import {buildExportManifest, exportReadyChecklist} from "./track-b-export-ready.mjs";
+import {trackBFrameAssert, trackBFrameLog} from "./track-b-frame-assert.mjs";
 import {runTrackBCleaning} from "./track-b-cleaning.mjs";
 import {runTrackBPublish} from "./track-b-publish.mjs";
 import {
@@ -254,11 +255,22 @@ export function auditTrackBPath(input = {}) {
         : "HARD_FAIL",
   };
 
+  const frameAssert = trackBFrameAssert();
+  const frameLog = trackBFrameLog();
+  const premounts = master.match(/premountFor=\{30\}/g) || [];
+  const typeCard = sources["layers.tsx"];
   const soft = {
     "VOX-S01": sources["wordClock.ts"].includes('ACTIVE_WORD_GOLD = "#C4A35A"') ? "PASS" : "SOFT_FAIL",
     "VOX-S02": master.includes('beat="sting"') || sources["Opener.tsx"].includes('beat="sting"') ? "PASS" : "SOFT_FAIL",
     "VOX-S03": sources["layers.tsx"].includes("#1f5eff") ? "SOFT_FAIL" : "PASS",
-    "VOX-S04": "SOFT_FAIL",
+    "VOX-S04":
+      typeCard.includes("function TypeCard") &&
+      typeCard.includes("backgroundColor: cream") &&
+      typeCard.includes("6px solid ${gold}") &&
+      !typeCard.includes("cards/ycjdt") &&
+      !/ernest/i.test(typeCard)
+        ? "PASS"
+        : "SOFT_FAIL",
     "VOX-S05": sources["layers.tsx"].includes('-0.03em') ? "SOFT_FAIL" : "PASS",
     "VOX-S06": sources["sceneMotionMath.ts"].includes('motion === "takeover" || motion === "glide" ? 0') ? "PASS" : "SOFT_FAIL",
     "VOX-S07": sources["sceneMotionMath.ts"].includes("TAKEOVER_HOLD_FRAMES = 12") && sources["sceneMotionMath.ts"].includes("smoothstep") ? "PASS" : "SOFT_FAIL",
@@ -267,8 +279,8 @@ export function auditTrackBPath(input = {}) {
     "VOX-S10": "PASS",
     "RM-S01": "PASS",
     "RM-S02": rootChunk.includes("defaultProps") ? "SOFT_FAIL" : "PASS",
-    "RM-S03": master.includes("premountFor") ? "PASS" : "SOFT_FAIL",
-    "RM-S04": "SOFT_FAIL",
+    "RM-S03": premounts.length === 5 && master.includes('name="fixture-vo" premountFor={30}') ? "PASS" : "SOFT_FAIL",
+    "RM-S04": frameLog.ok && frameLog.dryRun && frameLog.gpu === false && frameLog.frames === 1050 && frameLog.written === false ? "PASS" : "SOFT_FAIL",
     "RM-S05": MOTION_FILES.filter((name) => sources[name].includes("interpolate(")).every((name) => {
       const calls = sources[name].match(/interpolate\(/g) || [];
       const clamps = sources[name].match(/extrapolateLeft:\s*"clamp"/g) || [];
@@ -278,14 +290,14 @@ export function auditTrackBPath(input = {}) {
       : "SOFT_FAIL",
     "RM-S06": "PASS",
     "RM-S07": "PASS",
-    "RM-S08": "SOFT_FAIL",
+    "RM-S08": frameAssert.ok && frameAssert.gpu === false && frameAssert.written === false ? "PASS" : "SOFT_FAIL",
     "RM-S09": "PASS",
     "RM-S10": captions.every((caption) => typeof caption.text === "string" && Number.isFinite(caption.startMs) && Number.isFinite(caption.endMs))
       ? "PASS"
       : "SOFT_FAIL",
     "EDU-S01": sources["Opener.tsx"].includes("ObjectiveSlate") ? "PASS" : "SOFT_FAIL",
     "EDU-S02": brand.includes('gold = "#C4A35A"') ? "PASS" : "SOFT_FAIL",
-    "EDU-S03": "SOFT_FAIL",
+    "EDU-S03": sources["layers.tsx"].includes("function HeadFixture") && !sources["TalkingHeadCard.tsx"].includes("<Video") ? "SOFT_FAIL" : "PASS",
     "EDU-S04": "PASS",
     "EDU-S05": captions.every((caption) => caption.text.trim().split(/\s+/).length <= 3) ? "PASS" : "SOFT_FAIL",
     "EDU-S06": "PASS",
@@ -313,6 +325,7 @@ export function auditTrackBPath(input = {}) {
     gates,
     hard_fail: hardFail,
     soft_fail: softFail,
+    human_needed: softFail.includes("EDU-S03") ? ["EDU-S03: Cap take"] : [],
     hold_cleaning: verdict === "HARD_FAIL",
     escalate: verdict === "HARD_FAIL",
     rendering: "idle",

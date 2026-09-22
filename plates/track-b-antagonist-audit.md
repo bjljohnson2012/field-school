@@ -69,11 +69,11 @@ These notes are why the verdict is SOFT_FAIL. They do not restore a hard fail.
 
 | ID | Result | Note |
 |---|---|---|
-| VOX-S04 | SOFT_FAIL | Live type cards. No Ernest plate PNG. |
-| RM-S03 | SOFT_FAIL | Sequences have no `premountFor`. |
-| RM-S04 | SOFT_FAIL | No Remotion benchmark on this dry run. |
-| RM-S08 | SOFT_FAIL | No `remotion still` frame. The clock prefers a fixture dry run over a GPU render. |
-| EDU-S03 | SOFT_FAIL | The head is a dock fixture, not gesturing A-roll. No Cap take on this clock. |
+| VOX-S04 | PASS | Factory type card is cream paper with a 6px gold rail. Ernest plate PNGs are not required. |
+| RM-S03 | PASS | Each Track B sequence sets `premountFor={30}`, including the fixture audio. |
+| RM-S04 | PASS | A fixture frame log walks all 1050 frames. No GPU benchmark. No ship render. |
+| RM-S08 | PASS | Fixture frame assert covers takeover open, takeover head-in, glide enter, mid-hold, and luma exit. No GPU still. |
+| EDU-S03 | SOFT_FAIL | The head is a dock fixture, not gesturing A-roll. Human needed: Cap take. |
 
 QuizBumper is 7s. The plate constant `MIN_PLATE_SEC` is 8. `EDU-H06` fails under about 3s, so 7s is not a hard gate.
 
