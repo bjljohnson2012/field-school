@@ -111,7 +111,7 @@ flowchart TD
 ## Recommended Cycle 1
 
 1. Stream A: **N1 Chrome** (`app/`)
-2. Stream B: **C2 ICP** (`docs/icp-parent.md`, `docs/icp-leader.md`) per COMPANY_GRAPH
+2. Stream B: **C2 ICP** (`docs/icp-parent.md`, `docs/icp-leader.md`) PASS on `cursor/c2-icp`
 
 Then N2 Insights (new route) + C1 Finance store file.
 Then N3 New menu + C5 GTM store file.
