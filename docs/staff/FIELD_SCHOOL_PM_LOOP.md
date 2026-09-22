@@ -1,63 +1,56 @@
 # Field School PM loop
-Coordinator instructions for the Field School PM Cursor Project (`bc-882e8bdf`).
-Read `FIELD-SCHOOL-ETHOS-MEMO.md` first. This file does not replace the memo. It tells you how to run toward the end.
+Coordinator for Cursor Project `bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133`.
+Read `FIELD-SCHOOL-ETHOS-MEMO.md` (job and locks) then `docs/staff/THREE_LOOPS.md` (what to build).
+THREE_LOOPS is the product plan. The ethos memo still wins on Child vs User, prices, AUTH_URL, dest, and person-in-development-as-buyer.
 
-You do not write `app/` yourself. You spawn builders, checkers, and evaluators. You finish work. You report. You spawn the next gap. You do not stop because a local seal felt complete.
+You do not write `app/` yourself. You spawn builders, checkers, and evaluators. You finish. You report. You open the next gap on the three loops. You do not stop at a dest SHA, a hire-path test, or a store file.
 
 ## End
 
-A workable, sustainable, growing company.
-A hirer invests at https://portal.fieldschool.ai.
-A person in development keeps moving when the hirer is not in the room.
-That person gets better. The organization gets better.
-A human can hire the next hirer in household and in team.
-Launch stays CLOSED until CDM writes 8/8 against `docs/prelaunch/LAUNCH_GATE.md`.
+See THREE_LOOPS. Week done-when: one real Cap take becomes a published lesson, assigned to one salesperson (login) and one tracked child (no login), each with a visible next step.
 
-Job sentence lives in the memo §1. Locks live in the memo §2. Do not invent a new job to feel bigger. Do not treat "tests passed" as the end.
+Launch stays CLOSED. This loop is not 8/8.
 
 ## Cadence
 
-Every cycle:
+1. Pull origin/main. Read ethos memo + THREE_LOOPS.
+2. Restate the week done-when.
+3. List what still blocks Factory, Composer, Portal.
+4. Spawn at most two streams whose files cannot collide. One room per ticket. One verb per ticket.
+5. Finish. Proofs. Dean reply.
+6. Queue the next two streams from THREE_LOOPS build order. Do not wait for a new chat.
 
-1. Read `FIELD-SCHOOL-ETHOS-MEMO.md`.
-2. Restate the end in one paragraph.
-3. List unfinished work that still blocks the end. Map is eight seats × two rooms. Not sixteen tickets at once.
-4. Pick the highest-leverage items whose files cannot collide.
-5. Spawn at most two streams. Each stream: builder + checker + evaluator. One room per stream. One verb per stream.
-6. Finish. Collect proofs. Reply in Dean shape.
-7. Strike finished items. Open the next unfinished items immediately. Do not wait for a new chat.
+Stop a stream on lock, budget, two identical verify failures, or NEEDS YOU.
+Stop the project when the week done-when is true or CDM holds.
 
-Stop a stream only on: lock would move, budget hit, two identical verify failures, or `NEEDS YOU`.
-Stop the project only when the end is true or CDM says hold.
+## Unfinished map
 
-## Unfinished map (start here, then keep the list live)
+Factory: finish-to-files operator path. Existing plates only. No new card.
+Composer: Cap/HLS draft lesson, units, quiz with source_unit_id, approve.
+Portal home: course, why, next. For login learner and for tracked child.
+Leader: people list, assign, eval.
+Brain: pgvector over this org's units and notes. Not a JSON dump.
+Held: dest hash, AUTH_URL, family LIVE `bc-4765f2f0`, Just, public site, Launch PASS, new SKU, child login.
 
-Product household — tests on merged PR 196 / 197. Parent six-event session.
-Product team — leader six-event session. Not on `bc-2ed44fed`. Not on `bc-4765f2f0`. No team price.
-ICP — `docs/icp-parent.md` and `docs/icp-leader.md`.
-Brand / Offer / Marketing / Sales / Legal — store files to memo §4 headings, one room per file.
-Plan — Sunday score of both rooms against the end.
-Held — PR 198 FR-KB-1 unless a brief names it. Dest, AUTH_URL, family LIVE, Launch PASS.
+ICP/Brand/Offer store files wait until the week done-when is true.
 
 ## Spawn rules
 
-- Household product stays on `bc-2ed44fed`.
-- Team product uses a different stream.
-- Prose seats may run as High autonomy store files. Still one room per file. Still an evaluator.
-- Two streams in flight. Third waits.
-- Builder never writes EVALUATOR. Evaluator never edits files.
-- Checker is binary.
+- Two streams. Third waits.
+- Household tickets do not rewrite teammate identity. Team tickets do not rewrite Child identity.
+- Do not steal `bc-4765f2f0`.
+- Remotion stays in `plates/`. HLS in the player. No Remotion-in-Next.
+- Builder never writes EVALUATOR. Evaluator never edits files. Checker is binary.
+- Cap take is allowed. It is the factory input, not a forbid.
 
 ## Dean reply, every cycle
 
-- End restated (one paragraph)
-- Unfinished list (struck vs open)
-- Agents spawned this cycle (room, seat, role)
+- Week done-when restated
+- Factory / Composer / Portal: moved or blocked
+- Agents spawned (room, loop, role)
 - PR / file links
-- Proof table
-- Health curls if code moved
-- What still blocks the end
-- Next two streams already queued
+- Proof a person has a visible next step, or why not
+- Next two streams queued
 - Human needed
 
-If the reply cannot name the next two streams toward the end, the cycle is incomplete. Queue them before you stop talking.
+If you cannot name the next two streams toward the week done-when, the cycle is incomplete.
