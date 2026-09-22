@@ -2022,3 +2022,23 @@ test("teach and assign show Aim and Confidence when the living brain has them", 
   assert.doesNotMatch(assign, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
   assert.doesNotMatch(header, /href: "\/teach-aim"|href: "\/assign-aim"/);
 });
+
+test("insights shows Aim and Confidence when the living brain has them", () => {
+  const charts = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../app/insights/charts.tsx"), "utf8");
+  const page = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../app/insights/page.tsx"), "utf8");
+  const header = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../components/site-header.tsx"), "utf8");
+  assert.match(charts, /board\.outcome \?/);
+  assert.match(charts, /data-aim-label="Aim"/);
+  assert.match(charts, /person\.confidence \?/);
+  assert.match(charts, /data-confidence-label="Confidence"/);
+  assert.match(charts, /What this family is aiming for/);
+  assert.match(charts, /What this team is aiming for/);
+  assert.match(charts, /How they are doing/);
+  assert.match(charts, /data-sales-children=\{board\.room === "sales" \? "0" : undefined\}/);
+  assert.match(charts, /person\.login === "none" \? "No login"/);
+  assert.match(page, /sign_in_required/);
+  assert.match(page, /child_has_no_login/);
+  assert.doesNotMatch(charts, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+  assert.doesNotMatch(page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+  assert.doesNotMatch(header, /href: "\/insights-aim"/);
+});
