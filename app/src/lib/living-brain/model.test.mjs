@@ -3,7 +3,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { applyAssist, applyFactsAssist, applyPreparedAssist, assistDraft, assistFacts, brainBoard, chooseNextStep, learnHomeContext, nextStepTrail, parseAiSuggestion, personConfidence, pickSuggestionKey, readForTool, refreshFromUse, rememberOutcome, setConfidence, setOrgOutcome, shapeBrain, stepAfterFinish, suggestForPerson, updateOutcome } from "./model.ts";
+import { applyAssist, applyFactsAssist, applyPreparedAssist, assistDraft, assistFacts, brainBoard, chooseNextStep, learnHomeContext, nextStepTrail, parseAiSuggestion, peopleContext, personConfidence, pickSuggestionKey, readForTool, refreshFromUse, rememberOutcome, setConfidence, setOrgOutcome, shapeBrain, stepAfterFinish, suggestForPerson, updateOutcome } from "./model.ts";
 
 const parent = { kind: "adult", stance: "guardian", org: "household", membershipId: "parent-1" };
 const leader = { kind: "adult", stance: "trainer", org: "sales", membershipId: "leader-1" };
@@ -1895,4 +1895,93 @@ test("learn home reads the aim, how that person is doing, and the next step in b
   assert.match(page, /How they are doing/);
   assert.doesNotMatch(page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
   assert.doesNotMatch(header, /href: "\/learn-home"/);
+});
+
+test("people reads how each person is doing and the next step in both rooms", () => {
+  const home = shapeBrain({
+    orgId: "org-home",
+    room: "household",
+    facts: "Ada: Read the morning page.",
+    outcome: "Finish the year reading aloud",
+    actorId: "parent-1",
+    people: [
+      {
+        membershipId: "child-1",
+        name: "Ada",
+        kind: "child",
+        login: "none",
+        profile: "Reads at the table.",
+        outcomes: "Read the morning page",
+        confidence: "Steady at the table",
+      },
+    ],
+  });
+  assert.equal(home.ok, true);
+  if (!home.ok) return;
+  const homeRows = peopleContext({ room: "household", brain: home.brain });
+  assert.equal(homeRows.length, 1);
+  assert.equal(homeRows[0].membershipId, "child-1");
+  assert.equal(homeRows[0].login, "none");
+  assert.equal(homeRows[0].confidence, "Steady at the table");
+  assert.equal(homeRows[0].nextStep, "Read the morning page");
+  assert.equal(home.brain.people[0].ownsOutcomes, false);
+  const childWrite = updateOutcome(home.brain, { ...parent, kind: "child", membershipId: "child-1" }, "child-1", "A login");
+  assert.deepEqual(childWrite, { ok: false, error: "child_has_no_login" });
+
+  const sales = shapeBrain({
+    orgId: "org-sales",
+    room: "sales",
+    facts: "Kai: Name the next call.",
+    outcome: "Close the quarter on the next call",
+    actorId: "leader-1",
+    people: [
+      {
+        membershipId: "rep-1",
+        name: "Kai",
+        kind: "adult",
+        login: "member",
+        profile: "Knows the next call.",
+        outcomes: "Name the next call",
+        confidence: "Moving on the calls",
+      },
+    ],
+  });
+  assert.equal(sales.ok, true);
+  if (!sales.ok) return;
+  const withChild = {
+    ...sales.brain,
+    people: [
+      ...sales.brain.people,
+      {
+        membershipId: "child-9",
+        name: "Wrong room",
+        kind: "child",
+        login: "none",
+        profile: "no",
+        outcomes: "Do not show",
+        ownsOutcomes: false,
+        history: [],
+        confidence: "Do not show",
+      },
+    ],
+  };
+  const salesRows = peopleContext({ room: "sales", brain: withChild });
+  assert.equal(salesRows.length, 1);
+  assert.equal(salesRows[0].membershipId, "rep-1");
+  assert.equal(salesRows[0].login, "member");
+  assert.equal(salesRows[0].confidence, "Moving on the calls");
+  assert.equal(salesRows[0].nextStep, "Name the next call");
+  assert.equal(salesRows.some((row) => row.confidence === "Do not show" || row.nextStep === "Do not show"), false);
+  assert.equal(sales.brain.people[0].ownsOutcomes, false);
+
+  const page = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../app/people/page.tsx"), "utf8");
+  const header = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../components/site-header.tsx"), "utf8");
+  assert.match(page, /peopleContext/);
+  assert.match(page, /data-confidence=/);
+  assert.match(page, /data-next-step=/);
+  assert.match(page, /How they are doing/);
+  assert.match(page, /Next step/);
+  assert.doesNotMatch(page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+  assert.doesNotMatch(page, /href: "\/people-brain"/);
+  assert.doesNotMatch(header, /href: "\/people-brain"/);
 });

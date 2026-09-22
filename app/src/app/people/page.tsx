@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { peopleContext, type LivingBrain } from "@/lib/living-brain/model";
 import {
   DESK_COPY,
   JOB_SENTENCE,
@@ -12,6 +13,8 @@ import {
   type PersonRow,
 } from "./desk";
 
+type BrainLine = { membershipId: string; confidence: string; nextStep: string };
+
 export default function PeoplePage() {
   const [roster, setRoster] = useState<PersonRow[]>([]);
   const [desk, setDesk] = useState<Desk | null>(null);
@@ -19,6 +22,26 @@ export default function PeoplePage() {
   const [staff, setStaff] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const [lines, setLines] = useState<BrainLine[]>([]);
+
+  async function loadLines(room: Desk) {
+    try {
+      const response = await fetch("/api/living-brain");
+      if (!response.ok) {
+        setLines([]);
+        return;
+      }
+      const data = (await response.json()) as { brain?: LivingBrain };
+      const brain = data.brain;
+      if (!brain || brain.room !== room) {
+        setLines([]);
+        return;
+      }
+      setLines(peopleContext({ room, brain }));
+    } catch {
+      setLines([]);
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -52,14 +75,15 @@ export default function PeoplePage() {
         const isStaff = Boolean(data.staff);
         setStaff(isStaff);
         setChoices(roomsFor(slugs, isStaff));
-        setDesk(
-          initialDesk({
-            activeSlug: me.activeOrg?.slug || data.org || "",
-            membershipSlugs: slugs,
-            staff: isStaff,
-          }),
-        );
+        const active = initialDesk({
+          activeSlug: me.activeOrg?.slug || data.org || "",
+          membershipSlugs: slugs,
+          staff: isStaff,
+        });
+        setDesk(active);
         setRoster(data.people ?? []);
+        if (active) await loadLines(active);
+        if (cancelled) return;
         setReady(true);
       } catch {
         if (!cancelled) {
@@ -86,7 +110,9 @@ export default function PeoplePage() {
       if (!res.ok && !staff) {
         setDesk(previous);
         setError("Could not open that room.");
+        return;
       }
+      await loadLines(next);
     } catch {
       if (!staff) {
         setDesk(previous);
@@ -140,22 +166,27 @@ export default function PeoplePage() {
                 <th className="px-4 py-3 font-medium">Stance</th>
                 <th className="px-4 py-3 font-medium">Org</th>
                 <th className="px-4 py-3 font-medium">Login</th>
+                <th className="px-4 py-3 font-medium">How they are doing</th>
+                <th className="px-4 py-3 font-medium">Next step</th>
               </tr>
             </thead>
             <tbody>
               {rows.length === 0 && ready && !error ? (
                 <tr>
-                  <td className="px-4 py-6 text-muted-foreground" colSpan={5}>
+                  <td className="px-4 py-6 text-muted-foreground" colSpan={7}>
                     {copy.empty}
                   </td>
                 </tr>
               ) : (
-                rows.map((person) => (
+                rows.map((person) => {
+                  const line = lines.find((row) => row.membershipId === person.membershipId);
+                  return (
                   <tr
                     key={`${desk}-${person.membershipId}`}
                     className="border-t border-border"
                     data-room={desk}
                     data-kind={copy.kind}
+                    data-sales-children={desk === "sales" ? "0" : undefined}
                   >
                     <td className="px-4 py-3">{person.name}</td>
                     <td className="px-4 py-3">{copy.kind}</td>
@@ -166,8 +197,15 @@ export default function PeoplePage() {
                       </Link>
                     </td>
                     <td className="px-4 py-3">{copy.login}</td>
+                    <td className="px-4 py-3 text-muted-foreground" data-confidence={person.membershipId}>
+                      {line?.confidence || "No note on how they are doing yet."}
+                    </td>
+                    <td className="px-4 py-3" data-next-step={person.membershipId}>
+                      {line?.nextStep || "No next step yet."}
+                    </td>
                   </tr>
-                ))
+                  );
+                })
               )}
             </tbody>
           </table>

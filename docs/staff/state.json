@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T22:00:00Z",
+  "updated": "2026-09-22T22:10:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "Learn home shows what this family or team is aiming for, how that person is doing, and the next step. Home child has no login. Sales desk shows no children. Leader owns outcomes."
+      "evidence": "People shows how each person is doing and their next step. Home child has no login. Sales desk shows no children. Leader owns outcomes."
     },
     "N15": {
       "status": "PASS",
@@ -114,5 +114,5 @@
   "last_pick": [
     "N15"
   ],
-  "last_clock": "post-249"
+  "last_clock": "post-250"
 }
