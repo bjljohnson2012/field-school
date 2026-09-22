@@ -10,6 +10,7 @@ import {
   readForTool,
   refreshFromUse,
   shapeBrain,
+  stepAfterFinish,
   suggestForPerson,
   updateOutcome,
   type BrainActor,
@@ -251,7 +252,54 @@ async function soleOpenLearner(orgId: string, room: Room) {
   };
 }
 
-/** Learn is a watch. Progress is a quiz. The open path names the person when the leader is the one signed in. */
+/** The open portion after today's unit. A miss leaves the stored step where it is. */
+async function advanceOpenStep(orgId: string, room: Room, membershipId: string) {
+  try {
+    const db = getDb();
+    const rows = await db
+      .select({ id: assignments.id, raw: assignments.raw })
+      .from(assignments)
+      .where(
+        and(
+          eq(assignments.orgId, orgId),
+          eq(assignments.membershipId, membershipId),
+          eq(assignments.objectType, "lesson_spec"),
+          eq(assignments.status, "open"),
+        ),
+      );
+    for (const row of rows) {
+      if (!row.raw || typeof row.raw !== "object") continue;
+      const raw = row.raw as Record<string, unknown>;
+      if (raw.room !== room) continue;
+      const spec = raw.lessonSpec;
+      if (!spec || typeof spec !== "object") continue;
+      const unitsRaw = (spec as { units?: unknown }).units;
+      if (!Array.isArray(unitsRaw)) continue;
+      const units = unitsRaw.flatMap((unit) => {
+        if (!unit || typeof unit !== "object") return [];
+        const id = (unit as { id?: unknown }).id;
+        const title = (unit as { title?: unknown }).title;
+        if (typeof id !== "string" || typeof title !== "string") return [];
+        return [{ id, title }];
+      });
+      const currentId = typeof raw.nextUnitId === "string" ? raw.nextUnitId : undefined;
+      const moved = stepAfterFinish({ units, currentId });
+      if (!moved) continue;
+      const next = units.find((unit) => unit.title === moved.next);
+      if (!next) continue;
+      await db
+        .update(assignments)
+        .set({ raw: { ...raw, nextUnitId: next.id }, updatedAt: new Date() })
+        .where(and(eq(assignments.id, row.id), eq(assignments.orgId, orgId)));
+      return moved;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+/** Learn is a watch. Progress is a finished step. The parent or leader does not have to be the one present. */
 export async function noteUseFromEvent(input: {
   orgId: string;
   room: Room;
@@ -272,10 +320,11 @@ export async function noteUseFromEvent(input: {
       kind: input.actor.kind || "adult",
       login: "member",
     };
-  } else if (actorMayWrite(input.actor)) {
+  } else if (input.actor.kind !== "child" && (actorMayWrite(input.actor) || input.room === "household")) {
     person = await soleOpenLearner(input.orgId, input.room);
   }
   if (!person) return { ok: false as const, error: "not_on_desk" };
+  const moved = input.kind === "progress" ? await advanceOpenStep(input.orgId, input.room, person.membershipId) : null;
   return noteUse({
     orgId: input.orgId,
     actor: input.actor,
@@ -285,7 +334,8 @@ export async function noteUseFromEvent(input: {
       name: person.name,
       personKind: person.kind,
       login: person.login,
-      step: input.step,
+      step: moved?.finished || input.step,
+      following: moved?.next,
     },
   });
 }
