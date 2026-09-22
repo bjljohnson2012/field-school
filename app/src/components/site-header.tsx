@@ -10,6 +10,40 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const LEADER_STANCES = new Set(["admin", "guardian", "trainer", "teacher"]);
 
+const NEW_DOORS = [
+  { href: "/library/video", label: "Long-form video" },
+  { href: "/library/wizard", label: "Wizard" },
+  { href: "/settings/ai", label: "Connect AI" },
+] as const;
+
+const linkClass =
+  "flex h-11 items-center px-2 text-muted-foreground hover:text-foreground sm:px-2.5";
+
+function NewMenu() {
+  return (
+    <details className="relative">
+      <summary className={`${linkClass} cursor-pointer list-none`}>
+        New
+      </summary>
+      <div className="absolute right-0 z-40 mt-1 flex min-w-44 flex-col rounded-xl border border-border bg-background p-1 shadow-md">
+        {NEW_DOORS.map((door) => (
+          <Link
+            key={door.href}
+            href={door.href}
+            className={`${linkClass} whitespace-nowrap`}
+            onClick={(event) => {
+              const root = event.currentTarget.closest("details");
+              if (root) root.open = false;
+            }}
+          >
+            {door.label}
+          </Link>
+        ))}
+      </div>
+    </details>
+  );
+}
+
 type NavLink = { href: string; label: string };
 
 function navLinks(opts: {
@@ -33,7 +67,6 @@ function navLinks(opts: {
     { href: "/people", label: "People" },
     { href: org ? `/o/${org}/l` : "/dashboard", label: "Library" },
     { href: "/insights", label: "Insights" },
-    { href: org ? `/o/${org}/teach` : "/dashboard", label: "New" },
   ];
 }
 
@@ -62,15 +95,14 @@ export function SiteHeader() {
       .catch(() => undefined);
   }, [loggedIn]);
 
+  const leader = LEADER_STANCES.has(stance);
   const links = navLinks({
     loggedIn,
     guest: guestChrome,
-    leader: LEADER_STANCES.has(stance),
+    leader,
     org,
   });
-
-  const linkClass =
-    "flex h-11 items-center px-2 text-muted-foreground hover:text-foreground sm:px-2.5";
+  const showNew = loggedIn && leader;
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/88 backdrop-blur-md">
@@ -100,6 +132,7 @@ export function SiteHeader() {
               </Link>
             ))}
           </div>
+          {showNew ? <NewMenu /> : null}
           <details className="relative md:hidden">
             <summary className="flex h-11 cursor-pointer list-none items-center px-2 text-muted-foreground">
               Menu
