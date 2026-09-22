@@ -102,14 +102,22 @@ export function AssignDesk() {
   const [brainNext, setBrainNext] = useState<Record<string, string>>({});
   const [brainTrail, setBrainTrail] = useState<Record<string, OutcomeMark[]>>({});
   const [brainConfidence, setBrainConfidence] = useState<Record<string, string>>({});
+  const [brainAim, setBrainAim] = useState("");
 
   async function loadBrain(room: DeskRoom) {
     try {
       const res = await fetch("/api/living-brain");
-      if (!res.ok) return;
+      if (!res.ok) {
+        setBrainAim("");
+        return;
+      }
       const data = (await res.json()) as { brain?: LivingBrain };
       const brain = data.brain;
-      if (!brain || brain.room !== room) return;
+      if (!brain || brain.room !== room) {
+        setBrainAim("");
+        return;
+      }
+      setBrainAim(brain.outcome || "");
       const map: Record<string, string> = {};
       const trails: Record<string, OutcomeMark[]> = {};
       const notes: Record<string, string> = {};
@@ -128,6 +136,7 @@ export function AssignDesk() {
       setBrainNext({});
       setBrainTrail({});
       setBrainConfidence({});
+      setBrainAim("");
     }
   }
 
@@ -276,6 +285,17 @@ export function AssignDesk() {
       {view.status === "desk" && copy ? (
         <section className="mt-8">
           <p className="text-sm leading-relaxed">{copy.law}</p>
+          {brainAim ? (
+            <p className="mt-6 text-sm" data-org-aim="yes">
+              <span className="text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim">
+                Aim
+              </span>
+              <span className="mt-1 block text-sm font-medium">
+                {view.room === "sales" ? "What this team is aiming for" : "What this family is aiming for"}
+              </span>
+              <span className="mt-1 block text-muted-foreground">{brainAim}</span>
+            </p>
+          ) : null}
           {view.leader ? null : <p className="mt-4 text-sm leading-relaxed">{LEARNER_COPY}</p>}
 
           {view.leader ? (
@@ -374,7 +394,11 @@ export function AssignDesk() {
                           <span className="mt-1 block text-sm text-muted-foreground">{copy.loginLine}</span>
                           {brainConfidence[person.membershipId] ? (
                             <span className="mt-1 block text-xs text-muted-foreground" data-confidence={person.membershipId}>
-                              {brainConfidence[person.membershipId]}
+                              <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
+                                Confidence
+                              </span>
+                              <span className="mt-1 block text-sm font-medium text-foreground">How they are doing</span>
+                              <span className="mt-1 block">{brainConfidence[person.membershipId]}</span>
                             </span>
                           ) : null}
                           {(brainTrail[person.membershipId] ?? []).length ? (
@@ -431,7 +455,11 @@ export function AssignDesk() {
                     </p>
                     {brainConfidence[row.membershipId] ? (
                       <p className="mt-1 text-xs text-muted-foreground" data-confidence={row.membershipId}>
-                        {brainConfidence[row.membershipId]}
+                        <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
+                          Confidence
+                        </span>
+                        <span className="mt-1 block text-sm font-medium text-foreground">How they are doing</span>
+                        <span className="mt-1 block">{brainConfidence[row.membershipId]}</span>
                       </p>
                     ) : null}
                     {(brainTrail[row.membershipId] ?? []).length ? (

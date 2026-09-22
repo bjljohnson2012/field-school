@@ -1994,3 +1994,31 @@ test("people reads how each person is doing and the next step in both rooms", ()
   assert.doesNotMatch(page, /href: "\/people-brain"/);
   assert.doesNotMatch(header, /href: "\/people-brain"/);
 });
+
+test("teach and assign show Aim and Confidence when the living brain has them", () => {
+  const teach = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../app/teach-live/live.tsx"), "utf8");
+  const assign = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../app/assign/assign-desk.tsx"), "utf8");
+  const header = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../components/site-header.tsx"), "utf8");
+  assert.match(teach, /data-aim-label="Aim"/);
+  assert.match(teach, /data-confidence-label="Confidence"/);
+  assert.match(teach, /brain\?\.outcome/);
+  assert.match(teach, /props\.aim \?/);
+  assert.match(teach, /props\.confidence \?/);
+  assert.match(teach, /What this family is aiming for/);
+  assert.match(teach, /What this team is aiming for/);
+  assert.match(teach, /How they are doing/);
+  assert.match(teach, /The child has no login/);
+  assert.match(teach, /data-sales-children="0"/);
+  assert.match(assign, /data-aim-label="Aim"/);
+  assert.match(assign, /data-confidence-label="Confidence"/);
+  assert.match(assign, /brain\.outcome/);
+  assert.match(assign, /brainAim \?/);
+  assert.match(assign, /brainConfidence\[person\.membershipId\] \?/);
+  assert.match(assign, /What this family is aiming for/);
+  assert.match(assign, /What this team is aiming for/);
+  assert.match(assign, /How they are doing/);
+  assert.match(assign, /status: "guest"/);
+  assert.doesNotMatch(teach, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+  assert.doesNotMatch(assign, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+  assert.doesNotMatch(header, /href: "\/teach-aim"|href: "\/assign-aim"/);
+});
