@@ -89,8 +89,8 @@ Research feeds ICP. ICP and Finance feed GTM and Dev. GTM feeds Marketing copy. 
 | ID | Status | Needs | Files | Done when |
 | --- | --- | --- | --- | --- |
 | C1 Finance | READY | — | `docs/finance-units.md` | Three prices named as hours. Credits vs BYOK. What N2 must chart. No live charge. No team price. |
-| C2 ICP | READY | — | `docs/icp-parent.md`, `docs/icp-leader.md` | Both files. Headings from ethos §4. Anti-job present. Who we get after. |
-| C3 Research | BLOCKED | C2 started | `docs/research-forces.md` | Four forces per room. No market count. |
+| C2 ICP | PASS | — | `docs/icp-parent.md`, `docs/icp-leader.md` | Both files. Headings from ethos §4. Anti-job present. Who we get after. |
+| C3 Research | READY | C2 started | `docs/research-forces.md` | Four forces per room. No market count. |
 | C4 Marketing | BLOCKED | C2, C5 | `docs/marketing-parent-hire.md` | Five blocks. Public site unflipped. |
 | C5 GTM | READY | C2 in flight ok | `docs/gtm-hire.md` | Human hire motion for parent and for leader. Portal URL. No ads. |
 | C6 Ops | READY | — | Insights = N2. Clocks already in ROUTINES.md | N2 honest empty or live. Sunday scores both rooms. |
