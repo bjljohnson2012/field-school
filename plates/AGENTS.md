@@ -1,148 +1,45 @@
 # Field School plates (Remotion)
 
-Operator-only. Cap + Remotion + Edit-spec. Not a campus or student product.
-Not the factory hour-master melt path except as fallback.
+When I am accountable for people's development and for the organization's success, and I cannot sit with them every hour, I invest in Field School so each person keeps moving on a path fit to who they are now, they get better, the organization gets better, and the learning actually takes.
 
-Wave 5 compositions: Opener, RecapCard, **DefinitionBoard**, **QuizBumper**, **TalkingHeadCard**, **LessonSpine**, plus craft demos **LowerThirdDemo** / **CaptionsDemo** / **CaptionDensityDemo** / **OverlayLockDemo** / **LetterboxDemo** / **AudioBedDemo** / **ProgressRailDemo** / **ChapterChipDemo** / **CalloutCardDemo** / **TransitionLumaDemo** / **EndCardDemo** / **PracticeCardDemo** / **KeyClaimDemo** / **ScriptureCardDemo** / **CompareBoardDemo** / **SectionTitleDemo** / **GlossaryChipDemo** / **ObjectionCardDemo** / **StingColdOpenDemo** / **CheckpointCardDemo** / **ExampleCardDemo** / **QuoteCardDemo** / **StepsCardDemo** / **CaveatCardDemo** / **ReflectionPromptDemo** / **TimelineRailDemo** / **SourceChipDemo** / **SpectrumBarDemo** / **ThresholdCardDemo** / **RubricCardDemo** / **EvidenceCardDemo** / **AnalogyCardDemo** / **CounterexampleCardDemo**. Remotion is default. Melt fallback only. Do not re-render Asset Just (`27pn9xs0zk8a73g`).
+Operator-only. Cap plus Remotion plus edit spec. Not a campus or student product. Not the factory hour-master melt path except as fallback.
 
-Do not add campus UI. Do not add a student-facing AI builder. Do not campus-package Remotion into `app/`. Do not accept Cleaning flip or Publish/Distribute from this package.
+Launch stays CLOSED, 0/8.
 
-Independent Antagonist bar (only bar): [../docs/remotion-vox-standards.md](../docs/remotion-vox-standards.md).
+Do not add campus UI. Do not add a student-facing AI builder. Do not campus-package Remotion into `app/`. Do not accept a cleaning flip or Publish from this package. Do not install Remotion MCP.
 
-## Compositions
+## Live catalog
 
-Opener 8–12s, RecapCard 8–12s, DefinitionBoard still+6s, QuizBumper 6–8s, TalkingHeadCard docked (not full-bleed). LessonSpine 41s fixture: sting / slate / objective / recap / next-up. 1920×1080@30. Cream `#EFE7D6` / ink `#1A1A16` / gold `#C4A35A` / Fraunces. Isolated seal lock `80×64` at `x=1576 y=24`.
-Motion: `useCurrentFrame` + `interpolate` / SceneMotion math only. No CSS keyframes. No 9:16 pack. No Remotion Lambda. No Remotion MCP.
+Four plates, plus a captions layer:
 
-SceneMotion constants (must match `video-pipeline/remotion/src/sceneMotionMath.ts`): `GLIDE_FRAMES=24`, `TAKEOVER_HOLD_FRAMES=12`, `TAKEOVER_EASE_FRAMES=18`.
+1. Opener
+2. TalkingHead (Remotion composition id `TalkingHeadCard`)
+3. RecapCard
+4. QuizBumper
 
-## Layer order
+Captions are a layer, not a fifth plate. On a live take the order is bed, talking-head, captions, letterbox, audio. Later sibling sits on top. No z-index.
 
-Later sibling sits on top. No z-index.
+1920x1080 at 30fps. Cream `#EFE7D6`, ink `#1A1A16`, gold `#C4A35A`, Fraunces. Dock the talking-head card to about 38% width (`dock-right` or `dock-left`). Never full-bleed over type.
 
-1. bed
-2. screen
-3. talking-head card
-4. lower third
-5. captions
-6. letterbox
-7. progress
-8. chapter
-9. callout
-10. transition
-11. claim
-12. scripture
-13. compare
-14. section
-15. glossary
-16. objection
-17. cold-open
-18. checkpoint
-19. example
-20. quote
-21. steps
-22. caveat
-23. reflect
-24. timeline
-25. source
-26. spectrum
-27. threshold
-28. rubric
-29. evidence
-30. analogy
-31. counterexample
-32. practice
-33. end
-34. audio
+Motion uses `useCurrentFrame` plus `interpolate` only. No CSS keyframes. No 9:16 pack. No Remotion Lambda.
 
-Dock the talking-head card to ~38% width (`dock-right` or `dock-left`). Never full-bleed over type.
+Antagonist cards under `antagonist-*.md` are craft history. Do not render antagonist cards.
 
-## Render
+## WhisperX
 
-`node scripts/render-plate.mjs` waits (refuses) if melt `render.lock` exists or MemAvailable < 3072 MiB.
-CPU cap `--concurrency=2` (2/4). Refuse Just `27pn9xs0zk8a73g` and Aug 30 `vox/everything-made-up.mp4`.
-
-Cleaning checklist: `node scripts/cleaning-checklist-lesson-spine.mjs`. Exit 0 PASS / 1 FAIL. `--flip` refused. Never flip live Cap / Notion / Publish.
+Diarization off.
 
 ```
-npx remotion compositions
-npx remotion still Opener --frame=30
-npx remotion still RecapCard --frame=144
-npx remotion still DefinitionBoard --frame=30
-npx remotion still QuizBumper --frame=30
-npx remotion still TalkingHeadCard --frame=30
-npx remotion still LessonSpine --frame=30
-npx remotion still LessonSpine --frame=330
-npx remotion still LessonSpine --frame=570
-npx remotion still LessonSpine --frame=864
-npx remotion still LessonSpine --frame=1050
-npx remotion still LowerThirdDemo --frame=60
-npx remotion still CaptionsDemo --frame=18
-npx remotion still CaptionsDemo --frame=90
-npx remotion still CaptionDensityDemo --frame=0
-npx remotion still CaptionDensityDemo --frame=60
-npx remotion still OverlayLockDemo --frame=0
-npx remotion still OverlayLockDemo --frame=60
-npx remotion still LetterboxDemo --frame=0
-npx remotion still LetterboxDemo --frame=60
-npx remotion still AudioBedDemo --frame=0
-npx remotion still AudioBedDemo --frame=60
-npx remotion still ProgressRailDemo --frame=0
-npx remotion still ProgressRailDemo --frame=60
-npx remotion still ChapterChipDemo --frame=0
-npx remotion still ChapterChipDemo --frame=60
-npx remotion still CalloutCardDemo --frame=0
-npx remotion still CalloutCardDemo --frame=60
-npx remotion still TransitionLumaDemo --frame=0
-npx remotion still TransitionLumaDemo --frame=60
-npx remotion still EndCardDemo --frame=0
-npx remotion still EndCardDemo --frame=60
-npx remotion still PracticeCardDemo --frame=0
-npx remotion still PracticeCardDemo --frame=60
-npx remotion still KeyClaimDemo --frame=0
-npx remotion still KeyClaimDemo --frame=60
-npx remotion still ScriptureCardDemo --frame=0
-npx remotion still ScriptureCardDemo --frame=60
-npx remotion still CompareBoardDemo --frame=0
-npx remotion still CompareBoardDemo --frame=60
-npx remotion still SectionTitleDemo --frame=0
-npx remotion still SectionTitleDemo --frame=60
-npx remotion still GlossaryChipDemo --frame=0
-npx remotion still GlossaryChipDemo --frame=60
-npx remotion still ObjectionCardDemo --frame=0
-npx remotion still ObjectionCardDemo --frame=60
-npx remotion still StingColdOpenDemo --frame=0
-npx remotion still StingColdOpenDemo --frame=60
-npx remotion still CheckpointCardDemo --frame=0
-npx remotion still CheckpointCardDemo --frame=60
-npx remotion still ExampleCardDemo --frame=0
-npx remotion still ExampleCardDemo --frame=60
-npx remotion still QuoteCardDemo --frame=0
-npx remotion still QuoteCardDemo --frame=60
-npx remotion still StepsCardDemo --frame=0
-npx remotion still StepsCardDemo --frame=60
-npx remotion still CaveatCardDemo --frame=0
-npx remotion still CaveatCardDemo --frame=60
-npx remotion still ReflectionPromptDemo --frame=0
-npx remotion still ReflectionPromptDemo --frame=60
-npx remotion still TimelineRailDemo --frame=0
-npx remotion still TimelineRailDemo --frame=60
-npx remotion still SourceChipDemo --frame=0
-npx remotion still SourceChipDemo --frame=60
-npx remotion still SpectrumBarDemo --frame=0
-npx remotion still SpectrumBarDemo --frame=60
-npx remotion still ThresholdCardDemo --frame=0
-npx remotion still ThresholdCardDemo --frame=60
-npx remotion still RubricCardDemo --frame=0
-npx remotion still RubricCardDemo --frame=60
-npx remotion still EvidenceCardDemo --frame=0
-npx remotion still EvidenceCardDemo --frame=60
-npx remotion still AnalogyCardDemo --frame=0
-npx remotion still AnalogyCardDemo --frame=60
-npx remotion still CounterexampleCardDemo --frame=0
-npx remotion still CounterexampleCardDemo --frame=60
-npx remotion still TalkingHeadCard --frame=90
-npx remotion still LessonSpine --frame=330
+ffmpeg -i take.mp4 -ar 16000 take.wav
+whisperx take.wav --model medium --device cpu --compute_type int8
 ```
 
-TypeCard VOX-S04 stills dest (do not overwrite prior LessonSpine encodes): `/opt/cursor/artifacts/remotion-typecard-vox-s04/2026-09-20/`.
+`take.json` is WhisperX `segments[].words[]`. Map with `node scripts/whisperx-to-captions.mjs take.json`. Each Caption gets one space before the word. `start` and `end` are seconds. `startMs` and `endMs` are milliseconds. `timestampMs` and `confidence` stay null. Speaker labels are ignored.
+
+## Locks
+
+Just `27pn9xs0zk8a73g` stays locked. Do not render it. Also refuse Aug 30 `vox/everything-made-up.mp4`.
+
+`node scripts/render-plate.mjs` waits if melt `render.lock` exists or MemAvailable is under 3072 MiB. CPU cap `--concurrency=2`.
+
+This stream does not render.
