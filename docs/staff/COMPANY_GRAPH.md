@@ -88,7 +88,7 @@ Research feeds ICP. ICP and Finance feed GTM and Dev. GTM feeds Marketing copy. 
 
 | ID | Status | Needs | Files | Done when |
 | --- | --- | --- | --- | --- |
-| C1 Finance | READY | — | `docs/finance-units.md` | Three prices named as hours. Credits vs BYOK. What N2 must chart. No live charge. No team price. |
+| C1 Finance | PASS | — | `docs/finance-units.md` | Three prices named as hours. Credits vs BYOK. What N2 must chart. No live charge. No team price. |
 | C2 ICP | PASS | — | `docs/icp-parent.md`, `docs/icp-leader.md` | Both files. Headings from ethos §4. Anti-job present. Who we get after. |
 | C3 Research | READY | C2 started | `docs/research-forces.md` | Four forces per room. No market count. |
 | C4 Marketing | BLOCKED | C2, C5 | `docs/marketing-parent-hire.md` | Five blocks. Public site unflipped. |
