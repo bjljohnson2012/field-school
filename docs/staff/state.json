@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T12:29:30Z",
+  "updated": "2026-09-22T12:33:35Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -51,7 +51,7 @@
     },
     "N4": {
       "status": "PASS",
-      "evidence": "PR 210; parseLessonSpec refuses missing source_unit_id"
+      "evidence": "PR 210 merged 5ecd4497"
     },
     "N5": {
       "status": "PASS",
@@ -66,8 +66,8 @@
       "evidence": "PR 219 merged or merging"
     },
     "N8": {
-      "status": "READY",
-      "evidence": "N4+N10 PASS; PR 223 open"
+      "status": "PASS",
+      "evidence": "PR 223; one LessonSpec one room; child login none"
     },
     "N9": {
       "status": "PASS",
@@ -78,8 +78,8 @@
       "evidence": "PR 220 merged 6f48b025"
     },
     "N11": {
-      "status": "READY",
-      "evidence": "N4 PASS; PR 212 open"
+      "status": "PASS",
+      "evidence": "PR 212; teach-live presenter shows source_unit_id"
     },
     "N12": {
       "status": "HELD",
@@ -98,14 +98,8 @@
       ]
     },
     "N15": {
-      "status": "BLOCKED",
-      "needs": [
-        "N1",
-        "N2",
-        "N8",
-        "N9",
-        "N11"
-      ]
+      "status": "READY",
+      "evidence": "N1 N2 N8 N9 N11 PASS; prove PR 226 open; do not merge early this clock"
     },
     "FACTORY": {
       "status": "PASS",
@@ -114,7 +108,8 @@
   },
   "in_flight": [],
   "last_pick": [
-    "N4"
+    "N8",
+    "N11"
   ],
   "last_clock": "09-continue"
 }
