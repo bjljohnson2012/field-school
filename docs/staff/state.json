@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T12:37:56Z",
+  "updated": "2026-09-22T13:44:38Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -16,8 +16,8 @@
       "evidence": "PR 211 merged aaf933b or merging"
     },
     "C4": {
-      "status": "READY",
-      "evidence": "C2+C5 PASS; PR 209 open draft"
+      "status": "PASS",
+      "evidence": "PR 209 MERGED a5c384e51"
     },
     "C5": {
       "status": "PASS",
@@ -29,7 +29,7 @@
     },
     "C7": {
       "status": "READY",
-      "evidence": "N1\u2013N3 N9 N10 PASS; N5/N6/N7 proving"
+      "evidence": "N5 PR 221, N6 PR 224, N7 PR 219 PASS on main; N12 HELD; N13 N14 blocked on N12"
     }
   },
   "dev": {
@@ -99,7 +99,7 @@
     },
     "N15": {
       "status": "PASS",
-      "evidence": "docs/n15-both-rooms.md cites merged N1 N2 N8 N9 N11; PR 226"
+      "evidence": "PR 226 MERGED 673f2a045"
     },
     "FACTORY": {
       "status": "PASS",
@@ -107,8 +107,6 @@
     }
   },
   "in_flight": [],
-  "last_pick": [
-    "N15"
-  ],
-  "last_clock": "09-continue"
+  "last_pick": [],
+  "last_clock": "09-hub-2026-09-22"
 }
