@@ -728,6 +728,46 @@ export function nextStepTrail(input: {
   return person?.history ?? [];
 }
 
+/** Learn home: org aim, how that person is doing, and their next step. Sales never returns a child. */
+export function learnHomeContext(input: {
+  room: Room;
+  brain: { room: Room; outcome?: string; people: LivingPerson[] } | null;
+  membershipId?: string;
+  storedTitle?: string;
+}): {
+  aim: string;
+  confidence: string;
+  nextStep: string;
+  from: "outcomes" | "profile" | "stored" | "";
+  login: "none" | "member" | "";
+  membershipId: string;
+} {
+  const sameRoom = input.brain && input.brain.room === input.room ? input.brain : null;
+  const aim = sameRoom?.outcome ?? "";
+  const allowed = brainBoard({
+    room: input.room,
+    brain: sameRoom ? { room: sameRoom.room, facts: "", outcome: aim, people: sameRoom.people } : null,
+  }).people;
+  if (input.membershipId && !allowed.some((person) => person.membershipId === input.membershipId)) {
+    return { aim, confidence: "", nextStep: "", from: "", login: "", membershipId: "" };
+  }
+  const chosen = chooseNextStep({
+    room: input.room,
+    brain: sameRoom,
+    membershipId: input.membershipId,
+    storedTitle: input.storedTitle,
+  });
+  const membershipId = input.membershipId || chosen?.membershipId || "";
+  return {
+    aim,
+    confidence: personConfidence({ room: input.room, brain: sameRoom, membershipId }),
+    nextStep: chosen?.title || "",
+    from: chosen?.from || "",
+    login: chosen?.login || "",
+    membershipId,
+  };
+}
+
 /** The same plain confidence Insights lists for one person. Sales never returns a child. */
 export function personConfidence(input: {
   room: Room;

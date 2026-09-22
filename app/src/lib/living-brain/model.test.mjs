@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { applyAssist, applyFactsAssist, applyPreparedAssist, assistDraft, assistFacts, brainBoard, chooseNextStep, nextStepTrail, parseAiSuggestion, personConfidence, pickSuggestionKey, readForTool, refreshFromUse, rememberOutcome, setConfidence, setOrgOutcome, shapeBrain, stepAfterFinish, suggestForPerson, updateOutcome } from "./model.ts";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { applyAssist, applyFactsAssist, applyPreparedAssist, assistDraft, assistFacts, brainBoard, chooseNextStep, learnHomeContext, nextStepTrail, parseAiSuggestion, personConfidence, pickSuggestionKey, readForTool, refreshFromUse, rememberOutcome, setConfidence, setOrgOutcome, shapeBrain, stepAfterFinish, suggestForPerson, updateOutcome } from "./model.ts";
 
 const parent = { kind: "adult", stance: "guardian", org: "household", membershipId: "parent-1" };
 const leader = { kind: "adult", stance: "trainer", org: "sales", membershipId: "leader-1" };
@@ -1797,4 +1800,99 @@ test("a suggestion reads the family or team aim, how the person is doing, and re
   });
   assert.deepEqual(salesChild, { ok: false, error: "sales_has_no_children" });
   assert.equal(childCalls, 0);
+});
+
+test("learn home reads the aim, how that person is doing, and the next step in both rooms", () => {
+  const home = shapeBrain({
+    orgId: "org-home",
+    room: "household",
+    facts: "Ada: Read the morning page.",
+    outcome: "Finish the year reading aloud",
+    actorId: "parent-1",
+    people: [
+      {
+        membershipId: "child-1",
+        name: "Ada",
+        kind: "child",
+        login: "none",
+        profile: "Reads at the table.",
+        outcomes: "Read the morning page",
+        confidence: "Steady at the table",
+      },
+    ],
+  });
+  assert.equal(home.ok, true);
+  if (!home.ok) return;
+  const homeCard = learnHomeContext({ room: "household", brain: home.brain, membershipId: "child-1" });
+  assert.equal(homeCard.aim, "Finish the year reading aloud");
+  assert.equal(homeCard.confidence, "Steady at the table");
+  assert.equal(homeCard.nextStep, "Read the morning page");
+  assert.equal(homeCard.login, "none");
+  assert.equal(home.brain.people[0].ownsOutcomes, false);
+  const childWrite = updateOutcome(home.brain, { ...parent, kind: "child", membershipId: "child-1" }, "child-1", "A login");
+  assert.deepEqual(childWrite, { ok: false, error: "child_has_no_login" });
+
+  const sales = shapeBrain({
+    orgId: "org-sales",
+    room: "sales",
+    facts: "Kai: Name the next call.",
+    outcome: "Close the quarter on the next call",
+    actorId: "leader-1",
+    people: [
+      {
+        membershipId: "rep-1",
+        name: "Kai",
+        kind: "adult",
+        login: "member",
+        profile: "Knows the next call.",
+        outcomes: "Name the next call",
+        confidence: "Moving on the calls",
+      },
+    ],
+  });
+  assert.equal(sales.ok, true);
+  if (!sales.ok) return;
+  const salesCard = learnHomeContext({ room: "sales", brain: sales.brain, membershipId: "rep-1" });
+  assert.equal(salesCard.aim, "Close the quarter on the next call");
+  assert.equal(salesCard.confidence, "Moving on the calls");
+  assert.equal(salesCard.nextStep, "Name the next call");
+  assert.equal(salesCard.login, "member");
+  assert.equal(sales.brain.people[0].ownsOutcomes, false);
+  const withChild = {
+    ...sales.brain,
+    people: [
+      ...sales.brain.people,
+      {
+        membershipId: "child-9",
+        name: "Wrong room",
+        kind: "child",
+        login: "none",
+        profile: "no",
+        outcomes: "Do not show",
+        ownsOutcomes: false,
+        history: [],
+        confidence: "Do not show",
+      },
+    ],
+  };
+  const hidden = learnHomeContext({ room: "sales", brain: withChild, membershipId: "child-9" });
+  assert.equal(hidden.confidence, "");
+  assert.equal(hidden.nextStep, "");
+  assert.equal(hidden.membershipId, "");
+  assert.equal(hidden.aim, "Close the quarter on the next call");
+  const board = brainBoard({ room: "sales", brain: withChild });
+  assert.equal(board.people.some((person) => person.kind === "child"), false);
+
+  const page = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../app/dashboard/page.tsx"), "utf8");
+  const header = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../components/site-header.tsx"), "utf8");
+  assert.match(page, /learnHomeContext/);
+  assert.match(page, /data-org-aim=/);
+  assert.match(page, /data-confidence=/);
+  assert.match(page, /data-next-step=/);
+  assert.match(page, /data-sales-children=\{card\.org === "sales" \? "0" : undefined\}/);
+  assert.match(page, /What this family is aiming for/);
+  assert.match(page, /What this team is aiming for/);
+  assert.match(page, /How they are doing/);
+  assert.doesNotMatch(page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+  assert.doesNotMatch(header, /href: "\/learn-home"/);
 });
