@@ -1,6 +1,6 @@
 # N15 both rooms
 
-Dated 22 Sep 2026. Proof only. This file reads four open drafts and leaves each branch as it is.
+Dated 22 Sep 2026. Proof only. This file cites landed merges on `main`. It does not add product code.
 
 Launch stays CLOSED, 0/8.
 
@@ -21,32 +21,40 @@ Household and sales stay on separate desks. Sales has zero children. Household h
 
 ## The person still moves when the hirer is away
 
-The path is the LessonSpec and the open row, scoped to the active org. The leader can leave. The row remains. Insights on that org still shows who moved, and a point opens that person. Learn home still shows the next step for the active org. Teach live still walks the units, and each unit shows `source_unit_id`.
+The path is the LessonSpec and the open row, scoped to the active org. The leader can leave. The row remains. Insights on that org still shows who moved, and a point opens that person. Learn home still shows the next step for the active org. Teach live still walks the units, and each unit shows `source_unit_id`. Chrome keeps the leader bar to Learn, People, Library, Insights, New.
 
-## Open drafts
+## Landed deps on main
 
-These four drafts are open against `main` at `bf1f1ba898b11f341077360bf70149a783403461`. This proof cites them. It does not merge them.
+Main tip at this proof: `9da52fad67a682cbfdd6db8a8a188158a6a512eb`.
 
-### Insights
+### N1 Chrome
 
-[N2 Insights](https://github.com/bjljohnson2012/field-school/pull/225) on `cursor/n2-insights` at `2bd38bfc8d3a6067663652b5fb93dc30588034cb`.
+[N1 Chrome](https://github.com/bjljohnson2012/field-school/pull/206) merged on main (merge `ea9f024`). Leader bar: Learn, People, Library, Insights, New. Learner bar: Learn, Me. Sales desk does not fetch `/api/children`. Guest `/api/me` stays `{guest:true}`.
 
-`/insights` reads the active org. Click a point and the chart opens a person. Sales has zero children (the child row is absent). Household opens a tracked child with login none, and shows zero sales diagnostics. An empty org has no chart values: the six charts show `no events in this org yet` and no invented numbers.
+### N2 Insights
 
-### Assign
+[N2 Insights](https://github.com/bjljohnson2012/field-school/pull/225) landed tip `f9ce2b6a954fa10e8c17e1ed723c21b90fa7c6ff`.
 
-[N8 Assign](https://github.com/bjljohnson2012/field-school/pull/223) on `cursor/n8-assign` at `c0563444976b4bd8e5ee64e3c2d49134c5e6d6bf`.
+`/insights` reads the active org. Click a point and the chart opens a person. Sales has zero children. Household opens a tracked child with login none, and shows zero sales diagnostics. An empty org has no chart values: the six charts show `no events in this org yet` and no invented numbers.
 
-One LessonSpec. The open desk lists one room. Sales: a login learner, the teammate who may sign in to work. The teammate does not buy. Household: a tracked child. Login none. The child is not a buyer. Each unit carries `source_unit_id`. The assignment is scoped by org and membership. The open row remains when the leader leaves.
+### N8 Assign
 
-### Learn home
+[N8 Assign](https://github.com/bjljohnson2012/field-school/pull/223) MERGED SHA `1abaa93ffb813202dce23052b5666b368c943128` tip `43a18c06b499523d183d46e34bb97a4f23b4511c`.
 
-[N9 Learn home](https://github.com/bjljohnson2012/field-school/pull/217) on `cursor/n9-learn-home` at `bf51c55a1ce50a77ce788c2aa1997b5f940f56a6`.
+One LessonSpec. The open desk lists one room. Sales: a login learner. The teammate does not buy. Household: a tracked child. Login none. The child is not a buyer. Each unit carries `source_unit_id`. The open row remains when the leader leaves.
+
+### N9 Learn home
+
+[N9 Learn home](https://github.com/bjljohnson2012/field-school/pull/217) landed tip `14e26f3cd5cf48689c31e0f60a3792a9531132c7`.
 
 Signed-in `/dashboard` is Learn for the active org only. The page reads `activeOrg.slug`. Sales home is the sales course and lists zero children. Household home is the household course and shows zero sales diagnostics. The card carries the course and the next step, so the path is on the desk after the hirer steps away.
 
-### Teach live
+### N11 Teach live
 
-[N11 Teach live](https://github.com/bjljohnson2012/field-school/pull/212) on `cursor/n11-teach-live` at `f1fb11b98ad76db855e6b193d2840bf6365c406e`.
+[N11 Teach live](https://github.com/bjljohnson2012/field-school/pull/212) MERGED SHA `9da52fad67a682cbfdd6db8a8a188158a6a512eb` tip `9a351de87e25ab3d5b86ef97ba37bb54c6a543ab`.
 
 The presenter walks the units of one LessonSpec for the sales org. Previous, next, the unit list, and arrow keys move the current unit. Each unit shows its `source_unit_id`: `src-who-now`, then `src-next-step`, then `src-after-you-leave`.
+
+## Score
+
+N1 N2 N8 N9 N11 are PASS on main. This proof is PASS. Do not treat it as Launch open. Count stays 0/8. PR 218 stays HELD. Launch stays CLOSED, 0/8.

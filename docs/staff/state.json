@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T12:33:35Z",
+  "updated": "2026-09-22T12:37:56Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -67,7 +67,7 @@
     },
     "N8": {
       "status": "PASS",
-      "evidence": "PR 223; one LessonSpec one room; child login none"
+      "evidence": "PR 223 MERGED 1abaa93ff"
     },
     "N9": {
       "status": "PASS",
@@ -79,7 +79,7 @@
     },
     "N11": {
       "status": "PASS",
-      "evidence": "PR 212; teach-live presenter shows source_unit_id"
+      "evidence": "PR 212 MERGED 9da52fad"
     },
     "N12": {
       "status": "HELD",
@@ -98,8 +98,8 @@
       ]
     },
     "N15": {
-      "status": "READY",
-      "evidence": "N1 N2 N8 N9 N11 PASS; prove PR 226 open; do not merge early this clock"
+      "status": "PASS",
+      "evidence": "docs/n15-both-rooms.md cites merged N1 N2 N8 N9 N11; PR 226"
     },
     "FACTORY": {
       "status": "PASS",
@@ -108,8 +108,7 @@
   },
   "in_flight": [],
   "last_pick": [
-    "N8",
-    "N11"
+    "N15"
   ],
   "last_clock": "09-continue"
 }
