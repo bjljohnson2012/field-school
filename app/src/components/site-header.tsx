@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
@@ -9,6 +10,52 @@ import { OrgPicker } from "@/components/org-picker";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const LEADER_STANCES = new Set(["admin", "guardian", "trainer", "teacher"]);
+
+const NEW_DOORS = [
+  { href: "/library/video", label: "Long-form video" },
+  { href: "/library/wizard", label: "Wizard" },
+  { href: "/settings/ai", label: "Connect AI" },
+] as const;
+
+const linkClass =
+  "flex h-11 items-center px-2 text-muted-foreground hover:text-foreground sm:px-2.5";
+
+function NewMenu() {
+  const pathname = usePathname();
+  const here = NEW_DOORS.some(
+    (door) => pathname === door.href || pathname.startsWith(`${door.href}/`),
+  );
+
+  return (
+    <details className="relative">
+      <summary
+        className={`${linkClass} cursor-pointer list-none ${here ? "text-foreground" : ""}`}
+      >
+        New
+      </summary>
+      <div className="absolute right-0 z-40 mt-1 flex min-w-44 flex-col rounded-xl border border-border bg-background p-1 shadow-md">
+        {NEW_DOORS.map((door) => {
+          const current =
+            pathname === door.href || pathname.startsWith(`${door.href}/`);
+          return (
+            <Link
+              key={door.href}
+              href={door.href}
+              aria-current={current ? "page" : undefined}
+              className={`${linkClass} whitespace-nowrap ${current ? "text-foreground" : ""}`}
+              onClick={(event) => {
+                const root = event.currentTarget.closest("details");
+                if (root) root.open = false;
+              }}
+            >
+              {door.label}
+            </Link>
+          );
+        })}
+      </div>
+    </details>
+  );
+}
 
 type NavLink = { href: string; label: string };
 
@@ -33,7 +80,6 @@ function navLinks(opts: {
     { href: "/people", label: "People" },
     { href: org ? `/o/${org}/l` : "/dashboard", label: "Library" },
     { href: "/insights", label: "Insights" },
-    { href: org ? `/o/${org}/teach` : "/dashboard", label: "New" },
   ];
 }
 
@@ -62,15 +108,14 @@ export function SiteHeader() {
       .catch(() => undefined);
   }, [loggedIn]);
 
+  const leader = LEADER_STANCES.has(stance);
   const links = navLinks({
     loggedIn,
     guest: guestChrome,
-    leader: LEADER_STANCES.has(stance),
+    leader,
     org,
   });
-
-  const linkClass =
-    "flex h-11 items-center px-2 text-muted-foreground hover:text-foreground sm:px-2.5";
+  const showNew = loggedIn && leader;
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/88 backdrop-blur-md">
@@ -100,6 +145,7 @@ export function SiteHeader() {
               </Link>
             ))}
           </div>
+          {showNew ? <NewMenu /> : null}
           <details className="relative md:hidden">
             <summary className="flex h-11 cursor-pointer list-none items-center px-2 text-muted-foreground">
               Menu
