@@ -1,0 +1,66 @@
+{
+  "id": "master",
+  "node": "N13",
+  "serves": "C7",
+  "status": "queued",
+  "render": false,
+  "encoded": false,
+  "composition": "master",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "aspect": "16:9",
+  "output": {
+    "file": "master.mp4",
+    "encoded": false
+  },
+  "order": ["Opener", "TalkingHead", "RecapCard", "QuizBumper"],
+  "plates": [
+    {
+      "name": "Opener",
+      "compositionId": "Opener",
+      "fromMs": 0,
+      "toMs": 10000,
+      "durationSec": 10
+    },
+    {
+      "name": "TalkingHead",
+      "compositionId": "TalkingHeadCard",
+      "fromMs": 10000,
+      "toMs": 18000,
+      "durationSec": 8
+    },
+    {
+      "name": "RecapCard",
+      "compositionId": "RecapCard",
+      "fromMs": 18000,
+      "toMs": 28000,
+      "durationSec": 10
+    },
+    {
+      "name": "QuizBumper",
+      "compositionId": "QuizBumper",
+      "fromMs": 28000,
+      "toMs": 35000,
+      "durationSec": 7,
+      "source_unit_id": "lesson-opener"
+    }
+  ],
+  "layers": ["bed", "talking-head", "captions", "letterbox", "audio"],
+  "captions": {
+    "role": "layer",
+    "on": "TalkingHead",
+    "plate": false
+  },
+  "antagonistOnLiveTake": false,
+  "locks": {
+    "justCapId": "27pn9xs0zk8a73g",
+    "just": "locked",
+    "destSha256": "af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4",
+    "dest": "untouched",
+    "renderLock": "stays",
+    "remotionMcp": false,
+    "remotionInNext": false,
+    "launch": "CLOSED 0/8"
+  }
+}
