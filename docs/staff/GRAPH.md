@@ -1,7 +1,7 @@
 # Prelaunch staff graph
 
-Product plan as of 21 Sep 2026: [THREE_LOOPS.md](./THREE_LOOPS.md). Field School PM follows that file for what to build. GRAPH still owns roster, wire, and launch CLOSED 0/8.
-Where GRAPH says no Cap take or no player rail, THREE_LOOPS wins for the factory-to-portal slice. Remotion still does not ship inside Next. Just stays locked. Family LIVE `bc-4765f2f0` stays untouched. Dest hash stays untouched. Launch stays CLOSED.
+Product work graph: [BUILD_GRAPH.md](./BUILD_GRAPH.md). Chrome: [SHELLS.md](./SHELLS.md). Product nouns: [THREE_LOOPS.md](./THREE_LOOPS.md). Law: [../LAW.md](../LAW.md).
+This file owns roster, wire, and launch **CLOSED**, **0/8**. Field School PM follows BUILD_GRAPH for what to build. Remotion still does not ship inside Next. Just stays locked. Family LIVE `bc-4765f2f0` stays untouched. Dest hash stays untouched. Launch stays CLOSED.
 
 Locked hub: 2026-09-18 / 2026-09-19 (PR 48 source). Phase: build only.
 
@@ -41,7 +41,7 @@ Wire: **CDM → CTO → Cursor Gate → Field School PM**.
 
 C-suite rule from the Org Chart: CTO, Marketer, Revenue, and Product do not message each other. Each raises input to Chief Decision Maker. CDM synthesizes and routes. No peer C-suite messaging.
 
-Hands rule: Cursor Gate alone contacts Field School PM / Cursor cloud agents. CTO briefs Cursor Gate. CDM briefs CTO. This THREE_LOOPS brief is CDM product direction. Paste it to Field School PM.
+Hands rule: Cursor Gate alone contacts Field School PM / Cursor cloud agents. CTO briefs Cursor Gate. CDM briefs CTO. Paste BUILD_GRAPH Cycle 1 to Field School PM.
 
 ## Remotion (critical)
 
@@ -49,9 +49,9 @@ Remotion Wave 5 factory is **PASS** in `plates/` only. That is factory evidence 
 
 - Stay in `plates/`. No Remotion-in-Next.
 - ORDER LOCK: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up.
-- Existing four plates only for the THREE_LOOPS factory slice. No new antagonist card.
+- Existing plates only. No new antagonist card.
 - No Just remake (`27pn9xs0zk8a73g`). No second melt while `render.lock` exists.
-- Cap take is allowed as factory input for THREE_LOOPS. HLS player rail on campus is allowed. Remotion still not packaged into Next.
+- Cap take is allowed as Library input. HLS player on campus is allowed. Remotion-in-Next held.
 - Failures escalate CDM → CTO → Cursor Gate. Do not soft-ship.
 
 ## Launch nodes → owning seats
@@ -69,37 +69,36 @@ Same seats as the locked hub. Do not invent a second org chart.
 | Legal | CDM holds; Ben signs | Writer updates LEGAL.md + privacy/terms via Gate |
 | Plan | Budget + Revenue | Writer files PLAN.md; gate file is [../prelaunch/LAUNCH_GATE.md](../prelaunch/LAUNCH_GATE.md) (**CLOSED**, **0/8**) |
 
-Project Manager tracks the eight scores. Does not talk to Cursor. Does not invent work.
+Project Manager tracks BUILD_GRAPH node statuses plus the eight launch scores. Does not talk to Cursor. Does not invent work.
 
 Factory seats (Audio Builder, Soul Break, Share Desk) stay on tape and links. They are not launch-gate owners.
 
 ## Daily loop (unpause this)
 
-Weekday 09:00 ET. Already named in the 2026-09-19 morning brief. Full clock text: [ROUTINES.md](./ROUTINES.md).
+Weekday 09:00 ET. Full clock text: [ROUTINES.md](./ROUTINES.md).
 
 1. Notion Ops posts or refreshes the morning brief page.
-2. Project Manager reads `docs/staff/THREE_LOOPS.md` and scores Factory / Composer / Portal against the week done-when.
-3. CDM keeps THREE_LOOPS as the Product node. Remotion stays in `plates/` only (Remotion-in-Next held).
-4. If the node needs code or a repo file: CDM → CTO → Cursor Gate → Field School PM streams in THREE_LOOPS.
-5. If the node is company prose only: CDM → Writer (and Marketer or Revenue as raisers). Gate only when a PR is required.
-6. Max two Cursor streams. Second stream only if Gate has spare capacity and the files cannot conflict.
+2. Project Manager reads `docs/staff/BUILD_GRAPH.md` and scores N1–N15.
+3. CDM keeps BUILD_GRAPH as the Product node. Remotion stays in `plates/` only (Remotion-in-Next held).
+4. If the node needs code: CDM → CTO → Cursor Gate → Field School PM streams from BUILD_GRAPH.
+5. If the node is company prose only: CDM → Writer. Gate only when a PR is required.
+6. Max two Cursor streams. Files cannot conflict.
 7. Stop. No third stream. No C-suite side channel.
 
-Sunday: CDM scores Factory / Composer / Portal plus the eight launch nodes. Twenty lines. Contradictions listed. Launch stays **CLOSED**. This readout is **0/8**.
+Sunday: CDM scores BUILD_GRAPH plus the eight launch nodes. Launch stays **CLOSED**. This readout is **0/8**.
 
 ## Sealed brief (CDM writes, CTO forwards, Gate pastes)
 
 ```
 Node: Product
-Plan: docs/staff/THREE_LOOPS.md
+Plan: docs/staff/BUILD_GRAPH.md
 Raised by: CDM
-Target files: named in the cycle
-Branch: cursor/loop-<factory|composer|portal>-<slug>
+Target files: named on the node row
+Branch: cursor/n<id>-<slug>
 Project: Field School PM (bc-882e8bdf)
-Done when: week done-when in THREE_LOOPS
-Proofs: published lesson assigned to one salesperson and one tracked child, each with a visible next step
-Do not: child login, salesperson as child, Remotion-in-Next, new plate, FastAPI, Launch 8/8
-Human needed: Cap take
+Done when: node Done when
+Do not: Wave 2 resume, child login, salesperson as child, Remotion-in-Next, Django, pages in FastAPI, Launch 8/8
+Human needed: none | Cap take | upload | BYOK paste
 ```
 
 ## Locks on every brief
