@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T20:30:00Z",
+  "updated": "2026-09-22T20:40:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "The org brain carries a plain line for what this family or team is aiming for. Insights reads it alongside each person. People keep their own next step and the note on how they are doing. Home child has no login. Sales desk shows no children. Leader owns outcomes."
+      "evidence": "The suggestion reads what this family or team is aiming for, how the person is doing, and the recent next steps. The org key or the platform key is used, and the current assist stands when that reply is missing. Home child has no login. Sales desk shows no children. Leader owns outcomes."
     },
     "N15": {
       "status": "PASS",
@@ -114,5 +114,5 @@
   "last_pick": [
     "N15"
   ],
-  "last_clock": "15"
+  "last_clock": "post-241"
 }

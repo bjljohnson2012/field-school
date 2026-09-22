@@ -208,6 +208,7 @@ export async function writeAssist(input: {
     person,
     others: base.people.filter((row) => row.membershipId !== person.membershipId),
     facts: base.facts,
+    outcome: base.outcome,
     context: input.context,
     complete: (prompt) => completeWithConfiguredAi(input.orgId, prompt),
   });

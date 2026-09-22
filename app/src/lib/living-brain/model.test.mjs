@@ -1638,3 +1638,163 @@ test("org brain carries what the family or team is aiming for in both rooms", ()
   const member = { kind: "adult", stance: "learner", org: "sales", membershipId: "rep-1" };
   assert.deepEqual(setOrgOutcome(sales.brain, member, "I own this"), { ok: false, error: "not_leader" });
 });
+
+test("a suggestion reads the family or team aim, how the person is doing, and recent next steps", async () => {
+  const home = shapeBrain({
+    orgId: "org-home",
+    room: "household",
+    facts: "Ada: Old page.",
+    outcome: "Finish the year reading aloud",
+    actorId: "parent-1",
+    people: [
+      {
+        membershipId: "child-1",
+        name: "Ada",
+        kind: "child",
+        login: "none",
+        profile: "Taught. Next step is Old page.",
+        outcomes: "Old page",
+        confidence: "Steady at the table",
+        history: [{ outcomes: "Start the page" }],
+      },
+    ],
+  });
+  assert.equal(home.ok, true);
+  if (!home.ok) return;
+  assert.equal(home.brain.people[0].login, "none");
+  assert.equal(home.brain.people[0].ownsOutcomes, false);
+  let homePrompt = "";
+  const homeSuggested = await suggestForPerson({
+    room: "household",
+    person: home.brain.people[0],
+    facts: home.brain.facts,
+    outcome: home.brain.outcome,
+    context: { nextStep: "Finish the next page" },
+    complete: async (prompt) => {
+      homePrompt = prompt;
+      return JSON.stringify({
+        profile: "Ada is steady at the table and ready for the next page.",
+        outcomes: "Finish the next page",
+      });
+    },
+  });
+  assert.equal(homeSuggested.ok, true);
+  if (!homeSuggested.ok) return;
+  assert.equal(homeSuggested.source, "ai");
+  assert.match(homePrompt, /What this family is aiming for: Finish the year reading aloud/);
+  assert.match(homePrompt, /How they are doing: Steady at the table/);
+  assert.match(homePrompt, /Recent next steps, oldest first: Start the page; Old page/);
+  const homeSaved = applyPreparedAssist(home.brain, parent, "child-1", homeSuggested.draft);
+  assert.equal(homeSaved.ok, true);
+  if (!homeSaved.ok) return;
+  assert.equal(homeSaved.brain.people[0].login, "none");
+  assert.equal(homeSaved.brain.people[0].ownsOutcomes, false);
+  assert.equal(homeSaved.brain.people[0].confidence, "Steady at the table");
+  assert.equal(homeSaved.brain.outcome, "Finish the year reading aloud");
+  assert.equal(homeSaved.brain.people[0].outcomes, "Finish the next page");
+  assert.deepEqual(applyPreparedAssist(home.brain, { ...parent, kind: "child", membershipId: "child-1" }, "child-1", homeSuggested.draft), {
+    ok: false,
+    error: "child_has_no_login",
+  });
+  let homeFallback = "";
+  const homeDown = await suggestForPerson({
+    room: "household",
+    person: home.brain.people[0],
+    facts: home.brain.facts,
+    outcome: home.brain.outcome,
+    context: { nextStep: "Finish the next page" },
+    complete: async (prompt) => {
+      homeFallback = prompt;
+      return null;
+    },
+  });
+  assert.equal(homeDown.ok, true);
+  if (!homeDown.ok) return;
+  assert.equal(homeDown.source, "fallback");
+  assert.match(homeFallback, /Finish the year reading aloud/);
+  assert.match(homeFallback, /Steady at the table/);
+  assert.match(homeFallback, /Start the page/);
+
+  const sales = shapeBrain({
+    orgId: "org-sales",
+    room: "sales",
+    facts: "Kai: Old call.",
+    outcome: "Close the quarter on the next call",
+    actorId: "leader-1",
+    people: [
+      {
+        membershipId: "rep-1",
+        name: "Kai",
+        kind: "adult",
+        login: "member",
+        profile: "Taught. Next step is Old call.",
+        outcomes: "Old call",
+        confidence: "Moving on the calls",
+        history: [{ outcomes: "Open the first call" }],
+      },
+    ],
+  });
+  assert.equal(sales.ok, true);
+  if (!sales.ok) return;
+  let salesPrompt = "";
+  const salesSuggested = await suggestForPerson({
+    room: "sales",
+    person: sales.brain.people[0],
+    facts: sales.brain.facts,
+    outcome: sales.brain.outcome,
+    context: { nextStep: "Name the next call" },
+    complete: async (prompt) => {
+      salesPrompt = prompt;
+      return JSON.stringify({
+        profile: "Kai is moving on the calls and can name the next one.",
+        outcomes: "Name the next call",
+      });
+    },
+  });
+  assert.equal(salesSuggested.ok, true);
+  if (!salesSuggested.ok) return;
+  assert.equal(salesSuggested.source, "ai");
+  assert.match(salesPrompt, /What this team is aiming for: Close the quarter on the next call/);
+  assert.match(salesPrompt, /How they are doing: Moving on the calls/);
+  assert.match(salesPrompt, /Recent next steps, oldest first: Open the first call; Old call/);
+  const withChild = {
+    ...sales.brain,
+    people: [
+      ...sales.brain.people,
+      {
+        membershipId: "child-9",
+        name: "Wrong room",
+        kind: "child",
+        login: "none",
+        profile: "no",
+        outcomes: "Do not show",
+        ownsOutcomes: false,
+        history: [{ outcomes: "Do not show" }],
+        confidence: "Do not show",
+      },
+    ],
+  };
+  const salesSaved = applyPreparedAssist(withChild, leader, "rep-1", salesSuggested.draft);
+  assert.equal(salesSaved.ok, true);
+  if (!salesSaved.ok) return;
+  assert.equal(salesSaved.brain.people[0].login, "member");
+  assert.equal(salesSaved.brain.people[0].ownsOutcomes, false);
+  assert.equal(salesSaved.brain.people[0].confidence, "Moving on the calls");
+  assert.equal(salesSaved.brain.outcome, "Close the quarter on the next call");
+  assert.equal(salesSaved.brain.people.some((person) => person.kind === "child" || person.confidence === "Do not show"), false);
+  const member = { kind: "adult", stance: "learner", org: "sales", membershipId: "rep-1" };
+  assert.deepEqual(applyPreparedAssist(sales.brain, member, "rep-1", salesSuggested.draft), { ok: false, error: "not_leader" });
+  let childCalls = 0;
+  const salesChild = await suggestForPerson({
+    room: "sales",
+    person: withChild.people[1],
+    facts: sales.brain.facts,
+    outcome: sales.brain.outcome,
+    complete: async () => {
+      childCalls += 1;
+      return JSON.stringify({ profile: "no", outcomes: "no" });
+    },
+  });
+  assert.deepEqual(salesChild, { ok: false, error: "sales_has_no_children" });
+  assert.equal(childCalls, 0);
+});
