@@ -245,17 +245,25 @@ function mentionsSomeoneElse(text: string, selfName: string, others: string[]) {
 
 export function suggestionPrompt(input: {
   room: Room;
-  person: { name: string; profile: string; outcomes: string };
+  person: { name: string; profile: string; outcomes: string; confidence?: string; history?: OutcomeMark[] };
   facts: string;
+  outcome?: string;
   context?: { pathTitle?: string; nextStep?: string };
 }) {
   const name = clip(input.person.name) || "This person";
   const step = clip(input.context?.nextStep || input.person.outcomes);
   const path = pathForOnePerson(clip(input.context?.pathTitle || ""));
+  const aim = clip(input.outcome || "");
+  const confidence = clip(input.person.confidence || "");
+  const history = (input.person.history ?? []).map((mark) => clip(mark?.outcomes || "")).filter(Boolean);
   const roomLine =
     input.room === "household"
       ? "This is a home desk. The child has no login and cannot save. The parent owns the save."
       : "This is a sales desk. There are no children. The team member may sign in. The leader owns the save.";
+  const aimLine =
+    input.room === "household"
+      ? `What this family is aiming for: ${aim || "none"}.`
+      : `What this team is aiming for: ${aim || "none"}.`;
   return [
     "Write a clearer profile and the next step for one person.",
     roomLine,
@@ -264,6 +272,9 @@ export function suggestionPrompt(input: {
     `Person: ${name}.`,
     `Current profile: ${clip(input.person.profile) || "none"}.`,
     `Current next step: ${step || "none"}.`,
+    aimLine,
+    `How they are doing: ${confidence || "none"}.`,
+    `Recent next steps, oldest first: ${history.length ? history.join("; ") : "none"}.`,
     path ? `Path: ${path}.` : "",
     clip(input.facts) ? `Org facts, for context only: ${clip(input.facts)}.` : "",
     'Reply with JSON only: {"profile":"...","outcomes":"..."}',
@@ -314,9 +325,12 @@ export async function suggestForPerson(input: {
     profile: string;
     outcomes: string;
     ownsOutcomes?: boolean;
+    confidence?: string;
+    history?: OutcomeMark[];
   };
   others?: Array<{ name: string }>;
   facts: string;
+  outcome?: string;
   context?: { pathTitle?: string; nextStep?: string };
   complete: (prompt: string) => Promise<string | null>;
 }): Promise<{ ok: true; draft: AssistDraft; source: SuggestionSource } | { ok: false; error: string }> {
@@ -334,6 +348,7 @@ export async function suggestForPerson(input: {
         room: input.room,
         person: input.person,
         facts: input.facts,
+        outcome: input.outcome,
         context: input.context,
       }),
     );
