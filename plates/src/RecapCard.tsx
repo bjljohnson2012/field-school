@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from "remotion";
 import {cream, gold, ink} from "./brand";
-import {AnalogyCard, AudioBed, Bed, CalloutCard, CaveatCard, ChapterChip, CheckpointCard, Claim, CompareBoard, CounterexampleCard, EvidenceCard, ExampleCard, GlossaryChip, GoldRule, HeadDock, Karaoke, KeyClaim, Keyword, Kicker, Letterbox, LowerThird, ObjectionCard, ObjectiveSlate, OverlayLock, PracticeCard, ProgressRail, QuoteCard, ReflectionPrompt, RubricCard, ScriptureCard, SectionTitle, SourceChip, SpectrumBar, StepsCard, ThresholdCard, TimelineRail, Title, TransitionLuma, TypeCard} from "./layers";
+import {AudioBed, Bed, CalloutCard, ChapterChip, Claim, GoldRule, HeadDock, Karaoke, Keyword, Kicker, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, ProgressRail, Title, TransitionLuma, TypeCard} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
 import type {RecapProps} from "./types";
@@ -77,69 +77,6 @@ export const RecapCard: React.FC<RecapProps> = ({kicker, title, points, objectiv
         </Layer>
         <Layer name="transition">
           <TransitionLuma />
-        </Layer>
-        <Layer name="claim">
-          <KeyClaim />
-        </Layer>
-        <Layer name="scripture">
-          <ScriptureCard />
-        </Layer>
-        <Layer name="compare">
-          <CompareBoard />
-        </Layer>
-        <Layer name="section">
-          <SectionTitle />
-        </Layer>
-        <Layer name="glossary">
-          <GlossaryChip />
-        </Layer>
-        <Layer name="objection">
-          <ObjectionCard />
-        </Layer>
-        <Layer name="checkpoint">
-          <CheckpointCard />
-        </Layer>
-        <Layer name="example">
-          <ExampleCard />
-        </Layer>
-        <Layer name="quote">
-          <QuoteCard />
-        </Layer>
-        <Layer name="steps">
-          <StepsCard />
-        </Layer>
-        <Layer name="caveat">
-          <CaveatCard />
-        </Layer>
-        <Layer name="reflect">
-          <ReflectionPrompt />
-        </Layer>
-        <Layer name="timeline">
-          <TimelineRail />
-        </Layer>
-        <Layer name="source">
-          <SourceChip />
-        </Layer>
-        <Layer name="spectrum">
-          <SpectrumBar />
-        </Layer>
-        <Layer name="threshold">
-          <ThresholdCard />
-        </Layer>
-        <Layer name="rubric">
-          <RubricCard />
-        </Layer>
-        <Layer name="evidence">
-          <EvidenceCard />
-        </Layer>
-        <Layer name="analogy">
-          <AnalogyCard />
-        </Layer>
-        <Layer name="counterexample">
-          <CounterexampleCard />
-        </Layer>
-        <Layer name="practice">
-          <PracticeCard />
         </Layer>
         <Layer name="audio">
           <AudioBed />

@@ -91,8 +91,8 @@ test("QuoteCard is a pull quote / authority cite after sting/objective path", ()
   assert.match(demo, /<QuoteCard \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<QuoteCard \/>/);
-  assert.match(recap, /name="quote"/);
+  assert.doesNotMatch(recap, /<QuoteCard \/>/);
+  assert.doesNotMatch(recap, /name="quote"/);
   assert.match(board, /<QuoteCard \/>/);
   assert.match(board, /name="quote"/);
 });
@@ -124,17 +124,9 @@ test("QuoteCardDemo registers after ExampleCardDemo; Recap/Definition sequence q
       boardAudio > boardQuote,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapExample = recap.indexOf('name="example"');
-  const recapQuote = recap.indexOf('name="quote"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapExample > recapWipe &&
-      recapQuote > recapExample &&
-      recapPractice > recapQuote &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

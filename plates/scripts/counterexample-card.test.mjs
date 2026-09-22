@@ -118,8 +118,8 @@ test("CounterexampleCard is counterexample / not-this foil distinct from show-th
   assert.match(demo, /<CounterexampleCard \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<CounterexampleCard \/>/);
-  assert.match(recap, /name="counterexample"/);
+  assert.doesNotMatch(recap, /<CounterexampleCard \/>/);
+  assert.doesNotMatch(recap, /name="counterexample"/);
   assert.match(board, /<CounterexampleCard \/>/);
   assert.match(board, /name="counterexample"/);
 });
@@ -151,17 +151,9 @@ test("CounterexampleCardDemo registers after AnalogyCardDemo; Recap/Definition s
       boardAudio > boardCounter,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapAnalogy = recap.indexOf('name="analogy"');
-  const recapCounter = recap.indexOf('name="counterexample"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapAnalogy > recapWipe &&
-      recapCounter > recapAnalogy &&
-      recapPractice > recapCounter &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

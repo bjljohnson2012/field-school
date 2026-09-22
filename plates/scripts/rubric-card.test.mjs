@@ -111,8 +111,8 @@ test("RubricCard is scoring bands / criteria distinct from cutoff after threshol
   assert.match(demo, /<RubricCard \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<RubricCard \/>/);
-  assert.match(recap, /name="rubric"/);
+  assert.doesNotMatch(recap, /<RubricCard \/>/);
+  assert.doesNotMatch(recap, /name="rubric"/);
   assert.match(board, /<RubricCard \/>/);
   assert.match(board, /name="rubric"/);
 });
@@ -144,17 +144,9 @@ test("RubricCardDemo registers after ThresholdCardDemo; Recap/Definition sequenc
       boardAudio > boardRubric,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapThreshold = recap.indexOf('name="threshold"');
-  const recapRubric = recap.indexOf('name="rubric"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapThreshold > recapWipe &&
-      recapRubric > recapThreshold &&
-      recapPractice > recapRubric &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

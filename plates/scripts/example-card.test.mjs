@@ -89,8 +89,8 @@ test("ExampleCard is a worked example / show-how after sting/objective path", ()
   assert.match(demo, /<ExampleCard \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<ExampleCard \/>/);
-  assert.match(recap, /name="example"/);
+  assert.doesNotMatch(recap, /<ExampleCard \/>/);
+  assert.doesNotMatch(recap, /name="example"/);
   assert.match(board, /<ExampleCard \/>/);
   assert.match(board, /name="example"/);
 });
@@ -122,17 +122,9 @@ test("ExampleCardDemo registers after CheckpointCardDemo; Recap/Definition seque
       boardAudio > boardExample,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapCheck = recap.indexOf('name="checkpoint"');
-  const recapExample = recap.indexOf('name="example"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapCheck > recapWipe &&
-      recapExample > recapCheck &&
-      recapPractice > recapExample &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

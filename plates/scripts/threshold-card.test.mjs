@@ -107,8 +107,8 @@ test("ThresholdCard is a cutoff / gate mark distinct from continuum after spectr
   assert.match(demo, /<ThresholdCard \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<ThresholdCard \/>/);
-  assert.match(recap, /name="threshold"/);
+  assert.doesNotMatch(recap, /<ThresholdCard \/>/);
+  assert.doesNotMatch(recap, /name="threshold"/);
   assert.match(board, /<ThresholdCard \/>/);
   assert.match(board, /name="threshold"/);
 });
@@ -140,17 +140,9 @@ test("ThresholdCardDemo registers after SpectrumBarDemo; Recap/Definition sequen
       boardAudio > boardThreshold,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapSpectrum = recap.indexOf('name="spectrum"');
-  const recapThreshold = recap.indexOf('name="threshold"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapSpectrum > recapWipe &&
-      recapThreshold > recapSpectrum &&
-      recapPractice > recapThreshold &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

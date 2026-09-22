@@ -91,16 +91,9 @@ test("SectionTitleDemo registers after CompareBoardDemo; Opener/Definition/Recap
   assert.ok(rootTsx.indexOf('id="CompareBoardDemo"') < rootTsx.indexOf('id="SectionTitleDemo"'));
   assert.ok(rootTsx.indexOf('id="SectionTitleDemo"') < rootTsx.indexOf('id="LessonSpine"'));
   const openerWipe = opener.indexOf('name="transition"');
-  const openerCompare = opener.indexOf('name="compare"');
-  const openerSection = opener.indexOf('name="section"');
   const openerAudio = opener.indexOf('name="audio"');
-  assert.ok(
-    openerWipe >= 0 &&
-      openerCompare > openerWipe &&
-      openerSection > openerCompare &&
-      openerAudio > openerSection,
-  );
-  assert.match(opener, /<SectionTitle \/>/);
+  assert.ok(openerWipe >= 0 && openerAudio > openerWipe);
+  assert.doesNotMatch(opener, /<SectionTitle \/>|name="section"/);
   const boardWipe = board.indexOf('name="transition"');
   const boardCompare = board.indexOf('name="compare"');
   const boardSection = board.indexOf('name="section"');
@@ -113,20 +106,9 @@ test("SectionTitleDemo registers after CompareBoardDemo; Opener/Definition/Recap
   );
   assert.match(board, /<SectionTitle \/>/);
   const recapWipe = recap.indexOf('name="transition"');
-  const recapCompare = recap.indexOf('name="compare"');
-  const recapSection = recap.indexOf('name="section"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapCompare > recapWipe &&
-      recapSection > recapCompare &&
-      recapPractice > recapSection &&
-      recapAudio > recapPractice,
-  );
-  assert.match(recap, /<SectionTitle \/>/);
-  assert.match(recap, /<CompareBoard \/>/);
-  assert.match(recap, /<PracticeCard \/>/);
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /<SectionTitle \/>|<CompareBoard \/>|<PracticeCard \/>/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

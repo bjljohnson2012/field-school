@@ -95,8 +95,8 @@ test("StepsCard is a numbered procedure / do-this-in-order after sting/objective
   assert.match(demo, /<StepsCard \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<StepsCard \/>/);
-  assert.match(recap, /name="steps"/);
+  assert.doesNotMatch(recap, /<StepsCard \/>/);
+  assert.doesNotMatch(recap, /name="steps"/);
   assert.match(board, /<StepsCard \/>/);
   assert.match(board, /name="steps"/);
 });
@@ -128,17 +128,9 @@ test("StepsCardDemo registers after QuoteCardDemo; Recap/Definition sequence ste
       boardAudio > boardSteps,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapQuote = recap.indexOf('name="quote"');
-  const recapSteps = recap.indexOf('name="steps"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapQuote > recapWipe &&
-      recapSteps > recapQuote &&
-      recapPractice > recapSteps &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

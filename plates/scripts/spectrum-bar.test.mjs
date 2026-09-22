@@ -105,8 +105,8 @@ test("SpectrumBar is a continuum / contrast bar distinct from compare after sour
   assert.match(demo, /<SpectrumBar \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<SpectrumBar \/>/);
-  assert.match(recap, /name="spectrum"/);
+  assert.doesNotMatch(recap, /<SpectrumBar \/>/);
+  assert.doesNotMatch(recap, /name="spectrum"/);
   assert.match(board, /<SpectrumBar \/>/);
   assert.match(board, /name="spectrum"/);
 });
@@ -138,17 +138,9 @@ test("SpectrumBarDemo registers after SourceChipDemo; Recap/Definition sequence 
       boardAudio > boardSpectrum,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapSource = recap.indexOf('name="source"');
-  const recapSpectrum = recap.indexOf('name="spectrum"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapSource > recapWipe &&
-      recapSpectrum > recapSource &&
-      recapPractice > recapSpectrum &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

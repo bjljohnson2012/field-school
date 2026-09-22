@@ -97,8 +97,8 @@ test("ReflectionPrompt is a learner pause / think-then-answer after caveat", () 
   assert.match(demo, /<ReflectionPrompt \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<ReflectionPrompt \/>/);
-  assert.match(recap, /name="reflect"/);
+  assert.doesNotMatch(recap, /<ReflectionPrompt \/>/);
+  assert.doesNotMatch(recap, /name="reflect"/);
   assert.match(board, /<ReflectionPrompt \/>/);
   assert.match(board, /name="reflect"/);
 });
@@ -130,17 +130,9 @@ test("ReflectionPromptDemo registers after CaveatCardDemo; Recap/Definition sequ
       boardAudio > boardReflect,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapCaveat = recap.indexOf('name="caveat"');
-  const recapReflect = recap.indexOf('name="reflect"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapCaveat > recapWipe &&
-      recapReflect > recapCaveat &&
-      recapPractice > recapReflect &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

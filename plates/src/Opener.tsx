@@ -1,6 +1,6 @@
 import React from "react";
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from "remotion";
-import {AudioBed, CalloutCard, ChapterChip, Claim, CompareBoard, GlossaryChip, GoldRule, Kicker, Karaoke, KeyClaim, Keyword, Letterbox, LowerThird, ObjectionCard, ObjectiveSlate, OverlayLock, HeadDock, ProgressRail, ScriptureCard, SectionTitle, StingColdOpen, Title, TransitionLuma, TypeCard} from "./layers";
+import {AudioBed, CalloutCard, ChapterChip, Claim, GoldRule, Kicker, Karaoke, Keyword, Letterbox, LowerThird, ObjectiveSlate, OverlayLock, HeadDock, ProgressRail, Title, TransitionLuma, TypeCard} from "./layers";
 import {Bed} from "./layers";
 import {Layer, Stack} from "./Stack";
 import {lumaVeil} from "./sceneMotionMath";
@@ -63,27 +63,6 @@ export const Opener: React.FC<OpenerProps> = ({kicker, title, claim, objective, 
         </Layer>
         <Layer name="transition">
           <TransitionLuma />
-        </Layer>
-        <Layer name="claim">
-          <KeyClaim />
-        </Layer>
-        <Layer name="scripture">
-          <ScriptureCard />
-        </Layer>
-        <Layer name="compare">
-          <CompareBoard />
-        </Layer>
-        <Layer name="section">
-          <SectionTitle />
-        </Layer>
-        <Layer name="glossary">
-          <GlossaryChip />
-        </Layer>
-        <Layer name="objection">
-          <ObjectionCard />
-        </Layer>
-        <Layer name="cold-open">
-          <StingColdOpen />
         </Layer>
         <Layer name="audio">
           <AudioBed />

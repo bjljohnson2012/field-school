@@ -87,8 +87,8 @@ test("CheckpointCard is a formative check / confirm-understanding after sting/ob
   assert.match(demo, /<CheckpointCard \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<CheckpointCard \/>/);
-  assert.match(recap, /name="checkpoint"/);
+  assert.doesNotMatch(recap, /<CheckpointCard \/>/);
+  assert.doesNotMatch(recap, /name="checkpoint"/);
   assert.match(board, /<CheckpointCard \/>/);
   assert.match(board, /name="checkpoint"/);
 });
@@ -120,17 +120,9 @@ test("CheckpointCardDemo registers after StingColdOpenDemo; Recap/Definition seq
       boardAudio > boardCheck,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapObjection = recap.indexOf('name="objection"');
-  const recapCheck = recap.indexOf('name="checkpoint"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapObjection > recapWipe &&
-      recapCheck > recapObjection &&
-      recapPractice > recapCheck &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

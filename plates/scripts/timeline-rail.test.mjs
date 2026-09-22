@@ -101,8 +101,8 @@ test("TimelineRail is a sequence of beats / ordered milestones after reflect", (
   assert.match(demo, /<TimelineRail \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<TimelineRail \/>/);
-  assert.match(recap, /name="timeline"/);
+  assert.doesNotMatch(recap, /<TimelineRail \/>/);
+  assert.doesNotMatch(recap, /name="timeline"/);
   assert.match(board, /<TimelineRail \/>/);
   assert.match(board, /name="timeline"/);
 });
@@ -134,17 +134,9 @@ test("TimelineRailDemo registers after ReflectionPromptDemo; Recap/Definition se
       boardAudio > boardTimeline,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapReflect = recap.indexOf('name="reflect"');
-  const recapTimeline = recap.indexOf('name="timeline"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapReflect > recapWipe &&
-      recapTimeline > recapReflect &&
-      recapPractice > recapTimeline &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

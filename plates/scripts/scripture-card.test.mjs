@@ -87,16 +87,9 @@ test("ScriptureCardDemo registers after KeyClaimDemo; Opener/Definition/Recap se
   assert.ok(rootTsx.indexOf('id="KeyClaimDemo"') < rootTsx.indexOf('id="ScriptureCardDemo"'));
   assert.ok(rootTsx.indexOf('id="ScriptureCardDemo"') < rootTsx.indexOf('id="LessonSpine"'));
   const openerWipe = opener.indexOf('name="transition"');
-  const openerClaim = opener.indexOf('name="claim"');
-  const openerScripture = opener.indexOf('name="scripture"');
   const openerAudio = opener.indexOf('name="audio"');
-  assert.ok(
-    openerWipe >= 0 &&
-      openerClaim > openerWipe &&
-      openerScripture > openerClaim &&
-      openerAudio > openerScripture,
-  );
-  assert.match(opener, /<ScriptureCard \/>/);
+  assert.ok(openerWipe >= 0 && openerAudio > openerWipe);
+  assert.doesNotMatch(opener, /<ScriptureCard \/>|name="scripture"/);
   const boardWipe = board.indexOf('name="transition"');
   const boardClaim = board.indexOf('name="claim"');
   const boardScripture = board.indexOf('name="scripture"');
@@ -109,20 +102,9 @@ test("ScriptureCardDemo registers after KeyClaimDemo; Opener/Definition/Recap se
   );
   assert.match(board, /<ScriptureCard \/>/);
   const recapWipe = recap.indexOf('name="transition"');
-  const recapClaim = recap.indexOf('name="claim"');
-  const recapScripture = recap.indexOf('name="scripture"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapClaim > recapWipe &&
-      recapScripture > recapClaim &&
-      recapPractice > recapScripture &&
-      recapAudio > recapPractice,
-  );
-  assert.match(recap, /<ScriptureCard \/>/);
-  assert.match(recap, /<KeyClaim \/>/);
-  assert.match(recap, /<PracticeCard \/>/);
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /<ScriptureCard \/>|<KeyClaim \/>|<PracticeCard \/>/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');
