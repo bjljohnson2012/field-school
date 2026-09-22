@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T21:10:00Z",
+  "updated": "2026-09-22T21:20:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -107,12 +107,12 @@
     },
     "FACTORY": {
       "status": "PASS",
-      "evidence": "The four plates use the fixture caption clock. Independent Antagonist bar PASS. Just stays locked. Dest stays untouched. Remotion stays in plates. Launch CLOSED 0/8."
+      "evidence": "The four captioned plates sit on one master timeline. Independent Antagonist bar PASS. This clock does not render. Just stays locked. Dest stays untouched. Remotion stays in plates. Launch CLOSED 0/8."
     }
   },
   "in_flight": [],
   "last_pick": [
     "N15"
   ],
-  "last_clock": "post-244"
+  "last_clock": "post-245"
 }
