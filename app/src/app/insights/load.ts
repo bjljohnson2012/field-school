@@ -17,7 +17,7 @@ import {
   usageEvents,
 } from "@/lib/db/schema";
 import { knowledgeUnits } from "@/lib/composer/schema";
-import { chooseNextStep, type Room } from "@/lib/living-brain/model";
+import { brainBoard, chooseNextStep, type Room } from "@/lib/living-brain/model";
 import { toolRead } from "@/lib/living-brain/store";
 import { buildInsights, type InsightInput, type InsightsModel } from "./aggregate";
 
@@ -189,19 +189,22 @@ export async function loadInsights(): Promise<InsightsLoad> {
 
     const model = buildInsights(input);
     let brainNext: InsightsModel["brainNext"] = null;
+    let brainView: InsightsModel["brainBoard"] = null;
     const room: Room | null = org.slug === "household" || org.slug === "sales" ? org.slug : null;
     if (room) {
       try {
         const brain = await toolRead(orgId);
+        brainView = brainBoard({ room, brain });
         const chosen = chooseNextStep({ room, brain, storedTitle: "" });
         if (chosen && chosen.from !== "stored") {
           brainNext = { title: chosen.title, name: chosen.name, login: chosen.login, from: chosen.from };
         }
       } catch {
         brainNext = null;
+        brainView = null;
       }
     }
-    return { ok: true, model: { ...model, brainNext } };
+    return { ok: true, model: { ...model, brainNext, brainBoard: brainView } };
   } catch (error) {
     if (error instanceof DatabaseUnavailableError) {
       return { ok: false, status: 503, error: "database_unavailable" };

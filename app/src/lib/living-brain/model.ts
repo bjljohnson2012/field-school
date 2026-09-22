@@ -221,6 +221,50 @@ export function chooseNextStep(input: {
   };
 }
 
+export type BrainBoardPerson = {
+  membershipId: string;
+  name: string;
+  kind: string;
+  login: "none" | "member";
+  profile: string;
+  outcomes: string;
+  ownsOutcomes: false;
+};
+
+export type BrainBoard = {
+  room: Room;
+  facts: string;
+  people: BrainBoardPerson[];
+};
+
+/** One readable list: org facts, then each person's profile and outcomes. Sales drops children. */
+export function brainBoard(input: {
+  room: Room;
+  brain: { room: Room; facts: string; people: LivingPerson[] } | null;
+}): BrainBoard {
+  const source = input.brain && input.brain.room === input.room ? input.brain : null;
+  const people = (source?.people ?? [])
+    .filter((person) => {
+      if (person.ownsOutcomes) return false;
+      if (input.room === "sales") return person.kind !== "child" && person.login === "member";
+      return person.kind === "child" && person.login === "none";
+    })
+    .sort((a, b) => a.name.localeCompare(b.name) || a.membershipId.localeCompare(b.membershipId));
+  return {
+    room: input.room,
+    facts: source?.facts ?? "",
+    people: people.map((person) => ({
+      membershipId: person.membershipId,
+      name: person.name,
+      kind: person.kind,
+      login: person.login,
+      profile: person.profile,
+      outcomes: person.outcomes,
+      ownsOutcomes: false,
+    })),
+  };
+}
+
 /** Tools read one org. A sales brain never includes a child. */
 export function readForTool(brain: LivingBrain, activeOrgId: string) {
   if (brain.orgId !== activeOrgId) return null;
