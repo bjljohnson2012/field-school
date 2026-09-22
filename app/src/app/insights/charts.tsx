@@ -109,6 +109,7 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
   );
 
   const [board, setBoard] = useState<BrainBoard | null>(model.brainBoard ?? null);
+  const [suggestionSource, setSuggestionSource] = useState<"" | "ai" | "fallback">("");
 
   async function saveFacts() {
     if (!board) return;
@@ -134,8 +135,9 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
         nextStep: person.outcomes,
       }),
     });
-    const data = (await response.json()) as { brain?: BrainBoard };
+    const data = (await response.json()) as { brain?: BrainBoard; source?: "ai" | "fallback" };
     if (!response.ok || !data.brain) return;
+    if (data.source === "ai" || data.source === "fallback") setSuggestionSource(data.source);
     setBoard(brainBoard({ room: board.room, brain: data.brain }));
   }
 
@@ -147,6 +149,7 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
           data-brain-room={board.room}
           data-brain-count={board.people.length}
           data-sales-children={board.room === "sales" ? "0" : undefined}
+          data-suggestion-source={suggestionSource || undefined}
           aria-label="Org brain"
           className="mb-4 rounded-xl border border-border bg-card p-5"
         >

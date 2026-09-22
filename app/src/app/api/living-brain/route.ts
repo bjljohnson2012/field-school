@@ -95,7 +95,7 @@ export async function POST(request: Request) {
         },
       });
       if (!result.ok) return NextResponse.json({ ok: false, error: result.error }, { status: 403 });
-      return NextResponse.json({ ok: true, brain: result.brain });
+      return NextResponse.json({ ok: true, brain: result.brain, source: result.source });
     }
     const result = await writeOutcome({
       orgId: auth.identity.orgId,
