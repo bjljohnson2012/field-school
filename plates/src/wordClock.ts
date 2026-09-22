@@ -1,7 +1,7 @@
 import {gold, ink, stone} from "./brand";
 import type {Caption} from "./types";
 
-/** Fixture word clock. WhisperX ingest is a later stream. */
+/** Word clock for plate captions. The four live plates use the Track B fixture clock. */
 export type WordClockState = "unspoken" | "active" | "spoken";
 
 export type ClockedWord = Caption & {state: WordClockState};

@@ -18,6 +18,17 @@ function inNext(dest) {
   return value.includes("/app/") || value.includes("player-rail") || value.includes("node_modules/remotion");
 }
 
+/** The four live plates share one caption clock. DefinitionBoard is not in this catalog. */
+export function fourPlateCaptions(words) {
+  const captions = mapTrackBCaptions(words);
+  return {
+    Opener: captions,
+    TalkingHead: captions,
+    RecapCard: captions,
+    QuizBumper: captions,
+  };
+}
+
 /** WhisperX words become Caption[] on the Track B path. Speaker labels are dropped. */
 export function mapTrackBCaptions(words) {
   return whisperxWordsToCaptions(collectWhisperxWords(words)).map((caption) => ({
