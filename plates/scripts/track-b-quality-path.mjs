@@ -18,6 +18,42 @@ function inNext(dest) {
   return value.includes("/app/") || value.includes("player-rail") || value.includes("node_modules/remotion");
 }
 
+/** Fixture durations match the live plate metadata. DefinitionBoard is not on this timeline. */
+const MASTER_BEATS = [
+  {name: "Opener", component: "Opener", durationSec: 10},
+  {name: "TalkingHead", component: "TalkingHeadCard", durationSec: 8},
+  {name: "RecapCard", component: "RecapCard", durationSec: 10},
+  {name: "QuizBumper", component: "QuizBumper", durationSec: 7},
+];
+
+/** One master timeline. Same caption clock on each plate. Does not render. */
+export function masterTimeline(words) {
+  const captions = mapTrackBCaptions(words);
+  let from = 0;
+  const plates = MASTER_BEATS.map((beat) => {
+    const frames = beat.durationSec * 30;
+    const row = {
+      name: beat.name,
+      component: beat.component,
+      from,
+      durationSec: beat.durationSec,
+      frames,
+      captions,
+    };
+    from += frames;
+    return row;
+  });
+  return {
+    id: "TrackBMaster",
+    fps: 30,
+    width: 1920,
+    height: 1080,
+    durationInFrames: from,
+    renders: false,
+    plates,
+  };
+}
+
 /** The four live plates share one caption clock. DefinitionBoard is not in this catalog. */
 export function fourPlateCaptions(words) {
   const captions = mapTrackBCaptions(words);
@@ -85,6 +121,7 @@ export function planQualityPath(input) {
     audio: audio.audio,
     captions,
     plates: FOUR_PLATES,
+    timeline: masterTimeline(input.words),
     dest,
     width: 1920,
     height: 1080,

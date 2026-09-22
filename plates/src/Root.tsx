@@ -39,6 +39,7 @@ import {EvidenceCardDemo} from "./EvidenceCardDemo";
 import {TimelineRailDemo} from "./TimelineRailDemo";
 import {LowerThirdDemo} from "./LowerThirdDemo";
 import {TalkingHeadCard} from "./TalkingHeadCard";
+import {TrackBMaster} from "./TrackBMaster";
 import {TRACK_B_CAPTIONS} from "./trackBCaptions";
 import {LOCK} from "./brand";
 import {spineDurationFrames} from "./lessonSpine";
@@ -607,6 +608,14 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         defaultProps={spineDefaults}
         calculateMetadata={spineMetadata}
+      />
+      <Composition
+        id="TrackBMaster"
+        component={TrackBMaster}
+        durationInFrames={1050}
+        fps={30}
+        width={1920}
+        height={1080}
       />
     </>
   );
