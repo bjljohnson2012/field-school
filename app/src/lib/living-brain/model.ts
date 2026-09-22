@@ -232,11 +232,13 @@ export function applyAssist(
         }
       : { ...row, ownsOutcomes: false as const },
   );
+  const listed = brain.room === "sales" ? people.filter((row) => row.kind !== "child" && row.login === "member") : people;
   return {
     ok: true,
     brain: {
       ...brain,
-      people: brain.room === "sales" ? people.filter((row) => row.kind !== "child" && row.login === "member") : people,
+      facts: deskFacts(brain.room, listed) || brain.facts,
+      people: listed,
     },
   };
 }
