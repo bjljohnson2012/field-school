@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { chooseNextStep, nextStepTrail, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
+import { chooseNextStep, nextStepTrail, personConfidence, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
 import {
   DESK_COPY,
   ERROR_COPY,
@@ -101,6 +101,7 @@ export function AssignDesk() {
   const [formError, setFormError] = useState("");
   const [brainNext, setBrainNext] = useState<Record<string, string>>({});
   const [brainTrail, setBrainTrail] = useState<Record<string, OutcomeMark[]>>({});
+  const [brainConfidence, setBrainConfidence] = useState<Record<string, string>>({});
 
   async function loadBrain(room: DeskRoom) {
     try {
@@ -111,17 +112,22 @@ export function AssignDesk() {
       if (!brain || brain.room !== room) return;
       const map: Record<string, string> = {};
       const trails: Record<string, OutcomeMark[]> = {};
+      const notes: Record<string, string> = {};
       for (const person of brain.people) {
         const chosen = chooseNextStep({ room, brain, membershipId: person.membershipId });
         if (chosen && chosen.from !== "stored") map[person.membershipId] = chosen.title;
         const trail = nextStepTrail({ room, brain, membershipId: person.membershipId });
         if (trail.length) trails[person.membershipId] = trail;
+        const note = personConfidence({ room, brain, membershipId: person.membershipId });
+        if (note) notes[person.membershipId] = note;
       }
       setBrainNext(map);
       setBrainTrail(trails);
+      setBrainConfidence(notes);
     } catch {
       setBrainNext({});
       setBrainTrail({});
+      setBrainConfidence({});
     }
   }
 
@@ -366,6 +372,11 @@ export function AssignDesk() {
                         <span>
                           <span className="block text-sm">{person.name}</span>
                           <span className="mt-1 block text-sm text-muted-foreground">{copy.loginLine}</span>
+                          {brainConfidence[person.membershipId] ? (
+                            <span className="mt-1 block text-xs text-muted-foreground" data-confidence={person.membershipId}>
+                              {brainConfidence[person.membershipId]}
+                            </span>
+                          ) : null}
                           {(brainTrail[person.membershipId] ?? []).length ? (
                             <ol
                               className="mt-1 space-y-0.5 text-xs text-muted-foreground"
@@ -418,6 +429,11 @@ export function AssignDesk() {
                     >
                       Next portion: {brainNext[row.membershipId] || row.nextUnit}
                     </p>
+                    {brainConfidence[row.membershipId] ? (
+                      <p className="mt-1 text-xs text-muted-foreground" data-confidence={row.membershipId}>
+                        {brainConfidence[row.membershipId]}
+                      </p>
+                    ) : null}
                     {(brainTrail[row.membershipId] ?? []).length ? (
                       <ol
                         className="mt-1 space-y-0.5 text-xs text-muted-foreground"

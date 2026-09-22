@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { TeachDeck, type LessonSpec } from "@/components/teach-deck";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
-import { chooseNextStep, nextStepTrail, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
+import { chooseNextStep, nextStepTrail, personConfidence, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
 
 type Room = "household" | "sales";
 
@@ -50,6 +50,7 @@ export function TeachLive() {
   const [desk, setDesk] = useState<Desk>({ status: "loading" });
   const [brainTitle, setBrainTitle] = useState("");
   const [brainTrail, setBrainTrail] = useState<OutcomeMark[]>([]);
+  const [confidence, setConfidence] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -87,6 +88,7 @@ export function TeachLive() {
         if (!cancelled) {
           setBrainTitle(chosen && chosen.from !== "stored" ? chosen.title : "");
           setBrainTrail(nextStepTrail({ room, brain, membershipId: open?.membershipId }));
+          setConfidence(personConfidence({ room, brain, membershipId: open?.membershipId }));
           setDesk({ status: "room", room, assignment: open });
         }
       })
@@ -164,6 +166,11 @@ export function TeachLive() {
           ? `Next step for ${assignment.name} stays on Learn when the leader leaves and comes back. The team member may sign in. The leader owns the path.`
           : `Next step for ${assignment.name} stays on Learn when the parent leaves and comes back. The child has no login.`}
       </p>
+      {confidence ? (
+        <p className="mx-auto max-w-6xl px-4 pb-4 text-sm text-muted-foreground" data-confidence={assignment.membershipId || ""}>
+          {confidence}
+        </p>
+      ) : null}
       {brainTrail.length ? (
         <ol
           className="mx-auto max-w-6xl space-y-0.5 px-4 pb-10 text-xs text-muted-foreground"

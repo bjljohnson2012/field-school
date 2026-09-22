@@ -141,6 +141,18 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
     setBoard(brainBoard({ room: board.room, brain: data.brain }));
   }
 
+  async function saveConfidence(person: BrainBoard["people"][number], confidence: string) {
+    if (!board) return;
+    const response = await fetch("/api/living-brain", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ membershipId: person.membershipId, confidence }),
+    });
+    const data = (await response.json()) as { brain?: BrainBoard };
+    if (!response.ok || !data.brain) return;
+    setBoard(brainBoard({ room: board.room, brain: data.brain }));
+  }
+
   return (
     <div data-org={model.orgSlug} data-children={model.childrenIncluded} data-sales-diagnostics={model.salesDiagnostics}>
       {board ? (
@@ -203,6 +215,27 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                       <td className="px-2 py-2">{person.name}</td>
                       <td className="px-2 py-2">
                         {person.profile || "—"}
+                        <p className="mt-1 text-xs text-muted-foreground" data-confidence={person.membershipId}>
+                          {person.confidence || "No note on how they are doing yet."}
+                        </p>
+                        <form
+                          className="mt-1 flex flex-wrap items-center gap-2"
+                          onSubmit={(event) => {
+                            event.preventDefault();
+                            const field = new FormData(event.currentTarget).get("confidence");
+                            void saveConfidence(person, typeof field === "string" ? field : "");
+                          }}
+                        >
+                          <input
+                            name="confidence"
+                            defaultValue={person.confidence}
+                            aria-label={`How ${person.name} is doing`}
+                            className="h-8 min-w-0 flex-1 rounded-lg border border-border bg-background px-2 text-xs"
+                          />
+                          <button type="submit" className="text-xs underline underline-offset-4" data-save-confidence={person.membershipId}>
+                            Save how they are doing
+                          </button>
+                        </form>
                         {draft ? <p className="mt-1 text-xs text-muted-foreground">Suggested: {draft.profile}</p> : null}
                       </td>
                       <td className="px-2 py-2">

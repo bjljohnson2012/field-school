@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { applyAssist, applyFactsAssist, applyPreparedAssist, assistDraft, assistFacts, brainBoard, chooseNextStep, nextStepTrail, parseAiSuggestion, pickSuggestionKey, readForTool, refreshFromUse, rememberOutcome, shapeBrain, stepAfterFinish, suggestForPerson, updateOutcome } from "./model.ts";
+import { applyAssist, applyFactsAssist, applyPreparedAssist, assistDraft, assistFacts, brainBoard, chooseNextStep, nextStepTrail, parseAiSuggestion, personConfidence, pickSuggestionKey, readForTool, refreshFromUse, rememberOutcome, setConfidence, shapeBrain, stepAfterFinish, suggestForPerson, updateOutcome } from "./model.ts";
 
 const parent = { kind: "adult", stance: "guardian", org: "household", membershipId: "parent-1" };
 const leader = { kind: "adult", stance: "trainer", org: "sales", membershipId: "leader-1" };
@@ -1424,4 +1424,101 @@ test("assign and teach read the same next-step trail insights lists", () => {
   assert.equal(nextStepTrail({ room: "sales", brain: withChild, membershipId: "child-9" }).length, 0);
   assert.equal(salesBoard.people.every((person) => person.login === "member" && person.ownsOutcomes === false), true);
   assert.equal(salesBoard.people.some((person) => person.kind === "child"), false);
+});
+
+test("living profile carries how the person is doing in both rooms", () => {
+  const home = shapeBrain({
+    orgId: "org-home",
+    room: "household",
+    facts: "Ada: Read the morning page.",
+    actorId: "parent-1",
+    people: [
+      {
+        membershipId: "child-1",
+        name: "Ada",
+        kind: "child",
+        login: "none",
+        profile: "Reads at the table.",
+        outcomes: "Read the morning page",
+      },
+    ],
+  });
+  assert.equal(home.ok, true);
+  if (!home.ok) return;
+  assert.equal(home.brain.people[0].confidence, "");
+  assert.equal(home.brain.people[0].login, "none");
+  assert.equal(home.brain.people[0].ownsOutcomes, false);
+  const noted = setConfidence(home.brain, parent, "child-1", "Steady at the table");
+  assert.equal(noted.ok, true);
+  if (!noted.ok) return;
+  assert.equal(noted.brain.people[0].confidence, "Steady at the table");
+  assert.equal(noted.brain.people[0].outcomes, "Read the morning page");
+  assert.equal(noted.brain.people[0].ownsOutcomes, false);
+  const homeBoard = brainBoard({ room: "household", brain: noted.brain });
+  assert.equal(homeBoard.people[0].confidence, "Steady at the table");
+  assert.equal(personConfidence({ room: "household", brain: noted.brain, membershipId: "child-1" }), homeBoard.people[0].confidence);
+  const kept = refreshFromUse(noted.brain, parent, {
+    kind: "progress",
+    membershipId: "child-1",
+    name: "Ada",
+    personKind: "child",
+    login: "none",
+    step: "Read the morning page",
+    following: "Read the next page",
+  });
+  assert.equal(kept.ok, true);
+  if (!kept.ok) return;
+  assert.equal(kept.brain.people[0].confidence, "Steady at the table");
+  assert.equal(kept.brain.people[0].outcomes, "Read the next page");
+  const childWrite = setConfidence(noted.brain, { ...parent, kind: "child", membershipId: "child-1" }, "child-1", "A login");
+  assert.deepEqual(childWrite, { ok: false, error: "child_has_no_login" });
+
+  const sales = shapeBrain({
+    orgId: "org-sales",
+    room: "sales",
+    facts: "Kai: Name the next call.",
+    actorId: "leader-1",
+    people: [
+      {
+        membershipId: "rep-1",
+        name: "Kai",
+        kind: "adult",
+        login: "member",
+        profile: "Knows the next call.",
+        outcomes: "Name the next call",
+      },
+    ],
+  });
+  assert.equal(sales.ok, true);
+  if (!sales.ok) return;
+  const salesNoted = setConfidence(sales.brain, leader, "rep-1", "Moving on the calls");
+  assert.equal(salesNoted.ok, true);
+  if (!salesNoted.ok) return;
+  assert.equal(salesNoted.brain.people[0].login, "member");
+  assert.equal(salesNoted.brain.people[0].ownsOutcomes, false);
+  assert.equal(salesNoted.brain.people[0].confidence, "Moving on the calls");
+  const withChild = {
+    ...salesNoted.brain,
+    people: [
+      ...salesNoted.brain.people,
+      {
+        membershipId: "child-9",
+        name: "Wrong room",
+        kind: "child",
+        login: "none",
+        profile: "no",
+        outcomes: "Do not show",
+        ownsOutcomes: false,
+        history: [],
+        confidence: "Do not show",
+      },
+    ],
+  };
+  const salesBoard = brainBoard({ room: "sales", brain: withChild });
+  assert.equal(personConfidence({ room: "sales", brain: withChild, membershipId: "rep-1" }), "Moving on the calls");
+  assert.equal(personConfidence({ room: "sales", brain: withChild, membershipId: "rep-1" }), salesBoard.people[0].confidence);
+  assert.equal(personConfidence({ room: "sales", brain: withChild, membershipId: "child-9" }), "");
+  assert.equal(salesBoard.people.some((person) => person.kind === "child" || person.confidence === "Do not show"), false);
+  const member = { kind: "adult", stance: "learner", org: "sales", membershipId: "rep-1" };
+  assert.deepEqual(setConfidence(sales.brain, member, "rep-1", "I own this"), { ok: false, error: "not_leader" });
 });

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { DatabaseUnavailableError } from "@/lib/db/client";
 import { actorMayWrite, type Room } from "@/lib/living-brain/model";
-import { toolRead, writeAssist, writeFactsAssist, writeOutcome } from "@/lib/living-brain/store";
+import { toolRead, writeAssist, writeConfidence, writeFactsAssist, writeOutcome } from "@/lib/living-brain/store";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +61,7 @@ export async function POST(request: Request) {
     outcomes?: string;
     pathTitle?: string;
     nextStep?: string;
+    confidence?: string;
   };
   try {
     body = (await request.json()) as typeof body;
@@ -84,6 +85,16 @@ export async function POST(request: Request) {
   const kind = typeof body.kind === "string" && body.kind.trim() ? body.kind.trim() : room === "household" ? "child" : "adult";
   if (!membershipId) return NextResponse.json({ ok: false, error: "not_on_desk" }, { status: 400 });
   try {
+    if (typeof body.confidence === "string") {
+      const result = await writeConfidence({
+        orgId: auth.identity.orgId,
+        actor,
+        membershipId,
+        confidence: body.confidence,
+      });
+      if (!result.ok) return NextResponse.json({ ok: false, error: result.error }, { status: 403 });
+      return NextResponse.json({ ok: true, brain: result.brain });
+    }
     if (body.assist === true) {
       const result = await writeAssist({
         orgId: auth.identity.orgId,
