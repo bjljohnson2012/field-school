@@ -768,6 +768,35 @@ export function learnHomeContext(input: {
   };
 }
 
+/** People desk: how each person is doing, and their next step. Sales never returns a child. */
+export function peopleContext(input: {
+  room: Room;
+  brain: { room: Room; outcome?: string; people: LivingPerson[] } | null;
+}): { membershipId: string; confidence: string; nextStep: string; login: "none" | "member" }[] {
+  if (!input.brain || input.brain.room !== input.room) return [];
+  return brainBoard({
+    room: input.room,
+    brain: {
+      room: input.brain.room,
+      facts: "",
+      outcome: input.brain.outcome ?? "",
+      people: input.brain.people,
+    },
+  }).people.map((person) => {
+    const card = learnHomeContext({
+      room: input.room,
+      brain: input.brain,
+      membershipId: person.membershipId,
+    });
+    return {
+      membershipId: person.membershipId,
+      confidence: card.confidence,
+      nextStep: card.nextStep,
+      login: person.login,
+    };
+  });
+}
+
 /** The same plain confidence Insights lists for one person. Sales never returns a child. */
 export function personConfidence(input: {
   room: Room;
