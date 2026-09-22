@@ -41,6 +41,34 @@ const SALES_FIXTURE: LessonSpec = {
   ],
 };
 
+function TeachBrainLabels(props: { room: Room; aim: string; confidence: string; membershipId: string }) {
+  if (!props.aim && !props.confidence) return null;
+  return (
+    <div className="mx-auto max-w-6xl px-4 pb-4">
+      {props.aim ? (
+        <p className="text-sm" data-org-aim="yes">
+          <span className="text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim">
+            Aim
+          </span>
+          <span className="mt-1 block text-sm font-medium">
+            {props.room === "sales" ? "What this team is aiming for" : "What this family is aiming for"}
+          </span>
+          <span className="mt-1 block text-muted-foreground">{props.aim}</span>
+        </p>
+      ) : null}
+      {props.confidence ? (
+        <p className="mt-4 text-sm text-muted-foreground" data-confidence={props.membershipId}>
+          <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
+            Confidence
+          </span>
+          <span className="mt-1 block text-sm font-medium text-foreground">How they are doing</span>
+          <span className="mt-1 block">{props.confidence}</span>
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function roomOf(slug: string): Room | null {
   if (slug === "household" || slug === "sales") return slug;
   return null;
@@ -51,6 +79,7 @@ export function TeachLive() {
   const [brainTitle, setBrainTitle] = useState("");
   const [brainTrail, setBrainTrail] = useState<OutcomeMark[]>([]);
   const [confidence, setConfidence] = useState("");
+  const [aim, setAim] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -60,7 +89,11 @@ export function TeachLive() {
         const slug = typeof me?.activeOrg?.slug === "string" ? me.activeOrg.slug : "";
         const room = roomOf(slug);
         if (!room) {
-          if (!cancelled) setDesk({ status: "fixture" });
+          if (!cancelled) {
+            setAim("");
+            setConfidence("");
+            setDesk({ status: "fixture" });
+          }
           return;
         }
         const deskResponse = await fetch("/assign/desk", { headers: { "x-fs-org": room } });
@@ -88,12 +121,17 @@ export function TeachLive() {
         if (!cancelled) {
           setBrainTitle(chosen && chosen.from !== "stored" ? chosen.title : "");
           setBrainTrail(nextStepTrail({ room, brain, membershipId: open?.membershipId }));
+          setAim(brain?.outcome || "");
           setConfidence(personConfidence({ room, brain, membershipId: open?.membershipId }));
           setDesk({ status: "room", room, assignment: open });
         }
       })
       .catch(() => {
-        if (!cancelled) setDesk({ status: "fixture" });
+        if (!cancelled) {
+          setAim("");
+          setConfidence("");
+          setDesk({ status: "fixture" });
+        }
       });
     return () => {
       cancelled = true;
@@ -127,6 +165,7 @@ export function TeachLive() {
             ? "Assign a path to one team member first. They may sign in. You own the path. Their next step shows here after you return. This desk does not list children."
             : "Assign a path to one tracked child first. That child has no login. The next step shows here after you return."}
         </p>
+        <TeachBrainLabels room={room} aim={aim} confidence={confidence} membershipId="" />
       </main>
     );
   }
@@ -166,11 +205,12 @@ export function TeachLive() {
           ? `Next step for ${assignment.name} stays on Learn when the leader leaves and comes back. The team member may sign in. The leader owns the path.`
           : `Next step for ${assignment.name} stays on Learn when the parent leaves and comes back. The child has no login.`}
       </p>
-      {confidence ? (
-        <p className="mx-auto max-w-6xl px-4 pb-4 text-sm text-muted-foreground" data-confidence={assignment.membershipId || ""}>
-          {confidence}
-        </p>
-      ) : null}
+      <TeachBrainLabels
+        room={room}
+        aim={aim}
+        confidence={confidence}
+        membershipId={assignment.membershipId || ""}
+      />
       {brainTrail.length ? (
         <ol
           className="mx-auto max-w-6xl space-y-0.5 px-4 pb-10 text-xs text-muted-foreground"
