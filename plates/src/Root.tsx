@@ -39,6 +39,7 @@ import {EvidenceCardDemo} from "./EvidenceCardDemo";
 import {TimelineRailDemo} from "./TimelineRailDemo";
 import {LowerThirdDemo} from "./LowerThirdDemo";
 import {TalkingHeadCard} from "./TalkingHeadCard";
+import {TRACK_B_CAPTIONS} from "./trackBCaptions";
 import {LOCK} from "./brand";
 import {spineDurationFrames} from "./lessonSpine";
 import {EDU_S01_OBJECTIVE} from "./objectiveSlate";
@@ -225,27 +226,7 @@ export const RemotionRoot: React.FC = () => {
             w: 80,
             h: 64,
           },
-          captions: [
-            {text: "You", startMs: 0, endMs: 280},
-            {text: "Can", startMs: 280, endMs: 520},
-            {text: "Just", startMs: 520, endMs: 860},
-            {text: "Do", startMs: 860, endMs: 1100},
-            {text: "Things", startMs: 1100, endMs: 1700},
-            {text: "Type", startMs: 2200, endMs: 2600},
-            {text: "draws", startMs: 2600, endMs: 3000},
-            {text: "the", startMs: 3000, endMs: 3180},
-            {text: "idea.", startMs: 3180, endMs: 3800},
-            {text: "You", startMs: 4200, endMs: 4480},
-            {text: "will", startMs: 4480, endMs: 4720},
-            {text: "be", startMs: 4720, endMs: 4900},
-            {text: "able", startMs: 4900, endMs: 5200},
-            {text: "to", startMs: 5200, endMs: 5400},
-            {text: "draw", startMs: 5400, endMs: 5720},
-            {text: "one", startMs: 5720, endMs: 5960},
-            {text: "idea", startMs: 5960, endMs: 6300},
-            {text: "per", startMs: 6300, endMs: 6500},
-            {text: "beat", startMs: 6500, endMs: 7200},
-          ],
+          captions: TRACK_B_CAPTIONS,
         }}
         calculateMetadata={plateMetadata}
       />
@@ -273,27 +254,7 @@ export const RemotionRoot: React.FC = () => {
             w: 80,
             h: 64,
           },
-          captions: [
-            {text: "One", startMs: 800, endMs: 1100},
-            {text: "claim", startMs: 1100, endMs: 1600},
-            {text: "per", startMs: 1600, endMs: 1840},
-            {text: "beat", startMs: 1840, endMs: 2400},
-            {text: "Head", startMs: 2800, endMs: 3100},
-            {text: "docked", startMs: 3100, endMs: 3700},
-            {text: "Cream", startMs: 4800, endMs: 5300},
-            {text: "ink", startMs: 5400, endMs: 5800},
-            {text: "Fraunces", startMs: 5900, endMs: 6800},
-            {text: "You", startMs: 7400, endMs: 7680},
-            {text: "will", startMs: 7680, endMs: 7900},
-            {text: "be", startMs: 7900, endMs: 8080},
-            {text: "able", startMs: 8080, endMs: 8360},
-            {text: "to", startMs: 8360, endMs: 8540},
-            {text: "draw", startMs: 8540, endMs: 8840},
-            {text: "one", startMs: 8840, endMs: 9080},
-            {text: "idea", startMs: 9080, endMs: 9380},
-            {text: "per", startMs: 9380, endMs: 9560},
-            {text: "beat", startMs: 9560, endMs: 10000},
-          ],
+          captions: TRACK_B_CAPTIONS,
         }}
         calculateMetadata={plateMetadata}
       />
@@ -345,13 +306,7 @@ export const RemotionRoot: React.FC = () => {
             w: 80,
             h: 64,
           },
-          captions: [
-            {text: "What", startMs: 400, endMs: 700},
-            {text: "did", startMs: 700, endMs: 900},
-            {text: "the", startMs: 900, endMs: 1100},
-            {text: "card", startMs: 1100, endMs: 1500},
-            {text: "draw?", startMs: 1500, endMs: 2200},
-          ],
+          captions: TRACK_B_CAPTIONS,
         }}
         calculateMetadata={bumperMetadata}
       />
@@ -375,15 +330,7 @@ export const RemotionRoot: React.FC = () => {
             w: 80,
             h: 64,
           },
-          captions: [
-            {text: "Docked", startMs: 400, endMs: 900},
-            {text: "not", startMs: 900, endMs: 1100},
-            {text: "full-bleed", startMs: 1100, endMs: 1800},
-            {text: "Type", startMs: 2200, endMs: 2500},
-            {text: "keeps", startMs: 2500, endMs: 2900},
-            {text: "the", startMs: 2900, endMs: 3100},
-            {text: "left.", startMs: 3100, endMs: 3600},
-          ],
+          captions: TRACK_B_CAPTIONS,
         }}
         calculateMetadata={plateMetadata}
       />
