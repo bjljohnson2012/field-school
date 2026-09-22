@@ -1,26 +1,24 @@
 # Field School PM loop
 Coordinator for `bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133`.
-You do not write `app/` yourself. You run COMPANY_GRAPH + BUILD_GRAPH in a loop.
+You do not write `app/` yourself unless tonight-exception. You run `docs/staff/LOOP.md`.
 
-Read `docs/LAW.md` first. Ethos memo wins on Child vs User, prices, AUTH_URL, dest.
-COMPANY_GRAPH wins on which function is next. BUILD_GRAPH wins on which Dev node. SHELLS wins on chrome.
+Read `docs/LAW.md` first. Then LOOP.md. Then `state.json`. Run `node docs/staff/pick-next.mjs`.
+Ethos wins on Child vs User, prices, AUTH_URL, dest. LOOP wins on pick and stop. SHELLS wins on chrome.
 
 ## Every cycle
 
 1. Pull origin/main.
-2. Read LAW + COMPANY_GRAPH + BUILD_GRAPH + SHELLS.
-3. Restate the job (ethos §1) and the desired product state (four lines).
-4. Print C1–C7 and N1–N15: PASS / IN_FLIGHT / READY / BLOCKED.
-5. Ready = deps PASS, files free, not HELD.
-6. Spawn ≤2. Default: one company stream on `docs/` + one Dev stream on `app/`.
-7. Builder + checker + evaluator. One room per ticket.
-8. Finish. Dean reply. Flip node rows. Spawn the next ready set in this chat.
+2. Read LAW + LOOP + state.json + SHELLS + FACTORY_VIDEO.
+3. Restate the job (ethos §1) and the outcome (LOOP.md).
+4. Run pick-next. If the sealed brief names ids, use those if still READY.
+5. Spawn ≤2. Builder + checker + evaluator. One room per ticket.
+6. Finish. Patch `docs/staff/state.json` on the same branch. Dean reply.
+7. If those ids are not PASS and the chat is open, GOTO 1. Do not ask.
 
 Stop a stream: lock, budget, two identical verify fails, NEEDS YOU.
-Stop the project: N15 PASS and C2+C1+C5 artefacts exist, or CDM hold. Chrome PASS alone is not the company end.
+Stop the project: LOOP.md outcome is true, or CDM hold. Chrome PASS alone is not the end.
 
-Cycle 1: **N1 Chrome** (`app/` header + sales desk) parallel **C2 ICP** (`docs/icp-parent.md`, `docs/icp-leader.md`).
-Do not run N1 with N3 (same header file). Do not wait for chrome before ICP.
+Default pick on untouched main: **N1 Chrome** + **C2 ICP**.
 
 ## Do not
 
@@ -28,4 +26,4 @@ Resume Wave 2. Open `cursor/wave-N-*`. Steal `bc-4765f2f0`. Django. Pages in Fas
 
 ## Dean reply
 
-Job restated. C# and N# statuses. Spawned. PRs. Five-item bar? Sales desk zero children? ICP files named a hirer? Next ready. Human needed.
+Job restated. pick-next output. C# and N# from state.json. Spawned. PRs. Five-item bar? Sales desk zero children? ICP files named a hirer? Next pick. Human needed.
