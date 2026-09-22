@@ -1,7 +1,7 @@
 # Loop
 
 Dated 21 Sep 2026. This is how Field School moves from current state to the outcome.
-Grok Bot (CDM) runs the clock loop. Field School PM runs the inner loop. Neither is a daemon. The clocks restart the inner loop.
+Grok Bot (CDM) runs the clock loop. Field School PM runs the inner loop. Panel scores the live portal. Neither is a daemon. The clocks restart the inner loop.
 Launch stays CLOSED 0/8. This file is not 8/8.
 
 Read after ethos. Before COMPANY_GRAPH and BUILD_GRAPH.
@@ -14,14 +14,16 @@ Both rooms exist. Household child stays `kind:child`, `login:none`. Team teammat
 Chrome is five words. Sales desk shows zero children. New has three doors. One LessonSpec. Insights are real charts. Factory: one Cap take → WhisperX words → four plates → master.mp4.
 ICP, finance units, and GTM hire files exist. A human can hire the next hirer at the three prices. Public site unflipped. Counsel unsigned. Launch CLOSED.
 
-Chrome PASS alone is not the outcome. Dest SHA is not the outcome. Wave proofs are not the outcome.
+Chrome PASS alone is not the outcome. Dest SHA is not the outcome. Wave proofs are not the outcome. Six panel PASS on chrome still is not Launch 8/8.
 
-## Three loops
+## Four loops
 
 ```mermaid
 flowchart TD
   CLOCK[Clock loop Grok Bot CDM
-  06 09 15 22 02 ET]
+  06 09 10 15 22 02 ET]
+  PANEL[Panel 10:00
+  six stances]
   PICK[pick-next.mjs
   two disjoint READY]
   INNER[Inner loop Field School PM
@@ -29,22 +31,25 @@ flowchart TD
   STATE[docs/staff/state.json]
 
   CLOCK -->|sealed brief| PICK
+  PANEL -->|HARD redirect| CLOCK
   PICK -->|paste| INNER
   INNER -->|PASS or stall| STATE
   STATE --> CLOCK
+  STATE --> PANEL
 ```
 
 | Loop | Who | When | Does |
 | --- | --- | --- | --- |
-| Clock | Grok Bot = CDM | 06 / 09 / 15 / 22 / 02 ET | Inspect GitHub + state.json. Run pick. Emit one sealed brief (or two if files disjoint). @CTO. Stop. |
-| Company | Writer / Gate on `docs/` | When pick names C# | Artefacts: ICP, finance, GTM, research, marketing. High autonomy. |
-| Build | Field School PM on `app/` `plates/` | When pick names N# or Factory-slim | Implement node. Checker. Evaluator. PR. Flip state.json. |
+| Clock | Grok Bot = CDM | 06 / 09 / 15 / 22 / 02 ET | Inspect GitHub + state.json. Run pick. Emit sealed brief. @CTO. Stop. |
+| Panel | New Bot = Panel Runner | 10:00 ET weekday | Six personas walk the portal. File PANEL blocks. Do not write app/. |
+| Company | Writer / Gate on `docs/` | When pick names C# | ICP, finance, GTM, research, marketing. |
+| Build | Field School PM on `app/` `plates/` | When pick names N# or Factory-slim | Implement. Checker. Evaluator. PR. Flip state.json. |
 
-Wire never changes: **CDM → CTO → Cursor Gate → Field School PM**. CDM never messages Field School PM. No peer C-suite. Max two Cursor streams. Files cannot collide.
+Wire never changes: **CDM → CTO → Cursor Gate → Field School PM**. Panel never messages Field School PM. CDM never messages Field School PM. No peer C-suite. Max two Cursor streams. Files cannot collide. Do not invent seats.
 
 ## Automatic pick (do not invent a third)
 
-Source: `docs/staff/state.json`. Machine: `node docs/staff/pick-next.mjs`. Agents may follow the same score by eye.
+Source: `docs/staff/state.json`. Machine: `node docs/staff/pick-next.mjs`. Panel HARD_FAIL can override the pick (see PANEL.md).
 
 Score order:
 
@@ -69,30 +74,32 @@ Score order:
 19. C6 Ops (Insights = N2)
 
 Take the first two READY whose file sets do not intersect. Skip HELD and BLOCKED. If N1 is IN_FLIGHT, do not pick N3 or N9.
+If any panel HARD_FAIL names N1, pick N1 even if a later node looks fun.
 
-Default tonight/tomorrow morning if state is untouched: **N1 + C2**.
+Default if state is untouched: **N1 + C2**.
 
 ## Inner loop (Field School PM, one chat)
 
 1. Pull origin/main.
-2. Read LAW, this file, COMPANY_GRAPH, BUILD_GRAPH, SHELLS, FACTORY_VIDEO, state.json.
-3. Print C# and N# from state.json, then confirm against the repo (header still 12 items? icp files missing?).
+2. Read LAW, this file, COMPANY_GRAPH, BUILD_GRAPH, SHELLS, FACTORY_VIDEO, PANEL.md, state.json.
+3. Print C# and N# from state.json, then confirm against the repo.
 4. If the sealed brief names streams, do those. Else run pick-next.
 5. Spawn ≤2. Tonight exception: PM may be builder on one stream.
 6. Verify. EVALUATOR block. PR on `cursor/<id>-<slug>`.
-7. Patch `docs/staff/state.json` on that branch (status PASS or IN_FLIGHT + evidence).
+7. Patch `docs/staff/state.json` on that branch.
 8. Dean reply. If the clock seal is not met and budget remains, GOTO 1 in this chat.
 9. Stop when pick-next prints `IDLE`, a lock would move, `NEEDS YOU`, two identical verify fails, or N15 plus C2 C1 C5 exist.
 
 ## Clock loop (Grok Bot, each fire)
 
-Prompt: `docs/staff/GROK_BOT.md`. Pin that file on CDM. Each clock is still a **handoff**, not a conversation.
+Prompt: `docs/staff/GROK_BOT.md`. Panel: `docs/staff/GROK_BOT_PANEL.md`. Each clock is a **handoff**.
 
 | Clock | Extra |
 | --- | --- |
 | 06 harvest | What shipped overnight. Health. Pick. Sealed brief. Quiet to Ben. |
 | 09 weekday | Score table. Confirm or replace the 06 pick. |
-| 15 mid-course | Keep, redirect, or stop IN_FLIGHT. |
+| 10 panel | Six stances. Redirect summary only. |
+| 15 mid-course | Read panel HARD. Keep, redirect, or stop IN_FLIGHT. |
 | 22 night | Day score. Overnight brief safe with Ben asleep. |
 | 02 verify | Health. Family LIVE and Just still locked. First line for 06. |
 
@@ -111,7 +118,7 @@ Fail health → sealed brief is stop-the-stream, not a new node.
 ## Sealed brief (CDM writes, Gate pastes into Field School PM)
 
 ```
-Clock: 06|09|15|22|02
+Clock: 06|09|10|15|22|02
 Pick: <id> + <id or none>
 Project: Field School PM (bc-882e8bdf)
 Branch: cursor/<id>-<slug>
@@ -119,10 +126,10 @@ Room: household|team|company-prose
 Files:
 Done when:
 Do not: Wave 2, child login, Remotion-in-Next, Django, Launch 8/8, steal family LIVE, Just, dest, AUTH_URL, public flip, fourth SKU
-Human needed: none | Cap take | upload | BYOK paste | legal sign
+Human needed: none | Cap take | upload | BYOK paste | legal sign | test seat
 Paste: Read docs/staff/LOOP.md. Run node docs/staff/pick-next.mjs. Do the pick above. Loop until this clock's streams PASS or STOP.
 ```
 
 ## Held forever this week
 
-Launch 8/8. Public flip. Live card. Child login. Team price. Market count. Django. Remotion MCP. Remotion-in-Next. New antagonist plate. Wave 2 resume. Coach unhold. Steal `bc-4765f2f0`.
+Launch 8/8. Public flip. Live card. Child login. Team price. Market count. Django. Remotion MCP. Remotion-in-Next. New antagonist plate. Wave 2 resume. Coach unhold. Steal `bc-4765f2f0`. Official psychometric item banks. New C-suite seats.
