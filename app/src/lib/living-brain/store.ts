@@ -9,6 +9,7 @@ import {
   applyPreparedAssist,
   readForTool,
   refreshFromUse,
+  setConfidence,
   shapeBrain,
   stepAfterFinish,
   suggestForPerson,
@@ -70,6 +71,7 @@ export async function loadLivingBrain(orgId: string): Promise<LivingBrain | null
           profile: row.profile,
           outcomes: row.outcomes,
           history: parseHistory(row.history),
+          confidence: row.confidence || "",
         },
       ];
     }),
@@ -101,6 +103,7 @@ export async function saveLivingBrain(brain: LivingBrain) {
         outcomes: person.outcomes,
         ownsOutcomes: false,
         history: JSON.stringify(person.history ?? []),
+        confidence: person.confidence || "",
         updatedAt: now,
       })
       .onConflictDoUpdate({
@@ -113,6 +116,7 @@ export async function saveLivingBrain(brain: LivingBrain) {
           outcomes: person.outcomes,
           ownsOutcomes: false,
           history: JSON.stringify(person.history ?? []),
+          confidence: person.confidence || "",
           updatedAt: now,
         },
       });
@@ -152,10 +156,28 @@ export async function writeOutcome(input: {
             outcomes: "",
             ownsOutcomes: false,
             history: [],
+            confidence: "",
           },
         ],
       };
   const next = updateOutcome(withPerson, input.actor, input.membershipId, input.outcomes);
+  if (!next.ok) return next;
+  await saveLivingBrain(next.brain);
+  return { ok: true as const, brain: readForTool(next.brain, input.orgId) };
+}
+
+export async function writeConfidence(input: {
+  orgId: string;
+  actor: BrainActor;
+  membershipId: string;
+  confidence: string;
+}) {
+  const current = await loadLivingBrain(input.orgId);
+  const base: LivingBrain =
+    current && current.room === input.actor.org
+      ? current
+      : { orgId: input.orgId, room: input.actor.org, facts: "", people: [] };
+  const next = setConfidence(base, input.actor, input.membershipId, input.confidence);
   if (!next.ok) return next;
   await saveLivingBrain(next.brain);
   return { ok: true as const, brain: readForTool(next.brain, input.orgId) };

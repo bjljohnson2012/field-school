@@ -11,6 +11,7 @@ export type LivingPerson = {
   outcomes: string;
   ownsOutcomes: false;
   history: OutcomeMark[];
+  confidence: string;
 };
 
 export type LivingBrain = {
@@ -75,6 +76,7 @@ export function shapeBrain(input: {
     profile: string;
     outcomes: string;
     history?: OutcomeMark[];
+    confidence?: string;
   }>;
 }): { ok: true; brain: LivingBrain } | { ok: false; error: string } {
   const people: LivingPerson[] = [];
@@ -94,6 +96,7 @@ export function shapeBrain(input: {
       outcomes: clip(person.outcomes),
       ownsOutcomes: false,
       history: rememberOutcome(person.history, person.outcomes),
+      confidence: clip(person.confidence || ""),
     });
   }
   return {
@@ -456,6 +459,32 @@ export function updateOutcome(
   };
 }
 
+/** How this person is doing. The learner does not own it. */
+export function setConfidence(
+  brain: LivingBrain,
+  actor: BrainActor,
+  membershipId: string,
+  confidence: string,
+): { ok: true; brain: LivingBrain } | { ok: false; error: string } {
+  if (actor.kind === "child") return { ok: false, error: "child_has_no_login" };
+  if (!actorMayWrite(actor)) return { ok: false, error: "not_leader" };
+  if (actor.org !== brain.room) return { ok: false, error: "wrong_desk" };
+  const person = brain.people.find((row) => row.membershipId === membershipId);
+  if (!person) return { ok: false, error: "not_on_desk" };
+  if (!personAllowed(brain.room, person, actor.membershipId)) {
+    return { ok: false, error: brain.room === "sales" ? "sales_has_no_children" : "child_has_no_login" };
+  }
+  return {
+    ok: true,
+    brain: {
+      ...brain,
+      people: brain.people.map((row) =>
+        row.membershipId === membershipId ? { ...row, confidence: clip(confidence), ownsOutcomes: false } : row,
+      ),
+    },
+  };
+}
+
 export type ChosenNext = {
   membershipId: string;
   name: string;
@@ -551,6 +580,7 @@ export function refreshFromUse(
     outcomes: nextStep,
     ownsOutcomes: false,
     history: rememberOutcome(prior?.history, nextStep),
+    confidence: prior?.confidence ?? "",
   };
   const merged = brain.people.some((row) => row.membershipId === signal.membershipId)
     ? brain.people.map((row) => (row.membershipId === signal.membershipId ? nextPerson : { ...row, ownsOutcomes: false as const }))
@@ -605,6 +635,7 @@ export type BrainBoardPerson = {
   outcomes: string;
   ownsOutcomes: false;
   history: OutcomeMark[];
+  confidence: string;
 };
 
 export type BrainBoard = {
@@ -638,6 +669,7 @@ export function brainBoard(input: {
       outcomes: person.outcomes,
       ownsOutcomes: false,
       history: person.history ?? [],
+      confidence: person.confidence ?? "",
     })),
   };
 }
@@ -654,6 +686,20 @@ export function nextStepTrail(input: {
     brain: { room: input.brain.room, facts: "", people: input.brain.people },
   }).people.find((row) => row.membershipId === input.membershipId);
   return person?.history ?? [];
+}
+
+/** The same plain confidence Insights lists for one person. Sales never returns a child. */
+export function personConfidence(input: {
+  room: Room;
+  brain: { room: Room; people: LivingPerson[] } | null;
+  membershipId?: string;
+}): string {
+  if (!input.membershipId || !input.brain || input.brain.room !== input.room) return "";
+  const person = brainBoard({
+    room: input.room,
+    brain: { room: input.brain.room, facts: "", people: input.brain.people },
+  }).people.find((row) => row.membershipId === input.membershipId);
+  return person?.confidence ?? "";
 }
 
 /** Tools read one org. A sales brain never includes a child. */
@@ -673,6 +719,7 @@ export function readForTool(brain: LivingBrain, activeOrgId: string) {
       outcomes: person.outcomes,
       ownsOutcomes: false as const,
       history: person.history ?? [],
+      confidence: person.confidence ?? "",
     })),
   };
 }
