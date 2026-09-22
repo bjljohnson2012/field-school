@@ -23,23 +23,28 @@ export default function PeoplePage() {
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
   const [lines, setLines] = useState<BrainLine[]>([]);
+  const [aim, setAim] = useState("");
 
   async function loadLines(room: Desk) {
     try {
       const response = await fetch("/api/living-brain");
       if (!response.ok) {
         setLines([]);
+        setAim("");
         return;
       }
       const data = (await response.json()) as { brain?: LivingBrain };
       const brain = data.brain;
       if (!brain || brain.room !== room) {
         setLines([]);
+        setAim("");
         return;
       }
+      setAim(brain.outcome || "");
       setLines(peopleContext({ room, brain }));
     } catch {
       setLines([]);
+      setAim("");
     }
   }
 
@@ -155,6 +160,14 @@ export default function PeoplePage() {
         </div>
       ) : null}
       {error ? <p className="mt-6 text-sm">{error}</p> : null}
+      {aim ? (
+        <p className="mt-6 text-sm" data-org-aim="yes">
+          <span className="text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim">
+            Aim
+          </span>
+          <span className="mt-1 block text-muted-foreground">{aim}</span>
+        </p>
+      ) : null}
       {desk && copy ? (
         <div className="mt-8 overflow-x-auto rounded-xl border border-border">
           <table className="w-full text-left text-sm">
@@ -198,7 +211,16 @@ export default function PeoplePage() {
                     </td>
                     <td className="px-4 py-3">{copy.login}</td>
                     <td className="px-4 py-3 text-muted-foreground" data-confidence={person.membershipId}>
-                      {line?.confidence || "No note on how they are doing yet."}
+                      {line?.confidence ? (
+                        <>
+                          <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
+                            Confidence
+                          </span>
+                          {line.confidence}
+                        </>
+                      ) : (
+                        "No note on how they are doing yet."
+                      )}
                     </td>
                     <td className="px-4 py-3" data-next-step={person.membershipId}>
                       {line?.nextStep || "No next step yet."}

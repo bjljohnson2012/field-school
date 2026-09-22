@@ -1893,6 +1893,11 @@ test("learn home reads the aim, how that person is doing, and the next step in b
   assert.match(page, /What this family is aiming for/);
   assert.match(page, /What this team is aiming for/);
   assert.match(page, /How they are doing/);
+  assert.match(page, /signedIn && card\.aim/);
+  assert.match(page, /data-aim-label="Aim"/);
+  assert.match(page, /signedIn && card\.confidence/);
+  assert.match(page, /data-confidence-label="Confidence"/);
+  assert.match(page, /!signedIn && !waiting/);
   assert.doesNotMatch(page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
   assert.doesNotMatch(header, /href: "\/learn-home"/);
 });
@@ -1981,6 +1986,10 @@ test("people reads how each person is doing and the next step in both rooms", ()
   assert.match(page, /data-next-step=/);
   assert.match(page, /How they are doing/);
   assert.match(page, /Next step/);
+  assert.match(page, /data-aim-label="Aim"/);
+  assert.match(page, /data-confidence-label="Confidence"/);
+  assert.match(page, /brain\.outcome/);
+  assert.match(page, /line\?\.confidence/);
   assert.doesNotMatch(page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
   assert.doesNotMatch(page, /href: "\/people-brain"/);
   assert.doesNotMatch(header, /href: "\/people-brain"/);

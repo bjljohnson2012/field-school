@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T22:50:00Z",
+  "updated": "2026-09-22T23:00:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "Launch gate cites Learn home and People. Home child has no login. Sales desk shows no children. Leader owns outcomes. Launch CLOSED 0/8."
+      "evidence": "Signed-in Learn and People show Aim and Confidence when the living brain has them. Guest panel stays soft. Home child has no login. Sales desk shows no children. Launch CLOSED 0/8."
     },
     "N15": {
       "status": "PASS",
@@ -114,5 +114,5 @@
   "last_pick": [
     "N15"
   ],
-  "last_clock": "post-254"
+  "last_clock": "post-255"
 }
