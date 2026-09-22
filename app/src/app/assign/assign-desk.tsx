@@ -377,11 +377,9 @@ export function AssignDesk() {
                     <p className="mt-1 text-sm text-muted-foreground">
                       This portion stays when you leave and return. {copy.loginLine}
                     </p>
-                    {room === "household" ? (
-                      <Link href="/teach-live" className="mt-3 inline-flex text-sm underline underline-offset-2">
-                        Teach this path
-                      </Link>
-                    ) : null}
+                    <Link href="/teach-live" className="mt-3 inline-flex text-sm underline underline-offset-2">
+                      Teach this path
+                    </Link>
                   </li>
                 ))}
               </ul>

@@ -2,13 +2,35 @@
 
 import { useEffect, useState } from "react";
 import { TeachDeck, type LessonSpec } from "@/components/teach-deck";
+import { storedPortionForRoom } from "@/app/assign/next-portion";
 
-const SALES_LESSON: LessonSpec = {
+type Room = "household" | "sales";
+
+type Assignment = {
+  id: string;
+  name: string;
+  title: string;
+  outcome: string;
+  nextUnit?: string;
+  nextUnitId?: string;
+  login: "none" | "member";
+  ownsPath?: boolean;
+  buyer?: boolean;
+  room: Room;
+  units?: LessonSpec["units"];
+  lessonId?: string;
+};
+
+type Desk =
+  | { status: "loading" }
+  | { status: "fixture" }
+  | { status: "room"; room: Room; assignment: Assignment | null };
+
+const SALES_FIXTURE: LessonSpec = {
   id: "spec-sales-next-step",
   org: "sales",
   title: "The next step while you are in the room",
-  outcome:
-    "The teammate can name the next step on their path and keep moving after this session ends.",
+  outcome: "The team member can name the next step and keep moving after this session ends.",
   mode: "teach",
   units: [
     { id: "unit-who-now", title: "Who they are now", source_unit_id: "src-who-now" },
@@ -17,22 +39,10 @@ const SALES_LESSON: LessonSpec = {
   ],
 };
 
-type Assignment = {
-  id: string;
-  name: string;
-  title: string;
-  outcome: string;
-  nextUnitId?: string;
-  login: "none" | "member";
-  room: "household" | "sales";
-  units?: LessonSpec["units"];
-  lessonId?: string;
-};
-
-type Desk =
-  | { status: "loading" }
-  | { status: "sales" }
-  | { status: "household"; assignment: Assignment | null };
+function roomOf(slug: string): Room | null {
+  if (slug === "household" || slug === "sales") return slug;
+  return null;
+}
 
 export function TeachLive() {
   const [desk, setDesk] = useState<Desk>({ status: "loading" });
@@ -43,20 +53,21 @@ export function TeachLive() {
       .then((response) => response.json())
       .then(async (me) => {
         const slug = typeof me?.activeOrg?.slug === "string" ? me.activeOrg.slug : "";
-        if (slug !== "household") {
-          if (!cancelled) setDesk({ status: "sales" });
+        const room = roomOf(slug);
+        if (!room) {
+          if (!cancelled) setDesk({ status: "fixture" });
           return;
         }
-        const deskResponse = await fetch("/assign/desk", { headers: { "x-fs-org": "household" } });
+        const deskResponse = await fetch("/assign/desk", { headers: { "x-fs-org": room } });
         const data = await deskResponse.json();
         const rows = Array.isArray(data?.assignments) ? (data.assignments as Assignment[]) : [];
-        const assignment =
-          rows.find((row) => row.room === "household" && row.login === "none" && row.units && row.units.length > 0) ||
-          null;
-        if (!cancelled) setDesk({ status: "household", assignment });
+        const assignment = storedPortionForRoom(room, rows);
+        const open =
+          assignment && assignment.units && assignment.units.length > 0 ? assignment : null;
+        if (!cancelled) setDesk({ status: "room", room, assignment: open });
       })
       .catch(() => {
-        if (!cancelled) setDesk({ status: "sales" });
+        if (!cancelled) setDesk({ status: "fixture" });
       });
     return () => {
       cancelled = true;
@@ -71,22 +82,24 @@ export function TeachLive() {
     );
   }
 
-  if (desk.status === "sales") {
+  if (desk.status === "fixture") {
     return (
       <div data-sales-children="0">
-        <TeachDeck spec={SALES_LESSON} />
+        <TeachDeck spec={SALES_FIXTURE} />
       </div>
     );
   }
 
-  const assignment = desk.assignment;
+  const { room, assignment } = desk;
   if (!assignment || !assignment.units || assignment.units.length === 0) {
     return (
-      <main className="mx-auto max-w-6xl px-4 py-10" data-teach-org="household" data-login="none">
+      <main className="mx-auto max-w-6xl px-4 py-10" data-teach-org={room} data-sales-children="0">
         <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Teach live</p>
         <h1 className="mt-2 font-display text-4xl tracking-tight">No open path yet</h1>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-          Assign a path to one tracked child first. That child has no login. The next portion shows here after you return.
+          {room === "sales"
+            ? "Assign a path to one team member first. They may sign in. You own the path. Their next step shows here after you return. This desk does not list children."
+            : "Assign a path to one tracked child first. That child has no login. The next step shows here after you return."}
         </p>
       </main>
     );
@@ -98,7 +111,7 @@ export function TeachLive() {
   );
   const spec: LessonSpec = {
     id: assignment.lessonId || assignment.id,
-    org: "household",
+    org: room,
     title: assignment.title,
     outcome: assignment.outcome,
     mode: "teach",
@@ -106,20 +119,22 @@ export function TeachLive() {
   };
 
   return (
-    <div data-teach-org="household" data-login="none" data-sales-children="0">
+    <div data-teach-org={room} data-login={room === "household" ? "none" : "member"} data-sales-children="0">
       <TeachDeck
         spec={spec}
         startIndex={startIndex < 0 ? 0 : startIndex}
         onArrive={(unitId) => {
           void fetch("/assign/next", {
             method: "POST",
-            headers: { "content-type": "application/json", "x-fs-org": "household" },
+            headers: { "content-type": "application/json", "x-fs-org": room },
             body: JSON.stringify({ assignmentId: assignment.id, unitId }),
           });
         }}
       />
-      <p className="mx-auto max-w-6xl px-4 pb-10 text-sm text-muted-foreground" data-next-portion="">
-        Next portion for {assignment.name} stays on Learn when you leave and return. Login none.
+      <p className="mx-auto max-w-6xl px-4 pb-10 text-sm text-muted-foreground" data-next-portion={assignment.nextUnit || ""}>
+        {room === "sales"
+          ? `Next step for ${assignment.name} stays on Learn when the leader leaves and comes back. The team member may sign in. The leader owns the path.`
+          : `Next step for ${assignment.name} stays on Learn when the parent leaves and comes back. The child has no login.`}
       </p>
     </div>
   );

@@ -25,3 +25,26 @@ export function portionAfterTeach(units: PortionUnit[], currentUnitId: string): 
 export function portionOnReturn(units: PortionUnit[], storedNextUnitId: string): PortionUnit | null {
   return unitForPortion(units, storedNextUnitId);
 }
+
+export type StoredPortionRow = {
+  room: string;
+  login: string;
+  nextUnit?: string;
+  ownsPath?: boolean;
+  buyer?: boolean;
+  kind?: string;
+};
+
+/** Open row for this room. Home is a child with no login. Sales is a team member who may sign in. */
+export function storedPortionForRoom<T extends StoredPortionRow>(room: "household" | "sales", rows: T[]): T | null {
+  return (
+    rows.find((row) => {
+      if (row.room !== room) return false;
+      if (row.buyer === true || row.ownsPath === true) return false;
+      if (row.kind === "child" && room === "sales") return false;
+      if (typeof row.nextUnit === "string" && row.nextUnit.trim() === "") return false;
+      if (room === "household") return row.login === "none";
+      return row.login === "member";
+    }) || null
+  );
+}

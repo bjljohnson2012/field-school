@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { lessonForOrg } from "@/lib/campus-runtime/lessons";
 import { COURSE_NAME, COURSE_TAGLINE } from "@/lib/course/content";
+import { storedPortionForRoom } from "@/app/assign/next-portion";
 
-type NextStep = { href: string; title: string; portion?: boolean; login?: "none" };
+type NextStep = { href: string; title: string; portion?: boolean; login?: "none" | "member" };
 
 type LearnHome = {
   org: string;
@@ -78,17 +79,19 @@ export default function LearnPage() {
         const name = typeof data.activeOrg?.name === "string" ? data.activeOrg.name : "";
         const course = slug === "household" ? "home" : slug === "sales" ? "sales" : "grok-bot";
         let next: NextStep | null = null;
-        if (slug === "household") {
+        if (slug === "household" || slug === "sales") {
           try {
-            const deskResponse = await fetch("/assign/desk", { headers: { "x-fs-org": "household" } });
+            const deskResponse = await fetch("/assign/desk", { headers: { "x-fs-org": slug } });
             const desk = await deskResponse.json();
             const rows = Array.isArray(desk?.assignments) ? desk.assignments : [];
-            const open = rows.find(
-              (row: { room?: string; login?: string; nextUnit?: string }) =>
-                row?.room === "household" && row?.login === "none" && typeof row.nextUnit === "string" && row.nextUnit,
-            );
-            if (open) {
-              next = { href: "/teach-live", title: open.nextUnit, portion: true, login: "none" };
+            const open = storedPortionForRoom(slug, rows);
+            if (open?.nextUnit) {
+              next = {
+                href: "/teach-live",
+                title: open.nextUnit,
+                portion: true,
+                login: slug === "household" ? "none" : "member",
+              };
             }
           } catch {
             next = null;
@@ -163,7 +166,9 @@ export default function LearnPage() {
           <h3 className="mt-6 text-sm font-medium">{nextStep?.portion ? "Next portion" : "Next step"}</h3>
           {nextStep?.portion ? (
             <p className="mt-2 text-sm text-muted-foreground" data-next-portion={card.nextTitle}>
-              This portion stays when you leave and return. Login none.
+              {nextStep.login === "member"
+                ? "This next step stays when the leader leaves and comes back. The team member may sign in. The leader owns the path."
+                : "This next step stays when the parent leaves and comes back. The child has no login."}
             </p>
           ) : null}
           <Link
