@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { DatabaseUnavailableError } from "@/lib/db/client";
 import { actorMayWrite, type Room } from "@/lib/living-brain/model";
-import { toolRead, writeAssist, writeOutcome } from "@/lib/living-brain/store";
+import { toolRead, writeAssist, writeFactsAssist, writeOutcome } from "@/lib/living-brain/store";
 
 export const dynamic = "force-dynamic";
 
@@ -52,6 +52,7 @@ export async function POST(request: Request) {
   }
   let body: {
     assist?: boolean;
+    assistFacts?: boolean;
     membershipId?: string;
     name?: string;
     kind?: string;
@@ -65,6 +66,18 @@ export async function POST(request: Request) {
     body = (await request.json()) as typeof body;
   } catch {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
+  }
+  if (body.assistFacts === true) {
+    try {
+      const result = await writeFactsAssist({ orgId: auth.identity.orgId, actor });
+      if (!result.ok) return NextResponse.json({ ok: false, error: result.error }, { status: 403 });
+      return NextResponse.json({ ok: true, brain: result.brain });
+    } catch (error) {
+      if (error instanceof DatabaseUnavailableError) {
+        return NextResponse.json({ ok: false, error: "database_unavailable" }, { status: 503 });
+      }
+      throw error;
+    }
   }
   const membershipId = typeof body.membershipId === "string" ? body.membershipId.trim() : "";
   const login = body.login === "none" || body.login === "member" ? body.login : room === "household" ? "none" : "member";

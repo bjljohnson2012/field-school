@@ -4,6 +4,7 @@ import { assignments, livingBrains, livingProfiles, members, memberships } from 
 import {
   actorMayWrite,
   applyAssist,
+  applyFactsAssist,
   readForTool,
   refreshFromUse,
   shapeBrain,
@@ -148,6 +149,18 @@ export async function writeAssist(input: {
       ? current
       : { orgId: input.orgId, room: input.actor.org, facts: "", people: [] };
   const next = applyAssist(base, input.actor, input.membershipId, input.context);
+  if (!next.ok) return next;
+  await saveLivingBrain(next.brain);
+  return { ok: true as const, brain: readForTool(next.brain, input.orgId) };
+}
+
+export async function writeFactsAssist(input: { orgId: string; actor: BrainActor }) {
+  const current = await loadLivingBrain(input.orgId);
+  const base: LivingBrain =
+    current && current.room === input.actor.org
+      ? current
+      : { orgId: input.orgId, room: input.actor.org, facts: "", people: [] };
+  const next = applyFactsAssist(base, input.actor);
   if (!next.ok) return next;
   await saveLivingBrain(next.brain);
   return { ok: true as const, brain: readForTool(next.brain, input.orgId) };
