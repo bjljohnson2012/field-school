@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { chooseNextStep, type LivingBrain } from "@/lib/living-brain/model";
 import {
   DESK_COPY,
   ERROR_COPY,
@@ -98,11 +99,32 @@ export function AssignDesk() {
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState("");
   const [formError, setFormError] = useState("");
+  const [brainNext, setBrainNext] = useState<Record<string, string>>({});
+
+  async function loadBrain(room: DeskRoom) {
+    try {
+      const res = await fetch("/api/living-brain");
+      if (!res.ok) return;
+      const data = (await res.json()) as { brain?: LivingBrain };
+      const brain = data.brain;
+      if (!brain || brain.room !== room) return;
+      const map: Record<string, string> = {};
+      for (const person of brain.people) {
+        const chosen = chooseNextStep({ room, brain, membershipId: person.membershipId });
+        if (chosen && chosen.from !== "stored") map[person.membershipId] = chosen.title;
+      }
+      setBrainNext(map);
+    } catch {
+      setBrainNext({});
+    }
+  }
 
   useEffect(() => {
     const ticket = ++requestId.current;
     void fetchDesk().then((next) => {
-      if (ticket === requestId.current) setView(next);
+      if (ticket !== requestId.current) return;
+      setView(next);
+      if (next.status === "desk") void loadBrain(next.room);
     });
   }, []);
 
@@ -125,6 +147,7 @@ export function AssignDesk() {
     const next = await fetchDesk(org);
     if (ticket !== requestId.current) return;
     setView(next);
+    if (next.status === "desk") void loadBrain(next.room);
   }
 
   async function onAssign() {
@@ -371,8 +394,12 @@ export function AssignDesk() {
                     <p className="text-sm">{row.name}</p>
                     <p className="mt-1 font-display text-xl tracking-tight">{row.title}</p>
                     <p className="mt-2 text-sm text-muted-foreground">{row.outcome}</p>
-                    <p className="mt-2 text-sm" data-next-portion={row.nextUnit}>
-                      Next portion: {row.nextUnit}
+                    <p
+                      className="mt-2 text-sm"
+                      data-next-portion={brainNext[row.membershipId] || row.nextUnit}
+                      data-next-from={brainNext[row.membershipId] ? "brain" : "stored"}
+                    >
+                      Next portion: {brainNext[row.membershipId] || row.nextUnit}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
                       This portion stays when you leave and return. {copy.loginLine}

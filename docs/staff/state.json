@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T15:30:00Z",
+  "updated": "2026-09-22T15:40:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "Org brain holds facts plus each person's profile and outcomes. Home child has no login. Sales team member may sign in. The leader owns outcomes. Sales desk shows no children. GET /api/living-brain"
+      "evidence": "Assign, Teach, Learn, and Insights read GET /api/living-brain. Next step uses outcomes, then profile. Home child has no login. Sales team member may sign in. Leader owns outcomes. Sales desk shows no children."
     },
     "N15": {
       "status": "PASS",

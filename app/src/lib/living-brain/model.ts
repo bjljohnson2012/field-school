@@ -114,6 +114,44 @@ export function updateOutcome(
   };
 }
 
+export type ChosenNext = {
+  membershipId: string;
+  name: string;
+  login: "none" | "member";
+  title: string;
+  from: "outcomes" | "profile" | "stored";
+  ownsOutcomes: false;
+};
+
+/** Outcomes first, then profile, then the stored unit. Sales never picks a child. */
+export function chooseNextStep(input: {
+  room: Room;
+  brain: { room: Room; people: LivingPerson[] } | null;
+  storedTitle?: string;
+  membershipId?: string;
+}): ChosenNext | null {
+  const people = (input.brain && input.brain.room === input.room ? input.brain.people : []).filter((person) => {
+    if (person.ownsOutcomes) return false;
+    if (input.room === "sales") return person.kind !== "child" && person.login === "member";
+    return person.kind === "child" && person.login === "none";
+  });
+  const named = input.membershipId ? people.find((person) => person.membershipId === input.membershipId) : undefined;
+  const person = named || people.find((row) => row.outcomes.trim()) || people.find((row) => row.profile.trim()) || null;
+  const outcomes = person?.outcomes.trim() || "";
+  const profile = person?.profile.trim() || "";
+  const stored = input.storedTitle?.trim() || "";
+  const title = outcomes || profile || stored;
+  if (!title) return null;
+  return {
+    membershipId: person?.membershipId || "",
+    name: person?.name || "",
+    login: person?.login || (input.room === "household" ? "none" : "member"),
+    title,
+    from: outcomes ? "outcomes" : profile ? "profile" : "stored",
+    ownsOutcomes: false,
+  };
+}
+
 /** Tools read one org. A sales brain never includes a child. */
 export function readForTool(brain: LivingBrain, activeOrgId: string) {
   if (brain.orgId !== activeOrgId) return null;
@@ -125,6 +163,7 @@ export function readForTool(brain: LivingBrain, activeOrgId: string) {
     people: people.map((person) => ({
       membershipId: person.membershipId,
       name: person.name,
+      kind: person.kind,
       login: person.login,
       profile: person.profile,
       outcomes: person.outcomes,
