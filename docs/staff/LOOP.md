@@ -1,7 +1,6 @@
 # Loop
 
-Dated 21 Sep 2026. This is how Field School moves from current state to the outcome.
-Grok Bot (CDM) runs the clock loop. Field School PM runs the inner loop. Panel scores the live portal. Neither is a daemon. The clocks restart the inner loop.
+Dated 22 Sep 2026. Graph-engineered parallel. Grok Bots decide and test. Cursor builds.
 Launch stays CLOSED 0/8. This file is not 8/8.
 
 Read after ethos. Before COMPANY_GRAPH and BUILD_GRAPH.
@@ -14,96 +13,100 @@ Both rooms exist. Household child stays `kind:child`, `login:none`. Team teammat
 Chrome is five words. Sales desk shows zero children. New has three doors. One LessonSpec. Insights are real charts. Factory: one Cap take → WhisperX words → four plates → master.mp4.
 ICP, finance units, and GTM hire files exist. A human can hire the next hirer at the three prices. Public site unflipped. Counsel unsigned. Launch CLOSED.
 
-Chrome PASS alone is not the outcome. Dest SHA is not the outcome. Wave proofs are not the outcome. Six panel PASS on chrome still is not Launch 8/8.
+## Graph law (this is how 20 PRs stay aligned)
+
+The graph is not a queue of two. It is a DAG.
+
+| Verb | Meaning |
+| --- | --- |
+| OPEN | A PR may exist for every node that is not PASS and not HELD. 10, 20, 30 PRs is success if each PR is one node, one room, named files. |
+| MERGE | Only READY nodes whose file sets do not collide. N3 never merges before N1 is PASS on main. N12 stays HELD. N15 never merges before N1 N2 N8 N9 N11. |
+| TEST | Grok computer-use walks the live portal (or a preview). Scores. CDM decides merge / hold / rebase. |
+
+Blocked drafts are legal. They wait. They do not merge. That is how we go fast without lying about deps.
+
+One room per PR. One node per PR. Rebase a blocked PR onto main after its needs PASS. Do not rewrite it as a different node.
 
 ## Four loops
 
 ```mermaid
 flowchart TD
-  CLOCK[Clock loop Grok Bot CDM
-  06 09 10 15 22 02 ET]
-  PANEL[Panel 10:00
-  six stances]
-  PICK[pick-next.mjs
-  two disjoint READY]
-  INNER[Inner loop Field School PM
-  spawn ≤2 → verify → Dean → GOTO 1]
-  STATE[docs/staff/state.json]
+  CLOCK[CDM clock cheap
+  06 09 10 15 22 02]
+  OPEN[OPEN many PRs
+  one node each]
+  MERGE[MERGE disjoint READY]
+  TEST[Grok computer-use
+  panel + PR preview]
+  INNER[Field School PM
+  many streams]
+  STATE[state.json]
 
-  CLOCK -->|sealed brief| PICK
-  PANEL -->|HARD redirect| CLOCK
-  PICK -->|paste| INNER
-  INNER -->|PASS or stall| STATE
+  CLOCK --> OPEN
+  CLOCK --> MERGE
+  OPEN --> INNER
+  INNER --> TEST
+  TEST --> MERGE
+  MERGE --> STATE
   STATE --> CLOCK
-  STATE --> PANEL
 ```
 
-| Loop | Who | When | Does |
+| Loop | Who | Tokens | Does |
 | --- | --- | --- | --- |
-| Clock | Grok Bot = CDM | 06 / 09 / 15 / 22 / 02 ET | Inspect GitHub + state.json. Run pick. Emit sealed brief. @CTO. Stop. |
-| Panel | New Bot = Panel Runner | 10:00 ET weekday | Six personas walk the portal. File PANEL blocks. Do not write app/. |
-| Company | Writer / Gate on `docs/` | When pick names C# | ICP, finance, GTM, research, marketing. |
-| Build | Field School PM on `app/` `plates/` | When pick names N# or Factory-slim | Implement. Checker. Evaluator. PR. Flip state.json. |
+| Clock | CDM | Cheap. 15 lines. No novel. | Health. `gh pr list`. pick-next MERGE/OPEN. @CTO. Stop. |
+| Open/build | Field School PM | Cursor, not Grok | One PR per node. Many at once. |
+| Test | One panel runner | Computer-use. One bot. | Walk live + MERGE previews. PANEL blocks. |
+| Decide | CDM | Cheap | Merge READY green. Hold blocked. Close only HELD or lock-breakers. |
 
-Wire never changes: **CDM → CTO → Cursor Gate → Field School PM**. Panel never messages Field School PM. CDM never messages Field School PM. No peer C-suite. Max two Cursor streams. Files cannot collide. Do not invent seats.
+Wire: **Ben → CDM → (task bots) and CDM → CTO → Cursor Gate → Field School PM**.
+CDM never messages Field School PM. Do not invent C-suite. Panel is task bots CDM creates.
 
-## Automatic pick (do not invent a third)
+## Token budget (Grok)
 
-Source: `docs/staff/state.json`. Machine: `node docs/staff/pick-next.mjs`. Panel HARD_FAIL can override the pick (see PANEL.md).
+Spend Grok on **eyes and decisions**. Do not spend Grok rewriting LOOP.md, summarizing GitHub in prose, or six bots each reading five markdown files.
 
-Score order:
+| Spend | Skip |
+| --- | --- |
+| Computer-use: open portal, count header words, switch Org, screenshot | Harvest essays |
+| One FS Panel Runner PERSONA_ID=ALL | Six full-context panel bots unless a HARD needs a second pair of eyes |
+| CDM: MERGE list + 3 HARD ids + Human needed | Reciting ethos |
+| Cursor writes code | Grok writing app/ |
 
-1. N1 Chrome
-2. C2 ICP
-3. Factory-slim (`plates/` WhisperX → captions, four plates)
-4. C1 Finance
-5. N2 Insights
-6. C5 GTM
-7. N3 New menu (not with N1; same `site-header.tsx`)
-8. N10 People (after N1)
-9. N9 Learn home (after N1; collides dashboard with N1)
-10. N6 Wizard / N5 Video in / N7 AI keys (after N3)
-11. N4 LessonSpec (after N5 or N6)
-12. N8 Assign (after N4 and N10)
-13. N11 Teach live
-14. N12 Extract (Cycle 2)
-15. N13 Make video / N14 Brain
-16. N15 Prove (after N1 N2 N8 N9 N11)
-17. C3 Research (after C2 started)
-18. C4 Marketing (after C2 and C5)
-19. C6 Ops (Insights = N2)
+Clocks stay handoffs. If the last clock's MERGE list is unchanged and health is green, CDM posts `NO CHANGE` and stops.
 
-Take the first two READY whose file sets do not intersect. Skip HELD and BLOCKED. If N1 is IN_FLIGHT, do not pick N3 or N9.
-If any panel HARD_FAIL names N1, pick N1 even if a later node looks fun.
+## Automatic pick
 
-Default if state is untouched: **N1 + C2**.
+`node docs/staff/pick-next.mjs` prints MERGE and OPEN.
 
-## Inner loop (Field School PM, one chat)
+- MERGE = all disjoint READY. Not a cap of two.
+- OPEN = every node that is not PASS and not HELD. Drafts allowed.
+- N3 / N9 wait for N1 PASS on main before MERGE. They may stay OPEN as drafts.
+- N12 HELD. Close or leave draft. Never merge this week.
+- Panel HARD on chrome does not close other PRs. It blocks MERGE of anything that collides with N1 until N1 is on main.
+
+This morning (22 Sep) if state is untouched: MERGE **N1 C2 FACTORY C1 C5 C6**. OPEN the rest except N12. Live PRs already exist 206–226. Keep them. Merge 206 first among colliding header PRs.
+
+## Inner loop (Field School PM)
 
 1. Pull origin/main.
-2. Read LAW, this file, COMPANY_GRAPH, BUILD_GRAPH, SHELLS, FACTORY_VIDEO, PANEL.md, state.json.
-3. Print C# and N# from state.json, then confirm against the repo.
-4. If the sealed brief names streams, do those. Else run pick-next.
-5. Spawn ≤2. Tonight exception: PM may be builder on one stream.
-6. Verify. EVALUATOR block. PR on `cursor/<id>-<slug>`.
-7. Patch `docs/staff/state.json` on that branch.
-8. Dean reply. If the clock seal is not met and budget remains, GOTO 1 in this chat.
-9. Stop when pick-next prints `IDLE`, a lock would move, `NEEDS YOU`, two identical verify fails, or N15 plus C2 C1 C5 exist.
+2. Read LAW, this file, state.json, SHELLS.
+3. OPEN missing node PRs. One node, one branch, one room.
+4. MERGE only what pick-next says MERGE and CI is green.
+5. Rebase drafts onto main after their needs PASS.
+6. Patch state.json on the merged branch: that id PASS.
+7. Do not merge HELD. Do not merge N3 onto N1. Do not merge N15 early.
+8. Stop a stream that would move a lock.
 
-## Clock loop (Grok Bot, each fire)
-
-Prompt: `docs/staff/GROK_BOT.md`. Panel: `docs/staff/GROK_BOT_PANEL.md`. Each clock is a **handoff**.
+## Clock extras (still cheap)
 
 | Clock | Extra |
 | --- | --- |
-| 06 harvest | What shipped overnight. Health. Pick. Sealed brief. Quiet to Ben. |
-| 09 weekday | Score table. Confirm or replace the 06 pick. |
-| 10 panel | Six stances. Redirect summary only. |
-| 15 mid-course | Read panel HARD. Keep, redirect, or stop IN_FLIGHT. |
-| 22 night | Day score. Overnight brief safe with Ben asleep. |
-| 02 verify | Health. Family LIVE and Just still locked. First line for 06. |
-
-Sunday 09 also scores Launch 0/8. Do not invent 8/8.
+| 06 | Health. What merged. MERGE list. |
+| 09 | Same. Assign Gate the MERGE set. |
+| 10 | One panel runner, computer-use, live portal. |
+| 15 | Keep / merge / rebase. Not a new novel. |
+| 22 | MERGE left for overnight. Safe with Ben asleep. |
+| 02 | Health. Locks. |
 
 ## Health every clock
 
@@ -113,23 +116,20 @@ Sunday 09 also scores Launch 0/8. Do not invent 8/8.
 - Just `27pn9xs0zk8a73g` locked
 - Dest hash untouched
 
-Fail health → sealed brief is stop-the-stream, not a new node.
+Fail health → stop MERGE. Do not open more.
 
-## Sealed brief (CDM writes, Gate pastes into Field School PM)
+## Sealed brief
 
 ```
-Clock: 06|09|10|15|22|02
-Pick: <id> + <id or none>
+Clock:
+MERGE: <ids>
+OPEN: keep drafts <ids>
+CLOSE: only HELD or lock-breakers
 Project: Field School PM (bc-882e8bdf)
-Branch: cursor/<id>-<slug>
-Room: household|team|company-prose
-Files:
-Done when:
-Do not: Wave 2, child login, Remotion-in-Next, Django, Launch 8/8, steal family LIVE, Just, dest, AUTH_URL, public flip, fourth SKU
-Human needed: none | Cap take | upload | BYOK paste | legal sign | test seat
-Paste: Read docs/staff/LOOP.md. Run node docs/staff/pick-next.mjs. Do the pick above. Loop until this clock's streams PASS or STOP.
+Do not: merge N3 before N1 on main, merge N12, merge N15 early, Wave 2, child login, Remotion-in-Next, Launch 8/8, dest, AUTH_URL, family LIVE, Just
+Human needed: merge buttons | none | test seat
 ```
 
 ## Held forever this week
 
-Launch 8/8. Public flip. Live card. Child login. Team price. Market count. Django. Remotion MCP. Remotion-in-Next. New antagonist plate. Wave 2 resume. Coach unhold. Steal `bc-4765f2f0`. Official psychometric item banks. New C-suite seats.
+Launch 8/8. Public flip. Live card. Child login. Team price. Market count. Django. Remotion MCP. Remotion-in-Next. New antagonist plate. Wave 2 resume. Coach unhold. Steal `bc-4765f2f0`. Official psychometric item banks. New C-suite seats. Merging N12.

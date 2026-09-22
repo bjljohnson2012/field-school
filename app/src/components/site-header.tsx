@@ -1,64 +1,82 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
 import { OrgPicker } from "@/components/org-picker";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useCart } from "@/hooks/use-cart";
-import { cn } from "@/lib/utils";
+
+const LEADER_STANCES = new Set(["admin", "guardian", "trainer", "teacher"]);
+
+type NavLink = { href: string; label: string };
+
+function navLinks(opts: {
+  loggedIn: boolean;
+  guest: boolean;
+  leader: boolean;
+  org: string;
+}): NavLink[] {
+  if (!opts.loggedIn) {
+    return opts.guest ? [{ href: "/about", label: "About" }] : [];
+  }
+  const org = opts.org;
+  if (!opts.leader) {
+    return [
+      { href: "/dashboard", label: "Learn" },
+      { href: org === "sales" ? "/skills" : "/pattern", label: "Me" },
+    ];
+  }
+  return [
+    { href: "/dashboard", label: "Learn" },
+    { href: "/people", label: "People" },
+    { href: org ? `/o/${org}/l` : "/dashboard", label: "Library" },
+    { href: "/insights", label: "Insights" },
+    { href: org ? `/o/${org}/teach` : "/dashboard", label: "New" },
+  ];
+}
 
 export function SiteHeader() {
-  const pathname = usePathname();
   const { data: authSession, status } = useSession();
-  const { session, ready, isAdmin, isStaff, impersonating, unreadNotices } =
-    usePortal();
-  const cart = useCart();
+  const { session, ready } = usePortal();
   const guestChrome = status === "unauthenticated";
   const loggedIn = status === "authenticated" && Boolean(authSession?.user?.email);
-  const showAbout = guestChrome;
   const initial = (session?.name || "G").slice(0, 1).toUpperCase();
   const homeHref = guestChrome ? "/" : "/dashboard";
-  const cartHref = cart.planId ? `/cart?plan=${cart.planId}` : "/cart";
+  const [stance, setStance] = useState("");
+  const [org, setOrg] = useState("");
 
-  const links = [
-    { href: "/dashboard", label: "Dashboard", compact: true },
-    { href: "/play/lesson-spine", label: "Lesson", compact: true },
-    { href: "/tools", label: "Tools", compact: true },
-    { href: cartHref, label: "Cart", compact: true, badge: cart.planId ? 1 : 0 },
-    ...(loggedIn
-      ? [
-          { href: "/children", label: "Children", compact: true },
-          { href: "/progress", label: "Progress", compact: true },
-          { href: "/intent", label: "Intent", compact: true },
-          { href: "/path", label: "Path", compact: true },
-          { href: "/portion", label: "Portion", compact: true },
-          { href: "/brain", label: "Brain", compact: true },
-        ]
-      : []),
-    ...(showAbout ? [{ href: "/about", label: "About", compact: false }] : []),
-    ...(isStaff
-      ? [
-          {
-            href: "/admin",
-            label: "Admin",
-            compact: true,
-            badge: isAdmin && !impersonating ? unreadNotices : 0,
-          },
-        ]
-      : []),
-  ];
+  useEffect(() => {
+    if (!loggedIn) {
+      setStance("");
+      setOrg("");
+      return;
+    }
+    void fetch("/api/me")
+      .then((r) => r.json())
+      .then((data) => {
+        setStance(data.activeOrg?.stance || "");
+        setOrg(data.activeOrg?.slug || "");
+      })
+      .catch(() => undefined);
+  }, [loggedIn]);
+
+  const links = navLinks({
+    loggedIn,
+    guest: guestChrome,
+    leader: LEADER_STANCES.has(stance),
+    org,
+  });
+
+  const linkClass =
+    "flex h-11 items-center px-2 text-muted-foreground hover:text-foreground sm:px-2.5";
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/88 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
         <div className="flex min-w-0 items-center gap-2">
-          <Link
-            href={homeHref}
-            className="flex items-center rounded-lg px-1.5 py-0.5"
-          >
+          <Link href={homeHref} className="flex items-center rounded-lg px-1.5 py-0.5">
             <img
               src="/branding/assets/isolated-seal.png"
               alt="Field School"
@@ -69,58 +87,55 @@ export function SiteHeader() {
           </Link>
           <Link
             href={homeHref}
-            className="hidden text-xs uppercase tracking-[0.16em] text-muted-foreground sm:inline"
+            className="hidden text-sm text-foreground sm:inline"
           >
-            Training portal
+            Field School
           </Link>
         </div>
         <nav className="flex items-center gap-0.5 text-sm">
-          {links.map((l) => (
-            <Link
-              key={l.label}
-              href={l.href}
-              className={cn(
-                l.compact
-                  ? "flex h-11 items-center gap-1.5 px-2 text-muted-foreground hover:text-foreground sm:px-2.5"
-                  : "hidden h-11 items-center px-2.5 text-muted-foreground hover:text-foreground md:flex",
-                (l.label === "Admin"
-                  ? pathname.startsWith("/admin")
-                  : l.label === "Cart"
-                    ? pathname === "/cart"
-                    : pathname === l.href) && "text-foreground",
-              )}
-            >
-              {l.label}
-              {l.badge ? (
-                <span className="grid min-w-5 place-items-center rounded-full bg-primary px-1.5 text-[11px] font-medium text-primary-foreground">
-                  {l.badge}
-                </span>
-              ) : null}
-            </Link>
-          ))}
+          <div className="hidden items-center gap-0.5 md:flex">
+            {links.map((l) => (
+              <Link key={l.label} href={l.href} className={linkClass}>
+                {l.label}
+              </Link>
+            ))}
+          </div>
+          <details className="relative md:hidden">
+            <summary className="flex h-11 cursor-pointer list-none items-center px-2 text-muted-foreground">
+              Menu
+            </summary>
+            <div className="absolute right-0 z-40 mt-1 flex min-w-40 flex-col rounded-xl border border-border bg-background p-1 shadow-md">
+              {links.map((l) => (
+                <Link key={l.label} href={l.href} className={linkClass}>
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+          </details>
           {loggedIn ? <OrgPicker /> : null}
-          <ThemeToggle />
+          {loggedIn ? (
+            <Link href="/metering" className="flex h-11 items-center px-2 text-sm text-muted-foreground hover:text-foreground">
+              Credits
+            </Link>
+          ) : null}
           {status === "loading" || !ready ? (
             <div className="h-8 w-8 animate-pulse rounded-full bg-secondary" />
           ) : loggedIn ? (
-            <div className="ml-1 flex items-center gap-2">
-              <span
-                aria-hidden
-                className="grid size-8 place-items-center rounded-full bg-foreground text-xs font-medium text-background"
-              >
+            <details className="relative ml-1">
+              <summary className="grid size-8 cursor-pointer list-none place-items-center rounded-full bg-foreground text-xs font-medium text-background">
                 {initial}
-              </span>
-              <span className="hidden max-w-[9rem] truncate text-sm text-muted-foreground lg:inline">
-                {session?.email || session?.name}
-              </span>
-              <button
-                type="button"
-                onClick={() => signOutPortal("/login")}
-                className="h-11 text-sm text-muted-foreground hover:text-foreground"
-              >
-                Sign out
-              </button>
-            </div>
+              </summary>
+              <div className="absolute right-0 z-40 mt-1 flex min-w-40 flex-col gap-2 rounded-xl border border-border bg-background p-3 shadow-md">
+                <ThemeToggle />
+                <button
+                  type="button"
+                  onClick={() => signOutPortal("/login")}
+                  className="h-11 text-left text-sm text-muted-foreground hover:text-foreground"
+                >
+                  Sign out
+                </button>
+              </div>
+            </details>
           ) : (
             <div className="ml-1 flex items-center gap-2">
               <Link

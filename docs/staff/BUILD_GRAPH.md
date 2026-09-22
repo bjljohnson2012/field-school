@@ -13,8 +13,8 @@ Status: `PASS` | `READY` | `BLOCKED` | `IN_FLIGHT` | `HELD`.
 
 | Area | Live fact | Why it is not desired |
 | --- | --- | --- |
-| Chrome | `site-header.tsx` lists Dashboard Lesson Tools Cart Children Progress Intent Path Portion Brain Admin | Ticket log. GTM fail. |
-| Desk | `dashboard/page.tsx` fetches children if `orgs.includes("household")` | ICP fail. Child Test on Sales team. |
+| Chrome | Leader bar is Learn, People, Library, Insights, New. Learner bar is Learn, Me. | N1 on `cursor/n1-chrome`. |
+| Desk | Children load only when `activeOrg` is household. Sales desk renders no child card. | N1 on `cursor/n1-chrome`. |
 | Learn | Hire-path routes are the product | GTM fail. |
 | Library | Wave 3 teach: text/upload/book/link. Units from supplied text. | Kitchen missing. |
 | Composer | `0005` tables LIVE | No LessonSpec. |
@@ -87,9 +87,9 @@ flowchart TD
 | ID | Name | Serves | Status | Needs | Files | Done when |
 | --- | --- | --- | --- | --- | --- | --- |
 | N0 | Law | — | PASS | — | `docs/LAW.md` | Reading order exists. |
-| N1 | Chrome | C5 GTM, C2 ICP | READY | N0 | `site-header.tsx`, dashboard | Leader bar: Learn People Library Insights New. Sales desk zero children. |
-| N2 | Insights | C6 Ops, C1 Finance | BLOCKED | N1 | `app/src/app/insights/` | Six org-scoped charts. Click → person. Credit burn included. Honest empty. |
-| N3 | New menu | C5 GTM | READY | N0 | `site-header.tsx` (not with N1) | Video / Wizard / Connect AI. |
+| N1 | Chrome | C5 GTM, C2 ICP | PASS | N0 | `site-header.tsx`, dashboard | Leader bar: Learn People Library Insights New. Sales desk zero children. |
+| N2 | Insights | C6 Ops, C1 Finance | READY | N1 | `app/src/app/insights/` | Six org-scoped charts. Click → person. Credit burn included. Honest empty. |
+| N3 | New menu | C5 GTM | READY | N0 | `site-header.tsx` (not with N1) | Video / Wizard / Connect AI. Header is free after N1. |
 | N4 | LessonSpec | C7 Dev | BLOCKED | N5 or N6 | composer tables | One JSON drives learn / teach / video. `source_unit_id`. |
 | N5 | Video in | C7 | BLOCKED | N3 | teach + media | Cap or mp4 → draft units. |
 | N6 | Wizard | C5 | BLOCKED | N3 | wizard route | What / who / teach-assign-video. |
@@ -111,7 +111,7 @@ flowchart TD
 ## Recommended Cycle 1
 
 1. Stream A: **N1 Chrome** (`app/`)
-2. Stream B: **C2 ICP** (`docs/icp-parent.md`, `docs/icp-leader.md`) per COMPANY_GRAPH
+2. Stream B: **C2 ICP** (`docs/icp-parent.md`, `docs/icp-leader.md`) PASS on `cursor/c2-icp`
 
 Then N2 Insights (new route) + C1 Finance store file.
 Then N3 New menu + C5 GTM store file.
