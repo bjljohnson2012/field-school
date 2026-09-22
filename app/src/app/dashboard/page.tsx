@@ -213,7 +213,12 @@ export default function LearnPage() {
           <p className="mt-2 text-sm text-muted-foreground">{card.willDo}</p>
           {card.org === "household" || card.org === "sales" ? (
             <>
-              <h3 className="mt-6 text-sm font-medium">
+              {signedIn && card.aim ? (
+                <p className="mt-6 text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim">
+                  Aim
+                </p>
+              ) : null}
+              <h3 className={signedIn && card.aim ? "mt-1 text-sm font-medium" : "mt-6 text-sm font-medium"}>
                 {card.org === "sales" ? "What this team is aiming for" : "What this family is aiming for"}
               </h3>
               <p className="mt-2 text-sm text-muted-foreground" data-org-aim={card.aim ? "yes" : "no"}>
@@ -222,7 +227,14 @@ export default function LearnPage() {
                     ? "No line for what this team is aiming for yet."
                     : "No line for what this family is aiming for yet.")}
               </p>
-              <h3 className="mt-6 text-sm font-medium">How they are doing</h3>
+              {signedIn && card.confidence ? (
+                <p className="mt-6 text-xs font-medium uppercase tracking-[0.12em]" data-confidence-label="Confidence">
+                  Confidence
+                </p>
+              ) : null}
+              <h3 className={signedIn && card.confidence ? "mt-1 text-sm font-medium" : "mt-6 text-sm font-medium"}>
+                How they are doing
+              </h3>
               <p className="mt-2 text-sm text-muted-foreground" data-confidence={card.personId}>
                 {card.confidence || "No note on how they are doing yet."}
               </p>
