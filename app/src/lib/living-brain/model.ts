@@ -642,6 +642,20 @@ export function brainBoard(input: {
   };
 }
 
+/** The same recent next steps Insights lists for one person. Sales never returns a child. */
+export function nextStepTrail(input: {
+  room: Room;
+  brain: { room: Room; people: LivingPerson[] } | null;
+  membershipId?: string;
+}): OutcomeMark[] {
+  if (!input.membershipId || !input.brain || input.brain.room !== input.room) return [];
+  const person = brainBoard({
+    room: input.room,
+    brain: { room: input.brain.room, facts: "", people: input.brain.people },
+  }).people.find((row) => row.membershipId === input.membershipId);
+  return person?.history ?? [];
+}
+
 /** Tools read one org. A sales brain never includes a child. */
 export function readForTool(brain: LivingBrain, activeOrgId: string) {
   if (brain.orgId !== activeOrgId) return null;

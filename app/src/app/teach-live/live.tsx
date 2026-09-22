@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { TeachDeck, type LessonSpec } from "@/components/teach-deck";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
-import { chooseNextStep, type LivingBrain } from "@/lib/living-brain/model";
+import { chooseNextStep, nextStepTrail, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
 
 type Room = "household" | "sales";
 
@@ -49,6 +49,7 @@ function roomOf(slug: string): Room | null {
 export function TeachLive() {
   const [desk, setDesk] = useState<Desk>({ status: "loading" });
   const [brainTitle, setBrainTitle] = useState("");
+  const [brainTrail, setBrainTrail] = useState<OutcomeMark[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -85,6 +86,7 @@ export function TeachLive() {
         });
         if (!cancelled) {
           setBrainTitle(chosen && chosen.from !== "stored" ? chosen.title : "");
+          setBrainTrail(nextStepTrail({ room, brain, membershipId: open?.membershipId }));
           setDesk({ status: "room", room, assignment: open });
         }
       })
@@ -162,6 +164,17 @@ export function TeachLive() {
           ? `Next step for ${assignment.name} stays on Learn when the leader leaves and comes back. The team member may sign in. The leader owns the path.`
           : `Next step for ${assignment.name} stays on Learn when the parent leaves and comes back. The child has no login.`}
       </p>
+      {brainTrail.length ? (
+        <ol
+          className="mx-auto max-w-6xl space-y-0.5 px-4 pb-10 text-xs text-muted-foreground"
+          data-history={assignment.membershipId || ""}
+          data-history-count={brainTrail.length}
+        >
+          {brainTrail.map((mark, index) => (
+            <li key={`${index}-${mark.outcomes}`}>{mark.outcomes}</li>
+          ))}
+        </ol>
+      ) : null}
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { chooseNextStep, type LivingBrain } from "@/lib/living-brain/model";
+import { chooseNextStep, nextStepTrail, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
 import {
   DESK_COPY,
   ERROR_COPY,
@@ -100,6 +100,7 @@ export function AssignDesk() {
   const [notice, setNotice] = useState("");
   const [formError, setFormError] = useState("");
   const [brainNext, setBrainNext] = useState<Record<string, string>>({});
+  const [brainTrail, setBrainTrail] = useState<Record<string, OutcomeMark[]>>({});
 
   async function loadBrain(room: DeskRoom) {
     try {
@@ -109,13 +110,18 @@ export function AssignDesk() {
       const brain = data.brain;
       if (!brain || brain.room !== room) return;
       const map: Record<string, string> = {};
+      const trails: Record<string, OutcomeMark[]> = {};
       for (const person of brain.people) {
         const chosen = chooseNextStep({ room, brain, membershipId: person.membershipId });
         if (chosen && chosen.from !== "stored") map[person.membershipId] = chosen.title;
+        const trail = nextStepTrail({ room, brain, membershipId: person.membershipId });
+        if (trail.length) trails[person.membershipId] = trail;
       }
       setBrainNext(map);
+      setBrainTrail(trails);
     } catch {
       setBrainNext({});
+      setBrainTrail({});
     }
   }
 
@@ -360,6 +366,17 @@ export function AssignDesk() {
                         <span>
                           <span className="block text-sm">{person.name}</span>
                           <span className="mt-1 block text-sm text-muted-foreground">{copy.loginLine}</span>
+                          {(brainTrail[person.membershipId] ?? []).length ? (
+                            <ol
+                              className="mt-1 space-y-0.5 text-xs text-muted-foreground"
+                              data-history={person.membershipId}
+                              data-history-count={brainTrail[person.membershipId].length}
+                            >
+                              {brainTrail[person.membershipId].map((mark, index) => (
+                                <li key={`${index}-${mark.outcomes}`}>{mark.outcomes}</li>
+                              ))}
+                            </ol>
+                          ) : null}
                         </span>
                       </label>
                     ))}
@@ -401,6 +418,17 @@ export function AssignDesk() {
                     >
                       Next portion: {brainNext[row.membershipId] || row.nextUnit}
                     </p>
+                    {(brainTrail[row.membershipId] ?? []).length ? (
+                      <ol
+                        className="mt-1 space-y-0.5 text-xs text-muted-foreground"
+                        data-history={row.membershipId}
+                        data-history-count={brainTrail[row.membershipId].length}
+                      >
+                        {brainTrail[row.membershipId].map((mark, index) => (
+                          <li key={`${index}-${mark.outcomes}`}>{mark.outcomes}</li>
+                        ))}
+                      </ol>
+                    ) : null}
                     <p className="mt-1 text-sm text-muted-foreground">
                       This portion stays when you leave and return. {copy.loginLine}
                     </p>
