@@ -1,0 +1,36 @@
+{
+  "updated": "2026-09-21T22:16:00-04:00",
+  "launch": "CLOSED 0/8",
+  "outcome": false,
+  "company": {
+    "C1": { "status": "READY", "evidence": "finance-units.md missing" },
+    "C2": { "status": "READY", "evidence": "icp-parent.md and icp-leader.md missing" },
+    "C3": { "status": "BLOCKED", "needs": ["C2"] },
+    "C4": { "status": "BLOCKED", "needs": ["C2", "C5"] },
+    "C5": { "status": "READY", "evidence": "gtm-hire.md missing" },
+    "C6": { "status": "READY", "evidence": "Insights = N2" },
+    "C7": { "status": "IN_FLIGHT", "evidence": "BUILD_GRAPH N1 READY" }
+  },
+  "dev": {
+    "N0": { "status": "PASS", "evidence": "docs/LAW.md" },
+    "N1": { "status": "READY", "evidence": "site-header still hire-path words; dashboard orgs.includes household" },
+    "N2": { "status": "BLOCKED", "needs": ["N1"] },
+    "N3": { "status": "READY", "evidence": "collides N1 on site-header.tsx" },
+    "N4": { "status": "BLOCKED", "needs": ["N5", "N6"] },
+    "N5": { "status": "BLOCKED", "needs": ["N3"] },
+    "N6": { "status": "BLOCKED", "needs": ["N3"] },
+    "N7": { "status": "BLOCKED", "needs": ["N3"] },
+    "N8": { "status": "BLOCKED", "needs": ["N4", "N10"] },
+    "N9": { "status": "BLOCKED", "needs": ["N1"] },
+    "N10": { "status": "BLOCKED", "needs": ["N1"] },
+    "N11": { "status": "BLOCKED", "needs": ["N4"] },
+    "N12": { "status": "HELD", "evidence": "Cycle 2 FastAPI worker" },
+    "N13": { "status": "BLOCKED", "needs": ["N12"] },
+    "N14": { "status": "BLOCKED", "needs": ["N12"] },
+    "N15": { "status": "BLOCKED", "needs": ["N1", "N2", "N8", "N9", "N11"] },
+    "FACTORY": { "status": "READY", "evidence": "no @remotion/captions; no whisperx-to-captions.mjs" }
+  },
+  "in_flight": [],
+  "last_pick": [],
+  "last_clock": null
+}
