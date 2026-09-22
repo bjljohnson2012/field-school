@@ -94,7 +94,7 @@ Research feeds ICP. ICP and Finance feed GTM and Dev. GTM feeds Marketing copy. 
 | C4 Marketing | BLOCKED | C2, C5 | `docs/marketing-parent-hire.md` | Five blocks. Public site unflipped. |
 | C5 GTM | READY | C2 in flight ok | `docs/gtm-hire.md` | Human hire motion for parent and for leader. Portal URL. No ads. |
 | C6 Ops | READY | — | Insights = N2. Clocks already in ROUTINES.md | N2 honest empty or live. Sunday scores both rooms. |
-| C7 Dev | IN_FLIGHT | C2, C1 should be in flight | `BUILD_GRAPH.md` | See N1–N15. |
+| C7 Dev | IN_FLIGHT | C2, C1 should be in flight | `BUILD_GRAPH.md` | N1 chrome PASS on `cursor/n1-chrome`. N2 is next. |
 
 C2 and C1 are High autonomy store files. They do not wait on N1. They should land the same week as N1 so chrome is scored against a named hirer.
 
