@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T12:23:43Z",
+  "updated": "2026-09-22T12:29:30Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -12,8 +12,8 @@
       "evidence": "PR 207 merged"
     },
     "C3": {
-      "status": "READY",
-      "evidence": "C2 PASS; PR 211 open draft"
+      "status": "PASS",
+      "evidence": "PR 211 merged aaf933b or merging"
     },
     "C4": {
       "status": "READY",
@@ -50,27 +50,24 @@
       "evidence": "PR 214 merged 2a40c289"
     },
     "N4": {
-      "status": "READY",
-      "evidence": "N5 and N6 PASS; PR 210 open"
+      "status": "PASS",
+      "evidence": "PR 210; parseLessonSpec refuses missing source_unit_id"
     },
     "N5": {
       "status": "PASS",
-      "evidence": "PR 221; Cap/mp4 draft units with source_unit_id; Just refused"
+      "evidence": "PR 221 merged c51ae52a"
     },
     "N6": {
       "status": "PASS",
-      "evidence": "PR 224; wizard LessonSpec with source_unit_id"
+      "evidence": "PR 224 merged 80a02c51"
     },
     "N7": {
       "status": "PASS",
-      "evidence": "PR 219; Connect AI credits or last4"
+      "evidence": "PR 219 merged or merging"
     },
     "N8": {
-      "status": "BLOCKED",
-      "needs": [
-        "N4",
-        "N10"
-      ]
+      "status": "READY",
+      "evidence": "N4+N10 PASS; PR 223 open"
     },
     "N9": {
       "status": "PASS",
@@ -81,10 +78,8 @@
       "evidence": "PR 220 merged 6f48b025"
     },
     "N11": {
-      "status": "BLOCKED",
-      "needs": [
-        "N4"
-      ]
+      "status": "READY",
+      "evidence": "N4 PASS; PR 212 open"
     },
     "N12": {
       "status": "HELD",
@@ -119,8 +114,7 @@
   },
   "in_flight": [],
   "last_pick": [
-    "N5",
-    "N6"
+    "N4"
   ],
   "last_clock": "09-continue"
 }
