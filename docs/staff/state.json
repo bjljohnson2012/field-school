@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T22:10:00Z",
+  "updated": "2026-09-22T22:20:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "People shows how each person is doing and their next step. Home child has no login. Sales desk shows no children. Leader owns outcomes."
+      "evidence": "Launch gate cites Learn home and People. Home child has no login. Sales desk shows no children. Leader owns outcomes. Launch CLOSED 0/8."
     },
     "N15": {
       "status": "PASS",
@@ -107,12 +107,12 @@
     },
     "FACTORY": {
       "status": "PASS",
-      "evidence": "Publish evidence passes on the cleaned fixture master. distribute stays false. Dest is not flipped. Independent Antagonist bar PASS. This clock does not render. Just stays locked. Remotion stays in plates. Launch CLOSED 0/8."
+      "evidence": "Launch gate cites the Track B unattended path. Publish evidence passes. distribute stays false. Dest stays untouched. Just stays locked. Remotion stays in plates. Launch CLOSED 0/8."
     }
   },
   "in_flight": [],
   "last_pick": [
     "N15"
   ],
-  "last_clock": "post-250"
+  "last_clock": "post-251"
 }
