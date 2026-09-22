@@ -1,17 +1,18 @@
-# Waves
+# Waves — historical numbering
 
-Each wave has a proof on the VPS. Do not start the next wave until the proof passes.
+SUPERSEDED as a ticket list. Waves 1–3 and plates 5 are PASS/LIVE. The work graph is `docs/staff/BUILD_GRAPH.md`.
+Do not start “Wave 6” from this file.
 
-Wave 0 factory: keep Cap to HLS. Just stays locked. Do not block Wave 1 on a new film.
+Kept below so old proofs still make sense.
 
-Wave 1 identity: Postgres, seed Org 0 + household, authenticated watch/quiz writes learning_events on Grok Bot station 01. Guest stays localStorage. No AUTH_URL flip.
-Proof: user A progress survives refresh in Postgres. User B and guest do not see it. cap and edit health still work.
+---
 
-Wave 2 hosts: wildcard *.fieldschool.ai, /o/:slug, child/guardian, invites.
-Wave 3 publish: Notion Live/HLS Ready to runtime + embeddings when melt idle.
-Wave 4 sources: text, upload, book, YouTube, Vimeo, Loom, URL, Cap behind flag. Parent approve.
-Wave 5 learner_model + deterministic chooser + hand assignments.
-Wave 6 grounded autogen + resource proposal inbox. No web scrape into the pack.
-Wave 7 campus MCP at mcp.fieldschool.ai. Token no wider than the human.
-Wave 8 AUTH_URL / portal unpark after OAuth callbacks exist.
-Wave 9 paid Cap, signed HLS, custom domains.
+Each historical wave had a proof on the VPS.
+
+Wave 0 factory: keep Cap to HLS. Just stays locked.
+Wave 1 identity: PASS. `WAVE1.md`.
+Wave 2 hosts / picker / Pattern: PASS. `WAVE2.md`.
+Wave 3 composer teach: LIVE. `WAVE3.md`.
+Wave 5 Remotion plates: PASS in `plates/` only. `WAVE5.md`.
+
+Later numbers in the original draft (chooser LLM, campus MCP, AUTH unpark, paid Cap) are **not** BUILD_GRAPH nodes. Do not pick them up.
