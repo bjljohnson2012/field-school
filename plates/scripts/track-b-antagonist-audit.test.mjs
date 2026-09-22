@@ -58,7 +58,12 @@ test("full Track B path audit clears the four hard gates and does not ship", () 
   assert.equal(audit.gates["RM-H01"], "PASS");
   assert.equal(audit.gates["VOX-H10"], "PASS");
   assert.equal(audit.gates["VOX-H06"], "PASS");
-  assert.ok(audit.soft_fail.includes("RM-S08"));
+  assert.deepEqual(audit.soft_fail, ["EDU-S03"]);
+  assert.deepEqual(audit.human_needed, ["EDU-S03: Cap take"]);
+  assert.equal(audit.gates["VOX-S04"], "PASS");
+  assert.equal(audit.gates["RM-S03"], "PASS");
+  assert.equal(audit.gates["RM-S04"], "PASS");
+  assert.equal(audit.gates["RM-S08"], "PASS");
   assert.equal(audit.evidence.narrow_audit, "PASS");
   assert.equal(audit.evidence.cleaning_auto_flip, true);
 
@@ -69,6 +74,8 @@ test("full Track B path audit clears the four hard gates and does not ship", () 
   for (const id of ["RM-H07", "EDU-H01", "EDU-H02", "EDU-H09"]) {
     assert.match(report, new RegExp(`${id} \\| PASS`));
   }
+  assert.match(report, /EDU-S03 \| SOFT_FAIL/);
+  assert.match(report, /Human needed: Cap take/);
   assert.match(report, /`distribute` stays false/);
   assert.match(report, /does not write master\.mp4/);
 

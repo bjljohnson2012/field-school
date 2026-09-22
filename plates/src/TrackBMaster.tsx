@@ -22,10 +22,10 @@ const overlay = {
 export const TrackBMaster: React.FC = () => {
   return (
     <AbsoluteFill>
-      <Sequence from={0} durationInFrames={1050} name="fixture-vo">
+      <Sequence from={0} durationInFrames={1050} name="fixture-vo" premountFor={30}>
         <Audio src={staticFile("track-b-fixture.wav")} trimBefore={0} />
       </Sequence>
-      <Sequence from={0} durationInFrames={300} name="Opener">
+      <Sequence from={0} durationInFrames={300} name="Opener" premountFor={30}>
         <Opener
           kicker="Lesson"
           title="You Can Just Do Things"
@@ -36,7 +36,7 @@ export const TrackBMaster: React.FC = () => {
           captions={TRACK_B_CAPTIONS}
         />
       </Sequence>
-      <Sequence from={300} durationInFrames={240} name="TalkingHead">
+      <Sequence from={300} durationInFrames={240} name="TalkingHead" premountFor={30}>
         <TalkingHeadCard
           name="Teacher"
           role="Operator"
@@ -47,7 +47,7 @@ export const TrackBMaster: React.FC = () => {
           captions={TRACK_B_CAPTIONS}
         />
       </Sequence>
-      <Sequence from={540} durationInFrames={300} name="RecapCard">
+      <Sequence from={540} durationInFrames={300} name="RecapCard" premountFor={30}>
         <RecapCard
           kicker="Recap"
           title="What stays on the card"
@@ -58,7 +58,7 @@ export const TrackBMaster: React.FC = () => {
           captions={TRACK_B_CAPTIONS}
         />
       </Sequence>
-      <Sequence from={840} durationInFrames={210} name="QuizBumper">
+      <Sequence from={840} durationInFrames={210} name="QuizBumper" premountFor={30}>
         <QuizBumper
           prompt="What did the card draw?"
           sourceUnitTitle="Explanatory motion"
