@@ -1,0 +1,42 @@
+{
+  "kind": "cut-list",
+  "aspect": "9:16",
+  "later": true,
+  "verticalPack": false,
+  "render": false,
+  "fps": 30,
+  "source": "queue/master.json",
+  "sourceAspect": "16:9",
+  "cuts": [
+    {
+      "id": "opener",
+      "plate": "Opener",
+      "inMs": 0,
+      "outMs": 10000,
+      "aspect": "9:16"
+    },
+    {
+      "id": "talking-head",
+      "plate": "TalkingHead",
+      "inMs": 10000,
+      "outMs": 18000,
+      "aspect": "9:16",
+      "captions": "layer"
+    },
+    {
+      "id": "recap",
+      "plate": "RecapCard",
+      "inMs": 18000,
+      "outMs": 28000,
+      "aspect": "9:16"
+    },
+    {
+      "id": "quiz",
+      "plate": "QuizBumper",
+      "inMs": 28000,
+      "outMs": 35000,
+      "aspect": "9:16",
+      "source_unit_id": "lesson-opener"
+    }
+  ]
+}
