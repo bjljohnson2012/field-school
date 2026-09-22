@@ -805,3 +805,98 @@ test("a person's suggestion stays about that person in both rooms", () => {
   assert.equal(led.brain.people[0].ownsOutcomes, false);
   assert.equal(led.brain.people[0].profile.includes("Noor"), false);
 });
+
+test("saving a suggestion refreshes org facts in both rooms", () => {
+  const home = shapeBrain({
+    orgId: "org-home",
+    room: "household",
+    facts: "Ada: Old page.",
+    actorId: "parent-1",
+    people: [
+      {
+        membershipId: "child-1",
+        name: "Ada",
+        kind: "child",
+        login: "none",
+        profile: "Taught. Next step is Old page.",
+        outcomes: "Old page",
+      },
+      {
+        membershipId: "child-2",
+        name: "Bea",
+        kind: "child",
+        login: "none",
+        profile: "Reads every morning before chores.",
+        outcomes: "Stay with the morning reading",
+      },
+    ],
+  });
+  assert.equal(home.ok, true);
+  if (!home.ok) return;
+  const saved = applyAssist(home.brain, parent, "child-1", { nextStep: "Finish the next page" });
+  assert.equal(saved.ok, true);
+  if (!saved.ok) return;
+  assert.equal(saved.brain.facts, "Ada: Finish the next page. Bea: Stay with the morning reading.");
+  assert.equal(saved.brain.people[0].login, "none");
+  assert.equal(saved.brain.people.every((person) => person.ownsOutcomes === false), true);
+  assert.equal(saved.brain.facts.includes("Pat"), false);
+  const childWrite = applyAssist(home.brain, { ...parent, kind: "child", membershipId: "child-1" }, "child-1", {
+    nextStep: "A login",
+  });
+  assert.deepEqual(childWrite, { ok: false, error: "child_has_no_login" });
+
+  const sales = shapeBrain({
+    orgId: "org-sales",
+    room: "sales",
+    facts: "Kai: Old call.",
+    actorId: "leader-1",
+    people: [
+      {
+        membershipId: "rep-1",
+        name: "Kai",
+        kind: "adult",
+        login: "member",
+        profile: "Taught. Next step is Old call.",
+        outcomes: "Old call",
+      },
+      {
+        membershipId: "rep-2",
+        name: "Noor",
+        kind: "adult",
+        login: "member",
+        profile: "Works the afternoon desk",
+        outcomes: "Name the next call",
+      },
+    ],
+  });
+  assert.equal(sales.ok, true);
+  if (!sales.ok) return;
+  const withChild = {
+    ...sales.brain,
+    people: [
+      ...sales.brain.people,
+      {
+        membershipId: "child-9",
+        name: "Wrong room",
+        kind: "child",
+        login: "none",
+        profile: "no",
+        outcomes: "Do not show",
+        ownsOutcomes: false,
+      },
+    ],
+  };
+  const member = { kind: "adult", stance: "learner", org: "sales", membershipId: "rep-1" };
+  assert.deepEqual(applyAssist(sales.brain, member, "rep-1", { nextStep: "Keep the team next step" }), {
+    ok: false,
+    error: "not_leader",
+  });
+  const led = applyAssist(withChild, leader, "rep-1", { nextStep: "Keep the team next step" });
+  assert.equal(led.ok, true);
+  if (!led.ok) return;
+  assert.equal(led.brain.facts, "Kai: Keep the team next step. Noor: Name the next call.");
+  assert.equal(led.brain.facts.includes("Wrong room"), false);
+  assert.equal(led.brain.facts.includes("Do not show"), false);
+  assert.equal(led.brain.people.some((person) => person.kind === "child" || person.login === "none"), false);
+  assert.equal(led.brain.people.every((person) => person.ownsOutcomes === false && person.login === "member"), true);
+});
