@@ -1,5 +1,7 @@
 export type Room = "household" | "sales";
 
+export type OutcomeMark = { outcomes: string };
+
 export type LivingPerson = {
   membershipId: string;
   name: string;
@@ -8,6 +10,7 @@ export type LivingPerson = {
   profile: string;
   outcomes: string;
   ownsOutcomes: false;
+  history: OutcomeMark[];
 };
 
 export type LivingBrain = {
@@ -25,6 +28,19 @@ export type BrainActor = {
 };
 
 const MAX = 2000;
+const HISTORY_MAX = 8;
+
+/** Recent next steps, oldest first. The same step twice in a row is kept once. */
+export function rememberOutcome(prior: OutcomeMark[] | undefined, outcomes: string): OutcomeMark[] {
+  const marks = (prior ?? [])
+    .map((mark) => ({ outcomes: clip(mark?.outcomes || "") }))
+    .filter((mark) => mark.outcomes)
+    .slice(-HISTORY_MAX);
+  const next = clip(outcomes);
+  if (!next) return marks;
+  if (marks[marks.length - 1]?.outcomes === next) return marks;
+  return [...marks, { outcomes: next }].slice(-HISTORY_MAX);
+}
 
 function clip(value: string) {
   return value.trim().slice(0, MAX);
@@ -58,6 +74,7 @@ export function shapeBrain(input: {
     login: "none" | "member";
     profile: string;
     outcomes: string;
+    history?: OutcomeMark[];
   }>;
 }): { ok: true; brain: LivingBrain } | { ok: false; error: string } {
   const people: LivingPerson[] = [];
@@ -76,6 +93,7 @@ export function shapeBrain(input: {
       profile: clip(person.profile),
       outcomes: clip(person.outcomes),
       ownsOutcomes: false,
+      history: rememberOutcome(person.history, person.outcomes),
     });
   }
   return {
@@ -362,6 +380,7 @@ export function applyAssist(
           profile: drafted.draft.profile,
           outcomes: drafted.draft.outcomes,
           ownsOutcomes: false as const,
+          history: rememberOutcome(row.history, drafted.draft.outcomes),
         }
       : { ...row, ownsOutcomes: false as const },
   );
@@ -396,7 +415,7 @@ export function applyPreparedAssist(
   if (!profile || !outcomes) return { ok: false, error: "no_context" };
   const people = brain.people.map((row) =>
     row.membershipId === membershipId
-      ? { ...row, profile, outcomes, ownsOutcomes: false as const }
+      ? { ...row, profile, outcomes, ownsOutcomes: false as const, history: rememberOutcome(row.history, outcomes) }
       : { ...row, ownsOutcomes: false as const },
   );
   const listed = brain.room === "sales" ? people.filter((row) => row.kind !== "child" && row.login === "member") : people;
@@ -429,7 +448,9 @@ export function updateOutcome(
     brain: {
       ...brain,
       people: brain.people.map((row) =>
-        row.membershipId === membershipId ? { ...row, outcomes: clip(outcomes), ownsOutcomes: false } : row,
+        row.membershipId === membershipId
+          ? { ...row, outcomes: clip(outcomes), ownsOutcomes: false, history: rememberOutcome(row.history, outcomes) }
+          : row,
       ),
     },
   };
@@ -515,6 +536,7 @@ export function refreshFromUse(
     return { ok: false, error: "not_leader" };
   }
   const name = clip(signal.name) || "This person";
+  const prior = brain.people.find((row) => row.membershipId === signal.membershipId);
   const following = clip(signal.following || "");
   const nextStep = following || step;
   const profile = following
@@ -528,6 +550,7 @@ export function refreshFromUse(
     profile,
     outcomes: nextStep,
     ownsOutcomes: false,
+    history: rememberOutcome(prior?.history, nextStep),
   };
   const merged = brain.people.some((row) => row.membershipId === signal.membershipId)
     ? brain.people.map((row) => (row.membershipId === signal.membershipId ? nextPerson : { ...row, ownsOutcomes: false as const }))
@@ -581,6 +604,7 @@ export type BrainBoardPerson = {
   profile: string;
   outcomes: string;
   ownsOutcomes: false;
+  history: OutcomeMark[];
 };
 
 export type BrainBoard = {
@@ -613,6 +637,7 @@ export function brainBoard(input: {
       profile: person.profile,
       outcomes: person.outcomes,
       ownsOutcomes: false,
+      history: person.history ?? [],
     })),
   };
 }
@@ -633,6 +658,7 @@ export function readForTool(brain: LivingBrain, activeOrgId: string) {
       profile: person.profile,
       outcomes: person.outcomes,
       ownsOutcomes: false as const,
+      history: person.history ?? [],
     })),
   };
 }
