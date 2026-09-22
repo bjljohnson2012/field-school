@@ -123,6 +123,75 @@ export type ChosenNext = {
   ownsOutcomes: false;
 };
 
+export type UseKind = "assign" | "teach" | "learn" | "progress";
+
+export type UseSignal = {
+  kind: UseKind;
+  membershipId: string;
+  name: string;
+  personKind: string;
+  login: "none" | "member";
+  step: string;
+};
+
+function useLabel(kind: UseKind) {
+  if (kind === "assign") return "Assigned.";
+  if (kind === "teach") return "Taught.";
+  if (kind === "learn") return "Learned.";
+  return "Progress saved.";
+}
+
+/**
+ * Real use rewrites org facts and this person's profile and outcomes.
+ * The child has no login. A sales child is refused. The learner does not own outcomes.
+ */
+export function refreshFromUse(
+  brain: LivingBrain,
+  actor: BrainActor,
+  signal: UseSignal,
+): { ok: true; brain: LivingBrain } | { ok: false; error: string } {
+  if (actor.kind === "child") return { ok: false, error: "child_has_no_login" };
+  if (actor.org !== brain.room || !brain.orgId) return { ok: false, error: "wrong_desk" };
+  const step = clip(signal.step);
+  if (!step) return { ok: false, error: "no_step" };
+  const self = signal.membershipId === actor.membershipId;
+  if (brain.room === "sales") {
+    if (signal.personKind === "child" || signal.login !== "member") {
+      return { ok: false, error: "sales_has_no_children" };
+    }
+    const leader = actorMayWrite(actor);
+    if (leader && self) return { ok: false, error: "not_on_desk" };
+    if (!leader && (!self || (signal.kind !== "learn" && signal.kind !== "progress"))) {
+      return { ok: false, error: "not_leader" };
+    }
+  } else if (signal.personKind !== "child" || signal.login !== "none" || !actorMayWrite(actor) || self) {
+    return { ok: false, error: signal.personKind === "child" && signal.login === "none" ? "not_leader" : "child_has_no_login" };
+  }
+  const name = clip(signal.name) || "This person";
+  const nextPerson: LivingPerson = {
+    membershipId: signal.membershipId,
+    name,
+    kind: signal.personKind,
+    login: signal.login,
+    profile: clip(`${useLabel(signal.kind)} Next step is ${step}.`),
+    outcomes: step,
+    ownsOutcomes: false,
+  };
+  const merged = brain.people.some((row) => row.membershipId === signal.membershipId)
+    ? brain.people.map((row) => (row.membershipId === signal.membershipId ? nextPerson : { ...row, ownsOutcomes: false as const }))
+    : [...brain.people.map((row) => ({ ...row, ownsOutcomes: false as const })), nextPerson];
+  const people =
+    brain.room === "sales" ? merged.filter((person) => person.kind !== "child" && person.login === "member") : merged;
+  return {
+    ok: true,
+    brain: {
+      ...brain,
+      facts: clip(`${name}: next step is ${step}.`),
+      people,
+    },
+  };
+}
+
 /** Outcomes first, then profile, then the stored unit. Sales never picks a child. */
 export function chooseNextStep(input: {
   room: Room;

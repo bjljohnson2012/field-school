@@ -5,6 +5,7 @@ import { identityFromRequest, ensureMembership } from "@/lib/campus-runtime/iden
 import { HOUSEHOLD_SLUG, canCreateChild } from "@/lib/campus-runtime/org";
 import { isStaffEmail } from "@/lib/auth/staff";
 import { getDb } from "@/lib/db/client";
+import { noteUse } from "@/lib/living-brain/store";
 import {
   learningEvents,
   members,
@@ -138,6 +139,37 @@ export async function PATCH(request: Request) {
       objectId: "home:welcome",
       raw: { course: "home", station: "welcome", recordedBy: "parent" },
     });
+    if (auth.identity.orgSlug === HOUSEHOLD_SLUG && auth.identity.kind !== "child") {
+      const [child] = await db
+        .select({ name: members.name, kind: members.kind })
+        .from(memberships)
+        .innerJoin(members, eq(members.id, memberships.memberId))
+        .where(and(eq(memberships.id, membershipId), eq(memberships.orgId, auth.identity.orgId)))
+        .limit(1);
+      if (child?.kind === "child") {
+        try {
+          await noteUse({
+            orgId: auth.identity.orgId,
+            actor: {
+              kind: auth.identity.kind,
+              stance: auth.identity.stance,
+              org: "household",
+              membershipId: auth.identity.membershipId,
+            },
+            signal: {
+              kind: "learn",
+              membershipId,
+              name: child.name,
+              personKind: "child",
+              login: "none",
+              step: "Household welcome",
+            },
+          });
+        } catch {
+          // The welcome is already stored.
+        }
+      }
+    }
   }
   if (note !== null) {
     await db.insert(learningEvents).values({

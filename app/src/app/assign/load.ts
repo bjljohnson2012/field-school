@@ -17,6 +17,7 @@ import {
 } from "./desk";
 import { parseLessonSpec } from "./lesson-spec";
 import { portionAfterTeach, unitForPortion } from "./next-portion";
+import { noteUse } from "@/lib/living-brain/store";
 
 export type DeskPayload = {
   ok: true;
@@ -330,6 +331,19 @@ export async function saveAssignment(
     }
     const spec = drafted.draft.raw.lessonSpec;
     const unit = unitForPortion(spec.units, drafted.draft.raw.nextUnitId);
+    const step = unit?.title || spec.units[0].title;
+    await noteUse({
+      orgId: auth.identity.orgId,
+      actor: { kind: actor.kind, stance: actor.stance, org: room, membershipId: actor.membershipId },
+      signal: {
+        kind: "assign",
+        membershipId: person.membershipId,
+        name: person.name,
+        personKind: person.kind,
+        login: person.login === "member" ? "member" : "none",
+        step,
+      },
+    });
     const assignment: OpenAssignment = {
       id: rowId,
       membershipId: person.membershipId,
@@ -380,6 +394,7 @@ export async function saveNextPortion(
         id: assignments.id,
         membershipId: assignments.membershipId,
         name: members.name,
+        kind: members.kind,
         raw: assignments.raw,
       })
       .from(assignments)
@@ -421,6 +436,20 @@ export async function saveNextPortion(
       .set({ raw: nextRaw, updatedAt: new Date() })
       .where(and(eq(assignments.id, row.id), eq(assignments.orgId, auth.identity.orgId)));
     const login = raw.login === "member" ? "member" : "none";
+    if (!(room === "sales" && row.kind === "child")) {
+      await noteUse({
+        orgId: auth.identity.orgId,
+        actor: { kind: actor.kind, stance: actor.stance, org: room, membershipId: actor.membershipId },
+        signal: {
+          kind: "teach",
+          membershipId: row.membershipId,
+          name: row.name,
+          personKind: room === "household" ? "child" : row.kind || "adult",
+          login,
+          step: next.title,
+        },
+      });
+    }
     const assignment: OpenAssignment = {
       id: row.id,
       membershipId: row.membershipId,
