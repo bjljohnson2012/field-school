@@ -167,6 +167,7 @@ export type InsightsModel = {
   brainBoard?: {
     room: "household" | "sales";
     facts: string;
+    outcome: string;
     people: Array<{
       membershipId: string;
       name: string;

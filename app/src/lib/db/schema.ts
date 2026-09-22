@@ -862,6 +862,7 @@ export const livingBrains = pgTable("living_brains", {
     .references(() => organizations.id),
   room: text("room").notNull(),
   facts: text("facts").notNull().default(""),
+  outcome: text("outcome").notNull().default(""),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

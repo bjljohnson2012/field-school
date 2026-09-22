@@ -10,6 +10,7 @@ import {
   readForTool,
   refreshFromUse,
   setConfidence,
+  setOrgOutcome,
   shapeBrain,
   stepAfterFinish,
   suggestForPerson,
@@ -58,6 +59,7 @@ export async function loadLivingBrain(orgId: string): Promise<LivingBrain | null
     orgId,
     room,
     facts: head.facts,
+    outcome: head.outcome || "",
     actorId: "",
     people: rows.flatMap((row) => {
       const login = asLogin(row.login);
@@ -85,10 +87,10 @@ export async function saveLivingBrain(brain: LivingBrain) {
   const now = new Date();
   await db
     .insert(livingBrains)
-    .values({ orgId: brain.orgId, room: brain.room, facts: brain.facts, updatedAt: now })
+    .values({ orgId: brain.orgId, room: brain.room, facts: brain.facts, outcome: brain.outcome || "", updatedAt: now })
     .onConflictDoUpdate({
       target: livingBrains.orgId,
-      set: { room: brain.room, facts: brain.facts, updatedAt: now },
+      set: { room: brain.room, facts: brain.facts, outcome: brain.outcome || "", updatedAt: now },
     });
   for (const person of brain.people) {
     await db
@@ -138,6 +140,7 @@ export async function writeOutcome(input: {
           orgId: input.orgId,
           room: input.actor.org,
           facts: current?.facts || "",
+          outcome: current?.outcome || "",
           people: [],
         };
   const exists = base.people.some((row) => row.membershipId === input.membershipId);
@@ -176,7 +179,7 @@ export async function writeConfidence(input: {
   const base: LivingBrain =
     current && current.room === input.actor.org
       ? current
-      : { orgId: input.orgId, room: input.actor.org, facts: "", people: [] };
+      : { orgId: input.orgId, room: input.actor.org, facts: "", outcome: "", people: [] };
   const next = setConfidence(base, input.actor, input.membershipId, input.confidence);
   if (!next.ok) return next;
   await saveLivingBrain(next.brain);
@@ -193,7 +196,7 @@ export async function writeAssist(input: {
   const base: LivingBrain =
     current && current.room === input.actor.org
       ? current
-      : { orgId: input.orgId, room: input.actor.org, facts: "", people: [] };
+      : { orgId: input.orgId, room: input.actor.org, facts: "", outcome: "", people: [] };
   if (input.actor.kind === "child" || !actorMayWrite(input.actor) || input.actor.org !== base.room) {
     const refused = applyAssist(base, input.actor, input.membershipId, input.context);
     return refused.ok ? { ok: false as const, error: "not_leader" } : refused;
@@ -219,12 +222,24 @@ export async function writeAssist(input: {
   };
 }
 
+export async function writeOrgOutcome(input: { orgId: string; actor: BrainActor; outcome: string }) {
+  const current = await loadLivingBrain(input.orgId);
+  const base: LivingBrain =
+    current && current.room === input.actor.org
+      ? current
+      : { orgId: input.orgId, room: input.actor.org, facts: "", outcome: "", people: [] };
+  const next = setOrgOutcome(base, input.actor, input.outcome);
+  if (!next.ok) return next;
+  await saveLivingBrain(next.brain);
+  return { ok: true as const, brain: readForTool(next.brain, input.orgId) };
+}
+
 export async function writeFactsAssist(input: { orgId: string; actor: BrainActor }) {
   const current = await loadLivingBrain(input.orgId);
   const base: LivingBrain =
     current && current.room === input.actor.org
       ? current
-      : { orgId: input.orgId, room: input.actor.org, facts: "", people: [] };
+      : { orgId: input.orgId, room: input.actor.org, facts: "", outcome: "", people: [] };
   const next = applyFactsAssist(base, input.actor);
   if (!next.ok) return next;
   await saveLivingBrain(next.brain);
@@ -242,7 +257,7 @@ export async function noteUse(input: { orgId: string; actor: BrainActor; signal:
   const base: LivingBrain =
     current && current.room === input.actor.org
       ? current
-      : { orgId: input.orgId, room: input.actor.org, facts: "", people: [] };
+      : { orgId: input.orgId, room: input.actor.org, facts: "", outcome: "", people: [] };
   const next = refreshFromUse(base, input.actor, input.signal);
   if (!next.ok) return next;
   await saveLivingBrain(next.brain);
