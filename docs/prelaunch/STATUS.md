@@ -1,9 +1,10 @@
 # Prelaunch status
 
-Campus SoT: [../campus-runtime/STATUS.md](../campus-runtime/STATUS.md).
+Work graph: [../staff/BUILD_GRAPH.md](../staff/BUILD_GRAPH.md). Law: [../LAW.md](../LAW.md).
+Campus proofs stay in [../campus-runtime/STATUS.md](../campus-runtime/STATUS.md).
 
-Launch gate: [LAUNCH_GATE.md](./LAUNCH_GATE.md) — **CLOSED**. **0/8**. Hire-path evidence rows landed (play rail, AUTH, Stripe, metering, Publish polish, webhook hire activation, Parent-supervised progress, Parent-owned intent, Parent-path assembly, Parent next-portion, Knowledge brain, Hire-path sync, Sources and notes, Brain confidence, Composer plates readiness). Do not invent 8/8. Campus mirror `/operator/launch-gate`.
+Launch gate: [LAUNCH_GATE.md](./LAUNCH_GATE.md) — **CLOSED**. **0/8**. Do not invent 8/8. Campus mirror `/operator/launch-gate`.
 
-Campus Wave 5 overnight close-sync: [../campus-runtime/WAVE5.md](../campus-runtime/WAVE5.md) — letterbox encode sha256 `028d16e4…`; antagonist full-set reaudit PASS (SOFT only); karaoke gold `9f89f9a9…` (`VOX-S01` fixture PASS); AudioBed landed; Wave3 campus pack LIVE; current master dest audiobed-encode (sha256 same as karaoke when volume 0); launch stays CLOSED.
+Campus Wave 5 factory remains PASS in `plates/` only: [../campus-runtime/WAVE5.md](../campus-runtime/WAVE5.md). Wave3 campus pack LIVE. Launch stays CLOSED.
 
 Staff hub (locked 2026-09-18): [../staff/GRAPH.md](../staff/GRAPH.md) — CDM → CTO → Cursor Gate → Field School PM. Clocks: [../staff/ROUTINES.md](../staff/ROUTINES.md) (06 / 09 / 15 / 22 / 02 ET). Do not invent agents.
