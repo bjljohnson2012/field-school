@@ -1,29 +1,150 @@
 # Field School three loops
-Dated 21 Sep 2026. Project owner: Field School PM (`bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133`).
-This file is the product operating plan. Launch stays CLOSED. This file is not 8/8.
-Read with `FIELD-SCHOOL-ETHOS-MEMO.md` (job, locks, identity). This file wins on what to build this week.
+Dated 21 Sep 2026 (library revision). Project owner: Field School PM (`bc-882e8bdf-82ed-46f3-ae8a-a9ee9b441133`).
+Product plan. Launch stays CLOSED. This file is not 8/8.
+Ethos memo still wins on Child vs User, prices, AUTH_URL, dest, person-in-development-as-buyer.
+This file wins on what to build.
 
 ## End
 
-A workable, growing company.
 A leader or parent invests at https://portal.fieldschool.ai.
-A person in development keeps moving when that hirer is not in the room.
-You can finish a Cap take and get a postable video.
-That video becomes a course in the portal without Premiere.
-A leader can assign a plan to a login salesperson or a tracked child.
-Launch stays CLOSED until CDM writes 8/8.
+Anyone accountable for people's development can put knowledge into a Library, turn it into a lesson a live person can teach or a learner can take, optionally cut a video from that lesson, then assign a path that still moves when they are not in the room.
 
-## Three loops. One engine.
+## The three loops
+
+Library is the kitchen. Cap is one stove. Composer plates the meal. Portal serves it.
 
 | Loop | Job | Done when |
 | --- | --- | --- |
-| Factory | Finish a Cap take. Get files you can post. | 16:9 master + 9:16 cuts.json on disk. Download works. |
-| Composer | Those files become a course. | Chapters are knowledge_units. Quiz items cite source_unit_id. Draft until the leader approves. HLS plays in the portal. |
-| Portal | A leader assigns. People move. | Login learner or tracked child sees: this course, why, next. Leader sees eval. Brain retrieves this org only. |
+| Library | Ingest any source. Turn it into a LessonSpec. | A leader can drop a file, a link, pasted text, or a Cap take, review it, and get one lesson they can teach live, assign, or send to video. |
+| Composer | Order LessonSpecs into a course. Approve. | Units exist. Quiz items cite source_unit_id. Draft until approve. HLS or interactive player works. |
+| Portal | Assign. People move. | Login salesperson or tracked child sees course / why / next. Leader sees eval. Brain retrieves this org's units and notes. |
 
-Same Next app (`app/`). Same Postgres. Same VPS. Remotion stays in `plates/`. Do not add FastAPI, Celery, Qdrant, Django, or a new plate type.
+Wave 3 already has a seed: `sources` kinds text / upload / book / link, `/o/:slug/teach`, `/o/:slug/l`, uploads on disk. Links are stored, not scraped. That is the Library spine. Finish it. Do not invent a parallel app.
 
-## Identity (never collapse)
+## Library intakes (all first class)
+
+1. Record (Cap cam or cam+screen)
+2. Upload (PDF, slides, video, audio)
+3. Link (YouTube, Vimeo, Loom, URL)
+4. Text / paper / book paste
+
+Each intake becomes the same object: a **LessonSpec**.
+
+A LessonSpec is JSON. It is the only lesson source of truth. It drives four views:
+
+- Learn (self-serve player)
+- Teach live (presenter deck for a human in the room)
+- Make video (Remotion job from the spec, existing plates only)
+- Brain (embed units for retrieval)
+
+If a feature cannot be expressed as a field on LessonSpec, it is not a lesson feature yet.
+
+Minimum LessonSpec:
+
+```
+id, org_id, title, why
+sources[]          kind, uri, transcript, chapters
+units[]            title, body, t_start, t_end, source_unit_id
+checks[]           quiz or checkpoint, source_unit_id required
+teach[]            presenter notes, pause points
+media              hls_url, master_mp4, cuts.json
+outputs            learn | teach | video
+status             draft | approved
+```
+
+Cap-first and upload-first are the same pipeline after extract.
+
+## Stack call (considered, not cargo-culted)
+
+Keep the live product: Next.js `app/`, Auth.js, Postgres, pgvector, Caddy, VPS, Remotion in `plates/`.
+
+| Piece | Decision | Why |
+| --- | --- | --- |
+| Next.js | Keep. Product UI and BFF. | Teach, catalog, identity already live here. |
+| Django | No. | Rewrite of a working Next campus. Django admin is not the portal. |
+| FastAPI | Yes, as a Library worker only. | Docling, Whisper, yt-dlp, embeddings, structured extract are Python. Pages do not live here. |
+| Celery + Redis | Yes, with the Library. | PDF parse, STT, Remotion, embed are minutes-long. `render.lock` is the current fake queue. |
+| pgvector | Keep as the vector store. | Already in `0001`. Org-filtered chunks. |
+| Qdrant | Not now. | Second database for a chunk count you do not have. Revisit when latency forces it. |
+| LangChain | No framework-as-app. | Pydantic models for LessonSpec. Direct LLM calls. |
+| Ollama on VPS | No. | External LLM APIs. Keep the box for Postgres, Next, Redis, Remotion. |
+| ClickHouse | No. | `learning_events` in Postgres is enough. |
+
+Worker API (FastAPI) does four jobs. Nothing else.
+
+1. `extract` source to transcript + chapters + text chunks
+2. `spec` chunks to LessonSpec (units + checks with source_unit_id)
+3. `embed` units + notes into pgvector
+4. `render` LessonSpec to 16:9 master + cuts.json via Remotion CLI in Docker
+
+Next enqueues. Celery runs. Next reads job status. UI never waits on a 10-minute encode.
+
+Do not stand up FastAPI until the first extract job is real (PDF or Cap STT to units). Until then, Wave 3 units from supplied text still ships lessons.
+
+## UI / UX that can scale
+
+Do not generate rainbow dashboards from Python theme JSON. That is fake scale. Real scale is one design system, three shells, one spec.
+
+### Three shells (this is the IA)
+
+| Shell | Who | Phone | Desktop |
+| --- | --- | --- | --- |
+| Library | Maker (leader / parent / Ben) | capture + status | ingest, review, spec editor |
+| Lead | Hirer | assign, eval, next | people table, teach live |
+| Learn | Login salesperson, or parent acting for a tracked child | course / why / next / play | same, plus profile |
+
+Primary nav is those three words. Not /intent /path /portion /brain /metering /launch-gate.
+Fold Wave 3 `/o/:slug/teach` and `/o/:slug/l` into Library and Learn. Hire-path routes become panels, not the product.
+
+### Design system
+
+Foundry tokens only: charcoal, cream, olive, ink, Fraunces, IBM Plex.
+Components, reused in every shell:
+
+- SourceTile (record, upload, link, text)
+- ReviewRail (transcript, chapters, proposed units)
+- LessonPlayer (learn)
+- TeachDeck (live presenter)
+- NextCard (what / why / next)
+- PersonRow (login learner vs tracked child, labeled)
+- EvalSheet (progress, checks, notes)
+- JobChip (queued / running / ready / failed)
+
+If a screen cannot be built from those, the screen is too special.
+
+### Library UX (one screen, four intakes)
+
+Left: drop zone. Record | Upload | Paste link | Paste text.
+Center: ReviewRail. Leader edits units and checks.
+Right: outputs. Teach live. Assign. Make video. Save draft.
+
+A live person teaching uses TeachDeck: big current unit, next check, presenter notes, pause. Learners in the room or on the portal follow the same spec.
+Make video queues a render job. It does not open Premiere. Existing plates only: opener, talking-head, recap, quiz bumper.
+
+### Learn UX (three screens, forever)
+
+1. Home: this course, why it exists for you, what is next
+2. Play / teach-along
+3. Profile: skills, Field Pattern summary, progress, notes they do not edit
+
+If the flow is /intent then /path then /portion then /brain, it failed.
+
+### Lead UX
+
+1. People (login vs tracked, labeled, never mixed)
+2. Assign a course or a LessonSpec
+3. EvalSheet
+4. Brain search over this org only
+
+### Why this scales
+
+- New source kind = new extractor in FastAPI, same ReviewRail
+- New plate = new Remotion composition mapped from LessonSpec, not a new portal route
+- New org = same shells, scoped by org_id
+- New person type is forbidden. There are only three roles.
+- Thousand lessons do not mean thousand page types. They mean more LessonSpec rows.
+
+## Identity
 
 | Role | Login | Org | Owns the path |
 | --- | --- | --- | --- |
@@ -31,95 +152,48 @@ Same Next app (`app/`). Same Postgres. Same VPS. Remotion stays in `plates/`. Do
 | Login learner (salesperson) | yes | sales | no |
 | Tracked person (child) | no | household | no |
 
-Reject: salesperson as a child record. Child login. Fourth SKU. Official psychometric banks. Remotion-in-Next. Dest SHA as done-when. Launch 8/8.
+Reject: salesperson as child, child login, fourth SKU, official psychometric banks, Remotion-in-Next, dest SHA as done-when, Launch 8/8, Django rewrite.
 
-## Stack you keep
+## Locks
 
-- `app/` Next campus. Postgres + pgvector. Auth.js.
-- Orgs: `field-school` (operator), `household`, `sales`.
-- Composer tables: courses, lessons, sources, knowledge_units, quiz_items, publish_requests.
-- Field Pattern `fp-50-v1` on member_profiles. Personality routes load and question shape. It does not invent curriculum.
-- Cap + edit factory. Existing plates only: opener, talking-head, recap, quiz bumper.
-- AUTH_URL https://portal.fieldschool.ai. Dest hash untouched. Family LIVE `bc-4765f2f0` untouched. Just `27pn9xs0zk8a73g` locked.
+AUTH_URL https://portal.fieldschool.ai. Dest hash untouched. Family LIVE `bc-4765f2f0` untouched. Just `27pn9xs0zk8a73g` locked. Guest Grok Bot stays. Quiz items need source_unit_id. Household and sales events never mix. Personality routes load, not curriculum.
 
 ## This week done-when
 
-One real Cap take becomes a published lesson, assigned to one salesperson (login) and one tracked child (no login). Each has a visible next step on a phone-sized home screen.
+A leader ingests **one non-Cap source** (upload or pasted text) and **one Cap take** into Library. Each becomes an approved LessonSpec. One is assigned to a salesperson (login). One is assigned to a tracked child (no login). Each person has a visible next step. Teach live opens for the leader on that spec. Make video may still be queued, not posted.
 
-If that sentence is false, the week is not done. Tests on PR 196/197, dest reaudits, and store files are not the week.
+If that sentence is false, the week is not done.
 
-## Build order (do not skip)
+## Build order
 
-### 1. Factory: finish to files
-Operator screen, one take:
-1. Cap take is done.
-2. STT + chapters from existing factory.
-3. Review: chapters plus the four existing plates only.
-4. Render 16:9 master. Write cuts.json for 9:16.
-5. Store files. Buttons: download, send to portal as draft lesson.
+Cycle 1 (now, two streams):
+- A: Library spine on Wave 3 teach. One ReviewRail over existing source kinds (text, upload, book, link). Save LessonSpec into current courses/lessons/units/quiz tables. No FastAPI yet if the source already has text.
+- B: Learn home. NextCard for a selected person. One room per ticket. Both rooms allowed this week.
 
-Social post can be a manual upload in v1. YouTube API later.
-No new antagonist card. No dest SHA ritual.
-
-### 2. Composer: files to course
-On send to portal:
-- One course + one lesson in the leader's org.
-- Each chapter becomes a knowledge_unit.
-- Three quiz items, each with source_unit_id.
-- Status draft until approve.
-- Player is HLS, not Remotion inside Next.
-Household: parent must approve. Sales: trainer may auto-assign inside an approved pack.
-
-### 3. Portal: three learner screens, one leader screen
-Learner (or parent acting for a child):
-1. Home: this course, why, next.
-2. Play the unit.
-3. Profile: skills, Field Pattern summary, progress, notes they should not edit.
-
-Leader:
-1. People list. Login users vs tracked children, labeled.
-2. Assign course or plan.
-3. Eval: progress, quiz, notes, how they are doing.
-4. Brain: retrieve and generate from this org's units and notes only. Embed knowledge_units + brain_notes in pgvector.
-
-`/metering`, `/checkout`, `/operator/launch-gate` stay off the main path.
-
-## Streams for Field School PM
-
-You do not write `app/` yourself. Spawn builder + checker + evaluator. Two streams max. Files must not collide. Third waits.
-
-Cycle 1 (now):
-- Stream A: Composer ingest. Cap/HLS draft lesson in the leader org. Quiz items with source_unit_id. Approve path. Do not steal `bc-4765f2f0`. Do not package Remotion into Next.
-- Stream B: Portal home. One screen that names the course, why, and next for a selected person (salesperson login or tracked child). Two rooms allowed the same week. One room per ticket.
-
-Cycle 2 (after A lands):
-- Factory finish-to-files operator path using existing plates only.
-- Leader people + assign + eval.
+Cycle 2:
+- FastAPI + Redis + Celery worker: extract PDF and Cap STT to units. JobChip in Library.
+- Lead people + assign + EvalSheet.
 
 Cycle 3:
-- Brain embeddings on knowledge_units.
-- Assign the same published lesson to one salesperson and one child. Prove the week done-when.
-
-## Easy test
-
-Sales manager on a phone: sees the team, assigns Discovery week 1, rep knows what to watch, manager sees they are stuck.
-Parent on a phone: selects a child (no child account), assigns the new lesson from Cap, sees next portion without a new conversation, writes one note the brain uses next time.
-If the flow is /intent then /path then /portion then /brain, it failed.
+- Make video from LessonSpec (existing plates).
+- Embed units in pgvector. Brain query this org only.
+- Prove week done-when on one salesperson and one child.
 
 ## Do not
 
-- FastAPI, Django, Celery, Qdrant, ClickHouse, Ollama, LangChain-as-the-app
-- New plate types
-- Notion-replacement Kanban in the portal
+- Replace Next with Django
+- Put pages in FastAPI
+- Add Qdrant or ClickHouse this week
+- New Remotion plate types
+- Auto-colored JSON themes
+- Notion Kanban inside the portal
 - GitHub PAT curriculum sync
-- Official MBTI / Enneagram / Gallup / Wiley items
 - Child login
 - Treat a salesperson as a child
 - Flip the public site
 - Invent Launch PASS
-- Restart campus waves to match wording
 - Extend frozen TanStack `src/`
 
 ## Dean reply
 
-End restated. Which loop moved. Agents spawned. PR links. Proof that a person has a visible next step. What still blocks the week done-when. Next two streams queued. Human needed (Cap take is allowed and expected).
+Week done-when restated. Library / Composer / Portal moved or blocked. Whether FastAPI was actually needed this cycle. Agents spawned. PR links. Proof a person has a visible next step. Next two streams queued. Human needed (Cap take and one upload are expected).
