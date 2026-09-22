@@ -1,40 +1,35 @@
 {
-  "updated": "2026-09-22T11:57:39Z",
+  "updated": "2026-09-22T12:23:43Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
     "C1": {
       "status": "PASS",
-      "evidence": "PR 208 merged d4874207; docs/finance-units.md"
+      "evidence": "PR 208 merged"
     },
     "C2": {
       "status": "PASS",
-      "evidence": "PR 207 merged 05228c7; icp-parent.md and icp-leader.md"
+      "evidence": "PR 207 merged"
     },
     "C3": {
-      "status": "BLOCKED",
-      "needs": [
-        "C2"
-      ]
+      "status": "READY",
+      "evidence": "C2 PASS; PR 211 open draft"
     },
     "C4": {
-      "status": "BLOCKED",
-      "needs": [
-        "C2",
-        "C5"
-      ]
+      "status": "READY",
+      "evidence": "C2+C5 PASS; PR 209 open draft"
     },
     "C5": {
       "status": "PASS",
-      "evidence": "PR 213 merged 6da98a2b; docs/gtm-hire.md"
+      "evidence": "PR 213 merged"
     },
     "C6": {
-      "status": "READY",
-      "evidence": "Insights = N2"
+      "status": "PASS",
+      "evidence": "N2 Insights on main"
     },
     "C7": {
-      "status": "IN_FLIGHT",
-      "evidence": "N1 PASS on main; N2 proving on PR 225"
+      "status": "READY",
+      "evidence": "N1\u2013N3 N9 N10 PASS; N5/N6/N7 proving"
     }
   },
   "dev": {
@@ -44,40 +39,31 @@
     },
     "N1": {
       "status": "PASS",
-      "evidence": "PR 206 merged ea9f024; chrome on main"
+      "evidence": "PR 206 merged"
     },
     "N2": {
       "status": "PASS",
-      "evidence": "PR 225; six org-scoped charts; click opens person; sales zero children; honest empty"
+      "evidence": "PR 225 merged"
     },
     "N3": {
-      "status": "READY",
-      "evidence": "PR 214 OPEN draft; N1 PASS on main; rebase before MERGE GO"
+      "status": "PASS",
+      "evidence": "PR 214 merged 2a40c289"
     },
     "N4": {
-      "status": "BLOCKED",
-      "needs": [
-        "N5",
-        "N6"
-      ]
+      "status": "READY",
+      "evidence": "N5 and N6 PASS; PR 210 open"
     },
     "N5": {
-      "status": "BLOCKED",
-      "needs": [
-        "N3"
-      ]
+      "status": "PASS",
+      "evidence": "PR 221; Cap/mp4 draft units with source_unit_id; Just refused"
     },
     "N6": {
-      "status": "BLOCKED",
-      "needs": [
-        "N3"
-      ]
+      "status": "PASS",
+      "evidence": "PR 224; wizard LessonSpec with source_unit_id"
     },
     "N7": {
-      "status": "BLOCKED",
-      "needs": [
-        "N3"
-      ]
+      "status": "PASS",
+      "evidence": "PR 219; Connect AI credits or last4"
     },
     "N8": {
       "status": "BLOCKED",
@@ -87,12 +73,12 @@
       ]
     },
     "N9": {
-      "status": "READY",
-      "evidence": "N1 needs met; PR 217 open draft; prefer after N2+N3"
+      "status": "PASS",
+      "evidence": "PR 217 merged edf5ea88"
     },
     "N10": {
-      "status": "READY",
-      "evidence": "N1 needs met; PR 220 open draft"
+      "status": "PASS",
+      "evidence": "PR 220 merged 6f48b025"
     },
     "N11": {
       "status": "BLOCKED",
@@ -102,7 +88,7 @@
     },
     "N12": {
       "status": "HELD",
-      "evidence": "Cycle 2 FastAPI worker"
+      "evidence": "Cycle 2; PR 218 do not merge"
     },
     "N13": {
       "status": "BLOCKED",
@@ -128,13 +114,13 @@
     },
     "FACTORY": {
       "status": "PASS",
-      "evidence": "PR 215 merged 7d3878aa; captions mapper on main"
+      "evidence": "PR 215 merged"
     }
   },
   "in_flight": [],
   "last_pick": [
-    "N2",
-    "N3"
+    "N5",
+    "N6"
   ],
   "last_clock": "09-continue"
 }
