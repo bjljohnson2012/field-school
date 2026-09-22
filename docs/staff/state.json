@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T19:55:00Z",
+  "updated": "2026-09-22T19:58:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -16,8 +16,8 @@
       "evidence": "PR 211 merged aaf933b or merging"
     },
     "C4": {
-      "status": "READY",
-      "evidence": "C2+C5 PASS; PR 209 open draft"
+      "status": "PASS",
+      "evidence": "PR 209 merged"
     },
     "C5": {
       "status": "PASS",
@@ -28,8 +28,8 @@
       "evidence": "N2 Insights on main"
     },
     "C7": {
-      "status": "READY",
-      "evidence": "N1\u2013N3 N9 N10 PASS; N5/N6/N7 proving"
+      "status": "PASS",
+      "evidence": "N1\u2013N3 N5 N6 N7 N9 N10 PASS"
     }
   },
   "dev": {
