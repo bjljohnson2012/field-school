@@ -323,10 +323,18 @@ export function auditTrackBPath(input = {}) {
     public: publish.public,
     dest_flipped: publish.dest_flipped,
     evidence: {
-      "RM-H07": "TrackBMaster does not mount track-b-fixture.wav on Audio with trimBefore or startFrom. The plate bed is audio-bed-silence.wav at volume 0.",
-      "EDU-H01": piled.map(([name, claims]) => `${name}: ${claims.join(", ")}`).join(" | "),
-      "EDU-H02": "Those catalog cards are mounted together on one plate, with the head dock and the type card.",
-      "EDU-H09": "Signaling gold is present. Weeding fails: extra catalog claims sit on the same beat.",
+      "RM-H07": fixtureOnAudio
+        ? "TrackBMaster mounts track-b-fixture.wav on Audio with trimBefore."
+        : "TrackBMaster does not mount track-b-fixture.wav on Audio with trimBefore or startFrom.",
+      "EDU-H01": piled.length
+        ? piled.map(([name, claims]) => `${name}: ${claims.join(", ")}`).join(" | ")
+        : "No Track B plate mounts two catalog claims.",
+      "EDU-H02": piled.length
+        ? "Catalog cards sit with the type card and the head dock."
+        : "The type card and the head dock are the beat. Extra catalog cards are off the plate.",
+      "EDU-H09": piled.length
+        ? "Weeding fails: extra catalog claims sit on the same beat."
+        : "Gold signaling is present. Extra catalog claims are off the four plates.",
       ink_cream_contrast: Number(inkCream.toFixed(2)),
       head_width_pct: Number(headPct.toFixed(4)),
       narrow_audit: narrow.verdict,

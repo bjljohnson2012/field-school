@@ -84,8 +84,8 @@ test("StingColdOpen is a cold open / hook on the ORDER LOCK first beat", () => {
   assert.match(demo, /<StingColdOpen \/>/);
   assert.match(demo, /beat="sting"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(opener, /<StingColdOpen \/>/);
-  assert.match(opener, /name="cold-open"/);
+  assert.doesNotMatch(opener, /<StingColdOpen \/>/);
+  assert.doesNotMatch(opener, /name="cold-open"/);
 });
 
 test("StingColdOpenDemo registers after ObjectionCardDemo; Opener sequences cold-open after objection; downstream plates unchanged", () => {
@@ -102,15 +102,9 @@ test("StingColdOpenDemo registers after ObjectionCardDemo; Opener sequences cold
   assert.ok(rootTsx.indexOf('id="ObjectionCardDemo"') < rootTsx.indexOf('id="StingColdOpenDemo"'));
   assert.ok(rootTsx.indexOf('id="StingColdOpenDemo"') < rootTsx.indexOf('id="LessonSpine"'));
   const openerWipe = opener.indexOf('name="transition"');
-  const openerObjection = opener.indexOf('name="objection"');
-  const openerCold = opener.indexOf('name="cold-open"');
   const openerAudio = opener.indexOf('name="audio"');
-  assert.ok(
-    openerWipe >= 0 &&
-      openerObjection > openerWipe &&
-      openerCold > openerObjection &&
-      openerAudio > openerCold,
-  );
+  assert.ok(openerWipe >= 0 && openerAudio > openerWipe);
+  assert.doesNotMatch(opener, /<StingColdOpen \/>|name="cold-open"/);
   assert.doesNotMatch(board, /StingColdOpen|name="cold-open"/);
   assert.doesNotMatch(recap, /StingColdOpen|name="cold-open"/);
   assert.doesNotMatch(head, /StingColdOpen|name="cold-open"/);

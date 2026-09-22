@@ -1,16 +1,16 @@
 # Track B full-path antagonist audit
 
-verdict: HARD_FAIL
+verdict: SOFT_FAIL
 bar: v2
-hold_cleaning: true
-escalate: true
+hold_cleaning: false
+escalate: false
 rendering: idle
 
 The clock asked for bar v2.1. `docs/remotion-vox-standards.md` says Independent Antagonist bar v2 is the only bar. This audit scores v2. It does not invent a second bar.
 
 This is a fixture dry run. It does not write master.mp4. It does not take a Cap. It does not render on the GPU. Remotion stays in `plates/`. `distribute` stays false.
 
-One HARD_FAIL wins. Soft notes do not clear it. Do not ship this master.
+Every hard gate is PASS. Soft notes remain, so the verdict is SOFT_FAIL. Those notes do not block cleaning. Dest is not flipped. This is not a public ship.
 
 ## Path
 
@@ -21,7 +21,7 @@ One HARD_FAIL wins. Soft notes do not clear it. Do not ship this master.
 | plates | PASS | Opener, TalkingHead, RecapCard, and QuizBumper share that clock. |
 | master | PASS | `TrackBMaster` is 1050 frames at 30fps, 1920×1080. Order is Opener, TalkingHead, RecapCard, QuizBumper. |
 | export-ready | PASS | Dry-run checklist matches manifest, duration, and plate order. Nothing is written. |
-| cleaning | HARD_FAIL | The narrow checklist would auto-flip (`auto_flip` true, `dest_flipped` false). The full bar holds cleaning. |
+| cleaning | PASS | The four hard gates are clear, so they do not escalate-block cleaning. The checklist can auto-flip. Dest is not flipped. |
 | publish | PASS | Publish evidence keeps `distribute` false, `public` false, and `dest_flipped` false. That lock holds. It is not a ship. |
 
 The five-gate fixture audit (`VOX-H01`, `VOX-H05`, `VOX-H06`, `VOX-H08`, `VOX-H10`) is still PASS. That narrower pass is not this verdict.
@@ -46,26 +46,26 @@ The five-gate fixture audit (`VOX-H01`, `VOX-H05`, `VOX-H06`, `VOX-H08`, `VOX-H1
 | RM-H04 | PASS | Fraunces, IBM Plex Sans, and Source Serif 4 load through `@remotion/google-fonts`. |
 | RM-H05 | PASS | No `delayRender` on this path. |
 | RM-H06 | PASS | No `Math.random()`. |
-| RM-H07 | HARD_FAIL | `TrackBMaster` does not mount `track-b-fixture.wav` on `<Audio>` with `trimBefore` or `startFrom`. The plate bed is `audio-bed-silence.wav` at volume 0. |
+| RM-H07 | PASS | `TrackBMaster` mounts `track-b-fixture.wav` on `<Audio>` with `trimBefore={0}` inside a sequence from frame 0. |
 | RM-H08 | PASS | Root registers `id="TrackBMaster"`. |
 | RM-H09 | PASS | Dest is missing and `written` is false. The dry run does not sell a finished master. |
 | RM-H10 | PASS | No per-frame `fetch` or `delayRender`. |
 | RM-H11 | PASS | No `measureText`. The caption clock is wrapped in `useMemo`. |
 | RM-H12 | PASS | Three `latin` subsets. Weights are 700, 400/500, and 400. |
-| EDU-H01 | HARD_FAIL | Opener mounts KeyClaim, ScriptureCard, CompareBoard, SectionTitle, GlossaryChip, ObjectionCard, and StingColdOpen on one beat. RecapCard mounts those plus the rest of the catalog. QuizBumper mounts PracticeCard and EndCard beside the quiz prompt. |
-| EDU-H02 | HARD_FAIL | Those catalog cards sit on the same plate as the type card and the head dock. |
+| EDU-H01 | PASS | Opener, RecapCard, and QuizBumper each keep one beat: the type card. Catalog claim cards are not mounted on those plates. |
+| EDU-H02 | PASS | The type card and the head dock are the plate. Extra catalog cards are not on that beat. |
 | EDU-H03 | PASS | Ink on cream contrast is 14.19, above 4.5:1. |
 | EDU-H04 | PASS | Fixture captions are the captions path. |
 | EDU-H05 | PASS | The three words start inside the first seconds of each plate, while the type card is on screen. |
 | EDU-H06 | PASS | Plate lengths are 10s, 8s, 10s, and 7s. Each is between 3s and 40s, in four segments. |
 | EDU-H07 | PASS | The master is 35s, under 6 minutes. |
 | EDU-H08 | PASS | The master is under 12 minutes and has four on-screen segments. |
-| EDU-H09 | HARD_FAIL | Gold signaling is present. Weeding fails because the extra catalog claims stay on the beat. |
+| EDU-H09 | PASS | Gold signaling stays. The extra catalog claims are off Opener, RecapCard, and QuizBumper. |
 | EDU-H10 | PASS | TalkingHead uses HeadDock takeover plus a type card. It is not slides-only. |
 
 ## Soft notes
 
-These do not change the verdict.
+These notes are why the verdict is SOFT_FAIL. They do not restore a hard fail.
 
 | ID | Result | Note |
 |---|---|---|
@@ -79,4 +79,4 @@ QuizBumper is 7s. The plate constant `MIN_PLATE_SEC` is 8. `EDU-H06` fails under
 
 ## Locks
 
-Launch stays CLOSED 0/8. Dest stays untouched. Just stays locked. Distribute stays HELD. Cleaning stays held on this bar.
+Launch stays CLOSED 0/8. Dest stays untouched. Just stays locked. Distribute stays HELD. Cleaning is not escalate-blocked by RM-H07, EDU-H01, EDU-H02, or EDU-H09.

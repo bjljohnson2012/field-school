@@ -95,8 +95,8 @@ test("CaveatCard is a watch-out / warning after sting/objective path", () => {
   assert.match(demo, /<CaveatCard \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<CaveatCard \/>/);
-  assert.match(recap, /name="caveat"/);
+  assert.doesNotMatch(recap, /<CaveatCard \/>/);
+  assert.doesNotMatch(recap, /name="caveat"/);
   assert.match(board, /<CaveatCard \/>/);
   assert.match(board, /name="caveat"/);
 });
@@ -128,17 +128,9 @@ test("CaveatCardDemo registers after StepsCardDemo; Recap/Definition sequence ca
       boardAudio > boardCaveat,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapSteps = recap.indexOf('name="steps"');
-  const recapCaveat = recap.indexOf('name="caveat"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapSteps > recapWipe &&
-      recapCaveat > recapSteps &&
-      recapPractice > recapCaveat &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

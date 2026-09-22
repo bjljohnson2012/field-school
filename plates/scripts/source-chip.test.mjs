@@ -102,8 +102,8 @@ test("SourceChip is a citation chip distinct from quote / verse after timeline",
   assert.match(demo, /<SourceChip \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<SourceChip \/>/);
-  assert.match(recap, /name="source"/);
+  assert.doesNotMatch(recap, /<SourceChip \/>/);
+  assert.doesNotMatch(recap, /name="source"/);
   assert.match(board, /<SourceChip \/>/);
   assert.match(board, /name="source"/);
 });
@@ -135,17 +135,9 @@ test("SourceChipDemo registers after TimelineRailDemo; Recap/Definition sequence
       boardAudio > boardSource,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapTimeline = recap.indexOf('name="timeline"');
-  const recapSource = recap.indexOf('name="source"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapTimeline > recapWipe &&
-      recapSource > recapTimeline &&
-      recapPractice > recapSource &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

@@ -1,5 +1,5 @@
 import React from "react";
-import {AbsoluteFill, Sequence} from "remotion";
+import {AbsoluteFill, Audio, Sequence, staticFile} from "remotion";
 import {EDU_S01_OBJECTIVE} from "./objectiveSlate";
 import {Opener} from "./Opener";
 import {QuizBumper} from "./QuizBumper";
@@ -22,6 +22,9 @@ const overlay = {
 export const TrackBMaster: React.FC = () => {
   return (
     <AbsoluteFill>
+      <Sequence from={0} durationInFrames={1050} name="fixture-vo">
+        <Audio src={staticFile("track-b-fixture.wav")} trimBefore={0} />
+      </Sequence>
       <Sequence from={0} durationInFrames={300} name="Opener">
         <Opener
           kicker="Lesson"

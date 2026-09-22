@@ -116,8 +116,8 @@ test("AnalogyCard is analogy / like-this transfer pair distinct from two claims 
   assert.match(demo, /<AnalogyCard \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<AnalogyCard \/>/);
-  assert.match(recap, /name="analogy"/);
+  assert.doesNotMatch(recap, /<AnalogyCard \/>/);
+  assert.doesNotMatch(recap, /name="analogy"/);
   assert.match(board, /<AnalogyCard \/>/);
   assert.match(board, /name="analogy"/);
 });
@@ -149,17 +149,9 @@ test("AnalogyCardDemo registers after EvidenceCardDemo; Recap/Definition sequenc
       boardAudio > boardAnalogy,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapEvidence = recap.indexOf('name="evidence"');
-  const recapAnalogy = recap.indexOf('name="analogy"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapEvidence > recapWipe &&
-      recapAnalogy > recapEvidence &&
-      recapPractice > recapAnalogy &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

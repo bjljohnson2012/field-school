@@ -95,16 +95,9 @@ test("ObjectionCardDemo registers after GlossaryChipDemo; Opener/Definition/Reca
   assert.ok(rootTsx.indexOf('id="GlossaryChipDemo"') < rootTsx.indexOf('id="ObjectionCardDemo"'));
   assert.ok(rootTsx.indexOf('id="ObjectionCardDemo"') < rootTsx.indexOf('id="LessonSpine"'));
   const openerWipe = opener.indexOf('name="transition"');
-  const openerGlossary = opener.indexOf('name="glossary"');
-  const openerObjection = opener.indexOf('name="objection"');
   const openerAudio = opener.indexOf('name="audio"');
-  assert.ok(
-    openerWipe >= 0 &&
-      openerGlossary > openerWipe &&
-      openerObjection > openerGlossary &&
-      openerAudio > openerObjection,
-  );
-  assert.match(opener, /<ObjectionCard \/>/);
+  assert.ok(openerWipe >= 0 && openerAudio > openerWipe);
+  assert.doesNotMatch(opener, /<ObjectionCard \/>|name="objection"/);
   const boardWipe = board.indexOf('name="transition"');
   const boardGlossary = board.indexOf('name="glossary"');
   const boardObjection = board.indexOf('name="objection"');
@@ -117,20 +110,9 @@ test("ObjectionCardDemo registers after GlossaryChipDemo; Opener/Definition/Reca
   );
   assert.match(board, /<ObjectionCard \/>/);
   const recapWipe = recap.indexOf('name="transition"');
-  const recapGlossary = recap.indexOf('name="glossary"');
-  const recapObjection = recap.indexOf('name="objection"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapGlossary > recapWipe &&
-      recapObjection > recapGlossary &&
-      recapPractice > recapObjection &&
-      recapAudio > recapPractice,
-  );
-  assert.match(recap, /<ObjectionCard \/>/);
-  assert.match(recap, /<GlossaryChip \/>/);
-  assert.match(recap, /<PracticeCard \/>/);
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /<ObjectionCard \/>|<GlossaryChip \/>|<PracticeCard \/>/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

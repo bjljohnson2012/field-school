@@ -79,10 +79,10 @@ test("EndCardDemo registers after TransitionLumaDemo; QuizBumper sequences EndCa
   assert.ok(rootTsx.indexOf('id="TransitionLumaDemo"') < rootTsx.indexOf('id="EndCardDemo"'));
   assert.ok(rootTsx.indexOf('id="EndCardDemo"') < rootTsx.indexOf('id="LessonSpine"'));
   const wipe = quiz.indexOf('name="transition"');
-  const end = quiz.indexOf('name="end"');
   const audio = quiz.indexOf('name="audio"');
-  assert.ok(wipe >= 0 && end > wipe && audio > end);
-  assert.match(quiz, /<EndCard \/>/);
+  assert.ok(wipe >= 0 && audio > wipe);
+  assert.doesNotMatch(quiz, /name="end"/);
+  assert.doesNotMatch(quiz, /<EndCard \/>/);
   assert.match(quiz, /<TransitionLuma \/>/);
   assert.match(quiz, /<AudioBed \/>/);
   assert.doesNotMatch(quiz, /zIndex|z-index/);

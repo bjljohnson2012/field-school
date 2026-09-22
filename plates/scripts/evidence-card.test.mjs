@@ -114,8 +114,8 @@ test("EvidenceCard is evidence / warrant rows distinct from bands and citation a
   assert.match(demo, /<EvidenceCard \/>/);
   assert.match(demo, /beat="recap"/);
   assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g/);
-  assert.match(recap, /<EvidenceCard \/>/);
-  assert.match(recap, /name="evidence"/);
+  assert.doesNotMatch(recap, /<EvidenceCard \/>/);
+  assert.doesNotMatch(recap, /name="evidence"/);
   assert.match(board, /<EvidenceCard \/>/);
   assert.match(board, /name="evidence"/);
 });
@@ -147,17 +147,9 @@ test("EvidenceCardDemo registers after RubricCardDemo; Recap/Definition sequence
       boardAudio > boardEvidence,
   );
   const recapWipe = recap.indexOf('name="transition"');
-  const recapRubric = recap.indexOf('name="rubric"');
-  const recapEvidence = recap.indexOf('name="evidence"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapRubric > recapWipe &&
-      recapEvidence > recapRubric &&
-      recapPractice > recapEvidence &&
-      recapAudio > recapPractice,
-  );
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /KeyClaim|ScriptureCard|CompareBoard|SectionTitle|GlossaryChip|ObjectionCard|CheckpointCard|ExampleCard|QuoteCard|StepsCard|CaveatCard|ReflectionPrompt|TimelineRail|SourceChip|SpectrumBar|ThresholdCard|RubricCard|EvidenceCard|AnalogyCard|CounterexampleCard|PracticeCard/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

@@ -85,27 +85,18 @@ test("KeyClaimDemo registers after PracticeCardDemo; Opener/Definition/Recap seq
   assert.ok(rootTsx.indexOf('id="PracticeCardDemo"') < rootTsx.indexOf('id="KeyClaimDemo"'));
   assert.ok(rootTsx.indexOf('id="KeyClaimDemo"') < rootTsx.indexOf('id="LessonSpine"'));
   const openerWipe = opener.indexOf('name="transition"');
-  const openerClaim = opener.indexOf('name="claim"');
   const openerAudio = opener.indexOf('name="audio"');
-  assert.ok(openerWipe >= 0 && openerClaim > openerWipe && openerAudio > openerClaim);
-  assert.match(opener, /<KeyClaim \/>/);
+  assert.ok(openerWipe >= 0 && openerAudio > openerWipe);
+  assert.doesNotMatch(opener, /<KeyClaim \/>|name="claim"/);
   const boardWipe = board.indexOf('name="transition"');
   const boardClaim = board.indexOf('name="claim"');
   const boardAudio = board.indexOf('name="audio"');
   assert.ok(boardWipe >= 0 && boardClaim > boardWipe && boardAudio > boardClaim);
   assert.match(board, /<KeyClaim \/>/);
   const recapWipe = recap.indexOf('name="transition"');
-  const recapClaim = recap.indexOf('name="claim"');
-  const recapPractice = recap.indexOf('name="practice"');
   const recapAudio = recap.indexOf('name="audio"');
-  assert.ok(
-    recapWipe >= 0 &&
-      recapClaim > recapWipe &&
-      recapPractice > recapClaim &&
-      recapAudio > recapPractice,
-  );
-  assert.match(recap, /<KeyClaim \/>/);
-  assert.match(recap, /<PracticeCard \/>/);
+  assert.ok(recapWipe >= 0 && recapAudio > recapWipe);
+  assert.doesNotMatch(recap, /<KeyClaim \/>|<PracticeCard \/>/);
   const sting = spine.indexOf('name="sting"');
   const slate = spine.indexOf('name="slate"');
   const objective = spine.indexOf('name="objective"');

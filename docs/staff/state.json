@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T22:30:00Z",
+  "updated": "2026-09-22T22:40:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -106,13 +106,13 @@
       "evidence": "docs/n15-both-rooms.md cites merged N1 N2 N8 N9 N11; PR 226"
     },
     "FACTORY": {
-      "status": "HELD",
-      "evidence": "Full-path antagonist audit is HARD_FAIL on RM-H07, EDU-H01, EDU-H02, and EDU-H09. Cleaning stays held. distribute stays false. Dest stays untouched. Just stays locked. Remotion stays in plates. Launch CLOSED 0/8."
+      "status": "PASS",
+      "evidence": "Full-path antagonist audit cleared RM-H07, EDU-H01, EDU-H02, and EDU-H09. Soft notes remain. Cleaning is not escalate-blocked. distribute stays false. Dest stays untouched. Just stays locked. Remotion stays in plates. Launch CLOSED 0/8."
     }
   },
   "in_flight": [],
   "last_pick": [
     "N15"
   ],
-  "last_clock": "post-252"
+  "last_clock": "post-253"
 }
