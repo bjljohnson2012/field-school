@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { assistDraft, brainBoard, type BrainBoard } from "@/lib/living-brain/model";
 import { EMPTY_COPY, type InsightPerson, type InsightPoint, type InsightsModel } from "./aggregate";
 
 type OpenState = {
@@ -107,7 +108,25 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
     ...model.skills.cells.map((cell) => (typeof cell.score === "number" ? cell.score : 0)),
   );
 
-  const board = model.brainBoard;
+  const [board, setBoard] = useState<BrainBoard | null>(model.brainBoard ?? null);
+
+  async function saveSuggestion(person: BrainBoard["people"][number]) {
+    if (!board) return;
+    const response = await fetch("/api/living-brain", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        assist: true,
+        membershipId: person.membershipId,
+        pathTitle: board.facts,
+        nextStep: person.outcomes,
+      }),
+    });
+    const data = (await response.json()) as { brain?: BrainBoard };
+    if (!response.ok || !data.brain) return;
+    setBoard(brainBoard({ room: board.room, brain: data.brain }));
+  }
+
   return (
     <div data-org={model.orgSlug} data-children={model.childrenIncluded} data-sales-diagnostics={model.salesDiagnostics}>
       {board ? (
@@ -136,7 +155,15 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {board.people.map((person) => (
+                  {board.people.map((person) => {
+                    const suggestion = assistDraft({
+                      room: board.room,
+                      person,
+                      facts: board.facts,
+                      context: { pathTitle: board.facts, nextStep: person.outcomes },
+                    });
+                    const draft = suggestion.ok && suggestion.draft.changed ? suggestion.draft : null;
+                    return (
                     <tr
                       key={person.membershipId}
                       className="border-t border-border"
@@ -144,13 +171,30 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                       data-kind={person.kind}
                       data-login={person.login}
                       data-owns-outcomes="false"
+                      data-assist={draft ? "yes" : "no"}
                     >
                       <td className="px-2 py-2">{person.name}</td>
-                      <td className="px-2 py-2">{person.profile || "—"}</td>
-                      <td className="px-2 py-2">{person.outcomes || "—"}</td>
+                      <td className="px-2 py-2">
+                        {person.profile || "—"}
+                        {draft ? <p className="mt-1 text-xs text-muted-foreground">Suggested: {draft.profile}</p> : null}
+                      </td>
+                      <td className="px-2 py-2">
+                        {person.outcomes || "—"}
+                        {draft ? (
+                          <button
+                            type="button"
+                            className="mt-1 block text-xs underline underline-offset-4"
+                            data-save-assist={person.membershipId}
+                            onClick={() => void saveSuggestion(person)}
+                          >
+                            Save suggestion
+                          </button>
+                        ) : null}
+                      </td>
                       <td className="px-2 py-2">{person.login === "none" ? "No login" : "May sign in"}</td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

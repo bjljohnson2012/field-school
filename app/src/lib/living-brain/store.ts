@@ -3,6 +3,7 @@ import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import { assignments, livingBrains, livingProfiles, members, memberships } from "@/lib/db/schema";
 import {
   actorMayWrite,
+  applyAssist,
   readForTool,
   refreshFromUse,
   shapeBrain,
@@ -130,6 +131,23 @@ export async function writeOutcome(input: {
         ],
       };
   const next = updateOutcome(withPerson, input.actor, input.membershipId, input.outcomes);
+  if (!next.ok) return next;
+  await saveLivingBrain(next.brain);
+  return { ok: true as const, brain: readForTool(next.brain, input.orgId) };
+}
+
+export async function writeAssist(input: {
+  orgId: string;
+  actor: BrainActor;
+  membershipId: string;
+  context?: { pathTitle?: string; nextStep?: string };
+}) {
+  const current = await loadLivingBrain(input.orgId);
+  const base: LivingBrain =
+    current && current.room === input.actor.org
+      ? current
+      : { orgId: input.orgId, room: input.actor.org, facts: "", people: [] };
+  const next = applyAssist(base, input.actor, input.membershipId, input.context);
   if (!next.ok) return next;
   await saveLivingBrain(next.brain);
   return { ok: true as const, brain: readForTool(next.brain, input.orgId) };

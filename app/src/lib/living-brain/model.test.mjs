@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { brainBoard, chooseNextStep, readForTool, refreshFromUse, shapeBrain, updateOutcome } from "./model.ts";
+import { applyAssist, assistDraft, brainBoard, chooseNextStep, readForTool, refreshFromUse, shapeBrain, updateOutcome } from "./model.ts";
 
 const parent = { kind: "adult", stance: "guardian", org: "household", membershipId: "parent-1" };
 const leader = { kind: "adult", stance: "trainer", org: "sales", membershipId: "leader-1" };
@@ -440,4 +440,122 @@ test("insights lists org facts and many people in both rooms", () => {
   const fromTool = brainBoard({ room: "sales", brain: tool });
   assert.equal(fromTool.people.length, 2);
   assert.equal(fromTool.facts, tool?.facts);
+});
+
+test("assist keeps profile and outcomes current in both rooms", () => {
+  const home = shapeBrain({
+    orgId: "org-home",
+    room: "household",
+    facts: "Home reading",
+    actorId: "parent-1",
+    people: [
+      {
+        membershipId: "child-1",
+        name: "Ada",
+        kind: "child",
+        login: "none",
+        profile: "Taught. Next step is Old page.",
+        outcomes: "Old page",
+      },
+      {
+        membershipId: "child-2",
+        name: "Bea",
+        kind: "child",
+        login: "none",
+        profile: "Reads every morning before chores.",
+        outcomes: "Stay with the morning reading",
+      },
+    ],
+  });
+  assert.equal(home.ok, true);
+  if (!home.ok) return;
+  const ada = home.brain.people[0];
+  const suggested = assistDraft({
+    room: "household",
+    person: ada,
+    facts: home.brain.facts,
+    context: { pathTitle: "Home reading", nextStep: "Finish the next page" },
+  });
+  assert.equal(suggested.ok, true);
+  if (!suggested.ok) return;
+  assert.equal(suggested.draft.changed, true);
+  assert.match(suggested.draft.profile, /Ada/);
+  assert.match(suggested.draft.profile, /Home reading/);
+  assert.equal(suggested.draft.outcomes, "Finish the next page");
+  const saved = applyAssist(home.brain, parent, "child-1", {
+    pathTitle: "Home reading",
+    nextStep: "Finish the next page",
+  });
+  assert.equal(saved.ok, true);
+  if (!saved.ok) return;
+  assert.equal(saved.brain.people[0].login, "none");
+  assert.equal(saved.brain.people[0].ownsOutcomes, false);
+  assert.equal(saved.brain.people[0].outcomes, "Finish the next page");
+  assert.match(saved.brain.people[0].profile, /Home reading/);
+  const bea = saved.brain.people.find((person) => person.membershipId === "child-2");
+  const kept = assistDraft({
+    room: "household",
+    person: bea,
+    facts: saved.brain.facts,
+    context: { nextStep: "Stay with the morning reading" },
+  });
+  assert.equal(kept.ok, true);
+  if (!kept.ok) return;
+  assert.equal(kept.draft.changed, false);
+  assert.equal(kept.draft.profile, "Reads every morning before chores.");
+  const childWrite = applyAssist(home.brain, { ...parent, kind: "child", membershipId: "child-1" }, "child-1", {
+    nextStep: "A login",
+  });
+  assert.deepEqual(childWrite, { ok: false, error: "child_has_no_login" });
+
+  const sales = shapeBrain({
+    orgId: "org-sales",
+    room: "sales",
+    facts: "Afternoon desk",
+    actorId: "leader-1",
+    people: [
+      {
+        membershipId: "rep-1",
+        name: "Kai",
+        kind: "adult",
+        login: "member",
+        profile: "Learned. Next step is Old call.",
+        outcomes: "Old call",
+      },
+    ],
+  });
+  assert.equal(sales.ok, true);
+  if (!sales.ok) return;
+  const withChild = {
+    ...sales.brain,
+    people: [
+      ...sales.brain.people,
+      {
+        membershipId: "child-9",
+        name: "Wrong room",
+        kind: "child",
+        login: "none",
+        profile: "no",
+        outcomes: "no",
+        ownsOutcomes: false,
+      },
+    ],
+  };
+  const member = { kind: "adult", stance: "learner", org: "sales", membershipId: "rep-1" };
+  const memberWrite = applyAssist(sales.brain, member, "rep-1", { nextStep: "Name the next call" });
+  assert.deepEqual(memberWrite, { ok: false, error: "not_leader" });
+  const blocked = applyAssist(withChild, leader, "child-9", { nextStep: "no" });
+  assert.deepEqual(blocked, { ok: false, error: "sales_has_no_children" });
+  const led = applyAssist(withChild, leader, "rep-1", {
+    pathTitle: "Afternoon desk",
+    nextStep: "Name the next call",
+  });
+  assert.equal(led.ok, true);
+  if (!led.ok) return;
+  assert.equal(led.brain.people.some((person) => person.kind === "child"), false);
+  assert.equal(led.brain.people[0].login, "member");
+  assert.equal(led.brain.people[0].ownsOutcomes, false);
+  assert.equal(led.brain.people[0].outcomes, "Name the next call");
+  assert.match(led.brain.people[0].profile, /Kai/);
+  assert.match(led.brain.people[0].profile, /Afternoon desk/);
 });
