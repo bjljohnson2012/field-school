@@ -91,6 +91,14 @@ export function shapeBrain(input: {
 
 const MECHANICAL_PROFILE = /^(Assigned|Taught|Learned|Progress saved)\. Next step is /;
 
+/** Org facts look like "Ada: Finish the page." A person's profile should not repeat that whole line. */
+function pathForOnePerson(pathTitle: string) {
+  const path = pathTitle.trim();
+  if (!path) return "";
+  if (/^[^:]{1,80}:\s+\S/.test(path.replace(/\.$/, ""))) return "";
+  return path;
+}
+
 function onThisDesk(room: Room, person: { kind: string; login: "none" | "member"; ownsOutcomes?: boolean }) {
   if (person.ownsOutcomes) return false;
   if (room === "sales") return person.kind !== "child" && person.login === "member";
@@ -171,15 +179,16 @@ export function assistDraft(input: {
   if (input.room === "household" && (input.person.kind !== "child" || input.person.login !== "none")) {
     return { ok: false, error: "child_has_no_login" };
   }
-  const pathTitle = clip(input.context?.pathTitle || input.facts || "");
+  const pathTitle = pathForOnePerson(clip(input.context?.pathTitle || ""));
   const nextStep = clip(input.context?.nextStep || "");
   const outcomes = nextStep || clip(input.person.outcomes);
   const currentProfile = input.person.profile.trim();
-  if (!outcomes && !currentProfile && !pathTitle) return { ok: false, error: "no_context" };
+  if (!outcomes && !currentProfile && !pathTitle && !clip(input.facts)) return { ok: false, error: "no_context" };
   const name = clip(input.person.name) || "This person";
   const thin = !currentProfile || MECHANICAL_PROFILE.test(currentProfile);
+  const step = outcomes || "the open step";
   const profile = thin
-    ? clip(`${name} is on ${pathTitle || "this path"}. Next step is ${outcomes || "the open step"}.`)
+    ? clip(pathTitle ? `${name} is on ${pathTitle}. Next step is ${step}.` : `${name}. Next step is ${step}.`)
     : clip(currentProfile);
   const finalOutcomes = outcomes || "the open step";
   return {
