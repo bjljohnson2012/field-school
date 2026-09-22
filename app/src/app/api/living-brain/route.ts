@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { DatabaseUnavailableError } from "@/lib/db/client";
 import { actorMayWrite, type Room } from "@/lib/living-brain/model";
-import { toolRead, writeOutcome } from "@/lib/living-brain/store";
+import { toolRead, writeAssist, writeOutcome } from "@/lib/living-brain/store";
 
 export const dynamic = "force-dynamic";
 
@@ -51,12 +51,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "not_leader" }, { status: 403 });
   }
   let body: {
+    assist?: boolean;
     membershipId?: string;
     name?: string;
     kind?: string;
     login?: string;
     profile?: string;
     outcomes?: string;
+    pathTitle?: string;
+    nextStep?: string;
   };
   try {
     body = (await request.json()) as typeof body;
@@ -68,6 +71,19 @@ export async function POST(request: Request) {
   const kind = typeof body.kind === "string" && body.kind.trim() ? body.kind.trim() : room === "household" ? "child" : "adult";
   if (!membershipId) return NextResponse.json({ ok: false, error: "not_on_desk" }, { status: 400 });
   try {
+    if (body.assist === true) {
+      const result = await writeAssist({
+        orgId: auth.identity.orgId,
+        actor,
+        membershipId,
+        context: {
+          pathTitle: typeof body.pathTitle === "string" ? body.pathTitle : "",
+          nextStep: typeof body.nextStep === "string" ? body.nextStep : "",
+        },
+      });
+      if (!result.ok) return NextResponse.json({ ok: false, error: result.error }, { status: 403 });
+      return NextResponse.json({ ok: true, brain: result.brain });
+    }
     const result = await writeOutcome({
       orgId: auth.identity.orgId,
       actor,

@@ -89,6 +89,99 @@ export function shapeBrain(input: {
   };
 }
 
+const MECHANICAL_PROFILE = /^(Assigned|Taught|Learned|Progress saved)\. Next step is /;
+
+export type AssistDraft = {
+  profile: string;
+  outcomes: string;
+  changed: boolean;
+};
+
+/**
+ * Suggest a clearer profile and the next step from what the org already knows.
+ * A rich profile stays. A thin one is rewritten. The learner does not own outcomes.
+ */
+export function assistDraft(input: {
+  room: Room;
+  person: {
+    name: string;
+    kind: string;
+    login: "none" | "member";
+    profile: string;
+    outcomes: string;
+    ownsOutcomes?: boolean;
+  };
+  facts: string;
+  context?: { pathTitle?: string; nextStep?: string };
+}): { ok: true; draft: AssistDraft } | { ok: false; error: string } {
+  if (input.person.ownsOutcomes) return { ok: false, error: "not_leader" };
+  if (input.room === "sales" && (input.person.kind === "child" || input.person.login !== "member")) {
+    return { ok: false, error: "sales_has_no_children" };
+  }
+  if (input.room === "household" && (input.person.kind !== "child" || input.person.login !== "none")) {
+    return { ok: false, error: "child_has_no_login" };
+  }
+  const pathTitle = clip(input.context?.pathTitle || input.facts || "");
+  const nextStep = clip(input.context?.nextStep || "");
+  const outcomes = nextStep || clip(input.person.outcomes);
+  const currentProfile = input.person.profile.trim();
+  if (!outcomes && !currentProfile && !pathTitle) return { ok: false, error: "no_context" };
+  const name = clip(input.person.name) || "This person";
+  const thin = !currentProfile || MECHANICAL_PROFILE.test(currentProfile);
+  const profile = thin
+    ? clip(`${name} is on ${pathTitle || "this path"}. Next step is ${outcomes || "the open step"}.`)
+    : clip(currentProfile);
+  const finalOutcomes = outcomes || "the open step";
+  return {
+    ok: true,
+    draft: {
+      profile,
+      outcomes: finalOutcomes,
+      changed: profile !== currentProfile || finalOutcomes !== input.person.outcomes.trim(),
+    },
+  };
+}
+
+export function applyAssist(
+  brain: LivingBrain,
+  actor: BrainActor,
+  membershipId: string,
+  context?: { pathTitle?: string; nextStep?: string },
+): { ok: true; brain: LivingBrain } | { ok: false; error: string } {
+  if (actor.kind === "child") return { ok: false, error: "child_has_no_login" };
+  if (!actorMayWrite(actor)) return { ok: false, error: "not_leader" };
+  if (actor.org !== brain.room) return { ok: false, error: "wrong_desk" };
+  const person = brain.people.find((row) => row.membershipId === membershipId);
+  if (!person) return { ok: false, error: "not_on_desk" };
+  if (!personAllowed(brain.room, person, actor.membershipId)) {
+    return { ok: false, error: brain.room === "sales" ? "sales_has_no_children" : "child_has_no_login" };
+  }
+  const drafted = assistDraft({
+    room: brain.room,
+    person,
+    facts: brain.facts,
+    context: { pathTitle: context?.pathTitle || brain.facts, nextStep: context?.nextStep },
+  });
+  if (!drafted.ok) return drafted;
+  const people = brain.people.map((row) =>
+    row.membershipId === membershipId
+      ? {
+          ...row,
+          profile: drafted.draft.profile,
+          outcomes: drafted.draft.outcomes,
+          ownsOutcomes: false as const,
+        }
+      : { ...row, ownsOutcomes: false as const },
+  );
+  return {
+    ok: true,
+    brain: {
+      ...brain,
+      people: brain.room === "sales" ? people.filter((row) => row.kind !== "child" && row.login === "member") : people,
+    },
+  };
+}
+
 export function updateOutcome(
   brain: LivingBrain,
   actor: BrainActor,
