@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T21:50:00Z",
+  "updated": "2026-09-22T22:00:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "The suggestion reads what this family or team is aiming for, how the person is doing, and the recent next steps. The org key or the platform key is used, and the current assist stands when that reply is missing. Home child has no login. Sales desk shows no children. Leader owns outcomes."
+      "evidence": "Learn home shows what this family or team is aiming for, how that person is doing, and the next step. Home child has no login. Sales desk shows no children. Leader owns outcomes."
     },
     "N15": {
       "status": "PASS",
@@ -114,5 +114,5 @@
   "last_pick": [
     "N15"
   ],
-  "last_clock": "post-248"
+  "last_clock": "post-249"
 }
