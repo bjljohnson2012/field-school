@@ -856,6 +856,39 @@ export const customerApiKeys = pgTable(
   (t) => [index("customer_api_keys_parent_idx").on(t.orgId, t.parentMembershipId, t.status)],
 );
 
+export const livingBrains = pgTable("living_brains", {
+  orgId: uuid("org_id")
+    .primaryKey()
+    .references(() => organizations.id),
+  room: text("room").notNull(),
+  facts: text("facts").notNull().default(""),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const livingProfiles = pgTable(
+  "living_profiles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    membershipId: uuid("membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    name: text("name").notNull().default(""),
+    kind: text("kind").notNull().default(""),
+    login: text("login").notNull(),
+    profile: text("profile").notNull().default(""),
+    outcomes: text("outcomes").notNull().default(""),
+    ownsOutcomes: boolean("owns_outcomes").notNull().default(false),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("living_profiles_org_member").on(t.orgId, t.membershipId),
+    index("living_profiles_org_idx").on(t.orgId, t.membershipId),
+  ],
+);
+
 export const plateRenders = pgTable(
   "plate_renders",
   {
