@@ -1,50 +1,30 @@
 # Field School
 
-Public site: https://fieldschool.ai
+Public: https://fieldschool.ai
 App: https://portal.fieldschool.ai
-Legacy campus (301 to portal): https://university.benjohnson.ai
-Capture: https://cap.fieldschool.ai
-Edit MCP: https://edit.fieldschool.ai
+Cap: https://cap.fieldschool.ai
+Edit: https://edit.fieldschool.ai
 
-Official build path on this repo: **campus runtime** (multi-tenant Next app + Postgres).
-Start here: [docs/campus-runtime/README.md](docs/campus-runtime/README.md).
+**Agents start here:** [docs/LAW.md](docs/LAW.md) then [docs/staff/BUILD_GRAPH.md](docs/staff/BUILD_GRAPH.md).
+Waves 1–3 and plates Wave 5 are PASS. Do not resume Wave 2.
+Launch stays CLOSED 0/8.
 
-Wave 1 is live in `app/` and on the VPS. How it works, schema, and APIs: [docs/campus-runtime/API.md](docs/campus-runtime/API.md). Live page: https://portal.fieldschool.ai/docs/api. Proof: [docs/campus-runtime/WAVE1.md](docs/campus-runtime/WAVE1.md).
+## Trees
 
-Field Pattern `fp-50-v1` (50 Likert + 20-item child subset) stores Bearing on `member_profiles`. UI: https://portal.fieldschool.ai/pattern. Notes: [docs/campus-runtime/FIELD_PATTERN.md](docs/campus-runtime/FIELD_PATTERN.md).
+- `app/` — live Next campus. Build here.
+- `plates/` — Remotion factory. Not inside Next.
+- `marketing-site/` — fieldschool.ai. Distribute HELD.
+- `video-pipeline/` — Cap / edit notes.
+- `docs/campus-runtime/` — proofs and schema. Not tickets.
+- `src/` + `vite.config.ts` — frozen TanStack. Do not extend. Do not deploy.
 
-The TanStack Start tree under `src/`, `vite.config.ts`, and `migrations/0001-0003` is frozen. Do not extend it. Do not deploy it to the VPS.
+## Locks
 
-## What main is now
+AUTH_URL is `https://portal.fieldschool.ai`. University 301s there.
+Prices $100 / $200 / $1,000. No child seat. No fourth SKU.
+Just (`27pn9xs0zk8a73g`) locked. Family LIVE `bc-4765f2f0` untouched. Dest hash untouched.
+CNC vault `2.24.64.248` off limits. Deploy to `2.24.70.248` only.
 
-1. `docs/campus-runtime/` — plan, waves, [API](docs/campus-runtime/API.md), Wave 1 proof.
-2. `app/` — live Next campus (identity + Grok Bot events).
-3. `marketing-site/` — public fieldschool.ai HTML.
-4. `video-pipeline/` — Cap / adapter / edit notes for the factory on 2.24.70.248.
-5. Frozen TanStack demo — see [archive/TANSTACK.md](archive/TANSTACK.md).
+## Proofs
 
-## Wave 1 in one pass
-
-Guest progress stays in the browser. A signed-in member is upserted onto org `field-school`. Watch / quiz / field work on [Grok Bot station 01](https://portal.fieldschool.ai/c/grok-bot/s/briefing) writes `learning_events`. `GET /api/me`, `GET /api/progress?course=grok-bot`, `POST /api/events`. Isolation is `org_id` + `membership_id`. Seed slugs: `field-school`, `household`. AUTH_URL is `portal.fieldschool.ai`. University 301s there.
-
-## Domains
-
-- `fieldschool.ai` — marketing. Source: `marketing-site/`.
-- `portal.fieldschool.ai` — campus app. AUTH_URL is this origin. `university.benjohnson.ai` 301s here.
-- `cap.fieldschool.ai` — capture only.
-- `edit.fieldschool.ai` — factory MCP / melt. Not the learner MCP.
-
-## SKUs
-
-Gym $100 / $200 / $1,000. Foundry is off the cart. Invoice later. This runtime is the gym OS plus a private household tenant. Not a fourth SKU.
-
-## Deploy
-
-Cloud Agent + `/home/ubuntu/.ssh/vps_deploy` only. Target VPS `2.24.70.248`. CNC vault `2.24.64.248` is off limits.
-
-Do not deploy the frozen TanStack tree.
-Do not use the shared Grok box for SSH.
-
-## Agents
-
-Read [AGENTS.md](AGENTS.md) before writing code.
+[WAVE1.md](docs/campus-runtime/WAVE1.md) · [WAVE2.md](docs/campus-runtime/WAVE2.md) · [WAVE3.md](docs/campus-runtime/WAVE3.md) · factory [WAVE5.md](docs/campus-runtime/WAVE5.md)
