@@ -28,6 +28,10 @@ export type OpenAssignment = {
   title: string;
   outcome: string;
   nextUnit: string;
+  nextUnitId?: string;
+  sourceUnitId?: string;
+  lessonId?: string;
+  units?: { id: string; title: string; source_unit_id: string }[];
   login: "none" | "member";
   buyer: boolean;
   ownsPath: boolean;

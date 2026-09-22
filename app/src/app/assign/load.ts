@@ -16,6 +16,7 @@ import {
   type OpenAssignment,
 } from "./desk";
 import { parseLessonSpec } from "./lesson-spec";
+import { portionAfterTeach, unitForPortion } from "./next-portion";
 
 export type DeskPayload = {
   ok: true;
@@ -60,13 +61,19 @@ function readAssignment(row: {
   if (!spec || !room) return null;
   const login = raw.login === "none" || raw.login === "member" ? raw.login : null;
   if (!login) return null;
+  const storedId = typeof raw.nextUnitId === "string" ? raw.nextUnitId : undefined;
+  const unit = unitForPortion(spec.units, storedId);
   return {
     id: row.id,
     membershipId: row.membershipId,
     name: row.name,
     title: spec.title,
     outcome: spec.outcome,
-    nextUnit: spec.units[0]?.title || "",
+    nextUnit: unit?.title || "",
+    nextUnitId: unit?.id,
+    sourceUnitId: unit?.source_unit_id,
+    lessonId: spec.id,
+    units: spec.units,
     login,
     buyer: raw.buyer === true,
     ownsPath: raw.ownsPath === true,
@@ -322,13 +329,18 @@ export async function saveAssignment(
       });
     }
     const spec = drafted.draft.raw.lessonSpec;
+    const unit = unitForPortion(spec.units, drafted.draft.raw.nextUnitId);
     const assignment: OpenAssignment = {
       id: rowId,
       membershipId: person.membershipId,
       name: person.name,
       title: spec.title,
       outcome: spec.outcome,
-      nextUnit: spec.units[0].title,
+      nextUnit: unit?.title || spec.units[0].title,
+      nextUnitId: unit?.id,
+      sourceUnitId: unit?.source_unit_id,
+      lessonId: spec.id,
+      units: spec.units,
       login: drafted.draft.raw.login,
       buyer: false,
       ownsPath: false,
@@ -337,8 +349,95 @@ export async function saveAssignment(
     return {
       ok: true,
       assignment,
-      line: assignedLine(person.name, spec.units[0].title),
+      line: assignedLine(person.name, unit?.title || spec.units[0].title),
     };
+  } catch (error) {
+    if (error instanceof DatabaseUnavailableError) {
+      return { ok: false, status: 503, error: "database_unavailable" };
+    }
+    throw error;
+  }
+}
+
+export async function saveNextPortion(
+  request: Request,
+  body: { assignmentId?: string; unitId?: string },
+): Promise<{ ok: true; assignment: OpenAssignment; line: string } | DeskFailure> {
+  try {
+    const auth = await identityFromRequest(request);
+    if (!auth.ok) return { ok: false, status: auth.status, error: auth.error };
+    if (auth.identity.kind === "child") {
+      return { ok: false, status: 403, error: "child_has_no_login" };
+    }
+    const actor = actorFromIdentity(auth.identity);
+    const room = roomForOrg(actor.org);
+    if (!room || !leaderCanAssign(actor)) return { ok: false, status: 403, error: "not_leader" };
+    const assignmentId = typeof body.assignmentId === "string" ? body.assignmentId.trim() : "";
+    if (!assignmentId) return { ok: false, status: 400, error: "not_on_desk" };
+    const db = getDb();
+    const [row] = await db
+      .select({
+        id: assignments.id,
+        membershipId: assignments.membershipId,
+        name: members.name,
+        raw: assignments.raw,
+      })
+      .from(assignments)
+      .innerJoin(memberships, eq(memberships.id, assignments.membershipId))
+      .innerJoin(members, eq(members.id, memberships.memberId))
+      .where(
+        and(
+          eq(assignments.id, assignmentId),
+          eq(assignments.orgId, auth.identity.orgId),
+          eq(assignments.status, "open"),
+        ),
+      )
+      .limit(1);
+    if (!row || !row.raw || typeof row.raw !== "object") {
+      return { ok: false, status: 404, error: "not_on_desk" };
+    }
+    const raw = row.raw as Record<string, unknown>;
+    const spec = parseLessonSpec(raw.lessonSpec);
+    if (!spec || asRoom(raw.room) !== room) return { ok: false, status: 403, error: "wrong_desk" };
+    if (room === "household" && raw.login !== "none") {
+      return { ok: false, status: 403, error: "child_has_no_login" };
+    }
+    const requested = typeof body.unitId === "string" ? body.unitId.trim() : "";
+    const currentId = typeof raw.nextUnitId === "string" ? raw.nextUnitId : spec.units[0].id;
+    const next = requested
+      ? spec.units.find((unit) => unit.id === requested) || null
+      : portionAfterTeach(spec.units, currentId);
+    if (!next) return { ok: false, status: 400, error: "spec_invalid" };
+    const nextRaw = {
+      ...raw,
+      nextUnitId: next.id,
+      source_unit_id: next.source_unit_id,
+      login: raw.login,
+      buyer: false,
+      ownsPath: false,
+    };
+    await db
+      .update(assignments)
+      .set({ raw: nextRaw, updatedAt: new Date() })
+      .where(and(eq(assignments.id, row.id), eq(assignments.orgId, auth.identity.orgId)));
+    const login = raw.login === "member" ? "member" : "none";
+    const assignment: OpenAssignment = {
+      id: row.id,
+      membershipId: row.membershipId,
+      name: row.name,
+      title: spec.title,
+      outcome: spec.outcome,
+      nextUnit: next.title,
+      nextUnitId: next.id,
+      sourceUnitId: next.source_unit_id,
+      lessonId: spec.id,
+      units: spec.units,
+      login,
+      buyer: false,
+      ownsPath: false,
+      room,
+    };
+    return { ok: true, assignment, line: assignedLine(row.name, next.title) };
   } catch (error) {
     if (error instanceof DatabaseUnavailableError) {
       return { ok: false, status: 503, error: "database_unavailable" };

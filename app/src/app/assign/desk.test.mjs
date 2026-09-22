@@ -17,6 +17,7 @@ import {
   visibleAssignments,
 } from "./desk.ts";
 import { parseLessonSpec } from "./lesson-spec.ts";
+import { portionAfterTeach, portionOnReturn } from "./next-portion.ts";
 
 const child = {
   membershipId: "child-1",
@@ -166,6 +167,44 @@ test("open paths stay on the desk that wrote them", () => {
     ["a"],
   );
   assert.equal(visibleAssignments("sales", rows, "rep-1", false).length, 1);
+});
+
+test("assign, teach, leave, and return keep the household next portion", () => {
+  const home = {
+    id: "lesson-home",
+    org: "household",
+    title: "Who they are now",
+    outcome: "The child keeps the next portion after the parent leaves.",
+    units: [
+      { id: "unit-now", title: "Who they are now", source_unit_id: "src-who-now" },
+      { id: "unit-next", title: "The next portion", source_unit_id: "src-next-step" },
+      { id: "unit-after", title: "What still runs when you leave", source_unit_id: "src-after-you-leave" },
+    ],
+    mode: "assign",
+  };
+  const drafted = draftAssignment({
+    room: "household",
+    actor: { membershipId: "parent-1", kind: "adult", stance: "guardian", org: "household" },
+    person: child,
+    spec: home,
+    orgId: "org-home",
+  });
+  assert.equal(drafted.ok, true);
+  if (!drafted.ok) return;
+  assert.equal(drafted.draft.raw.login, "none");
+  assert.equal(drafted.draft.raw.buyer, false);
+  const assigned = portionOnReturn(home.units, drafted.draft.raw.nextUnitId);
+  assert.equal(assigned?.title, "Who they are now");
+  assert.equal(assigned?.source_unit_id, "src-who-now");
+  const taught = portionAfterTeach(home.units, assigned.id);
+  assert.equal(taught?.title, "The next portion");
+  const returned = portionOnReturn(home.units, taught.id);
+  assert.equal(returned?.id, taught?.id);
+  assert.equal(returned?.source_unit_id, "src-next-step");
+  const stayed = portionAfterTeach(home.units, "unit-after");
+  assert.equal(stayed?.id, "unit-after");
+  const sales = peopleOnDesk("sales", mixed, "leader-1");
+  assert.equal(sales.some((person) => person.kind === "child" || person.login === "none"), false);
 });
 
 test("copy keeps the job and leaves the other person off the open desk", () => {

@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { lessonForOrg } from "@/lib/campus-runtime/lessons";
 import { COURSE_NAME, COURSE_TAGLINE } from "@/lib/course/content";
 
-type NextStep = { href: string; title: string };
+type NextStep = { href: string; title: string; portion?: boolean; login?: "none" };
 
 type LearnHome = {
   org: string;
@@ -78,14 +78,32 @@ export default function LearnPage() {
         const name = typeof data.activeOrg?.name === "string" ? data.activeOrg.name : "";
         const course = slug === "household" ? "home" : slug === "sales" ? "sales" : "grok-bot";
         let next: NextStep | null = null;
-        try {
-          const nextResponse = await fetch(`/api/chooser?course=${course}`);
-          const nextData = await nextResponse.json();
-          if (nextData?.next?.href) {
-            next = { href: nextData.next.href, title: nextData.next.title || "Next step" };
+        if (slug === "household") {
+          try {
+            const deskResponse = await fetch("/assign/desk", { headers: { "x-fs-org": "household" } });
+            const desk = await deskResponse.json();
+            const rows = Array.isArray(desk?.assignments) ? desk.assignments : [];
+            const open = rows.find(
+              (row: { room?: string; login?: string; nextUnit?: string }) =>
+                row?.room === "household" && row?.login === "none" && typeof row.nextUnit === "string" && row.nextUnit,
+            );
+            if (open) {
+              next = { href: "/teach-live", title: open.nextUnit, portion: true, login: "none" };
+            }
+          } catch {
+            next = null;
           }
-        } catch {
-          next = null;
+        }
+        if (!next) {
+          try {
+            const nextResponse = await fetch(`/api/chooser?course=${course}`);
+            const nextData = await nextResponse.json();
+            if (nextData?.next?.href) {
+              next = { href: nextData.next.href, title: nextData.next.title || "Next step" };
+            }
+          } catch {
+            next = null;
+          }
         }
         if (cancelled) return;
         setOrgSlug(slug);
@@ -133,6 +151,8 @@ export default function LearnPage() {
         <section
           className="mt-8 max-w-2xl rounded-xl border border-border bg-card px-5 py-6"
           data-learn-org={card.org}
+          data-sales-children={card.org === "sales" ? "0" : undefined}
+          data-login={nextStep?.login}
         >
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Course</p>
           <h2 className="mt-1 font-display text-3xl tracking-tight">{card.course}</h2>
@@ -140,7 +160,12 @@ export default function LearnPage() {
           <p className="mt-2 text-sm text-muted-foreground">{card.about}</p>
           <h3 className="mt-6 text-sm font-medium">What it will do</h3>
           <p className="mt-2 text-sm text-muted-foreground">{card.willDo}</p>
-          <h3 className="mt-6 text-sm font-medium">Next step</h3>
+          <h3 className="mt-6 text-sm font-medium">{nextStep?.portion ? "Next portion" : "Next step"}</h3>
+          {nextStep?.portion ? (
+            <p className="mt-2 text-sm text-muted-foreground" data-next-portion={card.nextTitle}>
+              This portion stays when you leave and return. Login none.
+            </p>
+          ) : null}
           <Link
             href={card.nextHref}
             className="mt-3 inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
