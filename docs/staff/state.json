@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T20:40:00Z",
+  "updated": "2026-09-22T20:50:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -107,12 +107,12 @@
     },
     "FACTORY": {
       "status": "PASS",
-      "evidence": "PR 215 merged"
+      "evidence": "Track B plans a Cap take, WhisperX words, four plates, then master.mp4. Independent Antagonist bar PASS on the fixture. Just stays locked. Dest stays untouched. Remotion stays in plates. Launch CLOSED 0/8."
     }
   },
   "in_flight": [],
   "last_pick": [
     "N15"
   ],
-  "last_clock": "post-241"
+  "last_clock": "post-242"
 }
