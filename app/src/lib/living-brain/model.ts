@@ -18,6 +18,7 @@ export type LivingBrain = {
   orgId: string;
   room: Room;
   facts: string;
+  outcome: string;
   people: LivingPerson[];
 };
 
@@ -67,6 +68,7 @@ export function shapeBrain(input: {
   orgId: string;
   room: Room;
   facts: string;
+  outcome?: string;
   actorId: string;
   people: Array<{
     membershipId: string;
@@ -105,6 +107,7 @@ export function shapeBrain(input: {
       orgId: input.orgId,
       room: input.room,
       facts: clip(input.facts),
+      outcome: clip(input.outcome || ""),
       people,
     },
   };
@@ -459,6 +462,26 @@ export function updateOutcome(
   };
 }
 
+/** What this family or team is aiming for. People keep their own next step. */
+export function setOrgOutcome(
+  brain: LivingBrain,
+  actor: BrainActor,
+  outcome: string,
+): { ok: true; brain: LivingBrain } | { ok: false; error: string } {
+  if (actor.kind === "child") return { ok: false, error: "child_has_no_login" };
+  if (!actorMayWrite(actor)) return { ok: false, error: "not_leader" };
+  if (actor.org !== brain.room) return { ok: false, error: "wrong_desk" };
+  const people = brain.people.map((row) => ({ ...row, ownsOutcomes: false as const }));
+  return {
+    ok: true,
+    brain: {
+      ...brain,
+      outcome: clip(outcome),
+      people: brain.room === "sales" ? people.filter((row) => row.kind !== "child" && row.login === "member") : people,
+    },
+  };
+}
+
 /** How this person is doing. The learner does not own it. */
 export function setConfidence(
   brain: LivingBrain,
@@ -641,13 +664,14 @@ export type BrainBoardPerson = {
 export type BrainBoard = {
   room: Room;
   facts: string;
+  outcome: string;
   people: BrainBoardPerson[];
 };
 
 /** One readable list: org facts, then each person's profile and outcomes. Sales drops children. */
 export function brainBoard(input: {
   room: Room;
-  brain: { room: Room; facts: string; people: LivingPerson[] } | null;
+  brain: { room: Room; facts: string; outcome?: string; people: LivingPerson[] } | null;
 }): BrainBoard {
   const source = input.brain && input.brain.room === input.room ? input.brain : null;
   const people = (source?.people ?? [])
@@ -660,6 +684,7 @@ export function brainBoard(input: {
   return {
     room: input.room,
     facts: source?.facts ?? "",
+    outcome: source?.outcome ?? "",
     people: people.map((person) => ({
       membershipId: person.membershipId,
       name: person.name,
@@ -710,6 +735,7 @@ export function readForTool(brain: LivingBrain, activeOrgId: string) {
     orgId: brain.orgId,
     room: brain.room,
     facts: brain.facts,
+    outcome: brain.outcome ?? "",
     people: people.map((person) => ({
       membershipId: person.membershipId,
       name: person.name,

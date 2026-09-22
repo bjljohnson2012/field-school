@@ -111,6 +111,18 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
   const [board, setBoard] = useState<BrainBoard | null>(model.brainBoard ?? null);
   const [suggestionSource, setSuggestionSource] = useState<"" | "ai" | "fallback">("");
 
+  async function saveOrgOutcome(outcome: string) {
+    if (!board) return;
+    const response = await fetch("/api/living-brain", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ outcome }),
+    });
+    const data = (await response.json()) as { brain?: BrainBoard };
+    if (!response.ok || !data.brain) return;
+    setBoard(brainBoard({ room: board.room, brain: data.brain }));
+  }
+
   async function saveFacts() {
     if (!board) return;
     const response = await fetch("/api/living-brain", {
@@ -166,10 +178,34 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
           className="mb-4 rounded-xl border border-border bg-card p-5"
         >
           <h2 className="font-display text-2xl tracking-tight">Org brain</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Facts for this org, then each person&apos;s profile and outcomes.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Facts for this org, what this family or team is aiming for, then each person.</p>
           <p className="mt-4 text-sm" data-brain-facts={board.facts ? "yes" : "no"}>
             {board.facts || "No org facts yet."}
           </p>
+          <p className="mt-3 text-sm" data-org-outcome={board.outcome ? "yes" : "no"}>
+            {board.outcome ||
+              (board.room === "sales"
+                ? "No line for what this team is aiming for yet."
+                : "No line for what this family is aiming for yet.")}
+          </p>
+          <form
+            className="mt-2 flex flex-wrap items-center gap-2"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const field = new FormData(event.currentTarget).get("outcome");
+              void saveOrgOutcome(typeof field === "string" ? field : "");
+            }}
+          >
+            <input
+              name="outcome"
+              defaultValue={board.outcome}
+              aria-label="What this family or team is aiming for"
+              className="h-8 min-w-0 flex-1 rounded-lg border border-border bg-background px-2 text-sm"
+            />
+            <button type="submit" className="text-xs underline underline-offset-4" data-save-org-outcome="yes">
+              Save what we are aiming for
+            </button>
+          </form>
           {(() => {
             const suggested = assistFacts(board);
             if (!suggested.ok || !suggested.changed) return null;
