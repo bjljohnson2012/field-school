@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T21:40:00Z",
+  "updated": "2026-09-22T21:50:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -107,12 +107,12 @@
     },
     "FACTORY": {
       "status": "PASS",
-      "evidence": "The fixture cleaning checklist auto-passes and flips Cleaning only because the export checklist passed. Dest is not flipped. Independent Antagonist bar PASS. This clock does not render. Just stays locked. Remotion stays in plates. Launch CLOSED 0/8."
+      "evidence": "Publish evidence passes on the cleaned fixture master. distribute stays false. Dest is not flipped. Independent Antagonist bar PASS. This clock does not render. Just stays locked. Remotion stays in plates. Launch CLOSED 0/8."
     }
   },
   "in_flight": [],
   "last_pick": [
     "N15"
   ],
-  "last_clock": "post-247"
+  "last_clock": "post-248"
 }
