@@ -182,7 +182,17 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
           <p className="mt-4 text-sm" data-brain-facts={board.facts ? "yes" : "no"}>
             {board.facts || "No org facts yet."}
           </p>
-          <p className="mt-3 text-sm" data-org-outcome={board.outcome ? "yes" : "no"}>
+          {board.outcome ? (
+            <>
+              <p className="mt-3 text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim">
+                Aim
+              </p>
+              <p className="mt-1 text-sm font-medium">
+                {board.room === "sales" ? "What this team is aiming for" : "What this family is aiming for"}
+              </p>
+            </>
+          ) : null}
+          <p className="mt-3 text-sm" data-org-outcome={board.outcome ? "yes" : "no"} data-org-aim={board.outcome ? "yes" : "no"}>
             {board.outcome ||
               (board.room === "sales"
                 ? "No line for what this team is aiming for yet."
@@ -252,7 +262,17 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                       <td className="px-2 py-2">
                         {person.profile || "—"}
                         <p className="mt-1 text-xs text-muted-foreground" data-confidence={person.membershipId}>
-                          {person.confidence || "No note on how they are doing yet."}
+                          {person.confidence ? (
+                            <>
+                              <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
+                                Confidence
+                              </span>
+                              <span className="mt-1 block text-sm font-medium text-foreground">How they are doing</span>
+                              <span className="mt-1 block">{person.confidence}</span>
+                            </>
+                          ) : (
+                            "No note on how they are doing yet."
+                          )}
                         </p>
                         <form
                           className="mt-1 flex flex-wrap items-center gap-2"
