@@ -52,9 +52,9 @@ function messageFor(code: string) {
   return "The org default could not be saved.";
 }
 
-export function AiKeysPanel() {
+export function AiKeysPanel({ initialError = null }: { initialError?: string | null }) {
   const [state, setState] = useState<PublicState | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(initialError);
   const [mode, setMode] = useState<"platform" | "byok">("platform");
   const [provider, setProvider] = useState("");
   const [secret, setSecret] = useState("");
