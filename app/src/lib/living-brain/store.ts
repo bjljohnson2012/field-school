@@ -1,13 +1,17 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
-import { livingBrains, livingProfiles } from "@/lib/db/schema";
+import { assignments, livingBrains, livingProfiles, members, memberships } from "@/lib/db/schema";
 import {
+  actorMayWrite,
   readForTool,
+  refreshFromUse,
   shapeBrain,
   updateOutcome,
   type BrainActor,
   type LivingBrain,
   type Room,
+  type UseKind,
+  type UseSignal,
 } from "./model";
 
 export class LivingBrainUnavailableError extends DatabaseUnavailableError {}
@@ -135,4 +139,99 @@ export async function toolRead(orgId: string) {
   const brain = await loadLivingBrain(orgId);
   if (!brain) return null;
   return readForTool(brain, orgId);
+}
+
+export async function noteUse(input: { orgId: string; actor: BrainActor; signal: UseSignal }) {
+  const current = await loadLivingBrain(input.orgId);
+  const base: LivingBrain =
+    current && current.room === input.actor.org
+      ? current
+      : { orgId: input.orgId, room: input.actor.org, facts: "", people: [] };
+  const next = refreshFromUse(base, input.actor, input.signal);
+  if (!next.ok) return next;
+  await saveLivingBrain(next.brain);
+  return { ok: true as const, brain: readForTool(next.brain, input.orgId) };
+}
+
+async function personOnDesk(orgId: string, membershipId: string) {
+  const db = getDb();
+  const [row] = await db
+    .select({ membershipId: memberships.id, name: members.name, kind: members.kind })
+    .from(memberships)
+    .innerJoin(members, eq(members.id, memberships.memberId))
+    .where(and(eq(memberships.id, membershipId), eq(memberships.orgId, orgId)))
+    .limit(1);
+  if (!row) return null;
+  const login = row.kind === "child" ? "none" : "member";
+  return { membershipId: row.membershipId, name: row.name, kind: row.kind, login: login as "none" | "member" };
+}
+
+async function soleOpenLearner(orgId: string, room: Room) {
+  const db = getDb();
+  const rows = await db
+    .select({
+      membershipId: assignments.membershipId,
+      name: members.name,
+      kind: members.kind,
+      raw: assignments.raw,
+    })
+    .from(assignments)
+    .innerJoin(memberships, eq(memberships.id, assignments.membershipId))
+    .innerJoin(members, eq(members.id, memberships.memberId))
+    .where(and(eq(assignments.orgId, orgId), eq(assignments.objectType, "lesson_spec"), eq(assignments.status, "open")));
+  const matches = rows.flatMap((row) => {
+    if (!row.raw || typeof row.raw !== "object") return [];
+    const raw = row.raw as Record<string, unknown>;
+    if (raw.room !== room) return [];
+    if (room === "household" && (raw.login !== "none" || row.kind !== "child")) return [];
+    if (room === "sales" && (raw.login !== "member" || row.kind === "child")) return [];
+    return [row];
+  });
+  if (matches.length !== 1) return null;
+  const row = matches[0];
+  return {
+    membershipId: row.membershipId,
+    name: row.name,
+    kind: row.kind,
+    login: (room === "household" ? "none" : "member") as "none" | "member",
+  };
+}
+
+/** Learn is a watch. Progress is a quiz. The open path names the person when the leader is the one signed in. */
+export async function noteUseFromEvent(input: {
+  orgId: string;
+  room: Room;
+  actor: BrainActor;
+  actorName: string;
+  kind: Extract<UseKind, "learn" | "progress">;
+  step: string;
+  aboutMembershipId?: string;
+}) {
+  const about = input.aboutMembershipId?.trim() || "";
+  let person: { membershipId: string; name: string; kind: string; login: "none" | "member" } | null = null;
+  if (about && about !== input.actor.membershipId) {
+    person = await personOnDesk(input.orgId, about);
+  } else if (input.room === "sales" && input.actor.kind !== "child" && !actorMayWrite(input.actor)) {
+    person = {
+      membershipId: input.actor.membershipId,
+      name: input.actorName,
+      kind: input.actor.kind || "adult",
+      login: "member",
+    };
+  } else if (actorMayWrite(input.actor)) {
+    person = await soleOpenLearner(input.orgId, input.room);
+  }
+  if (!person) return { ok: false as const, error: "not_on_desk" };
+  return noteUse({
+    orgId: input.orgId,
+    actor: input.actor,
+    signal: {
+      kind: input.kind,
+      membershipId: person.membershipId,
+      name: person.name,
+      personKind: person.kind,
+      login: person.login,
+      step: input.step,
+    },
+  });
 }

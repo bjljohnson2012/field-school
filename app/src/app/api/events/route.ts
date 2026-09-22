@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { recordEvent, stationObjectId } from "@/lib/campus-runtime/events";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { courseAllowedInOrg } from "@/lib/campus-runtime/org";
+import { noteUseFromEvent } from "@/lib/living-brain/store";
+import type { Room } from "@/lib/living-brain/model";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +58,31 @@ export async function POST(request: Request) {
     score,
     raw: { ...raw, course, station },
   });
+
+  const room: Room | null =
+    result.identity.orgSlug === "household" || result.identity.orgSlug === "sales" ? result.identity.orgSlug : null;
+  if (room && result.identity.kind !== "child" && (kind === "watch" || kind === "quiz" || kind === "diagnostic")) {
+    const about = typeof body.membership_id === "string" ? body.membership_id.trim() : "";
+    const step = station || objectId || course;
+    try {
+      await noteUseFromEvent({
+        orgId: result.identity.orgId,
+        room,
+        actor: {
+          kind: result.identity.kind,
+          stance: result.identity.stance,
+          org: room,
+          membershipId: result.identity.membershipId,
+        },
+        actorName: result.identity.name,
+        kind: kind === "watch" ? "learn" : "progress",
+        step,
+        aboutMembershipId: about,
+      });
+    } catch {
+      // The event is already stored. A brain miss does not undo it.
+    }
+  }
 
   return NextResponse.json({
     ok: true,
