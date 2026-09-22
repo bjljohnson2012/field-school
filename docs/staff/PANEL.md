@@ -1,6 +1,8 @@
 # Panel
 Dated 21 Sep 2026. Eval loop. Not a launch PASS. Not new C-suite.
-Fixtures: [`panel.json`](./panel.json). Runner prompt: [`GROK_BOT_PANEL.md`](./GROK_BOT_PANEL.md).
+Fixtures: [`panel.json`](./panel.json). Prompt CDM puts on bots it creates: [`GROK_BOT_PANEL.md`](./GROK_BOT_PANEL.md).
+
+Ben talks only to CDM. CDM creates the panel bots. CDM assigns the walk. CDM collects. Ben does not pin these.
 
 ## Why this exists
 
@@ -8,13 +10,13 @@ pick-next moves code. The panel tells us whether a human in a room can actually 
 
 Nielsen: three to five independent evaluators catch most of the obvious breaks. We run **six stances** so household, team, maker, foundry, and nav are all covered. One HARD_FAIL from any stance is enough to redirect. Do not average.
 
-## Seats (do not invent)
+## Create-and-assign (CDM only)
 
-Locked roster stays. **New Bot** (empty) becomes the **Panel Runner**. CDM owns the clock. The six names in panel.json are scripts the runner plays, or six Grok Bot pins of the same prompt with `PERSONA_ID` set.
+Locked C-suite stays. These six are **task bots**, not roster seats. CDM creates them at 10:00 (or when Ben says run the panel). They report to CDM. They do not message Field School PM. They do not write `app/`.
 
-They do not message Field School PM. They do not write `app/`. They file a report. CDM reads the report at 15:00 and keeps, redirects, or stops.
+If credits are tight, CDM creates one bot `FS Panel Runner` with PERSONA_ID=ALL instead of six.
 
-| Bot | Persona | Room | Catches |
+| Bot CDM creates | Persona | Room | Catches |
 | --- | --- | --- | --- |
 | FS Panel Guardian | P1 parent hirer | household | Child login, child tab, person-as-buyer |
 | FS Panel Floor | P2 leader hirer | team | Child on sales, Insights-as-badge, rep owns path |
@@ -23,7 +25,7 @@ They do not message Field School PM. They do not write `app/`. They file a repor
 | FS Panel Foundry | P5 tokens | both | Gym copy, neon, contrast, Fraunces missing |
 | FS Panel Nav | P6 Nielsen | both | Header >5, banned words, org mix, Dashboard dump |
 
-Credit-cheap default: **one runner, six stances in one 10:00 ET session**. Separate pins only if you want them overnight in parallel.
+CDM reads the six blocks at 15:00 and keeps, redirects, or stops.
 
 ## What they score
 
@@ -44,7 +46,7 @@ Credit-cheap default: **one runner, six stances in one 10:00 ET session**. Separ
 4. Do **not** click family LIVE. Do **not** charge a card. Do **not** paste a real key in a screenshot.
 5. File the block. Stop.
 
-If the chrome is still the twelve-item bar, P6 HARD_FAIL N1 and the other stances still file (their evidence is the same bar). Do not skip the rest.
+If the chrome is still the twelve-item bar, P6 HARD_FAIL N1 and the other stances still file. Do not skip the rest.
 
 ## Report block (one per persona)
 
@@ -72,7 +74,7 @@ evidence:
   -
 ```
 
-Write to `docs/staff/panel/YYYY-MM-DD-<id>.md` via Gate only if CDM asked for a repo file. Otherwise the CDM thread is the store. Notion Ops copies the six verdicts onto that day's page.
+CDM thread is the store. Gate writes `docs/staff/panel/` only if CDM named that file. Notion Ops copies the six verdicts onto that day's page.
 
 ## How this moves the graph
 
@@ -86,23 +88,21 @@ Write to `docs/staff/panel/YYYY-MM-DD-<id>.md` via Gate only if CDM asked for a 
 | HARD factory karaoke | Factory-slim. Do not add a plate. |
 | Six PASS on a surface | That surface may stay PASS in state.json. Still not Launch 8/8. |
 
-Panel never flips Launch. Panel never authors the job. `eval-icp-job` is still the only skill that may propose a job sentence.
+Panel never flips Launch. Panel never authors the job.
 
 ## Natural progress
 
-1. 10:00 panel files six blocks.
-2. 15:00 CDM reads them. Keep / redirect / stop.
-3. Gate pastes the redirect into Field School PM if files must change.
-4. Next 10:00 walks the same scripts on the new SHA.
+1. CDM creates/assigns at 10:00. Six blocks come back.
+2. 15:00 CDM reads HARD ids. Keep / redirect / stop. @CTO if files must change.
+3. Gate pastes into Field School PM.
+4. Next 10:00 CDM assigns the same six on the new SHA.
 5. Repeat until LOOP.md outcome is true.
-
-That is the eval loop. It sits beside pick-next, not above ethos.
 
 ## Do not
 
-- Hire six C-suite bots
+- Ben pinning panel bots
+- Six new C-suite seats
 - Official psychometric items
 - Child login so a persona can "be the kid"
 - Screenshot a live API key
-- Treat a quote as ICP PASS by itself
 - Average HARD_FAIL into a 3/5 and ship
