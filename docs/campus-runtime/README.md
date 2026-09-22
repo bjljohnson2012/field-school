@@ -1,9 +1,17 @@
 # Campus runtime
 
-Cursor: send only the message in [START.md](./START.md).
+**Start:** [../../docs/LAW.md](../LAW.md) then [../staff/BUILD_GRAPH.md](../staff/BUILD_GRAPH.md).
 
-That loads [CURSOR_AGENT_PROMPT.md](./CURSOR_AGENT_PROMPT.md) and [CURSOR_WAVES_1_5_SPEC.md](./CURSOR_WAVES_1_5_SPEC.md).
+This folder is **proof and schema notes**, not the job.
 
-Wave 1 proof: [WAVE1.md](./WAVE1.md) · API: [API.md](./API.md) · live https://portal.fieldschool.ai/docs/api
+| File | Role |
+| --- | --- |
+| [START.md](./START.md) | Three-line paste. Not Wave 2. |
+| [WAVE1.md](./WAVE1.md) [WAVE2.md](./WAVE2.md) [WAVE3.md](./WAVE3.md) | PASS / LIVE proofs. |
+| [WAVE5.md](./WAVE5.md) | Factory PASS in `plates/` only. |
+| [API.md](./API.md) | Wave 1 API. Live https://portal.fieldschool.ai/docs/api |
+| [TENANTS_AND_COURSES.md](./TENANTS_AND_COURSES.md) | Org + course kinds. |
+| [fp-50-v1.md](./fp-50-v1.md) | Pattern items. |
+| CURRENT_RUN.md, CURSOR_WAVES_1_5_SPEC.md, CURSOR_AGENT_PROMPT.md, 03-waves.md | History. Do not follow as tickets. |
 
-Also: STATUS.md, CURRENT_RUN.md, TENANTS_AND_COURSES.md, ASSESSMENTS_AND_PICKER.md, FIELD_PATTERN.md, fp-50-v1.md.
+Product chrome: [../staff/SHELLS.md](../staff/SHELLS.md).
