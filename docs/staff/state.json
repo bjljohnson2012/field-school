@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T19:20:00Z",
+  "updated": "2026-09-22T19:30:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "Org facts list every next step on the desk. Home child has no login. Sales team member may sign in. Leader owns outcomes. Sales desk shows no children."
+      "evidence": "A person's suggestion names only that person, even when org facts list everyone. Home child has no login. Sales team member may sign in. Leader owns outcomes. Sales desk shows no children."
     },
     "N15": {
       "status": "PASS",

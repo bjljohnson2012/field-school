@@ -684,3 +684,124 @@ test("org facts name every next step in both rooms", () => {
   assert.equal(salesSaved.brain.people.some((person) => person.kind === "child" || person.login === "none"), false);
   assert.equal(salesSaved.brain.people.every((person) => person.ownsOutcomes === false && person.login === "member"), true);
 });
+
+test("a person's suggestion stays about that person in both rooms", () => {
+  const homeFacts = "Ada: Finish the next page. Bea: Stay with the morning reading.";
+  const home = shapeBrain({
+    orgId: "org-home",
+    room: "household",
+    facts: homeFacts,
+    actorId: "parent-1",
+    people: [
+      {
+        membershipId: "child-1",
+        name: "Ada",
+        kind: "child",
+        login: "none",
+        profile: "Taught. Next step is Old page.",
+        outcomes: "Finish the next page",
+      },
+      {
+        membershipId: "child-2",
+        name: "Bea",
+        kind: "child",
+        login: "none",
+        profile: "Learned. Next step is Old page.",
+        outcomes: "Stay with the morning reading",
+      },
+    ],
+  });
+  assert.equal(home.ok, true);
+  if (!home.ok) return;
+  const ada = assistDraft({
+    room: "household",
+    person: home.brain.people[0],
+    facts: homeFacts,
+    context: { pathTitle: homeFacts, nextStep: "Finish the next page" },
+  });
+  assert.equal(ada.ok, true);
+  if (!ada.ok) return;
+  assert.equal(ada.draft.profile, "Ada. Next step is Finish the next page.");
+  assert.equal(ada.draft.profile.includes("Bea"), false);
+  assert.equal(ada.draft.outcomes, "Finish the next page");
+  const saved = applyAssist(home.brain, parent, "child-1", { pathTitle: homeFacts, nextStep: "Finish the next page" });
+  assert.equal(saved.ok, true);
+  if (!saved.ok) return;
+  assert.equal(saved.brain.people[0].login, "none");
+  assert.equal(saved.brain.people[0].ownsOutcomes, false);
+  assert.equal(saved.brain.people[0].profile.includes("Bea"), false);
+  const childWrite = applyAssist(home.brain, { ...parent, kind: "child", membershipId: "child-1" }, "child-1", {
+    pathTitle: homeFacts,
+  });
+  assert.deepEqual(childWrite, { ok: false, error: "child_has_no_login" });
+
+  const salesFacts = "Kai: Keep the team next step. Noor: Name the next call.";
+  const sales = shapeBrain({
+    orgId: "org-sales",
+    room: "sales",
+    facts: salesFacts,
+    actorId: "leader-1",
+    people: [
+      {
+        membershipId: "rep-1",
+        name: "Kai",
+        kind: "adult",
+        login: "member",
+        profile: "Taught. Next step is Old call.",
+        outcomes: "Keep the team next step",
+      },
+      {
+        membershipId: "rep-2",
+        name: "Noor",
+        kind: "adult",
+        login: "member",
+        profile: "Learned. Next step is Old call.",
+        outcomes: "Name the next call",
+      },
+    ],
+  });
+  assert.equal(sales.ok, true);
+  if (!sales.ok) return;
+  const withChild = {
+    ...sales.brain,
+    people: [
+      ...sales.brain.people,
+      {
+        membershipId: "child-9",
+        name: "Wrong room",
+        kind: "child",
+        login: "none",
+        profile: "no",
+        outcomes: "Do not show",
+        ownsOutcomes: false,
+      },
+    ],
+  };
+  const kai = assistDraft({
+    room: "sales",
+    person: sales.brain.people[0],
+    facts: salesFacts,
+    context: { pathTitle: salesFacts, nextStep: "Keep the team next step" },
+  });
+  assert.equal(kai.ok, true);
+  if (!kai.ok) return;
+  assert.equal(kai.draft.profile, "Kai. Next step is Keep the team next step.");
+  assert.equal(kai.draft.profile.includes("Noor"), false);
+  assert.equal(kai.draft.profile.includes("Wrong room"), false);
+  const blocked = assistDraft({
+    room: "sales",
+    person: withChild.people[2],
+    facts: salesFacts,
+    context: { pathTitle: salesFacts, nextStep: "Do not show" },
+  });
+  assert.deepEqual(blocked, { ok: false, error: "sales_has_no_children" });
+  const member = { kind: "adult", stance: "learner", org: "sales", membershipId: "rep-1" };
+  assert.deepEqual(applyAssist(sales.brain, member, "rep-1", { pathTitle: salesFacts }), { ok: false, error: "not_leader" });
+  const led = applyAssist(withChild, leader, "rep-1", { pathTitle: salesFacts, nextStep: "Keep the team next step" });
+  assert.equal(led.ok, true);
+  if (!led.ok) return;
+  assert.equal(led.brain.people.some((person) => person.kind === "child"), false);
+  assert.equal(led.brain.people[0].login, "member");
+  assert.equal(led.brain.people[0].ownsOutcomes, false);
+  assert.equal(led.brain.people[0].profile.includes("Noor"), false);
+});
