@@ -88,7 +88,7 @@ flowchart TD
 | --- | --- | --- | --- | --- | --- | --- |
 | N0 | Law | — | PASS | — | `docs/LAW.md` | Reading order exists. |
 | N1 | Chrome | C5 GTM, C2 ICP | PASS | N0 | `site-header.tsx`, dashboard | Leader bar: Learn People Library Insights New. Sales desk zero children. |
-| N2 | Insights | C6 Ops, C1 Finance | READY | N1 | `app/src/app/insights/` | Six org-scoped charts. Click → person. Credit burn included. Honest empty. |
+| N2 | Insights | C6 Ops, C1 Finance | PASS | N1 | `app/src/app/insights/` | Six org-scoped charts. Click → person. Credit burn included. Honest empty. |
 | N3 | New menu | C5 GTM | READY | N0 | `site-header.tsx` (not with N1) | Video / Wizard / Connect AI. Header is free after N1. |
 | N4 | LessonSpec | C7 Dev | BLOCKED | N5 or N6 | composer tables | One JSON drives learn / teach / video. `source_unit_id`. |
 | N5 | Video in | C7 | BLOCKED | N3 | teach + media | Cap or mp4 → draft units. |
