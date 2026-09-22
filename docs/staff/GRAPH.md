@@ -1,5 +1,6 @@
 # Prelaunch staff graph
 
+Loop engine: [LOOP.md](./LOOP.md). Scoreboard: [state.json](./state.json). Grok Bot: [GROK_BOT.md](./GROK_BOT.md).
 Product work graph: [BUILD_GRAPH.md](./BUILD_GRAPH.md). Chrome: [SHELLS.md](./SHELLS.md). Product nouns: [THREE_LOOPS.md](./THREE_LOOPS.md). Law: [../LAW.md](../LAW.md).
 This file owns roster, wire, and launch **CLOSED**, **0/8**. Field School PM follows BUILD_GRAPH for what to build. Remotion still does not ship inside Next. Just stays locked. Family LIVE `bc-4765f2f0` stays untouched. Dest hash stays untouched. Launch stays CLOSED.
 
@@ -41,14 +42,14 @@ Wire: **CDM → CTO → Cursor Gate → Field School PM**.
 
 C-suite rule from the Org Chart: CTO, Marketer, Revenue, and Product do not message each other. Each raises input to Chief Decision Maker. CDM synthesizes and routes. No peer C-suite messaging.
 
-Hands rule: Cursor Gate alone contacts Field School PM / Cursor cloud agents. CTO briefs Cursor Gate. CDM briefs CTO. Paste BUILD_GRAPH Cycle 1 to Field School PM.
+Hands rule: Cursor Gate alone contacts Field School PM / Cursor cloud agents. CTO briefs Cursor Gate. CDM briefs CTO. Paste `node docs/staff/pick-next.mjs` output to Field School PM.
 
 ## Remotion (critical)
 
 Remotion Wave 5 factory is **PASS** in `plates/` only. That is factory evidence under Product, not a launch Product PASS. TypeCard VOX-S04 **PASS** (factory TypeCard-only; no Cap / Ernest PNG). Wave3 campus pack is LIVE (composer/teach) on campus — not Remotion-in-Next.
 
 - Stay in `plates/`. No Remotion-in-Next.
-- ORDER LOCK: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up.
+- ORDER LOCK: Opener/sting → TalkingHead/slate → DefinitionBoard/objective → RecapCard → QuizBumper/next-up. Live take uses four plates + captions layer. See [FACTORY_VIDEO.md](./FACTORY_VIDEO.md).
 - Existing plates only. No new antagonist card.
 - No Just remake (`27pn9xs0zk8a73g`). No second melt while `render.lock` exists.
 - Cap take is allowed as Library input. HLS player on campus is allowed. Remotion-in-Next held.
@@ -61,7 +62,7 @@ Same seats as the locked hub. Do not invent a second org chart.
 | Node | Raises input | Hands |
 |---|---|---|
 | Product | Product (Portal, Designer) | CTO → Cursor Gate → Field School PM campus workers |
-| ICP | Researcher | Writer files `docs/prelaunch/ICP.md` via Gate if it is a repo PR |
+| ICP | Researcher | Writer files `docs/icp-parent.md` / `docs/icp-leader.md` via Gate if it is a repo PR |
 | Brand | Marketer + Writer + Van Til / Theology Expert | Gate only if marketing-site or BRAND.md must change |
 | Offer | Revenue | Writer + Marketer; Gate for pricing.html |
 | Marketing | Marketer (Video) + Writer | Gate for marketing-site |
@@ -78,9 +79,9 @@ Factory seats (Audio Builder, Soul Break, Share Desk) stay on tape and links. Th
 Weekday 09:00 ET. Full clock text: [ROUTINES.md](./ROUTINES.md).
 
 1. Notion Ops posts or refreshes the morning brief page.
-2. Project Manager reads `docs/staff/BUILD_GRAPH.md` and scores N1–N15.
+2. Project Manager reads `docs/staff/state.json` and `LOOP.md` and scores C# and N#.
 3. CDM keeps BUILD_GRAPH as the Product node. Remotion stays in `plates/` only (Remotion-in-Next held).
-4. If the node needs code: CDM → CTO → Cursor Gate → Field School PM streams from BUILD_GRAPH.
+4. If the node needs code: CDM → CTO → Cursor Gate → Field School PM streams from pick-next.
 5. If the node is company prose only: CDM → Writer. Gate only when a PR is required.
 6. Max two Cursor streams. Files cannot conflict.
 7. Stop. No third stream. No C-suite side channel.
@@ -90,11 +91,12 @@ Sunday: CDM scores BUILD_GRAPH plus the eight launch nodes. Launch stays **CLOSE
 ## Sealed brief (CDM writes, CTO forwards, Gate pastes)
 
 ```
-Node: Product
-Plan: docs/staff/BUILD_GRAPH.md
+Clock:
+Pick:
+Plan: docs/staff/LOOP.md
 Raised by: CDM
 Target files: named on the node row
-Branch: cursor/n<id>-<slug>
+Branch: cursor/<id>-<slug>
 Project: Field School PM (bc-882e8bdf)
 Done when: node Done when
 Do not: Wave 2 resume, child login, salesperson as child, Remotion-in-Next, Django, pages in FastAPI, Launch 8/8

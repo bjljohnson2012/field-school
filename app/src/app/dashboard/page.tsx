@@ -29,8 +29,7 @@ export default function DashboardPage() {
         setActiveOrg(slug);
         const course = slug === "household" ? "home" : slug === "sales" ? "sales" : "grok-bot";
         const next = fetch(`/api/chooser?course=${course}`).then((r) => r.json());
-        const orgs = (data.memberships ?? []).map((row: { org?: string }) => row.org);
-        if (orgs.includes("household") || slug === "household") {
+        if (slug === "household") {
           void fetch("/api/children", { headers: { "x-fs-org": "household" } })
             .then((r) => r.json())
             .then((body) => {
@@ -57,11 +56,11 @@ export default function DashboardPage() {
       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
         Portal
       </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Dashboard</h1>
+      <h1 className="mt-2 font-display text-4xl tracking-tight">Learn</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">
         {signedIn
           ? session
-            ? `Signed in as ${session.name}${session.role === "guest" ? "" : session.role === "admin" ? " (admin)" : ` (${seatLabel || "member"})`}${impersonating ? " — impersonating" : ""}. Courses and assessments stay on this desk.`
+            ? `Signed in as ${session.name}${session.role === "guest" ? "" : session.role === "admin" ? " (admin)" : ` (${seatLabel || "member"})`}${impersonating ? ", impersonating" : ""}. Courses and assessments stay on this desk.`
             : "Signed in. Courses and assessments stay on this desk."
           : "Join the free beta, continue as a guest, or sign in. Progress still saves on this device."}
       </p>
@@ -97,7 +96,7 @@ export default function DashboardPage() {
         </p>
       ) : null}
 
-      {household || children.length > 0 ? (
+      {household ? (
         <section className="mt-12">
           <h2 className="font-display text-2xl tracking-tight">Children</h2>
           <p className="mt-2 text-sm text-muted-foreground">

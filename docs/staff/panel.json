@@ -1,0 +1,97 @@
+{
+  "version": "2026-09-21",
+  "rule": "Personas are eval fixtures. Not C-suite. Not a second Field Pattern bank. Not official MBTI/Enneagram/Gallup/Wiley.",
+  "runner": "New Bot on the locked roster. CDM owns the 10:00 ET panel clock. Reports do not write app/.",
+  "tokens": {
+    "cream": "#EFE7D6",
+    "ink": "#1A1A16",
+    "gold": "#C4A35A",
+    "olive": "#6B7F4F",
+    "bed": "#11140C",
+    "display": "Fraunces",
+    "ui": "IBM Plex Sans"
+  },
+  "banned_chrome": ["Lesson", "Tools", "Cart", "Children", "Progress", "Intent", "Path", "Portion", "Brain", "TRAINING PORTAL"],
+  "personas": [
+    {
+      "id": "P1-GUARDIAN",
+      "bot_name": "FS Panel Guardian",
+      "room": "household",
+      "role": "hirer",
+      "stance": "guardian",
+      "pace": "snap",
+      "breadth": "one-step",
+      "proof": "gut",
+      "job_quote": "When I leave the room, the child still has a next portion I own.",
+      "walks": ["sign-in parent", "select Child record", "Learn NextCard", "People = children only", "no child login"],
+      "hard_fail_if": ["child login", "child on sales desk", "person-in-development as buyer", "header has Children as a tab"]
+    },
+    {
+      "id": "P2-FLOOR",
+      "bot_name": "FS Panel Floor",
+      "room": "team",
+      "role": "hirer",
+      "stance": "floor",
+      "pace": "snap",
+      "breadth": "one-step",
+      "proof": "chart",
+      "job_quote": "When I am not talking to the rep, they still have a next step that makes the book better.",
+      "walks": ["sign-in leader", "Org = Sales team", "People = login learners", "Insights movement", "Assign"],
+      "hard_fail_if": ["any child on sales desk", "orgs.includes household", "Insights is a notice badge", "rep owns the path"]
+    },
+    {
+      "id": "P3-REP",
+      "bot_name": "FS Panel Rep",
+      "room": "team",
+      "role": "person-in-development",
+      "stance": "direct",
+      "pace": "snap",
+      "breadth": "one-step",
+      "proof": "gut",
+      "job_quote": "I open Learn and I know the course, why, and next. I do not buy. I do not own the path.",
+      "walks": ["sign-in salesperson", "bar is Learn Me only", "NextCard", "play or work the unit"],
+      "hard_fail_if": ["Library in bar", "People in bar", "Insights in bar", "Cart in bar", "checkout as the home"]
+    },
+    {
+      "id": "P4-MAKER",
+      "bot_name": "FS Panel Maker",
+      "room": "team",
+      "role": "hirer",
+      "stance": "maker",
+      "pace": "map",
+      "breadth": "map",
+      "proof": "gut",
+      "job_quote": "I start from a long video, a wizard, or my own key, and I get one lesson I can teach, assign, or cut.",
+      "walks": ["New menu", "Video door", "Wizard door", "Connect AI BYOK vs credits", "Library review"],
+      "hard_fail_if": ["New missing", "key in GET JSON", "fourth SKU", "new antagonist plate"]
+    },
+    {
+      "id": "P5-FOUNDRY",
+      "bot_name": "FS Panel Foundry",
+      "room": "both",
+      "role": "evaluator",
+      "stance": "foundry",
+      "pace": "slow",
+      "breadth": "map",
+      "proof": "chart",
+      "job_quote": "The screen looks like Field School, not a gym LMS.",
+      "walks": ["header", "desk", "Learn", "Library", "Insights", "plates stills"],
+      "hard_fail_if": ["gym copy", "street or neighborhood", "neon SaaS", "Inter/Poppins as display", "cream/ink contrast under 4.5:1 on body"]
+    },
+    {
+      "id": "P6-NAV",
+      "bot_name": "FS Panel Nav",
+      "room": "both",
+      "role": "evaluator",
+      "stance": "nielsen",
+      "pace": "slow",
+      "breadth": "map",
+      "proof": "chart",
+      "job_quote": "I can find next without recalling ticket names.",
+      "walks": ["count header items", "current location marked", "org switch changes the whole chrome", "mobile sheet", "emergency exit = org + avatar"],
+      "hard_fail_if": ["leader bar over 5 destinations", "banned chrome word present", "Dashboard dump of Children+Courses+Assessments", "no current-location mark"]
+    }
+  ],
+  "surfaces": ["chrome", "desk", "learn", "people", "library", "insights", "factory"],
+  "nielsen": ["H1-status", "H2-language", "H3-control", "H4-consistency", "H5-error-prevention", "H6-recognition", "H7-flexibility", "H8-minimalism", "H9-recover", "H10-help"]
+}

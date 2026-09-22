@@ -1,0 +1,39 @@
+{
+  "updated": "2026-09-22T11:52:00Z",
+  "launch": "CLOSED 0/8",
+  "outcome": false,
+  "company": {
+    "C1": { "status": "READY", "evidence": "finance-units.md missing" },
+    "C2": { "status": "READY", "evidence": "icp-parent.md and icp-leader.md still on PR 207; not merged" },
+    "C3": { "status": "BLOCKED", "needs": ["C2"] },
+    "C4": { "status": "BLOCKED", "needs": ["C2", "C5"] },
+    "C5": { "status": "READY", "evidence": "gtm-hire.md missing" },
+    "C6": { "status": "READY", "evidence": "Insights = N2" },
+    "C7": { "status": "IN_FLIGHT", "evidence": "N1 chrome PASS on PR 206; C2 still READY" }
+  },
+  "dev": {
+    "N0": { "status": "PASS", "evidence": "docs/LAW.md" },
+    "N1": {
+      "status": "PASS",
+      "evidence": "PR 206 rebased on main; leader bar Learn People Library Insights New; sales does not fetch /api/children; guest /api/me {guest:true}"
+    },
+    "N2": { "status": "BLOCKED", "needs": ["N1"] },
+    "N3": { "status": "READY", "evidence": "N1 before N3; PR 214 CLOSED; do not open this clock" },
+    "N4": { "status": "BLOCKED", "needs": ["N5", "N6"] },
+    "N5": { "status": "BLOCKED", "needs": ["N3"] },
+    "N6": { "status": "BLOCKED", "needs": ["N3"] },
+    "N7": { "status": "BLOCKED", "needs": ["N3"] },
+    "N8": { "status": "BLOCKED", "needs": ["N4", "N10"] },
+    "N9": { "status": "BLOCKED", "needs": ["N1"] },
+    "N10": { "status": "BLOCKED", "needs": ["N1"] },
+    "N11": { "status": "BLOCKED", "needs": ["N4"] },
+    "N12": { "status": "HELD", "evidence": "Cycle 2 FastAPI worker" },
+    "N13": { "status": "BLOCKED", "needs": ["N12"] },
+    "N14": { "status": "BLOCKED", "needs": ["N12"] },
+    "N15": { "status": "BLOCKED", "needs": ["N1", "N2", "N8", "N9", "N11"] },
+    "FACTORY": { "status": "READY", "evidence": "no @remotion/captions; no whisperx-to-captions.mjs" }
+  },
+  "in_flight": [],
+  "last_pick": ["N1"],
+  "last_clock": "09"
+}
