@@ -3,23 +3,39 @@ import {readFileSync} from "node:fs";
 import {dirname, join} from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
-import {formatPick, pickNext} from "./pick-next.mjs";
+import {formatPick, pickNext, pickOpen} from "./pick-next.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const state = JSON.parse(readFileSync(join(here, "state.json"), "utf8"));
 
-test("untouched state picks N1 then C2, not N3", () => {
+test("untouched MERGE includes N1 and C2, excludes N3", () => {
   const chosen = pickNext(state);
-  assert.deepEqual(chosen.map((n) => n.id), ["N1", "C2"]);
-  assert.match(formatPick(chosen).text, /^PICK N1 C2/m);
-  assert.doesNotMatch(formatPick(chosen).text, /\bN3\b/);
+  const ids = chosen.map((n) => n.id);
+  assert.equal(ids[0], "N1");
+  assert.ok(ids.includes("C2"));
+  assert.ok(ids.includes("FACTORY"));
+  assert.ok(ids.includes("C1"));
+  assert.ok(!ids.includes("N3"));
+  assert.match(formatPick(chosen).text, /^MERGE N1 /m);
 });
 
-test("after N1 PASS, pick C2 then FACTORY", () => {
+test("OPEN lists blocked drafts, not HELD", () => {
+  const opened = pickOpen(state);
+  const ids = opened.map((n) => n.id);
+  assert.ok(ids.includes("N2"));
+  assert.ok(ids.includes("N15"));
+  assert.ok(!ids.includes("N12"));
+  assert.ok(!ids.includes("N0"));
+});
+
+test("after N1 PASS, N3 may MERGE and N1 is gone", () => {
   const next = structuredClone(state);
   next.dev.N1 = {status: "PASS", evidence: "chrome"};
-  const chosen = pickNext(next);
-  assert.deepEqual(chosen.map((n) => n.id), ["C2", "FACTORY"]);
+  const ids = pickNext(next).map((n) => n.id);
+  assert.ok(!ids.includes("N1"));
+  assert.ok(ids.includes("C2"));
+  assert.ok(ids.includes("FACTORY"));
+  assert.ok(ids.includes("N3"));
 });
 
 test("N1 in flight blocks N3", () => {
