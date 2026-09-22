@@ -107,8 +107,58 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
     ...model.skills.cells.map((cell) => (typeof cell.score === "number" ? cell.score : 0)),
   );
 
+  const board = model.brainBoard;
   return (
     <div data-org={model.orgSlug} data-children={model.childrenIncluded} data-sales-diagnostics={model.salesDiagnostics}>
+      {board ? (
+        <section
+          data-chart="org-brain"
+          data-brain-room={board.room}
+          data-brain-count={board.people.length}
+          data-sales-children={board.room === "sales" ? "0" : undefined}
+          aria-label="Org brain"
+          className="mb-4 rounded-xl border border-border bg-card p-5"
+        >
+          <h2 className="font-display text-2xl tracking-tight">Org brain</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Facts for this org, then each person&apos;s profile and outcomes.</p>
+          <p className="mt-4 text-sm" data-brain-facts={board.facts ? "yes" : "no"}>
+            {board.facts || "No org facts yet."}
+          </p>
+          {board.people.length ? (
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full border-collapse text-left text-sm">
+                <thead>
+                  <tr>
+                    <th className="px-2 py-2 font-medium text-muted-foreground">Person</th>
+                    <th className="px-2 py-2 font-medium text-muted-foreground">Profile</th>
+                    <th className="px-2 py-2 font-medium text-muted-foreground">Outcomes</th>
+                    <th className="px-2 py-2 font-medium text-muted-foreground">Login</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {board.people.map((person) => (
+                    <tr
+                      key={person.membershipId}
+                      className="border-t border-border"
+                      data-brain-person={person.membershipId}
+                      data-kind={person.kind}
+                      data-login={person.login}
+                      data-owns-outcomes="false"
+                    >
+                      <td className="px-2 py-2">{person.name}</td>
+                      <td className="px-2 py-2">{person.profile || "—"}</td>
+                      <td className="px-2 py-2">{person.outcomes || "—"}</td>
+                      <td className="px-2 py-2">{person.login === "none" ? "No login" : "May sign in"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="mt-4 text-sm text-muted-foreground">No people on this brain yet.</p>
+          )}
+        </section>
+      ) : null}
       <div className="grid gap-4 md:grid-cols-2">
         <ChartFrame id="movement" title="Movement" hint="Moved in the last 7 days, and stalled." empty={model.empty}>
           <Bars points={model.movement} scale="count" onOpen={onOpen} />

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { chooseNextStep, readForTool, refreshFromUse, shapeBrain, updateOutcome } from "./model.ts";
+import { brainBoard, chooseNextStep, readForTool, refreshFromUse, shapeBrain, updateOutcome } from "./model.ts";
 
 const parent = { kind: "adult", stance: "guardian", org: "household", membershipId: "parent-1" };
 const leader = { kind: "adult", stance: "trainer", org: "sales", membershipId: "leader-1" };
@@ -328,4 +328,116 @@ test("real use refreshes the next step in both rooms", () => {
   if (!withChild.ok) return;
   assert.equal(withChild.brain.people.some((person) => person.kind === "child"), false);
   assert.equal(withChild.brain.people[0].outcomes, "Team step only");
+});
+
+test("insights lists org facts and many people in both rooms", () => {
+  const home = shapeBrain({
+    orgId: "org-home",
+    room: "household",
+    facts: "The household is learning at home.",
+    actorId: "parent-1",
+    people: [
+      {
+        membershipId: "child-2",
+        name: "Bea",
+        kind: "child",
+        login: "none",
+        profile: "Reads in the morning",
+        outcomes: "Finish the next page",
+      },
+      {
+        membershipId: "child-1",
+        name: "Ada",
+        kind: "child",
+        login: "none",
+        profile: "Who they are now",
+        outcomes: "Keep the home next step",
+      },
+    ],
+  });
+  assert.equal(home.ok, true);
+  if (!home.ok) return;
+  const homeWithAdult = {
+    ...home.brain,
+    people: [
+      ...home.brain.people,
+      {
+        membershipId: "adult-9",
+        name: "Pat",
+        kind: "adult",
+        login: "member",
+        profile: "Parent",
+        outcomes: "Owns the path",
+        ownsOutcomes: false,
+      },
+    ],
+  };
+  const homeBoard = brainBoard({ room: "household", brain: homeWithAdult });
+  assert.equal(homeBoard.facts, "The household is learning at home.");
+  assert.deepEqual(
+    homeBoard.people.map((person) => person.name),
+    ["Ada", "Bea"],
+  );
+  assert.equal(homeBoard.people.every((person) => person.login === "none"), true);
+  assert.equal(homeBoard.people.every((person) => person.ownsOutcomes === false), true);
+  assert.equal(homeBoard.people[0].profile, "Who they are now");
+  assert.equal(homeBoard.people[0].outcomes, "Keep the home next step");
+  assert.equal(homeBoard.people.some((person) => person.kind !== "child"), false);
+
+  const sales = shapeBrain({
+    orgId: "org-sales",
+    room: "sales",
+    facts: "The team keeps moving.",
+    actorId: "leader-1",
+    people: [
+      {
+        membershipId: "rep-2",
+        name: "Noor",
+        kind: "adult",
+        login: "member",
+        profile: "Works the afternoon desk",
+        outcomes: "Name the next call",
+      },
+      {
+        membershipId: "rep-1",
+        name: "Kai",
+        kind: "adult",
+        login: "member",
+        profile: "Who they are now",
+        outcomes: "Keep the team next step",
+      },
+    ],
+  });
+  assert.equal(sales.ok, true);
+  if (!sales.ok) return;
+  const salesWithChild = {
+    ...sales.brain,
+    people: [
+      ...sales.brain.people,
+      {
+        membershipId: "child-9",
+        name: "Wrong room",
+        kind: "child",
+        login: "none",
+        profile: "no",
+        outcomes: "no",
+        ownsOutcomes: false,
+      },
+    ],
+  };
+  const salesBoard = brainBoard({ room: "sales", brain: salesWithChild });
+  assert.equal(salesBoard.facts, "The team keeps moving.");
+  assert.deepEqual(
+    salesBoard.people.map((person) => person.name),
+    ["Kai", "Noor"],
+  );
+  assert.equal(salesBoard.people.every((person) => person.login === "member"), true);
+  assert.equal(salesBoard.people.every((person) => person.ownsOutcomes === false), true);
+  assert.equal(salesBoard.people.some((person) => person.kind === "child" || person.login === "none"), false);
+  assert.equal(salesBoard.people[1].profile, "Works the afternoon desk");
+  assert.equal(salesBoard.people[1].outcomes, "Name the next call");
+  const tool = readForTool(sales.brain, "org-sales");
+  const fromTool = brainBoard({ room: "sales", brain: tool });
+  assert.equal(fromTool.people.length, 2);
+  assert.equal(fromTool.facts, tool?.facts);
 });

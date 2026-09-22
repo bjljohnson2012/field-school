@@ -164,6 +164,19 @@ export type InsightsModel = {
     login: "none" | "member";
     from: "outcomes" | "profile" | "stored";
   } | null;
+  brainBoard?: {
+    room: "household" | "sales";
+    facts: string;
+    people: Array<{
+      membershipId: string;
+      name: string;
+      kind: string;
+      login: "none" | "member";
+      profile: string;
+      outcomes: string;
+      ownsOutcomes: false;
+    }>;
+  } | null;
 };
 
 function norm(value: string) {
