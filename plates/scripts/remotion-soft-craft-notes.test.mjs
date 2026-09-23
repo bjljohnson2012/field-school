@@ -86,6 +86,8 @@ test("the checker does not flip Cleaning or invent EDU-S03", () => {
   assert.match(source, /cleaningFlip: false/);
   assert.match(source, /holdCleaning: true/);
   assert.match(source, /kind: "audio-desync"/);
+  assert.match(source, /kind: "missing-use-current-frame"/);
+  assert.match(source, /kind: "css-timer-motion"/);
   assert.doesNotMatch(source, /EDU-S03|27pn9xs0zk8a73g|af374d95|distribute:\s*true|AUTH_URL|HARD_FAIL/);
   assert.doesNotMatch(source, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
@@ -158,6 +160,73 @@ test("audio desync stays beside caption drift and a missing chapter boundary", (
   assert.deepEqual(
     result.notes.map((note) => note.kind),
     ["caption-cue-drift", "missing-chapter-boundary", "audio-desync"],
+  );
+  assert.equal(result.cleaningFlip, false);
+  assert.equal(result.holdCleaning, true);
+});
+
+const frameDriven = `
+import { useCurrentFrame, interpolate } from "remotion";
+export function Beat() {
+  const frame = useCurrentFrame();
+  return interpolate(frame, [0, 20], [0, 1]);
+}
+`;
+
+test("a composition on useCurrentFrame records no soft note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Opener", source: frameDriven }],
+    cleaningFlip: true,
+  });
+  assert.deepEqual(result.notes, []);
+  assert.equal(result.cleaningFlip, false);
+});
+
+test("motion without useCurrentFrame is the only soft note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Slate", source: "interpolate(frame, [0, 10], [0, 1]);" }],
+  });
+  assert.deepEqual(result.notes, [{ kind: "missing-use-current-frame", id: "Slate" }]);
+  assert.equal(result.holdCleaning, true);
+});
+
+test("CSS-timer motion is the only soft note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Slate", source: `${frameDriven}\nconst style = { transition: "opacity 1s" };` }],
+  });
+  assert.deepEqual(result.notes, [{ kind: "css-timer-motion", id: "Slate" }]);
+  assert.equal(result.cleaningFlip, false);
+});
+
+test("frame smells stay beside caption, chapter, and audio notes", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [{ ...aligned, startMs: 10800 }],
+    spoken,
+    chapters: chapters.filter((row) => row.id !== "recap"),
+    audio: [{ ...syncedAudio, startMs: 10400 }],
+    compositions: [{ id: "Slate", source: 'interpolate(0, [0, 1], [0, 1]);\n@keyframes spin {}\nanimation: spin 1s;' }],
+  });
+  assert.deepEqual(
+    result.notes.map((note) => note.kind),
+    [
+      "caption-cue-drift",
+      "missing-chapter-boundary",
+      "audio-desync",
+      "missing-use-current-frame",
+      "css-timer-motion",
+    ],
   );
   assert.equal(result.cleaningFlip, false);
   assert.equal(result.holdCleaning, true);

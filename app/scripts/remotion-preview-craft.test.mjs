@@ -1166,3 +1166,95 @@ test("Remotion plates record a soft note only when audio drifts from the timelin
   assert.doesNotMatch(checker, /EDU-S03|27pn9xs0zk8a73g|af374d95|AUTH_URL|HARD_FAIL/);
   assert.doesNotMatch(preview + html5 + checker, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
+
+test("Remotion plates record a soft note only for missing useCurrentFrame or CSS-timer motion", () => {
+  const checker = readFileSync(join(root, "..", "plates", "scripts", "remotion-soft-craft-notes.mjs"), "utf8");
+  const opener = readFileSync(join(root, "..", "plates", "src", "Opener.tsx"), "utf8");
+  const spoken = [
+    { text: "Slate.", startMs: 10000, endMs: 10400 },
+    { text: "Household:", startMs: 10400, endMs: 11200 },
+    { text: "the", startMs: 11200, endMs: 11600 },
+    { text: "child", startMs: 11600, endMs: 12200 },
+    { text: "has", startMs: 12200, endMs: 12600 },
+    { text: "no", startMs: 12600, endMs: 13000 },
+    { text: "login.", startMs: 13000, endMs: 14000 },
+  ];
+  const cue = {
+    text: "Slate. Household: the child has no login.",
+    startMs: 10000,
+    endMs: 14000,
+  };
+  const chapters = spineLayout(SPINE_BEATS);
+  const audio = {
+    id: "slate",
+    from: 300,
+    frames: 120,
+    fps: 30,
+    startMs: 10000,
+    endMs: 14000,
+    cueStartMs: 10000,
+    cueEndMs: 14000,
+  };
+  const clean = remotionSoftCraftNotes({
+    cues: [cue],
+    spoken,
+    chapters,
+    audio: [audio],
+    compositions: [{ id: "Opener", source: opener }],
+    cleaningFlip: true,
+  });
+  assert.deepEqual(clean.notes, []);
+  assert.equal(clean.cleaningFlip, false);
+  assert.equal(clean.holdCleaning, true);
+
+  const missingFrame = remotionSoftCraftNotes({
+    cues: [cue],
+    spoken,
+    chapters,
+    audio: [audio],
+    compositions: [{ id: "Slate", source: "interpolate(frame, [0, 10], [0, 1]);" }],
+  });
+  assert.deepEqual(missingFrame.notes, [{ kind: "missing-use-current-frame", id: "Slate" }]);
+
+  const cssTimer = remotionSoftCraftNotes({
+    cues: [cue],
+    spoken,
+    chapters,
+    audio: [audio],
+    compositions: [{ id: "Slate", source: `${opener}\nconst style = { animation: "fade 1s" };` }],
+  });
+  assert.equal(cssTimer.notes.length, 1);
+  assert.equal(cssTimer.notes[0].kind, "css-timer-motion");
+
+  const prior = remotionSoftCraftNotes({
+    cues: [{ ...cue, startMs: 11000 }],
+    spoken,
+    chapters: chapters.filter((row) => row.id !== "recap"),
+    audio: [{ ...audio, endMs: 14800 }],
+    compositions: [{ id: "Slate", source: "spring({ frame: 0 });\ntransition: opacity 1s;" }],
+  });
+  assert.deepEqual(
+    prior.notes.map((note) => note.kind),
+    [
+      "caption-cue-drift",
+      "missing-chapter-boundary",
+      "audio-desync",
+      "missing-use-current-frame",
+      "css-timer-motion",
+    ],
+  );
+  assert.equal(prior.holdCleaning, true);
+
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  assert.match(preview, /continueAt\.stage === "prove" \? null/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(html5, /recordRail\("html5"\)/);
+  assert.match(html5, /addEventListener\("pagehide"/);
+  assert.match(checker, /kind: "missing-use-current-frame"/);
+  assert.match(checker, /kind: "css-timer-motion"/);
+  assert.match(checker, /kind: "audio-desync"/);
+  assert.match(checker, /cleaningFlip: false/);
+  assert.doesNotMatch(checker, /EDU-S03|27pn9xs0zk8a73g|af374d95|AUTH_URL|HARD_FAIL/);
+  assert.doesNotMatch(preview + html5 + checker, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});

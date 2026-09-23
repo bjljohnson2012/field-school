@@ -1,8 +1,9 @@
 /**
  * Remotion soft craft notes for plates.
  * A note is recorded only when a caption cue drifts from spoken timing,
- * a chapter boundary is missing, or audio drifts from the Remotion timeline
- * or from caption cues.
+ * a chapter boundary is missing, audio drifts from the Remotion timeline
+ * or from caption cues, or a composition is missing useCurrentFrame
+ * or drives motion with a CSS timer.
  * This checker does not flip Cleaning.
  */
 
@@ -96,6 +97,27 @@ function audioNotes(clips) {
   return notes;
 }
 
+function compositionSource(row) {
+  return String(row?.source ?? "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\/\/.*$/gm, "");
+}
+
+function frameNotes(compositions) {
+  const notes = [];
+  for (const row of compositions ?? []) {
+    const source = compositionSource(row);
+    if (!source.trim()) continue;
+    const id = row.id ? String(row.id) : "";
+    const hasFrame = /\buseCurrentFrame\b/.test(source);
+    const cssTimer = /@keyframes|\banimation\s*:|\btransition\s*:/.test(source);
+    const frameMotion = /\binterpolate\s*\(|\bspring\s*\(/.test(source);
+    if (!hasFrame && frameMotion) notes.push({ kind: "missing-use-current-frame", id });
+    if (cssTimer) notes.push({ kind: "css-timer-motion", id });
+  }
+  return notes;
+}
+
 /** Soft notes only. Cleaning stays held. */
 export function remotionSoftCraftNotes(input = {}) {
   const notes = [];
@@ -122,5 +144,6 @@ export function remotionSoftCraftNotes(input = {}) {
     notes.push({ kind: "missing-chapter-boundary", id });
   }
   notes.push(...audioNotes(input.audio));
+  notes.push(...frameNotes(input.compositions));
   return { notes, cleaningFlip: false, holdCleaning: true };
 }
