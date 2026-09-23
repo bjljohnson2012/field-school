@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-23T09:40:00Z",
+  "updated": "2026-09-23T09:48:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -107,12 +107,12 @@
     },
     "FACTORY": {
       "status": "PASS",
-      "evidence": "Track B PASS on main. EDU-S03 still needs a Cap take. PR 260 mounts remotion and @remotion/player on the campus play rail for a LessonSpine preview. PR 261 writes the next LessonSpine step into the living brain on signed-in play. PR 271 continues the HTML5 rail and the Remotion preview at that next step. PR 274: the Remotion LessonSpine preview names the current chapter and shows its caption. PR 275: leave and return on the play page restores that same LessonSpine chapter from the living brain. PR 276: leave mid-chapter and return restores that Remotion scrub and caption cue from the living brain. HTML5 rail stays. distribute stays false. Dest stays untouched. Launch CLOSED 0/8."
+      "evidence": "Track B PASS on main. EDU-S03 still needs a Cap take. PR 260 mounts remotion and @remotion/player on the campus play rail for a LessonSpine preview. PR 261 writes the next LessonSpine step into the living brain on signed-in play. PR 271 continues the HTML5 rail and the Remotion preview at that next step. PR 274: the Remotion LessonSpine preview names the current chapter and shows its caption. PR 275: leave and return on the play page restores that same LessonSpine chapter from the living brain. PR 276: leave mid-chapter and return restores that Remotion scrub and caption cue from the living brain. PR 277: finishing a Remotion chapter writes the next LessonSpine portion into the living brain, and leave and return opens that portion. HTML5 rail stays. distribute stays false. Dest stays untouched. Launch CLOSED 0/8."
     }
   },
   "in_flight": [],
   "last_pick": [
     "N15"
   ],
-  "last_clock": "clock-02-next16"
+  "last_clock": "clock-02-next17"
 }

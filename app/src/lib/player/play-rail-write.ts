@@ -48,6 +48,15 @@ export function playWriteBody(input: {
   };
 }
 
+/** Next LessonSpine portion after this chapter finishes. Same write as play, named for the finished chapter. */
+export function portionWriteBody(input: {
+  room: Room;
+  brain: LivingBrain | null;
+  chapterId: string;
+}) {
+  return playWriteBody(input);
+}
+
 /** Body for POST /api/living-brain. Keeps the step and stores a mid-chapter scrub plus caption cue. */
 export function resumeWriteBody(input: {
   room: Room;
