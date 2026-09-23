@@ -27,10 +27,8 @@ export default function ExamPage() {
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">{course.title}</h1>
       <p className="mt-4 text-sm text-muted-foreground">
-        {course.examQuestions.length} questions. Pass at{" "}
-        {Math.ceil(course.examQuestions.length * course.examPassRatio)}/
-        {course.examQuestions.length}. The Field School certificate also needs
-        every station cleared.
+        {course.examQuestions.length} questions. Pass at 8/10. The Field School
+        certificate also needs every station cleared.
       </p>
       <p className="mt-2 text-sm text-muted-foreground">
         Stations passed {tally.passed}/{tally.total}.
@@ -40,6 +38,7 @@ export default function ExamPage() {
           title="Course exam"
           questions={course.examQuestions}
           ratio={course.examPassRatio}
+          showProgress
           priorScore={tally.exam?.score ?? null}
           priorPassed={Boolean(tally.exam?.passed)}
           shareTitle={`${course.title} exam`}
