@@ -256,9 +256,11 @@ export function LessonSpineRemotionPreview() {
             data-continue-chapter={opened.chapterId}
             data-login={continueAt.login}
             data-sales-children={continueAt.room === "sales" ? "0" : undefined}
-            data-portion-stage={continueAt.stage === "teach" ? "teach" : "assign"}
+            data-portion-stage={
+              continueAt.stage === "prove" ? "prove" : continueAt.stage === "teach" ? "teach" : "assign"
+            }
           >
-            {continueAt.stage === "teach" ? null : (
+            {continueAt.stage === "teach" ? null : continueAt.stage === "prove" ? null : (
               <Link
                 href="/assign"
                 className="underline underline-offset-2"
@@ -268,20 +270,23 @@ export function LessonSpineRemotionPreview() {
                 Assign · {opened.label}
               </Link>
             )}
-            <Link
-              href="/teach-live"
-              className="underline underline-offset-2"
-              data-teach-portion={opened.teach}
-              data-teach-chapter={opened.chapterId}
-              data-teach-entry={continueAt.stage === "teach" ? "living-brain" : undefined}
-            >
-              Teach · {opened.label}
-            </Link>
+            {continueAt.stage === "prove" ? null : (
+              <Link
+                href="/teach-live"
+                className="underline underline-offset-2"
+                data-teach-portion={opened.teach}
+                data-teach-chapter={opened.chapterId}
+                data-teach-entry={continueAt.stage === "teach" ? "living-brain" : undefined}
+              >
+                Teach · {opened.label}
+              </Link>
+            )}
             <a
               href="#lesson-spine-prove"
               className="underline underline-offset-2"
               data-prove-portion={opened.prove}
               data-prove-chapter={opened.chapterId}
+              data-prove-entry={continueAt.stage === "prove" ? "living-brain" : undefined}
             >
               Prove · {opened.label}
             </a>
