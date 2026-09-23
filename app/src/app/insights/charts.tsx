@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { assistDraft, assistFacts, brainBoard, type BrainBoard } from "@/lib/living-brain/model";
 import { LessonSpineHistory } from "@/components/lesson-spine-history";
-import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
+import { lessonSpineConfidence, lessonSpineRollup, lessonSpineStep } from "@/lib/player/play-rail-write";
 import { EMPTY_COPY, type InsightPerson, type InsightPoint, type InsightsModel } from "./aggregate";
 
 type OpenState = {
@@ -215,6 +215,27 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
           <p className="mt-4 text-sm" data-brain-facts={board.facts ? "yes" : "no"}>
             {board.facts || "No org facts yet."}
           </p>
+          {lessonSpineRollup(board.people).length ? (
+            <div
+              className="mt-4"
+              data-org-rollup="living-brain"
+              data-org-rollup-count={lessonSpineRollup(board.people).length}
+              data-sales-children={board.room === "sales" ? "0" : undefined}
+            >
+              <p className="text-xs font-medium uppercase tracking-[0.12em]">LessonSpine outcomes</p>
+              <ul className="mt-2 space-y-1 text-sm">
+                {lessonSpineRollup(board.people).map((row) => (
+                  <li key={`${row.name}-${row.step}`} data-lesson-spine-next={row.step} data-login={row.login}>
+                    {row.name}: <Link href="/play/lesson-spine">{row.step}</Link>
+                    {row.confidence ? ` · ${row.confidence}` : ""}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {board.room === "sales" ? "This desk lists no children." : "The child has no login."}
+              </p>
+            </div>
+          ) : null}
           {board.outcome ? (
             <>
               <p className="mt-3 text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim">
