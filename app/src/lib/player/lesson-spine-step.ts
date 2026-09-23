@@ -118,6 +118,31 @@ export function lessonSpineWithRail(outcomes: string, rail: LessonSpineRail) {
   return kept ? `${kept}\nrail ${rail}` : `rail ${rail}`;
 }
 
+export type LessonSpineStage = "assign" | "teach";
+
+/** Portion stage stored on a living-brain outcome. Null until Assign is finished. */
+export function lessonSpineStage(title: string): LessonSpineStage | null {
+  for (const line of title.split("\n")) {
+    const trimmed = line.trim();
+    if (trimmed === "stage teach") return "teach";
+    if (trimmed === "stage assign") return "assign";
+  }
+  return null;
+}
+
+/** Keep the LessonSpine step, resume, and rail, and store the portion stage. */
+export function lessonSpineWithStage(outcomes: string, stage: LessonSpineStage) {
+  const kept = outcomes
+    .split("\n")
+    .filter((line) => {
+      const trimmed = line.trim();
+      return trimmed !== "stage teach" && trimmed !== "stage assign";
+    })
+    .join("\n")
+    .trim();
+  return kept ? `${kept}\nstage ${stage}` : `stage ${stage}`;
+}
+
 /** Keep the LessonSpine step and attach a mid-chapter scrub. Null when the scrub is not inside that chapter. */
 export function lessonSpineWithResume(step: string, offsetSec: number, cue: string) {
   const head = lessonSpineStep(step);

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { brainBoard, chooseNextStep, nextStepTrail, personConfidence, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
 import { LessonSpineHistory } from "@/components/lesson-spine-history";
 import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
+import { useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
 import {
   DESK_COPY,
   ERROR_COPY,
@@ -50,11 +51,22 @@ type View =
 
 function LessonSpineAct(props: { title: string }) {
   const spine = lessonSpineStep(props.title);
+  const { recordAssignComplete } = useLessonSpinePlayWrite();
   if (!spine) return null;
   return (
-    <p className="mt-1 text-sm" data-assign-entry="living-brain" data-lesson-spine-next={spine} data-next-from="outcomes">
+    <div className="mt-1 text-sm" data-assign-entry="living-brain" data-lesson-spine-next={spine} data-next-from="outcomes">
       <Link href="/play/lesson-spine">{spine}</Link>
-    </p>
+      <button
+        type="button"
+        className="ml-3 underline underline-offset-2"
+        data-assign-complete="living-brain"
+        onClick={() => {
+          void recordAssignComplete();
+        }}
+      >
+        Assign complete
+      </button>
+    </div>
   );
 }
 
