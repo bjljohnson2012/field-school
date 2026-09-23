@@ -93,6 +93,31 @@ export function lessonSpineResume(title: string) {
   };
 }
 
+export type LessonSpineRail = "remotion" | "html5";
+
+/** Last play rail stored on a living-brain outcome. Null when none is stored. */
+export function lessonSpineRail(title: string): LessonSpineRail | null {
+  for (const line of title.split("\n")) {
+    const trimmed = line.trim();
+    if (trimmed === "rail remotion") return "remotion";
+    if (trimmed === "rail html5") return "html5";
+  }
+  return null;
+}
+
+/** Keep the LessonSpine step and resume lines, and store the last-used play rail. */
+export function lessonSpineWithRail(outcomes: string, rail: LessonSpineRail) {
+  const kept = outcomes
+    .split("\n")
+    .filter((line) => {
+      const trimmed = line.trim();
+      return trimmed !== "rail remotion" && trimmed !== "rail html5";
+    })
+    .join("\n")
+    .trim();
+  return kept ? `${kept}\nrail ${rail}` : `rail ${rail}`;
+}
+
 /** Keep the LessonSpine step and attach a mid-chapter scrub. Null when the scrub is not inside that chapter. */
 export function lessonSpineWithResume(step: string, offsetSec: number, cue: string) {
   const head = lessonSpineStep(step);

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Player, type PlayerRef } from "@remotion/player";
 import { AbsoluteFill, Easing, Sequence, interpolate, useCurrentFrame } from "remotion";
 import Link from "next/link";
-import { useLessonSpineContinue, useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
+import { useLessonSpineContinue, useLessonSpinePlayWrite, useLessonSpineRail } from "@/components/lesson-spine-play-write";
 import { lessonSpineTeachProve } from "@/lib/player/play-rail-write";
 
 const FPS = 30;
@@ -120,8 +120,9 @@ function chapterAt(frame: number) {
 
 export function LessonSpineRemotionPreview() {
   const playerRef = useRef<PlayerRef>(null);
-  const { recordPlay, recordResume, recordPortion, recordProve, wrote } = useLessonSpinePlayWrite();
+  const { recordPlay, recordResume, recordPortion, recordProve, recordRail, wrote } = useLessonSpinePlayWrite();
   const continueAt = useLessonSpineContinue();
+  const rail = useLessonSpineRail();
   const playing = useRef(false);
   const prevIndex = useRef<number | null>(null);
   const portionSeen = useRef(new Set<string>());
@@ -148,6 +149,7 @@ export function LessonSpineRemotionPreview() {
     }
     const onPlay = () => {
       playing.current = true;
+      void recordRail("remotion");
       if (!continueAt) void recordPlay("sting");
       else void recordPlay(continueAt.chapterId);
     };
@@ -203,7 +205,7 @@ export function LessonSpineRemotionPreview() {
       player.removeEventListener("seeked", onSeeked);
       document.removeEventListener("visibilitychange", onLeave);
     };
-  }, [continueAt, recordPlay, recordPortion, recordResume]);
+  }, [continueAt, recordPlay, recordPortion, recordRail, recordResume]);
 
   return (
     <section
@@ -213,6 +215,7 @@ export function LessonSpineRemotionPreview() {
       data-rooms="household,sales"
       data-login="none"
       data-sales-children="0"
+      data-play-rail={rail === "remotion" ? "remotion" : undefined}
       data-play-write={wrote ? "living-brain" : undefined}
     >
       <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Remotion preview</p>

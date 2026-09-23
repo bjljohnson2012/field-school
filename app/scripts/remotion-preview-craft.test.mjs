@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { brainBoard } from "../src/lib/living-brain/model.ts";
-import { lessonSpineContinue, lessonSpineResume, lessonSpineStep, lessonSpineTeachProve, lessonSpineWithResume, NEXT_LESSON_STEP, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
+import { lessonSpineContinue, lessonSpineRail, lessonSpineResume, lessonSpineStep, lessonSpineTeachProve, lessonSpineWithRail, lessonSpineWithResume, NEXT_LESSON_STEP, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
@@ -535,4 +535,104 @@ test("Prove on the final lesson clears Continue and does not open a next lesson"
   assert.match(preview, /data-chapter-rail="lesson-spine"/);
   assert.match(read("src/components/leave-return-next.tsx"), /href="\/play\/lesson-spine"/);
   assert.doesNotMatch(preview, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+test("leave and return opens the last-used LessonSpine rail", () => {
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  const page = read("src/app/play/lesson-spine/page.tsx");
+  const hook = read("src/components/lesson-spine-play-write.tsx");
+  const home = {
+    orgId: "org-1",
+    room: "household",
+    facts: "",
+    outcome: "",
+    people: [person({ outcomes: `${NEXT_LESSON_STEP}\nrail remotion` })],
+  };
+  const stored = railPreferenceBody({ room: "household", brain: home, rail: "remotion" });
+  assert.equal(stored?.login, "none");
+  assert.equal(lessonSpineRail(stored.outcomes), "remotion");
+  assert.equal(lessonSpineContinue(stored.outcomes)?.label, "Next lesson");
+  assert.equal(lessonSpineContinue(stored.outcomes)?.startSec, 0);
+  assert.equal(lessonSpineResume(stored.outcomes), null);
+
+  const html5Play = railPreferenceBody({ room: "household", brain: home, rail: "html5" });
+  assert.equal(lessonSpineRail(html5Play.outcomes), "html5");
+  assert.equal(lessonSpineStep(html5Play.outcomes), NEXT_LESSON_STEP);
+
+  const proved = proveCompleteBody({ room: "household", brain: home, chapterId: "next-up" });
+  assert.equal(proved?.outcomes, "rail remotion");
+  assert.equal(lessonSpineStep(proved.outcomes), null);
+  assert.equal(lessonSpineContinue(proved.outcomes), null);
+  assert.equal(lessonSpineRail(proved.outcomes), "remotion");
+
+  const stillNext = proveCompleteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: "Continue LessonSpine at Next up\nrail html5" })] },
+    chapterId: "nextUp",
+  });
+  assert.equal(lessonSpineStep(stillNext.outcomes), NEXT_LESSON_STEP);
+  assert.equal(lessonSpineRail(stillNext.outcomes), "html5");
+  assert.equal(lessonSpineContinue(stillNext.outcomes)?.startSec, 0);
+  assert.equal(lessonSpineResume(stillNext.outcomes), null);
+
+  const resumed = resumeWriteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: "Continue LessonSpine at Slate\nrail remotion" })] },
+    offsetSec: 4,
+    cue: "Slate. Household: the child has no login.",
+  });
+  assert.equal(lessonSpineRail(resumed.outcomes), "remotion");
+  assert.equal(lessonSpineResume(resumed.outcomes)?.offsetSec, 4);
+  assert.equal(lessonSpineContinue(resumed.outcomes)?.chapterId, "slate");
+
+  const portion = portionWriteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: "Continue LessonSpine at Sting\nrail html5" })] },
+    chapterId: "sting",
+  });
+  assert.equal(lessonSpineStep(portion.outcomes), "Continue LessonSpine at Slate");
+  assert.equal(lessonSpineRail(portion.outcomes), "html5");
+
+  const idle = railPreferenceBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: "" })] },
+    rail: "html5",
+  });
+  assert.equal(idle?.outcomes, "rail html5");
+  assert.equal(lessonSpineContinue(idle.outcomes), null);
+  assert.equal(lessonSpineWithRail("Finished LessonSpine", "remotion").split("\n")[0], "Finished LessonSpine");
+
+  const salesBrain = {
+    orgId: "org-1",
+    room: "sales",
+    facts: "",
+    outcome: "",
+    people: [
+      person({ membershipId: "kid", name: "No", kind: "child", login: "none", outcomes: "rail remotion" }),
+      person({ membershipId: "rep-1", name: "Lee", kind: "adult", login: "member", outcomes: NEXT_LESSON_STEP }),
+    ],
+  };
+  const sales = railPreferenceBody({ room: "sales", brain: salesBrain, rail: "html5" });
+  assert.equal(sales?.login, "member");
+  assert.equal(lessonSpineRail(sales.outcomes), "html5");
+  assert.equal(lessonSpineContinue(sales.outcomes)?.label, "Next lesson");
+  assert.equal(brainBoard({ room: "sales", brain: salesBrain }).people.some((row) => row.kind === "child"), false);
+
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(preview, /data-play-rail=\{rail === "remotion" \? "remotion" : undefined\}/);
+  assert.match(preview, /recordPlay\("sting"\)/);
+  assert.match(preview, /if \(continueAt\?\.step\)/);
+  assert.match(html5, /recordRail\("html5"\)/);
+  assert.match(html5, /recordPlay\(active\.id\)/);
+  assert.match(html5, /data-play-rail=\{rail === "html5" \? "html5" : undefined\}/);
+  assert.doesNotMatch(html5, /@remotion|from "remotion"|data-consume-portion|data-prove-complete/);
+  assert.match(page, /LessonSpineRailHydrate/);
+  assert.match(html5, /data-play-rail="living-brain"/);
+  assert.match(html5, /data-restored-rail=\{rail \|\| undefined\}/);
+  assert.match(page, /LessonSpinePlayer/);
+  assert.match(page, /LessonSpineRemotionPreview/);
+  assert.match(hook, /railPreferenceBody\(/);
+  assert.match(hook, /status !== "authenticated" \|\| !email/);
+  assert.doesNotMatch(preview + html5 + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });

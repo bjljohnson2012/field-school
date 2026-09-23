@@ -8,7 +8,10 @@ export function LessonSpineHistory(props: {
   membershipId: string;
 }) {
   const trail = lessonSpineTrail(props.marks, props.current);
-  const other = props.marks.filter((mark) => !lessonSpineStep(mark.outcomes));
+  const other = props.marks.filter((mark) => {
+    const outcomes = mark.outcomes.trim();
+    return !lessonSpineStep(outcomes) && outcomes !== "rail remotion" && outcomes !== "rail html5";
+  });
   if (!trail.length && !other.length) return null;
   return (
     <div data-history={props.membershipId} data-history-count={props.marks.length}>
