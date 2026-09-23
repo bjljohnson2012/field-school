@@ -3,11 +3,15 @@
  * A note is recorded only when a caption cue drifts from spoken timing,
  * a chapter boundary is missing, audio drifts from the Remotion timeline
  * or from caption cues, or a composition is missing useCurrentFrame
- * or drives motion with a CSS timer.
+ * or drives motion with a CSS timer, or master length falls outside
+ * the Guo 6 minute practice band and the Lagerstrom 12–20 minute for-credit band.
  * This checker does not flip Cleaning.
  */
 
 const FPS = 30;
+const PRACTICE_MAX_SEC = 6 * 60;
+const CREDIT_MIN_SEC = 12 * 60;
+const CREDIT_MAX_SEC = 20 * 60;
 
 const REQUIRED_CHAPTERS = ["sting", "slate", "objective", "recap", "nextUp"];
 
@@ -118,6 +122,29 @@ function frameNotes(compositions) {
   return notes;
 }
 
+function inDurationBand(seconds) {
+  if (seconds <= PRACTICE_MAX_SEC) return true;
+  return seconds >= CREDIT_MIN_SEC && seconds <= CREDIT_MAX_SEC;
+}
+
+function durationNotes(rows) {
+  const notes = [];
+  for (const row of rows ?? []) {
+    const seconds = row?.seconds;
+    if (!Number.isFinite(seconds) || seconds < 0) continue;
+    if (inDurationBand(seconds)) continue;
+    notes.push({
+      kind: "duration-band",
+      id: row.id ? String(row.id) : "",
+      seconds,
+      practiceMaxSec: PRACTICE_MAX_SEC,
+      creditMinSec: CREDIT_MIN_SEC,
+      creditMaxSec: CREDIT_MAX_SEC,
+    });
+  }
+  return notes;
+}
+
 /** Soft notes only. Cleaning stays held. */
 export function remotionSoftCraftNotes(input = {}) {
   const notes = [];
@@ -145,5 +172,6 @@ export function remotionSoftCraftNotes(input = {}) {
   }
   notes.push(...audioNotes(input.audio));
   notes.push(...frameNotes(input.compositions));
+  notes.push(...durationNotes(input.durations));
   return { notes, cleaningFlip: false, holdCleaning: true };
 }

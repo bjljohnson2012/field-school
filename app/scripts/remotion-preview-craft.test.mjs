@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { brainBoard } from "../src/lib/living-brain/model.ts";
 import { assignCompleteBody, lessonSpineContinue, lessonSpineRail, lessonSpineResume, lessonSpineStage, lessonSpineStep, lessonSpineTeachProve, lessonSpineWithRail, lessonSpineWithResume, NEXT_LESSON_STEP, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody, teachCompleteBody } from "../src/lib/player/play-rail-write.ts";
-import { SPINE_BEATS, spineLayout } from "../../plates/src/lessonSpine.ts";
+import { SPINE_BEATS, spineDurationSec, spineLayout } from "../../plates/src/lessonSpine.ts";
 import { remotionSoftCraftNotes } from "../../plates/scripts/remotion-soft-craft-notes.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -1254,6 +1254,108 @@ test("Remotion plates record a soft note only for missing useCurrentFrame or CSS
   assert.match(checker, /kind: "missing-use-current-frame"/);
   assert.match(checker, /kind: "css-timer-motion"/);
   assert.match(checker, /kind: "audio-desync"/);
+  assert.match(checker, /cleaningFlip: false/);
+  assert.doesNotMatch(checker, /EDU-S03|27pn9xs0zk8a73g|af374d95|AUTH_URL|HARD_FAIL/);
+  assert.doesNotMatch(preview + html5 + checker, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+test("Remotion plates record a soft note only when length falls outside the duration bands", () => {
+  const checker = readFileSync(join(root, "..", "plates", "scripts", "remotion-soft-craft-notes.mjs"), "utf8");
+  const opener = readFileSync(join(root, "..", "plates", "src", "Opener.tsx"), "utf8");
+  const spoken = [
+    { text: "Slate.", startMs: 10000, endMs: 10400 },
+    { text: "Household:", startMs: 10400, endMs: 11200 },
+    { text: "the", startMs: 11200, endMs: 11600 },
+    { text: "child", startMs: 11600, endMs: 12200 },
+    { text: "has", startMs: 12200, endMs: 12600 },
+    { text: "no", startMs: 12600, endMs: 13000 },
+    { text: "login.", startMs: 13000, endMs: 14000 },
+  ];
+  const cue = {
+    text: "Slate. Household: the child has no login.",
+    startMs: 10000,
+    endMs: 14000,
+  };
+  const chapters = spineLayout(SPINE_BEATS);
+  const audio = {
+    id: "slate",
+    from: 300,
+    frames: 120,
+    fps: 30,
+    startMs: 10000,
+    endMs: 14000,
+    cueStartMs: 10000,
+    cueEndMs: 14000,
+  };
+  const spineSeconds = spineDurationSec(SPINE_BEATS);
+  assert.equal(spineSeconds, 41);
+  const inBand = remotionSoftCraftNotes({
+    cues: [cue],
+    spoken,
+    chapters,
+    audio: [audio],
+    compositions: [{ id: "Opener", source: opener }],
+    durations: [
+      { id: "LessonSpine", seconds: spineSeconds },
+      { id: "practice", seconds: 6 * 60 },
+      { id: "credit", seconds: 15 * 60 },
+    ],
+    cleaningFlip: true,
+  });
+  assert.deepEqual(inBand.notes, []);
+  assert.equal(inBand.cleaningFlip, false);
+  assert.equal(inBand.holdCleaning, true);
+
+  const outside = remotionSoftCraftNotes({
+    cues: [cue],
+    spoken,
+    chapters,
+    audio: [audio],
+    compositions: [{ id: "Opener", source: opener }],
+    durations: [{ id: "LessonSpine", seconds: 11 * 60 }],
+  });
+  assert.deepEqual(outside.notes, [
+    {
+      kind: "duration-band",
+      id: "LessonSpine",
+      seconds: 11 * 60,
+      practiceMaxSec: 6 * 60,
+      creditMinSec: 12 * 60,
+      creditMaxSec: 20 * 60,
+    },
+  ]);
+
+  const prior = remotionSoftCraftNotes({
+    cues: [{ ...cue, startMs: 11000 }],
+    spoken,
+    chapters: chapters.filter((row) => row.id !== "recap"),
+    audio: [{ ...audio, endMs: 14800 }],
+    compositions: [{ id: "Slate", source: "spring({ frame: 0 });\ntransition: opacity 1s;" }],
+    durations: [{ id: "sit-down", seconds: 21 * 60 }],
+  });
+  assert.deepEqual(
+    prior.notes.map((note) => note.kind),
+    [
+      "caption-cue-drift",
+      "missing-chapter-boundary",
+      "audio-desync",
+      "missing-use-current-frame",
+      "css-timer-motion",
+      "duration-band",
+    ],
+  );
+  assert.equal(prior.holdCleaning, true);
+
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  assert.match(preview, /continueAt\.stage === "prove" \? null/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(html5, /recordRail\("html5"\)/);
+  assert.match(html5, /addEventListener\("pagehide"/);
+  assert.match(checker, /kind: "duration-band"/);
+  assert.match(checker, /kind: "caption-cue-drift"/);
+  assert.match(checker, /kind: "audio-desync"/);
+  assert.match(checker, /kind: "missing-use-current-frame"/);
   assert.match(checker, /cleaningFlip: false/);
   assert.doesNotMatch(checker, /EDU-S03|27pn9xs0zk8a73g|af374d95|AUTH_URL|HARD_FAIL/);
   assert.doesNotMatch(preview + html5 + checker, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
