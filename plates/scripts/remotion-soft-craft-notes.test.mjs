@@ -88,6 +88,7 @@ test("the checker does not flip Cleaning or invent EDU-S03", () => {
   assert.match(source, /kind: "audio-desync"/);
   assert.match(source, /kind: "missing-use-current-frame"/);
   assert.match(source, /kind: "css-timer-motion"/);
+  assert.match(source, /kind: "duration-band"/);
   assert.doesNotMatch(source, /EDU-S03|27pn9xs0zk8a73g|af374d95|distribute:\s*true|AUTH_URL|HARD_FAIL/);
   assert.doesNotMatch(source, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
@@ -226,6 +227,81 @@ test("frame smells stay beside caption, chapter, and audio notes", () => {
       "audio-desync",
       "missing-use-current-frame",
       "css-timer-motion",
+    ],
+  );
+  assert.equal(result.cleaningFlip, false);
+  assert.equal(result.holdCleaning, true);
+});
+
+test("Guo practice and Lagerstrom for-credit lengths record no soft note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Opener", source: frameDriven }],
+    durations: [
+      { id: "practice", seconds: 6 * 60 },
+      { id: "credit-short", seconds: 12 * 60 },
+      { id: "credit-long", seconds: 20 * 60 },
+    ],
+    cleaningFlip: true,
+  });
+  assert.deepEqual(result.notes, []);
+  assert.equal(result.cleaningFlip, false);
+});
+
+test("a length outside both duration bands is the only soft note", () => {
+  const gap = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Opener", source: frameDriven }],
+    durations: [{ id: "LessonSpine", seconds: 11 * 60 }],
+  });
+  assert.deepEqual(gap.notes, [
+    {
+      kind: "duration-band",
+      id: "LessonSpine",
+      seconds: 11 * 60,
+      practiceMaxSec: 6 * 60,
+      creditMinSec: 12 * 60,
+      creditMaxSec: 20 * 60,
+    },
+  ]);
+  const over = remotionSoftCraftNotes({
+    durations: [{ id: "sit-down", seconds: 21 * 60 }],
+    chapters,
+    cues: [aligned],
+    spoken,
+    audio: [syncedAudio],
+    compositions: [{ id: "Opener", source: frameDriven }],
+  });
+  assert.equal(over.notes.length, 1);
+  assert.equal(over.notes[0].kind, "duration-band");
+  assert.equal(over.notes[0].seconds, 21 * 60);
+  assert.equal(over.holdCleaning, true);
+});
+
+test("a duration-band note stays beside the earlier soft notes", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [{ ...aligned, startMs: 10800 }],
+    spoken,
+    chapters: chapters.filter((row) => row.id !== "recap"),
+    audio: [{ ...syncedAudio, startMs: 10400 }],
+    compositions: [{ id: "Slate", source: 'interpolate(0, [0, 1], [0, 1]);\n@keyframes spin {}\nanimation: spin 1s;' }],
+    durations: [{ id: "LessonSpine", seconds: 7 * 60 }],
+  });
+  assert.deepEqual(
+    result.notes.map((note) => note.kind),
+    [
+      "caption-cue-drift",
+      "missing-chapter-boundary",
+      "audio-desync",
+      "missing-use-current-frame",
+      "css-timer-motion",
+      "duration-band",
     ],
   );
   assert.equal(result.cleaningFlip, false);
