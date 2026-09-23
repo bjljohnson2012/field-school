@@ -5,7 +5,8 @@
  * or from caption cues, or a composition is missing useCurrentFrame
  * or drives motion with a CSS timer, or master length falls outside
  * the Guo 6 minute practice band and the Lagerstrom 12–20 minute for-credit band,
- * or frame-to-frame flicker or a flash pattern is detected.
+ * or frame-to-frame flicker or a flash pattern is detected,
+ * or on-screen text or a critical mark fails WCAG contrast against its background.
  * This checker does not flip Cleaning.
  */
 
@@ -16,6 +17,8 @@ const FLASH_REVERSALS = 3;
 const PRACTICE_MAX_SEC = 6 * 60;
 const CREDIT_MIN_SEC = 12 * 60;
 const CREDIT_MAX_SEC = 20 * 60;
+const TEXT_CONTRAST_MIN = 4.5;
+const MARK_CONTRAST_MIN = 3;
 
 const REQUIRED_CHAPTERS = ["sting", "slate", "objective", "recap", "nextUp"];
 
@@ -232,5 +235,56 @@ export function remotionSoftCraftNotes(input = {}) {
   notes.push(...frameNotes(input.compositions));
   notes.push(...durationNotes(input.durations));
   notes.push(...flickerNotes(input.flicker));
+  notes.push(...contrastNotes(input.contrast));
   return { notes, cleaningFlip: false, holdCleaning: true };
+}
+
+function parseHex(value) {
+  const raw = String(value ?? "").trim().replace(/^#/, "");
+  const hex = raw.length === 3 ? raw.split("").map((ch) => ch + ch).join("") : raw;
+  if (!/^[0-9a-fA-F]{6}$/.test(hex)) return null;
+  return `#${hex.toUpperCase()}`;
+}
+
+function channel(hex, index) {
+  const value = parseInt(hex.slice(index, index + 2), 16) / 255;
+  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+}
+
+function relativeLuminance(hex) {
+  const n = hex.slice(1);
+  return 0.2126 * channel(n, 0) + 0.7152 * channel(n, 2) + 0.0722 * channel(n, 4);
+}
+
+function contrastRatio(foreground, background) {
+  const fg = parseHex(foreground);
+  const bg = parseHex(background);
+  if (!fg || !bg) return null;
+  const left = relativeLuminance(fg);
+  const right = relativeLuminance(bg);
+  const [hi, lo] = left > right ? [left, right] : [right, left];
+  const ratio = (hi + 0.05) / (lo + 0.05);
+  return { foreground: fg, background: bg, ratio };
+}
+
+function contrastNotes(rows) {
+  const notes = [];
+  for (const row of rows ?? []) {
+    const measured = contrastRatio(row?.foreground, row?.background);
+    if (!measured) continue;
+    const role = row?.role == null || row.role === "" ? "text" : String(row.role);
+    if (role !== "text" && role !== "mark") continue;
+    const minimum = role === "mark" || row?.large === true ? MARK_CONTRAST_MIN : TEXT_CONTRAST_MIN;
+    if (measured.ratio >= minimum) continue;
+    notes.push({
+      kind: "wcag-contrast",
+      id: row.id ? String(row.id) : "",
+      role,
+      foreground: measured.foreground,
+      background: measured.background,
+      ratio: Math.round(measured.ratio * 100) / 100,
+      minimum,
+    });
+  }
+  return notes;
 }
