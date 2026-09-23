@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { brainBoard } from "../src/lib/living-brain/model.ts";
-import { lessonSpineContinue, lessonSpineRail, lessonSpineResume, lessonSpineStep, lessonSpineTeachProve, lessonSpineWithRail, lessonSpineWithResume, NEXT_LESSON_STEP, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
+import { assignCompleteBody, lessonSpineContinue, lessonSpineRail, lessonSpineResume, lessonSpineStage, lessonSpineStep, lessonSpineTeachProve, lessonSpineWithRail, lessonSpineWithResume, NEXT_LESSON_STEP, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
@@ -815,4 +815,98 @@ test("HTML5 pause, seek, or page hide writes the scrub and a hard exit restores 
   assert.match(preview, /if \(continueAt\?\.step\)/);
   assert.match(preview, /freshNextLesson/);
   assert.doesNotMatch(html5 + preview, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+test("finishing Assign writes Teach and leave and return opens Teach", () => {
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  const assign = read("src/app/assign/assign-desk.tsx");
+  const hook = read("src/components/lesson-spine-play-write.tsx");
+  const cue = "Slate. Household: the child has no login. Sales: this desk lists no children.";
+  const home = {
+    orgId: "org-1",
+    room: "household",
+    facts: "",
+    outcome: "",
+    people: [person({ outcomes: `Continue LessonSpine at Slate\nresume 4s\ncue ${cue}\nrail remotion` })],
+  };
+  assert.equal(lessonSpineStage(home.people[0].outcomes), null);
+  const wrote = assignCompleteBody({ room: "household", brain: home });
+  assert.equal(wrote?.login, "none");
+  assert.equal(lessonSpineStep(wrote.outcomes), "Continue LessonSpine at Slate");
+  assert.equal(lessonSpineStage(wrote.outcomes), "teach");
+  assert.equal(lessonSpineRail(wrote.outcomes), "remotion");
+  assert.equal(lessonSpineResume(wrote.outcomes)?.offsetSec, 4);
+  assert.equal(lessonSpineContinue(wrote.outcomes)?.chapterId, "slate");
+
+  const resumed = resumeWriteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: wrote.outcomes })] },
+    offsetSec: 5,
+    cue,
+  });
+  assert.equal(lessonSpineStage(resumed.outcomes), "teach");
+  assert.equal(lessonSpineRail(resumed.outcomes), "remotion");
+  assert.equal(lessonSpineResume(resumed.outcomes)?.offsetSec, 5);
+
+  const nextPortion = portionWriteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: wrote.outcomes })] },
+    chapterId: "slate",
+  });
+  assert.equal(lessonSpineStep(nextPortion.outcomes), "Continue LessonSpine at Objective");
+  assert.equal(lessonSpineStage(nextPortion.outcomes), null);
+
+  const salesBrain = {
+    orgId: "org-1",
+    room: "sales",
+    facts: "",
+    outcome: "",
+    people: [
+      person({ membershipId: "kid", name: "No", kind: "child", login: "none", outcomes: "Continue LessonSpine at Slate" }),
+      person({ membershipId: "rep-1", name: "Lee", kind: "adult", login: "member", outcomes: "Continue LessonSpine at Recap\nrail html5" }),
+    ],
+  };
+  const sales = assignCompleteBody({ room: "sales", brain: salesBrain });
+  assert.equal(sales?.login, "member");
+  assert.equal(lessonSpineStage(sales.outcomes), "teach");
+  assert.equal(lessonSpineRail(sales.outcomes), "html5");
+  assert.equal(brainBoard({ room: "sales", brain: salesBrain }).people.some((row) => row.kind === "child"), false);
+  assert.equal(assignCompleteBody({ room: "household", brain: { ...home, people: [] } }), null);
+
+  const carried = `${NEXT_LESSON_STEP}\nresume 6s\ncue Next up. Household: the child has no login. Sales: this desk lists no children.`;
+  assert.equal(lessonSpineResume(carried), null);
+  assert.equal(lessonSpineContinue(carried)?.startSec, 0);
+  const cleared = proveCompleteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: `${NEXT_LESSON_STEP}\nstage teach\nrail remotion` })] },
+    chapterId: "next-up",
+  });
+  assert.equal(cleared?.outcomes, "rail remotion");
+  assert.equal(lessonSpineContinue(cleared.outcomes), null);
+  assert.equal(lessonSpineStage(cleared.outcomes), null);
+
+  const assignAt = preview.indexOf('href="/assign"');
+  const teachAt = preview.indexOf('href="/teach-live"');
+  const proveAt = preview.indexOf('href="#lesson-spine-prove"');
+  assert.ok(assignAt >= 0 && assignAt < teachAt && teachAt < proveAt);
+  assert.match(preview, /continueAt\.stage === "teach" \? null/);
+  assert.match(preview, /data-portion-stage=\{continueAt\.stage === "teach" \? "teach" : "assign"\}/);
+  assert.match(preview, /data-teach-entry=\{continueAt\.stage === "teach" \? "living-brain" : undefined\}/);
+  assert.match(preview, /data-prove-portion=\{opened\.prove\}/);
+  assert.match(preview, /data-assign-portion=\{opened\.assign\}/);
+  assert.match(assign, /data-assign-complete="living-brain"/);
+  assert.match(assign, /data-assign-entry="living-brain"/);
+  assert.match(assign, /recordAssignComplete/);
+  assert.match(hook, /assignCompleteBody\(/);
+  assert.match(hook, /status !== "authenticated" \|\| !email/);
+  assert.match(html5, /addEventListener\("pagehide"/);
+  assert.match(html5, /recordResume/);
+  assert.match(preview, /addEventListener\("pause"/);
+  assert.match(preview, /addEventListener\("pagehide"/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(preview, /if \(continueAt\?\.step\)/);
+  assert.match(preview, /freshNextLesson/);
+  assert.doesNotMatch(html5, /@remotion|from "remotion"|data-consume-portion|data-prove-complete/);
+  assert.doesNotMatch(preview + html5 + assign, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });

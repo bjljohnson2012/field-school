@@ -3,14 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { brainBoard, type LivingBrain } from "@/lib/living-brain/model";
-import { lessonSpineContinue, lessonSpineRail, lessonSpineResume } from "@/lib/player/lesson-spine-step";
-import { playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody } from "@/lib/player/play-rail-write";
+import { lessonSpineContinue, lessonSpineRail, lessonSpineResume, lessonSpineStage } from "@/lib/player/lesson-spine-step";
+import { assignCompleteBody, playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody } from "@/lib/player/play-rail-write";
 
 export type LessonSpineContinueAt = NonNullable<ReturnType<typeof lessonSpineContinue>> & {
   login: "none" | "member";
   room: "household" | "sales";
   offsetSec: number;
   cue: string;
+  stage: "assign" | "teach" | null;
 };
 
 /** Signed-in continue point. Guests stay at the start and do not write. */
@@ -49,6 +50,7 @@ export function useLessonSpineContinue() {
           room,
           offsetSec: resume?.offsetSec ?? 0,
           cue: resume?.cue ?? "",
+          stage: lessonSpineStage(person.outcomes),
         });
       })
       .catch(() => {
@@ -254,5 +256,24 @@ export function useLessonSpinePlayWrite() {
     [email, status],
   );
 
-  return { recordPlay, recordResume, recordPortion, recordProve, recordRail, wrote };
+  const recordAssignComplete = useCallback(async () => {
+    if (status !== "authenticated" || !email) return;
+    const got = await fetch("/api/living-brain");
+    if (!got.ok) return;
+    const payload = (await got.json()) as {
+      ok?: boolean;
+      room?: "household" | "sales";
+      brain?: Parameters<typeof assignCompleteBody>[0]["brain"];
+    };
+    if (!payload.ok || (payload.room !== "household" && payload.room !== "sales")) return;
+    const body = assignCompleteBody({ room: payload.room, brain: payload.brain ?? null });
+    if (!body) return;
+    await fetch("/api/living-brain", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  }, [email, status]);
+
+  return { recordPlay, recordResume, recordPortion, recordProve, recordRail, recordAssignComplete, wrote };
 }

@@ -1,5 +1,5 @@
 import { brainBoard, type LivingBrain, type Room } from "../living-brain/model.ts";
-import { lessonSpineRail, lessonSpineStep, lessonSpineWithRail, lessonSpineWithResume } from "./lesson-spine-step.ts";
+import { lessonSpineRail, lessonSpineStage, lessonSpineStep, lessonSpineWithRail, lessonSpineWithResume, lessonSpineWithStage } from "./lesson-spine-step.ts";
 import { LESSON_SPINE_CHAPTERS } from "./lesson-spine-meta.ts";
 
 export {
@@ -8,16 +8,23 @@ export {
   lessonSpineRail,
   lessonSpineResume,
   lessonSpineRollup,
+  lessonSpineStage,
   lessonSpineStep,
   lessonSpineTeachProve,
   lessonSpineTrail,
   lessonSpineWithRail,
   lessonSpineWithResume,
+  lessonSpineWithStage,
 } from "./lesson-spine-step.ts";
 
 function keepRail(outcomes: string, prior: string) {
   const rail = lessonSpineRail(prior);
   return rail ? lessonSpineWithRail(outcomes, rail) : outcomes;
+}
+
+function keepStage(outcomes: string, prior: string) {
+  const stage = lessonSpineStage(prior);
+  return stage ? lessonSpineWithStage(outcomes, stage) : outcomes;
 }
 
 function chapterId(raw: string) {
@@ -111,7 +118,7 @@ export function resumeWriteBody(input: {
     kind: person.kind,
     login: person.login,
     profile: person.profile,
-    outcomes: keepRail(outcomes, person.outcomes || ""),
+    outcomes: keepStage(keepRail(outcomes, person.outcomes || ""), person.outcomes || ""),
   };
 }
 
@@ -133,5 +140,22 @@ export function railPreferenceBody(input: {
     login: person.login,
     profile: person.profile,
     outcomes: lessonSpineWithRail(person.outcomes || "", rail),
+  };
+}
+
+/** Finishing Assign for this portion writes Teach as the stage. The step, scrub, and rail stay. */
+export function assignCompleteBody(input: { room: Room; brain: LivingBrain | null }) {
+  if (!input.brain || input.brain.room !== input.room) return null;
+  const person = brainBoard({ room: input.room, brain: input.brain }).people[0];
+  if (!person) return null;
+  const step = lessonSpineStep(person.outcomes || "");
+  if (!step) return null;
+  return {
+    membershipId: person.membershipId,
+    name: person.name,
+    kind: person.kind,
+    login: person.login,
+    profile: person.profile,
+    outcomes: lessonSpineWithStage(person.outcomes || "", "teach"),
   };
 }
