@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { TeachDeck, type LessonSpec } from "@/components/teach-deck";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
 import { chooseNextStep, nextStepTrail, personConfidence, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
+import { lessonSpineStep } from "@/lib/player/play-rail-write";
 
 type Room = "household" | "sales";
 
@@ -40,6 +42,24 @@ const SALES_FIXTURE: LessonSpec = {
     { id: "unit-after", title: "What still runs when you leave", source_unit_id: "src-after-you-leave" },
   ],
 };
+
+function LessonSpineAct(props: { title: string; login: "none" | "member" }) {
+  const spine = lessonSpineStep(props.title);
+  if (!spine) return null;
+  return (
+    <p
+      className="mx-auto mt-4 max-w-6xl px-4 text-sm"
+      data-lesson-spine-next={spine}
+      data-next-from="outcomes"
+      data-login={props.login}
+    >
+      <Link href="/play/lesson-spine">{spine}</Link>
+      {props.login === "member"
+        ? " The team member may sign in. The leader owns the path."
+        : " The child has no login."}
+    </p>
+  );
+}
 
 function TeachBrainLabels(props: { room: Room; aim: string; confidence: string; membershipId: string }) {
   if (!props.aim && !props.confidence) return null;
@@ -118,8 +138,10 @@ export function TeachLive() {
           storedTitle: open?.nextUnit,
           membershipId: open?.membershipId,
         });
+        const samePerson = !open?.membershipId || chosen?.membershipId === open.membershipId;
+        const onDesk = chosen && (room === "sales" ? chosen.login === "member" : chosen.login === "none");
         if (!cancelled) {
-          setBrainTitle(chosen && chosen.from !== "stored" ? chosen.title : "");
+          setBrainTitle(samePerson && onDesk && chosen.from !== "stored" ? chosen.title : "");
           setBrainTrail(nextStepTrail({ room, brain, membershipId: open?.membershipId }));
           setAim(brain?.outcome || "");
           setConfidence(personConfidence({ room, brain, membershipId: open?.membershipId }));
@@ -166,6 +188,7 @@ export function TeachLive() {
             : "Assign a path to one tracked child first. That child has no login. The next step shows here after you return."}
         </p>
         <TeachBrainLabels room={room} aim={aim} confidence={confidence} membershipId="" />
+        <LessonSpineAct title={brainTitle} login={room === "household" ? "none" : "member"} />
       </main>
     );
   }
@@ -205,6 +228,7 @@ export function TeachLive() {
           ? `Next step for ${assignment.name} stays on Learn when the leader leaves and comes back. The team member may sign in. The leader owns the path.`
           : `Next step for ${assignment.name} stays on Learn when the parent leaves and comes back. The child has no login.`}
       </p>
+      <LessonSpineAct title={brainTitle} login={room === "household" ? "none" : "member"} />
       <TeachBrainLabels
         room={room}
         aim={aim}
@@ -217,9 +241,14 @@ export function TeachLive() {
           data-history={assignment.membershipId || ""}
           data-history-count={brainTrail.length}
         >
-          {brainTrail.map((mark, index) => (
-            <li key={`${index}-${mark.outcomes}`}>{mark.outcomes}</li>
-          ))}
+          {brainTrail.map((mark, index) => {
+            const past = lessonSpineStep(mark.outcomes);
+            return (
+              <li key={`${index}-${mark.outcomes}`} data-lesson-spine-next={past || undefined}>
+                {past ? <Link href="/play/lesson-spine">{past}</Link> : mark.outcomes}
+              </li>
+            );
+          })}
         </ol>
       ) : null}
     </div>
