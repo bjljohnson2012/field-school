@@ -12,7 +12,7 @@ export function LessonSpinePlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [current, setCurrent] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const { recordPlay, recordRail, wrote } = useLessonSpinePlayWrite();
+  const { recordPlay, recordRail, recordResume, wrote } = useLessonSpinePlayWrite();
   const continueAt = useLessonSpineContinue();
   const rail = useLessonSpineRail();
   const continued = useRef(false);
@@ -34,12 +34,50 @@ export function LessonSpinePlayer() {
   useEffect(() => {
     if (!continueAt) return;
     setCurrent(continueAt.startSec);
+    const at = continueAt.startSec + (continueAt.offsetSec || 0);
     if (continued.current) return;
     const video = videoRef.current;
     if (!video || video.readyState < 1) return;
     continued.current = true;
-    video.currentTime = continueAt.startSec;
+    video.currentTime = at;
+    setCurrent(at);
   }, [continueAt]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const saveResume = () => {
+      if (!video || !continueAt) return;
+      const time = video.currentTime;
+      const chapter =
+        LESSON_SPINE_CHAPTERS.find((row) => time >= row.startSec && time < row.endSec) ?? null;
+      if (!chapter || chapter.id !== continueAt.chapterId) return;
+      const offsetSec = time - chapter.startSec;
+      if (offsetSec <= 0) return;
+      const cue = `${chapter.label}. Household: the child has no login. Sales: this desk lists no children.`;
+      void recordResume(offsetSec, cue);
+    };
+    const mark = () => sessionStorage.setItem("fs-lesson-spine-active-rail", "html5");
+    const onSeeked = () => {
+      mark();
+      saveResume();
+    };
+    const onPause = () => {
+      mark();
+      saveResume();
+    };
+    const onHardExit = () => {
+      if (sessionStorage.getItem("fs-lesson-spine-active-rail") !== "html5") return;
+      saveResume();
+    };
+    video?.addEventListener("seeked", onSeeked);
+    video?.addEventListener("pause", onPause);
+    window.addEventListener("pagehide", onHardExit);
+    return () => {
+      video?.removeEventListener("seeked", onSeeked);
+      video?.removeEventListener("pause", onPause);
+      window.removeEventListener("pagehide", onHardExit);
+    };
+  }, [continueAt, recordResume]);
 
   return (
     <div
@@ -61,11 +99,12 @@ export function LessonSpinePlayer() {
           onLoadedMetadata={() => {
             if (!continueAt || continued.current) return;
             continued.current = true;
-            seek(continueAt.startSec);
+            seek(continueAt.startSec + (continueAt.offsetSec || 0));
           }}
           onTimeUpdate={(event) => setCurrent(event.currentTarget.currentTime)}
           onPlay={() => {
             setPlaying(true);
+            sessionStorage.setItem("fs-lesson-spine-active-rail", "html5");
             void recordRail("html5");
             void recordPlay(active.id);
           }}
