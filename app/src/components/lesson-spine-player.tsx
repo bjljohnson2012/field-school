@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useSession } from "next-auth/react";
 import { useLessonSpineContinue, useLessonSpinePlayWrite, useLessonSpineRail } from "@/components/lesson-spine-play-write";
-import { applyLiveBroll, signedInRemotionBrollMarkers, type LiveBroll } from "@/lib/player/live-pexels-broll";
+import { applyLiveBroll, signedInRemotionBrollMarkers, signedInRemotionMarkerRail, type LiveBroll } from "@/lib/player/live-pexels-broll";
 import {
   LESSON_SPINE_CHAPTERS,
   LESSON_SPINE_DURATION_SEC,
@@ -175,11 +176,15 @@ export function LessonSpinePlayer() {
 }
 
 /** Opens the last-used play rail from the living brain. HTML5 stays first until a Remotion play is stored. */
-export function LessonSpineRailHydrate(props: { html5: ReactNode; preview: ReactNode }) {
+export function LessonSpineRailHydrate(props: { html5: ReactNode; preview: ReactNode; signedIn?: boolean }) {
   const rail = useLessonSpineRail();
+  const { data, status } = useSession();
+  const sessionSignedIn =
+    Boolean(props.signedIn) || (status === "authenticated" && Boolean(data?.user?.email));
+  const markerRail = signedInRemotionMarkerRail(rail, sessionSignedIn);
   const [liveBroll, setLiveBroll] = useState<LiveBroll | null>(null);
   useEffect(() => {
-    if (rail !== "remotion") return;
+    if (markerRail !== "remotion") return;
     let gone = false;
     void fetch("/api/play/lesson-spine-broll")
       .then((response) => (response.ok ? response.json() : null))
@@ -191,8 +196,8 @@ export function LessonSpineRailHydrate(props: { html5: ReactNode; preview: React
     return () => {
       gone = true;
     };
-  }, [rail]);
-  const signedInBroll = signedInRemotionBrollMarkers(liveBroll, rail);
+  }, [markerRail]);
+  const signedInBroll = signedInRemotionBrollMarkers(liveBroll, markerRail);
   return (
     <div data-play-rail="living-brain" data-restored-rail={rail || undefined} {...(signedInBroll ?? {})}>
       {rail === "remotion" ? (

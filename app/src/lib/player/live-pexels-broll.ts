@@ -47,6 +47,20 @@ export type SignedInBrollMarkers = {
   "data-pexels-credit": "live" | "absent";
 };
 
+/**
+ * Guest stays null so preview markers stay on the Remotion player.
+ * A signed-in session on that plate requests b-roll even before a rail line is stored.
+ * An html5 preference stays quiet.
+ */
+export function signedInRemotionMarkerRail(
+  stored: "remotion" | "html5" | null,
+  signedIn: boolean,
+): "remotion" | null {
+  if (stored === "html5") return null;
+  if (stored === "remotion" || signedIn) return "remotion";
+  return null;
+}
+
 /** Same credit markers as the guest rail, on the signed-in Remotion living-brain hydrate. */
 export function signedInRemotionBrollMarkers(
   mounted: Partial<LiveBroll> | null | undefined,

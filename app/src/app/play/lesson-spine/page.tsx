@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { auth } from "@/auth";
 import { LessonSpineGuestSoftPanel } from "@/components/lesson-spine-guest-soft-panel";
 import { LessonSpineHirePath } from "@/components/lesson-spine-hire-path";
 import { LessonSpineParentSession } from "@/components/lesson-spine-parent-session";
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
   description: "Play the locked Field School LessonSpine master in campus.",
 };
 
-export default function LessonSpinePlayPage() {
+export default async function LessonSpinePlayPage() {
+  const session = await auth().catch(() => null);
+  const signedIn = Boolean(session?.user?.email);
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -37,6 +40,7 @@ export default function LessonSpinePlayPage() {
       <LessonSpineParentSession />
       <LessonSpineHirePath />
       <LessonSpineRailHydrate
+        signedIn={signedIn}
         html5={
           <div className="mt-8">
             <LessonSpinePlayer />

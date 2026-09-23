@@ -9,7 +9,7 @@ import { assignCompleteBody, lessonSpineContinue, lessonSpineRail, lessonSpineRe
 import { SPINE_BEATS, spineDurationSec, spineLayout } from "../../plates/src/lessonSpine.ts";
 import { remotionSoftCraftNotes } from "../../plates/scripts/remotion-soft-craft-notes.mjs";
 import { loadCachedBroll, mountLivePexelsBroll, searchAndCachePexelsBroll } from "../../plates/scripts/pexels-broll.mjs";
-import { applyLiveBroll, lessonSpineBrollCredit, signedInRemotionBrollMarkers } from "../src/lib/player/live-pexels-broll.ts";
+import { applyLiveBroll, lessonSpineBrollCredit, signedInRemotionBrollMarkers, signedInRemotionMarkerRail } from "../src/lib/player/live-pexels-broll.ts";
 import { lessonSpineBrollPayload, lessonSpineLiveBroll } from "../src/lib/player/live-pexels-broll-server.ts";
 import { appliedLessonSpineCraft } from "../src/lib/player/soft-craft-apply.ts";
 
@@ -2159,6 +2159,19 @@ test("signed-in Remotion rail matches the guest b-roll credit when the plate req
   assert.equal(signedInRemotionBrollMarkers(mounted, null), null);
   assert.equal(signedInRemotionBrollMarkers(mounted, "html5"), null);
   assert.equal(signedInRemotionBrollMarkers({ photographer: "Ada Frame" }, "remotion")?.["data-live-broll"], "absent");
+  const sessionRail = signedInRemotionMarkerRail(null, true);
+  assert.equal(sessionRail, "remotion");
+  const sessionMarkers = signedInRemotionBrollMarkers(mounted, sessionRail);
+  assert.ok(sessionMarkers);
+  assert.equal(sessionMarkers["data-live-broll"], "non-null");
+  assert.equal(sessionMarkers["data-pexels-rail-attribution"], "present");
+  assert.equal(sessionMarkers["data-pexels-credit"], "live");
+  assert.equal(signedInRemotionMarkerRail("remotion", true), "remotion");
+  assert.equal(signedInRemotionMarkerRail("html5", true), null);
+  assert.equal(signedInRemotionBrollMarkers(mounted, signedInRemotionMarkerRail("html5", true)), null);
+  assert.equal(signedInRemotionMarkerRail(null, false), null);
+  assert.equal(signedInRemotionBrollMarkers(mounted, signedInRemotionMarkerRail(null, false)), null);
+  assert.equal(signedInRemotionMarkerRail("remotion", false), "remotion");
 
   const applied = remotionSoftCraftNotes(appliedLessonSpineCraft());
   assert.deepEqual(applied.notes, []);
@@ -2171,7 +2184,10 @@ test("signed-in Remotion rail matches the guest b-roll credit when the plate req
   const panel = read("src/components/lesson-spine-guest-soft-panel.tsx");
   const helper = read("src/lib/player/live-pexels-broll.ts");
   assert.match(helper, /export function signedInRemotionBrollMarkers/);
+  assert.match(helper, /export function signedInRemotionMarkerRail/);
   assert.match(helper, /export function lessonSpineBrollCredit/);
+  assert.match(page, /signedIn=\{signedIn\}/);
+  assert.match(page, /await auth\(\)/);
   assert.match(preview, /data-live-broll=\{liveBroll \? "non-null" : "absent"\}/);
   assert.match(preview, /data-pexels-rail-attribution=\{credit\.state\}/);
   assert.match(preview, /data-pexels-credit="live"/);
@@ -2184,7 +2200,10 @@ test("signed-in Remotion rail matches the guest b-roll credit when the plate req
   assert.match(preview, /addEventListener\("pagehide"/);
   assert.match(preview, /data-play-rail=\{rail === "remotion" \? "remotion" : undefined\}/);
   assert.match(preview, /data-soft-craft-apply="plates"/);
-  assert.match(html5, /signedInRemotionBrollMarkers\(liveBroll, rail\)/);
+  assert.match(html5, /signedInRemotionMarkerRail\(rail, sessionSignedIn\)/);
+  assert.match(html5, /signedInRemotionBrollMarkers\(liveBroll, markerRail\)/);
+  assert.match(html5, /props\.signedIn/);
+  assert.match(html5, /markerRail !== "remotion"/);
   assert.match(html5, /data-play-rail="living-brain"/);
   assert.match(html5, /data-restored-rail=\{rail \|\| undefined\}/);
   assert.match(html5, /fetch\("\/api\/play\/lesson-spine-broll"\)/);
