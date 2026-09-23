@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { loadSession } from "@/lib/campus-runtime/identity";
+import { memberPlatformAdmin } from "@/lib/coaching/scores";
 import { featureMode } from "@/lib/intent/family-mode";
 
 export const dynamic = "force-dynamic";
@@ -22,8 +23,10 @@ export async function GET(request: Request) {
   const active = session.active && memberships.some((m) => m.org === session.active?.orgSlug)
     ? session.active
     : null;
+  const platformAdmin = await memberPlatformAdmin(session.member.id);
   return NextResponse.json({
     authenticated: true,
+    platformAdmin,
     member: {
       id: session.member.id,
       email: session.member.email,

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { signOutPortal } from "@/lib/auth/sign-out";
+import { preferPlatformAdmin } from "@/lib/campus-runtime/lessons";
 import { coachingNav, tasksCount, type NavItem } from "@/lib/coaching/nav";
 
 type OrgChoice = { slug: string; name: string };
@@ -14,6 +15,7 @@ type ShellSession = {
   slug: string;
   capabilities: string[];
   memberships: OrgChoice[];
+  platformAdmin?: boolean;
 };
 
 export function AppShell({
@@ -22,7 +24,7 @@ export function AppShell({
   orgKind: orgKindProp,
   orgName: orgNameProp,
   capabilities: capabilitiesProp,
-  platformAdmin = false,
+  platformAdmin: platformAdminProp = false,
   memberships: membershipsProp,
 }: {
   name: string;
@@ -62,6 +64,8 @@ export function AppShell({
             (typeof data.activeOrg?.name === "string" ? data.activeOrg.name : ""),
           slug: typeof active?.org === "string" ? active.org : slug,
           capabilities: stance ? [stance] : [],
+          platformAdmin:
+            typeof data.platformAdmin === "boolean" ? data.platformAdmin : undefined,
           memberships: rows
             .filter((row: { org?: string }) => typeof row.org === "string" && row.org)
             .map((row: { org: string; name?: string }) => ({
@@ -80,6 +84,7 @@ export function AppShell({
   const orgName = orgNameProp ?? session?.name ?? "";
   const capabilities = capabilitiesProp ?? session?.capabilities ?? [];
   const memberships = membershipsProp ?? session?.memberships ?? [];
+  const platformAdmin = preferPlatformAdmin(session?.platformAdmin, platformAdminProp);
   const items = coachingNav({ orgKind, capabilities, platformAdmin });
   const initial = (name || "F").slice(0, 1).toUpperCase();
 
@@ -132,6 +137,13 @@ export function AppShell({
                   role="menu"
                   className="absolute right-0 z-20 mt-2 w-56 rounded-brand border border-white/10 bg-brand-navy py-1 text-sm shadow-card"
                 >
+                  <Link
+                    href="/card"
+                    role="menuitem"
+                    className="block w-full px-3 py-2 text-left text-white hover:bg-white/10"
+                  >
+                    My card
+                  </Link>
                   {memberships.length > 1
                     ? memberships.map((org) => (
                         <button
