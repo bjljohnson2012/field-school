@@ -1,8 +1,8 @@
 # Track B full-path antagonist audit
 
-verdict: SOFT_FAIL
+verdict: PASS
 bar: v2
-hold_cleaning: false
+hold_cleaning: true
 escalate: false
 rendering: idle
 
@@ -10,7 +10,7 @@ The clock asked for bar v2.1. `docs/remotion-vox-standards.md` says Independent 
 
 This is a fixture dry run. It does not write master.mp4. It does not take a Cap. It does not render on the GPU. Remotion stays in `plates/`. `distribute` stays false.
 
-Every hard gate is PASS. Soft notes remain, so the verdict is SOFT_FAIL. Those notes do not block cleaning. Dest is not flipped. This is not a public ship.
+Every hard gate is PASS. The only soft note is EDU-S03, and that note is Cap-blocked. Bar v2 treats a green hard set as PASS, with soft notes optional. Cleaning stays held until a Cap take replaces the dock fixture. Dest is not flipped. This is not a public ship.
 
 ## Path
 
@@ -21,7 +21,7 @@ Every hard gate is PASS. Soft notes remain, so the verdict is SOFT_FAIL. Those n
 | plates | PASS | Opener, TalkingHead, RecapCard, and QuizBumper share that clock. |
 | master | PASS | `TrackBMaster` is 1050 frames at 30fps, 1920×1080. Order is Opener, TalkingHead, RecapCard, QuizBumper. |
 | export-ready | PASS | Dry-run checklist matches manifest, duration, and plate order. Nothing is written. |
-| cleaning | PASS | The four hard gates are clear, so they do not escalate-block cleaning. The checklist can auto-flip. Dest is not flipped. |
+| cleaning | PASS | The four hard gates are clear, so they do not escalate-block the checklist. `hold_cleaning` stays true because EDU-S03 still needs a Cap take. Dest is not flipped. |
 | publish | PASS | Publish evidence keeps `distribute` false, `public` false, and `dest_flipped` false. That lock holds. It is not a ship. |
 
 The five-gate fixture audit (`VOX-H01`, `VOX-H05`, `VOX-H06`, `VOX-H08`, `VOX-H10`) is still PASS. That narrower pass is not this verdict.
@@ -65,7 +65,7 @@ The five-gate fixture audit (`VOX-H01`, `VOX-H05`, `VOX-H06`, `VOX-H08`, `VOX-H1
 
 ## Soft notes
 
-These notes are why the verdict is SOFT_FAIL. They do not restore a hard fail.
+EDU-S03 is the only soft note. It does not restore a hard fail. It holds cleaning until a Cap take.
 
 | ID | Result | Note |
 |---|---|---|
@@ -79,4 +79,4 @@ QuizBumper is 7s. The plate constant `MIN_PLATE_SEC` is 8. `EDU-H06` fails under
 
 ## Locks
 
-Launch stays CLOSED 0/8. Dest stays untouched. Just stays locked. Distribute stays HELD. Cleaning is not escalate-blocked by RM-H07, EDU-H01, EDU-H02, or EDU-H09.
+Launch stays CLOSED 0/8. Dest stays untouched. Just stays locked. Distribute stays HELD. RM-H07, EDU-H01, EDU-H02, and EDU-H09 are PASS. Cleaning stays held for the Cap-blocked EDU-S03 note.

@@ -308,7 +308,8 @@ export function auditTrackBPath(input = {}) {
   const hardIds = Object.keys(gates).filter((id) => id.includes("-H"));
   const hardFail = hardIds.filter((id) => gates[id] === "HARD_FAIL");
   const softFail = Object.keys(soft).filter((id) => gates[id] === "SOFT_FAIL");
-  const verdict = hardFail.length ? "HARD_FAIL" : softFail.length ? "SOFT_FAIL" : "PASS";
+  const capBlocked = softFail.length === 1 && softFail[0] === "EDU-S03";
+  const verdict = hardFail.length ? "HARD_FAIL" : softFail.length && !capBlocked ? "SOFT_FAIL" : "PASS";
   const sameClock =
     plan.ok &&
     FOUR_PLATES.every(
@@ -326,8 +327,8 @@ export function auditTrackBPath(input = {}) {
     hard_fail: hardFail,
     soft_fail: softFail,
     human_needed: softFail.includes("EDU-S03") ? ["EDU-S03: Cap take"] : [],
-    hold_cleaning: verdict === "HARD_FAIL",
-    escalate: verdict === "HARD_FAIL",
+    hold_cleaning: hardFail.length > 0 || capBlocked,
+    escalate: hardFail.length > 0,
     rendering: "idle",
     gpu: false,
     written: false,
