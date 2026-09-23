@@ -6,7 +6,7 @@ Wave 1 is live. Wave 2 tenants + picker + Field Pattern is proven in [WAVE2.md](
 
 - Postgres `field-school-campus-db`, database `campus`. Do not write leftover `field-school-db`.
 - Guest Grok Bot still works. `GET /api/me` guest `{ authenticated: false, guest: true }`. `POST /api/events` guest 401.
-- AUTH_URL is `https://portal.fieldschool.ai`. `university.benjohnson.ai` 301s there. Do not flip AUTH_URL back.
+- AUTH_URL is `https://portal.fieldschool.ai`. `university.benjohnson.ai` 301s to `https://portal.fieldschool.ai/`. Do not flip AUTH_URL back. Plan: [ae-coach/docs/FIELD_SCHOOL_MIGRATION.md](https://github.com/bjljohnson2012/ae-coach/blob/main/docs/FIELD_SCHOOL_MIGRATION.md).
 - Factory (Cap / edit / melt) left running. Just `27pn9xs0zk8a73g` locked. `https://edit.fieldschool.ai/health` 200.
 
 ## Current
