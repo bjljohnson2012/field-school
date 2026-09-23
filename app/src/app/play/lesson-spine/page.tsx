@@ -22,7 +22,9 @@ export default function LessonSpinePlayPage() {
         rail stays. A Remotion player previews the LessonSpine composition for
         the household and the sales desk. A signed-in play writes the next
         LessonSpine step into the living brain for the person already on the
-        desk. The child has no login. Launch stays closed. Distribute held.
+        desk. A signed-in open continues at that living-brain next step. Guests
+        still play and do not write. The child has no login. Launch stays closed.
+        Distribute held.
       </p>
       <p
         className="mt-2 font-mono text-xs text-muted-foreground"

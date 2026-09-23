@@ -1,8 +1,57 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { brainBoard, type LivingBrain } from "@/lib/living-brain/model";
+import { lessonSpineContinue } from "@/lib/player/lesson-spine-step";
 import { playWriteBody } from "@/lib/player/play-rail-write";
+
+export type LessonSpineContinueAt = NonNullable<ReturnType<typeof lessonSpineContinue>> & {
+  login: "none" | "member";
+  room: "household" | "sales";
+};
+
+/** Signed-in continue point. Guests stay at the start and do not write. */
+export function useLessonSpineContinue() {
+  const { data, status } = useSession();
+  const email = data?.user?.email;
+  const [continueAt, setContinueAt] = useState<LessonSpineContinueAt | null>(null);
+
+  useEffect(() => {
+    if (status !== "authenticated" || !email) {
+      setContinueAt(null);
+      return;
+    }
+    let cancelled = false;
+    void fetch("/api/living-brain")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: { ok?: boolean; room?: string; brain?: LivingBrain | null } | null) => {
+        if (cancelled) return;
+        const room = payload?.room === "household" || payload?.room === "sales" ? payload.room : null;
+        if (!payload?.ok || !room) {
+          setContinueAt(null);
+          return;
+        }
+        const person = brainBoard({ room, brain: payload.brain ?? null }).people.find((row) =>
+          lessonSpineContinue(row.outcomes),
+        );
+        const next = person ? lessonSpineContinue(person.outcomes) : null;
+        if (!person || !next) {
+          setContinueAt(null);
+          return;
+        }
+        setContinueAt({ ...next, login: person.login, room });
+      })
+      .catch(() => {
+        if (!cancelled) setContinueAt(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [email, status]);
+
+  return continueAt;
+}
 
 const STORAGE_KEY = "fs-lesson-spine-play-write";
 
