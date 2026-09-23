@@ -77,10 +77,10 @@ function hasCssMotion(source) {
   return /(?:^|[\s;{])(?:transition|animation)\s*:/.test(source) || /\banimate-/.test(source);
 }
 
-function remotionInNext() {
+function remotionFactoryInNext() {
   const pkg = JSON.parse(readFileSync(join(platesRoot, "..", "app", "package.json"), "utf8"));
   return Object.keys({...pkg.dependencies, ...pkg.devDependencies}).some(
-    (name) => name === "remotion" || name.startsWith("@remotion/"),
+    (name) => name === "@remotion/cli" || name === "@remotion/renderer" || name === "@remotion/bundler",
   );
 }
 
@@ -139,7 +139,7 @@ export function auditTrackBPath(input = {}) {
   const typeRight = 72 + 1040;
   const dockLeft = 1160;
   const destPresent = Boolean(dest) && existsSync(dest);
-  const nextHasRemotion = remotionInNext();
+  const nextRendersFactory = remotionFactoryInNext();
 
   const gates = {
     "VOX-H01":
@@ -189,7 +189,7 @@ export function auditTrackBPath(input = {}) {
         : "HARD_FAIL",
     "VOX-H09": manifest.ok && manifest.renders === false && !master.toLowerCase().includes("melt") ? "PASS" : "HARD_FAIL",
     "VOX-H10":
-      plan.ok && plan.target === "plates" && plan.renders === false && !nextHasRemotion && !String(dest).includes("/app/")
+      plan.ok && plan.target === "plates" && plan.renders === false && !nextRendersFactory && !String(dest).includes("/app/")
         ? "PASS"
         : "HARD_FAIL",
     "RM-H01": frameDriven && cssMotion.length === 0 ? "PASS" : "HARD_FAIL",

@@ -14,7 +14,7 @@ Dated 2026-09-21. Plan source of truth for public launch. Campus runtime SoT sta
 
 | Node | Status | Evidence (one line) | Hold |
 |---|---|---|---|
-| Product | HELD | Hire-path evidence rows landed (play rail, AUTH, Stripe `$100`/`$200`/`$1,000`, `/metering`, Play-rail Publish polish, webhook hire activation, Parent-supervised progress, Parent-owned intent, Parent-path assembly, Parent next-portion, Knowledge brain, Hire-path sync, Sources and notes, Brain confidence, Composer plates readiness). Living brain on Learn and People landed. Track B unattended path landed with `distribute` false. Factory dest `af374d95…`. Not a launch Product PASS. | Remotion-in-Next; Cap take; Distribute; Launch 8/8; PR 65 SUPERSEDED, unmerged |
+| Product | HELD | Hire-path evidence rows landed (play rail, AUTH, Stripe `$100`/`$200`/`$1,000`, `/metering`, Play-rail Publish polish, webhook hire activation, Parent-supervised progress, Parent-owned intent, Parent-path assembly, Parent next-portion, Knowledge brain, Hire-path sync, Sources and notes, Brain confidence, Composer plates readiness). Living brain on Learn and People landed. Track B unattended path landed with `distribute` false. The campus play rail mounts a Remotion LessonSpine preview beside the HTML5 player. Factory dest `af374d95…`. Not a launch Product PASS. | Cap take; Distribute; Launch 8/8; PR 65 SUPERSEDED, unmerged |
 | ICP | HELD | Household + sales orgs exist ([WAVE2.md](../campus-runtime/WAVE2.md)). No sealed ICP launch readout. | Do not invent ICP 8/8 |
 | Brand | HELD | Factory cream / ink / Fraunces + seal lock in `plates/`. No sealed Brand launch readout. | Do not invent Brand 8/8 |
 | Offer | HELD | Learn with Ben checkout + metering UI + webhook hire activation landed on campus hire path. Not a launch Offer PASS. | No new dollars; no launch SKU seal |
@@ -63,7 +63,9 @@ Remotion Wave 5 factory **PASS** under Product: compositions, LessonSpine ORDER 
 
 Hire-path rows above landed on campus (HTML5 play rail, AUTH portal, Stripe three-plan, `/metering`, Publish polish, webhook hire activation, Parent-supervised progress, Parent-owned intent, Parent-path assembly, Parent next-portion, Knowledge brain, Hire-path sync, Sources and notes, Brain confidence, Composer plates readiness). They are **not** a launch Product PASS.
 
-Still **HELD** under Product: Remotion packaged into Next (`@remotion/*`); Cap take; Just remake `27pn9xs0zk8a73g`; Distribute; public marketing flip; Launch 8/8. Wave3 campus pack LIVE (composer/teach); PR 65 stays closed SUPERSEDED, unmerged.
+The campus play rail now packages `remotion` and `@remotion/player` so `/play/lesson-spine` can preview the LessonSpine composition. The HTML5 rail stays. Factory render packages (`@remotion/cli`, `@remotion/renderer`, `@remotion/bundler`) stay out of Next. Dest render stays plates-only, so factory Remotion-in-Next is not this preview. Dest `af374d95…` stays untouched. `distribute` stays false.
+
+Still **HELD** under Product: Cap take; Just remake `27pn9xs0zk8a73g`; Distribute; public marketing flip; Launch 8/8. Wave3 campus pack LIVE (composer/teach); PR 65 stays closed SUPERSEDED, unmerged.
 
 ## Rule
 

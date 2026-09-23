@@ -56,7 +56,10 @@ test("FR-KB-3 metering UI shows locked Learn with Ben prices only", () => {
   assert.match(store, /byok_monthly_only/);
   assert.doesNotMatch(rules, /\$\d|priceLabel|buy\.stripe/);
   assert.doesNotMatch(home, /\/api\/credits|\/api\/keys|\/metering/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
   assert.doesNotMatch(page + ui + display, /Gym|Foundry|Retainer|\$150|\$250|\$500/);
 });
 

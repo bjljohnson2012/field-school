@@ -60,7 +60,10 @@ test("Publish polish evidence rows exist on Ready HLS dest", () => {
   assert.match(page, /data-publish-polish="operator"/);
   assert.match(page, /Distribute stays off|Distribute/);
   assert.match(page, /Launch stays closed|CLOSED 0\/8/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
 });
 
 test("master and priors untouched after Publish polish", () => {

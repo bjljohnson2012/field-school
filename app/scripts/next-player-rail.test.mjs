@@ -43,7 +43,10 @@ test("player rail page streams locked LessonSpine master without Remotion npm", 
   assert.doesNotMatch(media, /requireMember|requireTeacher/);
   assert.match(home, /href="\/play\/lesson-spine"/);
   assert.match(header, /href: "\/play\/lesson-spine"/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
   assert.doesNotMatch(page + player + media, /family-v1-home|children-database|@remotion/);
   assert.match(read("src/lib/player/lesson-spine-meta.ts"), /id: "sting"/);
   assert.match(read("src/lib/player/lesson-spine-meta.ts"), new RegExp(MASTER_SHA));

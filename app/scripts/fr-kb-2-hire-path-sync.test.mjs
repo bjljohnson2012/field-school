@@ -128,7 +128,10 @@ test("FR-KB-2 hire-path sync does not steal family LIVE or family brain sync", (
   assert.doesNotMatch(api + sync, /from ["']@\/lib\/portion/);
   assert.doesNotMatch(ui + lib + sync, /Gym|Foundry|Retainer|\$150|\$250|\$500/);
   assert.match(family, /Now \/ Confidence \/ Next/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
 });
 
 test("master and priors untouched after hire-path sync", () => {

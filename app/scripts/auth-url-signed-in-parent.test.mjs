@@ -41,7 +41,10 @@ test("play rail keeps guest play and adds signed-in Parent return path", () => {
   assert.match(login, /safeMemberNext/);
   assert.match(flip, /AUTH_URL=https:\/\/portal\.fieldschool\.ai/);
   assert.match(flip, /redir https:\/\/portal\.fieldschool\.ai\{uri\} permanent/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
   assert.doesNotMatch(page + session, /family-v1-home|@remotion|Gym|Foundry|Retainer/);
 });
 

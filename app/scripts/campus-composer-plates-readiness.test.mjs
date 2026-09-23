@@ -63,7 +63,10 @@ test("composer and plates readiness do not steal family LIVE", () => {
   assert.match(members, /src\/app\/api\/plates\/route\.ts/);
   assert.doesNotMatch(members, /family-v1-home|children-database/);
   assert.match(family, /Now \/ Confidence \/ Next/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
 });
 
 test("master and priors untouched after composer plates readiness", () => {

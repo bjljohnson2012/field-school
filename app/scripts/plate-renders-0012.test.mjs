@@ -74,7 +74,10 @@ test("docs hook checklist to future auto-flip; no Remotion in Next; no live flip
   assert.match(readme, /auto-flip/);
   assert.match(campus, /cleaning-checklist-lesson-spine/);
   assert.match(campus, /ship 1–6/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
   assert.doesNotMatch(read("src/app/api/plates/approve/route.ts"), /notion|Cleaning|Publish/);
   assert.match(read("src/app/api/plates/approve/route.ts"), /auto_flip: false/);
 });
