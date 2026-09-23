@@ -1,10 +1,10 @@
 import { LESSON_SPINE_CHAPTERS } from "./lesson-spine-meta.ts";
 
-/** A living-brain outcome written by LessonSpine play. */
+/** A living-brain outcome written by LessonSpine play. A resume cue may follow on later lines. */
 export function lessonSpineStep(title: string) {
-  const text = title.trim();
-  if (text === "Finished LessonSpine") return text;
-  if (/^Continue LessonSpine at \S/.test(text)) return text;
+  const line = title.trim().split("\n")[0]?.trim() || "";
+  if (line === "Finished LessonSpine") return line;
+  if (/^Continue LessonSpine at \S/.test(line)) return line;
   return null;
 }
 
@@ -54,6 +54,41 @@ export function lessonSpineContinue(title: string) {
   const chapter = LESSON_SPINE_CHAPTERS.find((row) => row.label === name);
   if (!chapter) return null;
   return { step, chapterId: chapter.id, label: chapter.label, startSec: chapter.startSec };
+}
+
+/** Seconds into the continued chapter, plus the caption cue, when a return should resume mid-chapter. */
+export function lessonSpineResume(title: string) {
+  const step = lessonSpineStep(title);
+  const continued = step ? lessonSpineContinue(step) : null;
+  if (!step || !continued) return null;
+  const lines = title.trim().split("\n").slice(1);
+  const resume = lines.find((line) => line.startsWith("resume "));
+  const cueLine = lines.find((line) => line.startsWith("cue "));
+  if (!resume) return null;
+  const offsetSec = Number(resume.slice("resume ".length).replace(/s$/, ""));
+  const chapter = LESSON_SPINE_CHAPTERS.find((row) => row.id === continued.chapterId);
+  if (!chapter || !Number.isFinite(offsetSec)) return null;
+  const span = chapter.endSec - chapter.startSec;
+  if (offsetSec <= 0 || offsetSec >= span) return null;
+  return {
+    chapterId: continued.chapterId,
+    offsetSec,
+    cue: cueLine ? cueLine.slice("cue ".length) : continued.label,
+  };
+}
+
+/** Keep the LessonSpine step and attach a mid-chapter scrub. Null when the scrub is not inside that chapter. */
+export function lessonSpineWithResume(step: string, offsetSec: number, cue: string) {
+  const head = lessonSpineStep(step);
+  const continued = head ? lessonSpineContinue(head) : null;
+  if (!head || !continued) return null;
+  const chapter = LESSON_SPINE_CHAPTERS.find((row) => row.id === continued.chapterId);
+  if (!chapter) return null;
+  const seconds = Math.round(offsetSec);
+  const span = chapter.endSec - chapter.startSec;
+  if (seconds <= 0 || seconds >= span) return null;
+  const text = cue.trim() || continued.label;
+  return `${head}\nresume ${seconds}s\ncue ${text}`;
 }
 
 /** LessonSpine Continue/Finished marks, oldest first. The current step is included once. */

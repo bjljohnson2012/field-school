@@ -118,7 +118,7 @@ function chapterAt(frame: number) {
 
 export function LessonSpineRemotionPreview() {
   const playerRef = useRef<PlayerRef>(null);
-  const { recordPlay, wrote } = useLessonSpinePlayWrite();
+  const { recordPlay, recordResume, wrote } = useLessonSpinePlayWrite();
   const continueAt = useLessonSpineContinue();
   const [frame, setFrame] = useState(0);
   const [chosen, setChosen] = useState<string | null>(null);
@@ -133,7 +133,7 @@ export function LessonSpineRemotionPreview() {
     const player = playerRef.current;
     if (!player) return;
     if (continueAt) {
-      const next = frameFor(continueAt.chapterId);
+      const next = frameFor(continueAt.chapterId) + Math.round((continueAt.offsetSec || 0) * FPS);
       player.seekTo(next);
       setFrame(next);
     }
@@ -147,13 +147,34 @@ export function LessonSpineRemotionPreview() {
       if (continueAt && next === 0 && frameFor(continueAt.chapterId) !== 0) return;
       setChosen(chapterAt(next).id);
     };
+    const saveResume = (next: number) => {
+      const row = chapterAt(next);
+      const restored = continueAt
+        ? continueAt.chapterId === "next-up"
+          ? "nextUp"
+          : continueAt.chapterId
+        : null;
+      if (!restored || row.id !== restored) return;
+      const offsetSec = (next - row.from) / FPS;
+      if (offsetSec <= 0) return;
+      const cue = `${row.label}. Household: the child has no login. Sales: this desk lists no children.`;
+      void recordResume(offsetSec, cue);
+    };
+    const onSeeked = () => saveResume(player.getCurrentFrame());
     player.addEventListener("play", onPlay);
     player.addEventListener("frameupdate", onFrame);
+    player.addEventListener("seeked", onSeeked);
+    const onLeave = () => {
+      if (document.visibilityState === "hidden") saveResume(player.getCurrentFrame());
+    };
+    document.addEventListener("visibilitychange", onLeave);
     return () => {
       player.removeEventListener("play", onPlay);
       player.removeEventListener("frameupdate", onFrame);
+      player.removeEventListener("seeked", onSeeked);
+      document.removeEventListener("visibilitychange", onLeave);
     };
-  }, [continueAt, recordPlay]);
+  }, [continueAt, recordPlay, recordResume]);
 
   return (
     <section
@@ -213,8 +234,12 @@ export function LessonSpineRemotionPreview() {
         className="mt-2 text-sm text-muted-foreground"
         data-preview-caption={chapter.id}
         data-continue-from={!chosen && continueAt ? "outcomes" : undefined}
+        data-resume-cue={!chosen && continueAt?.cue ? continueAt.cue : undefined}
+        data-resume-sec={!chosen && continueAt?.offsetSec ? continueAt.offsetSec : undefined}
       >
-        {chapter.label}. Household: the child has no login. Sales: this desk lists no children.
+        {!chosen && continueAt?.cue
+          ? continueAt.cue
+          : `${chapter.label}. Household: the child has no login. Sales: this desk lists no children.`}
       </p>
       <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-black">
         <Player
