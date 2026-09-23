@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import Link from "next/link";
 import { assistDraft, assistFacts, brainBoard, type BrainBoard } from "@/lib/living-brain/model";
+import { lessonSpineStep } from "@/lib/player/play-rail-write";
 import { EMPTY_COPY, type InsightPerson, type InsightPoint, type InsightsModel } from "./aggregate";
 
 type OpenState = {
@@ -241,6 +243,7 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                 </thead>
                 <tbody>
                   {board.people.map((person) => {
+                    const spine = lessonSpineStep(person.outcomes);
                     const suggestion = assistDraft({
                       room: board.room,
                       person,
@@ -295,12 +298,23 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                         {draft ? <p className="mt-1 text-xs text-muted-foreground">Suggested: {draft.profile}</p> : null}
                       </td>
                       <td className="px-2 py-2">
-                        {person.outcomes || "—"}
+                        {spine ? (
+                          <Link href="/play/lesson-spine" data-lesson-spine-next={spine} data-next-from="outcomes">
+                            {spine}
+                          </Link>
+                        ) : (
+                          person.outcomes || "—"
+                        )}
                         {person.history.length ? (
                           <ol className="mt-1 space-y-0.5 text-xs text-muted-foreground" data-history={person.membershipId} data-history-count={person.history.length}>
-                            {person.history.map((mark, index) => (
-                              <li key={`${index}-${mark.outcomes}`}>{mark.outcomes}</li>
-                            ))}
+                            {person.history.map((mark, index) => {
+                              const past = lessonSpineStep(mark.outcomes);
+                              return (
+                                <li key={`${index}-${mark.outcomes}`} data-lesson-spine-next={past || undefined}>
+                                  {past ? <Link href="/play/lesson-spine">{past}</Link> : mark.outcomes}
+                                </li>
+                              );
+                            })}
                           </ol>
                         ) : null}
                         {draft ? (
@@ -332,8 +346,18 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
         </ChartFrame>
         <ChartFrame id="next-step" title="Next-step" hint="No next portion, or no next unit." empty={model.empty}>
           {model.brainNext ? (
-            <p className="mb-3 text-sm" data-next-from="brain" data-login={model.brainNext.login}>
-              {model.brainNext.name}: {model.brainNext.title}
+            <p
+              className="mb-3 text-sm"
+              data-next-from="brain"
+              data-login={model.brainNext.login}
+              data-lesson-spine-next={lessonSpineStep(model.brainNext.title) || undefined}
+            >
+              {model.brainNext.name}:{" "}
+              {lessonSpineStep(model.brainNext.title) ? (
+                <Link href="/play/lesson-spine">{model.brainNext.title}</Link>
+              ) : (
+                model.brainNext.title
+              )}
             </p>
           ) : null}
           <Bars points={model.nextStep} scale="count" onOpen={onOpen} />
