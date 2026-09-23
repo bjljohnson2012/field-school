@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Player, type PlayerRef } from "@remotion/player";
 import { AbsoluteFill, Easing, Sequence, interpolate, useCurrentFrame } from "remotion";
+import Link from "next/link";
 import { useLessonSpineContinue, useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
+import { lessonSpineTeachProve } from "@/lib/player/play-rail-write";
 
 const FPS = 30;
 const BEATS = [
@@ -131,6 +133,7 @@ export function LessonSpineRemotionPreview() {
       : continueAt.chapterId
     : null;
   const chapter = ROWS.find((row) => row.id === (chosen ?? restoredId)) ?? chapterAt(frame);
+  const opened = continueAt ? lessonSpineTeachProve(continueAt.step) : null;
 
   useEffect(() => {
     const player = playerRef.current;
@@ -210,16 +213,48 @@ export function LessonSpineRemotionPreview() {
       data-play-write={wrote ? "living-brain" : undefined}
     >
       <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Remotion preview</p>
-      {continueAt ? (
-        <p
-          className="mt-2 text-sm text-muted-foreground"
-          data-continue-from="outcomes"
-          data-lesson-spine-next={continueAt.step}
-          data-login={continueAt.login}
-          data-sales-children={continueAt.room === "sales" ? "0" : undefined}
-        >
-          Continue · {continueAt.step}
-        </p>
+      {continueAt && opened ? (
+        <>
+          <p
+            className="mt-2 text-sm text-muted-foreground"
+            data-continue-from="outcomes"
+            data-lesson-spine-next={continueAt.step}
+            data-login={continueAt.login}
+            data-sales-children={continueAt.room === "sales" ? "0" : undefined}
+          >
+            Continue · {continueAt.step}
+          </p>
+          <div
+            className="mt-3 flex flex-wrap items-center gap-3 text-sm"
+            data-consume-portion="living-brain"
+            data-lesson-spine-next={opened.step}
+            data-continue-chapter={opened.chapterId}
+            data-login={continueAt.login}
+            data-sales-children={continueAt.room === "sales" ? "0" : undefined}
+          >
+            <Link
+              href="/teach-live"
+              className="underline underline-offset-2"
+              data-teach-portion={opened.teach}
+              data-teach-chapter={opened.chapterId}
+            >
+              Teach · {opened.label}
+            </Link>
+            <a
+              href="#lesson-spine-prove"
+              className="underline underline-offset-2"
+              data-prove-portion={opened.prove}
+              data-prove-chapter={opened.chapterId}
+            >
+              Prove · {opened.label}
+            </a>
+            <span>
+              {continueAt.login === "none"
+                ? "The child has no login."
+                : "This desk lists no children."}
+            </span>
+          </div>
+        </>
       ) : null}
       <h2 className="mt-1 font-display text-2xl tracking-tight">LessonSpine composition</h2>
       <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
@@ -264,7 +299,7 @@ export function LessonSpineRemotionPreview() {
           ? continueAt.cue
           : `${chapter.label}. Household: the child has no login. Sales: this desk lists no children.`}
       </p>
-      <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-black">
+      <div id="lesson-spine-prove" className="mt-4 overflow-hidden rounded-2xl border border-border bg-black">
         <Player
           ref={playerRef}
           component={LessonSpineComposition}

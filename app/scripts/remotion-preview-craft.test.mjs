@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { brainBoard } from "../src/lib/living-brain/model.ts";
-import { lessonSpineContinue, lessonSpineResume, lessonSpineStep, playOutcome, playWriteBody, portionWriteBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
+import { lessonSpineContinue, lessonSpineResume, lessonSpineStep, lessonSpineTeachProve, playOutcome, playWriteBody, portionWriteBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
@@ -203,4 +203,84 @@ test("finishing a chapter writes the next portion and return opens it", () => {
   assert.equal(sales?.login, "member");
   assert.equal(sales?.outcomes, "Continue LessonSpine at Recap");
   assert.equal(playWriteBody({ room: "household", brain: home, chapterId: "sting" })?.outcomes, sting.outcomes);
+});
+
+test("leave and return consumes the next portion into Teach and Prove", () => {
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  const page = read("src/app/play/lesson-spine/page.tsx");
+  const home = {
+    orgId: "org-1",
+    room: "household",
+    facts: "",
+    outcome: "",
+    people: [person({})],
+  };
+  const sting = portionWriteBody({ room: "household", brain: home, chapterId: "sting" });
+  const opened = lessonSpineTeachProve(sting.outcomes);
+  assert.equal(sting?.login, "none");
+  assert.equal(opened?.teach, "Continue LessonSpine at Slate");
+  assert.equal(opened?.prove, "Continue LessonSpine at Slate");
+  assert.equal(opened?.chapterId, "slate");
+  assert.equal(opened?.label, "Slate");
+  assert.equal(lessonSpineTeachProve("not a spine step"), null);
+  const finished = portionWriteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: sting.outcomes })] },
+    chapterId: "nextUp",
+  });
+  const done = lessonSpineTeachProve(finished.outcomes);
+  assert.equal(done?.teach, "Finished LessonSpine");
+  assert.equal(done?.prove, "Finished LessonSpine");
+  assert.equal(done?.chapterId, "next-up");
+
+  const salesBrain = {
+    orgId: "org-1",
+    room: "sales",
+    facts: "",
+    outcome: "",
+    people: [
+      person({ membershipId: "kid", name: "No", kind: "child", login: "none" }),
+      person({ membershipId: "rep-1", name: "Lee", kind: "adult", login: "member" }),
+    ],
+  };
+  const sales = portionWriteBody({ room: "sales", brain: salesBrain, chapterId: "objective" });
+  const board = brainBoard({
+    room: "sales",
+    brain: {
+      ...salesBrain,
+      people: salesBrain.people.map((row) =>
+        row.membershipId === sales.membershipId ? { ...row, outcomes: sales.outcomes } : row,
+      ),
+    },
+  });
+  assert.equal(board.people.some((row) => row.kind === "child"), false);
+  assert.equal(sales?.login, "member");
+  const salesOpen = lessonSpineTeachProve(board.people[0].outcomes);
+  assert.equal(salesOpen?.teach, "Continue LessonSpine at Recap");
+  assert.equal(salesOpen?.prove, "Continue LessonSpine at Recap");
+  assert.equal(salesOpen?.chapterId, "recap");
+
+  assert.match(preview, /lessonSpineTeachProve\(continueAt\.step\)/);
+  assert.match(preview, /data-consume-portion="living-brain"/);
+  assert.match(preview, /data-teach-portion=\{opened\.teach\}/);
+  assert.match(preview, /data-prove-portion=\{opened\.prove\}/);
+  assert.match(preview, /data-teach-chapter=\{opened\.chapterId\}/);
+  assert.match(preview, /data-prove-chapter=\{opened\.chapterId\}/);
+  assert.match(preview, /href="\/teach-live"/);
+  assert.match(preview, /href="#lesson-spine-prove"/);
+  assert.match(preview, /id="lesson-spine-prove"/);
+  assert.match(preview, /The child has no login\./);
+  assert.match(preview, /This desk lists no children\./);
+  assert.match(preview, /data-preview-craft="chapter"/);
+  assert.match(preview, /data-chapter-rail="lesson-spine"/);
+  assert.match(preview, /recordPortion/);
+  assert.match(html5, /<video/);
+  assert.doesNotMatch(html5, /@remotion|from "remotion"|data-consume-portion/);
+  assert.match(page, /LessonSpinePlayer/);
+  assert.match(page, /Guests/);
+  assert.match(page, /do not write/);
+  assert.match(read("src/components/lesson-spine-play-write.tsx"), /status !== "authenticated" \|\| !email/);
+  assert.match(read("src/components/leave-return-next.tsx"), /href="\/play\/lesson-spine"/);
+  assert.doesNotMatch(preview + html5 + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
