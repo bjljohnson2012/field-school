@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { chooseNextStep, nextStepTrail, personConfidence, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
+import { brainBoard, chooseNextStep, nextStepTrail, personConfidence, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
+import { lessonSpineStep } from "@/lib/player/play-rail-write";
 import {
   DESK_COPY,
   ERROR_COPY,
@@ -45,6 +46,16 @@ type View =
       people: DeskPerson[];
       assignments: OpenAssignment[];
     };
+
+function LessonSpineAct(props: { title: string }) {
+  const spine = lessonSpineStep(props.title);
+  if (!spine) return null;
+  return (
+    <p className="mt-1 text-sm" data-lesson-spine-next={spine} data-next-from="outcomes">
+      <Link href="/play/lesson-spine">{spine}</Link>
+    </p>
+  );
+}
 
 function freshUnit(): UnitDraft {
   return { id: crypto.randomUUID(), title: "", source_unit_id: "" };
@@ -121,7 +132,9 @@ export function AssignDesk() {
       const map: Record<string, string> = {};
       const trails: Record<string, OutcomeMark[]> = {};
       const notes: Record<string, string> = {};
+      const onDesk = new Set(brainBoard({ room, brain }).people.map((person) => person.membershipId));
       for (const person of brain.people) {
+        if (!onDesk.has(person.membershipId)) continue;
         const chosen = chooseNextStep({ room, brain, membershipId: person.membershipId });
         if (chosen && chosen.from !== "stored") map[person.membershipId] = chosen.title;
         const trail = nextStepTrail({ room, brain, membershipId: person.membershipId });
@@ -401,15 +414,21 @@ export function AssignDesk() {
                               <span className="mt-1 block">{brainConfidence[person.membershipId]}</span>
                             </span>
                           ) : null}
+                          <LessonSpineAct title={brainNext[person.membershipId] || ""} />
                           {(brainTrail[person.membershipId] ?? []).length ? (
                             <ol
                               className="mt-1 space-y-0.5 text-xs text-muted-foreground"
                               data-history={person.membershipId}
                               data-history-count={brainTrail[person.membershipId].length}
                             >
-                              {brainTrail[person.membershipId].map((mark, index) => (
-                                <li key={`${index}-${mark.outcomes}`}>{mark.outcomes}</li>
-                              ))}
+                              {brainTrail[person.membershipId].map((mark, index) => {
+                                const past = lessonSpineStep(mark.outcomes);
+                                return (
+                                  <li key={`${index}-${mark.outcomes}`} data-lesson-spine-next={past || undefined}>
+                                    {past ? <Link href="/play/lesson-spine">{past}</Link> : mark.outcomes}
+                                  </li>
+                                );
+                              })}
                             </ol>
                           ) : null}
                         </span>
@@ -468,11 +487,17 @@ export function AssignDesk() {
                         data-history={row.membershipId}
                         data-history-count={brainTrail[row.membershipId].length}
                       >
-                        {brainTrail[row.membershipId].map((mark, index) => (
-                          <li key={`${index}-${mark.outcomes}`}>{mark.outcomes}</li>
-                        ))}
+                        {brainTrail[row.membershipId].map((mark, index) => {
+                          const past = lessonSpineStep(mark.outcomes);
+                          return (
+                            <li key={`${index}-${mark.outcomes}`} data-lesson-spine-next={past || undefined}>
+                              {past ? <Link href="/play/lesson-spine">{past}</Link> : mark.outcomes}
+                            </li>
+                          );
+                        })}
                       </ol>
                     ) : null}
+                    <LessonSpineAct title={brainNext[row.membershipId] || ""} />
                     <p className="mt-1 text-sm text-muted-foreground">
                       This portion stays when you leave and return. {copy.loginLine}
                     </p>
