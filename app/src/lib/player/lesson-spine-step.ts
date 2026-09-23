@@ -23,6 +23,25 @@ export function lessonSpineConfidence(outcomes: string) {
   return "Getting there";
 }
 
+/** One org list of LessonSpine outcomes. People without a spine step are left out. */
+export function lessonSpineRollup(
+  people: Array<{ name?: string; outcomes?: string; login?: string }>,
+) {
+  const rows: Array<{ name: string; step: string; login: "none" | "member"; confidence: string }> = [];
+  for (const person of people) {
+    const step = lessonSpineStep(person.outcomes || "");
+    if (!step) continue;
+    rows.push({
+      name: (person.name || "").trim() || "This person",
+      step,
+      login: person.login === "member" ? "member" : "none",
+      confidence: lessonSpineConfidence(step) || "",
+    });
+  }
+  rows.sort((a, b) => a.name.localeCompare(b.name) || a.step.localeCompare(b.step));
+  return rows;
+}
+
 /** Chapter a signed-in play should continue, from a living-brain LessonSpine step. */
 export function lessonSpineContinue(title: string) {
   const step = lessonSpineStep(title);

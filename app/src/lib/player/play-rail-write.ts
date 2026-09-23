@@ -1,7 +1,13 @@
 import { brainBoard, type LivingBrain, type Room } from "../living-brain/model.ts";
 import { LESSON_SPINE_CHAPTERS } from "./lesson-spine-meta.ts";
 
-export { lessonSpineConfidence, lessonSpineContinue, lessonSpineStep, lessonSpineTrail } from "./lesson-spine-step.ts";
+export {
+  lessonSpineConfidence,
+  lessonSpineContinue,
+  lessonSpineRollup,
+  lessonSpineStep,
+  lessonSpineTrail,
+} from "./lesson-spine-step.ts";
 
 function chapterId(raw: string) {
   const id = raw.trim();
