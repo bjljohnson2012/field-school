@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TeachDeck, type LessonSpec } from "@/components/teach-deck";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
-import { chooseNextStep, nextStepTrail, personConfidence, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
-import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
+import { brainBoard, chooseNextStep, nextStepTrail, personConfidence, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
+import { LessonSpineHistory } from "@/components/lesson-spine-history";
+import { lessonSpineConfidence, lessonSpineStep, lessonSpineTrail } from "@/lib/player/play-rail-write";
 
 type Room = "household" | "sales";
 
@@ -153,7 +154,11 @@ export function TeachLive() {
         const onDesk = chosen && (room === "sales" ? chosen.login === "member" : chosen.login === "none");
         if (!cancelled) {
           setBrainTitle(samePerson && onDesk && chosen.from !== "stored" ? chosen.title : "");
-          setBrainTrail(nextStepTrail({ room, brain, membershipId: open?.membershipId }));
+          const onDeskPeople = brain ? brainBoard({ room, brain }).people : [];
+          const trailId =
+            open?.membershipId ||
+            onDeskPeople.find((person) => lessonSpineTrail(person.history, person.outcomes).length)?.membershipId;
+          setBrainTrail(nextStepTrail({ room, brain, membershipId: trailId }));
           setAim(brain?.outcome || "");
           setConfidence(personConfidence({ room, brain, membershipId: open?.membershipId }));
           setDesk({ status: "room", room, assignment: open });
@@ -210,6 +215,7 @@ export function TeachLive() {
           aimFrom={!aim && spineAim ? "outcomes" : undefined}
           confidenceFrom={spineConfidence ? "outcomes" : undefined}
         />
+        <LessonSpineHistory marks={brainTrail} current={brainTitle} membershipId="" />
         <LessonSpineAct title={brainTitle} login={room === "household" ? "none" : "member"} />
       </main>
     );
@@ -259,22 +265,11 @@ export function TeachLive() {
         aimFrom={!aim && spineAim ? "outcomes" : undefined}
         confidenceFrom={spineConfidence ? "outcomes" : undefined}
       />
-      {brainTrail.length ? (
-        <ol
-          className="mx-auto max-w-6xl space-y-0.5 px-4 pb-10 text-xs text-muted-foreground"
-          data-history={assignment.membershipId || ""}
-          data-history-count={brainTrail.length}
-        >
-          {brainTrail.map((mark, index) => {
-            const past = lessonSpineStep(mark.outcomes);
-            return (
-              <li key={`${index}-${mark.outcomes}`} data-lesson-spine-next={past || undefined}>
-                {past ? <Link href="/play/lesson-spine">{past}</Link> : mark.outcomes}
-              </li>
-            );
-          })}
-        </ol>
-      ) : null}
+      <LessonSpineHistory
+        marks={brainTrail}
+        current={brainTitle}
+        membershipId={assignment.membershipId || ""}
+      />
     </div>
   );
 }

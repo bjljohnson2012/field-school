@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-23T08:02:00Z",
+  "updated": "2026-09-23T08:12:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "Signed-in Learn, People, Teach, Assign, and Insights show Aim and Confidence when the living brain has them. Guest panel stays soft. PR 261: a signed-in LessonSpine play writes the next step into the living brain for the person already on the desk. PR 262: the Learn desk shows that next LessonSpine step from the living brain. PR 263: the People desk shows that same next LessonSpine step for each person already on the desk. PR 264: Insights shows that same LessonSpine step, and earlier steps, from the living brain. PR 265: Teach and Assign show that step and link it so the accountable person can play it. PR 266: signed-in chrome shows that next LessonSpine step again when the accountable person returns. PR 267: Aim and Confidence on Learn, People, Teach, Assign, and Insights follow that LessonSpine progress. PR 268: AI suggestions include that LessonSpine progress in the context. Guests do not write. Home child has no login. Sales desk shows no children. Launch CLOSED 0/8."
+      "evidence": "Signed-in Learn, People, Teach, Assign, and Insights show Aim and Confidence when the living brain has them. Guest panel stays soft. PR 261: a signed-in LessonSpine play writes the next step into the living brain for the person already on the desk. PR 262: the Learn desk shows that next LessonSpine step from the living brain. PR 263: the People desk shows that same next LessonSpine step for each person already on the desk. PR 264: Insights shows that same LessonSpine step, and earlier steps, from the living brain. PR 265: Teach and Assign show that step and link it so the accountable person can play it. PR 266: signed-in chrome shows that next LessonSpine step again when the accountable person returns. PR 267: Aim and Confidence on Learn, People, Teach, Assign, and Insights follow that LessonSpine progress. PR 268: AI suggestions include that LessonSpine progress in the context. PR 269: History on Insights, Teach, and Assign lists the LessonSpine Continue and Finished steps from the living brain. Guests do not write. Home child has no login. Sales desk shows no children. Launch CLOSED 0/8."
     },
     "N15": {
       "status": "PASS",
@@ -114,5 +114,5 @@
   "last_pick": [
     "N15"
   ],
-  "last_clock": "clock-02-next8"
+  "last_clock": "clock-02-next9"
 }
