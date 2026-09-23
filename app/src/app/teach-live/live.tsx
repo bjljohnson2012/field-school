@@ -5,7 +5,7 @@ import Link from "next/link";
 import { TeachDeck, type LessonSpec } from "@/components/teach-deck";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
 import { chooseNextStep, nextStepTrail, personConfidence, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
-import { lessonSpineStep } from "@/lib/player/play-rail-write";
+import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
 
 type Room = "household" | "sales";
 
@@ -61,12 +61,19 @@ function LessonSpineAct(props: { title: string; login: "none" | "member" }) {
   );
 }
 
-function TeachBrainLabels(props: { room: Room; aim: string; confidence: string; membershipId: string }) {
+function TeachBrainLabels(props: {
+  room: Room;
+  aim: string;
+  confidence: string;
+  membershipId: string;
+  aimFrom?: "outcomes";
+  confidenceFrom?: "outcomes";
+}) {
   if (!props.aim && !props.confidence) return null;
   return (
     <div className="mx-auto max-w-6xl px-4 pb-4">
       {props.aim ? (
-        <p className="text-sm" data-org-aim="yes">
+        <p className="text-sm" data-org-aim="yes" data-aim-from={props.aimFrom}>
           <span className="text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim">
             Aim
           </span>
@@ -77,7 +84,11 @@ function TeachBrainLabels(props: { room: Room; aim: string; confidence: string; 
         </p>
       ) : null}
       {props.confidence ? (
-        <p className="mt-4 text-sm text-muted-foreground" data-confidence={props.membershipId}>
+        <p
+          className="mt-4 text-sm text-muted-foreground"
+          data-confidence={props.membershipId}
+          data-confidence-from={props.confidenceFrom}
+        >
           <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
             Confidence
           </span>
@@ -177,6 +188,10 @@ export function TeachLive() {
   }
 
   const { room, assignment } = desk;
+  const spineAim = lessonSpineStep(brainTitle);
+  const spineConfidence = lessonSpineConfidence(brainTitle);
+  const aimShown = aim || spineAim || "";
+  const confidenceShown = spineConfidence || confidence;
   if (!assignment || !assignment.units || assignment.units.length === 0) {
     return (
       <main className="mx-auto max-w-6xl px-4 py-10" data-teach-org={room} data-sales-children="0">
@@ -187,7 +202,14 @@ export function TeachLive() {
             ? "Assign a path to one team member first. They may sign in. You own the path. Their next step shows here after you return. This desk does not list children."
             : "Assign a path to one tracked child first. That child has no login. The next step shows here after you return."}
         </p>
-        <TeachBrainLabels room={room} aim={aim} confidence={confidence} membershipId="" />
+        <TeachBrainLabels
+          room={room}
+          aim={aimShown}
+          confidence={confidenceShown}
+          membershipId=""
+          aimFrom={!aim && spineAim ? "outcomes" : undefined}
+          confidenceFrom={spineConfidence ? "outcomes" : undefined}
+        />
         <LessonSpineAct title={brainTitle} login={room === "household" ? "none" : "member"} />
       </main>
     );
@@ -231,9 +253,11 @@ export function TeachLive() {
       <LessonSpineAct title={brainTitle} login={room === "household" ? "none" : "member"} />
       <TeachBrainLabels
         room={room}
-        aim={aim}
-        confidence={confidence}
+        aim={aimShown}
+        confidence={confidenceShown}
         membershipId={assignment.membershipId || ""}
+        aimFrom={!aim && spineAim ? "outcomes" : undefined}
+        confidenceFrom={spineConfidence ? "outcomes" : undefined}
       />
       {brainTrail.length ? (
         <ol
