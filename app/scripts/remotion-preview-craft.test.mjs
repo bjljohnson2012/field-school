@@ -8,7 +8,9 @@ import { brainBoard } from "../src/lib/living-brain/model.ts";
 import { assignCompleteBody, lessonSpineContinue, lessonSpineRail, lessonSpineResume, lessonSpineStage, lessonSpineStep, lessonSpineTeachProve, lessonSpineWithRail, lessonSpineWithResume, NEXT_LESSON_STEP, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody, teachCompleteBody } from "../src/lib/player/play-rail-write.ts";
 import { SPINE_BEATS, spineDurationSec, spineLayout } from "../../plates/src/lessonSpine.ts";
 import { remotionSoftCraftNotes } from "../../plates/scripts/remotion-soft-craft-notes.mjs";
-import { loadCachedBroll, searchAndCachePexelsBroll } from "../../plates/scripts/pexels-broll.mjs";
+import { loadCachedBroll, mountLivePexelsBroll, searchAndCachePexelsBroll } from "../../plates/scripts/pexels-broll.mjs";
+import { applyLiveBroll } from "../src/lib/player/live-pexels-broll.ts";
+import { lessonSpineLiveBroll } from "../src/lib/player/live-pexels-broll-server.ts";
 import { appliedLessonSpineCraft } from "../src/lib/player/soft-craft-apply.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -1874,7 +1876,8 @@ test("LessonSpine Remotion rail applies soft-craft cues and cached Pexels attrib
   assert.match(preview, /data-objective=\{label\}/);
   assert.match(preview, /data-pexels-attribution="cached"/);
   assert.match(preview, /name="broll"/);
-  assert.match(preview, /inputProps=\{\{ broll: null \}\}/);
+  assert.match(preview, /inputProps=\{\{ broll: liveBroll \}\}/);
+  assert.match(preview, /data-live-broll=\{liveBroll \? "non-null" : "absent"\}/);
   assert.match(preview, /useCurrentFrame/);
   assert.match(preview, /#EFE7D6/);
   assert.match(preview, /#1A1A16/);
@@ -1895,4 +1898,109 @@ test("LessonSpine Remotion rail applies soft-craft cues and cached Pexels attrib
   assert.match(checker, /holdCleaning: true/);
   assert.doesNotMatch(preview + panel + checker, /EDU-S03|27pn9xs0zk8a73g|AUTH_URL|HARD_FAIL|distribute:\s*true/);
   assert.doesNotMatch(preview + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+test("LessonSpine Remotion rail mounts live Pexels b-roll when a plate requests it", async () => {
+  const prior = process.env.PEXELS_API_KEY;
+  process.env.PEXELS_API_KEY = "pexels-test-key";
+  const calls = [];
+  const fetchImpl = async (url, init) => {
+    calls.push({ href: String(url), authorization: init?.headers?.Authorization ?? null });
+    if (String(url).includes("/videos/search")) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          videos: [
+            {
+              id: 4401,
+              url: "https://www.pexels.com/video/classroom-4401/",
+              user: { name: "Ada Frame", url: "https://www.pexels.com/@ada" },
+              video_files: [
+                { file_type: "video/mp4", width: 640, link: "https://images.pexels.com/videos/4401/sd.mp4" },
+              ],
+            },
+          ],
+        }),
+      };
+    }
+    return { ok: true, status: 200, arrayBuffer: async () => Uint8Array.from([1, 2, 3, 4]).buffer };
+  };
+  try {
+    const cacheDir = mkdtempSync(join(tmpdir(), "pexels-live-"));
+    const skipped = await mountLivePexelsBroll({ requested: false, query: "classroom", cacheDir, fetchImpl });
+    assert.equal(skipped, null);
+    assert.equal(calls.length, 0);
+
+    const mounted = await lessonSpineLiveBroll({ cacheDir, fetchImpl });
+    assert.ok(mounted);
+    assert.match(mounted.file, /4401\.mp4$/);
+    assert.equal(mounted.photographer, "Ada Frame");
+    assert.equal(mounted.photographerUrl, "https://www.pexels.com/@ada");
+    assert.equal(mounted.pexelsUrl, "https://www.pexels.com/video/classroom-4401/");
+    assert.equal(calls[0].authorization, "pexels-test-key");
+    assert.equal(String(calls[0].authorization).startsWith("Bearer"), false);
+    assert.equal(calls[1].authorization, null);
+    const applied = applyLiveBroll(mounted);
+    assert.ok(applied);
+    assert.equal(applied.file, mounted.file);
+    assert.equal(applied.photographer, "Ada Frame");
+
+    const before = calls.length;
+    const again = await lessonSpineLiveBroll({ cacheDir, fetchImpl });
+    assert.equal(calls.length, before);
+    assert.equal(again.file, mounted.file);
+    assert.equal(again.photographer, mounted.photographer);
+    assert.equal(again.pexelsUrl, mounted.pexelsUrl);
+
+    delete process.env.PEXELS_API_KEY;
+    const quiet = await lessonSpineLiveBroll({ cacheDir: mkdtempSync(join(tmpdir(), "pexels-live-empty-")) });
+    assert.equal(quiet, null);
+    assert.equal(applyLiveBroll(null), null);
+
+    const appliedCraft = remotionSoftCraftNotes(appliedLessonSpineCraft());
+    assert.deepEqual(appliedCraft.notes, []);
+    assert.equal(appliedCraft.cleaningFlip, false);
+    assert.equal(appliedCraft.holdCleaning, true);
+
+    const preview = read("src/components/lesson-spine-remotion-player.tsx");
+    const html5 = read("src/components/lesson-spine-player.tsx");
+    const page = read("src/app/play/lesson-spine/page.tsx");
+    const panel = read("src/components/lesson-spine-guest-soft-panel.tsx");
+    const route = read("src/app/api/play/lesson-spine-broll/route.ts");
+    const server = read("src/lib/player/live-pexels-broll-server.ts");
+    const spine = readFileSync(join(root, "..", "plates", "src", "LessonSpine.tsx"), "utf8");
+    const helper = readFileSync(join(root, "..", "plates", "scripts", "pexels-broll.mjs"), "utf8");
+    assert.match(preview, /fetch\("\/api\/play\/lesson-spine-broll"\)/);
+    assert.match(preview, /applyLiveBroll/);
+    assert.match(preview, /inputProps=\{\{ broll: liveBroll \}\}/);
+    assert.match(preview, /data-live-broll=\{liveBroll \? "non-null" : "absent"\}/);
+    assert.match(preview, /data-broll-request="classroom"/);
+    assert.match(preview, /data-pexels-attribution="cached"/);
+    assert.match(preview, /data-soft-craft-apply="plates"/);
+    assert.match(preview, /useCurrentFrame/);
+    assert.match(preview, /Household: the child has no login\. Sales: this desk lists no children\./);
+    assert.match(preview, /continueAt\.stage === "prove" \? null/);
+    assert.match(preview, /recordRail\("remotion"\)/);
+    assert.match(preview, /addEventListener\("pagehide"/);
+    assert.match(html5, /recordRail\("html5"\)/);
+    assert.match(page, /LessonSpineGuestSoftPanel/);
+    assert.match(page, /af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4/);
+    assert.match(panel, /data-guest-soft-panel="soft-craft"/);
+    assert.match(panel, /data-distribute="false"/);
+    assert.match(panel, /data-cleaning-flip="false"/);
+    assert.match(route, /lessonSpineLiveBroll/);
+    assert.match(route, /distribute: false/);
+    assert.match(server, /requested: true/);
+    assert.match(server, /LESSON_SPINE_BROLL_QUERY = "classroom"/);
+    assert.match(spine, /<PexelsBroll \{\.\.\.broll\} \/>/);
+    assert.match(spine, /name="broll"/);
+    assert.match(helper, /export async function mountLivePexelsBroll/);
+    assert.match(helper, /Authorization: authorization/);
+    assert.doesNotMatch(preview + route + server + helper, /pexels-test-key|EDU-S03|27pn9xs0zk8a73g|AUTH_URL|HARD_FAIL|distribute:\s*true/);
+    assert.doesNotMatch(preview + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+  } finally {
+    if (prior == null) delete process.env.PEXELS_API_KEY;
+    else process.env.PEXELS_API_KEY = prior;
+  }
 });

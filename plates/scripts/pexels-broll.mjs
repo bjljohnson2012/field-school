@@ -4,7 +4,7 @@
  * Each cached file keeps a photographer attribution sidecar.
  */
 
-import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const SEARCH_URL = "https://api.pexels.com/videos/search";
@@ -96,4 +96,43 @@ export async function searchAndCachePexelsBroll({
   const video = videos[0];
   if (!video) throw new Error("Pexels search returned no video");
   return cachePexelsVideo({ video, query, cacheDir, fetchImpl });
+}
+
+export function findCachedBroll(cacheDir, query) {
+  if (!cacheDir || !existsSync(cacheDir)) return null;
+  const wanted = String(query ?? "");
+  for (const name of readdirSync(cacheDir)) {
+    if (!name.endsWith(".json")) continue;
+    let record;
+    try {
+      record = JSON.parse(readFileSync(join(cacheDir, name), "utf8"));
+    } catch {
+      continue;
+    }
+    if (record.query !== wanted || !record.id || !record.file) continue;
+    if (!existsSync(join(cacheDir, record.file))) continue;
+    const mounted = loadCachedBroll(cacheDir, record.id);
+    if (!mounted.file || !mounted.photographer || !mounted.photographerUrl || !mounted.pexelsUrl) continue;
+    return mounted;
+  }
+  return null;
+}
+
+/** Search, then a later call for the same query is a cache hit. Absent request stays null. */
+export async function mountLivePexelsBroll({
+  requested = false,
+  query,
+  cacheDir,
+  apiKey,
+  fetchImpl = fetch,
+} = {}) {
+  if (!requested) return null;
+  const hit = findCachedBroll(cacheDir, query);
+  if (hit) return hit;
+  const saved = await searchAndCachePexelsBroll({ query, cacheDir, apiKey, fetchImpl });
+  const mounted = loadCachedBroll(cacheDir, saved.id);
+  if (!mounted?.file || !mounted.photographer || !mounted.photographerUrl || !mounted.pexelsUrl) {
+    throw new Error("Pexels b-roll mount is empty");
+  }
+  return mounted;
 }

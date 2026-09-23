@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { loadCachedBroll, searchAndCachePexelsBroll } from "./pexels-broll.mjs";
+import { loadCachedBroll, mountLivePexelsBroll, searchAndCachePexelsBroll } from "./pexels-broll.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const src = (name) => readFileSync(join(here, "..", "src", name), "utf8");
@@ -107,4 +107,35 @@ test("LessonSpine and the Pexels plate can use the cached b-roll", () => {
   assert.match(checker, /cleaningFlip: false/);
   assert.doesNotMatch(plate + spine + checker, /EDU-S03|27pn9xs0zk8a73g|af374d95|AUTH_URL|HARD_FAIL/);
   assert.doesNotMatch(plate + spine, /Bearer /);
+});
+
+test("a plate request mounts non-null b-roll and the next call is a cache hit", async () => {
+  const prior = process.env.PEXELS_API_KEY;
+  process.env.PEXELS_API_KEY = "pexels-test-key";
+  const calls = [];
+  const fetchImpl = async (url, init) => {
+    calls.push({ href: String(url), authorization: init?.headers?.Authorization ?? null });
+    if (String(url).includes("/videos/search")) {
+      return { ok: true, status: 200, json: async () => ({ videos: [video] }) };
+    }
+    return { ok: true, status: 200, arrayBuffer: async () => Uint8Array.from([1, 2, 3, 4]).buffer };
+  };
+  try {
+    const cacheDir = mkdtempSync(join(tmpdir(), "pexels-live-"));
+    assert.equal(await mountLivePexelsBroll({ requested: false, query: "classroom", cacheDir, fetchImpl }), null);
+    const mounted = await mountLivePexelsBroll({ requested: true, query: "classroom", cacheDir, fetchImpl });
+    assert.equal(mounted.photographer, "Ada Frame");
+    assert.match(mounted.file, /4401\.mp4$/);
+    assert.equal(mounted.pexelsUrl, "https://www.pexels.com/video/classroom-4401/");
+    assert.equal(calls[0].authorization, "pexels-test-key");
+    assert.equal(calls[1].authorization, null);
+    const before = calls.length;
+    const again = await mountLivePexelsBroll({ requested: true, query: "classroom", cacheDir, fetchImpl });
+    assert.equal(calls.length, before);
+    assert.equal(again.file, mounted.file);
+    assert.equal(loadCachedBroll(cacheDir, "4401").photographer, "Ada Frame");
+  } finally {
+    if (prior == null) delete process.env.PEXELS_API_KEY;
+    else process.env.PEXELS_API_KEY = prior;
+  }
 });
