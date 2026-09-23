@@ -85,6 +85,80 @@ test("cue drift and a missing boundary are the only soft notes", () => {
 test("the checker does not flip Cleaning or invent EDU-S03", () => {
   assert.match(source, /cleaningFlip: false/);
   assert.match(source, /holdCleaning: true/);
-  assert.doesNotMatch(source, /EDU-S03|27pn9xs0zk8a73g|af374d95|distribute:\s*true|AUTH_URL/);
+  assert.match(source, /kind: "audio-desync"/);
+  assert.doesNotMatch(source, /EDU-S03|27pn9xs0zk8a73g|af374d95|distribute:\s*true|AUTH_URL|HARD_FAIL/);
   assert.doesNotMatch(source, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+const syncedAudio = {
+  id: "slate",
+  from: 300,
+  frames: 120,
+  fps: 30,
+  startMs: 10000,
+  endMs: 14000,
+  cueStartMs: 10000,
+  cueEndMs: 14000,
+};
+
+test("audio locked to the timeline and caption cue records no soft note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+  });
+  assert.deepEqual(result.notes, []);
+  assert.equal(result.cleaningFlip, false);
+});
+
+test("audio that drifts from the Remotion timeline is the only soft note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [{ ...syncedAudio, startMs: 10400 }],
+  });
+  assert.deepEqual(result.notes, [
+    {
+      kind: "audio-desync",
+      id: "slate",
+      audioStartMs: 10400,
+      audioEndMs: 14000,
+      timelineStartMs: 10000,
+      timelineEndMs: 14000,
+      cueStartMs: 10000,
+      cueEndMs: 14000,
+    },
+  ]);
+  assert.equal(result.holdCleaning, true);
+});
+
+test("audio that drifts from the caption cue is the only soft note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [{ ...syncedAudio, cueEndMs: 14800 }],
+  });
+  assert.equal(result.notes.length, 1);
+  assert.equal(result.notes[0].kind, "audio-desync");
+  assert.equal(result.notes[0].cueEndMs, 14800);
+  assert.equal(result.notes[0].audioEndMs, 14000);
+  assert.equal(result.cleaningFlip, false);
+});
+
+test("audio desync stays beside caption drift and a missing chapter boundary", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [{ ...aligned, startMs: 10800 }],
+    spoken,
+    chapters: chapters.filter((row) => row.id !== "recap"),
+    audio: [{ ...syncedAudio, startMs: 10400 }],
+  });
+  assert.deepEqual(
+    result.notes.map((note) => note.kind),
+    ["caption-cue-drift", "missing-chapter-boundary", "audio-desync"],
+  );
+  assert.equal(result.cleaningFlip, false);
+  assert.equal(result.holdCleaning, true);
 });
