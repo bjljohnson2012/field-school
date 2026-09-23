@@ -105,7 +105,10 @@ test("FR-KB-1 campus surface does not steal family LIVE or family brain store", 
   assert.doesNotMatch(api, /from ["']@\/lib\/portion/);
   assert.doesNotMatch(ui + lib, /Gym|Foundry|Retainer|\$150|\$250|\$500/);
   assert.match(family, /Now \/ Confidence \/ Next/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
 });
 
 test("master and priors untouched after knowledge brain", () => {

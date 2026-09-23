@@ -51,7 +51,10 @@ test("Launch-gate evidence rows cite landed unlocks without inventing 8/8", () =
   assert.match(page, /data-launch-gate="operator"/);
   assert.match(page, /data-launch=\{evidence\.launch\}/);
   assert.match(page, /Eight nodes \(all HELD\)/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
   assert.doesNotMatch(page + lib, /Gym|Foundry|Retainer/);
 });
 

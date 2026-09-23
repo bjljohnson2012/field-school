@@ -66,7 +66,10 @@ test("player rail prefers HLS then MP4; no Remotion npm", () => {
   assert.match(page, new RegExp(MASTER_SHA));
   assert.match(readyRoute, /ready_manifest_missing|ready\.json/);
   assert.doesNotMatch(readyRoute, /requireMember|requireTeacher/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
   assert.equal(cleaningAutoFlipReady({checklistExit: 0, shipGreen: false, holdCleaning: true}), false);
 });
 

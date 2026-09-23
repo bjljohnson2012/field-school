@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LessonSpineHirePath } from "@/components/lesson-spine-hire-path";
 import { LessonSpineParentSession } from "@/components/lesson-spine-parent-session";
 import { LessonSpinePlayer } from "@/components/lesson-spine-player";
+import { LessonSpineRemotionPreview } from "@/components/lesson-spine-remotion-player";
 
 export const metadata: Metadata = {
   title: "LessonSpine",
@@ -17,9 +18,10 @@ export default function LessonSpinePlayPage() {
       </p>
       <h1 className="mt-3 font-display text-4xl tracking-tight">LessonSpine</h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
-        Ready / HLS play of the locked counterexample-encode master. HTML5
-        player rail only — no Remotion package in campus. Launch stays closed.
-        Distribute held.
+        Ready / HLS play of the locked counterexample-encode master. The HTML5
+        rail stays. A Remotion player previews the LessonSpine composition for
+        the household and the sales desk. The child has no login. Launch stays
+        closed. Distribute held.
       </p>
       <p
         className="mt-2 font-mono text-xs text-muted-foreground"
@@ -32,6 +34,7 @@ export default function LessonSpinePlayPage() {
       <div className="mt-8">
         <LessonSpinePlayer />
       </div>
+      <LessonSpineRemotionPreview />
       <p className="mt-6 text-sm text-muted-foreground">
         Guest Grok Bot stays at{" "}
         <Link href="/c/grok-bot" className="underline">

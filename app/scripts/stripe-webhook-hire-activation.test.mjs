@@ -135,7 +135,10 @@ test("webhook route and success return stay on locked three plans", () => {
   assert.doesNotMatch(parse, /credits|BYOK|customer_api_keys|writeCredits/);
   assert.doesNotMatch(plans, /credits|BYOK|customer_api_keys/);
   assert.doesNotMatch(hire + page + success, /Gym|Foundry|Retainer|\$150|\$250|\$500/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
 });
 
 test("master and priors untouched after hire activation", () => {

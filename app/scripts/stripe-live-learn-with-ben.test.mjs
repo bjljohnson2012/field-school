@@ -50,7 +50,10 @@ test("play rail hire path uses unlocked Learn with Ben $100 / $200 / $1,000 only
   assert.match(plans, /buy\.stripe\.com\/8x25kCa9j6nF4Ze8F08g006/);
   assert.match(plans, /buy\.stripe\.com\/aFa8wOgxHeUbcrG5sO8g007/);
   assert.match(dest, /\/play\/lesson-spine/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
   assert.doesNotMatch(page + hire, /family-v1-home|@remotion|Gym|Foundry|Retainer|\$150|\$250|\$500/);
 });
 

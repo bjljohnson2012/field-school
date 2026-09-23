@@ -82,7 +82,7 @@ test("full Track B path audit clears the four hard gates and does not ship", () 
 
   const pkg = JSON.parse(readFileSync(join(root, "..", "app", "package.json"), "utf8"));
   const names = Object.keys({...pkg.dependencies, ...pkg.devDependencies});
-  assert.equal(names.some((name) => name === "remotion" || name.startsWith("@remotion/")), false);
+  assert.equal(names.includes("@remotion/cli") || names.includes("@remotion/renderer") || names.includes("@remotion/bundler"), false);
 });
 
 test("the audit script stays a dry run when only soft notes remain", () => {

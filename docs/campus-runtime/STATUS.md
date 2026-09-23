@@ -37,7 +37,7 @@ Gym wording is retired. Student orgs: household and sales.
 
 - Cap take / Just remake / second melt
 - Global checklist `--flip` still refused; `cleaningAutoFlipReady` stays false when shipGreen is false. Play-rail Cleaning auto-flip + Publish Ready/HLS landed for locked dest `af374d95…` only. Publish polish evidence rows at `/operator/publish`. Distribute HELD.
-- Remotion packaged into Next (`@remotion/*` in campus) — still HELD. HTML5 LessonSpine player rail at `/play/lesson-spine` landed.
+- Remotion play-rail preview landed at `/play/lesson-spine` with `remotion` and `@remotion/player`. HTML5 LessonSpine player rail stays. Factory dest render stays in `plates/`. Remotion-in-Next held for that dest.
 - FR-KB-3 metering UI landed at `/metering`. Prices from locked Learn with Ben market-research `$100` / `$200` / `$1,000` only. Stripe live Learn with Ben landed. Stripe webhook hire activation landed at `/operator/hire` for `$100` / `$200` / `$1,000` only. Parent-supervised progress (FR-6 / FR-2) landed at `/progress` as Now / Confidence / Next under the selected Child. Parent-owned intent (FR-3) landed at `/intent` under the selected Child. Parent-path assembly (FR-4) landed at `/path` under the selected Child from that intent. Parent next-portion (FR-5) landed at `/portion` under the selected Child from that assembled path. AUTH_URL signed-in Parent landed at `https://portal.fieldschool.ai`. Publish polish operator path landed. Launch-gate hire-path evidence rows at `/operator/launch-gate`. Distribute still HELD. Launch stays **CLOSED**, **0/8**.
 - CNC vault `2.24.64.248`
 

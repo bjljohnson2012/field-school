@@ -90,7 +90,10 @@ test("FR-3 campus surface does not steal family LIVE or children-database", () =
   assert.doesNotMatch(ui + lib + api, /family-v1-home|children-database|bc-4765f2f0|\/api\/intent|learning_intents/);
   assert.doesNotMatch(ui + lib, /Gym|Foundry|Retainer|\$150|\$250|\$500/);
   assert.match(family, /Now \/ Confidence \/ Next/);
-  assert.equal(Object.keys(pkg.dependencies).some((name) => name.includes("remotion")), false);
+  assert.deepEqual(
+    Object.keys(pkg.dependencies).filter((name) => name === "remotion" || name.startsWith("@remotion/")).sort(),
+    ["@remotion/player", "remotion"],
+  );
 });
 
 test("master and priors untouched after parent-owned intent", () => {
