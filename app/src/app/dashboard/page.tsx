@@ -7,6 +7,7 @@ import { lessonForOrg } from "@/lib/campus-runtime/lessons";
 import { COURSE_NAME, COURSE_TAGLINE } from "@/lib/course/content";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
 import { learnHomeContext, type LivingBrain } from "@/lib/living-brain/model";
+import { lessonSpineStep } from "@/lib/player/play-rail-write";
 
 type NextStep = {
   href: string;
@@ -127,8 +128,9 @@ export default function LearnPage() {
               membershipId: open?.membershipId,
             });
             if (home.nextStep && (home.login === "none" || home.login === "member")) {
+              const fromBrain = home.from === "outcomes" ? lessonSpineStep(home.nextStep) : null;
               next = {
-                href: "/teach-live",
+                href: fromBrain ? "/play/lesson-spine" : "/teach-live",
                 title: home.nextStep,
                 portion: true,
                 login: home.login,
@@ -240,8 +242,24 @@ export default function LearnPage() {
               </p>
             </>
           ) : null}
-          <h3 className="mt-6 text-sm font-medium">{nextStep?.portion ? "Next portion" : "Next step"}</h3>
-          {nextStep?.portion ? (
+          <h3 className="mt-6 text-sm font-medium">
+            {nextStep?.portion && !(nextStep.from === "outcomes" && lessonSpineStep(card.nextTitle))
+              ? "Next portion"
+              : "Next step"}
+          </h3>
+          {nextStep?.from === "outcomes" && lessonSpineStep(card.nextTitle) ? (
+            <p
+              className="mt-2 text-sm text-muted-foreground"
+              data-lesson-spine-next={lessonSpineStep(card.nextTitle) || undefined}
+              data-next-step={card.nextTitle}
+              data-next-from="outcomes"
+            >
+              {lessonSpineStep(card.nextTitle)}{" "}
+              {nextStep.login === "member"
+                ? "This next step stays when the leader leaves and comes back. The team member may sign in. The leader owns the path."
+                : "This next step stays when the parent leaves and comes back. The child has no login."}
+            </p>
+          ) : nextStep?.portion ? (
             <p
               className="mt-2 text-sm text-muted-foreground"
               data-next-portion={card.nextTitle}
