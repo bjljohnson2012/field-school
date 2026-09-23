@@ -4,11 +4,15 @@
  * a chapter boundary is missing, audio drifts from the Remotion timeline
  * or from caption cues, or a composition is missing useCurrentFrame
  * or drives motion with a CSS timer, or master length falls outside
- * the Guo 6 minute practice band and the Lagerstrom 12–20 minute for-credit band.
+ * the Guo 6 minute practice band and the Lagerstrom 12–20 minute for-credit band,
+ * or frame-to-frame flicker or a flash pattern is detected.
  * This checker does not flip Cleaning.
  */
 
 const FPS = 30;
+const FLICKER_DELTA = 0.5;
+const FLASH_WINDOW = FPS;
+const FLASH_REVERSALS = 3;
 const PRACTICE_MAX_SEC = 6 * 60;
 const CREDIT_MIN_SEC = 12 * 60;
 const CREDIT_MAX_SEC = 20 * 60;
@@ -145,6 +149,60 @@ function durationNotes(rows) {
   return notes;
 }
 
+function lumaSeries(values) {
+  if (!Array.isArray(values) || values.length < 2) return null;
+  if (values.some((value) => !Number.isFinite(value))) return null;
+  const scale = values.some((value) => value > 1) ? 255 : 1;
+  return values.map((value) => value / scale);
+}
+
+function largeSteps(luma) {
+  const steps = [];
+  for (let index = 1; index < luma.length; index++) {
+    const delta = luma[index] - luma[index - 1];
+    if (Math.abs(delta) >= FLICKER_DELTA) steps.push({ index, delta });
+  }
+  return steps;
+}
+
+function flickerPattern(steps) {
+  let frame = false;
+  for (let index = 1; index < steps.length; index++) {
+    const prev = steps[index - 1];
+    const next = steps[index];
+    if (next.index === prev.index + 1 && next.delta * prev.delta < 0) frame = true;
+  }
+  let flash = false;
+  for (let start = 0; start < steps.length; start++) {
+    let reversals = 0;
+    for (let index = start + 1; index < steps.length; index++) {
+      if (steps[index].index - steps[start].index > FLASH_WINDOW) break;
+      if (steps[index].delta * steps[index - 1].delta < 0) reversals += 1;
+    }
+    if (reversals >= FLASH_REVERSALS) flash = true;
+  }
+  if (frame && flash) return "both";
+  if (frame) return "frame";
+  if (flash) return "flash";
+  return null;
+}
+
+function flickerNotes(rows) {
+  const notes = [];
+  for (const row of rows ?? []) {
+    const luma = lumaSeries(row?.luma);
+    if (!luma) continue;
+    const pattern = flickerPattern(largeSteps(luma));
+    if (!pattern) continue;
+    notes.push({
+      kind: "flicker",
+      id: row.id ? String(row.id) : "",
+      pattern,
+    });
+  }
+  return notes;
+}
+
 /** Soft notes only. Cleaning stays held. */
 export function remotionSoftCraftNotes(input = {}) {
   const notes = [];
@@ -173,5 +231,6 @@ export function remotionSoftCraftNotes(input = {}) {
   notes.push(...audioNotes(input.audio));
   notes.push(...frameNotes(input.compositions));
   notes.push(...durationNotes(input.durations));
+  notes.push(...flickerNotes(input.flicker));
   return { notes, cleaningFlip: false, holdCleaning: true };
 }

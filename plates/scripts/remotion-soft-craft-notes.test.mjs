@@ -89,6 +89,7 @@ test("the checker does not flip Cleaning or invent EDU-S03", () => {
   assert.match(source, /kind: "missing-use-current-frame"/);
   assert.match(source, /kind: "css-timer-motion"/);
   assert.match(source, /kind: "duration-band"/);
+  assert.match(source, /kind: "flicker"/);
   assert.doesNotMatch(source, /EDU-S03|27pn9xs0zk8a73g|af374d95|distribute:\s*true|AUTH_URL|HARD_FAIL/);
   assert.doesNotMatch(source, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
@@ -304,6 +305,85 @@ test("a duration-band note stays beside the earlier soft notes", () => {
       "duration-band",
     ],
   );
+  assert.equal(result.cleaningFlip, false);
+  assert.equal(result.holdCleaning, true);
+});
+
+function held(value, count) {
+  return Array.from({ length: count }, () => value);
+}
+
+test("a steady fade and a single cut record no flicker note", () => {
+  const fade = Array.from({ length: 20 }, (_, index) => index / 19);
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Opener", source: frameDriven }],
+    durations: [{ id: "practice", seconds: 6 * 60 }],
+    flicker: [
+      { id: "fade", luma: fade },
+      { id: "cut", luma: [0, 0, 0, 1, 1, 1] },
+    ],
+    cleaningFlip: true,
+  });
+  assert.deepEqual(result.notes, []);
+  assert.equal(result.cleaningFlip, false);
+});
+
+test("frame-to-frame flicker is the only soft note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Opener", source: frameDriven }],
+    durations: [{ id: "practice", seconds: 6 * 60 }],
+    flicker: [{ id: "slate", luma: [0, 1, 0] }],
+  });
+  assert.deepEqual(result.notes, [{ kind: "flicker", id: "slate", pattern: "frame" }]);
+  assert.equal(result.holdCleaning, true);
+});
+
+test("a flash pattern is the only soft note", () => {
+  const luma = [...held(0, 8), ...held(1, 8), ...held(0, 8), ...held(1, 8), ...held(0, 8)];
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Opener", source: frameDriven }],
+    durations: [{ id: "practice", seconds: 6 * 60 }],
+    flicker: [{ id: "slate", luma }],
+  });
+  assert.deepEqual(result.notes, [{ kind: "flicker", id: "slate", pattern: "flash" }]);
+  assert.equal(result.cleaningFlip, false);
+});
+
+test("a flicker note stays beside the earlier soft notes", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [{ ...aligned, startMs: 10800 }],
+    spoken,
+    chapters: chapters.filter((row) => row.id !== "recap"),
+    audio: [{ ...syncedAudio, startMs: 10400 }],
+    compositions: [{ id: "Slate", source: 'interpolate(0, [0, 1], [0, 1]);\n@keyframes spin {}\nanimation: spin 1s;' }],
+    durations: [{ id: "LessonSpine", seconds: 7 * 60 }],
+    flicker: [{ id: "slate", luma: [0, 1, 0] }],
+  });
+  assert.deepEqual(
+    result.notes.map((note) => note.kind),
+    [
+      "caption-cue-drift",
+      "missing-chapter-boundary",
+      "audio-desync",
+      "missing-use-current-frame",
+      "css-timer-motion",
+      "duration-band",
+      "flicker",
+    ],
+  );
+  assert.equal(result.notes.at(-1).pattern, "frame");
   assert.equal(result.cleaningFlip, false);
   assert.equal(result.holdCleaning, true);
 });
