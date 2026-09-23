@@ -10,7 +10,7 @@ import { SPINE_BEATS, spineDurationSec, spineLayout } from "../../plates/src/les
 import { remotionSoftCraftNotes } from "../../plates/scripts/remotion-soft-craft-notes.mjs";
 import { loadCachedBroll, mountLivePexelsBroll, searchAndCachePexelsBroll } from "../../plates/scripts/pexels-broll.mjs";
 import { applyLiveBroll } from "../src/lib/player/live-pexels-broll.ts";
-import { lessonSpineLiveBroll } from "../src/lib/player/live-pexels-broll-server.ts";
+import { lessonSpineBrollPayload, lessonSpineLiveBroll } from "../src/lib/player/live-pexels-broll-server.ts";
 import { appliedLessonSpineCraft } from "../src/lib/player/soft-craft-apply.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -1970,7 +1970,7 @@ test("LessonSpine Remotion rail mounts live Pexels b-roll when a plate requests 
     const route = read("src/app/api/play/lesson-spine-broll/route.ts");
     const server = read("src/lib/player/live-pexels-broll-server.ts");
     const spine = readFileSync(join(root, "..", "plates", "src", "LessonSpine.tsx"), "utf8");
-    const helper = readFileSync(join(root, "..", "plates", "scripts", "pexels-broll.mjs"), "utf8");
+    const helper = read("src/lib/player/pexels-broll.mjs");
     assert.match(preview, /fetch\("\/api\/play\/lesson-spine-broll"\)/);
     assert.match(preview, /applyLiveBroll/);
     assert.match(preview, /inputProps=\{\{ broll: liveBroll \}\}/);
@@ -1989,7 +1989,7 @@ test("LessonSpine Remotion rail mounts live Pexels b-roll when a plate requests 
     assert.match(panel, /data-guest-soft-panel="soft-craft"/);
     assert.match(panel, /data-distribute="false"/);
     assert.match(panel, /data-cleaning-flip="false"/);
-    assert.match(route, /lessonSpineLiveBroll/);
+    assert.match(route, /lessonSpineBrollPayload/);
     assert.match(route, /distribute: false/);
     assert.match(server, /requested: true/);
     assert.match(server, /LESSON_SPINE_BROLL_QUERY = "classroom"/);
@@ -1999,6 +1999,74 @@ test("LessonSpine Remotion rail mounts live Pexels b-roll when a plate requests 
     assert.match(helper, /Authorization: authorization/);
     assert.doesNotMatch(preview + route + server + helper, /pexels-test-key|EDU-S03|27pn9xs0zk8a73g|AUTH_URL|HARD_FAIL|distribute:\s*true/);
     assert.doesNotMatch(preview + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+  } finally {
+    if (prior == null) delete process.env.PEXELS_API_KEY;
+    else process.env.PEXELS_API_KEY = prior;
+  }
+});
+
+test("production Next mount keeps live b-roll when the key is set", async () => {
+  const prior = process.env.PEXELS_API_KEY;
+  const server = read("src/lib/player/live-pexels-broll-server.ts");
+  const route = read("src/app/api/play/lesson-spine-broll/route.ts");
+  const mount = read("src/lib/player/pexels-broll.mjs");
+  const envName = read("src/lib/player/pexels-env.ts");
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const page = read("src/app/play/lesson-spine/page.tsx");
+  const panel = read("src/components/lesson-spine-guest-soft-panel.tsx");
+  assert.match(server, /from "\.\/pexels-broll\.mjs"/);
+  assert.match(server, /PEXELS_API_KEY_ENV/);
+  assert.doesNotMatch(server + route, /pathToFileURL|import\(|plates\/scripts\/pexels-broll/);
+  assert.match(mount, /export async function mountLivePexelsBroll/);
+  assert.match(envName, /PEXELS_API_KEY_ENV = "PEXELS_API_KEY"/);
+  assert.doesNotMatch(envName + server + route + mount, /PEXELS_API_KEY\s*=\s*["'][^"']+/);
+  assert.match(preview, /data-live-broll=\{liveBroll \? "non-null" : "absent"\}/);
+  assert.match(preview, /data-broll-request="classroom"/);
+  assert.match(preview, /data-login="none"/);
+  assert.match(page, /LessonSpineGuestSoftPanel/);
+  assert.match(panel, /data-guest-soft-panel="soft-craft"/);
+  assert.match(page, /af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4/);
+
+  process.env.PEXELS_API_KEY = "pexels-test-key";
+  const calls = [];
+  const fetchImpl = async (url, init) => {
+    calls.push({ href: String(url), authorization: init?.headers?.Authorization ?? null });
+    if (String(url).includes("/videos/search")) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          videos: [
+            {
+              id: 4401,
+              url: "https://www.pexels.com/video/classroom-4401/",
+              user: { name: "Ada Frame", url: "https://www.pexels.com/@ada" },
+              video_files: [
+                { file_type: "video/mp4", width: 640, link: "https://images.pexels.com/videos/4401/sd.mp4" },
+              ],
+            },
+          ],
+        }),
+      };
+    }
+    return { ok: true, status: 200, arrayBuffer: async () => Uint8Array.from([1, 2, 3, 4]).buffer };
+  };
+  try {
+    const cacheDir = mkdtempSync(join(tmpdir(), "pexels-prod-mount-"));
+    const body = await lessonSpineBrollPayload({ cacheDir, fetchImpl });
+    assert.equal(body.ok, true);
+    assert.equal(body.distribute, false);
+    assert.ok(body.broll);
+    assert.match(body.broll.file, /4401\.mp4$/);
+    assert.equal(body.broll.photographer, "Ada Frame");
+    assert.equal(body.broll.photographerUrl, "https://www.pexels.com/@ada");
+    assert.equal(body.broll.pexelsUrl, "https://www.pexels.com/video/classroom-4401/");
+    assert.equal(calls[0].authorization, "pexels-test-key");
+    assert.equal(String(calls[0].authorization).startsWith("Bearer"), false);
+    assert.equal(calls[1].authorization, null);
+    delete process.env.PEXELS_API_KEY;
+    const quiet = await lessonSpineLiveBroll({ cacheDir: mkdtempSync(join(tmpdir(), "pexels-prod-empty-")) });
+    assert.equal(quiet, null);
   } finally {
     if (prior == null) delete process.env.PEXELS_API_KEY;
     else process.env.PEXELS_API_KEY = prior;
