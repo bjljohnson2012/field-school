@@ -5,7 +5,7 @@ import { Player, type PlayerRef } from "@remotion/player";
 import { AbsoluteFill, Easing, Sequence, interpolate, useCurrentFrame } from "remotion";
 import Link from "next/link";
 import { useLessonSpineContinue, useLessonSpinePlayWrite, useLessonSpineRail } from "@/components/lesson-spine-play-write";
-import { applyLiveBroll, type LiveBroll } from "@/lib/player/live-pexels-broll";
+import { applyLiveBroll, lessonSpineBrollCredit, type LiveBroll } from "@/lib/player/live-pexels-broll";
 import { lessonSpineTeachProve } from "@/lib/player/play-rail-write";
 
 const FPS = 30;
@@ -167,6 +167,7 @@ export function LessonSpineRemotionPreview() {
   const [frame, setFrame] = useState(0);
   const [chosen, setChosen] = useState<string | null>(null);
   const [liveBroll, setLiveBroll] = useState<CachedBroll | null>(null);
+  const credit = lessonSpineBrollCredit(liveBroll);
   const restoredId = continueAt
     ? continueAt.chapterId === "next-up"
       ? "nextUp"
@@ -289,6 +290,7 @@ export function LessonSpineRemotionPreview() {
       data-sales-children="0"
       data-broll-request="classroom"
       data-live-broll={liveBroll ? "non-null" : "absent"}
+      data-pexels-rail-attribution={credit.state}
       data-play-rail={rail === "remotion" ? "remotion" : undefined}
       data-play-write={wrote ? "living-brain" : undefined}
     >
@@ -409,6 +411,19 @@ export function LessonSpineRemotionPreview() {
           ? continueAt.cue
           : `${!chosen && continueAt?.label === "Next lesson" ? "Next lesson" : chapter.label}. Household: the child has no login. Sales: this desk lists no children.`}
       </p>
+      {credit.state === "present" ? (
+        <p className="mt-2 text-sm text-muted-foreground" data-pexels-credit="live">
+          <a
+            href={credit.pexelsUrl}
+            className="underline underline-offset-2"
+            data-photographer={credit.photographer}
+            data-photographer-url={credit.photographerUrl}
+            data-pexels-url={credit.pexelsUrl}
+          >
+            {credit.label}
+          </a>
+        </p>
+      ) : null}
       <div id="lesson-spine-prove" className="mt-4 overflow-hidden rounded-2xl border border-border bg-black">
         <Player
           ref={playerRef}

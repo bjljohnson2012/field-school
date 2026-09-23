@@ -9,7 +9,7 @@ import { assignCompleteBody, lessonSpineContinue, lessonSpineRail, lessonSpineRe
 import { SPINE_BEATS, spineDurationSec, spineLayout } from "../../plates/src/lessonSpine.ts";
 import { remotionSoftCraftNotes } from "../../plates/scripts/remotion-soft-craft-notes.mjs";
 import { loadCachedBroll, mountLivePexelsBroll, searchAndCachePexelsBroll } from "../../plates/scripts/pexels-broll.mjs";
-import { applyLiveBroll } from "../src/lib/player/live-pexels-broll.ts";
+import { applyLiveBroll, lessonSpineBrollCredit } from "../src/lib/player/live-pexels-broll.ts";
 import { lessonSpineBrollPayload, lessonSpineLiveBroll } from "../src/lib/player/live-pexels-broll-server.ts";
 import { appliedLessonSpineCraft } from "../src/lib/player/soft-craft-apply.ts";
 
@@ -2071,4 +2071,67 @@ test("production Next mount keeps live b-roll when the key is set", async () => 
     if (prior == null) delete process.env.PEXELS_API_KEY;
     else process.env.PEXELS_API_KEY = prior;
   }
+});
+
+test("LessonSpine Remotion rail shows the Pexels photographer when live b-roll is mounted", () => {
+  const mounted = {
+    file: "/tmp/field-school-pexels/4401.mp4",
+    photographer: "Ada Frame",
+    photographerUrl: "https://www.pexels.com/@ada",
+    pexelsUrl: "https://www.pexels.com/video/classroom-4401/",
+  };
+  const credit = lessonSpineBrollCredit(mounted);
+  assert.equal(credit.state, "present");
+  if (credit.state !== "present") return;
+  assert.equal(credit.photographer, "Ada Frame");
+  assert.equal(credit.photographerUrl, "https://www.pexels.com/@ada");
+  assert.equal(credit.pexelsUrl, "https://www.pexels.com/video/classroom-4401/");
+  assert.equal(credit.label, "Ada Frame on Pexels");
+  assert.deepEqual(lessonSpineBrollCredit(mounted), credit);
+  assert.deepEqual(lessonSpineBrollCredit(applyLiveBroll(mounted)), credit);
+  assert.deepEqual(lessonSpineBrollCredit(null), { state: "absent" });
+  assert.deepEqual(lessonSpineBrollCredit({ photographer: "Ada Frame" }), { state: "absent" });
+  assert.equal(lessonSpineBrollCredit(undefined).state, "absent");
+
+  const applied = remotionSoftCraftNotes(appliedLessonSpineCraft());
+  assert.deepEqual(applied.notes, []);
+  assert.equal(applied.cleaningFlip, false);
+  assert.equal(applied.holdCleaning, true);
+
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  const page = read("src/app/play/lesson-spine/page.tsx");
+  const panel = read("src/components/lesson-spine-guest-soft-panel.tsx");
+  const helper = read("src/lib/player/live-pexels-broll.ts");
+  assert.match(helper, /export function lessonSpineBrollCredit/);
+  assert.match(preview, /lessonSpineBrollCredit\(liveBroll\)/);
+  assert.match(preview, /data-pexels-rail-attribution=\{credit\.state\}/);
+  assert.match(preview, /data-live-broll=\{liveBroll \? "non-null" : "absent"\}/);
+  assert.match(preview, /data-login="none"/);
+  assert.match(preview, /data-pexels-credit="live"/);
+  assert.match(preview, /credit\.state === "present"/);
+  assert.match(preview, /\{credit\.label\}/);
+  assert.match(preview, /data-photographer=\{credit\.photographer\}/);
+  assert.match(preview, /data-pexels-url=\{credit\.pexelsUrl\}/);
+  assert.match(preview, /data-pexels-attribution="cached"/);
+  assert.match(preview, /data-play-rail=\{rail === "remotion" \? "remotion" : undefined\}/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(preview, /addEventListener\("pause"/);
+  assert.match(preview, /addEventListener\("seeked"/);
+  assert.match(preview, /addEventListener\("pagehide"/);
+  assert.match(preview, /continueAt\.stage === "prove" \? null/);
+  assert.match(preview, /data-soft-craft-apply="plates"/);
+  assert.match(html5, /recordRail\("html5"\)/);
+  assert.match(page, /LessonSpineGuestSoftPanel/);
+  assert.match(page, /af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4/);
+  assert.match(panel, /data-guest-soft-panel="soft-craft"/);
+  assert.match(panel, /data-distribute="false"/);
+  assert.match(panel, /data-cleaning-flip="false"/);
+  assert.match(panel, /data-login="none"/);
+  const handlers = preview.slice(preview.indexOf("const onPlay = () => {"), preview.indexOf('player.addEventListener("play"'));
+  assert.doesNotMatch(handlers, /setLiveBroll/);
+  const creditUi = preview.slice(preview.indexOf('data-pexels-credit="live"'), preview.indexOf('id="lesson-spine-prove"'));
+  assert.doesNotMatch(creditUi, /rail === "remotion" \? null|setLiveBroll/);
+  assert.doesNotMatch(preview + helper + panel, /pexels-test-key|EDU-S03|27pn9xs0zk8a73g|AUTH_URL|HARD_FAIL|distribute:\s*true/);
+  assert.doesNotMatch(preview + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
