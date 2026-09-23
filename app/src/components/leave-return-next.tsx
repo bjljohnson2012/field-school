@@ -4,9 +4,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { brainBoard, type LivingBrain, type Room } from "@/lib/living-brain/model";
-import { lessonSpineStep } from "@/lib/player/play-rail-write";
+import { lessonSpineContinue, lessonSpineStep } from "@/lib/player/play-rail-write";
 
-type ReturnStep = { title: string; login: "none" | "member"; room: Room };
+type ReturnStep = {
+  title: string;
+  login: "none" | "member";
+  room: Room;
+  chapterId: string;
+};
 
 export function LeaveReturnNext() {
   const { data, status } = useSession();
@@ -32,11 +37,12 @@ export function LeaveReturnNext() {
           lessonSpineStep(row.outcomes),
         );
         const title = person ? lessonSpineStep(person.outcomes) : null;
-        if (!person || !title) {
+        const continued = title ? lessonSpineContinue(title) : null;
+        if (!person || !title || !continued) {
           setStep(null);
           return;
         }
-        setStep({ title, login: person.login, room });
+        setStep({ title, login: person.login, room, chapterId: continued.chapterId });
       })
       .catch(() => {
         if (!cancelled) setStep(null);
@@ -53,6 +59,8 @@ export function LeaveReturnNext() {
       data-leave-return="living-brain"
       data-lesson-spine-next={step.title}
       data-next-from="outcomes"
+      data-continue-from="outcomes"
+      data-continue-chapter={step.chapterId}
       data-login={step.login}
       data-sales-children={step.room === "sales" ? "0" : undefined}
     >
