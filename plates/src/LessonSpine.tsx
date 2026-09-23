@@ -4,6 +4,7 @@ import {DefinitionBoard} from "./DefinitionBoard";
 import {Opener} from "./Opener";
 import {QuizBumper} from "./QuizBumper";
 import {RecapCard} from "./RecapCard";
+import {PexelsBroll} from "./PexelsBroll";
 import {TalkingHeadCard} from "./TalkingHeadCard";
 import {SPINE_BEATS, spineLayout} from "./lessonSpine";
 import type {LessonSpineProps} from "./types";
@@ -15,12 +16,19 @@ export const LessonSpine: React.FC<LessonSpineProps> = ({
   objective,
   recap,
   nextUp,
+  broll,
 }) => {
   const layout = spineLayout(SPINE_BEATS);
   const from = Object.fromEntries(layout.map((row) => [row.id, row]));
+  const span = layout.reduce((sum, row) => sum + row.frames, 0);
 
   return (
     <AbsoluteFill>
+      {broll ? (
+        <Sequence from={0} durationInFrames={span} name="broll">
+          <PexelsBroll {...broll} />
+        </Sequence>
+      ) : null}
       <Sequence
         from={from.sting.from}
         durationInFrames={from.sting.frames}
