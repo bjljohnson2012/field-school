@@ -6,6 +6,14 @@ function chapterId(raw: string) {
   return id === "nextUp" ? "next-up" : id;
 }
 
+/** A living-brain outcome written by LessonSpine play. */
+export function lessonSpineStep(title: string) {
+  const text = title.trim();
+  if (text === "Finished LessonSpine") return text;
+  if (/^Continue LessonSpine at \S/.test(text)) return text;
+  return null;
+}
+
 /** Next LessonSpine step for the person already on the desk. */
 export function playOutcome(rawChapterId: string) {
   const id = chapterId(rawChapterId);
