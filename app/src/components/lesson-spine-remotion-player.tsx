@@ -118,8 +118,11 @@ function chapterAt(frame: number) {
 
 export function LessonSpineRemotionPreview() {
   const playerRef = useRef<PlayerRef>(null);
-  const { recordPlay, recordResume, wrote } = useLessonSpinePlayWrite();
+  const { recordPlay, recordResume, recordPortion, wrote } = useLessonSpinePlayWrite();
   const continueAt = useLessonSpineContinue();
+  const playing = useRef(false);
+  const prevIndex = useRef<number | null>(null);
+  const portionSeen = useRef(new Set<string>());
   const [frame, setFrame] = useState(0);
   const [chosen, setChosen] = useState<string | null>(null);
   const restoredId = continueAt
@@ -138,6 +141,7 @@ export function LessonSpineRemotionPreview() {
       setFrame(next);
     }
     const onPlay = () => {
+      playing.current = true;
       if (!continueAt) void recordPlay("sting");
       else void recordPlay(continueAt.chapterId);
     };
@@ -146,6 +150,25 @@ export function LessonSpineRemotionPreview() {
       setFrame(next);
       if (continueAt && next === 0 && frameFor(continueAt.chapterId) !== 0) return;
       setChosen(chapterAt(next).id);
+      if (!playing.current) return;
+      const row = chapterAt(next);
+      const index = ROWS.findIndex((item) => item.id === row.id);
+      if (prevIndex.current === null) {
+        prevIndex.current = index;
+      } else if (index > prevIndex.current) {
+        for (let i = prevIndex.current; i < index; i += 1) {
+          const id = ROWS[i].id;
+          if (portionSeen.current.has(id)) continue;
+          portionSeen.current.add(id);
+          void recordPortion(id);
+        }
+        prevIndex.current = index;
+      }
+      const last = ROWS[ROWS.length - 1];
+      if (row.id === last.id && next >= last.from + last.frames - 1 && !portionSeen.current.has(last.id)) {
+        portionSeen.current.add(last.id);
+        void recordPortion(last.id);
+      }
     };
     const saveResume = (next: number) => {
       const row = chapterAt(next);
@@ -174,7 +197,7 @@ export function LessonSpineRemotionPreview() {
       player.removeEventListener("seeked", onSeeked);
       document.removeEventListener("visibilitychange", onLeave);
     };
-  }, [continueAt, recordPlay, recordResume]);
+  }, [continueAt, recordPlay, recordPortion, recordResume]);
 
   return (
     <section
