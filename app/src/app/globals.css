@@ -56,6 +56,20 @@
   --radius-2xl: 28px;
   --radius-3xl: 32px;
   --radius-4xl: 36px;
+  --color-brand-navy: #0b1f3a;
+  --color-brand-indigo: #1f3c88;
+  --color-brand-indigo-deep: #172e6b;
+  --color-brand-orange: #ff6a1a;
+  --color-brand-orange-deep: #e55a15;
+  --color-brand-emerald: #0e9f6e;
+  --color-brand-amber: #f59e0b;
+  --color-brand-red: #dc2626;
+  --radius-brand: 0.875rem;
+  --radius-card: 1.25rem;
+  --shadow-card: 0 8px 24px rgba(11, 31, 58, 0.08);
+  --shadow-card-hover: 0 12px 30px rgba(11, 31, 58, 0.12);
+  --shadow-orange-glow: 0 10px 22px rgba(255, 106, 26, 0.28);
+  --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root {
@@ -131,6 +145,70 @@
   --sidebar-accent-foreground: #f3f1ec;
   --sidebar-border: #343844;
   --sidebar-ring: #6b93ff;
+}
+
+[data-chrome="coach"] {
+  --font-fraunces: var(--font-space-grotesk), var(--font-inter), sans-serif;
+  --font-ibm-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --background: #f5f7fa;
+  --foreground: #111827;
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+  --primary: #ff6a1a;
+  --primary-foreground: #ffffff;
+  --secondary: #f9fafb;
+  --secondary-foreground: #111827;
+  --muted: #f9fafb;
+  --muted-foreground: #6b7280;
+  --accent: #ff6a1a;
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --border: #e5e7eb;
+  --input: #d1d5db;
+  --ring: #1f3c88;
+  --faint: #6b7280;
+  --pass: #0e9f6e;
+  --warn: #f59e0b;
+  --sidebar: #0b1f3a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ff6a1a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1f3c88;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #ff6a1a;
+  color-scheme: light;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-ibm-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-brand px-5 py-2.5 text-sm font-semibold transition-all duration-200 ease-brand focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-brand bg-brand-orange px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-brand hover:bg-brand-orange-deep hover:shadow-orange-glow focus:outline-none focus:ring-4 focus:ring-brand-orange/25 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .card {
+    @apply rounded-card border border-gray-200 bg-white shadow-card;
+  }
+
+  .input {
+    @apply w-full rounded-brand border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm focus:border-brand-indigo focus:outline-none focus:ring-4 focus:ring-brand-indigo/15;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-semibold text-gray-700;
+  }
+
+  .h-section {
+    @apply font-display text-xl font-semibold tracking-tight text-gray-900;
+  }
 }
 
 @layer base {

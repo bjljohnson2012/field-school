@@ -17,9 +17,39 @@ import { continueAsGuest, signInLocal } from "@/lib/portal";
 
 type Props = {
   oauth: OAuthProviderStatus;
+  coachingShell?: boolean;
 };
 
-export function LoginForm({ oauth }: Props) {
+function CoachMark() {
+  return (
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 64 64"
+      className="rounded-brand shadow-orange-glow"
+      role="img"
+      aria-label="Field School"
+    >
+      <defs>
+        <linearGradient id="coach-mark-bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#0B1F3A" />
+          <stop offset="1" stopColor="#1F3C88" />
+        </linearGradient>
+        <linearGradient id="coach-mark-bolt" x1="20" y1="14" x2="44" y2="50" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#FF6A1A" />
+          <stop offset="1" stopColor="#F59E0B" />
+        </linearGradient>
+      </defs>
+      <rect width="64" height="64" rx="14" fill="url(#coach-mark-bg)" />
+      <rect x="14" y="38" width="6" height="14" rx="2" fill="#1F3C88" opacity="0.55" />
+      <rect x="24" y="30" width="6" height="22" rx="2" fill="#1F3C88" opacity="0.75" />
+      <rect x="34" y="22" width="6" height="30" rx="2" fill="#1F3C88" opacity="0.95" />
+      <path d="M44 14 L34 32 L41 32 L36 50 L52 28 L45 28 Z" fill="url(#coach-mark-bolt)" />
+    </svg>
+  );
+}
+
+export function LoginForm({ oauth, coachingShell = false }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: authSession, status } = useSession();
@@ -52,6 +82,81 @@ export function LoginForm({ oauth }: Props) {
     if (!ready || !isStaff) return;
     if (isAdminRoute(next)) router.replace(next);
   }, [ready, isStaff, router, next, memberNext, status, authSession]);
+
+  if (coachingShell) {
+    return (
+      <div className="card w-full max-w-md p-8">
+        <div className="mb-6 flex items-center gap-3">
+          <CoachMark />
+          <h1 className="h-section">
+            Field <span className="text-brand-orange">School</span>
+          </h1>
+        </div>
+        <form
+          className="space-y-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setPending(true);
+            setError(null);
+            try {
+              const signed = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+              });
+              if (signed?.error) {
+                setError(visibleLoginProviderError(signed.error, oauth));
+                return;
+              }
+              router.push(isAdminRoute(next) ? "/request-access?from=admin" : memberNext);
+            } catch {
+              setError("Could not reach the campus. Try again.");
+            } finally {
+              setPending(false);
+            }
+          }}
+        >
+          <div>
+            <label className="label" htmlFor="login-email">
+              Email
+            </label>
+            <input
+              id="login-email"
+              type="email"
+              required
+              className="input"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@work.com"
+            />
+          </div>
+          <div>
+            <label className="label" htmlFor="login-password">
+              Password
+            </label>
+            <input
+              id="login-password"
+              type="password"
+              required
+              className="input"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {error ? (
+            <div className="rounded-brand border border-brand-red/20 bg-brand-red/5 px-3 py-2 text-sm text-brand-red">
+              {error}
+            </div>
+          ) : null}
+          <button type="submit" disabled={pending} className="btn-primary w-full">
+            {pending ? "Signing in…" : "Sign in"}
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <main className="mx-auto max-w-md px-4 py-16">
