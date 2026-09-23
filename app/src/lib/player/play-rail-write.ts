@@ -8,6 +8,7 @@ export {
   lessonSpineResume,
   lessonSpineRollup,
   lessonSpineStep,
+  lessonSpineTeachProve,
   lessonSpineTrail,
   lessonSpineWithResume,
 } from "./lesson-spine-step.ts";
