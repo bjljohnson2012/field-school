@@ -1792,3 +1792,48 @@ test("Remotion plates search and cache Pexels b-roll with the raw API key", asyn
     else process.env.PEXELS_API_KEY = prior;
   }
 });
+
+test("guests can read the soft-craft notes on the play page", () => {
+  const page = read("src/app/play/lesson-spine/page.tsx");
+  const panel = read("src/components/lesson-spine-guest-soft-panel.tsx");
+  const notes = read("src/lib/player/soft-craft-guest.ts");
+  const overlay = read("deploy/overlay-player-rail.sh");
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  const checker = readFileSync(join(root, "..", "plates", "scripts", "remotion-soft-craft-notes.mjs"), "utf8");
+  assert.match(page, /LessonSpineGuestSoftPanel/);
+  assert.match(page, /LessonSpinePlayer/);
+  assert.match(page, /LessonSpineRemotionPreview/);
+  assert.match(page, /LessonSpineRailHydrate/);
+  assert.match(page, /af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4/);
+  assert.match(page, /do not write/);
+  assert.match(panel, /data-guest-soft-panel="soft-craft"/);
+  assert.match(panel, /data-login="none"/);
+  assert.match(panel, /data-distribute="false"/);
+  assert.match(panel, /data-cleaning-flip="false"/);
+  assert.match(panel, /Guests do not write/);
+  for (const kind of [
+    "caption-cue-drift",
+    "missing-chapter-boundary",
+    "audio-desync",
+    "missing-use-current-frame",
+    "css-timer-motion",
+    "duration-band",
+    "flicker",
+    "wcag-contrast",
+    "multi-objective",
+    "pexels-broll",
+  ]) {
+    assert.match(notes, new RegExp(`kind: "${kind}"`));
+    assert.match(panel, /data-soft-note=\{note\.kind\}/);
+  }
+  assert.match(overlay, /src\/components\/lesson-spine-guest-soft-panel\.tsx/);
+  assert.match(overlay, /src\/lib\/player\/soft-craft-guest\.ts/);
+  assert.match(preview, /continueAt\.stage === "prove" \? null/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(html5, /recordRail\("html5"\)/);
+  assert.match(checker, /cleaningFlip: false/);
+  assert.doesNotMatch(panel + notes, /EDU-S03|27pn9xs0zk8a73g|AUTH_URL|HARD_FAIL|distribute:\s*true/);
+  assert.doesNotMatch(overlay, /AUTH_URL=|distribute:\s*true/);
+  assert.doesNotMatch(panel + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
