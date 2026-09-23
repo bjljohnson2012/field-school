@@ -57,6 +57,11 @@ MEMBERS=(
   src/app/play/lesson-spine/page.tsx
   src/components/lesson-spine-guest-soft-panel.tsx
   src/lib/player/soft-craft-guest.ts
+  src/app/api/play/lesson-spine-broll/route.ts
+  src/lib/player/live-pexels-broll.ts
+  src/lib/player/live-pexels-broll-server.ts
+  src/lib/player/pexels-broll.mjs
+  src/lib/player/pexels-env.ts
   src/app/api/media/lesson-spine/route.ts
   src/components/lesson-spine-player.tsx
   src/components/lesson-spine-parent-session.tsx
