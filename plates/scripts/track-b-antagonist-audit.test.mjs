@@ -21,13 +21,13 @@ const HARD_IDS = [
 test("full Track B path audit clears the four hard gates and does not ship", () => {
   const audit = auditTrackBPath({capId: "fixture-audio", audio, words, dest});
   assert.equal(audit.bar, "v2");
-  assert.equal(audit.verdict, "SOFT_FAIL");
+  assert.equal(audit.verdict, "PASS");
   assert.deepEqual(audit.hard_fail, []);
   assert.equal(audit.gates["RM-H07"], "PASS");
   assert.equal(audit.gates["EDU-H01"], "PASS");
   assert.equal(audit.gates["EDU-H02"], "PASS");
   assert.equal(audit.gates["EDU-H09"], "PASS");
-  assert.equal(audit.hold_cleaning, false);
+  assert.equal(audit.hold_cleaning, true);
   assert.equal(audit.escalate, false);
   assert.equal(audit.rendering, "idle");
   assert.equal(audit.gpu, false);
@@ -68,7 +68,8 @@ test("full Track B path audit clears the four hard gates and does not ship", () 
   assert.equal(audit.evidence.cleaning_auto_flip, true);
 
   const report = readFileSync(join(root, "track-b-antagonist-audit.md"), "utf8");
-  assert.match(report, /^verdict: SOFT_FAIL/m);
+  assert.match(report, /^verdict: PASS/m);
+  assert.match(report, /^hold_cleaning: true/m);
   assert.match(report, /bar: v2/);
   assert.doesNotMatch(report, /bar v2\.1 is the score/);
   for (const id of ["RM-H07", "EDU-H01", "EDU-H02", "EDU-H09"]) {
@@ -88,7 +89,9 @@ test("the audit script stays a dry run when only soft notes remain", () => {
   const run = spawnSync(process.execPath, [join(here, "track-b-antagonist-audit.mjs")], {encoding: "utf8"});
   assert.equal(run.status, 0);
   const body = JSON.parse(run.stdout);
-  assert.equal(body.verdict, "SOFT_FAIL");
+  assert.equal(body.verdict, "PASS");
+  assert.equal(body.hold_cleaning, true);
+  assert.deepEqual(body.soft_fail, ["EDU-S03"]);
   assert.deepEqual(body.hard_fail, []);
   assert.equal(body.distribute, false);
   assert.equal(body.written, false);
