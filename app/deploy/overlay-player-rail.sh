@@ -55,6 +55,8 @@ trap 'rm -rf "$STAGE" "$TMP_TAR"' EXIT
 
 MEMBERS=(
   src/app/play/lesson-spine/page.tsx
+  src/components/lesson-spine-guest-soft-panel.tsx
+  src/lib/player/soft-craft-guest.ts
   src/app/api/media/lesson-spine/route.ts
   src/components/lesson-spine-player.tsx
   src/components/lesson-spine-parent-session.tsx
