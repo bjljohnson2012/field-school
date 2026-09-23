@@ -1961,6 +1961,95 @@ export function CounterexampleCard() {
   );
 }
 
+/** Repair / the case that holds, distinct from the not-this foil and try-this practice. After sting/objective path, after counterexample, before practice. Cream + gold 6px rail. */
+export const REPAIR_CARD_KICKER = "Repair";
+export const REPAIR_CARD_LINE = "Name the case that holds.";
+export const REPAIR_CARD_ONE = "This case.";
+export const REPAIR_CARD_TWO = "A fit.";
+
+export function RepairCard() {
+  const words = REPAIR_CARD_LINE.trim().split(/\s+/);
+  const keyword = words[words.length - 1] ?? REPAIR_CARD_LINE;
+  const lead = words.slice(0, -1).join(" ");
+  const oneWords = REPAIR_CARD_ONE.trim().split(/\s+/);
+  const oneKeyword = oneWords[oneWords.length - 1] ?? REPAIR_CARD_ONE;
+  const oneLead = oneWords.slice(0, -1).join(" ");
+  const twoWords = REPAIR_CARD_TWO.trim().split(/\s+/);
+  const twoKeyword = twoWords[twoWords.length - 1] ?? REPAIR_CARD_TWO;
+  const twoLead = twoWords.slice(0, -1).join(" ");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 64,
+        bottom: LETTERBOX_H + 210,
+        maxWidth: 400,
+        padding: "12px 20px 14px 16px",
+        backgroundColor: cream,
+        borderLeft: `6px solid ${gold}`,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: sansFace,
+          fontSize: 16,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: gold,
+        }}
+      >
+        {REPAIR_CARD_KICKER}
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: "0.01em",
+          color: ink,
+        }}
+      >
+        {lead ? `${lead} ` : null}
+        <Keyword>{keyword}</Keyword>
+      </div>
+      <div
+        style={{
+          marginTop: 8,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 22,
+          color: ink,
+        }}
+      >
+        {oneLead ? `${oneLead} ` : null}
+        <Keyword>{oneKeyword}</Keyword>
+      </div>
+      <div
+        style={{
+          marginTop: 6,
+          width: 16,
+          height: 16,
+          backgroundColor: gold,
+          borderRadius: 4,
+        }}
+      />
+      <div
+        style={{
+          marginTop: 6,
+          fontFamily: displayFace,
+          fontWeight: 700,
+          fontSize: 22,
+          color: ink,
+        }}
+      >
+        {twoLead ? `${twoLead} ` : null}
+        <Keyword>{twoKeyword}</Keyword>
+      </div>
+    </div>
+  );
+}
+
 /** Application / try-this. After Recap/Quiz path, before end. Cream + gold 6px rail. */
 export const PRACTICE_CARD_KICKER = "Try this";
 export const PRACTICE_CARD_LINE = "Apply one idea now.";

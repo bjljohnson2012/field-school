@@ -1,0 +1,84 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {dirname, join} from "node:path";
+import {fileURLToPath} from "node:url";
+import test from "node:test";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const root = join(here, "..");
+const src = (...parts) => readFileSync(join(root, ...parts), "utf8");
+const DEST_SHA = "af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4";
+
+test("RepairCard is the case that holds after the counterexample foil", () => {
+  const layers = src("src", "layers.tsx");
+  const demo = src("src", "RepairCardDemo.tsx");
+  const board = src("src", "DefinitionBoard.tsx");
+  const recap = src("src", "RecapCard.tsx");
+  assert.match(layers, /export function RepairCard/);
+  assert.match(layers, /export const REPAIR_CARD_KICKER/);
+  assert.match(layers, /export const REPAIR_CARD_LINE/);
+  assert.match(layers, /REPAIR_CARD_KICKER = "Repair"/);
+  assert.match(layers, /REPAIR_CARD_LINE = "Name the case that holds\."/);
+  assert.match(layers, /REPAIR_CARD_ONE = "This case\."/);
+  assert.match(layers, /REPAIR_CARD_TWO = "A fit\."/);
+  assert.match(layers, /after counterexample, before practice/);
+  assert.match(layers, /borderLeft: `6px solid \$\{gold\}`/);
+  assert.match(layers, /<Keyword>\{keyword\}<\/Keyword>/);
+  assert.doesNotMatch(layers, /zIndex|z-index/);
+  assert.doesNotMatch(layers, /animation:|transition:|animate-/);
+  assert.doesNotMatch(layers, /a_roll\.mp4|27pn9xs0zk8a73g/);
+  assert.match(demo, /RepairCardDemo/);
+  assert.match(demo, /useCurrentFrame/);
+  assert.match(demo, /name="repair"/);
+  assert.match(demo, /<RepairCard \/>/);
+  assert.match(demo, /CaptionsBand/);
+  assert.doesNotMatch(demo, /a_roll\.mp4|27pn9xs0zk8a73g|<Video/);
+  assert.doesNotMatch(recap, /<RepairCard \/>/);
+  assert.doesNotMatch(recap, /name="repair"/);
+  assert.match(board, /<RepairCard \/>/);
+  assert.match(board, /name="repair"/);
+  const foil = layers.indexOf("export function CounterexampleCard");
+  const repair = layers.indexOf("export function RepairCard");
+  const practice = layers.indexOf("export function PracticeCard");
+  assert.ok(foil >= 0 && repair > foil && practice > repair);
+});
+
+test("RepairCardDemo registers after CounterexampleCardDemo and leaves the spine length alone", () => {
+  const rootTsx = src("src", "Root.tsx");
+  const spine = src("src", "LessonSpine.tsx");
+  const opener = src("src", "Opener.tsx");
+  const head = src("src", "TalkingHeadCard.tsx");
+  const quiz = src("src", "QuizBumper.tsx");
+  const board = src("src", "DefinitionBoard.tsx");
+  assert.match(rootTsx, /id="RepairCardDemo"/);
+  assert.match(rootTsx, /id="CounterexampleCardDemo"/);
+  assert.ok(rootTsx.indexOf('id="CounterexampleCardDemo"') < rootTsx.indexOf('id="RepairCardDemo"'));
+  assert.ok(rootTsx.indexOf('id="RepairCardDemo"') < rootTsx.indexOf('id="LessonSpine"'));
+  assert.match(rootTsx, /durationInFrames=\{1230\}/);
+  assert.doesNotMatch(opener, /RepairCard|name="repair"/);
+  assert.doesNotMatch(head, /RepairCard|name="repair"/);
+  assert.doesNotMatch(quiz, /RepairCard|name="repair"/);
+  assert.doesNotMatch(spine, /RepairCard|name="repair"/);
+  const boardFoil = board.indexOf('name="counterexample"');
+  const boardRepair = board.indexOf('name="repair"');
+  const boardAudio = board.indexOf('name="audio"');
+  assert.ok(boardFoil >= 0 && boardRepair > boardFoil && boardAudio > boardRepair);
+});
+
+test("RepairCard stays SOFT and the counterexample dest is not overwritten", () => {
+  const note = src("antagonist-repair-card.md");
+  const audit = src("scripts", "track-b-antagonist-audit.mjs");
+  const report = src("track-b-antagonist-audit.md");
+  assert.match(note, /EDU-S03: SOFT/);
+  assert.match(note, /hold_cleaning: true/);
+  assert.match(note, new RegExp(DEST_SHA));
+  assert.match(note, /27pn9xs0zk8a73g/);
+  assert.match(note, /CLOSED 0\/8/);
+  assert.match(note, /No encode/);
+  assert.doesNotMatch(note, /8\/8 PASS|launch OPEN|HARD_FAIL|Cap take replaces/);
+  assert.match(audit, /EDU-S03/);
+  assert.match(audit, /SOFT_FAIL/);
+  assert.match(report, /EDU-S03 \| SOFT_FAIL/);
+  assert.match(src("README.md"), /antagonist-repair-card\.md/);
+  assert.doesNotMatch(src("src", "RepairCardDemo.tsx") + note, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
