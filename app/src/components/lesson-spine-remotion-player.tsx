@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Player, type PlayerRef } from "@remotion/player";
 import { AbsoluteFill, Sequence, useCurrentFrame } from "remotion";
-import { useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
+import { useLessonSpineContinue, useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
 
 const FPS = 30;
 const BEATS = [
@@ -70,19 +70,27 @@ export function LessonSpineComposition() {
   );
 }
 
+function frameFor(chapterId: string) {
+  const id = chapterId === "next-up" ? "nextUp" : chapterId;
+  return ROWS.find((row) => row.id === id)?.from ?? 0;
+}
+
 export function LessonSpineRemotionPreview() {
   const playerRef = useRef<PlayerRef>(null);
   const { recordPlay, wrote } = useLessonSpinePlayWrite();
+  const continueAt = useLessonSpineContinue();
 
   useEffect(() => {
     const player = playerRef.current;
     if (!player) return;
+    if (continueAt) player.seekTo(frameFor(continueAt.chapterId));
     const onPlay = () => {
-      void recordPlay("sting");
+      if (!continueAt) void recordPlay("sting");
+      else void recordPlay(continueAt.chapterId);
     };
     player.addEventListener("play", onPlay);
     return () => player.removeEventListener("play", onPlay);
-  }, [recordPlay]);
+  }, [continueAt, recordPlay]);
 
   return (
     <section
@@ -95,6 +103,17 @@ export function LessonSpineRemotionPreview() {
       data-play-write={wrote ? "living-brain" : undefined}
     >
       <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Remotion preview</p>
+      {continueAt ? (
+        <p
+          className="mt-2 text-sm text-muted-foreground"
+          data-continue-from="outcomes"
+          data-lesson-spine-next={continueAt.step}
+          data-login={continueAt.login}
+          data-sales-children={continueAt.room === "sales" ? "0" : undefined}
+        >
+          Continue · {continueAt.step}
+        </p>
+      ) : null}
       <h2 className="mt-1 font-display text-2xl tracking-tight">LessonSpine composition</h2>
       <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
         Same beat clock as the factory composition: sting, slate, objective, recap, next up. The HTML5 rail above

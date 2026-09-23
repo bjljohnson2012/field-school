@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
-import { useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLessonSpineContinue, useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
 import {
   LESSON_SPINE_CHAPTERS,
   LESSON_SPINE_DURATION_SEC,
@@ -13,6 +13,8 @@ export function LessonSpinePlayer() {
   const [current, setCurrent] = useState(0);
   const [playing, setPlaying] = useState(false);
   const { recordPlay, wrote } = useLessonSpinePlayWrite();
+  const continueAt = useLessonSpineContinue();
+  const continued = useRef(false);
   const progress = Math.min(1, current / LESSON_SPINE_DURATION_SEC);
   const active = useMemo(
     () =>
@@ -28,6 +30,15 @@ export function LessonSpinePlayer() {
     setCurrent(seconds);
   }
 
+  useEffect(() => {
+    if (!continueAt || continued.current) return;
+    const video = videoRef.current;
+    if (!video || video.readyState < 1) return;
+    continued.current = true;
+    video.currentTime = continueAt.startSec;
+    setCurrent(continueAt.startSec);
+  }, [continueAt]);
+
   return (
     <div className="space-y-4" data-player="lesson-spine" data-play-write={wrote ? "living-brain" : undefined}>
       <div className="overflow-hidden rounded-2xl border border-border bg-black">
@@ -40,6 +51,11 @@ export function LessonSpinePlayer() {
           src="/api/media/lesson-spine"
           data-master-sha256={LESSON_SPINE_MASTER_SHA256}
           data-ready="hls"
+          onLoadedMetadata={() => {
+            if (!continueAt || continued.current) return;
+            continued.current = true;
+            seek(continueAt.startSec);
+          }}
           onTimeUpdate={(event) => setCurrent(event.currentTarget.currentTime)}
           onPlay={() => {
             setPlaying(true);
@@ -55,6 +71,16 @@ export function LessonSpinePlayer() {
       <div className="rounded-2xl border border-border bg-card p-4">
         <div className="flex items-center justify-between gap-3 text-xs uppercase tracking-[0.16em] text-muted-foreground">
           <span>Player rail</span>
+          {continueAt ? (
+            <span
+              data-continue-from="outcomes"
+              data-lesson-spine-next={continueAt.step}
+              data-login={continueAt.login}
+              data-sales-children={continueAt.room === "sales" ? "0" : undefined}
+            >
+              Continue · {continueAt.step}
+            </span>
+          ) : null}
           <span data-ready-chip="hls">Ready · HLS</span>
           <span>
             {playing ? "Playing" : "Paused"} · {active.label}

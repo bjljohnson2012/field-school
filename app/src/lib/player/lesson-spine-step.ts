@@ -23,6 +23,20 @@ export function lessonSpineConfidence(outcomes: string) {
   return "Getting there";
 }
 
+/** Chapter a signed-in play should continue, from a living-brain LessonSpine step. */
+export function lessonSpineContinue(title: string) {
+  const step = lessonSpineStep(title);
+  if (!step) return null;
+  if (step === "Finished LessonSpine") {
+    const last = LESSON_SPINE_CHAPTERS[LESSON_SPINE_CHAPTERS.length - 1];
+    return { step, chapterId: last.id, label: last.label, startSec: last.startSec };
+  }
+  const name = step.slice("Continue LessonSpine at ".length);
+  const chapter = LESSON_SPINE_CHAPTERS.find((row) => row.label === name);
+  if (!chapter) return null;
+  return { step, chapterId: chapter.id, label: chapter.label, startSec: chapter.startSec };
+}
+
 /** LessonSpine Continue/Finished marks, oldest first. The current step is included once. */
 export function lessonSpineTrail(marks: Array<{ outcomes?: string } | null | undefined>, current?: string) {
   const steps: string[] = [];
