@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { brainBoard, type LivingBrain } from "@/lib/living-brain/model";
 import { lessonSpineContinue, lessonSpineResume } from "@/lib/player/lesson-spine-step";
-import { playWriteBody, portionWriteBody, resumeWriteBody } from "@/lib/player/play-rail-write";
+import { playWriteBody, portionWriteBody, proveCompleteBody, resumeWriteBody } from "@/lib/player/play-rail-write";
 
 export type LessonSpineContinueAt = NonNullable<ReturnType<typeof lessonSpineContinue>> & {
   login: "none" | "member";
@@ -161,5 +161,37 @@ export function useLessonSpinePlayWrite() {
     [email, status],
   );
 
-  return { recordPlay, recordResume, recordPortion, wrote };
+  const recordProve = useCallback(
+    async (chapterId: string) => {
+      if (status !== "authenticated" || !email) return;
+      const key = "fs-lesson-spine-prove";
+      const done = (sessionStorage.getItem(key) || "").split(",").filter(Boolean);
+      if (done.includes(chapterId)) return;
+      const got = await fetch("/api/living-brain");
+      if (!got.ok) return;
+      const payload = (await got.json()) as {
+        ok?: boolean;
+        room?: "household" | "sales";
+        brain?: Parameters<typeof proveCompleteBody>[0]["brain"];
+      };
+      if (!payload.ok || (payload.room !== "household" && payload.room !== "sales")) return;
+      const body = proveCompleteBody({
+        room: payload.room,
+        brain: payload.brain ?? null,
+        chapterId,
+      });
+      if (!body) return;
+      const posted = await fetch("/api/living-brain", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!posted.ok) return;
+      sessionStorage.setItem(key, [...done, chapterId].join(","));
+      setWrote(true);
+    },
+    [email, status],
+  );
+
+  return { recordPlay, recordResume, recordPortion, recordProve, wrote };
 }
