@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { brainBoard } from "../src/lib/living-brain/model.ts";
 import { assignCompleteBody, lessonSpineContinue, lessonSpineRail, lessonSpineResume, lessonSpineStage, lessonSpineStep, lessonSpineTeachProve, lessonSpineWithRail, lessonSpineWithResume, NEXT_LESSON_STEP, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody, teachCompleteBody } from "../src/lib/player/play-rail-write.ts";
+import { SPINE_BEATS, spineLayout } from "../../plates/src/lessonSpine.ts";
+import { remotionSoftCraftNotes } from "../../plates/scripts/remotion-soft-craft-notes.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
@@ -1014,4 +1016,74 @@ test("finishing Teach writes Prove and leave and return opens Prove", () => {
   assert.match(preview, /freshNextLesson/);
   assert.doesNotMatch(html5, /@remotion|from "remotion"|data-consume-portion|data-prove-complete/);
   assert.doesNotMatch(preview + html5 + teach, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+test("Remotion plates record a soft note only for cue drift or a missing chapter boundary", () => {
+  const checker = readFileSync(join(root, "..", "plates", "scripts", "remotion-soft-craft-notes.mjs"), "utf8");
+  const spoken = [
+    { text: "Slate.", startMs: 10000, endMs: 10400 },
+    { text: "Household:", startMs: 10400, endMs: 11200 },
+    { text: "the", startMs: 11200, endMs: 11600 },
+    { text: "child", startMs: 11600, endMs: 12200 },
+    { text: "has", startMs: 12200, endMs: 12600 },
+    { text: "no", startMs: 12600, endMs: 13000 },
+    { text: "login.", startMs: 13000, endMs: 14000 },
+  ];
+  const cue = {
+    text: "Slate. Household: the child has no login.",
+    startMs: 10000,
+    endMs: 14000,
+  };
+  const chapters = spineLayout(SPINE_BEATS);
+  assert.deepEqual(
+    chapters.map((row) => row.id),
+    ["sting", "slate", "objective", "recap", "nextUp"],
+  );
+  const aligned = remotionSoftCraftNotes({ cues: [cue], spoken, chapters, cleaningFlip: true });
+  assert.deepEqual(aligned.notes, []);
+  assert.equal(aligned.cleaningFlip, false);
+  assert.equal(aligned.holdCleaning, true);
+
+  const drifted = remotionSoftCraftNotes({
+    cues: [{ ...cue, endMs: 15000 }],
+    spoken,
+    chapters,
+  });
+  assert.equal(drifted.notes.length, 1);
+  assert.equal(drifted.notes[0].kind, "caption-cue-drift");
+  assert.equal(drifted.notes[0].spokenEndMs, 14000);
+  assert.equal(drifted.cleaningFlip, false);
+
+  const missing = remotionSoftCraftNotes({
+    cues: [cue],
+    spoken,
+    chapters: chapters.filter((row) => row.id !== "objective"),
+  });
+  assert.deepEqual(missing.notes, [{ kind: "missing-chapter-boundary", id: "objective" }]);
+
+  const both = remotionSoftCraftNotes({
+    cues: [{ ...cue, startMs: 11000 }],
+    spoken,
+    chapters: chapters.filter((row) => row.id !== "recap"),
+  });
+  assert.deepEqual(
+    both.notes.map((note) => note.kind),
+    ["caption-cue-drift", "missing-chapter-boundary"],
+  );
+  assert.equal(both.notes[1].id, "recap");
+  assert.equal(both.holdCleaning, true);
+
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  assert.match(preview, /data-portion-stage=/);
+  assert.match(preview, /continueAt\.stage === "prove" \? null/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(preview, /if \(continueAt\?\.step\)/);
+  assert.match(html5, /recordRail\("html5"\)/);
+  assert.match(html5, /addEventListener\("pagehide"/);
+  assert.match(checker, /kind: "caption-cue-drift"/);
+  assert.match(checker, /kind: "missing-chapter-boundary"/);
+  assert.match(checker, /cleaningFlip: false/);
+  assert.doesNotMatch(checker, /EDU-S03|27pn9xs0zk8a73g|af374d95|AUTH_URL/);
+  assert.doesNotMatch(preview + html5 + checker, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
