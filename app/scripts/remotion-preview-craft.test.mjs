@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,6 +9,7 @@ import { assignCompleteBody, lessonSpineContinue, lessonSpineRail, lessonSpineRe
 import { SPINE_BEATS, spineDurationSec, spineLayout } from "../../plates/src/lessonSpine.ts";
 import { remotionSoftCraftNotes } from "../../plates/scripts/remotion-soft-craft-notes.mjs";
 import { loadCachedBroll, searchAndCachePexelsBroll } from "../../plates/scripts/pexels-broll.mjs";
+import { appliedLessonSpineCraft } from "../src/lib/player/soft-craft-apply.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
@@ -1836,4 +1837,62 @@ test("guests can read the soft-craft notes on the play page", () => {
   assert.doesNotMatch(panel + notes, /EDU-S03|27pn9xs0zk8a73g|AUTH_URL|HARD_FAIL|distribute:\s*true/);
   assert.doesNotMatch(overlay, /AUTH_URL=|distribute:\s*true/);
   assert.doesNotMatch(panel + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+test("LessonSpine Remotion rail applies soft-craft cues and cached Pexels attribution", () => {
+  const applied = remotionSoftCraftNotes(appliedLessonSpineCraft());
+  assert.deepEqual(applied.notes, []);
+  assert.equal(applied.cleaningFlip, false);
+  assert.equal(applied.holdCleaning, true);
+
+  const cacheDir = mkdtempSync(join(tmpdir(), "pexels-apply-"));
+  const sidecar = join(cacheDir, "4401.json");
+  writeFileSync(
+    sidecar,
+    JSON.stringify({
+      id: 4401,
+      query: "classroom",
+      photographer: "Ada Frame",
+      photographerUrl: "https://www.pexels.com/@ada",
+      pexelsUrl: "https://www.pexels.com/video/classroom-4401/",
+      file: "4401.mp4",
+    }),
+  );
+  const cached = loadCachedBroll(cacheDir, "4401");
+  assert.equal(cached.photographer, "Ada Frame");
+  assert.match(cached.file, /4401\.mp4$/);
+  assert.equal(cached.pexelsUrl, "https://www.pexels.com/video/classroom-4401/");
+
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  const page = read("src/app/play/lesson-spine/page.tsx");
+  const panel = read("src/components/lesson-spine-guest-soft-panel.tsx");
+  const spine = readFileSync(join(root, "..", "plates", "src", "LessonSpine.tsx"), "utf8");
+  const checker = readFileSync(join(root, "..", "plates", "scripts", "remotion-soft-craft-notes.mjs"), "utf8");
+  assert.match(preview, /data-soft-craft-apply="plates"/);
+  assert.match(preview, /data-chapter-boundary=\{id\}/);
+  assert.match(preview, /data-objective=\{label\}/);
+  assert.match(preview, /data-pexels-attribution="cached"/);
+  assert.match(preview, /name="broll"/);
+  assert.match(preview, /inputProps=\{\{ broll: null \}\}/);
+  assert.match(preview, /useCurrentFrame/);
+  assert.match(preview, /#EFE7D6/);
+  assert.match(preview, /#1A1A16/);
+  assert.match(preview, /#C4A35A/);
+  assert.match(preview, /Household: the child has no login\. Sales: this desk lists no children\./);
+  assert.match(preview, /continueAt\.stage === "prove" \? null/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(preview, /addEventListener\("pagehide"/);
+  assert.match(html5, /recordRail\("html5"\)/);
+  assert.match(page, /LessonSpineGuestSoftPanel/);
+  assert.match(page, /af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4/);
+  assert.match(panel, /data-guest-soft-panel="soft-craft"/);
+  assert.match(panel, /data-distribute="false"/);
+  assert.match(panel, /data-cleaning-flip="false"/);
+  assert.match(spine, /<PexelsBroll \{\.\.\.broll\} \/>/);
+  assert.match(spine, /name="broll"/);
+  assert.match(checker, /cleaningFlip: false/);
+  assert.match(checker, /holdCleaning: true/);
+  assert.doesNotMatch(preview + panel + checker, /EDU-S03|27pn9xs0zk8a73g|AUTH_URL|HARD_FAIL|distribute:\s*true/);
+  assert.doesNotMatch(preview + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
