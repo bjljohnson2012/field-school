@@ -1,17 +1,24 @@
 import { brainBoard, type LivingBrain, type Room } from "../living-brain/model.ts";
-import { lessonSpineStep, lessonSpineWithResume } from "./lesson-spine-step.ts";
+import { lessonSpineRail, lessonSpineStep, lessonSpineWithRail, lessonSpineWithResume } from "./lesson-spine-step.ts";
 import { LESSON_SPINE_CHAPTERS } from "./lesson-spine-meta.ts";
 
 export {
   lessonSpineConfidence,
   lessonSpineContinue,
+  lessonSpineRail,
   lessonSpineResume,
   lessonSpineRollup,
   lessonSpineStep,
   lessonSpineTeachProve,
   lessonSpineTrail,
+  lessonSpineWithRail,
   lessonSpineWithResume,
 } from "./lesson-spine-step.ts";
+
+function keepRail(outcomes: string, prior: string) {
+  const rail = lessonSpineRail(prior);
+  return rail ? lessonSpineWithRail(outcomes, rail) : outcomes;
+}
 
 function chapterId(raw: string) {
   const id = raw.trim();
@@ -45,7 +52,7 @@ export function playWriteBody(input: {
     kind: person.kind,
     login: person.login,
     profile: person.profile,
-    outcomes,
+    outcomes: keepRail(outcomes, person.outcomes || ""),
   };
 }
 
@@ -72,14 +79,15 @@ export function proveCompleteBody(input: {
   if (!input.brain || input.brain.room !== input.room) return null;
   const person = brainBoard({ room: input.room, brain: input.brain }).people[0];
   if (!person) return null;
-  const onFinalLesson = lessonSpineStep(person.outcomes || "") === NEXT_LESSON_STEP;
+  const prior = person.outcomes || "";
+  const onFinalLesson = lessonSpineStep(prior) === NEXT_LESSON_STEP;
   return {
     membershipId: person.membershipId,
     name: person.name,
     kind: person.kind,
     login: person.login,
     profile: person.profile,
-    outcomes: onFinalLesson ? "" : NEXT_LESSON_STEP,
+    outcomes: keepRail(onFinalLesson ? "" : NEXT_LESSON_STEP, prior),
   };
 }
 
@@ -103,6 +111,27 @@ export function resumeWriteBody(input: {
     kind: person.kind,
     login: person.login,
     profile: person.profile,
-    outcomes,
+    outcomes: keepRail(outcomes, person.outcomes || ""),
+  };
+}
+
+/** Body for POST /api/living-brain. Stores the last-used play rail on the person already on the desk. */
+export function railPreferenceBody(input: {
+  room: Room;
+  brain: LivingBrain | null;
+  rail: string;
+}) {
+  if (!input.brain || input.brain.room !== input.room) return null;
+  const rail = input.rail === "remotion" || input.rail === "html5" ? input.rail : null;
+  if (!rail) return null;
+  const person = brainBoard({ room: input.room, brain: input.brain }).people[0];
+  if (!person) return null;
+  return {
+    membershipId: person.membershipId,
+    name: person.name,
+    kind: person.kind,
+    login: person.login,
+    profile: person.profile,
+    outcomes: lessonSpineWithRail(person.outcomes || "", rail),
   };
 }

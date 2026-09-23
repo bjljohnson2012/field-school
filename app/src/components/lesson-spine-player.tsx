@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useLessonSpineContinue, useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useLessonSpineContinue, useLessonSpinePlayWrite, useLessonSpineRail } from "@/components/lesson-spine-play-write";
 import {
   LESSON_SPINE_CHAPTERS,
   LESSON_SPINE_DURATION_SEC,
@@ -12,8 +12,9 @@ export function LessonSpinePlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [current, setCurrent] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const { recordPlay, wrote } = useLessonSpinePlayWrite();
+  const { recordPlay, recordRail, wrote } = useLessonSpinePlayWrite();
   const continueAt = useLessonSpineContinue();
+  const rail = useLessonSpineRail();
   const continued = useRef(false);
   const progress = Math.min(1, current / LESSON_SPINE_DURATION_SEC);
   const active = useMemo(
@@ -41,7 +42,12 @@ export function LessonSpinePlayer() {
   }, [continueAt]);
 
   return (
-    <div className="space-y-4" data-player="lesson-spine" data-play-write={wrote ? "living-brain" : undefined}>
+    <div
+      className="space-y-4"
+      data-player="lesson-spine"
+      data-play-rail={rail === "html5" ? "html5" : undefined}
+      data-play-write={wrote ? "living-brain" : undefined}
+    >
       <div className="overflow-hidden rounded-2xl border border-border bg-black">
         <video
           ref={videoRef}
@@ -60,6 +66,7 @@ export function LessonSpinePlayer() {
           onTimeUpdate={(event) => setCurrent(event.currentTarget.currentTime)}
           onPlay={() => {
             setPlaying(true);
+            void recordRail("html5");
             void recordPlay(active.id);
           }}
           onPause={() => setPlaying(false)}
@@ -123,6 +130,26 @@ export function LessonSpinePlayer() {
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Opens the last-used play rail from the living brain. HTML5 stays first until a Remotion play is stored. */
+export function LessonSpineRailHydrate(props: { html5: ReactNode; preview: ReactNode }) {
+  const rail = useLessonSpineRail();
+  return (
+    <div data-play-rail="living-brain" data-restored-rail={rail || undefined}>
+      {rail === "remotion" ? (
+        <>
+          {props.preview}
+          {props.html5}
+        </>
+      ) : (
+        <>
+          {props.html5}
+          {props.preview}
+        </>
+      )}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LessonSpineHirePath } from "@/components/lesson-spine-hire-path";
 import { LessonSpineParentSession } from "@/components/lesson-spine-parent-session";
-import { LessonSpinePlayer } from "@/components/lesson-spine-player";
+import { LessonSpinePlayer, LessonSpineRailHydrate } from "@/components/lesson-spine-player";
 import { LessonSpineRemotionPreview } from "@/components/lesson-spine-remotion-player";
 
 export const metadata: Metadata = {
@@ -34,10 +34,14 @@ export default function LessonSpinePlayPage() {
       </p>
       <LessonSpineParentSession />
       <LessonSpineHirePath />
-      <div className="mt-8">
-        <LessonSpinePlayer />
-      </div>
-      <LessonSpineRemotionPreview />
+      <LessonSpineRailHydrate
+        html5={
+          <div className="mt-8">
+            <LessonSpinePlayer />
+          </div>
+        }
+        preview={<LessonSpineRemotionPreview />}
+      />
       <p className="mt-6 text-sm text-muted-foreground">
         Guest Grok Bot stays at{" "}
         <Link href="/c/grok-bot" className="underline">

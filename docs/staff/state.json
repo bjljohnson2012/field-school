@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-23T10:52:00Z",
+  "updated": "2026-09-23T11:12:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -107,12 +107,12 @@
     },
     "FACTORY": {
       "status": "PASS",
-      "evidence": "Track B PASS on main. EDU-S03 still needs a Cap take. PR 260 mounts remotion and @remotion/player on the campus play rail for a LessonSpine preview. PR 261 writes the next LessonSpine step into the living brain on signed-in play. PR 271 continues the HTML5 rail and the Remotion preview at that next step. PR 274: the Remotion LessonSpine preview names the current chapter and shows its caption. PR 275: leave and return on the play page restores that same LessonSpine chapter from the living brain. PR 276: leave mid-chapter and return restores that Remotion scrub and caption cue from the living brain. PR 277: finishing a Remotion chapter writes the next LessonSpine portion into the living brain, and leave and return opens that portion. PR 278: leave and return on the play page opens that next LessonSpine portion as Teach and Prove from the living brain. PR 279: finishing Prove for the consumed LessonSpine portion writes the next chapter into the living brain, and leave and return opens that Remotion chapter. PR 280: RepairCard is a soft fixture after the counterexample foil. EDU-S03 stays SOFT. Dest stays untouched. PR 281: Prove on the final chapter writes the next lesson into the living brain, and leave and return opens that lesson on the play page. PR 282: the first open of the next lesson starts at the chapter start, with no scrub or caption cue carried from the prior lesson. PR 283: Prove on the final lesson clears Continue, so leave and return does not open a next lesson. HTML5 rail stays. distribute stays false. Dest stays untouched. Launch CLOSED 0/8."
+      "evidence": "Track B PASS on main. EDU-S03 still needs a Cap take. PR 260 mounts remotion and @remotion/player on the campus play rail for a LessonSpine preview. PR 261 writes the next LessonSpine step into the living brain on signed-in play. PR 271 continues the HTML5 rail and the Remotion preview at that next step. PR 274: the Remotion LessonSpine preview names the current chapter and shows its caption. PR 275: leave and return on the play page restores that same LessonSpine chapter from the living brain. PR 276: leave mid-chapter and return restores that Remotion scrub and caption cue from the living brain. PR 277: finishing a Remotion chapter writes the next LessonSpine portion into the living brain, and leave and return opens that portion. PR 278: leave and return on the play page opens that next LessonSpine portion as Teach and Prove from the living brain. PR 279: finishing Prove for the consumed LessonSpine portion writes the next chapter into the living brain, and leave and return opens that Remotion chapter. PR 280: RepairCard is a soft fixture after the counterexample foil. EDU-S03 stays SOFT. Dest stays untouched. PR 281: Prove on the final chapter writes the next lesson into the living brain, and leave and return opens that lesson on the play page. PR 282: the first open of the next lesson starts at the chapter start, with no scrub or caption cue carried from the prior lesson. PR 283: Prove on the final lesson clears Continue, so leave and return does not open a next lesson. PR 284: leave and return on the play page opens the last-used LessonSpine rail from the living brain. HTML5 rail stays. distribute stays false. Dest stays untouched. Launch CLOSED 0/8."
     }
   },
   "in_flight": [],
   "last_pick": [
     "N15"
   ],
-  "last_clock": "clock-path-complete-idle"
+  "last_clock": "clock-rail-preference-brain"
 }

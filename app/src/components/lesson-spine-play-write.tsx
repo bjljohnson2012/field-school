@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { brainBoard, type LivingBrain } from "@/lib/living-brain/model";
-import { lessonSpineContinue, lessonSpineResume } from "@/lib/player/lesson-spine-step";
-import { playWriteBody, portionWriteBody, proveCompleteBody, resumeWriteBody } from "@/lib/player/play-rail-write";
+import { lessonSpineContinue, lessonSpineRail, lessonSpineResume } from "@/lib/player/lesson-spine-step";
+import { playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody } from "@/lib/player/play-rail-write";
 
 export type LessonSpineContinueAt = NonNullable<ReturnType<typeof lessonSpineContinue>> & {
   login: "none" | "member";
@@ -60,6 +60,41 @@ export function useLessonSpineContinue() {
   }, [email, status]);
 
   return continueAt;
+}
+
+/** Last play rail stored for the person on this desk. Guests stay unset and do not write. */
+export function useLessonSpineRail() {
+  const { data, status } = useSession();
+  const email = data?.user?.email;
+  const [rail, setRail] = useState<"remotion" | "html5" | null>(null);
+
+  useEffect(() => {
+    if (status !== "authenticated" || !email) {
+      setRail(null);
+      return;
+    }
+    let cancelled = false;
+    void fetch("/api/living-brain")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: { ok?: boolean; room?: string; brain?: LivingBrain | null } | null) => {
+        if (cancelled) return;
+        const room = payload?.room === "household" || payload?.room === "sales" ? payload.room : null;
+        if (!payload?.ok || !room) {
+          setRail(null);
+          return;
+        }
+        const person = brainBoard({ room, brain: payload.brain ?? null }).people[0];
+        setRail(person ? lessonSpineRail(person.outcomes) : null);
+      })
+      .catch(() => {
+        if (!cancelled) setRail(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [email, status]);
+
+  return rail;
 }
 
 const STORAGE_KEY = "fs-lesson-spine-play-write";
@@ -193,5 +228,31 @@ export function useLessonSpinePlayWrite() {
     [email, status],
   );
 
-  return { recordPlay, recordResume, recordPortion, recordProve, wrote };
+  const recordRail = useCallback(
+    async (rail: "remotion" | "html5") => {
+      if (status !== "authenticated" || !email) return;
+      const got = await fetch("/api/living-brain");
+      if (!got.ok) return;
+      const payload = (await got.json()) as {
+        ok?: boolean;
+        room?: "household" | "sales";
+        brain?: Parameters<typeof railPreferenceBody>[0]["brain"];
+      };
+      if (!payload.ok || (payload.room !== "household" && payload.room !== "sales")) return;
+      const body = railPreferenceBody({
+        room: payload.room,
+        brain: payload.brain ?? null,
+        rail,
+      });
+      if (!body) return;
+      await fetch("/api/living-brain", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    },
+    [email, status],
+  );
+
+  return { recordPlay, recordResume, recordPortion, recordProve, recordRail, wrote };
 }
