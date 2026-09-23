@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
-import { learningEvents } from "@/lib/db/schema";
+import { learningEvents, memberships } from "@/lib/db/schema";
 import type { LearnerIdentity } from "./identity";
 import { emptyProgress } from "@/lib/course/content";
 import type { ModuleProgress, ProgressMap } from "@/lib/course/types";
@@ -18,15 +18,29 @@ export function stationObjectId(course: string, station: string) {
   return `${course}:${station}`;
 }
 
-export async function recordEvent(identity: LearnerIdentity, input: EventInput) {
+export async function recordEvent(
+  subject: LearnerIdentity,
+  input: EventInput,
+  actor?: { membershipId: string; stance: string },
+) {
   const db = getDb();
+  if (actor) {
+    const [actorRow] = await db
+      .select({ orgId: memberships.orgId })
+      .from(memberships)
+      .where(eq(memberships.id, actor.membershipId))
+      .limit(1);
+    if (!actorRow || actorRow.orgId !== subject.orgId) {
+      throw new Error("actor_org_mismatch");
+    }
+  }
   const [row] = await db
     .insert(learningEvents)
     .values({
-      orgId: identity.orgId,
-      membershipId: identity.membershipId,
-      actorMembershipId: identity.membershipId,
-      actorStance: identity.stance,
+      orgId: subject.orgId,
+      membershipId: subject.membershipId,
+      actorMembershipId: actor?.membershipId ?? subject.membershipId,
+      actorStance: actor?.stance ?? subject.stance,
       kind: input.kind,
       objectType: input.objectType,
       objectId: input.objectId,

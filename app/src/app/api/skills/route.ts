@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { HOUSEHOLD_SLUG, SALES_SLUG } from "@/lib/campus-runtime/org";
-import { HOUSEHOLD_SKILLS, SALES_SKILLS } from "@/lib/campus-runtime/lessons";
+import { deskScoresRejection, HOUSEHOLD_SKILLS, SALES_SKILLS, skillScale } from "@/lib/campus-runtime/lessons";
 import { getDb } from "@/lib/db/client";
 import { skillStates, skills } from "@/lib/db/schema";
 import { recordEvent } from "@/lib/campus-runtime/events";
@@ -15,7 +15,12 @@ async function seedSkills(orgId: string, orgSlug: string) {
   for (const skill of defs) {
     await db
       .insert(skills)
-      .values({ orgId, slug: skill.slug, name: skill.name, rubric: { prompt: skill.prompt } })
+      .values({
+        orgId,
+        slug: skill.slug,
+        name: skill.name,
+        rubric: { prompt: skill.prompt, scale: "1-4" },
+      })
       .onConflictDoNothing({ target: [skills.orgId, skills.slug] });
   }
 }
@@ -93,12 +98,17 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
+  const rejection = deskScoresRejection(auth.identity.orgSlug, body.scores ?? null);
+  if (rejection) {
+    return NextResponse.json({ ok: false, error: rejection }, { status: 400 });
+  }
   const db = getDb();
   await seedSkills(auth.identity.orgId, auth.identity.orgSlug);
   const orgSkills = await db.select().from(skills).where(eq(skills.orgId, auth.identity.orgId));
   for (const skill of orgSkills) {
     const score = body.scores?.[skill.slug];
     if (typeof score !== "number") continue;
+    if (skillScale(skill.slug) !== "1-4") continue;
     await db
       .insert(skillStates)
       .values({
