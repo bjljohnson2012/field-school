@@ -11,16 +11,16 @@ Launch stays CLOSED 0/8.
 
 ## Trees
 
-- `app/` — live Next campus. Build here.
+- `app/` — the only ship path. Live Next campus. Build here.
 - `plates/` — Remotion factory. Not inside Next.
 - `marketing-site/` — fieldschool.ai. Distribute HELD.
 - `video-pipeline/` — Cap / edit notes.
 - `docs/campus-runtime/` — proofs and schema. Not tickets.
-- `src/` + `vite.config.ts` — frozen TanStack. Do not extend. Do not deploy.
+- `src/` + `vite.config.ts` — frozen TanStack. Do not extend. Do not deploy. Not a place to build.
 
 ## Locks
 
-AUTH_URL is `https://portal.fieldschool.ai`. University 301s there.
+AUTH_URL is `https://portal.fieldschool.ai`. `university.benjohnson.ai` 301s to `https://portal.fieldschool.ai`.
 Prices $100 / $200 / $1,000. No child seat. No fourth SKU.
 Just (`27pn9xs0zk8a73g`) locked. Family LIVE `bc-4765f2f0` untouched. Dest hash untouched.
 CNC vault `2.24.64.248` off limits. Deploy to `2.24.70.248` only.
