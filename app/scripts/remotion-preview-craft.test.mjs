@@ -9,7 +9,7 @@ import { assignCompleteBody, lessonSpineContinue, lessonSpineRail, lessonSpineRe
 import { SPINE_BEATS, spineDurationSec, spineLayout } from "../../plates/src/lessonSpine.ts";
 import { remotionSoftCraftNotes } from "../../plates/scripts/remotion-soft-craft-notes.mjs";
 import { loadCachedBroll, mountLivePexelsBroll, searchAndCachePexelsBroll } from "../../plates/scripts/pexels-broll.mjs";
-import { applyLiveBroll, lessonSpineBrollCredit } from "../src/lib/player/live-pexels-broll.ts";
+import { applyLiveBroll, lessonSpineBrollCredit, signedInRemotionBrollMarkers } from "../src/lib/player/live-pexels-broll.ts";
 import { lessonSpineBrollPayload, lessonSpineLiveBroll } from "../src/lib/player/live-pexels-broll-server.ts";
 import { appliedLessonSpineCraft } from "../src/lib/player/soft-craft-apply.ts";
 
@@ -2134,4 +2134,71 @@ test("LessonSpine Remotion rail shows the Pexels photographer when live b-roll i
   assert.doesNotMatch(creditUi, /rail === "remotion" \? null|setLiveBroll/);
   assert.doesNotMatch(preview + helper + panel, /pexels-test-key|EDU-S03|27pn9xs0zk8a73g|AUTH_URL|HARD_FAIL|distribute:\s*true/);
   assert.doesNotMatch(preview + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+test("signed-in Remotion rail matches the guest b-roll credit when the plate requests it", () => {
+  const mounted = {
+    file: "/tmp/field-school-pexels/4401.mp4",
+    photographer: "Ada Frame",
+    photographerUrl: "https://www.pexels.com/@ada",
+    pexelsUrl: "https://www.pexels.com/video/classroom-4401/",
+  };
+  const guest = lessonSpineBrollCredit(mounted);
+  assert.equal(guest.state, "present");
+  const signedIn = signedInRemotionBrollMarkers(mounted, "remotion");
+  assert.ok(signedIn);
+  assert.equal(signedIn["data-broll-request"], "classroom");
+  assert.equal(signedIn["data-live-broll"], "non-null");
+  assert.equal(signedIn["data-pexels-rail-attribution"], "present");
+  assert.equal(signedIn["data-pexels-credit"], "live");
+  assert.equal(signedIn["data-pexels-rail-attribution"], guest.state);
+  const quiet = signedInRemotionBrollMarkers(null, "remotion");
+  assert.equal(quiet?.["data-live-broll"], "absent");
+  assert.equal(quiet?.["data-pexels-rail-attribution"], "absent");
+  assert.equal(quiet?.["data-pexels-credit"], "absent");
+  assert.equal(signedInRemotionBrollMarkers(mounted, null), null);
+  assert.equal(signedInRemotionBrollMarkers(mounted, "html5"), null);
+  assert.equal(signedInRemotionBrollMarkers({ photographer: "Ada Frame" }, "remotion")?.["data-live-broll"], "absent");
+
+  const applied = remotionSoftCraftNotes(appliedLessonSpineCraft());
+  assert.deepEqual(applied.notes, []);
+  assert.equal(applied.cleaningFlip, false);
+  assert.equal(applied.holdCleaning, true);
+
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  const page = read("src/app/play/lesson-spine/page.tsx");
+  const panel = read("src/components/lesson-spine-guest-soft-panel.tsx");
+  const helper = read("src/lib/player/live-pexels-broll.ts");
+  assert.match(helper, /export function signedInRemotionBrollMarkers/);
+  assert.match(helper, /export function lessonSpineBrollCredit/);
+  assert.match(preview, /data-live-broll=\{liveBroll \? "non-null" : "absent"\}/);
+  assert.match(preview, /data-pexels-rail-attribution=\{credit\.state\}/);
+  assert.match(preview, /data-pexels-credit="live"/);
+  assert.match(preview, /data-login="none"/);
+  assert.match(preview, /data-broll-request="classroom"/);
+  assert.match(preview, /fetch\("\/api\/play\/lesson-spine-broll"\)/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(preview, /addEventListener\("pause"/);
+  assert.match(preview, /addEventListener\("seeked"/);
+  assert.match(preview, /addEventListener\("pagehide"/);
+  assert.match(preview, /data-play-rail=\{rail === "remotion" \? "remotion" : undefined\}/);
+  assert.match(preview, /data-soft-craft-apply="plates"/);
+  assert.match(html5, /signedInRemotionBrollMarkers\(liveBroll, rail\)/);
+  assert.match(html5, /data-play-rail="living-brain"/);
+  assert.match(html5, /data-restored-rail=\{rail \|\| undefined\}/);
+  assert.match(html5, /fetch\("\/api\/play\/lesson-spine-broll"\)/);
+  assert.match(html5, /applyLiveBroll/);
+  assert.match(html5, /recordRail\("html5"\)/);
+  assert.doesNotMatch(html5, /@remotion|from "remotion"|data-consume-portion|data-prove-complete/);
+  assert.match(page, /LessonSpineRailHydrate/);
+  assert.match(page, /LessonSpineGuestSoftPanel/);
+  assert.match(page, /LessonSpineRemotionPreview/);
+  assert.match(page, /af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4/);
+  assert.match(panel, /data-guest-soft-panel="soft-craft"/);
+  assert.match(panel, /data-login="none"/);
+  assert.match(panel, /data-distribute="false"/);
+  assert.match(panel, /data-cleaning-flip="false"/);
+  assert.doesNotMatch(preview + html5 + helper + panel, /pexels-test-key|EDU-S03|27pn9xs0zk8a73g|AUTH_URL|HARD_FAIL|distribute:\s*true/);
+  assert.doesNotMatch(preview + page + html5, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });

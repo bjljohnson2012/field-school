@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useLessonSpineContinue, useLessonSpinePlayWrite, useLessonSpineRail } from "@/components/lesson-spine-play-write";
+import { applyLiveBroll, signedInRemotionBrollMarkers, type LiveBroll } from "@/lib/player/live-pexels-broll";
 import {
   LESSON_SPINE_CHAPTERS,
   LESSON_SPINE_DURATION_SEC,
@@ -176,8 +177,24 @@ export function LessonSpinePlayer() {
 /** Opens the last-used play rail from the living brain. HTML5 stays first until a Remotion play is stored. */
 export function LessonSpineRailHydrate(props: { html5: ReactNode; preview: ReactNode }) {
   const rail = useLessonSpineRail();
+  const [liveBroll, setLiveBroll] = useState<LiveBroll | null>(null);
+  useEffect(() => {
+    if (rail !== "remotion") return;
+    let gone = false;
+    void fetch("/api/play/lesson-spine-broll")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body: { broll?: LiveBroll | null } | null) => {
+        if (gone) return;
+        setLiveBroll(applyLiveBroll(body?.broll ?? null));
+      })
+      .catch(() => {});
+    return () => {
+      gone = true;
+    };
+  }, [rail]);
+  const signedInBroll = signedInRemotionBrollMarkers(liveBroll, rail);
   return (
-    <div data-play-rail="living-brain" data-restored-rail={rail || undefined}>
+    <div data-play-rail="living-brain" data-restored-rail={rail || undefined} {...(signedInBroll ?? {})}>
       {rail === "remotion" ? (
         <>
           {props.preview}
