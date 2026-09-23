@@ -80,7 +80,8 @@ test("portal cart reviews $10 / $50 / $1,059 and Learn with Ben stays $100 / $20
   assert.match(pricing, /price: "\$1,000"/);
   assert.match(cart, /checkoutPath\(plan\.id\)/);
   assert.match(cart, /Pay \{plan\.priceLabel\}/);
-  assert.match(header, /label: "Cart"/);
+  assert.doesNotMatch(header, /label: "Cart"/);
+  assert.doesNotMatch(readSrc("src/components/site-footer.tsx"), /href="\/cart"/);
   assert.match(marketing, /checkout\?plan=100/);
   assert.match(marketing, /checkout\?plan=200/);
   assert.match(marketing, /checkout\?plan=1000/);

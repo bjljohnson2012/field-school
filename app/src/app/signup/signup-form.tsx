@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { GuestContinuity } from "@/components/guest-continuity";
 import { OAuthSignInButtons } from "@/components/oauth-sign-in-buttons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,6 +51,9 @@ export function SignupForm({ oauth }: Props) {
         .
         {plan ? ` This sign-up is for the ${plan} seat.` : ""}
       </p>
+      <div className="mt-8">
+        <GuestContinuity />
+      </div>
       {error ? (
         <p className="mt-4 rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
           {error}

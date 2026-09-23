@@ -2,50 +2,55 @@ import Link from "next/link";
 import { StaffFooterLinks } from "@/components/staff-footer-links";
 import { COMPANY_NAME } from "@/lib/brand";
 
+const stoneLink = "text-[#7a746a] hover:text-foreground";
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-        <p>
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 text-sm sm:flex-row sm:items-start sm:justify-between">
+        <p className="text-[#7a746a]">
           <span className="text-foreground">{COMPANY_NAME}</span> is the
           organization. This site is the training portal. Learn AI, sales,
           go-to-market, and leadership at your pace.
         </p>
-        <div className="flex flex-wrap gap-x-4 gap-y-2">
-          <Link href="/pattern" className="hover:text-foreground">
-            Pattern
-          </Link>
-          <Link href="/docs/api" className="hover:text-foreground">
-            API
-          </Link>
-          <Link href="/about" className="hover:text-foreground">
-            About
-          </Link>
-          <Link href="/pricing" className="hover:text-foreground">
-            Pricing
-          </Link>
-          <Link href="/cart" className="hover:text-foreground">
-            Cart
-          </Link>
-          <Link href="/signup" className="hover:text-foreground">
-            Join
-          </Link>
-          <Link href="/privacy" className="hover:text-foreground">
-            Privacy
-          </Link>
-          <Link href="/terms" className="hover:text-foreground">
-            Terms
-          </Link>
-          <Link href="/tools" className="hover:text-foreground">
-            Tools
-          </Link>
-          <Link href="/share/field-school" className="hover:text-foreground">
-            Share
-          </Link>
-          <Link href="/c/grok-bot" className="hover:text-foreground">
-            Catalog
-          </Link>
-          <StaffFooterLinks />
+        <div className="flex flex-col gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.16em] text-[#7a746a]">
+              Field School site
+            </p>
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+              <Link href="/about" className={stoneLink}>
+                About
+              </Link>
+              <Link href="/pricing" className={stoneLink}>
+                Pricing
+              </Link>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            <Link href="/pattern" className={stoneLink}>
+              Pattern
+            </Link>
+            <Link href="/docs/api" className={stoneLink}>
+              API
+            </Link>
+            <Link href="/signup" className={stoneLink}>
+              Join
+            </Link>
+            <Link href="/privacy" className={stoneLink}>
+              Privacy
+            </Link>
+            <Link href="/terms" className={stoneLink}>
+              Terms
+            </Link>
+            <Link href="/share/field-school" className={stoneLink}>
+              Share
+            </Link>
+            <Link href="/c/grok-bot" className={stoneLink}>
+              Catalog
+            </Link>
+            <StaffFooterLinks />
+          </div>
         </div>
       </div>
     </footer>
