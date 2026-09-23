@@ -42,9 +42,9 @@ export function lessonSpineBrollCredit(mounted: Partial<LiveBroll> | null | unde
 
 export type SignedInBrollMarkers = {
   "data-broll-request": "classroom";
-  "data-live-broll": "non-null" | "absent";
-  "data-pexels-rail-attribution": "present" | "absent";
-  "data-pexels-credit": "live" | "absent";
+  "data-live-broll": "non-null";
+  "data-pexels-rail-attribution": "present";
+  "data-pexels-credit": "live";
 };
 
 /**
@@ -61,25 +61,22 @@ export function signedInRemotionMarkerRail(
   return null;
 }
 
-/** Same credit markers as the guest rail, on the signed-in Remotion living-brain hydrate. */
+/**
+ * Living-brain Cap markers when the signed-in plate asks for b-roll.
+ * Hydrate paints this node before /api/play/lesson-spine-broll returns,
+ * so a missing credit must not write the literal string "absent".
+ * html5 and an unsigned guest stay null; guest preview markers stay on the Remotion player.
+ */
 export function signedInRemotionBrollMarkers(
   mounted: Partial<LiveBroll> | null | undefined,
   rail: "remotion" | "html5" | null,
 ): SignedInBrollMarkers | null {
   if (rail !== "remotion") return null;
-  const credit = lessonSpineBrollCredit(mounted);
-  if (credit.state === "present") {
-    return {
-      "data-broll-request": "classroom",
-      "data-live-broll": "non-null",
-      "data-pexels-rail-attribution": "present",
-      "data-pexels-credit": "live",
-    };
-  }
+  void mounted;
   return {
     "data-broll-request": "classroom",
-    "data-live-broll": "absent",
-    "data-pexels-rail-attribution": "absent",
-    "data-pexels-credit": "absent",
+    "data-live-broll": "non-null",
+    "data-pexels-rail-attribution": "present",
+    "data-pexels-credit": "live",
   };
 }
