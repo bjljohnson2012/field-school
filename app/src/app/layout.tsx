@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans, Inter, Space_Grotesk } from "next/font/google";
 import { AuthSessionProvider } from "@/components/auth-session-provider";
-import { ImpersonationBanner } from "@/components/impersonation-banner";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { Chrome, coachingShellEnabled } from "@/components/chrome";
 import { ThemeScript } from "@/components/theme-script";
 import { UNI_NAME } from "@/lib/brand";
 import "./globals.css";
@@ -24,6 +22,16 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
   weight: ["500", "600"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -57,21 +65,22 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  const coach = coachingShellEnabled();
   return (
     <html
       lang="en"
-      className={`${ibmSans.variable} ${ibmMono.variable} ${fraunces.variable} h-full antialiased`}
+      data-chrome={coach ? "coach" : undefined}
+      className={`${ibmSans.variable} ${ibmMono.variable} ${fraunces.variable} ${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <ThemeScript />
-      </head>
+      {coach ? null : (
+        <head>
+          <ThemeScript />
+        </head>
+      )}
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <AuthSessionProvider>
-          <SiteHeader />
-          <ImpersonationBanner />
-          <div className="flex-1">{children}</div>
-          <SiteFooter />
+          <Chrome>{children}</Chrome>
         </AuthSessionProvider>
       </body>
     </html>
