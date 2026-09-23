@@ -701,3 +701,54 @@ test("pause or seek writes the mid-chapter scrub and a hard exit restores it", (
   assert.match(preview, /freshNextLesson/);
   assert.doesNotMatch(preview, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
+
+test("HTML5 pause, seek, or page hide writes the scrub and a hard exit restores it", () => {
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const cue = "Slate. Household: the child has no login. Sales: this desk lists no children.";
+  const home = {
+    orgId: "org-1",
+    room: "household",
+    facts: "",
+    outcome: "",
+    people: [person({ outcomes: "Continue LessonSpine at Slate\nrail html5" })],
+  };
+  const wrote = resumeWriteBody({ room: "household", brain: home, offsetSec: 4, cue });
+  assert.equal(wrote?.login, "none");
+  assert.equal(lessonSpineRail(wrote.outcomes), "html5");
+  assert.deepEqual(lessonSpineResume(wrote.outcomes), { chapterId: "slate", offsetSec: 4, cue });
+  const returned = lessonSpineContinue(wrote.outcomes);
+  assert.equal(returned?.chapterId, "slate");
+  assert.equal(returned?.startSec, 10);
+  assert.equal(returned.startSec + 4, 14);
+
+  const carried = `${NEXT_LESSON_STEP}\nresume 6s\ncue Next up. Household: the child has no login. Sales: this desk lists no children.`;
+  assert.equal(lessonSpineResume(carried), null);
+  assert.equal(lessonSpineContinue(carried)?.startSec, 0);
+  const cleared = proveCompleteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: `${NEXT_LESSON_STEP}\nrail html5` })] },
+    chapterId: "next-up",
+  });
+  assert.equal(cleared?.outcomes, "rail html5");
+  assert.equal(lessonSpineContinue(cleared.outcomes), null);
+
+  assert.match(html5, /addEventListener\("pause"/);
+  assert.match(html5, /addEventListener\("seeked"/);
+  assert.match(html5, /addEventListener\("pagehide"/);
+  assert.match(html5, /recordResume/);
+  assert.match(html5, /setCurrent\(continueAt\.startSec\)/);
+  assert.match(html5, /continueAt\.offsetSec/);
+  assert.match(html5, /recordPlay\(active\.id\)/);
+  assert.match(html5, /recordRail\("html5"\)/);
+  assert.match(html5, /fs-lesson-spine-active-rail/);
+  assert.doesNotMatch(html5, /@remotion|from "remotion"|data-consume-portion|data-prove-complete/);
+  assert.match(preview, /addEventListener\("pause"/);
+  assert.match(preview, /addEventListener\("seeked"/);
+  assert.match(preview, /addEventListener\("pagehide"/);
+  assert.match(preview, /recordResume/);
+  assert.match(preview, /fs-lesson-spine-active-rail"\) === "html5"/);
+  assert.match(preview, /if \(continueAt\?\.step\)/);
+  assert.match(preview, /freshNextLesson/);
+  assert.doesNotMatch(html5 + preview, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});

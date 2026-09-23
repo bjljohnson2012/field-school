@@ -149,6 +149,7 @@ export function LessonSpineRemotionPreview() {
     }
     const onPlay = () => {
       playing.current = true;
+      sessionStorage.setItem("fs-lesson-spine-active-rail", "remotion");
       void recordRail("remotion");
       if (!continueAt) void recordPlay("sting");
       else void recordPlay(continueAt.chapterId);
@@ -191,9 +192,14 @@ export function LessonSpineRemotionPreview() {
       const cue = `${row.label}. Household: the child has no login. Sales: this desk lists no children.`;
       void recordResume(offsetSec, cue);
     };
-    const onSeeked = () => saveResume(player.getCurrentFrame());
+    const markRemotion = () => sessionStorage.setItem("fs-lesson-spine-active-rail", "remotion");
+    const onSeeked = () => {
+      markRemotion();
+      saveResume(player.getCurrentFrame());
+    };
     const onPause = () => {
       playing.current = false;
+      markRemotion();
       saveResume(player.getCurrentFrame());
     };
     player.addEventListener("play", onPlay);
@@ -203,7 +209,10 @@ export function LessonSpineRemotionPreview() {
     const onLeave = () => {
       if (document.visibilityState === "hidden") saveResume(player.getCurrentFrame());
     };
-    const onHardExit = () => saveResume(player.getCurrentFrame());
+    const onHardExit = () => {
+      if (sessionStorage.getItem("fs-lesson-spine-active-rail") === "html5") return;
+      saveResume(player.getCurrentFrame());
+    };
     document.addEventListener("visibilitychange", onLeave);
     window.addEventListener("pagehide", onHardExit);
     return () => {
