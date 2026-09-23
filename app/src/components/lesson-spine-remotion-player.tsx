@@ -5,6 +5,7 @@ import { Player, type PlayerRef } from "@remotion/player";
 import { AbsoluteFill, Easing, Sequence, interpolate, useCurrentFrame } from "remotion";
 import Link from "next/link";
 import { useLessonSpineContinue, useLessonSpinePlayWrite, useLessonSpineRail } from "@/components/lesson-spine-play-write";
+import { applyLiveBroll, type LiveBroll } from "@/lib/player/live-pexels-broll";
 import { lessonSpineTeachProve } from "@/lib/player/play-rail-write";
 
 const FPS = 30;
@@ -99,12 +100,7 @@ function BeatCard({ id, label, index, total }: { id: string; label: string; inde
   );
 }
 
-type CachedBroll = {
-  file: string;
-  photographer: string;
-  photographerUrl: string;
-  pexelsUrl: string;
-};
+type CachedBroll = LiveBroll;
 
 function PexelsCachedBroll({ broll }: { broll: CachedBroll }) {
   const frame = useCurrentFrame();
@@ -170,6 +166,7 @@ export function LessonSpineRemotionPreview() {
   const portionSeen = useRef(new Set<string>());
   const [frame, setFrame] = useState(0);
   const [chosen, setChosen] = useState<string | null>(null);
+  const [liveBroll, setLiveBroll] = useState<CachedBroll | null>(null);
   const restoredId = continueAt
     ? continueAt.chapterId === "next-up"
       ? "nextUp"
@@ -267,6 +264,21 @@ export function LessonSpineRemotionPreview() {
     };
   }, [continueAt, recordPlay, recordPortion, recordRail, recordResume]);
 
+  useEffect(() => {
+    let gone = false;
+    void fetch("/api/play/lesson-spine-broll")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body: { broll?: CachedBroll | null } | null) => {
+        if (gone) return;
+        const next = applyLiveBroll(body?.broll ?? null);
+        if (next) setLiveBroll(next);
+      })
+      .catch(() => {});
+    return () => {
+      gone = true;
+    };
+  }, []);
+
   return (
     <section
       className="mt-8"
@@ -275,6 +287,8 @@ export function LessonSpineRemotionPreview() {
       data-rooms="household,sales"
       data-login="none"
       data-sales-children="0"
+      data-broll-request="classroom"
+      data-live-broll={liveBroll ? "non-null" : "absent"}
       data-play-rail={rail === "remotion" ? "remotion" : undefined}
       data-play-write={wrote ? "living-brain" : undefined}
     >
@@ -399,7 +413,7 @@ export function LessonSpineRemotionPreview() {
         <Player
           ref={playerRef}
           component={LessonSpineComposition}
-          inputProps={{ broll: null }}
+          inputProps={{ broll: liveBroll }}
           durationInFrames={LESSON_SPINE_DURATION_IN_FRAMES}
           compositionWidth={1920}
           compositionHeight={1080}
