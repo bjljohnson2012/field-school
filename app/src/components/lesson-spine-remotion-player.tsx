@@ -227,6 +227,7 @@ export function LessonSpineRemotionPreview() {
           <div
             className="mt-3 flex flex-wrap items-center gap-3 text-sm"
             data-consume-portion="living-brain"
+            data-next-lesson={opened.label === "Next lesson" ? "living-brain" : undefined}
             data-lesson-spine-next={opened.step}
             data-continue-chapter={opened.chapterId}
             data-login={continueAt.login}
@@ -302,13 +303,14 @@ export function LessonSpineRemotionPreview() {
       <p
         className="mt-2 text-sm text-muted-foreground"
         data-preview-caption={chapter.id}
+        data-next-lesson={!chosen && continueAt?.label === "Next lesson" ? "living-brain" : undefined}
         data-continue-from={!chosen && continueAt ? "outcomes" : undefined}
         data-resume-cue={!chosen && continueAt?.cue ? continueAt.cue : undefined}
         data-resume-sec={!chosen && continueAt?.offsetSec ? continueAt.offsetSec : undefined}
       >
         {!chosen && continueAt?.cue
           ? continueAt.cue
-          : `${chapter.label}. Household: the child has no login. Sales: this desk lists no children.`}
+          : `${!chosen && continueAt?.label === "Next lesson" ? "Next lesson" : chapter.label}. Household: the child has no login. Sales: this desk lists no children.`}
       </p>
       <div id="lesson-spine-prove" className="mt-4 overflow-hidden rounded-2xl border border-border bg-black">
         <Player

@@ -58,13 +58,28 @@ export function portionWriteBody(input: {
   return playWriteBody(input);
 }
 
-/** Finishing Prove for the consumed portion writes the next chapter continue-from. */
+export const NEXT_LESSON_STEP = "Continue LessonSpine at Next lesson";
+
+/** Finishing Prove for the consumed portion writes the next chapter continue-from. The final chapter writes the next lesson. */
 export function proveCompleteBody(input: {
   room: Room;
   brain: LivingBrain | null;
   chapterId: string;
 }) {
-  return portionWriteBody(input);
+  const id = chapterId(input.chapterId);
+  const last = LESSON_SPINE_CHAPTERS[LESSON_SPINE_CHAPTERS.length - 1];
+  if (id !== last.id) return portionWriteBody(input);
+  if (!input.brain || input.brain.room !== input.room) return null;
+  const person = brainBoard({ room: input.room, brain: input.brain }).people[0];
+  if (!person) return null;
+  return {
+    membershipId: person.membershipId,
+    name: person.name,
+    kind: person.kind,
+    login: person.login,
+    profile: person.profile,
+    outcomes: NEXT_LESSON_STEP,
+  };
 }
 
 /** Body for POST /api/living-brain. Keeps the step and stores a mid-chapter scrub plus caption cue. */

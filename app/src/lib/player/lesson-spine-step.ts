@@ -51,6 +51,10 @@ export function lessonSpineContinue(title: string) {
     return { step, chapterId: last.id, label: last.label, startSec: last.startSec };
   }
   const name = step.slice("Continue LessonSpine at ".length);
+  if (name === "Next lesson") {
+    const first = LESSON_SPINE_CHAPTERS[0];
+    return { step, chapterId: first.id, label: "Next lesson", startSec: first.startSec };
+  }
   const chapter = LESSON_SPINE_CHAPTERS.find((row) => row.label === name);
   if (!chapter) return null;
   return { step, chapterId: chapter.id, label: chapter.label, startSec: chapter.startSec };
