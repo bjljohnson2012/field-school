@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { assistDraft, assistFacts, brainBoard, type BrainBoard } from "@/lib/living-brain/model";
+import { LessonSpineHistory } from "@/components/lesson-spine-history";
 import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
 import { EMPTY_COPY, type InsightPerson, type InsightPoint, type InsightsModel } from "./aggregate";
 
@@ -343,18 +344,11 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                         ) : (
                           person.outcomes || "—"
                         )}
-                        {person.history.length ? (
-                          <ol className="mt-1 space-y-0.5 text-xs text-muted-foreground" data-history={person.membershipId} data-history-count={person.history.length}>
-                            {person.history.map((mark, index) => {
-                              const past = lessonSpineStep(mark.outcomes);
-                              return (
-                                <li key={`${index}-${mark.outcomes}`} data-lesson-spine-next={past || undefined}>
-                                  {past ? <Link href="/play/lesson-spine">{past}</Link> : mark.outcomes}
-                                </li>
-                              );
-                            })}
-                          </ol>
-                        ) : null}
+                        <LessonSpineHistory
+                          marks={person.history}
+                          current={person.outcomes}
+                          membershipId={person.membershipId}
+                        />
                         {draft ? (
                           <button
                             type="button"

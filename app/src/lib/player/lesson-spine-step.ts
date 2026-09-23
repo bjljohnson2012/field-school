@@ -22,3 +22,15 @@ export function lessonSpineConfidence(outcomes: string) {
   if (index <= 0) return "Not yet";
   return "Getting there";
 }
+
+/** LessonSpine Continue/Finished marks, oldest first. The current step is included once. */
+export function lessonSpineTrail(marks: Array<{ outcomes?: string } | null | undefined>, current?: string) {
+  const steps: string[] = [];
+  for (const mark of marks) {
+    const step = lessonSpineStep(mark?.outcomes || "");
+    if (step && steps[steps.length - 1] !== step) steps.push(step);
+  }
+  const now = lessonSpineStep(current || "");
+  if (now && steps[steps.length - 1] !== now) steps.push(now);
+  return steps;
+}
