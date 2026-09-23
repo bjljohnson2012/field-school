@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { brainBoard } from "../src/lib/living-brain/model.ts";
-import { lessonSpineContinue, lessonSpineResume, lessonSpineStep, lessonSpineTeachProve, NEXT_LESSON_STEP, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
+import { lessonSpineContinue, lessonSpineResume, lessonSpineStep, lessonSpineTeachProve, lessonSpineWithResume, NEXT_LESSON_STEP, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
@@ -445,4 +445,36 @@ test("Prove on the final chapter writes the next lesson and return opens it", ()
   assert.match(page, /af374d95ee71b4609acae0c76eff7610aa013ee8092cb18051ff511afb220ee4/);
   assert.match(read("src/components/leave-return-next.tsx"), /href="\/play\/lesson-spine"/);
   assert.doesNotMatch(preview + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+test("first open of the next lesson starts at frame 0 with no prior cue", () => {
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const priorCue = "Next up. Household: the child has no login. Sales: this desk lists no children.";
+  const carried = `${NEXT_LESSON_STEP}\nresume 6s\ncue ${priorCue}`;
+  assert.equal(lessonSpineContinue(carried)?.label, "Next lesson");
+  assert.equal(lessonSpineContinue(carried)?.chapterId, "sting");
+  assert.equal(lessonSpineContinue(carried)?.startSec, 0);
+  assert.equal(lessonSpineResume(carried), null);
+  assert.equal(lessonSpineResume(NEXT_LESSON_STEP), null);
+
+  const stingCue = "Sting. Household: the child has no login. Sales: this desk lists no children.";
+  const inside = lessonSpineWithResume(NEXT_LESSON_STEP, 3, stingCue);
+  assert.equal(lessonSpineStep(inside), NEXT_LESSON_STEP);
+  assert.deepEqual(lessonSpineResume(inside), { chapterId: "sting", offsetSec: 3, cue: stingCue });
+
+  const slateCue = "Slate. Household: the child has no login. Sales: this desk lists no children.";
+  const slate = lessonSpineWithResume("Continue LessonSpine at Slate", 4, slateCue);
+  assert.deepEqual(lessonSpineResume(slate), { chapterId: "slate", offsetSec: 4, cue: slateCue });
+
+  assert.match(
+    preview,
+    /continueAt\.label === "Next lesson" && !continueAt\.offsetSec && !continueAt\.cue/,
+  );
+  assert.match(preview, /freshNextLesson/);
+  assert.match(preview, /\? 0/);
+  assert.match(preview, /data-resume-cue=/);
+  assert.match(preview, /recordResume/);
+  assert.match(preview, /recordProve\(opened\.chapterId\)/);
+  assert.match(read("src/components/lesson-spine-play-write.tsx"), /lessonSpineResume\(person\.outcomes\)/);
+  assert.doesNotMatch(preview + read("src/components/lesson-spine-player.tsx"), /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });

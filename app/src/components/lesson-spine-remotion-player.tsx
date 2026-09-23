@@ -139,7 +139,10 @@ export function LessonSpineRemotionPreview() {
     const player = playerRef.current;
     if (!player) return;
     if (continueAt) {
-      const next = frameFor(continueAt.chapterId) + Math.round((continueAt.offsetSec || 0) * FPS);
+      const freshNextLesson = continueAt.label === "Next lesson" && !continueAt.offsetSec && !continueAt.cue;
+      const next = freshNextLesson
+        ? 0
+        : frameFor(continueAt.chapterId) + Math.round((continueAt.offsetSec || 0) * FPS);
       player.seekTo(next);
       setFrame(next);
     }

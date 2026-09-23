@@ -76,6 +76,11 @@ export function lessonSpineResume(title: string) {
   const resume = lines.find((line) => line.startsWith("resume "));
   const cueLine = lines.find((line) => line.startsWith("cue "));
   if (!resume) return null;
+  if (continued.label === "Next lesson") {
+    const carried = cueLine ? cueLine.slice("cue ".length) : "";
+    const owned = carried.startsWith("Next lesson") || carried.startsWith("Sting");
+    if (!owned) return null;
+  }
   const offsetSec = Number(resume.slice("resume ".length).replace(/s$/, ""));
   const chapter = LESSON_SPINE_CHAPTERS.find((row) => row.id === continued.chapterId);
   if (!chapter || !Number.isFinite(offsetSec)) return null;
