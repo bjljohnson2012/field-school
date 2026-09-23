@@ -285,6 +285,70 @@ test("leave and return consumes the next portion into Teach and Prove", () => {
   assert.doesNotMatch(preview + html5 + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
 
+test("leave and return opens Assign before Teach and Prove", () => {
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  const assign = read("src/app/assign/assign-desk.tsx");
+  const home = {
+    orgId: "org-1",
+    room: "household",
+    facts: "",
+    outcome: "",
+    people: [person({ outcomes: "Continue LessonSpine at Slate" })],
+  };
+  const opened = lessonSpineTeachProve(home.people[0].outcomes);
+  assert.equal(opened?.assign, "Continue LessonSpine at Slate");
+  assert.equal(opened?.teach, opened.assign);
+  assert.equal(opened?.prove, opened.assign);
+  assert.equal(opened?.chapterId, "slate");
+  assert.equal(opened?.login, undefined);
+
+  const salesBrain = {
+    orgId: "org-1",
+    room: "sales",
+    facts: "",
+    outcome: "",
+    people: [
+      person({ membershipId: "kid", name: "No", kind: "child", login: "none", outcomes: "Continue LessonSpine at Objective" }),
+      person({ membershipId: "rep-1", name: "Lee", kind: "adult", login: "member", outcomes: "Continue LessonSpine at Recap\nrail html5" }),
+    ],
+  };
+  const board = brainBoard({ room: "sales", brain: salesBrain });
+  assert.equal(board.people.some((row) => row.kind === "child"), false);
+  const salesOpen = lessonSpineTeachProve(board.people[0].outcomes);
+  assert.equal(salesOpen?.assign, "Continue LessonSpine at Recap");
+  assert.equal(lessonSpineRail(board.people[0].outcomes), "html5");
+  assert.equal(lessonSpineResume(`${NEXT_LESSON_STEP}\nresume 6s\ncue Next up. Household: the child has no login.`), null);
+  assert.equal(lessonSpineContinue(NEXT_LESSON_STEP)?.startSec, 0);
+  const cleared = proveCompleteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: `${NEXT_LESSON_STEP}\nrail remotion` })] },
+    chapterId: "next-up",
+  });
+  assert.equal(cleared?.outcomes, "rail remotion");
+  assert.equal(lessonSpineContinue(cleared.outcomes), null);
+
+  const assignAt = preview.indexOf('href="/assign"');
+  const teachAt = preview.indexOf('href="/teach-live"');
+  const proveAt = preview.indexOf('href="#lesson-spine-prove"');
+  assert.ok(assignAt >= 0 && assignAt < teachAt && teachAt < proveAt);
+  assert.match(preview, /data-assign-portion=\{opened\.assign\}/);
+  assert.match(preview, /data-consume-portion="living-brain"/);
+  assert.match(preview, /data-teach-portion=\{opened\.teach\}/);
+  assert.match(preview, /data-prove-portion=\{opened\.prove\}/);
+  assert.match(assign, /data-assign-entry="living-brain"/);
+  assert.match(assign, /href="\/play\/lesson-spine"/);
+  assert.match(html5, /addEventListener\("pagehide"/);
+  assert.match(html5, /recordResume/);
+  assert.match(preview, /addEventListener\("pause"/);
+  assert.match(preview, /addEventListener\("pagehide"/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(preview, /if \(continueAt\?\.step\)/);
+  assert.match(preview, /freshNextLesson/);
+  assert.doesNotMatch(html5, /@remotion|from "remotion"|data-consume-portion|data-prove-complete/);
+  assert.doesNotMatch(preview + html5 + assign, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
 test("finishing Prove writes the next chapter and return opens it", () => {
   const preview = read("src/components/lesson-spine-remotion-player.tsx");
   const html5 = read("src/components/lesson-spine-player.tsx");

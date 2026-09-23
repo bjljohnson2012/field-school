@@ -52,7 +52,7 @@ function LessonSpineAct(props: { title: string }) {
   const spine = lessonSpineStep(props.title);
   if (!spine) return null;
   return (
-    <p className="mt-1 text-sm" data-lesson-spine-next={spine} data-next-from="outcomes">
+    <p className="mt-1 text-sm" data-assign-entry="living-brain" data-lesson-spine-next={spine} data-next-from="outcomes">
       <Link href="/play/lesson-spine">{spine}</Link>
     </p>
   );
