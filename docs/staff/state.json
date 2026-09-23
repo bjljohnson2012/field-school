@@ -99,7 +99,7 @@
     },
     "BRAIN": {
       "status": "PASS",
-      "evidence": "Signed-in Learn, People, Teach, Assign, and Insights show Aim and Confidence when the living brain has them. Guest panel stays soft. A signed-in LessonSpine play writes the next step into the living brain for the person already on the desk. Guests do not write. Home child has no login. Sales desk shows no children. Launch CLOSED 0/8."
+      "evidence": "Signed-in Learn, People, Teach, Assign, and Insights show Aim and Confidence when the living brain has them. Guest panel stays soft. PR 261: a signed-in LessonSpine play writes the next step into the living brain for the person already on the desk. Guests do not write. Home child has no login. Sales desk shows no children. Launch CLOSED 0/8."
     },
     "N15": {
       "status": "PASS",
@@ -107,7 +107,7 @@
     },
     "FACTORY": {
       "status": "PASS",
-      "evidence": "Track B PASS on main. EDU-S03 still needs a Cap take. PR 260 mounts remotion and @remotion/player on the campus play rail for a LessonSpine preview. HTML5 rail stays. distribute stays false. Dest stays untouched. Launch CLOSED 0/8."
+      "evidence": "Track B PASS on main. EDU-S03 still needs a Cap take. PR 260 mounts remotion and @remotion/player on the campus play rail for a LessonSpine preview. PR 261 writes the next LessonSpine step into the living brain on signed-in play. HTML5 rail stays. distribute stays false. Dest stays untouched. Launch CLOSED 0/8."
     }
   },
   "in_flight": [],
