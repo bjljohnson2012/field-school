@@ -1,12 +1,15 @@
 import { brainBoard, type LivingBrain, type Room } from "../living-brain/model.ts";
+import { lessonSpineStep, lessonSpineWithResume } from "./lesson-spine-step.ts";
 import { LESSON_SPINE_CHAPTERS } from "./lesson-spine-meta.ts";
 
 export {
   lessonSpineConfidence,
   lessonSpineContinue,
+  lessonSpineResume,
   lessonSpineRollup,
   lessonSpineStep,
   lessonSpineTrail,
+  lessonSpineWithResume,
 } from "./lesson-spine-step.ts";
 
 function chapterId(raw: string) {
@@ -34,6 +37,30 @@ export function playWriteBody(input: {
   const person = brainBoard({ room: input.room, brain: input.brain }).people[0];
   if (!person) return null;
   const outcomes = playOutcome(input.chapterId);
+  if (!outcomes) return null;
+  return {
+    membershipId: person.membershipId,
+    name: person.name,
+    kind: person.kind,
+    login: person.login,
+    profile: person.profile,
+    outcomes,
+  };
+}
+
+/** Body for POST /api/living-brain. Keeps the step and stores a mid-chapter scrub plus caption cue. */
+export function resumeWriteBody(input: {
+  room: Room;
+  brain: LivingBrain | null;
+  offsetSec: number;
+  cue: string;
+}) {
+  if (!input.brain || input.brain.room !== input.room) return null;
+  const person = brainBoard({ room: input.room, brain: input.brain }).people[0];
+  if (!person) return null;
+  const step = lessonSpineStep(person.outcomes || "");
+  if (!step) return null;
+  const outcomes = lessonSpineWithResume(step, input.offsetSec, input.cue);
   if (!outcomes) return null;
   return {
     membershipId: person.membershipId,

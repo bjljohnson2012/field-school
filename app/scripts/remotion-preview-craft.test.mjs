@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { brainBoard } from "../src/lib/living-brain/model.ts";
-import { lessonSpineContinue, playOutcome, playWriteBody } from "../src/lib/player/play-rail-write.ts";
+import { lessonSpineContinue, lessonSpineResume, lessonSpineStep, playOutcome, playWriteBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
@@ -45,6 +45,13 @@ test("Remotion preview names the current LessonSpine chapter and caption", () =>
   assert.match(read("src/components/leave-return-next.tsx"), /data-continue-chapter=\{step\.chapterId\}/);
   assert.match(read("src/components/leave-return-next.tsx"), /href="\/play\/lesson-spine"/);
   assert.match(read("src/components/lesson-spine-play-write.tsx"), /status !== "authenticated" \|\| !email/);
+  assert.match(preview, /data-resume-cue=/);
+  assert.match(preview, /data-preview-craft="chapter"/);
+  assert.match(preview, /data-chapter-rail="lesson-spine"/);
+  assert.match(preview, /visibilitychange/);
+  assert.match(preview, /recordResume/);
+  assert.match(preview, /addEventListener\("seeked"/);
+  assert.match(html5, /<video/);
 });
 
 function person(overrides) {
@@ -106,4 +113,51 @@ test("leave and return restore the same LessonSpine chapter from the living brai
   assert.equal(sales.people.some((row) => row.kind === "child"), false);
   assert.equal(lessonSpineContinue(sales.people[0].outcomes)?.chapterId, "objective");
   assert.equal(lessonSpineContinue(sales.people[0].outcomes)?.label, "Objective");
+});
+
+test("leave mid-chapter restores the Remotion scrub and caption cue", () => {
+  const cue = "Slate. Household: the child has no login. Sales: this desk lists no children.";
+  const home = {
+    orgId: "org-1",
+    room: "household",
+    facts: "",
+    outcome: "",
+    people: [person({ outcomes: "Continue LessonSpine at Slate" })],
+  };
+  const wrote = resumeWriteBody({ room: "household", brain: home, offsetSec: 4, cue });
+  assert.equal(wrote?.login, "none");
+  assert.equal(lessonSpineStep(wrote.outcomes), "Continue LessonSpine at Slate");
+  assert.deepEqual(lessonSpineResume(wrote.outcomes), { chapterId: "slate", offsetSec: 4, cue });
+  assert.equal(resumeWriteBody({ room: "household", brain: home, offsetSec: 0, cue }), null);
+  assert.equal(resumeWriteBody({ room: "household", brain: home, offsetSec: 8, cue }), null);
+  assert.equal(resumeWriteBody({ room: "household", brain: null, offsetSec: 4, cue }), null);
+
+  const salesBrain = {
+    orgId: "org-1",
+    room: "sales",
+    facts: "",
+    outcome: "",
+    people: [
+      person({ membershipId: "kid", name: "No", kind: "child", login: "none", outcomes: playOutcome("sting") }),
+      person({
+        membershipId: "rep-1",
+        name: "Lee",
+        kind: "adult",
+        login: "member",
+        outcomes: playOutcome("slate"),
+      }),
+    ],
+  };
+  const salesWrote = resumeWriteBody({
+    room: "sales",
+    brain: salesBrain,
+    offsetSec: 2,
+    cue: "Objective. Household: the child has no login. Sales: this desk lists no children.",
+  });
+  assert.equal(salesWrote?.membershipId, "rep-1");
+  assert.equal(salesWrote?.login, "member");
+  assert.equal(lessonSpineResume(salesWrote.outcomes)?.chapterId, "objective");
+  assert.equal(lessonSpineResume(salesWrote.outcomes)?.offsetSec, 2);
+  const board = brainBoard({ room: "sales", brain: { ...salesBrain, people: salesBrain.people.map((row) => row.membershipId === "rep-1" ? { ...row, outcomes: salesWrote.outcomes } : row) } });
+  assert.equal(board.people.some((row) => row.kind === "child"), false);
 });

@@ -3,12 +3,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { brainBoard, type LivingBrain } from "@/lib/living-brain/model";
-import { lessonSpineContinue } from "@/lib/player/lesson-spine-step";
-import { playWriteBody } from "@/lib/player/play-rail-write";
+import { lessonSpineContinue, lessonSpineResume } from "@/lib/player/lesson-spine-step";
+import { playWriteBody, resumeWriteBody } from "@/lib/player/play-rail-write";
 
 export type LessonSpineContinueAt = NonNullable<ReturnType<typeof lessonSpineContinue>> & {
   login: "none" | "member";
   room: "household" | "sales";
+  offsetSec: number;
+  cue: string;
 };
 
 /** Signed-in continue point. Guests stay at the start and do not write. */
@@ -36,11 +38,18 @@ export function useLessonSpineContinue() {
           lessonSpineContinue(row.outcomes),
         );
         const next = person ? lessonSpineContinue(person.outcomes) : null;
+        const resume = person ? lessonSpineResume(person.outcomes) : null;
         if (!person || !next) {
           setContinueAt(null);
           return;
         }
-        setContinueAt({ ...next, login: person.login, room });
+        setContinueAt({
+          ...next,
+          login: person.login,
+          room,
+          offsetSec: resume?.offsetSec ?? 0,
+          cue: resume?.cue ?? "",
+        });
       })
       .catch(() => {
         if (!cancelled) setContinueAt(null);
@@ -93,5 +102,32 @@ export function useLessonSpinePlayWrite() {
     [email, status],
   );
 
-  return { recordPlay, wrote };
+  const recordResume = useCallback(
+    async (offsetSec: number, cue: string) => {
+      if (status !== "authenticated" || !email) return;
+      const got = await fetch("/api/living-brain");
+      if (!got.ok) return;
+      const payload = (await got.json()) as {
+        ok?: boolean;
+        room?: "household" | "sales";
+        brain?: Parameters<typeof resumeWriteBody>[0]["brain"];
+      };
+      if (!payload.ok || (payload.room !== "household" && payload.room !== "sales")) return;
+      const body = resumeWriteBody({
+        room: payload.room,
+        brain: payload.brain ?? null,
+        offsetSec,
+        cue,
+      });
+      if (!body) return;
+      await fetch("/api/living-brain", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    },
+    [email, status],
+  );
+
+  return { recordPlay, recordResume, wrote };
 }
