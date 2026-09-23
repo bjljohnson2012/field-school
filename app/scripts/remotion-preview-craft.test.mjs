@@ -478,3 +478,61 @@ test("first open of the next lesson starts at frame 0 with no prior cue", () => 
   assert.match(read("src/components/lesson-spine-play-write.tsx"), /lessonSpineResume\(person\.outcomes\)/);
   assert.doesNotMatch(preview + read("src/components/lesson-spine-player.tsx"), /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
+
+test("Prove on the final lesson clears Continue and does not open a next lesson", () => {
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const home = {
+    orgId: "org-1",
+    room: "household",
+    facts: "",
+    outcome: "",
+    people: [person({ outcomes: NEXT_LESSON_STEP })],
+  };
+  const proved = proveCompleteBody({ room: "household", brain: home, chapterId: "next-up" });
+  assert.equal(proved?.login, "none");
+  assert.equal(proved?.outcomes, "");
+  assert.equal(lessonSpineStep(proved.outcomes), null);
+  assert.equal(lessonSpineContinue(proved.outcomes), null);
+  assert.equal(lessonSpineResume(proved.outcomes), null);
+
+  const stillNext = proveCompleteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: "Continue LessonSpine at Next up" })] },
+    chapterId: "nextUp",
+  });
+  assert.equal(stillNext?.outcomes, NEXT_LESSON_STEP);
+  assert.equal(lessonSpineContinue(stillNext.outcomes)?.startSec, 0);
+  assert.equal(lessonSpineResume(stillNext.outcomes), null);
+  assert.equal(portionWriteBody({ room: "household", brain: home, chapterId: "next-up" })?.outcomes, "Finished LessonSpine");
+
+  const salesBrain = {
+    orgId: "org-1",
+    room: "sales",
+    facts: "",
+    outcome: "",
+    people: [
+      person({ membershipId: "kid", name: "No", kind: "child", login: "none", outcomes: NEXT_LESSON_STEP }),
+      person({ membershipId: "rep-1", name: "Lee", kind: "adult", login: "member", outcomes: NEXT_LESSON_STEP }),
+    ],
+  };
+  const sales = proveCompleteBody({ room: "sales", brain: salesBrain, chapterId: "next-up" });
+  const board = brainBoard({
+    room: "sales",
+    brain: {
+      ...salesBrain,
+      people: salesBrain.people.map((row) =>
+        row.membershipId === sales.membershipId ? { ...row, outcomes: sales.outcomes } : row,
+      ),
+    },
+  });
+  assert.equal(board.people.some((row) => row.kind === "child"), false);
+  assert.equal(sales?.login, "member");
+  assert.equal(sales?.outcomes, "");
+  assert.equal(lessonSpineContinue(board.people[0].outcomes), null);
+
+  assert.match(preview, /if \(continueAt\?\.step\)/);
+  assert.match(preview, /recordProve\(opened\.chapterId\)/);
+  assert.match(preview, /data-chapter-rail="lesson-spine"/);
+  assert.match(read("src/components/leave-return-next.tsx"), /href="\/play\/lesson-spine"/);
+  assert.doesNotMatch(preview, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
