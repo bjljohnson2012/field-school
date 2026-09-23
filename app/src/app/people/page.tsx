@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { peopleContext, type LivingBrain } from "@/lib/living-brain/model";
+import { lessonSpineStep } from "@/lib/player/play-rail-write";
 import {
   DESK_COPY,
   JOB_SENTENCE,
@@ -193,6 +194,7 @@ export default function PeoplePage() {
               ) : (
                 rows.map((person) => {
                   const line = lines.find((row) => row.membershipId === person.membershipId);
+                  const spine = line?.nextStep ? lessonSpineStep(line.nextStep) : null;
                   return (
                   <tr
                     key={`${desk}-${person.membershipId}`}
@@ -222,8 +224,17 @@ export default function PeoplePage() {
                         "No note on how they are doing yet."
                       )}
                     </td>
-                    <td className="px-4 py-3" data-next-step={person.membershipId}>
-                      {line?.nextStep || "No next step yet."}
+                    <td
+                      className="px-4 py-3"
+                      data-next-step={person.membershipId}
+                      data-lesson-spine-next={spine || undefined}
+                      data-next-from={spine ? "outcomes" : undefined}
+                    >
+                      {spine ? (
+                        <Link href="/play/lesson-spine">{spine}</Link>
+                      ) : (
+                        line?.nextStep || "No next step yet."
+                      )}
                     </td>
                   </tr>
                   );
