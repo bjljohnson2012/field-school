@@ -91,6 +91,7 @@ test("the checker does not flip Cleaning or invent EDU-S03", () => {
   assert.match(source, /kind: "duration-band"/);
   assert.match(source, /kind: "flicker"/);
   assert.match(source, /kind: "wcag-contrast"/);
+  assert.match(source, /kind: "multi-objective"/);
   assert.doesNotMatch(source, /EDU-S03|27pn9xs0zk8a73g|af374d95|distribute:\s*true|AUTH_URL|HARD_FAIL/);
   assert.doesNotMatch(source, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
@@ -489,6 +490,100 @@ test("a contrast note stays beside the earlier soft notes", () => {
     ],
   );
   assert.equal(result.notes.at(-1).ratio, 1.95);
+  assert.equal(result.cleaningFlip, false);
+  assert.equal(result.holdCleaning, true);
+});
+
+const oneBeat = { id: "objective", objective: "Name the type." };
+const splitQuiz = {
+  id: "quiz",
+  segments: [
+    { objective: "Question one." },
+    { objective: "Question two." },
+    { objective: "Question three." },
+    { objective: "Question four." },
+    { objective: "Question five." },
+  ],
+};
+
+test("one objective and split segments record no multi-objective note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Opener", source: frameDriven }],
+    durations: [{ id: "practice", seconds: 6 * 60 }],
+    flicker: [{ id: "cut", luma: [0, 0, 0, 1, 1, 1] }],
+    contrast: [{ id: "body", role: "text", ...inkOnCream }],
+    beats: [oneBeat, { id: "repeat", objectives: ["Name the type.", "Name the type."] }, splitQuiz],
+    cleaningFlip: true,
+  });
+  assert.deepEqual(result.notes, []);
+  assert.equal(result.cleaningFlip, false);
+});
+
+test("a beat that teaches two objectives at once is the only soft note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Opener", source: frameDriven }],
+    durations: [{ id: "practice", seconds: 6 * 60 }],
+    beats: [{ id: "slate", objectives: ["Name the type.", "Dock the head."] }],
+  });
+  assert.deepEqual(result.notes, [{ kind: "multi-objective", id: "slate", count: 2 }]);
+  assert.equal(result.holdCleaning, true);
+});
+
+test("a segment that teaches two objectives at once is the only soft note", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [aligned],
+    spoken,
+    chapters,
+    audio: [syncedAudio],
+    compositions: [{ id: "Opener", source: frameDriven }],
+    durations: [{ id: "practice", seconds: 6 * 60 }],
+    beats: [
+      oneBeat,
+      {
+        id: "quiz",
+        segments: [{ objective: "Question one." }, { objectives: ["Question two.", "Question three."] }],
+      },
+    ],
+  });
+  assert.deepEqual(result.notes, [{ kind: "multi-objective", id: "quiz", count: 2 }]);
+  assert.equal(result.cleaningFlip, false);
+});
+
+test("a multi-objective note stays beside the earlier soft notes", () => {
+  const result = remotionSoftCraftNotes({
+    cues: [{ ...aligned, startMs: 10800 }],
+    spoken,
+    chapters: chapters.filter((row) => row.id !== "recap"),
+    audio: [{ ...syncedAudio, startMs: 10400 }],
+    compositions: [{ id: "Slate", source: "interpolate(0, [0, 1], [0, 1]);\n@keyframes spin {}\nanimation: spin 1s;" }],
+    durations: [{ id: "LessonSpine", seconds: 7 * 60 }],
+    flicker: [{ id: "slate", luma: [0, 1, 0] }],
+    contrast: [{ id: "body", role: "text", ...goldOnCream }],
+    beats: [{ id: "slate", objectives: ["Name the type.", "Dock the head."] }],
+  });
+  assert.deepEqual(
+    result.notes.map((note) => note.kind),
+    [
+      "caption-cue-drift",
+      "missing-chapter-boundary",
+      "audio-desync",
+      "missing-use-current-frame",
+      "css-timer-motion",
+      "duration-band",
+      "flicker",
+      "wcag-contrast",
+      "multi-objective",
+    ],
+  );
+  assert.equal(result.notes.at(-1).count, 2);
   assert.equal(result.cleaningFlip, false);
   assert.equal(result.holdCleaning, true);
 });

@@ -6,7 +6,8 @@
  * or drives motion with a CSS timer, or master length falls outside
  * the Guo 6 minute practice band and the Lagerstrom 12–20 minute for-credit band,
  * or frame-to-frame flicker or a flash pattern is detected,
- * or on-screen text or a critical mark fails WCAG contrast against its background.
+ * or on-screen text or a critical mark fails WCAG contrast against its background,
+ * or a beat tries to teach more than one objective at once.
  * This checker does not flip Cleaning.
  */
 
@@ -236,6 +237,7 @@ export function remotionSoftCraftNotes(input = {}) {
   notes.push(...durationNotes(input.durations));
   notes.push(...flickerNotes(input.flicker));
   notes.push(...contrastNotes(input.contrast));
+  notes.push(...objectiveNotes(input.beats));
   return { notes, cleaningFlip: false, holdCleaning: true };
 }
 
@@ -284,6 +286,37 @@ function contrastNotes(rows) {
       background: measured.background,
       ratio: Math.round(measured.ratio * 100) / 100,
       minimum,
+    });
+  }
+  return notes;
+}
+
+function objectiveTexts(row) {
+  const listed = Array.isArray(row?.objectives)
+    ? row.objectives
+    : row?.objective == null
+      ? []
+      : [row.objective];
+  return [...new Set(listed.map((text) => normalize(text)).filter(Boolean))];
+}
+
+function piledCount(beat) {
+  const segments = Array.isArray(beat?.segments) ? beat.segments : [];
+  if (segments.length > 0) {
+    return segments.reduce((max, segment) => Math.max(max, objectiveTexts(segment).length), 0);
+  }
+  return objectiveTexts(beat).length;
+}
+
+function objectiveNotes(rows) {
+  const notes = [];
+  for (const beat of rows ?? []) {
+    const count = piledCount(beat);
+    if (count < 2) continue;
+    notes.push({
+      kind: "multi-objective",
+      id: beat?.id ? String(beat.id) : "",
+      count,
     });
   }
   return notes;

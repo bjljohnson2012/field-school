@@ -1598,3 +1598,125 @@ test("Remotion plates record a soft note only when text or a critical mark fails
   assert.doesNotMatch(checker, /EDU-S03|27pn9xs0zk8a73g|af374d95|AUTH_URL|HARD_FAIL/);
   assert.doesNotMatch(preview + html5 + checker, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
+
+test("Remotion plates record a soft note only when a beat teaches more than one objective", () => {
+  const checker = readFileSync(join(root, "..", "plates", "scripts", "remotion-soft-craft-notes.mjs"), "utf8");
+  const opener = readFileSync(join(root, "..", "plates", "src", "Opener.tsx"), "utf8");
+  const spoken = [
+    { text: "Slate.", startMs: 10000, endMs: 10400 },
+    { text: "Household:", startMs: 10400, endMs: 11200 },
+    { text: "the", startMs: 11200, endMs: 11600 },
+    { text: "child", startMs: 11600, endMs: 12200 },
+    { text: "has", startMs: 12200, endMs: 12600 },
+    { text: "no", startMs: 12600, endMs: 13000 },
+    { text: "login.", startMs: 13000, endMs: 14000 },
+  ];
+  const cue = {
+    text: "Slate. Household: the child has no login.",
+    startMs: 10000,
+    endMs: 14000,
+  };
+  const chapters = spineLayout(SPINE_BEATS);
+  const audio = {
+    id: "slate",
+    from: 300,
+    frames: 120,
+    fps: 30,
+    startMs: 10000,
+    endMs: 14000,
+    cueStartMs: 10000,
+    cueEndMs: 14000,
+  };
+  const splitQuiz = {
+    id: "quiz",
+    segments: [
+      { objective: "Question one." },
+      { objective: "Question two." },
+      { objective: "Question three." },
+      { objective: "Question four." },
+      { objective: "Question five." },
+    ],
+  };
+  const quiet = remotionSoftCraftNotes({
+    cues: [cue],
+    spoken,
+    chapters,
+    audio: [audio],
+    compositions: [{ id: "Opener", source: opener }],
+    durations: [{ id: "LessonSpine", seconds: spineDurationSec(SPINE_BEATS) }],
+    flicker: [{ id: "cut", luma: [0, 0, 0, 1, 1, 1] }],
+    contrast: [{ id: "body", role: "text", foreground: "#1A1A16", background: "#EFE7D6" }],
+    beats: [{ id: "objective", objective: "Name the type." }, splitQuiz],
+    cleaningFlip: true,
+  });
+  assert.deepEqual(quiet.notes, []);
+  assert.equal(quiet.cleaningFlip, false);
+  assert.equal(quiet.holdCleaning, true);
+
+  const piled = remotionSoftCraftNotes({
+    cues: [cue],
+    spoken,
+    chapters,
+    audio: [audio],
+    compositions: [{ id: "Opener", source: opener }],
+    durations: [{ id: "LessonSpine", seconds: 41 }],
+    beats: [{ id: "slate", objectives: ["Name the type.", "Dock the head."] }],
+  });
+  assert.deepEqual(piled.notes, [{ kind: "multi-objective", id: "slate", count: 2 }]);
+
+  const segment = remotionSoftCraftNotes({
+    cues: [cue],
+    spoken,
+    chapters,
+    audio: [audio],
+    compositions: [{ id: "Opener", source: opener }],
+    durations: [{ id: "LessonSpine", seconds: 41 }],
+    beats: [
+      {
+        id: "quiz",
+        segments: [{ objective: "Question one." }, { objectives: ["Question two.", "Question three."] }],
+      },
+    ],
+  });
+  assert.deepEqual(segment.notes, [{ kind: "multi-objective", id: "quiz", count: 2 }]);
+
+  const prior = remotionSoftCraftNotes({
+    cues: [{ ...cue, startMs: 11000 }],
+    spoken,
+    chapters: chapters.filter((row) => row.id !== "recap"),
+    audio: [{ ...audio, endMs: 14800 }],
+    compositions: [{ id: "Slate", source: "spring({ frame: 0 });\ntransition: opacity 1s;" }],
+    durations: [{ id: "sit-down", seconds: 21 * 60 }],
+    flicker: [{ id: "slate", luma: [0, 1, 0] }],
+    contrast: [{ id: "body", role: "text", foreground: "#C4A35A", background: "#EFE7D6" }],
+    beats: [{ id: "slate", objectives: ["Name the type.", "Dock the head."] }],
+  });
+  assert.deepEqual(
+    prior.notes.map((note) => note.kind),
+    [
+      "caption-cue-drift",
+      "missing-chapter-boundary",
+      "audio-desync",
+      "missing-use-current-frame",
+      "css-timer-motion",
+      "duration-band",
+      "flicker",
+      "wcag-contrast",
+      "multi-objective",
+    ],
+  );
+  assert.equal(prior.holdCleaning, true);
+
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  assert.match(preview, /continueAt\.stage === "prove" \? null/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(html5, /recordRail\("html5"\)/);
+  assert.match(html5, /addEventListener\("pagehide"/);
+  assert.match(checker, /kind: "multi-objective"/);
+  assert.match(checker, /kind: "wcag-contrast"/);
+  assert.match(checker, /kind: "flicker"/);
+  assert.match(checker, /cleaningFlip: false/);
+  assert.doesNotMatch(checker, /EDU-S03|27pn9xs0zk8a73g|af374d95|AUTH_URL|HARD_FAIL/);
+  assert.doesNotMatch(preview + html5 + checker, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
