@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { peopleContext, type LivingBrain } from "@/lib/living-brain/model";
-import { lessonSpineStep } from "@/lib/player/play-rail-write";
+import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
 import {
   DESK_COPY,
   JOB_SENTENCE,
@@ -161,12 +161,18 @@ export default function PeoplePage() {
         </div>
       ) : null}
       {error ? <p className="mt-6 text-sm">{error}</p> : null}
-      {aim ? (
-        <p className="mt-6 text-sm" data-org-aim="yes">
+      {aim || lines.some((line) => lessonSpineStep(line.nextStep)) ? (
+        <p
+          className="mt-6 text-sm"
+          data-org-aim="yes"
+          data-aim-from={!aim && lines.some((line) => lessonSpineStep(line.nextStep)) ? "outcomes" : undefined}
+        >
           <span className="text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim">
             Aim
           </span>
-          <span className="mt-1 block text-muted-foreground">{aim}</span>
+          <span className="mt-1 block text-muted-foreground">
+            {aim || lines.map((line) => lessonSpineStep(line.nextStep)).find(Boolean)}
+          </span>
         </p>
       ) : null}
       {desk && copy ? (
@@ -195,6 +201,7 @@ export default function PeoplePage() {
                 rows.map((person) => {
                   const line = lines.find((row) => row.membershipId === person.membershipId);
                   const spine = line?.nextStep ? lessonSpineStep(line.nextStep) : null;
+                  const spineConfidence = line?.nextStep ? lessonSpineConfidence(line.nextStep) : null;
                   return (
                   <tr
                     key={`${desk}-${person.membershipId}`}
@@ -212,13 +219,17 @@ export default function PeoplePage() {
                       </Link>
                     </td>
                     <td className="px-4 py-3">{copy.login}</td>
-                    <td className="px-4 py-3 text-muted-foreground" data-confidence={person.membershipId}>
-                      {line?.confidence ? (
+                    <td
+                      className="px-4 py-3 text-muted-foreground"
+                      data-confidence={person.membershipId}
+                      data-confidence-from={spineConfidence ? "outcomes" : undefined}
+                    >
+                      {line?.confidence || spineConfidence ? (
                         <>
                           <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
                             Confidence
                           </span>
-                          {line.confidence}
+                          {spineConfidence || line?.confidence}
                         </>
                       ) : (
                         "No note on how they are doing yet."

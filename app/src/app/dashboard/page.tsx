@@ -7,7 +7,7 @@ import { lessonForOrg } from "@/lib/campus-runtime/lessons";
 import { COURSE_NAME, COURSE_TAGLINE } from "@/lib/course/content";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
 import { learnHomeContext, type LivingBrain } from "@/lib/living-brain/model";
-import { lessonSpineStep } from "@/lib/player/play-rail-write";
+import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
 
 type NextStep = {
   href: string;
@@ -219,12 +219,25 @@ export default function LearnPage() {
                 <p className="mt-6 text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim">
                   Aim
                 </p>
+              ) : signedIn && lessonSpineStep(card.nextTitle) ? (
+                <p
+                  className="mt-6 text-xs font-medium uppercase tracking-[0.12em]"
+                  data-aim-label="Aim"
+                  data-aim-from="outcomes"
+                >
+                  Aim
+                </p>
               ) : null}
               <h3 className={signedIn && card.aim ? "mt-1 text-sm font-medium" : "mt-6 text-sm font-medium"}>
                 {card.org === "sales" ? "What this team is aiming for" : "What this family is aiming for"}
               </h3>
-              <p className="mt-2 text-sm text-muted-foreground" data-org-aim={card.aim ? "yes" : "no"}>
+              <p
+                className="mt-2 text-sm text-muted-foreground"
+                data-org-aim={card.aim || lessonSpineStep(card.nextTitle) ? "yes" : "no"}
+                data-aim-from={!card.aim && lessonSpineStep(card.nextTitle) ? "outcomes" : undefined}
+              >
                 {card.aim ||
+                  lessonSpineStep(card.nextTitle) ||
                   (card.org === "sales"
                     ? "No line for what this team is aiming for yet."
                     : "No line for what this family is aiming for yet.")}
@@ -233,12 +246,24 @@ export default function LearnPage() {
                 <p className="mt-6 text-xs font-medium uppercase tracking-[0.12em]" data-confidence-label="Confidence">
                   Confidence
                 </p>
+              ) : signedIn && lessonSpineConfidence(card.nextTitle) ? (
+                <p
+                  className="mt-6 text-xs font-medium uppercase tracking-[0.12em]"
+                  data-confidence-label="Confidence"
+                  data-confidence-from="outcomes"
+                >
+                  Confidence
+                </p>
               ) : null}
               <h3 className={signedIn && card.confidence ? "mt-1 text-sm font-medium" : "mt-6 text-sm font-medium"}>
                 How they are doing
               </h3>
-              <p className="mt-2 text-sm text-muted-foreground" data-confidence={card.personId}>
-                {card.confidence || "No note on how they are doing yet."}
+              <p
+                className="mt-2 text-sm text-muted-foreground"
+                data-confidence={card.personId}
+                data-confidence-from={lessonSpineConfidence(card.nextTitle) ? "outcomes" : undefined}
+              >
+                {lessonSpineConfidence(card.nextTitle) || card.confidence || "No note on how they are doing yet."}
               </p>
             </>
           ) : null}

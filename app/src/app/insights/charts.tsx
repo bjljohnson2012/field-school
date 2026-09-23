@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { assistDraft, assistFacts, brainBoard, type BrainBoard } from "@/lib/living-brain/model";
-import { lessonSpineStep } from "@/lib/player/play-rail-write";
+import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
 import { EMPTY_COPY, type InsightPerson, type InsightPoint, type InsightsModel } from "./aggregate";
 
 type OpenState = {
@@ -193,9 +193,24 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                 {board.room === "sales" ? "What this team is aiming for" : "What this family is aiming for"}
               </p>
             </>
+          ) : board.people.some((person) => lessonSpineStep(person.outcomes)) ? (
+            <>
+              <p className="mt-3 text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim" data-aim-from="outcomes">
+                Aim
+              </p>
+              <p className="mt-1 text-sm font-medium">
+                {board.room === "sales" ? "What this team is aiming for" : "What this family is aiming for"}
+              </p>
+            </>
           ) : null}
-          <p className="mt-3 text-sm" data-org-outcome={board.outcome ? "yes" : "no"} data-org-aim={board.outcome ? "yes" : "no"}>
+          <p
+            className="mt-3 text-sm"
+            data-org-outcome={board.outcome ? "yes" : "no"}
+            data-org-aim={board.outcome || board.people.some((person) => lessonSpineStep(person.outcomes)) ? "yes" : "no"}
+            data-aim-from={!board.outcome && board.people.some((person) => lessonSpineStep(person.outcomes)) ? "outcomes" : undefined}
+          >
             {board.outcome ||
+              board.people.map((person) => lessonSpineStep(person.outcomes)).find(Boolean) ||
               (board.room === "sales"
                 ? "No line for what this team is aiming for yet."
                 : "No line for what this family is aiming for yet.")}
@@ -244,6 +259,7 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                 <tbody>
                   {board.people.map((person) => {
                     const spine = lessonSpineStep(person.outcomes);
+                    const spineConfidence = lessonSpineConfidence(person.outcomes);
                     const suggestion = assistDraft({
                       room: board.room,
                       person,
@@ -264,14 +280,26 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                       <td className="px-2 py-2">{person.name}</td>
                       <td className="px-2 py-2">
                         {person.profile || "—"}
-                        <p className="mt-1 text-xs text-muted-foreground" data-confidence={person.membershipId}>
+                        <p
+                          className="mt-1 text-xs text-muted-foreground"
+                          data-confidence={person.membershipId}
+                          data-confidence-from={spineConfidence ? "outcomes" : undefined}
+                        >
                           {person.confidence ? (
                             <>
                               <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
                                 Confidence
                               </span>
                               <span className="mt-1 block text-sm font-medium text-foreground">How they are doing</span>
-                              <span className="mt-1 block">{person.confidence}</span>
+                              <span className="mt-1 block">{spineConfidence || person.confidence}</span>
+                            </>
+                          ) : spineConfidence ? (
+                            <>
+                              <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
+                                Confidence
+                              </span>
+                              <span className="mt-1 block text-sm font-medium text-foreground">How they are doing</span>
+                              <span className="mt-1 block">{spineConfidence}</span>
                             </>
                           ) : (
                             "No note on how they are doing yet."
