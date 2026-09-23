@@ -31,12 +31,13 @@ export function LessonSpinePlayer() {
   }
 
   useEffect(() => {
-    if (!continueAt || continued.current) return;
+    if (!continueAt) return;
+    setCurrent(continueAt.startSec);
+    if (continued.current) return;
     const video = videoRef.current;
     if (!video || video.readyState < 1) return;
     continued.current = true;
     video.currentTime = continueAt.startSec;
-    setCurrent(continueAt.startSec);
   }, [continueAt]);
 
   return (

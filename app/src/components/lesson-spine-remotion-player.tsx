@@ -121,7 +121,13 @@ export function LessonSpineRemotionPreview() {
   const { recordPlay, wrote } = useLessonSpinePlayWrite();
   const continueAt = useLessonSpineContinue();
   const [frame, setFrame] = useState(0);
-  const chapter = chapterAt(frame);
+  const [chosen, setChosen] = useState<string | null>(null);
+  const restoredId = continueAt
+    ? continueAt.chapterId === "next-up"
+      ? "nextUp"
+      : continueAt.chapterId
+    : null;
+  const chapter = ROWS.find((row) => row.id === (chosen ?? restoredId)) ?? chapterAt(frame);
 
   useEffect(() => {
     const player = playerRef.current;
@@ -135,7 +141,12 @@ export function LessonSpineRemotionPreview() {
       if (!continueAt) void recordPlay("sting");
       else void recordPlay(continueAt.chapterId);
     };
-    const onFrame = () => setFrame(player.getCurrentFrame());
+    const onFrame = () => {
+      const next = player.getCurrentFrame();
+      setFrame(next);
+      if (continueAt && next === 0 && frameFor(continueAt.chapterId) !== 0) return;
+      setChosen(chapterAt(next).id);
+    };
     player.addEventListener("play", onPlay);
     player.addEventListener("frameupdate", onFrame);
     return () => {
@@ -171,7 +182,13 @@ export function LessonSpineRemotionPreview() {
         Same beat clock as the factory composition: sting, slate, objective, recap, next up. The HTML5 rail above
         still plays the locked master. This preview does not take a Cap and does not write a master.
       </p>
-      <p className="mt-4 text-sm" data-chapter-label={chapter.label} data-preview-craft="chapter">
+      <p
+        className="mt-4 text-sm"
+        data-chapter-label={chapter.label}
+        data-preview-craft="chapter"
+        data-continue-from={!chosen && continueAt ? "outcomes" : undefined}
+        data-continue-chapter={!chosen && continueAt ? continueAt.chapterId : undefined}
+      >
         {ROWS.findIndex((row) => row.id === chapter.id) + 1} / {ROWS.length} · {chapter.label}
       </p>
       <div className="mt-2 flex flex-wrap gap-2" data-chapter-rail="lesson-spine">
@@ -183,6 +200,7 @@ export function LessonSpineRemotionPreview() {
             data-chapter={row.id}
             data-chapter-current={row.id === chapter.id ? "yes" : "no"}
             onClick={() => {
+              setChosen(row.id);
               playerRef.current?.seekTo(row.from);
               setFrame(row.from);
             }}
@@ -191,7 +209,11 @@ export function LessonSpineRemotionPreview() {
           </button>
         ))}
       </div>
-      <p className="mt-2 text-sm text-muted-foreground" data-preview-caption={chapter.id}>
+      <p
+        className="mt-2 text-sm text-muted-foreground"
+        data-preview-caption={chapter.id}
+        data-continue-from={!chosen && continueAt ? "outcomes" : undefined}
+      >
         {chapter.label}. Household: the child has no login. Sales: this desk lists no children.
       </p>
       <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-black">
