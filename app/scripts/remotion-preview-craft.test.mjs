@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { brainBoard } from "../src/lib/living-brain/model.ts";
-import { lessonSpineContinue, lessonSpineResume, lessonSpineStep, lessonSpineTeachProve, playOutcome, playWriteBody, portionWriteBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
+import { lessonSpineContinue, lessonSpineResume, lessonSpineStep, lessonSpineTeachProve, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, resumeWriteBody } from "../src/lib/player/play-rail-write.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
@@ -283,4 +283,95 @@ test("leave and return consumes the next portion into Teach and Prove", () => {
   assert.match(read("src/components/lesson-spine-play-write.tsx"), /status !== "authenticated" \|\| !email/);
   assert.match(read("src/components/leave-return-next.tsx"), /href="\/play\/lesson-spine"/);
   assert.doesNotMatch(preview + html5 + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+test("finishing Prove writes the next chapter and return opens it", () => {
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const html5 = read("src/components/lesson-spine-player.tsx");
+  const hook = read("src/components/lesson-spine-play-write.tsx");
+  const home = {
+    orgId: "org-1",
+    room: "household",
+    facts: "",
+    outcome: "",
+    people: [person({})],
+  };
+  const consumed = portionWriteBody({ room: "household", brain: home, chapterId: "sting" });
+  const opened = lessonSpineTeachProve(consumed.outcomes);
+  const afterConsume = { ...home, people: [person({ outcomes: consumed.outcomes })] };
+  const proved = proveCompleteBody({
+    room: "household",
+    brain: afterConsume,
+    chapterId: opened.chapterId,
+  });
+  assert.equal(consumed?.login, "none");
+  assert.equal(opened?.chapterId, "slate");
+  assert.equal(proved?.login, "none");
+  assert.equal(proved?.outcomes, "Continue LessonSpine at Objective");
+  assert.equal(lessonSpineContinue(proved.outcomes)?.chapterId, "objective");
+  assert.equal(lessonSpineContinue(proved.outcomes)?.label, "Objective");
+  assert.equal(proveCompleteBody({ room: "household", brain: null, chapterId: "slate" }), null);
+  const finishedBrain = { ...home, people: [person({ outcomes: "Finished LessonSpine" })] };
+  const stay = proveCompleteBody({ room: "household", brain: finishedBrain, chapterId: "next-up" });
+  assert.equal(stay?.outcomes, "Finished LessonSpine");
+  assert.equal(lessonSpineContinue(stay.outcomes)?.chapterId, "next-up");
+
+  const salesBrain = {
+    orgId: "org-1",
+    room: "sales",
+    facts: "",
+    outcome: "",
+    people: [
+      person({ membershipId: "kid", name: "No", kind: "child", login: "none" }),
+      person({
+        membershipId: "rep-1",
+        name: "Lee",
+        kind: "adult",
+        login: "member",
+        outcomes: "Continue LessonSpine at Objective",
+      }),
+    ],
+  };
+  const salesOpen = lessonSpineTeachProve(
+    brainBoard({ room: "sales", brain: salesBrain }).people[0].outcomes,
+  );
+  const sales = proveCompleteBody({
+    room: "sales",
+    brain: salesBrain,
+    chapterId: salesOpen.chapterId,
+  });
+  const board = brainBoard({
+    room: "sales",
+    brain: {
+      ...salesBrain,
+      people: salesBrain.people.map((row) =>
+        row.membershipId === sales.membershipId ? { ...row, outcomes: sales.outcomes } : row,
+      ),
+    },
+  });
+  assert.equal(board.people.some((row) => row.kind === "child"), false);
+  assert.equal(sales?.membershipId, "rep-1");
+  assert.equal(sales?.login, "member");
+  assert.equal(sales?.outcomes, "Continue LessonSpine at Recap");
+  assert.equal(lessonSpineContinue(board.people[0].outcomes)?.chapterId, "recap");
+  assert.equal(
+    portionWriteBody({ room: "household", brain: afterConsume, chapterId: "slate" })?.outcomes,
+    proved.outcomes,
+  );
+
+  assert.match(preview, /recordProve\(opened\.chapterId\)/);
+  assert.match(preview, /data-prove-complete="living-brain"/);
+  assert.match(preview, /data-prove-complete-chapter=\{opened\.chapterId\}/);
+  assert.match(preview, /data-consume-portion="living-brain"/);
+  assert.match(preview, /data-preview-craft="chapter"/);
+  assert.match(preview, /data-chapter-rail="lesson-spine"/);
+  assert.match(preview, /recordPortion/);
+  assert.match(preview, /recordPlay\("sting"\)/);
+  assert.match(hook, /proveCompleteBody\(/);
+  assert.match(hook, /status !== "authenticated" \|\| !email/);
+  assert.match(hook, /fs-lesson-spine-prove/);
+  assert.match(html5, /<video/);
+  assert.doesNotMatch(html5, /@remotion|from "remotion"|data-prove-complete/);
+  assert.match(read("src/components/leave-return-next.tsx"), /href="\/play\/lesson-spine"/);
+  assert.doesNotMatch(preview + html5 + hook, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });

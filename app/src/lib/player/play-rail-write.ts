@@ -58,6 +58,15 @@ export function portionWriteBody(input: {
   return playWriteBody(input);
 }
 
+/** Finishing Prove for the consumed portion writes the next chapter continue-from. */
+export function proveCompleteBody(input: {
+  room: Room;
+  brain: LivingBrain | null;
+  chapterId: string;
+}) {
+  return portionWriteBody(input);
+}
+
 /** Body for POST /api/living-brain. Keeps the step and stores a mid-chapter scrub plus caption cue. */
 export function resumeWriteBody(input: {
   room: Room;

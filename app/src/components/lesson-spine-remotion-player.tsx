@@ -120,7 +120,7 @@ function chapterAt(frame: number) {
 
 export function LessonSpineRemotionPreview() {
   const playerRef = useRef<PlayerRef>(null);
-  const { recordPlay, recordResume, recordPortion, wrote } = useLessonSpinePlayWrite();
+  const { recordPlay, recordResume, recordPortion, recordProve, wrote } = useLessonSpinePlayWrite();
   const continueAt = useLessonSpineContinue();
   const playing = useRef(false);
   const prevIndex = useRef<number | null>(null);
@@ -248,6 +248,17 @@ export function LessonSpineRemotionPreview() {
             >
               Prove · {opened.label}
             </a>
+            <button
+              type="button"
+              className="underline underline-offset-2"
+              data-prove-complete="living-brain"
+              data-prove-complete-chapter={opened.chapterId}
+              onClick={() => {
+                void recordProve(opened.chapterId);
+              }}
+            >
+              Prove complete
+            </button>
             <span>
               {continueAt.login === "none"
                 ? "The child has no login."
