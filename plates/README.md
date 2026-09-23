@@ -96,6 +96,7 @@ PASS notes:
 - [antagonist-evidence-card.md](./antagonist-evidence-card.md) — EvidenceCard evidence / warrant rows 2026-09-21
 - [antagonist-analogy-card.md](./antagonist-analogy-card.md) — AnalogyCard analogy / like-this transfer pair 2026-09-21
 - [antagonist-counterexample-card.md](./antagonist-counterexample-card.md) — CounterexampleCard counterexample / not-this foil 2026-09-21
+- [antagonist-repair-card.md](./antagonist-repair-card.md) — RepairCard repair / the case that holds 2026-09-23
 - [antagonist-lesson-spine-source-encode.md](./antagonist-lesson-spine-source-encode.md) — LessonSpine SourceChip encode 2026-09-21
 - [antagonist-lesson-spine-spectrum-encode.md](./antagonist-lesson-spine-spectrum-encode.md) — LessonSpine SpectrumBar encode 2026-09-21
 - [antagonist-lesson-spine-threshold-encode.md](./antagonist-lesson-spine-threshold-encode.md) — LessonSpine ThresholdCard encode 2026-09-21
