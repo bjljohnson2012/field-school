@@ -323,6 +323,16 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                             Save how they are doing
                           </button>
                         </form>
+                        {spine ? (
+                          <p
+                            className="mt-1 text-xs text-muted-foreground"
+                            data-suggestion-context="living-brain"
+                            data-lesson-spine-next={spine}
+                            data-confidence-from="outcomes"
+                          >
+                            Suggestion uses {spine}. {spineConfidence}
+                          </p>
+                        ) : null}
                         {draft ? <p className="mt-1 text-xs text-muted-foreground">Suggested: {draft.profile}</p> : null}
                       </td>
                       <td className="px-2 py-2">

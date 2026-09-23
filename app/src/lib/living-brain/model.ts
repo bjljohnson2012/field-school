@@ -1,3 +1,5 @@
+import { lessonSpineConfidence, lessonSpineStep } from "../player/lesson-spine-step.ts";
+
 export type Room = "household" | "sales";
 
 export type OutcomeMark = { outcomes: string };
@@ -256,6 +258,9 @@ export function suggestionPrompt(input: {
   const aim = clip(input.outcome || "");
   const confidence = clip(input.person.confidence || "");
   const history = (input.person.history ?? []).map((mark) => clip(mark?.outcomes || "")).filter(Boolean);
+  const spine = lessonSpineStep(step) || [...history].reverse().map((mark) => lessonSpineStep(mark)).find(Boolean) || "";
+  const spineHow = lessonSpineStep(step) ? lessonSpineConfidence(step) : "";
+  const how = spineHow || confidence;
   const roomLine =
     input.room === "household"
       ? "This is a home desk. The child has no login and cannot save. The parent owns the save."
@@ -272,8 +277,9 @@ export function suggestionPrompt(input: {
     `Person: ${name}.`,
     `Current profile: ${clip(input.person.profile) || "none"}.`,
     `Current next step: ${step || "none"}.`,
+    spine ? `LessonSpine progress: ${spine}.` : "",
     aimLine,
-    `How they are doing: ${confidence || "none"}.`,
+    `How they are doing: ${how || "none"}.`,
     `Recent next steps, oldest first: ${history.length ? history.join("; ") : "none"}.`,
     path ? `Path: ${path}.` : "",
     clip(input.facts) ? `Org facts, for context only: ${clip(input.facts)}.` : "",
