@@ -47,14 +47,38 @@ function NewMenu() {
 
 type NavLink = { href: string; label: string };
 
+const stoneLink =
+  "flex h-11 items-center px-2 text-[#7a746a] hover:text-foreground sm:px-2.5";
+
+function GuestOrgMenu() {
+  return (
+    <details className="relative">
+      <summary className={`${stoneLink} cursor-pointer list-none`}>
+        Org
+      </summary>
+      <div className="absolute right-0 z-40 mt-1 flex min-w-44 flex-col rounded-xl border border-border bg-background p-1 shadow-md">
+        <Link href="/o/household" className={stoneLink}>
+          Household
+        </Link>
+        <Link href="/o/sales" className={stoneLink}>
+          Sales
+        </Link>
+      </div>
+    </details>
+  );
+}
+
 function navLinks(opts: {
   loggedIn: boolean;
   guest: boolean;
   leader: boolean;
   org: string;
 }): NavLink[] {
-  if (!opts.loggedIn) {
-    return opts.guest ? [{ href: "/about", label: "About" }] : [];
+  if (opts.guest || !opts.loggedIn) {
+    // Guest rooms: People, Library, Insights, and New stay hidden.
+    // Learn stays on the home page rail (Learn with Ben), not in the nav,
+    // because the signed-in Learn door is /dashboard.
+    return [];
   }
   const org = opts.org;
   if (!opts.leader) {
@@ -133,6 +157,7 @@ export function SiteHeader() {
                 {l.label}
               </Link>
             ))}
+            {guestChrome ? <GuestOrgMenu /> : null}
           </div>
           {showNew ? <NewMenu /> : null}
           <details className="relative md:hidden">
@@ -145,6 +170,19 @@ export function SiteHeader() {
                   {l.label}
                 </Link>
               ))}
+              {guestChrome ? (
+                <>
+                  <p className="px-2 pt-2 text-xs uppercase tracking-[0.16em] text-[#7a746a]">
+                    Org
+                  </p>
+                  <Link href="/o/household" className={stoneLink}>
+                    Household
+                  </Link>
+                  <Link href="/o/sales" className={stoneLink}>
+                    Sales
+                  </Link>
+                </>
+              ) : null}
             </div>
           </details>
           {loggedIn ? <OrgPicker /> : null}
@@ -181,7 +219,7 @@ export function SiteHeader() {
               </Link>
               <Link
                 href="/signup"
-                className="flex h-9 items-center rounded-xl bg-primary px-3 text-sm font-medium text-primary-foreground"
+                className="flex h-9 items-center rounded-xl border border-border px-3 text-sm text-[#7a746a] hover:text-foreground"
               >
                 Join free
               </Link>

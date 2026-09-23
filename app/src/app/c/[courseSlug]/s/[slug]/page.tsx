@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { AssignmentPanel } from "@/components/assignment-panel";
+import { GuestContinuity } from "@/components/guest-continuity";
 import { QuizPanel } from "@/components/quiz-panel";
 import { YoutubeClip } from "@/components/youtube-clip";
 import { useCoursePortal } from "@/hooks/use-portal";
@@ -132,6 +133,8 @@ export default function StationPage() {
             ))}
           </ul>
         </section>
+
+        <GuestContinuity />
 
         <AssignmentPanel
           module={mod}
