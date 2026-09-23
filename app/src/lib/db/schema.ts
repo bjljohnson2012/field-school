@@ -914,3 +914,569 @@ export const plateRenders = pgTable(
   (t) => [index("plate_renders_org_status_idx").on(t.orgId, t.status, t.createdAt)],
 );
 
+export const membershipCapabilities = pgTable(
+  "membership_capabilities",
+  {
+    membershipId: uuid("membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    capability: text("capability").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.membershipId, t.capability] })],
+);
+
+export const coachingLinks = pgTable(
+  "coaching_links",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    coachMembershipId: uuid("coach_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    subjectMembershipId: uuid("subject_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    kind: text("kind").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("coaching_links_edge").on(
+      t.orgId,
+      t.coachMembershipId,
+      t.subjectMembershipId,
+      t.kind,
+    ),
+    index("coaching_links_org_coach_idx").on(t.orgId, t.coachMembershipId),
+  ],
+);
+
+export const coachingProfiles = pgTable(
+  "coaching_profiles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    membershipId: uuid("membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    personalitySummary: text("personality_summary"),
+    salesStyleSummary: text("sales_style_summary"),
+    communicationSummary: text("communication_summary"),
+    leadershipSummary: text("leadership_summary"),
+    forecastingSummary: text("forecasting_summary"),
+    motivations: jsonb("motivations").notNull().default([]),
+    strengths: jsonb("strengths").notNull().default([]),
+    weaknesses: jsonb("weaknesses").notNull().default([]),
+    enneagramType: text("enneagram_type"),
+    discProfile: text("disc_profile"),
+    mbtiType: text("mbti_type"),
+    coachingHints: jsonb("coaching_hints"),
+    reasoningSummary: text("reasoning_summary"),
+    synthesisStatus: text("synthesis_status"),
+    synthesisError: text("synthesis_error"),
+    synthesisStartedAt: timestamp("synthesis_started_at", { withTimezone: true }),
+    lastSynthesizedAt: timestamp("last_synthesized_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("coaching_profiles_org_member").on(t.orgId, t.membershipId),
+    index("coaching_profiles_org_member_idx").on(t.orgId, t.membershipId),
+  ],
+);
+
+export const memberCredentials = pgTable(
+  "member_credentials",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    memberId: uuid("member_id")
+      .notNull()
+      .references(() => members.id),
+    source: text("source").notNull(),
+    passwordHash: text("password_hash").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [unique("member_credentials_member_source").on(t.memberId, t.source)],
+);
+
+export const products = pgTable(
+  "products",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    slug: text("slug").notNull(),
+    name: text("name").notNull(),
+    summary: text("summary"),
+    audience: text("audience"),
+    active: boolean("active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("products_org_slug").on(t.orgId, t.slug),
+    index("products_org_created_idx").on(t.orgId, t.createdAt),
+  ],
+);
+
+export const questions = pgTable(
+  "questions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id").references(() => organizations.id),
+    productId: uuid("product_id").references(() => products.id),
+    category: text("category").notNull(),
+    questionType: text("question_type").notNull(),
+    text: text("text").notNull(),
+    options: jsonb("options"),
+    tags: jsonb("tags").notNull().default([]),
+    weight: numeric("weight").notNull().default("1"),
+    active: boolean("active").notNull().default(true),
+    authorMembershipId: uuid("author_membership_id").references(() => memberships.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("questions_org_created_idx").on(t.orgId, t.createdAt)],
+);
+
+export const answerSets = pgTable(
+  "answer_sets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    membershipId: uuid("membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    subjectMembershipId: uuid("subject_membership_id").references(() => memberships.id),
+    kind: text("kind").notNull(),
+    status: text("status").notNull(),
+    version: integer("version").notNull().default(1),
+    resumeIndex: integer("resume_index").notNull().default(0),
+    questionOrder: jsonb("question_order").notNull().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("answer_sets_org_member_idx").on(t.orgId, t.membershipId)],
+);
+
+export const answers = pgTable(
+  "answers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    answerSetId: uuid("answer_set_id")
+      .notNull()
+      .references(() => answerSets.id),
+    questionId: uuid("question_id")
+      .notNull()
+      .references(() => questions.id),
+    value: jsonb("value").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("answers_set_question").on(t.answerSetId, t.questionId),
+    index("answers_org_created_idx").on(t.orgId, t.createdAt),
+  ],
+);
+
+export const recommendations = pgTable(
+  "recommendations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    subjectMembershipId: uuid("subject_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    source: text("source").notNull(),
+    category: text("category").notNull(),
+    routeTo: text("route_to").notNull(),
+    channel: text("channel").notNull(),
+    title: text("title").notNull(),
+    body: text("body").notNull(),
+    status: text("status").notNull(),
+    sourceUnitIds: jsonb("source_unit_ids").notNull().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("recommendations_org_subject_route_idx").on(
+      t.orgId,
+      t.subjectMembershipId,
+      t.routeTo,
+    ),
+  ],
+);
+
+export const coachingNotes = pgTable(
+  "coaching_notes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    authorMembershipId: uuid("author_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    subjectMembershipId: uuid("subject_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    body: text("body").notNull(),
+    visibleToLearner: boolean("visible_to_learner").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("coaching_notes_org_subject_idx").on(t.orgId, t.subjectMembershipId)],
+);
+
+export const coachingPlans = pgTable(
+  "coaching_plans",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    subjectMembershipId: uuid("subject_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    authorMembershipId: uuid("author_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    generated: jsonb("generated").notNull().default({}),
+    modelName: text("model_name"),
+    status: text("status").notNull(),
+    error: text("error"),
+    readBy: jsonb("read_by").notNull().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("coaching_plans_org_subject_idx").on(t.orgId, t.subjectMembershipId)],
+);
+
+export const oneOnOnePreps = pgTable(
+  "one_on_one_preps",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    subjectMembershipId: uuid("subject_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    authorMembershipId: uuid("author_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    prepDocText: text("prep_doc_text").notNull().default(""),
+    generated: jsonb("generated").notNull().default({}),
+    modelName: text("model_name"),
+    status: text("status").notNull(),
+    error: text("error"),
+    readBy: jsonb("read_by").notNull().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("one_on_one_preps_org_subject_idx").on(t.orgId, t.subjectMembershipId)],
+);
+
+export const reviews = pgTable(
+  "reviews",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    coachMembershipId: uuid("coach_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    subjectMembershipId: uuid("subject_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    monthOf: timestamp("month_of", { withTimezone: true }).notNull(),
+    status: text("status").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("reviews_month").on(t.orgId, t.coachMembershipId, t.subjectMembershipId, t.monthOf),
+    index("reviews_org_subject_idx").on(t.orgId, t.subjectMembershipId),
+  ],
+);
+
+export const reviewAnswers = pgTable(
+  "review_answers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    reviewId: uuid("review_id")
+      .notNull()
+      .references(() => reviews.id),
+    questionId: uuid("question_id")
+      .notNull()
+      .references(() => questions.id),
+    value: jsonb("value").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("review_answers_review_question").on(t.reviewId, t.questionId),
+    index("review_answers_org_created_idx").on(t.orgId, t.createdAt),
+  ],
+);
+
+export const workItems = pgTable(
+  "work_items",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    assigneeMembershipId: uuid("assignee_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    authorMembershipId: uuid("author_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    subjectMembershipId: uuid("subject_membership_id").references(() => memberships.id),
+    title: text("title").notNull(),
+    body: text("body"),
+    status: text("status").notNull(),
+    dueAt: timestamp("due_at", { withTimezone: true }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    recommendationId: uuid("recommendation_id").references(() => recommendations.id),
+    planId: uuid("plan_id").references(() => coachingPlans.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("work_items_org_assignee_idx").on(t.orgId, t.assigneeMembershipId)],
+);
+
+export const coachingSources = pgTable(
+  "coaching_sources",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    kind: text("kind").notNull(),
+    title: text("title").notNull(),
+    storagePath: text("storage_path"),
+    body: text("body").notNull().default(""),
+    mime: text("mime"),
+    byteSize: integer("byte_size"),
+    visibility: text("visibility").notNull(),
+    storageStatus: text("storage_status").notNull(),
+    authorMembershipId: uuid("author_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("coaching_sources_org_author_idx").on(t.orgId, t.authorMembershipId)],
+);
+
+export const sourceMappings = pgTable(
+  "source_mappings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    sourceId: uuid("source_id")
+      .notNull()
+      .references(() => coachingSources.id),
+    kind: text("kind").notNull(),
+    intent: text("intent").notNull(),
+    visibility: text("visibility").notNull(),
+    aiSuggestedKind: text("ai_suggested_kind"),
+    aiSuggestedIntent: text("ai_suggested_intent"),
+    aiConfidence: numeric("ai_confidence"),
+    aiRationale: text("ai_rationale"),
+    confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("source_mappings_org_created_idx").on(t.orgId, t.createdAt)],
+);
+
+export const knowledgeRepos = pgTable(
+  "knowledge_repos",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    repoKind: text("repo_kind").notNull(),
+    name: text("name").notNull(),
+    visibility: text("visibility").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("knowledge_repos_org_kind_name").on(t.orgId, t.repoKind, t.name),
+    index("knowledge_repos_org_created_idx").on(t.orgId, t.createdAt),
+  ],
+);
+
+export const coachingKnowledgeUnits = pgTable(
+  "coaching_knowledge_units",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    repositoryId: uuid("repository_id")
+      .notNull()
+      .references(() => knowledgeRepos.id),
+    sourceId: uuid("source_id").references(() => coachingSources.id),
+    productId: uuid("product_id").references(() => products.id),
+    title: text("title").notNull(),
+    body: text("body").notNull(),
+    skillSlugs: text("skill_slugs").array().notNull().default([]),
+    tags: jsonb("tags").notNull().default([]),
+    status: text("status").notNull(),
+    visibility: text("visibility").notNull(),
+    authorMembershipId: uuid("author_membership_id").references(() => memberships.id),
+    approverMembershipId: uuid("approver_membership_id").references(() => memberships.id),
+    embedding: jsonb("embedding"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("coaching_knowledge_units_org_created_idx").on(t.orgId, t.createdAt)],
+);
+
+export const adHocQuizzes = pgTable(
+  "ad_hoc_quizzes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    subjectMembershipId: uuid("subject_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    authorMembershipId: uuid("author_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    title: text("title").notNull(),
+    tokenHash: text("token_hash").notNull().unique(),
+    status: text("status").notNull(),
+    questionIds: jsonb("question_ids").notNull().default([]),
+    answerSetId: uuid("answer_set_id").references(() => answerSets.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("ad_hoc_quizzes_org_subject_idx").on(t.orgId, t.subjectMembershipId)],
+);
+
+export const quizSchedules = pgTable(
+  "quiz_schedules",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    subjectMembershipId: uuid("subject_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    cadence: text("cadence").notNull(),
+    nextRunAt: timestamp("next_run_at", { withTimezone: true }).notNull(),
+    active: boolean("active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("quiz_schedules_org_subject_idx").on(t.orgId, t.subjectMembershipId)],
+);
+
+export const retakeRequests = pgTable(
+  "retake_requests",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    requesterMembershipId: uuid("requester_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    quizId: uuid("quiz_id").references(() => adHocQuizzes.id),
+    answerSetId: uuid("answer_set_id").references(() => answerSets.id),
+    status: text("status").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("retake_requests_org_requester_idx").on(t.orgId, t.requesterMembershipId)],
+);
+
+export const drillAttempts = pgTable(
+  "drill_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    membershipId: uuid("membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    skillCategory: text("skill_category").notNull(),
+    prompt: text("prompt").notNull(),
+    userResponse: text("user_response"),
+    aiScore: integer("ai_score"),
+    pointsAwarded: integer("points_awarded").notNull().default(0),
+    status: text("status").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("drill_attempts_org_member_idx").on(t.orgId, t.membershipId)],
+);
+
+export const performanceSnapshots = pgTable(
+  "performance_snapshots",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    membershipId: uuid("membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    year: integer("year").notNull(),
+    quarter: integer("quarter").notNull(),
+    quotaCents: integer("quota_cents"),
+    attainedCents: integer("attained_cents"),
+    notes: text("notes"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("performance_snapshots_period").on(t.orgId, t.membershipId, t.year, t.quarter),
+    index("performance_snapshots_org_member_idx").on(t.orgId, t.membershipId),
+  ],
+);
+
+export const auditLogs = pgTable(
+  "audit_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id").references(() => organizations.id),
+    actorMembershipId: uuid("actor_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    action: text("action").notNull(),
+    targetType: text("target_type").notNull(),
+    targetId: text("target_id").notNull(),
+    metadata: jsonb("metadata").notNull().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("audit_logs_org_created_idx").on(t.orgId, t.createdAt)],
+);
+
+export const legacyIds = pgTable(
+  "legacy_ids",
+  {
+    source: text("source").notNull(),
+    legacyId: text("legacy_id").notNull(),
+    tableName: text("table_name").notNull(),
+    newId: uuid("new_id").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.source, t.tableName, t.legacyId] })],
+);
+
