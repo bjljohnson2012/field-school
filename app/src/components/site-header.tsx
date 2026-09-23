@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
+import { LeaveReturnNext } from "@/components/leave-return-next";
 import { OrgPicker } from "@/components/org-picker";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -123,6 +124,7 @@ export function SiteHeader() {
           >
             Field School
           </Link>
+          {loggedIn ? <LeaveReturnNext /> : null}
         </div>
         <nav className="flex items-center gap-0.5 text-sm">
           <div className="hidden items-center gap-0.5 md:flex">
