@@ -4,7 +4,6 @@ import { AppShell, GuestChrome } from "@/components/app-shell";
 import { ImpersonationBanner } from "@/components/impersonation-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { ThemeScript } from "@/components/theme-script";
 
 export function coachingShellEnabled() {
   const value = process.env.COACHING_SHELL?.trim().toLowerCase();
@@ -15,7 +14,6 @@ export async function Chrome({ children }: { children: ReactNode }) {
   if (!coachingShellEnabled()) {
     return (
       <>
-        <ThemeScript />
         <SiteHeader />
         <ImpersonationBanner />
         <div className="flex-1">{children}</div>
