@@ -60,11 +60,11 @@ export function lessonSpineContinue(title: string) {
   return { step, chapterId: chapter.id, label: chapter.label, startSec: chapter.startSec };
 }
 
-/** Teach and Prove entries for the next LessonSpine portion stored on the living brain. */
+/** Assign, then Teach and Prove, for the next LessonSpine portion stored on the living brain. */
 export function lessonSpineTeachProve(title: string) {
   const continued = lessonSpineContinue(title);
   if (!continued) return null;
-  return { ...continued, teach: continued.step, prove: continued.step };
+  return { ...continued, assign: continued.step, teach: continued.step, prove: continued.step };
 }
 
 /** Seconds into the continued chapter, plus the caption cue, when a return should resume mid-chapter. */

@@ -258,6 +258,14 @@ export function LessonSpineRemotionPreview() {
             data-sales-children={continueAt.room === "sales" ? "0" : undefined}
           >
             <Link
+              href="/assign"
+              className="underline underline-offset-2"
+              data-assign-portion={opened.assign}
+              data-assign-chapter={opened.chapterId}
+            >
+              Assign · {opened.label}
+            </Link>
+            <Link
               href="/teach-live"
               className="underline underline-offset-2"
               data-teach-portion={opened.teach}
