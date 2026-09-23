@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Player, type PlayerRef } from "@remotion/player";
-import { AbsoluteFill, Sequence, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Easing, Sequence, interpolate, useCurrentFrame } from "remotion";
 import { useLessonSpineContinue, useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
 
 const FPS = 30;
@@ -27,9 +27,9 @@ function layout() {
 const ROWS = layout();
 export const LESSON_SPINE_DURATION_IN_FRAMES = ROWS.reduce((sum, row) => sum + row.frames, 0);
 
-function BeatCard({ label }: { label: string }) {
+function BeatCard({ label, index, total }: { label: string; index: number; total: number }) {
   const frame = useCurrentFrame();
-  const enter = Math.min(1, frame / 12);
+  const chapter = `${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
   return (
     <AbsoluteFill
       style={{
@@ -41,17 +41,54 @@ function BeatCard({ label }: { label: string }) {
     >
       <div
         style={{
-          opacity: enter,
-          transform: `translateY(${(1 - enter) * 16}px)`,
+          opacity: interpolate(frame, [0, 12], [0, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+            easing: Easing.bezier(0.16, 1, 0.3, 1),
+          }),
+          translate: interpolate(frame, [0, 12], ["0px 16px", "0px 0px"], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+            easing: Easing.bezier(0.16, 1, 0.3, 1),
+          }),
           borderLeft: "6px solid #C4A35A",
           paddingLeft: 28,
           maxWidth: 1040,
         }}
       >
-        <p style={{ fontSize: 18, letterSpacing: "0.16em", textTransform: "uppercase", margin: 0 }}>LessonSpine</p>
+        <p style={{ fontSize: 18, letterSpacing: "0.16em", textTransform: "uppercase", margin: 0 }}>
+          LessonSpine · {chapter}
+        </p>
         <h2 style={{ fontSize: 72, lineHeight: 1.05, margin: "12px 0 0" }}>{label}</h2>
         <p style={{ fontSize: 24, margin: "16px 0 0" }}>
           Household: the child has no login. Sales: this desk lists no children.
+        </p>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          left: 72,
+          right: 72,
+          bottom: 48,
+          opacity: interpolate(frame, [6, 18], [0, 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          }),
+        }}
+      >
+        <p
+          data-caption={label}
+          style={{
+            margin: 0,
+            fontSize: 22,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#1A1A16",
+            borderTop: "2px solid #C4A35A",
+            paddingTop: 12,
+          }}
+        >
+          {label}
         </p>
       </div>
     </AbsoluteFill>
@@ -63,7 +100,7 @@ export function LessonSpineComposition() {
     <AbsoluteFill>
       {ROWS.map((row) => (
         <Sequence key={row.id} from={row.from} durationInFrames={row.frames} name={row.id}>
-          <BeatCard label={row.label} />
+          <BeatCard label={row.label} index={ROWS.indexOf(row)} total={ROWS.length} />
         </Sequence>
       ))}
     </AbsoluteFill>
@@ -75,21 +112,36 @@ function frameFor(chapterId: string) {
   return ROWS.find((row) => row.id === id)?.from ?? 0;
 }
 
+function chapterAt(frame: number) {
+  return [...ROWS].reverse().find((row) => frame >= row.from) ?? ROWS[0];
+}
+
 export function LessonSpineRemotionPreview() {
   const playerRef = useRef<PlayerRef>(null);
   const { recordPlay, wrote } = useLessonSpinePlayWrite();
   const continueAt = useLessonSpineContinue();
+  const [frame, setFrame] = useState(0);
+  const chapter = chapterAt(frame);
 
   useEffect(() => {
     const player = playerRef.current;
     if (!player) return;
-    if (continueAt) player.seekTo(frameFor(continueAt.chapterId));
+    if (continueAt) {
+      const next = frameFor(continueAt.chapterId);
+      player.seekTo(next);
+      setFrame(next);
+    }
     const onPlay = () => {
       if (!continueAt) void recordPlay("sting");
       else void recordPlay(continueAt.chapterId);
     };
+    const onFrame = () => setFrame(player.getCurrentFrame());
     player.addEventListener("play", onPlay);
-    return () => player.removeEventListener("play", onPlay);
+    player.addEventListener("frameupdate", onFrame);
+    return () => {
+      player.removeEventListener("play", onPlay);
+      player.removeEventListener("frameupdate", onFrame);
+    };
   }, [continueAt, recordPlay]);
 
   return (
@@ -118,6 +170,29 @@ export function LessonSpineRemotionPreview() {
       <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
         Same beat clock as the factory composition: sting, slate, objective, recap, next up. The HTML5 rail above
         still plays the locked master. This preview does not take a Cap and does not write a master.
+      </p>
+      <p className="mt-4 text-sm" data-chapter-label={chapter.label} data-preview-craft="chapter">
+        {ROWS.findIndex((row) => row.id === chapter.id) + 1} / {ROWS.length} · {chapter.label}
+      </p>
+      <div className="mt-2 flex flex-wrap gap-2" data-chapter-rail="lesson-spine">
+        {ROWS.map((row) => (
+          <button
+            key={row.id}
+            type="button"
+            className="rounded-full border border-border px-3 py-1 text-xs uppercase tracking-[0.12em]"
+            data-chapter={row.id}
+            data-chapter-current={row.id === chapter.id ? "yes" : "no"}
+            onClick={() => {
+              playerRef.current?.seekTo(row.from);
+              setFrame(row.from);
+            }}
+          >
+            {row.label}
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-sm text-muted-foreground" data-preview-caption={chapter.id}>
+        {chapter.label}. Household: the child has no login. Sales: this desk lists no children.
       </p>
       <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-black">
         <Player

@@ -17,6 +17,8 @@ const files = [
   "scripts/profile-lessons-from-brain.test.mjs",
   "scripts/play-rail-align-brain-next.test.mjs",
   "scripts/org-lessons-outcomes-rollup.test.mjs",
+  "scripts/remotion-preview-craft.test.mjs",
+  "scripts/remotion-play-rail.test.mjs",
   "src/lib/living-brain/model.test.mjs",
 ];
 
