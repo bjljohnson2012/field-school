@@ -32,14 +32,25 @@ export function CampusHome() {
               tape, walk the stations, keep a dashboard, or start as a guest
               and share a normal link.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#catalog"
-                className="inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+            <div className="mt-8">
+              <Link
+                href="/c/grok-bot"
+                onClick={() => guest()}
+                className="inline-flex h-12 items-center gap-2 rounded-xl bg-[#1f5eff] px-5 text-sm font-medium text-white"
               >
-                Open the catalog
+                Start Grok Bot
                 <ArrowRight className="size-4" />
-              </a>
+              </Link>
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#7a746a]">
+                Open the free campus course. Watch, work, and clear as a guest.
+              </p>
+            </div>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-[#7a746a]">
+              Three rails on this portal: campus ladder to start; Learn with Ben
+              for LessonSpine, progress, and metering; Org for household and
+              sales desks.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/signup"
                 className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-5 text-sm"
@@ -56,12 +67,6 @@ export function CampusHome() {
               >
                 Continue as guest
               </button>
-              <Link
-                href="/play/lesson-spine"
-                className="inline-flex h-12 items-center rounded-xl border border-border bg-card px-5 text-sm"
-              >
-                Play LessonSpine
-              </Link>
               {ready && isStaff ? (
                 <>
                   <Link
@@ -82,6 +87,46 @@ export function CampusHome() {
           </div>
           <CampusLadder />
         </div>
+        <div className="mx-auto max-w-6xl px-4 pb-12">
+          <div>
+            <p className="text-xs uppercase tracking-[0.16em] text-[#7a746a]">
+              Learn with Ben
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Link
+                href="/play/lesson-spine"
+                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-[#7a746a]"
+              >
+                LessonSpine
+              </Link>
+              <Link
+                href="/progress"
+                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-[#7a746a]"
+              >
+                Progress
+              </Link>
+              <Link
+                href="/metering"
+                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-[#7a746a]"
+              >
+                Metering
+              </Link>
+            </div>
+          </div>
+          <div className="mt-6">
+            <p className="text-xs uppercase tracking-[0.16em] text-[#7a746a]">
+              Org
+            </p>
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+              <Link href="/o/household" className="text-[#7a746a] hover:text-foreground">
+                Household
+              </Link>
+              <Link href="/o/sales" className="text-[#7a746a] hover:text-foreground">
+                Sales
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="border-b border-border bg-card/40">
@@ -94,12 +139,12 @@ export function CampusHome() {
           <PassCard
             n="02"
             title="Do the field work"
-            body="Assignments assume you may not have the paid tool yet. You still name the job, map the logins, and write the brief."
+            body="Assignments assume you may not have the paid tool yet. You still name the work, map the logins, and write the brief."
           />
           <PassCard
             n="03"
-            title="Clear the quiz"
-            body="75% on each station, 80% on the exam. A Field School certificate needs the whole ladder plus the exam."
+            title="Clear the quiz and exam"
+            body="Score 75% on each station quiz. Score 8/10 on the exam. A Field School certificate needs the whole ladder plus the exam."
           />
         </div>
       </section>
@@ -112,10 +157,8 @@ export function CampusHome() {
           Current courses
         </h2>
         <p className="mt-3 max-w-2xl text-muted-foreground">
-          Each course is a staff you can actually run: tape, stations, desk,
-          exam. Share a normal path —{" "}
-          <span className="text-foreground">/c/grok-bot</span> — and anyone can
-          start as a guest.
+          Each course is a staff you can run: tape, stations, desk, exam. Share
+          a normal path like /c/grok-bot. Guests can start.
         </p>
         <div className="mt-6">
           <ShareLink path="/c/grok-bot" label="Copy catalog link" />

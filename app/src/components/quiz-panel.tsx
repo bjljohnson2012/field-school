@@ -15,6 +15,7 @@ export function QuizPanel({
   priorPassed,
   onSubmit,
   shareTitle,
+  showProgress = false,
 }: {
   title?: string;
   questions: QuizQuestion[];
@@ -23,6 +24,7 @@ export function QuizPanel({
   priorPassed: boolean;
   onSubmit: (answers: Record<string, number>) => void;
   shareTitle?: string;
+  showProgress?: boolean;
 }) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [result, setResult] = useState<{ score: number; passed: boolean } | null>(
@@ -39,6 +41,11 @@ export function QuizPanel({
           <p className="mt-1 text-sm text-muted-foreground">
             Pass at {need}/{questions.length}. You can retake.
           </p>
+          {showProgress ? (
+            <p className="mt-1 text-sm tabular-nums text-muted-foreground">
+              {Object.keys(answers).length} / {questions.length}
+            </p>
+          ) : null}
         </div>
         {result ? (
           <span

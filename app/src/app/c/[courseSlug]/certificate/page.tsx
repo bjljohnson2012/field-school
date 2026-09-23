@@ -45,6 +45,9 @@ export default function CertificatePage() {
           {tally.exam ? ` · exam ${tally.exam.score}/${course.examQuestions.length}` : ""}.
           A Field School training credential. Not a vendor certification.
         </p>
+        <p className="mx-auto mt-4 max-w-md text-center text-sm leading-relaxed text-muted-foreground">
+          Certificate requires 8/10 on the exam.
+        </p>
         <p className="mt-8 text-center font-mono text-xs text-faint">
           {new Date().toISOString().slice(0, 10)} · {course.kicker || course.slug}
         </p>

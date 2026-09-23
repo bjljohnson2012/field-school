@@ -185,7 +185,7 @@ export default function LearnPage() {
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             href="/signup"
-            className="inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+            className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm"
           >
             Join free beta
           </Link>
@@ -199,7 +199,15 @@ export default function LearnPage() {
       ) : null}
 
       {waiting ? (
-        <p className="mt-6 text-sm text-muted-foreground">Loading this org.</p>
+        signedIn ? (
+          <p className="mt-6 text-sm text-muted-foreground">Loading this org.</p>
+        ) : (
+          <section className="mt-8">
+            <p className="text-xs uppercase tracking-[0.16em] text-[#7a746a]">Org</p>
+            <p className="mt-2 text-sm text-[#7a746a]">Family</p>
+            <p className="mt-2 text-sm text-[#7a746a]">Loading</p>
+          </section>
+        )
       ) : (
         <section
           className="mt-8 max-w-2xl rounded-xl border border-border bg-card px-5 py-6"

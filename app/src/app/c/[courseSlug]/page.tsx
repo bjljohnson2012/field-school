@@ -8,7 +8,6 @@ import { ShareLink } from "@/components/share-link";
 import { YoutubeClip } from "@/components/youtube-clip";
 import { useCoursePortal } from "@/hooks/use-portal";
 import { getCourse } from "@/lib/course/catalog";
-import { passingScore } from "@/lib/course/content";
 import { cn } from "@/lib/utils";
 
 export default function CourseHome() {
@@ -31,7 +30,6 @@ export default function CourseHome() {
   }
 
   const first = course.modules[0];
-  const need = passingScore(course.examQuestions.length, course.examPassRatio);
 
   return (
     <main>
@@ -88,8 +86,7 @@ export default function CourseHome() {
         <h2 className="font-display text-3xl tracking-tight">The ladder</h2>
         <p className="mt-3 max-w-2xl text-muted-foreground">
           Watch the clip, finish the required field work, score 75% on the
-          station quiz. Then {need}/{course.examQuestions.length} on the exam
-          for a Field School certificate.
+          station quiz. Then 8/10 on the exam for a Field School certificate.
         </p>
         <ol className="mt-8 grid gap-3">
           {course.modules.map((mod) => {
