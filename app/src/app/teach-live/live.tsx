@@ -6,6 +6,7 @@ import { TeachDeck, type LessonSpec } from "@/components/teach-deck";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
 import { brainBoard, chooseNextStep, nextStepTrail, personConfidence, type LivingBrain, type OutcomeMark } from "@/lib/living-brain/model";
 import { LessonSpineHistory } from "@/components/lesson-spine-history";
+import { useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
 import { lessonSpineConfidence, lessonSpineStep, lessonSpineTrail } from "@/lib/player/play-rail-write";
 
 type Room = "household" | "sales";
@@ -46,9 +47,10 @@ const SALES_FIXTURE: LessonSpec = {
 
 function LessonSpineAct(props: { title: string; login: "none" | "member" }) {
   const spine = lessonSpineStep(props.title);
+  const { recordTeachComplete } = useLessonSpinePlayWrite();
   if (!spine) return null;
   return (
-    <p
+    <div
       className="mx-auto mt-4 max-w-6xl px-4 text-sm"
       data-lesson-spine-next={spine}
       data-next-from="outcomes"
@@ -58,7 +60,17 @@ function LessonSpineAct(props: { title: string; login: "none" | "member" }) {
       {props.login === "member"
         ? " The team member may sign in. The leader owns the path."
         : " The child has no login."}
-    </p>
+      <button
+        type="button"
+        className="ml-3 underline underline-offset-2"
+        data-teach-complete="living-brain"
+        onClick={() => {
+          void recordTeachComplete();
+        }}
+      >
+        Teach complete
+      </button>
+    </div>
   );
 }
 

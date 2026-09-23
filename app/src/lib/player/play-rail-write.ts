@@ -159,3 +159,22 @@ export function assignCompleteBody(input: { room: Room; brain: LivingBrain | nul
     outcomes: lessonSpineWithStage(person.outcomes || "", "teach"),
   };
 }
+
+/** Finishing Teach for this portion writes Prove as the stage. The step, scrub, and rail stay. */
+export function teachCompleteBody(input: { room: Room; brain: LivingBrain | null }) {
+  if (!input.brain || input.brain.room !== input.room) return null;
+  const person = brainBoard({ room: input.room, brain: input.brain }).people[0];
+  if (!person) return null;
+  const prior = person.outcomes || "";
+  if (lessonSpineStage(prior) !== "teach") return null;
+  const step = lessonSpineStep(prior);
+  if (!step) return null;
+  return {
+    membershipId: person.membershipId,
+    name: person.name,
+    kind: person.kind,
+    login: person.login,
+    profile: person.profile,
+    outcomes: lessonSpineWithStage(prior, "prove"),
+  };
+}

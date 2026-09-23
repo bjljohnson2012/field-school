@@ -4,14 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { brainBoard, type LivingBrain } from "@/lib/living-brain/model";
 import { lessonSpineContinue, lessonSpineRail, lessonSpineResume, lessonSpineStage } from "@/lib/player/lesson-spine-step";
-import { assignCompleteBody, playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody } from "@/lib/player/play-rail-write";
+import { assignCompleteBody, playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody, teachCompleteBody } from "@/lib/player/play-rail-write";
 
 export type LessonSpineContinueAt = NonNullable<ReturnType<typeof lessonSpineContinue>> & {
   login: "none" | "member";
   room: "household" | "sales";
   offsetSec: number;
   cue: string;
-  stage: "assign" | "teach" | null;
+  stage: "assign" | "teach" | "prove" | null;
 };
 
 /** Signed-in continue point. Guests stay at the start and do not write. */
@@ -275,5 +275,24 @@ export function useLessonSpinePlayWrite() {
     });
   }, [email, status]);
 
-  return { recordPlay, recordResume, recordPortion, recordProve, recordRail, recordAssignComplete, wrote };
+  const recordTeachComplete = useCallback(async () => {
+    if (status !== "authenticated" || !email) return;
+    const got = await fetch("/api/living-brain");
+    if (!got.ok) return;
+    const payload = (await got.json()) as {
+      ok?: boolean;
+      room?: "household" | "sales";
+      brain?: Parameters<typeof teachCompleteBody>[0]["brain"];
+    };
+    if (!payload.ok || (payload.room !== "household" && payload.room !== "sales")) return;
+    const body = teachCompleteBody({ room: payload.room, brain: payload.brain ?? null });
+    if (!body) return;
+    await fetch("/api/living-brain", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  }, [email, status]);
+
+  return { recordPlay, recordResume, recordPortion, recordProve, recordRail, recordAssignComplete, recordTeachComplete, wrote };
 }

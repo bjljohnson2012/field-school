@@ -118,12 +118,13 @@ export function lessonSpineWithRail(outcomes: string, rail: LessonSpineRail) {
   return kept ? `${kept}\nrail ${rail}` : `rail ${rail}`;
 }
 
-export type LessonSpineStage = "assign" | "teach";
+export type LessonSpineStage = "assign" | "teach" | "prove";
 
 /** Portion stage stored on a living-brain outcome. Null until Assign is finished. */
 export function lessonSpineStage(title: string): LessonSpineStage | null {
   for (const line of title.split("\n")) {
     const trimmed = line.trim();
+    if (trimmed === "stage prove") return "prove";
     if (trimmed === "stage teach") return "teach";
     if (trimmed === "stage assign") return "assign";
   }
@@ -136,7 +137,7 @@ export function lessonSpineWithStage(outcomes: string, stage: LessonSpineStage) 
     .split("\n")
     .filter((line) => {
       const trimmed = line.trim();
-      return trimmed !== "stage teach" && trimmed !== "stage assign";
+      return trimmed !== "stage prove" && trimmed !== "stage teach" && trimmed !== "stage assign";
     })
     .join("\n")
     .trim();
