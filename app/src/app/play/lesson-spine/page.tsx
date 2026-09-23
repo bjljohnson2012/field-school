@@ -20,8 +20,9 @@ export default function LessonSpinePlayPage() {
       <p className="mt-4 max-w-2xl text-muted-foreground">
         Ready / HLS play of the locked counterexample-encode master. The HTML5
         rail stays. A Remotion player previews the LessonSpine composition for
-        the household and the sales desk. The child has no login. Launch stays
-        closed. Distribute held.
+        the household and the sales desk. A signed-in play writes the next
+        LessonSpine step into the living brain for the person already on the
+        desk. The child has no login. Launch stays closed. Distribute held.
       </p>
       <p
         className="mt-2 font-mono text-xs text-muted-foreground"

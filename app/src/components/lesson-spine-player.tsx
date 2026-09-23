@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import { useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
 import {
   LESSON_SPINE_CHAPTERS,
   LESSON_SPINE_DURATION_SEC,
@@ -11,6 +12,7 @@ export function LessonSpinePlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [current, setCurrent] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const { recordPlay, wrote } = useLessonSpinePlayWrite();
   const progress = Math.min(1, current / LESSON_SPINE_DURATION_SEC);
   const active = useMemo(
     () =>
@@ -27,7 +29,7 @@ export function LessonSpinePlayer() {
   }
 
   return (
-    <div className="space-y-4" data-player="lesson-spine">
+    <div className="space-y-4" data-player="lesson-spine" data-play-write={wrote ? "living-brain" : undefined}>
       <div className="overflow-hidden rounded-2xl border border-border bg-black">
         <video
           ref={videoRef}
@@ -39,7 +41,10 @@ export function LessonSpinePlayer() {
           data-master-sha256={LESSON_SPINE_MASTER_SHA256}
           data-ready="hls"
           onTimeUpdate={(event) => setCurrent(event.currentTarget.currentTime)}
-          onPlay={() => setPlaying(true)}
+          onPlay={() => {
+            setPlaying(true);
+            void recordPlay(active.id);
+          }}
           onPause={() => setPlaying(false)}
         >
           <source src="/lessons/hls/LessonSpine.m3u8" type="application/vnd.apple.mpegurl" />

@@ -1,7 +1,9 @@
 "use client";
 
-import { Player } from "@remotion/player";
+import { useEffect, useRef } from "react";
+import { Player, type PlayerRef } from "@remotion/player";
 import { AbsoluteFill, Sequence, useCurrentFrame } from "remotion";
+import { useLessonSpinePlayWrite } from "@/components/lesson-spine-play-write";
 
 const FPS = 30;
 const BEATS = [
@@ -69,6 +71,19 @@ export function LessonSpineComposition() {
 }
 
 export function LessonSpineRemotionPreview() {
+  const playerRef = useRef<PlayerRef>(null);
+  const { recordPlay, wrote } = useLessonSpinePlayWrite();
+
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player) return;
+    const onPlay = () => {
+      void recordPlay("sting");
+    };
+    player.addEventListener("play", onPlay);
+    return () => player.removeEventListener("play", onPlay);
+  }, [recordPlay]);
+
   return (
     <section
       className="mt-8"
@@ -77,6 +92,7 @@ export function LessonSpineRemotionPreview() {
       data-rooms="household,sales"
       data-login="none"
       data-sales-children="0"
+      data-play-write={wrote ? "living-brain" : undefined}
     >
       <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Remotion preview</p>
       <h2 className="mt-1 font-display text-2xl tracking-tight">LessonSpine composition</h2>
@@ -86,6 +102,7 @@ export function LessonSpineRemotionPreview() {
       </p>
       <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-black">
         <Player
+          ref={playerRef}
           component={LessonSpineComposition}
           durationInFrames={LESSON_SPINE_DURATION_IN_FRAMES}
           compositionWidth={1920}
