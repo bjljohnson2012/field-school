@@ -72,13 +72,14 @@ export function proveCompleteBody(input: {
   if (!input.brain || input.brain.room !== input.room) return null;
   const person = brainBoard({ room: input.room, brain: input.brain }).people[0];
   if (!person) return null;
+  const onFinalLesson = lessonSpineStep(person.outcomes || "") === NEXT_LESSON_STEP;
   return {
     membershipId: person.membershipId,
     name: person.name,
     kind: person.kind,
     login: person.login,
     profile: person.profile,
-    outcomes: NEXT_LESSON_STEP,
+    outcomes: onFinalLesson ? "" : NEXT_LESSON_STEP,
   };
 }
 

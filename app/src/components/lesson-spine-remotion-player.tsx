@@ -138,7 +138,7 @@ export function LessonSpineRemotionPreview() {
   useEffect(() => {
     const player = playerRef.current;
     if (!player) return;
-    if (continueAt) {
+    if (continueAt?.step) {
       const freshNextLesson = continueAt.label === "Next lesson" && !continueAt.offsetSec && !continueAt.cue;
       const next = freshNextLesson
         ? 0
