@@ -77,14 +77,44 @@ function ChartFrame({
   );
 }
 
-function PersonCard({ person }: { person: InsightPerson }) {
+function PersonCard({
+  person,
+  brain,
+}: {
+  person: InsightPerson;
+  brain?: {
+    profile: string;
+    outcomes: string;
+    history?: Array<{ outcomes: string }>;
+  } | null;
+}) {
   const role =
     person.kind === "child" ? "Tracked child" : person.stance === "learner" ? "Login learner" : "Hirer";
+  const spine = brain ? lessonSpineStep(brain.outcomes) : null;
   return (
-    <article data-person={person.membershipId} data-kind={person.kind} data-login={person.login}>
+    <article
+      data-person={person.membershipId}
+      data-kind={person.kind}
+      data-login={person.login}
+      data-profile={brain ? "living-brain" : undefined}
+      data-lesson-spine-next={spine || undefined}
+      data-next-from={spine ? "outcomes" : undefined}
+    >
       <h3 className="font-display text-2xl tracking-tight">{person.name}</h3>
       <p className="mt-1 text-sm text-muted-foreground">{role}</p>
       <p className="mt-1 text-sm">Login {person.login}</p>
+      {brain ? <p className="mt-3 text-sm text-muted-foreground">{brain.profile || "No profile yet."}</p> : null}
+      {spine ? (
+        <p className="mt-3 text-sm">
+          <Link href="/play/lesson-spine">{spine}</Link>
+          {person.login === "none" ? " The child has no login." : " This desk lists no children."}
+        </p>
+      ) : null}
+      {brain ? (
+        <div className="mt-3">
+          <LessonSpineHistory marks={brain.history ?? []} current={brain.outcomes} membershipId={person.membershipId} />
+        </div>
+      ) : null}
       <p className="mt-2 font-mono text-xs text-muted-foreground">{person.membershipId}</p>
     </article>
   );
@@ -278,7 +308,24 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
                       data-owns-outcomes="false"
                       data-assist={draft ? "yes" : "no"}
                     >
-                      <td className="px-2 py-2">{person.name}</td>
+                      <td className="px-2 py-2">
+                        <button
+                          type="button"
+                          className="underline underline-offset-2"
+                          data-open-profile={person.membershipId}
+                          onClick={() =>
+                            onOpenPerson({
+                              membershipId: person.membershipId,
+                              name: person.name,
+                              kind: person.kind,
+                              stance: person.login === "member" ? "learner" : "guardian",
+                              login: person.login,
+                            })
+                          }
+                        >
+                          {person.name}
+                        </button>
+                      </td>
                       <td className="px-2 py-2">
                         {person.profile || "—"}
                         <p
@@ -481,7 +528,10 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
         ) : null}
         <div className="mt-4">
           {open?.person ? (
-            <PersonCard person={open.person} />
+            <PersonCard
+              person={open.person}
+              brain={board?.people.find((row) => row.membershipId === open.person?.membershipId) ?? null}
+            />
           ) : (
             <p className="text-sm text-muted-foreground">Open a point to see a person.</p>
           )}
