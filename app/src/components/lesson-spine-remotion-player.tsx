@@ -29,11 +29,13 @@ function layout() {
 const ROWS = layout();
 export const LESSON_SPINE_DURATION_IN_FRAMES = ROWS.reduce((sum, row) => sum + row.frames, 0);
 
-function BeatCard({ label, index, total }: { label: string; index: number; total: number }) {
+function BeatCard({ id, label, index, total }: { id: string; label: string; index: number; total: number }) {
   const frame = useCurrentFrame();
   const chapter = `${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
   return (
     <AbsoluteFill
+      data-chapter-boundary={id}
+      data-objective={label}
       style={{
         backgroundColor: "#EFE7D6",
         color: "#1A1A16",
@@ -97,12 +99,52 @@ function BeatCard({ label, index, total }: { label: string; index: number; total
   );
 }
 
-export function LessonSpineComposition() {
+type CachedBroll = {
+  file: string;
+  photographer: string;
+  photographerUrl: string;
+  pexelsUrl: string;
+};
+
+function PexelsCachedBroll({ broll }: { broll: CachedBroll }) {
+  const frame = useCurrentFrame();
+  const opacity = interpolate(frame, [0, 12], [0, 1], { extrapolateRight: "clamp" });
   return (
     <AbsoluteFill>
+      <div
+        data-pexels-attribution="cached"
+        data-pexels-file={broll.file}
+        data-photographer={broll.photographer}
+        data-photographer-url={broll.photographerUrl}
+        data-pexels-url={broll.pexelsUrl}
+        style={{
+          position: "absolute",
+          left: 72,
+          bottom: 120,
+          color: "#1A1A16",
+          backgroundColor: "#EFE7D6",
+          fontSize: 22,
+          padding: "8px 12px",
+          opacity,
+        }}
+      >
+        {broll.photographer} on Pexels
+      </div>
+    </AbsoluteFill>
+  );
+}
+
+export function LessonSpineComposition({ broll }: { broll?: CachedBroll | null }) {
+  return (
+    <AbsoluteFill data-soft-craft-apply="plates">
+      {broll ? (
+        <Sequence from={0} durationInFrames={LESSON_SPINE_DURATION_IN_FRAMES} name="broll">
+          <PexelsCachedBroll broll={broll} />
+        </Sequence>
+      ) : null}
       {ROWS.map((row) => (
         <Sequence key={row.id} from={row.from} durationInFrames={row.frames} name={row.id}>
-          <BeatCard label={row.label} index={ROWS.indexOf(row)} total={ROWS.length} />
+          <BeatCard id={row.id} label={row.label} index={ROWS.indexOf(row)} total={ROWS.length} />
         </Sequence>
       ))}
     </AbsoluteFill>
@@ -357,6 +399,7 @@ export function LessonSpineRemotionPreview() {
         <Player
           ref={playerRef}
           component={LessonSpineComposition}
+          inputProps={{ broll: null }}
           durationInFrames={LESSON_SPINE_DURATION_IN_FRAMES}
           compositionWidth={1920}
           compositionHeight={1080}
