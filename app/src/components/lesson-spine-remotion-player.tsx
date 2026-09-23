@@ -192,18 +192,27 @@ export function LessonSpineRemotionPreview() {
       void recordResume(offsetSec, cue);
     };
     const onSeeked = () => saveResume(player.getCurrentFrame());
+    const onPause = () => {
+      playing.current = false;
+      saveResume(player.getCurrentFrame());
+    };
     player.addEventListener("play", onPlay);
+    player.addEventListener("pause", onPause);
     player.addEventListener("frameupdate", onFrame);
     player.addEventListener("seeked", onSeeked);
     const onLeave = () => {
       if (document.visibilityState === "hidden") saveResume(player.getCurrentFrame());
     };
+    const onHardExit = () => saveResume(player.getCurrentFrame());
     document.addEventListener("visibilitychange", onLeave);
+    window.addEventListener("pagehide", onHardExit);
     return () => {
       player.removeEventListener("play", onPlay);
+      player.removeEventListener("pause", onPause);
       player.removeEventListener("frameupdate", onFrame);
       player.removeEventListener("seeked", onSeeked);
       document.removeEventListener("visibilitychange", onLeave);
+      window.removeEventListener("pagehide", onHardExit);
     };
   }, [continueAt, recordPlay, recordPortion, recordRail, recordResume]);
 

@@ -636,3 +636,68 @@ test("leave and return opens the last-used LessonSpine rail", () => {
   assert.match(hook, /status !== "authenticated" \|\| !email/);
   assert.doesNotMatch(preview + html5 + page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });
+
+test("pause or seek writes the mid-chapter scrub and a hard exit restores it", () => {
+  const preview = read("src/components/lesson-spine-remotion-player.tsx");
+  const cue = "Slate. Household: the child has no login. Sales: this desk lists no children.";
+  const home = {
+    orgId: "org-1",
+    room: "household",
+    facts: "",
+    outcome: "",
+    people: [person({ outcomes: "Continue LessonSpine at Slate\nrail remotion" })],
+  };
+  const wrote = resumeWriteBody({ room: "household", brain: home, offsetSec: 4, cue });
+  assert.equal(wrote?.login, "none");
+  assert.equal(lessonSpineStep(wrote.outcomes), "Continue LessonSpine at Slate");
+  assert.equal(lessonSpineRail(wrote.outcomes), "remotion");
+  assert.deepEqual(lessonSpineResume(wrote.outcomes), { chapterId: "slate", offsetSec: 4, cue });
+  const returned = lessonSpineContinue(wrote.outcomes);
+  assert.equal(returned?.chapterId, "slate");
+  assert.equal(returned?.startSec, 10);
+
+  const salesBrain = {
+    orgId: "org-1",
+    room: "sales",
+    facts: "",
+    outcome: "",
+    people: [
+      person({ membershipId: "kid", name: "No", kind: "child", login: "none", outcomes: "Continue LessonSpine at Slate" }),
+      person({ membershipId: "rep-1", name: "Lee", kind: "adult", login: "member", outcomes: "Continue LessonSpine at Objective\nrail html5" }),
+    ],
+  };
+  const sales = resumeWriteBody({
+    room: "sales",
+    brain: salesBrain,
+    offsetSec: 2,
+    cue: "Objective. Household: the child has no login. Sales: this desk lists no children.",
+  });
+  assert.equal(sales?.login, "member");
+  assert.equal(lessonSpineRail(sales.outcomes), "html5");
+  assert.equal(lessonSpineResume(sales.outcomes)?.chapterId, "objective");
+  assert.equal(lessonSpineResume(sales.outcomes)?.offsetSec, 2);
+  assert.equal(brainBoard({ room: "sales", brain: salesBrain }).people.some((row) => row.kind === "child"), false);
+
+  const carried = `${NEXT_LESSON_STEP}\nresume 6s\ncue Next up. Household: the child has no login. Sales: this desk lists no children.`;
+  assert.equal(lessonSpineResume(carried), null);
+  assert.equal(lessonSpineContinue(carried)?.startSec, 0);
+  const cleared = proveCompleteBody({
+    room: "household",
+    brain: { ...home, people: [person({ outcomes: `${NEXT_LESSON_STEP}\nrail remotion` })] },
+    chapterId: "next-up",
+  });
+  assert.equal(cleared?.outcomes, "rail remotion");
+  assert.equal(lessonSpineContinue(cleared.outcomes), null);
+  assert.equal(lessonSpineRail(cleared.outcomes), "remotion");
+
+  assert.match(preview, /addEventListener\("pause"/);
+  assert.match(preview, /addEventListener\("seeked"/);
+  assert.match(preview, /addEventListener\("pagehide"/);
+  assert.match(preview, /visibilitychange/);
+  assert.match(preview, /recordResume/);
+  assert.match(preview, /saveResume\(player\.getCurrentFrame\(\)\)/);
+  assert.match(preview, /recordRail\("remotion"\)/);
+  assert.match(preview, /if \(continueAt\?\.step\)/);
+  assert.match(preview, /freshNextLesson/);
+  assert.doesNotMatch(preview, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
