@@ -35,6 +35,7 @@ import {ThresholdCardDemo} from "./ThresholdCardDemo";
 import {RubricCardDemo} from "./RubricCardDemo";
 import {AnalogyCardDemo} from "./AnalogyCardDemo";
 import {CounterexampleCardDemo} from "./CounterexampleCardDemo";
+import {PexelsBroll} from "./PexelsBroll";
 import {RepairCardDemo} from "./RepairCardDemo";
 import {EvidenceCardDemo} from "./EvidenceCardDemo";
 import {TimelineRailDemo} from "./TimelineRailDemo";
@@ -607,6 +608,20 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1920}
         height={1080}
+      />
+      <Composition
+        id="PexelsBroll"
+        component={PexelsBroll}
+        durationInFrames={90}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          file: "",
+          photographer: "",
+          photographerUrl: "",
+          pexelsUrl: "",
+        }}
       />
       <Composition
         id="LessonSpine"

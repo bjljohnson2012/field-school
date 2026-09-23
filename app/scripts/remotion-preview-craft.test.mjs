@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -7,6 +8,7 @@ import { brainBoard } from "../src/lib/living-brain/model.ts";
 import { assignCompleteBody, lessonSpineContinue, lessonSpineRail, lessonSpineResume, lessonSpineStage, lessonSpineStep, lessonSpineTeachProve, lessonSpineWithRail, lessonSpineWithResume, NEXT_LESSON_STEP, playOutcome, playWriteBody, portionWriteBody, proveCompleteBody, railPreferenceBody, resumeWriteBody, teachCompleteBody } from "../src/lib/player/play-rail-write.ts";
 import { SPINE_BEATS, spineDurationSec, spineLayout } from "../../plates/src/lessonSpine.ts";
 import { remotionSoftCraftNotes } from "../../plates/scripts/remotion-soft-craft-notes.mjs";
+import { loadCachedBroll, searchAndCachePexelsBroll } from "../../plates/scripts/pexels-broll.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
@@ -1719,4 +1721,74 @@ test("Remotion plates record a soft note only when a beat teaches more than one 
   assert.match(checker, /cleaningFlip: false/);
   assert.doesNotMatch(checker, /EDU-S03|27pn9xs0zk8a73g|af374d95|AUTH_URL|HARD_FAIL/);
   assert.doesNotMatch(preview + html5 + checker, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
+});
+
+test("Remotion plates search and cache Pexels b-roll with the raw API key", async () => {
+  const prior = process.env.PEXELS_API_KEY;
+  process.env.PEXELS_API_KEY = "pexels-test-key";
+  const calls = [];
+  const fetchImpl = async (url, init) => {
+    calls.push({ href: String(url), authorization: init?.headers?.Authorization ?? null });
+    if (String(url).includes("/videos/search")) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          videos: [
+            {
+              id: 4401,
+              url: "https://www.pexels.com/video/classroom-4401/",
+              user: { name: "Ada Frame", url: "https://www.pexels.com/@ada" },
+              video_files: [
+                { file_type: "video/mp4", width: 640, link: "https://images.pexels.com/videos/4401/sd.mp4" },
+              ],
+            },
+          ],
+        }),
+      };
+    }
+    return { ok: true, status: 200, arrayBuffer: async () => Uint8Array.from([1, 2, 3, 4]).buffer };
+  };
+  try {
+    const cacheDir = mkdtempSync(join(tmpdir(), "pexels-craft-"));
+    const cached = await searchAndCachePexelsBroll({ query: "classroom", cacheDir, fetchImpl });
+    assert.equal(calls[0].authorization, process.env.PEXELS_API_KEY);
+    assert.equal(calls[0].authorization.startsWith("Bearer"), false);
+    assert.equal(calls[1].authorization, null);
+    const props = loadCachedBroll(cacheDir, "4401");
+    assert.equal(props.file, cached.path);
+    assert.equal(props.photographer, "Ada Frame");
+    assert.equal(props.pexelsUrl, "https://www.pexels.com/video/classroom-4401/");
+
+    const plate = readFileSync(join(root, "..", "plates", "src", "PexelsBroll.tsx"), "utf8");
+    const spine = readFileSync(join(root, "..", "plates", "src", "LessonSpine.tsx"), "utf8");
+    const checker = readFileSync(join(root, "..", "plates", "scripts", "remotion-soft-craft-notes.mjs"), "utf8");
+    assert.match(plate, /OffthreadVideo src=\{file\}/);
+    assert.match(plate, /data-pexels-attribution="cached"/);
+    assert.match(spine, /<PexelsBroll \{\.\.\.broll\} \/>/);
+    assert.match(spine, /name="sting"/);
+    for (const kind of [
+      "multi-objective",
+      "wcag-contrast",
+      "flicker",
+      "duration-band",
+      "missing-use-current-frame",
+      "css-timer-motion",
+      "audio-desync",
+      "caption-cue-drift",
+      "missing-chapter-boundary",
+    ]) {
+      assert.match(checker, new RegExp(`kind: "${kind}"`));
+    }
+    assert.match(checker, /cleaningFlip: false/);
+    const preview = read("src/components/lesson-spine-remotion-player.tsx");
+    const html5 = read("src/components/lesson-spine-player.tsx");
+    assert.match(preview, /continueAt\.stage === "prove" \? null/);
+    assert.match(preview, /recordRail\("remotion"\)/);
+    assert.match(html5, /recordRail\("html5"\)/);
+    assert.doesNotMatch(plate + spine + checker, /EDU-S03|27pn9xs0zk8a73g|af374d95|AUTH_URL|HARD_FAIL/);
+  } finally {
+    if (prior == null) delete process.env.PEXELS_API_KEY;
+    else process.env.PEXELS_API_KEY = prior;
+  }
 });

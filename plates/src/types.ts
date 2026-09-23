@@ -68,4 +68,11 @@ export type LessonSpineProps = {
   objective: DefinitionProps;
   recap: RecapProps;
   nextUp: QuizBumperProps;
+  /** Optional cached Pexels b-roll. Absent leaves the spine plates unchanged. */
+  broll?: {
+    file: string;
+    photographer: string;
+    photographerUrl: string;
+    pexelsUrl: string;
+  } | null;
 };
