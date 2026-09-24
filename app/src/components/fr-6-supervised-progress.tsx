@@ -44,10 +44,10 @@ export function Fr6SupervisedProgress() {
 
   return (
     <section data-supervised="fr-6-fr-2">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+      <p className="eyebrow">
         Parent-supervised progress
       </p>
-      <h1 className="mt-3 font-display text-4xl tracking-tight">
+      <h1 className="h-page mt-2">
         Now / Confidence / Next
       </h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
@@ -63,7 +63,11 @@ export function Fr6SupervisedProgress() {
             href={`/progress?child=${encodeURIComponent(child.id)}`}
             data-child-id={child.id}
             data-child-selected={selected?.id === child.id ? "true" : "false"}
-            className="inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm"
+            className={
+              selected?.id === child.id
+                ? "inline-flex items-center rounded-brand border border-primary bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+                : "inline-flex items-center rounded-brand border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+            }
           >
             {child.name}
           </Link>
@@ -77,24 +81,24 @@ export function Fr6SupervisedProgress() {
           data-child-kind="child"
           data-child-login="none"
         >
-          <article className="rounded-xl border border-border px-4 py-4" data-now="true">
-            <h2 className="font-display text-2xl tracking-tight">Now</h2>
+          <article className="card p-4" data-now="true">
+            <h2 className="h-section">Now</h2>
             <p className="mt-2 text-sm">{selected.now.title}</p>
             <p className="mt-2 text-sm text-muted-foreground">{selected.now.copy}</p>
           </article>
           <article
-            className="rounded-xl border border-border px-4 py-4"
+            className="card p-4"
             data-confidence={selected.confidence.state}
           >
-            <h2 className="font-display text-2xl tracking-tight">Confidence</h2>
+            <h2 className="h-section">Confidence</h2>
             <p className="mt-2 text-sm">{selected.confidence.label}</p>
             <p className="mt-2 text-sm text-muted-foreground">
               Parent-supervised FR-6 confidence for {selected.name}. Not a User
               score.
             </p>
           </article>
-          <article className="rounded-xl border border-border px-4 py-4" data-next="true">
-            <h2 className="font-display text-2xl tracking-tight">Next</h2>
+          <article className="card p-4" data-next="true">
+            <h2 className="h-section">Next</h2>
             <p className="mt-2 text-sm">{selected.next.title}</p>
             <p className="mt-2 text-sm text-muted-foreground">{selected.next.copy}</p>
           </article>

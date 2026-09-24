@@ -273,16 +273,21 @@ export function AssignDesk() {
   }
 
   const room = view.status === "desk" ? view.room : null;
+  const household = room === "household";
+  const paint = (next: string, current: string) => (household ? next : current);
   const copy = room ? DESK_COPY[room] : null;
   const otherDoor =
     view.status === "desk" ? view.doors.find((door) => door !== view.room) : undefined;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12" data-desk={room ?? view.status}>
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+    <main
+      className={paint("mx-auto max-w-6xl px-6 py-8", "mx-auto max-w-3xl px-4 py-12")}
+      data-desk={room ?? view.status}
+    >
+      <p className={paint("eyebrow", "text-xs uppercase tracking-[0.2em] text-muted-foreground")}>
         {copy?.eyebrow || "Assign"}
       </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Assign</h1>
+      <h1 className={paint("h-page mt-2", "mt-2 font-display text-4xl tracking-tight")}>Assign</h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{JOB_SENTENCE}</p>
 
       {view.status === "loading" ? <p className="mt-8 text-sm">Loading this desk.</p> : null}
@@ -292,7 +297,10 @@ export function AssignDesk() {
           <p className="text-sm leading-relaxed">{GUEST_COPY}</p>
           <Link
             href="/login?next=/assign"
-            className="mt-6 inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+            className={paint(
+              "btn-primary mt-6",
+              "mt-6 inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground",
+            )}
           >
             Sign in
           </Link>
@@ -311,7 +319,11 @@ export function AssignDesk() {
               <button
                 key={door}
                 type="button"
-                className="inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+                className={
+                  door === "household"
+                    ? "btn-primary"
+                    : "inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+                }
                 onClick={() => void switchDesk(door)}
               >
                 {door === "sales" ? "Open the sales desk" : "Open the household desk"}
@@ -329,7 +341,7 @@ export function AssignDesk() {
           <p className="text-sm leading-relaxed">{copy.law}</p>
           {brainAim ? (
             <p className="mt-6 text-sm" data-org-aim="yes" data-aim-from={aimFrom || undefined}>
-              <span className="text-xs font-medium uppercase tracking-[0.12em]" data-aim-label="Aim">
+              <span className={paint("eyebrow", "text-xs font-medium uppercase tracking-[0.12em]")} data-aim-label="Aim">
                 Aim
               </span>
               <span className="mt-1 block text-sm font-medium">
@@ -342,18 +354,18 @@ export function AssignDesk() {
 
           {view.leader ? (
             <form
-              className="mt-8 rounded-xl border border-border bg-card px-4 py-4"
+              className={paint("card mt-8 p-5", "mt-8 rounded-xl border border-border bg-card px-4 py-4")}
               onSubmit={(event) => {
                 event.preventDefault();
                 void onAssign();
               }}
             >
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Lesson</p>
+              <p className={paint("eyebrow", "text-xs uppercase tracking-[0.16em] text-muted-foreground")}>Lesson</p>
               <label className="mt-4 block text-sm" htmlFor="assign-title">
                 Title
                 <input
                   id="assign-title"
-                  className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3"
+                  className={paint("input mt-1", "mt-1 h-11 w-full rounded-xl border border-border bg-background px-3")}
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                 />
@@ -362,7 +374,7 @@ export function AssignDesk() {
                 Outcome
                 <input
                   id="assign-outcome"
-                  className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3"
+                  className={paint("input mt-1", "mt-1 h-11 w-full rounded-xl border border-border bg-background px-3")}
                   value={outcome}
                   onChange={(event) => setOutcome(event.target.value)}
                 />
@@ -375,7 +387,7 @@ export function AssignDesk() {
                       Unit
                       <input
                         id={`unit-title-${unit.id}`}
-                        className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3"
+                        className={paint("input mt-1", "mt-1 h-11 w-full rounded-xl border border-border bg-background px-3")}
                         value={unit.title}
                         onChange={(event) => {
                           const next = units.slice();
@@ -388,7 +400,7 @@ export function AssignDesk() {
                       Source unit id
                       <input
                         id={`unit-source-${unit.id}`}
-                        className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3"
+                        className={paint("input mt-1", "mt-1 h-11 w-full rounded-xl border border-border bg-background px-3")}
                         value={unit.source_unit_id}
                         onChange={(event) => {
                           const next = units.slice();
@@ -409,7 +421,7 @@ export function AssignDesk() {
               </button>
 
               <fieldset className="mt-8">
-                <legend className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                <legend className={paint("eyebrow", "text-xs uppercase tracking-[0.16em] text-muted-foreground")}>
                   {copy.person}
                 </legend>
                 {view.people.length === 0 ? (
@@ -419,7 +431,10 @@ export function AssignDesk() {
                     {view.people.map((person) => (
                       <label
                         key={person.membershipId}
-                        className="flex cursor-pointer gap-3 rounded-xl border border-border px-4 py-3"
+                        className={paint(
+                          "flex cursor-pointer gap-3 rounded-brand border border-border bg-card px-4 py-3 transition-all duration-200 ease-brand",
+                          "flex cursor-pointer gap-3 rounded-xl border border-border px-4 py-3",
+                        )}
                         data-role="assignee"
                         data-kind={person.kind}
                         data-login={person.login}
@@ -440,7 +455,7 @@ export function AssignDesk() {
                               data-confidence={person.membershipId}
                               data-confidence-from={confidenceFrom[person.membershipId]}
                             >
-                              <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
+                              <span className={paint("eyebrow", "block text-xs font-medium uppercase tracking-[0.12em] text-foreground")} data-confidence-label="Confidence">
                                 Confidence
                               </span>
                               <span className="mt-1 block text-sm font-medium text-foreground">How they are doing</span>
@@ -469,7 +484,10 @@ export function AssignDesk() {
               <button
                 type="submit"
                 disabled={pending || view.people.length === 0}
-                className="mt-6 inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground disabled:opacity-50"
+                className={paint(
+                  "btn-primary mt-6 disabled:opacity-50",
+                  "mt-6 inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground disabled:opacity-50",
+                )}
               >
                 Assign this path
               </button>
@@ -477,15 +495,15 @@ export function AssignDesk() {
           ) : null}
 
           <section className="mt-10">
-            <h2 className="font-display text-2xl tracking-tight">Open paths</h2>
+            <h2 className={paint("h-section", "font-display text-2xl tracking-tight")}>Open paths</h2>
             {view.assignments.length === 0 ? (
               <p className="mt-3 text-sm text-muted-foreground">No open path on this desk.</p>
             ) : (
               <ul className="mt-4 space-y-3">
                 {view.assignments.map((row) => (
-                  <li key={row.id} className="rounded-xl border border-border px-4 py-4" data-login={row.login}>
+                  <li key={row.id} className={paint("card p-4", "rounded-xl border border-border px-4 py-4")} data-login={row.login}>
                     <p className="text-sm">{row.name}</p>
-                    <p className="mt-1 font-display text-xl tracking-tight">{row.title}</p>
+                    <p className={paint("h-card mt-1", "mt-1 font-display text-xl tracking-tight")}>{row.title}</p>
                     <p className="mt-2 text-sm text-muted-foreground">{row.outcome}</p>
                     <p
                       className="mt-2 text-sm"
@@ -500,7 +518,7 @@ export function AssignDesk() {
                         data-confidence={row.membershipId}
                         data-confidence-from={confidenceFrom[row.membershipId]}
                       >
-                        <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
+                        <span className={paint("eyebrow", "block text-xs font-medium uppercase tracking-[0.12em] text-foreground")} data-confidence-label="Confidence">
                           Confidence
                         </span>
                         <span className="mt-1 block text-sm font-medium text-foreground">How they are doing</span>

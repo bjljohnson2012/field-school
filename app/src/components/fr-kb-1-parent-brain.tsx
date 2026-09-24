@@ -157,10 +157,10 @@ export function FrKb1ParentBrain() {
 
   return (
     <section data-brain="fr-kb-1" data-hire-path-sync="fr-kb-2" data-brain-sources-notes="true" data-brain-confidence="fr-6">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+      <p className="eyebrow">
         Knowledge brain
       </p>
-      <h1 className="mt-3 font-display text-4xl tracking-tight">
+      <h1 className="h-page mt-2">
         Brain under selected Child
       </h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
@@ -176,7 +176,11 @@ export function FrKb1ParentBrain() {
             href={`/brain?child=${encodeURIComponent(child.id)}`}
             data-child-id={child.id}
             data-child-selected={selected?.id === child.id ? "true" : "false"}
-            className="inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm"
+            className={
+              selected?.id === child.id
+                ? "inline-flex items-center rounded-brand border border-primary bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+                : "inline-flex items-center rounded-brand border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+            }
           >
             {child.name}
           </Link>
@@ -185,7 +189,7 @@ export function FrKb1ParentBrain() {
 
       {selected ? (
         <div
-          className="mt-8 grid gap-6"
+          className="card mt-8 grid gap-6 p-5"
           data-selected-child={selected.id}
           data-child-kind="child"
           data-child-login="none"
@@ -199,11 +203,11 @@ export function FrKb1ParentBrain() {
             Selected Child: {selected.name}. Kind {selected.kind}. Login none.
             Not a User. Status {selected.status}. Version {selected.version}.
           </p>
-          <article className="rounded-xl border border-border px-4 py-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          <article className="card p-4">
+            <p className="eyebrow">
               Parent-owned brain
             </p>
-            <h2 className="mt-2 font-display text-2xl tracking-tight">{selected.title}</h2>
+            <h2 className="h-section mt-2">{selected.title}</h2>
             <p className="mt-2 text-sm">
               Bound to FR-3 intent, FR-4 path, and FR-5 portion. Confidence{" "}
               {(selected.confidence || selected.progress.confidence).label}. Horizon{" "}
@@ -216,8 +220,8 @@ export function FrKb1ParentBrain() {
             data-brain-source-count={selected.summary.sources}
             data-brain-note-count={selected.summary.notes}
           >
-            <article className="rounded-xl border border-border px-4 py-4">
-              <h2 className="font-display text-2xl tracking-tight">Sources</h2>
+            <article className="card p-4">
+              <h2 className="h-section">Sources</h2>
               <ul className="mt-2 grid gap-2 text-sm">
                 {(selected.sources || []).length ? (
                   (selected.sources || []).map((source, index) => (
@@ -228,8 +232,8 @@ export function FrKb1ParentBrain() {
                 )}
               </ul>
             </article>
-            <article className="rounded-xl border border-border px-4 py-4">
-              <h2 className="font-display text-2xl tracking-tight">Notes</h2>
+            <article className="card p-4">
+              <h2 className="h-section">Notes</h2>
               <ul className="mt-2 grid gap-2 text-sm">
                 {(selected.notes || []).length ? (
                   (selected.notes || []).map((note, index) => (
@@ -242,47 +246,47 @@ export function FrKb1ParentBrain() {
             </article>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
-            <article className="rounded-xl border border-border px-4 py-4">
-              <h2 className="font-display text-2xl tracking-tight">Intent</h2>
+            <article className="card p-4">
+              <h2 className="h-section">Intent</h2>
               <p className="mt-2 text-sm">{selected.intent.goals.join(", ") || "—"}</p>
             </article>
-            <article className="rounded-xl border border-border px-4 py-4">
-              <h2 className="font-display text-2xl tracking-tight">Path</h2>
+            <article className="card p-4">
+              <h2 className="h-section">Path</h2>
               <p className="mt-2 text-sm">{selected.paths.items[0]?.title || "—"}</p>
             </article>
-            <article className="rounded-xl border border-border px-4 py-4">
-              <h2 className="font-display text-2xl tracking-tight">Portion</h2>
+            <article className="card p-4">
+              <h2 className="h-section">Portion</h2>
               <p className="mt-2 text-sm">{selected.portion.items[0]?.title || "—"}</p>
             </article>
           </div>
           <form className="grid gap-3" onSubmit={selected.status === "suggested" ? onStart : onUpdate}>
-            <label className="grid gap-2 text-sm">
+            <label className="grid gap-1.5 text-sm font-semibold text-muted-foreground">
               Brain title
               <input
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 data-brain-title="true"
-                className="rounded-xl border border-border bg-background px-3 py-2"
+                className="input"
               />
             </label>
-            <label className="grid gap-2 text-sm">
+            <label className="grid gap-1.5 text-sm font-semibold text-muted-foreground">
               Parent sources
               <textarea
                 value={sourceText}
                 onChange={(event) => setSourceText(event.target.value)}
                 rows={4}
                 data-brain-sources="true"
-                className="rounded-xl border border-border bg-background px-3 py-2"
+                className="input"
               />
             </label>
-            <label className="grid gap-2 text-sm">
+            <label className="grid gap-1.5 text-sm font-semibold text-muted-foreground">
               Parent notes
               <textarea
                 value={noteText}
                 onChange={(event) => setNoteText(event.target.value)}
                 rows={4}
                 data-brain-notes="true"
-                className="rounded-xl border border-border bg-background px-3 py-2"
+                className="input"
               />
             </label>
             <fieldset
@@ -299,7 +303,11 @@ export function FrKb1ParentBrain() {
                     data-confidence-state={item.state}
                     data-confidence-selected={confidenceState === item.state ? "true" : "false"}
                     onClick={() => void postConfidence(item.state)}
-                    className="inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm"
+                    className={
+                      confidenceState === item.state
+                        ? "inline-flex items-center rounded-brand border border-primary bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+                        : "inline-flex items-center rounded-brand border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+                    }
                   >
                     {item.label}
                   </button>
@@ -311,7 +319,7 @@ export function FrKb1ParentBrain() {
                 <button
                   type="submit"
                   data-brain-start="true"
-                  className="inline-flex h-11 w-fit items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
+                  className="btn-primary w-fit"
                 >
                   Start knowledge brain
                 </button>
@@ -319,7 +327,7 @@ export function FrKb1ParentBrain() {
                 <button
                   type="submit"
                   data-brain-update="true"
-                  className="inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
+                  className="inline-flex items-center rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold transition-all duration-200 ease-brand"
                 >
                   Update knowledge brain
                 </button>
@@ -328,7 +336,7 @@ export function FrKb1ParentBrain() {
                 type="button"
                 data-brain-sync="true"
                 onClick={() => void postAction("sync")}
-                className="inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
+                className="inline-flex items-center rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold transition-all duration-200 ease-brand"
               >
                 Sync from hire path
               </button>

@@ -559,7 +559,8 @@ export function ChildrenDatabase({
           <Button
             key={`${item.title}-${value}`}
             type="button"
-            variant={current === value ? "default" : "outline"}
+            variant="outline"
+            className={current === value ? "border-primary" : undefined}
             onClick={() => void markConfidence(item.title, value, item.flag || "")}
           >
             {label}
@@ -570,8 +571,8 @@ export function ChildrenDatabase({
   }
 
   return (
-    <section className="rounded-xl border border-border bg-card px-5 py-5">
-      <h2 className="font-display text-2xl">{heading}</h2>
+    <section className="card p-5">
+      <h2 className="h-section">{heading}</h2>
       <p className="mt-2 text-sm text-muted-foreground">
         Parent-facing children/subusers database. Say child, not student. Kids have no own login. You record feedback and progress here.
       </p>
@@ -583,16 +584,16 @@ export function ChildrenDatabase({
         <>
           <div className="mt-4 flex flex-wrap gap-2">
             <input
-              className="h-11 flex-1 rounded-xl border border-border bg-background px-3 text-sm"
+              className="input min-w-0 flex-1"
               placeholder="Child name"
               value={childName}
               onChange={(e) => setChildName(e.target.value)}
             />
             <Button onClick={() => void addChild()}>Add a child</Button>
           </div>
-          <div className="mt-5 overflow-x-auto rounded-xl border border-border">
+          <div className="card mt-5 overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-background text-xs uppercase tracking-[0.12em] text-muted-foreground">
+              <thead className="bg-muted/50">
                 <tr>
                   <th className="px-3 py-3 font-medium">Child</th>
                   <th className="px-3 py-3 font-medium">Subuser</th>
@@ -617,8 +618,12 @@ export function ChildrenDatabase({
                         <p className="text-xs text-muted-foreground">Child</p>
                         <Button
                           type="button"
-                          variant={selectedMembershipId === row.membershipId ? "default" : "outline"}
-                          className="mt-2"
+                          variant="outline"
+                          className={
+                            selectedMembershipId === row.membershipId
+                              ? "mt-2 border-primary"
+                              : "mt-2"
+                          }
                           onClick={() => void selectChild(row.membershipId)}
                         >
                           {selectedMembershipId === row.membershipId ? "Selected child" : "Select child"}
@@ -646,7 +651,7 @@ export function ChildrenDatabase({
                         </p>
                         <Link
                           href={`/pattern?child=${encodeURIComponent(row.membershipId)}`}
-                          className="mt-2 inline-flex h-9 items-center rounded-xl border border-border px-3 text-xs"
+                          className="mt-2 inline-flex items-center rounded-brand border border-border px-3 py-1.5 text-xs font-semibold"
                         >
                           {row.patternTitle ? "Review Pattern" : "Record Pattern"}
                         </Link>
@@ -664,7 +669,7 @@ export function ChildrenDatabase({
                       <td className="px-3 py-3">
                         <div className="flex min-w-[14rem] flex-col gap-2">
                           <textarea
-                            className="min-h-16 rounded-xl border border-border bg-background px-3 py-2 text-sm"
+                            className="input min-h-16"
                             value={notes[row.membershipId] ?? ""}
                             onChange={(e) =>
                               setNotes((prev) => ({
@@ -698,8 +703,8 @@ export function ChildrenDatabase({
             />
           ) : null}
           {selectedMembershipId ? (
-            <div className="mt-6 rounded-xl border border-border px-4 py-4">
-              <h3 className="font-display text-xl">Learning intent</h3>
+            <div className="card mt-6 p-4">
+              <h3 className="h-card">Learning intent</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 Parent-owned plan seeds for the selected child. This is not a parent note and not Field Pattern.
               </p>
@@ -707,7 +712,7 @@ export function ChildrenDatabase({
                 <label className="text-sm">
                   Goals
                   <textarea
-                    className="mt-1 min-h-20 w-full rounded-xl border border-border bg-background px-3 py-2"
+                    className="input mt-1 min-h-20 w-full"
                     value={intentDraft.goals}
                     onChange={(e) =>
                       setIntentDraft((prev) => ({ ...prev, goals: e.target.value }))
@@ -717,7 +722,7 @@ export function ChildrenDatabase({
                 <label className="text-sm">
                   Subjects
                   <textarea
-                    className="mt-1 min-h-20 w-full rounded-xl border border-border bg-background px-3 py-2"
+                    className="input mt-1 min-h-20 w-full"
                     value={intentDraft.subjects}
                     onChange={(e) =>
                       setIntentDraft((prev) => ({ ...prev, subjects: e.target.value }))
@@ -727,7 +732,7 @@ export function ChildrenDatabase({
                 <label className="text-sm">
                   Themes
                   <textarea
-                    className="mt-1 min-h-20 w-full rounded-xl border border-border bg-background px-3 py-2"
+                    className="input mt-1 min-h-20 w-full"
                     value={intentDraft.themes}
                     onChange={(e) =>
                       setIntentDraft((prev) => ({ ...prev, themes: e.target.value }))
@@ -737,7 +742,7 @@ export function ChildrenDatabase({
                 <label className="text-sm">
                   Constraints
                   <textarea
-                    className="mt-1 min-h-20 w-full rounded-xl border border-border bg-background px-3 py-2"
+                    className="input mt-1 min-h-20 w-full"
                     value={intentDraft.constraints}
                     onChange={(e) =>
                       setIntentDraft((prev) => ({ ...prev, constraints: e.target.value }))
@@ -747,7 +752,7 @@ export function ChildrenDatabase({
                 <label className="text-sm md:col-span-2">
                   Time horizon
                   <input
-                    className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3"
+                    className="input mt-1 w-full"
                     value={intentDraft.timeHorizon}
                     onChange={(e) =>
                       setIntentDraft((prev) => ({ ...prev, timeHorizon: e.target.value }))
@@ -757,7 +762,7 @@ export function ChildrenDatabase({
                 </label>
               </div>
               <div className="mt-4">
-                <Button type="button" onClick={() => void saveIntent()}>
+                <Button type="button" variant="outline" onClick={() => void saveIntent()}>
                   Save intent version
                 </Button>
               </div>
@@ -776,14 +781,14 @@ export function ChildrenDatabase({
             </div>
           ) : null}
           {selectedMembershipId ? (
-            <div className="mt-6 rounded-xl border border-border px-4 py-4">
-              <h3 className="font-display text-xl">Curriculum path</h3>
+            <div className="card mt-6 p-4">
+              <h3 className="h-card">Curriculum path</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 Ordered path bound to the selected child. Household catalog lessons attach here with
                 the child membership, not as an org-only catalog.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Button type="button" onClick={() => void proposePath()}>
+                <Button type="button" variant="outline" onClick={() => void proposePath()}>
                   Propose path
                 </Button>
                 <Button type="button" variant="outline" onClick={() => void acceptPath()}>
@@ -814,7 +819,7 @@ export function ChildrenDatabase({
               <label className="mt-4 block text-sm">
                 Edit order
                 <textarea
-                  className="mt-1 min-h-24 w-full rounded-xl border border-border bg-background px-3 py-2"
+                  className="input mt-1 min-h-24 w-full"
                   value={pathEdit}
                   onChange={(e) => setPathEdit(e.target.value)}
                 />
@@ -827,7 +832,7 @@ export function ChildrenDatabase({
               <label className="mt-4 block text-sm">
                 Re-prompt
                 <input
-                  className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3"
+                  className="input mt-1 w-full"
                   value={pathPrompt}
                   onChange={(e) => setPathPrompt(e.target.value)}
                   placeholder="Add fractions review"
@@ -850,14 +855,14 @@ export function ChildrenDatabase({
             </div>
           ) : null}
           {selectedMembershipId ? (
-            <div className="mt-6 rounded-xl border border-border px-4 py-4">
-              <h3 className="font-display text-xl">Next portion</h3>
+            <div className="card mt-6 p-4">
+              <h3 className="h-card">Next portion</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 Suggested slice of the remaining accepted path for the selected child. Parent can
                 lock or override. This is not Pattern chooser and not a child login.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Button type="button" onClick={() => void suggestPortion()}>
+                <Button type="button" variant="outline" onClick={() => void suggestPortion()}>
                   Suggest next portion
                 </Button>
                 <Button type="button" variant="outline" onClick={() => void lockPortion()}>
@@ -900,7 +905,7 @@ export function ChildrenDatabase({
               <label className="mt-4 block text-sm">
                 Override stations
                 <textarea
-                  className="mt-1 min-h-24 w-full rounded-xl border border-border bg-background px-3 py-2"
+                  className="input mt-1 min-h-24 w-full"
                   value={portionOverride}
                   onChange={(e) => setPortionOverride(e.target.value)}
                 />
@@ -922,15 +927,15 @@ export function ChildrenDatabase({
             </div>
           ) : null}
           {selectedMembershipId ? (
-            <div className="mt-6 rounded-xl border border-border px-4 py-4">
-              <h3 className="font-display text-xl">Progress ledger</h3>
+            <div className="card mt-6 p-4">
+              <h3 className="h-card">Progress ledger</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 Parent-supervised unit ledger for the selected child. Completed, in progress,
                 recommended next, and parent confidence (Not yet / Getting there / Ready). This is
                 not session progress and not Pattern chooser.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Button type="button" onClick={() => void refreshLedger()}>
+                <Button type="button" variant="outline" onClick={() => void refreshLedger()}>
                   Refresh ledger
                 </Button>
               </div>

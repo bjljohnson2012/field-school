@@ -10,11 +10,9 @@ export default async function ChildrenPage() {
   if (!session?.user?.email) redirect("/login?next=/children");
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-12">
-      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-        Household
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Children</h1>
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <p className="eyebrow">Household</p>
+      <h1 className="h-page mt-2">Children</h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
         Parent-facing children/subusers database. Say child, not student. Kids have no own login. You record welcome, Field Pattern, notes, lock, a curriculum path, a next portion, and a progress ledger.
       </p>

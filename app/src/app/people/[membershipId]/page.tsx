@@ -214,7 +214,7 @@ export default async function PersonPage({
       <div className="mt-6">
         <SkillCard skills={scoreTiles} />
       </div>
-      {hints.length ? (
+      {hints.length && subject.orgSlug !== "household" ? (
         <section className="mt-8">
           <h2 className="h-section">Hints</h2>
           <ul className="mt-3 space-y-2 text-sm">

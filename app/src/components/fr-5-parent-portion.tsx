@@ -92,10 +92,10 @@ export function Fr5ParentPortion() {
 
   return (
     <section data-portion="fr-5">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+      <p className="eyebrow">
         Parent next-portion
       </p>
-      <h1 className="mt-3 font-display text-4xl tracking-tight">
+      <h1 className="h-page mt-2">
         Next slice under selected Child
       </h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
@@ -111,7 +111,11 @@ export function Fr5ParentPortion() {
             href={`/portion?child=${encodeURIComponent(child.id)}`}
             data-child-id={child.id}
             data-child-selected={selected?.id === child.id ? "true" : "false"}
-            className="inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm"
+            className={
+              selected?.id === child.id
+                ? "inline-flex items-center rounded-brand border border-primary bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+                : "inline-flex items-center rounded-brand border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+            }
           >
             {child.name}
           </Link>
@@ -120,7 +124,7 @@ export function Fr5ParentPortion() {
 
       {selected ? (
         <div
-          className="mt-8 grid gap-6"
+          className="card mt-8 grid gap-6 p-5"
           data-selected-child={selected.id}
           data-child-kind="child"
           data-child-login="none"
@@ -137,14 +141,14 @@ export function Fr5ParentPortion() {
             {selected.items.map((item) => (
               <li
                 key={`${item.sortOrder}-${item.title}`}
-                className="rounded-xl border border-border px-4 py-4"
+                className="card p-4"
                 data-portion-item={item.sortOrder}
                 data-portion-source={item.source}
               >
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                <p className="eyebrow">
                   Slice {item.sortOrder}
                 </p>
-                <h2 className="mt-2 font-display text-2xl tracking-tight">{item.title}</h2>
+                <h2 className="h-section mt-2">{item.title}</h2>
                 <p className="mt-2 text-sm">{item.subject}</p>
                 <Link href={item.play} className="mt-3 inline-flex text-sm underline">
                   {item.play}
@@ -157,26 +161,26 @@ export function Fr5ParentPortion() {
               type="button"
               data-portion-lock="true"
               onClick={onLock}
-              className="inline-flex h-11 w-fit items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
+              className="btn-primary w-fit"
             >
               Lock next slice
             </button>
           </div>
           <form className="grid gap-3" onSubmit={onOverride}>
-            <label className="grid gap-2 text-sm">
+            <label className="grid gap-1.5 text-sm font-semibold text-muted-foreground">
               Override slice
               <textarea
                 value={overrideText}
                 onChange={(event) => setOverrideText(event.target.value)}
                 rows={4}
                 data-portion-override="true"
-                className="rounded-xl border border-border bg-background px-3 py-2"
+                className="input"
               />
             </label>
             <button
               type="submit"
               data-portion-override-save="true"
-              className="inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
+              className="inline-flex items-center rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold transition-all duration-200 ease-brand"
             >
               Override from parent
             </button>

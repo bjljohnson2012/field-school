@@ -79,12 +79,16 @@ export default function OrgHomePage() {
     );
   }
 
+  const quietLink = household
+    ? "inline-flex items-center rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold transition-all duration-200 ease-brand"
+    : "inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm";
+
   return (
-    <main className={`mx-auto px-4 py-12 ${household ? "max-w-5xl" : "max-w-3xl"}`}>
-      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+    <main className={household ? "mx-auto max-w-6xl px-6 py-8" : "mx-auto max-w-3xl px-4 py-12"}>
+      <p className={household ? "eyebrow" : "text-xs uppercase tracking-[0.16em] text-muted-foreground"}>
         {household ? "Household" : sales ? "Sales team" : slug}
       </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">
+      <h1 className={household ? "h-page mt-2" : "mt-2 font-display text-4xl tracking-tight"}>
         {me?.activeOrg?.name || slug}
       </h1>
       <p className="mt-4 text-muted-foreground">
@@ -95,44 +99,51 @@ export default function OrgHomePage() {
             : "Operator catalog."}
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
-        <Link href={lessonHref} className="inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm text-primary-foreground">
+        <Link
+          href={lessonHref}
+          className={
+            household
+              ? "btn-primary"
+              : "inline-flex h-11 items-center rounded-xl bg-primary px-5 text-sm text-primary-foreground"
+          }
+        >
           Open welcome
         </Link>
         {household ? (
           <>
-            <Link href="/children" className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+            <Link href="/children" className={quietLink}>
               Children database
             </Link>
-            <Link href="/pattern" className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+            <Link href="/pattern" className={quietLink}>
               Field Pattern
             </Link>
           </>
         ) : null}
-        <Link href="/skills" className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+        <Link href="/skills" className={quietLink}>
           Skill diagnostic
         </Link>
-        <Link href={`/o/${slug}/l`} className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+        <Link href={`/o/${slug}/l`} className={quietLink}>
           Lessons
         </Link>
         {teacher ? (
-          <Link href={`/o/${slug}/teach`} className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm">
+          <Link href={`/o/${slug}/teach`} className={quietLink}>
             Teach
           </Link>
         ) : null}
       </div>
 
       {canInvite ? (
-        <section className="mt-10 rounded-xl border border-border bg-card px-5 py-5">
-          <h2 className="font-display text-2xl">Invite</h2>
+        <section className={household ? "card mt-10 p-5" : "mt-10 rounded-xl border border-border bg-card px-5 py-5"}>
+          <h2 className={household ? "h-section" : "font-display text-2xl"}>Invite</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             <input
-              className="h-11 flex-1 rounded-xl border border-border bg-background px-3 text-sm"
+              className={household ? "input min-w-0 flex-1" : "h-11 flex-1 rounded-xl border border-border bg-background px-3 text-sm"}
               placeholder="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <select
-              className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
+              className={household ? "input w-auto" : "h-11 rounded-xl border border-border bg-background px-3 text-sm"}
               value={inviteStance}
               onChange={(e) => setStance(e.target.value)}
             >
@@ -142,7 +153,9 @@ export default function OrgHomePage() {
                 </option>
               ))}
             </select>
-            <Button onClick={() => void invite()}>Send invite</Button>
+            <Button variant={household ? "outline" : "default"} onClick={() => void invite()}>
+              Send invite
+            </Button>
           </div>
           {inviteUrl ? (
             <p className="mt-3 text-sm">

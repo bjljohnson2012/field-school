@@ -78,10 +78,10 @@ export function Fr4ParentPath() {
 
   return (
     <section data-path="fr-4-fr-3">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+      <p className="eyebrow">
         Parent-path assembly
       </p>
-      <h1 className="mt-3 font-display text-4xl tracking-tight">
+      <h1 className="h-page mt-2">
         Path under selected Child
       </h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
@@ -97,7 +97,11 @@ export function Fr4ParentPath() {
             href={`/path?child=${encodeURIComponent(child.id)}`}
             data-child-id={child.id}
             data-child-selected={selected?.id === child.id ? "true" : "false"}
-            className="inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm"
+            className={
+              selected?.id === child.id
+                ? "inline-flex items-center rounded-brand border border-primary bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+                : "inline-flex items-center rounded-brand border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+            }
           >
             {child.name}
           </Link>
@@ -106,7 +110,7 @@ export function Fr4ParentPath() {
 
       {selected ? (
         <div
-          className="mt-8 grid gap-6"
+          className="card mt-8 grid gap-6 p-5"
           data-selected-child={selected.id}
           data-child-kind="child"
           data-child-login="none"
@@ -121,14 +125,14 @@ export function Fr4ParentPath() {
             {selected.items.map((item) => (
               <li
                 key={`${item.sortOrder}-${item.title}`}
-                className="rounded-xl border border-border px-4 py-4"
+                className="card p-4"
                 data-path-item={item.sortOrder}
                 data-path-source={item.source}
               >
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                <p className="eyebrow">
                   Station {item.sortOrder}
                 </p>
-                <h2 className="mt-2 font-display text-2xl tracking-tight">{item.title}</h2>
+                <h2 className="h-section mt-2">{item.title}</h2>
                 <p className="mt-2 text-sm">{item.subject}</p>
                 <p className="mt-2 text-sm text-muted-foreground">{item.reason}</p>
                 <Link href={item.play} className="mt-3 inline-flex text-sm underline">
@@ -141,7 +145,7 @@ export function Fr4ParentPath() {
             type="button"
             data-path-assemble="true"
             onClick={onAssemble}
-            className="inline-flex h-11 w-fit items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
+            className="btn-primary w-fit"
           >
             Assemble from parent intent
           </button>

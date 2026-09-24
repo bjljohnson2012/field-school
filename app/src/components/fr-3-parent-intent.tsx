@@ -99,10 +99,10 @@ export function Fr3ParentIntent() {
 
   return (
     <section data-intent="fr-3-fr-2">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+      <p className="eyebrow">
         Parent-owned intent
       </p>
-      <h1 className="mt-3 font-display text-4xl tracking-tight">Intent under selected Child</h1>
+      <h1 className="h-page mt-2">Intent under selected Child</h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
         Parent captures and owns intent under the selected Child so path planning
         starts from parent intent, not child login. Child is not a User. Family
@@ -116,7 +116,11 @@ export function Fr3ParentIntent() {
             href={`/intent?child=${encodeURIComponent(child.id)}`}
             data-child-id={child.id}
             data-child-selected={selected?.id === child.id ? "true" : "false"}
-            className="inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm"
+            className={
+              selected?.id === child.id
+                ? "inline-flex items-center rounded-brand border border-primary bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+                : "inline-flex items-center rounded-brand border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand"
+            }
           >
             {child.name}
           </Link>
@@ -125,7 +129,7 @@ export function Fr3ParentIntent() {
 
       {selected ? (
         <form
-          className="mt-8 grid gap-4"
+          className="card mt-8 grid gap-4 p-5"
           data-selected-child={selected.id}
           data-child-kind={childKind}
           data-child-login="none"
@@ -136,60 +140,60 @@ export function Fr3ParentIntent() {
             Selected Child: {selected.name}. Kind {selected.kind}. Login none.
             Not a User.
           </p>
-          <label className="grid gap-2 text-sm">
+          <label className="grid gap-1.5 text-sm font-semibold text-muted-foreground">
             Goals
             <textarea
               name="goals"
               data-intent-field="goals"
               value={goals}
               onChange={(event) => setGoals(event.target.value)}
-              className="min-h-24 rounded-xl border border-border bg-background px-3 py-2"
+              className="input min-h-24"
             />
           </label>
-          <label className="grid gap-2 text-sm">
+          <label className="grid gap-1.5 text-sm font-semibold text-muted-foreground">
             Subjects
             <textarea
               name="subjects"
               data-intent-field="subjects"
               value={subjects}
               onChange={(event) => setSubjects(event.target.value)}
-              className="min-h-20 rounded-xl border border-border bg-background px-3 py-2"
+              className="input min-h-20"
             />
           </label>
-          <label className="grid gap-2 text-sm">
+          <label className="grid gap-1.5 text-sm font-semibold text-muted-foreground">
             Themes
             <textarea
               name="themes"
               data-intent-field="themes"
               value={themes}
               onChange={(event) => setThemes(event.target.value)}
-              className="min-h-20 rounded-xl border border-border bg-background px-3 py-2"
+              className="input min-h-20"
             />
           </label>
-          <label className="grid gap-2 text-sm">
+          <label className="grid gap-1.5 text-sm font-semibold text-muted-foreground">
             Time horizon
             <input
               name="timeHorizon"
               data-intent-field="timeHorizon"
               value={timeHorizon}
               onChange={(event) => setTimeHorizon(event.target.value)}
-              className="h-11 rounded-xl border border-border bg-background px-3"
+              className="input"
             />
           </label>
-          <label className="grid gap-2 text-sm">
+          <label className="grid gap-1.5 text-sm font-semibold text-muted-foreground">
             Constraints
             <textarea
               name="constraints"
               data-intent-field="constraints"
               value={constraints}
               onChange={(event) => setConstraints(event.target.value)}
-              className="min-h-20 rounded-xl border border-border bg-background px-3 py-2"
+              className="input min-h-20"
             />
           </label>
           <button
             type="submit"
             data-intent-save="true"
-            className="inline-flex h-11 w-fit items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
+            className="btn-primary w-fit"
           >
             Save parent intent
           </button>
