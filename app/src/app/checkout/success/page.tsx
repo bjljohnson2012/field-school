@@ -13,7 +13,7 @@ export default function CheckoutSuccessPage() {
   return (
     <Suspense
       fallback={
-        <main className="mx-auto max-w-md px-4 py-16">
+        <main className="mx-auto max-w-md px-6 py-8">
           <p className="text-sm text-muted-foreground">Opening your seat…</p>
         </main>
       }

@@ -51,18 +51,16 @@ export default function AdminFormsPage() {
   if (!ready || !isStaff) return null;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Staff
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Forms</h1>
+    <main className="mx-auto max-w-3xl px-6 py-8">
+      <p className="eyebrow">Staff</p>
+      <h1 className="h-page mt-2">Forms</h1>
       <p className="mt-3 text-muted-foreground">
         People who wrote in from fieldschool.ai. One tab per form. The Saturday list
         and shop waitlist keep one row per email. Topic requests keep each ask.
       </p>
 
       {error ? (
-        <p className="mt-6 rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+        <p className="mt-6 rounded-brand border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
           {error}
         </p>
       ) : null}
@@ -79,8 +77,8 @@ export default function AdminFormsPage() {
             role="tab"
             aria-selected={tab === kind}
             className={cn(
-              "inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground",
-              tab === kind && "bg-secondary text-foreground",
+              "inline-flex h-10 items-center gap-2 border-b-2 border-transparent px-3 text-sm text-muted-foreground hover:text-foreground",
+              tab === kind && "border-primary text-foreground",
             )}
             onClick={() => setTab(kind)}
           >
@@ -92,20 +90,20 @@ export default function AdminFormsPage() {
 
       <div className="mt-6 space-y-4" role="tabpanel">
         {rows.length === 0 && !error ? (
-          <p className="rounded-xl border border-dashed border-border px-5 py-6 text-sm text-muted-foreground">
+          <p className="rounded-card border border-dashed border-border px-5 py-6 text-sm text-muted-foreground">
             No {FORM_LABELS[tab].toLowerCase()} yet.
           </p>
         ) : null}
         {rows.map((row) => (
           <article
             key={row.id}
-            className="rounded-xl border border-border bg-card px-5 py-5"
+            className="card px-5 py-5"
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="font-display text-2xl tracking-tight">
+              <h2 className="h-section">
                 {row.name || row.email}
               </h2>
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+              <p className="eyebrow">
                 {formatDay(row.updatedAt)}
               </p>
             </div>

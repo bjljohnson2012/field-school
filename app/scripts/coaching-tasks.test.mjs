@@ -202,7 +202,7 @@ test("badge polls the count route, hides at zero, and mounts only on the orange 
   assert.equal(hrefs.length, 1);
   const link = shell.indexOf('href="/tasks"');
   const mount = shell.indexOf("<TasksNavBadge");
-  const avatar = shell.indexOf("from-brand-indigo");
+  const avatar = shell.indexOf('aria-haspopup="menu"');
   assert.ok(link >= 0 && mount > link && mount < avatar);
   assert.match(shell, /fallback=\{openTasks\}/);
 

@@ -2,7 +2,6 @@ export const COMPANY_NAME = "Field School";
 export const PORTAL_NAME = "Field School training portal";
 export const UNI_NAME = COMPANY_NAME;
 export const UNI_SHORT = "Field School";
-export const THEME_KEY = "fsu-theme";
 export const PORTAL_KEY = "fsu-portal-v3";
 
 export const brand = {

@@ -18,11 +18,9 @@ export function CartClient() {
   const plan = getPaidPlan(isPaidPlanId(requested) ? requested : planId);
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-16">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Cart
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Your seat</h1>
+    <main className="mx-auto max-w-lg px-6 py-8">
+      <p className="eyebrow">Cart</p>
+      <h1 className="h-page mt-2">Your seat</h1>
 
       {!ready ? (
         <p className="mt-4 text-sm text-muted-foreground">Opening your cart…</p>
@@ -36,7 +34,7 @@ export function CartClient() {
           </p>
           <Link
             href="/pricing"
-            className="mt-8 inline-flex h-12 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+            className="btn-primary mt-8"
           >
             See pricing
           </Link>
@@ -45,9 +43,9 @@ export function CartClient() {
 
       {plan ? (
         <>
-          <article className="mt-8 rounded-xl border border-border bg-card px-5 py-6">
-            <h2 className="font-display text-2xl tracking-tight">{plan.name}</h2>
-            <p className="mt-4 font-display text-4xl tracking-tight">
+          <article className="card mt-8 px-5 py-6">
+            <h2 className="h-section">{plan.name}</h2>
+            <p className="mt-4 font-sans text-4xl font-semibold tracking-tight text-foreground">
               {plan.priceLabel}
               <span className="ml-1 text-base text-muted-foreground">
                 {plan.cadence === "month" ? "per month" : "one time"}
@@ -61,14 +59,14 @@ export function CartClient() {
           <div className="mt-8 flex flex-col gap-3">
             <Link
               href={checkoutPath(plan.id)}
-              className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+              className="btn-primary justify-center"
             >
               Pay {plan.priceLabel}
             </Link>
             <button
               type="button"
               onClick={clear}
-              className="inline-flex h-12 items-center justify-center rounded-xl border border-border px-5 text-sm"
+              className="btn justify-center border border-input bg-card text-foreground hover:bg-muted"
             >
               Remove
             </button>

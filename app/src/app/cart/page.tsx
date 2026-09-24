@@ -13,7 +13,7 @@ export default function CartPage() {
   return (
     <Suspense
       fallback={
-        <main className="mx-auto max-w-lg px-4 py-16">
+        <main className="mx-auto max-w-lg px-6 py-8">
           <p className="text-sm text-muted-foreground">Opening your cart…</p>
         </main>
       }

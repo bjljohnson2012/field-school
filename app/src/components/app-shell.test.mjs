@@ -91,26 +91,11 @@ register("data:text/javascript," + encodeURIComponent(hookSource(findTypescript(
 });
 
 const { paletteItems } = await import(pathToFileURL(join(here, "command-palette.tsx")).href);
-const { coachingShellEnabled } = await import(pathToFileURL(join(here, "chrome.tsx")).href);
 
-test("coaching shell defaults on and COACHING_SHELL=0 turns it off", () => {
-  const previous = process.env.COACHING_SHELL;
-  try {
-    delete process.env.COACHING_SHELL;
-    assert.equal(coachingShellEnabled(), true);
-    process.env.COACHING_SHELL = "";
-    assert.equal(coachingShellEnabled(), true);
-    process.env.COACHING_SHELL = "1";
-    assert.equal(coachingShellEnabled(), true);
-    process.env.COACHING_SHELL = " 0 ";
-    assert.equal(coachingShellEnabled(), false);
-    process.env.COACHING_SHELL = "0";
-    assert.equal(coachingShellEnabled(), false);
-  } finally {
-    if (previous === undefined) delete process.env.COACHING_SHELL;
-    else process.env.COACHING_SHELL = previous;
-  }
-  assert.match(chrome, /return value !== "0"/);
+test("AppShell is always on", () => {
+  assert.match(chrome, /<AppShell/);
+  assert.match(chrome, /<GuestChrome/);
+  assert.doesNotMatch(chrome, /COACHING_SHELL|coachingShellEnabled|SiteHeader|SiteFooter/);
   assert.doesNotMatch(shell, /COACHING_SHELL|COACHING_WRITES|COACHING_IMPORT|CRON_SECRET/);
 });
 
@@ -127,17 +112,18 @@ test("AppShell imports navLinks and NEW_DOORS instead of copying the five words"
   assert.match(header, /export const NEW_DOORS/);
 });
 
-test("theme toggle is not rendered from the shell or the cream header", () => {
+test("theme toggle is gone from the portal", () => {
   assert.doesNotMatch(shell, /ThemeToggle|theme-toggle/);
   assert.doesNotMatch(header, /ThemeToggle|theme-toggle/);
-  assert.equal(existsSync(join(here, "theme-toggle.tsx")), true);
+  assert.doesNotMatch(chrome, /ThemeToggle|theme-toggle/);
+  assert.equal(existsSync(join(here, "theme-toggle.tsx")), false);
 });
 
 test("Tasks is sales-only and the palette is signed-in only", () => {
   assert.equal((shell.match(/href="\/tasks"/g) || []).length, 1);
   const link = shell.indexOf('href="/tasks"');
   const mount = shell.indexOf("<TasksNavBadge");
-  const avatar = shell.indexOf("from-brand-indigo");
+  const avatar = shell.indexOf('aria-haspopup="menu"');
   assert.ok(link >= 0 && mount > link && mount < avatar);
   assert.match(shell, /fallback=\{openTasks\}/);
   assert.match(shell, /room === "sales" \? \(/);

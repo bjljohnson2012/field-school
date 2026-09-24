@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 function Code({ children }: { children: string }) {
   return (
-    <pre className="overflow-x-auto rounded-xl border border-border bg-secondary/40 p-4 text-xs leading-relaxed">
+    <pre className="overflow-x-auto rounded-card border border-border bg-muted p-4 font-mono text-xs leading-relaxed">
       <code>{children}</code>
     </pre>
   );
@@ -29,11 +29,9 @@ function Block({
   return (
     <section className="space-y-3">
       {kicker ? (
-        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          {kicker}
-        </p>
+        <p className="eyebrow">{kicker}</p>
       ) : null}
-      <h2 className="font-display text-2xl tracking-tight">{title}</h2>
+      <h2 className="h-section">{title}</h2>
       <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
         {children}
       </div>
@@ -43,11 +41,9 @@ function Block({
 
 export default function ApiDocsPage() {
   return (
-    <main className="mx-auto max-w-3xl px-4 py-14">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Integration
-      </p>
-      <h1 className="mt-3 font-display text-4xl tracking-tight sm:text-5xl">
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <p className="eyebrow">Integration</p>
+      <h1 className="h-page mt-2">
         Campus API — Wave 1
       </h1>
       <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
@@ -100,7 +96,7 @@ export default function ApiDocsPage() {
         </Block>
 
         <Block kicker="02" title="Seed orgs">
-          <div className="overflow-x-auto rounded-xl border border-border">
+          <div className="card overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-secondary/60 text-foreground">
                 <tr>

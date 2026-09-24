@@ -40,13 +40,9 @@ export default function AccessRequestsPage() {
   if (!ready || !isStaff) return null;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Staff
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">
-        Access requests
-      </h1>
+    <main className="mx-auto max-w-3xl px-6 py-8">
+      <p className="eyebrow">Staff</p>
+      <h1 className="h-page mt-2">Access requests</h1>
       <p className="mt-3 text-muted-foreground">
         Staff-desk asks and new free-beta enrollments. Adding someone to
         admin still means putting their email on{" "}
@@ -54,27 +50,27 @@ export default function AccessRequestsPage() {
       </p>
 
       {error ? (
-        <p className="mt-6 rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+        <p className="mt-6 rounded-brand border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
           {error}
         </p>
       ) : null}
 
       <div className="mt-8 space-y-4">
         {requests.length === 0 && !error ? (
-          <p className="rounded-xl border border-dashed border-border px-5 py-6 text-sm text-muted-foreground">
+          <p className="rounded-card border border-dashed border-border px-5 py-6 text-sm text-muted-foreground">
             No pending requests.
           </p>
         ) : null}
         {requests.map((request) => (
           <article
             key={request.id}
-            className="rounded-xl border border-border bg-card px-5 py-5"
+            className="card px-5 py-5"
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="font-display text-2xl tracking-tight">
+              <h2 className="h-section">
                 {request.name}
               </h2>
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+              <p className="eyebrow">
                 {request.kind === "enrollment" ? "enrollment" : "staff"} ·{" "}
                 {request.status}
               </p>

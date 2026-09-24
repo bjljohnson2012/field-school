@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { AuthSessionProvider } from "@/components/auth-session-provider";
-import { Chrome, coachingShellEnabled } from "@/components/chrome";
+import { Chrome } from "@/components/chrome";
 import { ThemeScript } from "@/components/theme-script";
 import { UNI_NAME } from "@/lib/brand";
 import "./globals.css";
@@ -55,19 +55,16 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  const coach = coachingShellEnabled();
   return (
     <html
       lang="en"
-      data-chrome={coach ? "coach" : undefined}
+      data-chrome="coach"
       className={`${ibmSans.variable} ${ibmMono.variable} ${fraunces.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      {coach ? null : (
-        <head>
-          <ThemeScript />
-        </head>
-      )}
+      <head>
+        <ThemeScript />
+      </head>
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <AuthSessionProvider>
           <Chrome>{children}</Chrome>

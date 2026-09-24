@@ -21,11 +21,9 @@ export function AdminNav() {
   const { unreadNotices } = usePortal();
 
   return (
-    <div className="border-b border-border bg-card/70">
-      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          Admin
-        </p>
+    <div className="border-b border-border bg-background/88">
+      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="eyebrow">Admin</p>
         <nav className="flex flex-wrap gap-1 text-sm">
           {items.map((item) => {
             const active = item.exact
@@ -37,8 +35,8 @@ export function AdminNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "inline-flex h-10 items-center gap-2 rounded-xl px-3 text-muted-foreground hover:bg-secondary hover:text-foreground",
-                  active && "bg-secondary text-foreground",
+                  "inline-flex h-10 items-center gap-2 border-b-2 border-transparent px-3 text-muted-foreground hover:text-foreground",
+                  active && "border-primary text-foreground",
                 )}
               >
                 {item.label}

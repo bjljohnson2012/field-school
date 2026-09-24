@@ -4,28 +4,8 @@ import { AppShell, GuestChrome } from "@/components/app-shell";
 import { readOrgLogoUrl } from "@/components/org-logo";
 import { loadSession } from "@/lib/campus-runtime/identity";
 import { memberPlatformAdmin } from "@/lib/coaching/scores";
-import { ImpersonationBanner } from "@/components/impersonation-banner";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
-
-/** AppShell is the portal default. COACHING_SHELL=0 is the only rollback. */
-export function coachingShellEnabled() {
-  const value = process.env.COACHING_SHELL?.trim();
-  return value !== "0";
-}
 
 export async function Chrome({ children }: { children: ReactNode }) {
-  if (!coachingShellEnabled()) {
-    return (
-      <>
-        <SiteHeader />
-        <ImpersonationBanner />
-        <div className="flex-1">{children}</div>
-        <SiteFooter />
-      </>
-    );
-  }
-
   const session = await auth().catch(() => null);
   const email = session?.user?.email?.trim();
   if (email) {
