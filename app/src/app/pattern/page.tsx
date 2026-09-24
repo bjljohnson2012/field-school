@@ -182,8 +182,8 @@ function PatternForm() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-8">
-      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <p className="eyebrow">
         Field Pattern · fp-50-v1
       </p>
       <h1 className="h-page mt-2">Field Pattern</h1>
@@ -207,8 +207,8 @@ function PatternForm() {
         <button
           type="button"
           className={cn(
-            "h-11 rounded-xl border px-4 text-sm",
-            subset === "adult" ? "border-primary bg-secondary" : "border-border",
+            "inline-flex items-center rounded-brand border bg-card px-4 py-2.5 text-sm font-semibold transition-all duration-200 ease-brand",
+            subset === "adult" ? "border-primary text-foreground" : "border-border text-foreground",
           )}
           onClick={() => setSubset("adult")}
         >
@@ -217,8 +217,8 @@ function PatternForm() {
         <button
           type="button"
           className={cn(
-            "h-11 rounded-xl border px-4 text-sm",
-            subset === "child" ? "border-primary bg-secondary" : "border-border",
+            "inline-flex items-center rounded-brand border bg-card px-4 py-2.5 text-sm font-semibold transition-all duration-200 ease-brand",
+            subset === "child" ? "border-primary text-foreground" : "border-border text-foreground",
           )}
           onClick={() => setSubset("child")}
         >
@@ -285,7 +285,7 @@ function PatternForm() {
                 <label
                   key={opt.value}
                   className={cn(
-                    "flex min-h-11 cursor-pointer items-center justify-center rounded-lg border px-2 text-center text-xs",
+                    "flex min-h-11 cursor-pointer items-center justify-center rounded-brand border px-2 text-center text-xs font-medium transition-all duration-200 ease-brand",
                     answers[item.key] === opt.value
                       ? "border-primary bg-secondary"
                       : "border-border hover:bg-secondary/50",
@@ -330,13 +330,13 @@ function PatternForm() {
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
-            className="btn-primary"
+            className="inline-flex items-center rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold transition-all duration-200 ease-brand"
             disabled={!signedIn || !paper.trim() || busy}
             onClick={() => void submitPaper()}
           >
             Ingest paper
           </button>
-          <label className="inline-flex h-11 cursor-pointer items-center rounded-xl border border-border px-4 text-sm">
+          <label className="inline-flex cursor-pointer items-center rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold transition-all duration-200 ease-brand">
             Voice / video
             <input
               type="file"
@@ -366,7 +366,7 @@ function PatternForm() {
         />
         <button
           type="button"
-          className="btn-primary"
+          className="inline-flex items-center rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold transition-all duration-200 ease-brand"
           disabled={!signedIn || !importCode.trim() || busy}
           onClick={() => {
             void fetch("/api/pattern/import", {
@@ -396,7 +396,7 @@ export default function PatternPage() {
   return (
     <Suspense
       fallback={
-        <main className="mx-auto max-w-7xl px-6 py-8">
+        <main className="mx-auto max-w-6xl px-6 py-8">
           <p className="text-sm text-muted-foreground">Loading Field Pattern…</p>
         </main>
       }

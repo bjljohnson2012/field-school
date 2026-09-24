@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 
 export default function ProgressPage() {
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10">
+    <main className="mx-auto max-w-6xl px-6 py-8">
       <Suspense fallback={<p className="text-sm text-muted-foreground">Loading progress…</p>}>
         <Fr6SupervisedProgress />
       </Suspense>
