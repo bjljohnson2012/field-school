@@ -33,7 +33,7 @@ export default async function SignupPage({
   return (
     <Suspense
       fallback={
-        <main className="mx-auto max-w-md px-4 py-16">
+        <main className="mx-auto max-w-md px-6 py-8">
           <p className="text-sm text-muted-foreground">Loading join…</p>
         </main>
       }

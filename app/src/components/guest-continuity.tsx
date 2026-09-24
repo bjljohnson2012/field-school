@@ -5,9 +5,9 @@ export function GuestContinuity() {
   return (
     <section
       data-guest-continuity="s2"
-      className="rounded-xl border border-border px-5 py-5 text-sm leading-relaxed text-muted-foreground"
+      className="rounded-card border border-border bg-card px-5 py-5 text-sm leading-relaxed text-muted-foreground shadow-card"
     >
-      <h2 className="font-display text-xl tracking-tight text-foreground">
+      <h2 className="h-section">
         What a guest keeps
       </h2>
       <ul className="mt-3 list-disc space-y-2 pl-5">

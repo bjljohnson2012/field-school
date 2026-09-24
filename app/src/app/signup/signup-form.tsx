@@ -35,11 +35,10 @@ export function SignupForm({ oauth }: Props) {
   const [pending, setPending] = useState(false);
 
   return (
-    <main className="mx-auto max-w-md px-4 py-16">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Free beta
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">
+    <main className="mx-auto max-w-md px-6 py-8">
+      <div className="rounded-card border border-border bg-card p-8 shadow-card">
+      <p className="eyebrow">Free beta</p>
+      <h1 className="h-page mt-2">
         Join the Field School training portal
       </h1>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -55,7 +54,7 @@ export function SignupForm({ oauth }: Props) {
         <GuestContinuity />
       </div>
       {error ? (
-        <p className="mt-4 rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+        <p className="mt-4 rounded-brand border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
           {error}
         </p>
       ) : null}
@@ -117,7 +116,6 @@ export function SignupForm({ oauth }: Props) {
             onChange={(e) => setName(e.target.value)}
             placeholder="Your name"
             required
-            className="h-11 rounded-xl"
           />
         </div>
         <div className="space-y-2">
@@ -129,7 +127,6 @@ export function SignupForm({ oauth }: Props) {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@work.com"
             required
-            className="h-11 rounded-xl"
           />
         </div>
         <div className="space-y-2">
@@ -142,10 +139,9 @@ export function SignupForm({ oauth }: Props) {
             placeholder="At least 8 characters"
             required
             minLength={8}
-            className="h-11 rounded-xl"
           />
         </div>
-        <Button className="h-12 w-full rounded-xl" type="submit" disabled={pending}>
+        <Button className="w-full" type="submit" disabled={pending}>
           {pending ? "Joining…" : "Join the free beta"}
         </Button>
       </form>
@@ -162,12 +158,10 @@ export function SignupForm({ oauth }: Props) {
       </p>
 
       <div className="mt-10 space-y-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          Other ways in
-        </p>
+        <p className="eyebrow">Other ways in</p>
         <button
           type="button"
-          className="h-12 w-full rounded-xl border border-border text-sm"
+          className="w-full rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand hover:bg-muted"
           onClick={() => {
             continueAsGuest();
             router.push("/c/grok-bot");
@@ -175,6 +169,7 @@ export function SignupForm({ oauth }: Props) {
         >
           Continue as guest
         </button>
+      </div>
       </div>
     </main>
   );

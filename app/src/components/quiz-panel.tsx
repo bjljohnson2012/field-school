@@ -33,7 +33,7 @@ export function QuizPanel({
   const allAnswered = questions.every((q) => answers[q.id] != null);
 
   return (
-    <section className="card p-5 sm:p-6">
+    <section className="card border-border bg-card p-5 sm:p-6">
       <div className="mb-5 flex items-end justify-between gap-3">
         <div>
           <h2 className="h-section">{title}</h2>

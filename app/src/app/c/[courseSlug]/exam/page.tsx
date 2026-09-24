@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { QuizPanel } from "@/components/quiz-panel";
+import { buttonVariants } from "@/components/ui/button";
 import { useCoursePortal } from "@/hooks/use-portal";
 import { getCourse } from "@/lib/course/catalog";
 import { saveExamAnswers } from "@/lib/portal";
@@ -14,18 +15,17 @@ export default function ExamPage() {
 
   if (!course) {
     return (
-      <main className="mx-auto max-w-xl px-4 py-16">
+      <main className="mx-auto max-w-xl px-6 py-8">
         <p className="text-muted-foreground">Course not found.</p>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-        Exam · Field School
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">{course.title}</h1>
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <div className="mx-auto max-w-3xl">
+      <p className="eyebrow">Exam · Field School</p>
+      <h1 className="h-page mt-2">{course.title}</h1>
       <p className="mt-4 text-sm text-muted-foreground">
         {course.examQuestions.length} questions. Pass at 8/10. The Field School
         certificate also needs every station cleared.
@@ -48,11 +48,12 @@ export default function ExamPage() {
       {tally.certified ? (
         <Link
           href={`/c/${course.slug}/certificate`}
-          className="mt-6 inline-flex h-12 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+          className={buttonVariants({ variant: "outline", className: "mt-6" })}
         >
           View certificate
         </Link>
       ) : null}
+      </div>
     </main>
   );
 }

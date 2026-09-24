@@ -20,11 +20,9 @@ export function CourseFeedback({
   const [sent, setSent] = useState(false);
 
   return (
-    <section id="feedback" className="rounded-xl border border-border bg-card px-5 py-6">
-      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-        Student note
-      </p>
-      <h2 className="mt-1 font-display text-2xl tracking-tight">
+    <section id="feedback" className="rounded-card border border-border bg-card px-5 py-6 shadow-card">
+      <p className="eyebrow">Student note</p>
+      <h2 className="h-section mt-2">
         Send feedback to staff
       </h2>
       <p className="mt-2 text-sm text-muted-foreground">
@@ -58,7 +56,7 @@ export function CourseFeedback({
               key={value}
               type="button"
               onClick={() => setKind(value)}
-              className={`h-10 rounded-xl border px-3 text-sm ${
+              className={`rounded-brand border px-3 py-2 text-sm font-semibold ${
                 kind === value
                   ? "border-primary bg-primary/10"
                   : "border-border text-muted-foreground"
@@ -70,13 +68,11 @@ export function CourseFeedback({
         </div>
         {course ? (
           <label className="block text-sm">
-            <span className="mb-2 block text-xs uppercase tracking-[0.16em] text-muted-foreground">
-              Station (optional)
-            </span>
+            <span className="eyebrow mb-2">Station (optional)</span>
             <select
               value={stationSlug}
               onChange={(e) => setStationSlug(e.target.value)}
-              className="h-11 w-full rounded-xl border border-border bg-background px-3"
+              className="w-full rounded-brand border border-input bg-card px-4 py-2.5 text-sm shadow-sm"
             >
               <option value="">Whole course</option>
               {course.modules.map((m) => (
@@ -96,9 +92,8 @@ export function CourseFeedback({
           rows={5}
           required
           placeholder="What should staff know?"
-          className="rounded-xl"
         />
-        <Button className="h-11 rounded-xl px-5" type="submit" disabled={!body.trim()}>
+        <Button type="submit" variant="outline" disabled={!body.trim()}>
           Submit to staff
         </Button>
         {sent ? (

@@ -16,11 +16,9 @@ export default async function LessonSpinePlayPage() {
   const session = await auth().catch(() => null);
   const signedIn = Boolean(session?.user?.email);
   return (
-    <main data-plate className="mx-auto max-w-6xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Learn with Ben · filmed lesson
-      </p>
-      <h1 className="mt-3 font-display text-4xl tracking-tight">LessonSpine</h1>
+    <main data-plate className="mx-auto max-w-6xl px-6 py-8">
+      <p className="eyebrow">Learn with Ben · filmed lesson</p>
+      <h1 className="h-page mt-2">LessonSpine</h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
         Ready / HLS play of the locked counterexample-encode master. The HTML5
         rail stays. A Remotion player previews the LessonSpine composition for

@@ -1,6 +1,6 @@
 export function CampusLadder() {
   return (
-    <div className="relative overflow-hidden rounded-xl border border-border bg-card">
+    <div className="relative overflow-hidden rounded-card border border-border bg-card shadow-card">
       <div className="relative aspect-[16/10] w-full">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,color-mix(in_srgb,var(--primary)_22%,transparent),transparent_42%),radial-gradient(circle_at_86%_78%,color-mix(in_srgb,var(--primary)_14%,transparent),transparent_36%)]" />
         <svg viewBox="0 0 640 400" className="absolute inset-0 h-full w-full" aria-hidden>
@@ -52,12 +52,8 @@ export function CampusLadder() {
           <circle cx="460" cy="270" r="8" fill="var(--primary)" />
         </svg>
         <div className="absolute inset-x-0 bottom-0 p-5">
-          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            Campus ladder
-          </p>
-          <p className="mt-1 font-display text-2xl tracking-tight sm:text-3xl">
-            Watch. Work. Clear.
-          </p>
+          <p className="eyebrow">Campus ladder</p>
+          <h2 className="h-section mt-1 text-2xl sm:text-3xl">Watch. Work. Clear.</h2>
         </div>
       </div>
     </div>

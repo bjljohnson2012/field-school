@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { ShareLink } from "@/components/share-link";
+import { buttonVariants } from "@/components/ui/button";
 import { useCoursePortal } from "@/hooks/use-portal";
 import { UNI_NAME } from "@/lib/brand";
 import { getCourse } from "@/lib/course/catalog";
@@ -59,14 +60,11 @@ export default function CertificatePage() {
         />
         <Link
           href={`/c/${course.slug}/desk`}
-          className="inline-flex h-11 items-center text-sm text-muted-foreground hover:text-foreground"
+          className={buttonVariants({ variant: "outline" })}
         >
           Export share desk
         </Link>
-        <Link
-          href="/"
-          className="inline-flex h-11 items-center text-sm text-muted-foreground hover:text-foreground"
-        >
+        <Link href="/" className={buttonVariants({ variant: "ghost" })}>
           Campus
         </Link>
       </div>

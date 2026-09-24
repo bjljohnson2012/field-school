@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ShareLink } from "@/components/share-link";
 import { useCoursePortal } from "@/hooks/use-portal";
 import { getCourse } from "@/lib/course/catalog";
@@ -55,7 +57,7 @@ export default function DeskPage() {
 
   if (!course) {
     return (
-      <main className="mx-auto max-w-xl px-4 py-16">
+      <main className="mx-auto max-w-xl px-6 py-8">
         <p className="text-muted-foreground">Course not found.</p>
       </main>
     );
@@ -70,14 +72,11 @@ export default function DeskPage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl space-y-8 px-4 py-12">
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          Share desk
-        </p>
-        <h1 className="mt-2 font-display text-4xl tracking-tight">
-          Build a brief you can send
-        </h1>
+        <p className="eyebrow">Share desk</p>
+        <h1 className="h-page mt-2">Build a brief you can send</h1>
         <p className="mt-3 text-sm text-muted-foreground">
           Same campus chrome as the rest of the training portal. When you
           are ready, copy the markdown or share the public template at{" "}
@@ -89,53 +88,44 @@ export default function DeskPage() {
       </div>
 
       <label className="block">
-        <span className="mb-2 block text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          Operator
-        </span>
-        <input
+        <span className="eyebrow mb-2">Operator</span>
+        <Input
           value={current.operator}
           onChange={(e) => {
             setDesk({ ...current, operator: e.target.value });
             setSaved(false);
           }}
-          className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm"
         />
       </label>
       <label className="block">
-        <span className="mb-2 block text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          Business / context
-        </span>
-        <input
+        <span className="eyebrow mb-2">Business / context</span>
+        <Input
           value={current.business}
           onChange={(e) => {
             setDesk({ ...current, business: e.target.value });
             setSaved(false);
           }}
-          className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm"
         />
       </label>
 
       {current.bots.map((bot, i) => (
-        <section key={i} className="rounded-xl border border-border bg-card px-5 py-5">
-          <h2 className="font-display text-xl tracking-tight">Seat {i + 1}</h2>
+        <section key={i} className="rounded-card border border-border bg-card px-5 py-5 shadow-card">
+          <h2 className="h-section">Seat {i + 1}</h2>
           <div className="mt-4 grid gap-3">
-            <input
+            <Input
               placeholder="Name"
               value={bot.name}
               onChange={(e) => updateBot(i, { name: e.target.value })}
-              className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
             />
-            <input
+            <Input
               placeholder="One job"
               value={bot.job}
               onChange={(e) => updateBot(i, { job: e.target.value })}
-              className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
             />
-            <input
+            <Input
               placeholder="Voice"
               value={bot.voice}
               onChange={(e) => updateBot(i, { voice: e.target.value })}
-              className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
             />
             <div className="flex flex-wrap gap-2">
               {PLUGIN_OPTIONS.map((plugin) => {
@@ -151,9 +141,9 @@ export default function DeskPage() {
                           : [...bot.plugins, plugin],
                       })
                     }
-                    className={`rounded-full border px-3 py-1 text-xs ${
+                    className={`rounded-brand border px-3 py-1 text-xs font-semibold transition-all duration-200 ease-brand ${
                       on
-                        ? "border-primary bg-primary/10 text-foreground"
+                        ? "border-primary text-primary"
                         : "border-border text-muted-foreground"
                     }`}
                   >
@@ -167,10 +157,10 @@ export default function DeskPage() {
       ))}
 
       {current.routines.map((routine, i) => (
-        <section key={i} className="rounded-xl border border-border bg-card px-5 py-5">
-          <h2 className="font-display text-xl tracking-tight">Routine {i + 1}</h2>
+        <section key={i} className="rounded-card border border-border bg-card px-5 py-5 shadow-card">
+          <h2 className="h-section">Routine {i + 1}</h2>
           <div className="mt-4 grid gap-3">
-            <input
+            <Input
               placeholder="Name"
               value={routine.name}
               onChange={(e) => {
@@ -182,9 +172,8 @@ export default function DeskPage() {
                 });
                 setSaved(false);
               }}
-              className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
             />
-            <input
+            <Input
               placeholder="When"
               value={routine.when}
               onChange={(e) => {
@@ -196,9 +185,8 @@ export default function DeskPage() {
                 });
                 setSaved(false);
               }}
-              className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
             />
-            <input
+            <Input
               placeholder="Done looks like"
               value={routine.does}
               onChange={(e) => {
@@ -210,30 +198,26 @@ export default function DeskPage() {
                 });
                 setSaved(false);
               }}
-              className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
             />
           </div>
         </section>
       ))}
 
       <label className="block">
-        <span className="mb-2 block text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          Overnight brief
-        </span>
-        <textarea
+        <span className="eyebrow mb-2">Overnight brief</span>
+        <Textarea
           value={current.overnightBrief}
           onChange={(e) => {
             setDesk({ ...current, overnightBrief: e.target.value });
             setSaved(false);
           }}
           rows={6}
-          className="w-full rounded-xl border border-border bg-card px-3 py-3 font-mono text-sm"
+          className="font-mono"
         />
       </label>
 
       <div className="flex flex-wrap gap-3">
         <Button
-          className="h-11 rounded-xl px-5"
           onClick={() => {
             saveDesk(course.slug, current);
             setSaved(true);
@@ -243,7 +227,6 @@ export default function DeskPage() {
         </Button>
         <Button
           variant="outline"
-          className="h-11 rounded-xl px-5"
           onClick={async () => {
             await navigator.clipboard.writeText(md);
             setCopied(true);
@@ -253,6 +236,7 @@ export default function DeskPage() {
           {copied ? "Markdown copied" : "Copy markdown"}
         </Button>
         {saved ? <span className="self-center text-sm text-pass">Saved</span> : null}
+      </div>
       </div>
     </main>
   );
