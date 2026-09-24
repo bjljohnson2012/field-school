@@ -23,8 +23,6 @@ import {
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Person" };
 
-const COACH_TABS = ["Card", "Notes", "Plan", "1:1 prep", "Tasks", "Reviews", "Files"];
-
 function asHints(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value.filter((item): item is string => typeof item === "string");
@@ -175,22 +173,34 @@ export default async function PersonPage({
       <h1 className="font-display text-3xl tracking-tight">{dto.displayName}</h1>
       {surface === "coach" ? (
         <div className="mt-4 flex flex-wrap gap-2" role="tablist" aria-label="Person">
-          {COACH_TABS.map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              role="tab"
-              aria-selected={tab === "Card"}
-              disabled={tab !== "Card"}
-              className={
-                tab === "Card"
-                  ? "rounded-brand bg-brand-navy px-3 py-1.5 text-sm font-semibold text-white"
-                  : "rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground"
-              }
-            >
-              {tab}
-            </button>
-          ))}
+          <span
+            role="tab"
+            aria-selected="true"
+            className="rounded-brand bg-brand-navy px-3 py-1.5 text-sm font-semibold text-white"
+          >
+            Card
+          </span>
+          <a
+            href={`/people/${subject.membershipId}/notes`}
+            className="rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground"
+          >
+            Notes
+          </a>
+          <a
+            href={`/people/${subject.membershipId}/plan`}
+            className="rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground"
+          >
+            Plan
+          </a>
+          <a
+            href={`/people/${subject.membershipId}/prep`}
+            className="rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground"
+          >
+            1:1 prep
+          </a>
+          <span className="rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground">Tasks</span>
+          <span className="rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground">Reviews</span>
+          <span className="rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground">Files</span>
         </div>
       ) : null}
       <div className="mt-6">
