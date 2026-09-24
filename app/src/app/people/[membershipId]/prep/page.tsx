@@ -38,7 +38,7 @@ export default async function PrepPage({
     return (
       <main>
         <h1 className="h-page">1:1 prep</h1>
-        <p className="mt-2 text-sm text-gray-600">Not allowed</p>
+        <p className="mt-2 text-sm text-muted-foreground">Not allowed</p>
       </main>
     );
   }
@@ -71,7 +71,7 @@ export default async function PrepPage({
     <main>
       <p className="eyebrow">{subject.stance}</p>
       <h1 className="h-page">1:1 prep</h1>
-      <p className="mt-2 text-sm text-gray-600">{subject.name}</p>
+      <p className="mt-2 text-sm text-muted-foreground">{subject.name}</p>
       <PrepPanel subjectMembershipId={subject.membershipId} prep={prep} coach={surface === "coach"} />
     </main>
   );

@@ -38,8 +38,8 @@ export default async function CoachingFilesPage({
   return (
     <main>
       <h1 className="h-page">Files</h1>
-      <p className="mt-2 text-sm text-gray-600">Signed in as {loaded.name}</p>
-      {subjectId ? <p className="mt-1 text-sm text-gray-600">Subject {subjectId}</p> : null}
+      <p className="mt-2 text-sm text-muted-foreground">Signed in as {loaded.name}</p>
+      {subjectId ? <p className="mt-1 text-sm text-muted-foreground">Subject {subjectId}</p> : null}
       <FilesPanel initial={files} subject={subjectId} />
     </main>
   );

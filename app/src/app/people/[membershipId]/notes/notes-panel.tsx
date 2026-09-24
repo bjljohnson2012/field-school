@@ -71,12 +71,12 @@ export function NotesPanel({
     <div className="mt-6 grid gap-6">
       <section className="card p-6">
         <h2 className="h-section">Notes</h2>
-        {notes.length === 0 ? <p className="mt-4 text-sm text-gray-600">No notes yet.</p> : null}
+        {notes.length === 0 ? <p className="mt-4 text-sm text-muted-foreground">No notes yet.</p> : null}
         <ul className="mt-4 space-y-3">
           {notes.map((note) => (
-            <li key={note.id} className="rounded-card border border-gray-200 p-4">
-              <p className="text-sm text-gray-800">{note.body}</p>
-              <p className="mt-2 text-xs text-gray-500">
+            <li key={note.id} className="rounded-card border border-border p-4">
+              <p className="text-sm text-foreground">{note.body}</p>
+              <p className="mt-2 text-xs text-muted-foreground">
                 {note.createdAt.slice(0, 10)}
                 {note.visibleToLearner ? " · visible to learner" : " · hidden from learner"}
               </p>
@@ -107,7 +107,7 @@ export function NotesPanel({
             value={body}
             onChange={(event) => setBody(event.target.value)}
           />
-          <label className="mt-3 flex items-center gap-2 text-sm text-gray-700">
+          <label className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
             <input
               type="checkbox"
               checked={visibleToLearner}
@@ -120,7 +120,7 @@ export function NotesPanel({
           </button>
         </section>
       ) : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm text-destructive">{error}</p> : null}
     </div>
   );
 }

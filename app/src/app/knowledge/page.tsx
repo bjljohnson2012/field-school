@@ -22,12 +22,12 @@ export default async function LearnerKnowledgePage() {
   return (
     <main>
       <h1 className="h-page">Knowledge</h1>
-      <p className="mt-2 text-sm text-gray-600">Signed in as {auth.identity.name}</p>
+      <p className="mt-2 text-sm text-muted-foreground">Signed in as {auth.identity.name}</p>
       {units.length ? (
         <ul className="mt-6 space-y-4">
           {units.map((unit) => (
             <li key={unit.id} className="card p-4">
-              <h2 className="font-semibold">{unit.title}</h2>
+              <h2 className="h-section">{unit.title}</h2>
               <p className="mt-2 whitespace-pre-wrap text-sm">{unit.body}</p>
             </li>
           ))}

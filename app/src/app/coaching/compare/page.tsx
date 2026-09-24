@@ -35,7 +35,7 @@ export default async function ComparePage() {
   return (
     <main>
       <h1 className="h-page">Compare</h1>
-      <p className="mt-2 text-sm text-gray-600">Compare AEs and directors in the active org.</p>
+      <p className="mt-2 text-sm text-muted-foreground">Compare AEs and directors in the active org.</p>
       <ComparePanel aes={aes} directors={directors} actorMembershipId={loaded.actor.membershipId} />
     </main>
   );

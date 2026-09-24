@@ -30,7 +30,7 @@ export const ITEMS: readonly HelpItem[] = [
   },
   {
     title: "Tasks",
-    body: "Open tasks for this org live on the tasks board. The orange Tasks control is the way in.",
+    body: "Open tasks for this org live on the tasks board. The Tasks control in the header is the way in.",
     tags: ["tasks", "work"],
     href: "/tasks",
     audience: ["learner", "coach", "leader", "admin", "platformAdmin"],
@@ -141,7 +141,7 @@ export function HelpClient({ capabilities, platformAdmin }: HelpViewer) {
                         {item.href}
                       </a>
                     ) : null}
-                    <p className="mt-2 text-sm text-gray-600">{item.tags.join(" · ")}</p>
+                    <p className="mt-2 text-sm text-muted-foreground">{item.tags.join(" · ")}</p>
                   </div>
                 ) : null}
               </li>

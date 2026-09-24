@@ -11,11 +11,11 @@ test("1-4 skill card uses Field School primary and skips coach chips", () => {
   const card = read("src/components/skill-card.tsx");
   assert.match(card, /data-meter="1-4"/);
   assert.match(card, /bg-primary/);
-  assert.match(card, /bg-brand-orange/);
+  assert.doesNotMatch(card, /bg-brand-orange|#FF6A1A|#0B1F3A/);
   const hundred = card.indexOf("hundred ?");
   const meter = card.indexOf('data-meter="1-4"');
-  const orange = card.indexOf("bg-brand-orange");
-  assert.ok(hundred >= 0 && meter > hundred && orange > hundred && orange < meter);
+  assert.ok(hundred >= 0 && meter > hundred);
+  assert.match(card.slice(hundred, meter), /bg-primary/);
   assert.match(card, /skill\.scale === "0-100" && skill\.source/);
   assert.doesNotMatch(card.slice(meter), /bg-brand-orange|Coach override|Monthly review|director/);
 });
@@ -26,7 +26,8 @@ test("household person card hides coach hints and keeps the sales tab", () => {
   assert.match(page, /<SkillCard skills=\{scoreTiles\} \/>/);
   assert.match(page, /skill\.scale === "0-100" \? source : null/);
   assert.match(page, /hints\.length && subject\.orgSlug !== "household"/);
-  assert.match(page, /bg-brand-navy/);
+  assert.match(page, /bg-primary/);
+  assert.doesNotMatch(page, /bg-brand-navy/);
   assert.match(page, /aria-label="Person"/);
 });
 

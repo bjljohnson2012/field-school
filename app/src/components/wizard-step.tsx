@@ -56,7 +56,7 @@ export function WizardStep({
                 type="button"
                 onClick={() => onChange({ choice: opt.value, label: opt.label })}
                 className={`w-full rounded-brand border px-4 py-3 text-left ${
-                  selected ? "border-brand-orange bg-orange-50" : "border-gray-200"
+                  selected ? "border-primary bg-secondary" : "border-border"
                 }`}
               >
                 {opt.label}
@@ -75,7 +75,7 @@ export function WizardStep({
                 type="button"
                 onClick={() => onChange({ scale: n })}
                 className={`flex-1 rounded-brand border py-3 font-medium ${
-                  selected ? "border-brand-orange bg-orange-50" : "border-gray-200"
+                  selected ? "border-primary bg-secondary" : "border-border"
                 }`}
               >
                 {n}
@@ -94,7 +94,7 @@ export function WizardStep({
             value={current.scale ?? 50}
             onChange={(event) => onChange({ scale: Number(event.target.value) })}
           />
-          <div className="mt-1 text-center text-sm text-gray-500">{current.scale ?? 50}</div>
+          <div className="mt-1 text-center text-sm text-muted-foreground">{current.scale ?? 50}</div>
         </div>
       ) : null}
     </div>

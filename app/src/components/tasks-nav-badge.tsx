@@ -30,7 +30,7 @@ export function TasksNavBadge({ fallback = 0 }: { fallback?: number }) {
 
   if (count <= 0) return null;
   return (
-    <span className="grid min-w-5 place-items-center rounded-full bg-white px-1 text-xs text-brand-orange">
+    <span className="grid min-w-5 place-items-center rounded-full bg-white px-1 text-xs text-primary">
       {count}
     </span>
   );

@@ -98,7 +98,7 @@ export function ComparePanel({
   return (
     <div className="mt-6 space-y-6">
       <section className="card p-6">
-        <h2 className="text-lg font-semibold">Compare AEs</h2>
+        <h2 className="h-section">Compare AEs</h2>
         {aes.length === 0 ? <p className="mt-3">No AEs in this org.</p> : null}
         <ul className="mt-4 space-y-2">
           {aes.map((person) => (
@@ -128,7 +128,7 @@ export function ComparePanel({
                 {aeResult.recommendations.map((row) => (
                   <li key={row.id}>
                     <p className="font-semibold">{row.title}</p>
-                    <p className="text-sm text-gray-600">{row.body}</p>
+                    <p className="text-sm text-muted-foreground">{row.body}</p>
                   </li>
                 ))}
               </ul>
@@ -138,7 +138,7 @@ export function ComparePanel({
       </section>
 
       <section className="card p-6">
-        <h2 className="text-lg font-semibold">Compare directors</h2>
+        <h2 className="h-section">Compare directors</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <select className="input" value={leaderId} onChange={(event) => setLeaderId(event.target.value)}>
             <option value={actorMembershipId}>Me</option>
@@ -182,7 +182,7 @@ export function ComparePanel({
             </ul>
           </div>
         ) : null}
-        {error ? <p className="mt-3 text-sm text-red-700">{error}</p> : null}
+        {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
       </section>
     </div>
   );

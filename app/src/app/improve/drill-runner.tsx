@@ -122,46 +122,46 @@ export function DrillRunner({
       <section className="card p-5">
         <div className="flex flex-wrap items-end gap-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Level</p>
-            <p className="font-display text-3xl font-bold text-brand-indigo">{live.level}</p>
+            <p className="eyebrow">Level</p>
+            <p className="font-sans text-3xl font-semibold tabular-nums text-foreground">{live.level}</p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Total points</p>
-            <p className="font-display text-3xl font-bold text-brand-indigo">{live.totalPoints.toLocaleString()}</p>
+            <p className="eyebrow">Total points</p>
+            <p className="font-sans text-3xl font-semibold tabular-nums text-foreground">{live.totalPoints.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Streak</p>
-            <p className="font-display text-3xl font-bold text-brand-orange">
+            <p className="eyebrow">Streak</p>
+            <p className="font-sans text-3xl font-semibold tabular-nums text-foreground">
               {live.currentStreak}
-              <span className="ml-1 text-sm font-normal text-gray-500">
+              <span className="ml-1 text-sm font-normal text-muted-foreground">
                 day{live.currentStreak === 1 ? "" : "s"}
               </span>
             </p>
           </div>
         </div>
         <div className="mt-4 max-w-sm">
-          <div className="mb-1 flex justify-between text-xs text-gray-500">
+          <div className="mb-1 flex justify-between text-xs text-muted-foreground">
             <span>Level {live.level} progress</span>
             <span className="font-mono">
               {live.progress.current} / {live.progress.needed}
             </span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-gray-200">
+          <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div
-              className="h-full bg-brand-orange"
+              className="h-full bg-primary"
               style={{ width: `${live.progress.pct}%` }}
             />
           </div>
         </div>
       </section>
 
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
       {active && stage !== "picker" ? (
         <section className="card p-5">
           <h2 className="h-section">{active.label}</h2>
-          {stage === "loading" ? <p className="mt-3 text-sm text-gray-600">Writing a scenario…</p> : null}
-          {scenario ? <p className="mt-3 text-sm leading-relaxed text-gray-800">{scenario}</p> : null}
+          {stage === "loading" ? <p className="mt-3 text-sm text-muted-foreground">Writing a scenario…</p> : null}
+          {scenario ? <p className="mt-3 text-sm leading-relaxed text-foreground">{scenario}</p> : null}
           {stage === "drilling" || stage === "submitting" ? (
             <label className="mt-4 block">
               <span className="label">Your response</span>
@@ -184,7 +184,7 @@ export function DrillRunner({
           ) : null}
           {feedback ? (
             <div className="mt-4 space-y-3 text-sm">
-              <p className="font-semibold text-gray-900">
+              <p className="font-semibold text-foreground">
                 {feedback.score}/100 · +{feedback.pointsAwarded} points
               </p>
               <p>{feedback.summary}</p>
@@ -218,15 +218,15 @@ export function DrillRunner({
       ) : null}
 
       <section className="card overflow-hidden">
-        <header className="border-b border-gray-200 px-5 py-3">
+        <header className="border-b border-border px-5 py-3">
           <h2 className="h-section">Skills</h2>
         </header>
         <ul>
           {skills.map((skill) => (
-            <li key={skill.category} className="flex items-center justify-between gap-3 border-b border-gray-100 px-5 py-3 last:border-b-0">
+            <li key={skill.category} className="flex items-center justify-between gap-3 border-b border-border px-5 py-3 last:border-b-0">
               <div>
-                <p className="text-sm font-semibold text-gray-900">{skill.label}</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-sm font-semibold text-foreground">{skill.label}</p>
+                <p className="text-xs text-muted-foreground">
                   {skill.score == null ? "No score yet" : `Score ${Math.round(skill.score)}`}
                 </p>
               </div>

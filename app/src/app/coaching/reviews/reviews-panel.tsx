@@ -144,14 +144,14 @@ export function ReviewsPanel({
   return (
     <div className="mt-6 space-y-6">
       <section className="card p-6">
-        <h2 className="text-lg font-semibold">Pending reviews</h2>
+        <h2 className="h-section">Pending reviews</h2>
         {rows.length === 0 ? <p className="mt-3">No pending reviews.</p> : null}
         <ul className="mt-4 space-y-3">
           {rows.map((row) => (
             <li key={row.id} className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="font-semibold">{row.subjectName}</p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   {row.monthOf.slice(0, 7)} · {row.status}
                   {row.coachMembershipId === actorMembershipId ? "" : ` · ${row.coachName}`}
                 </p>
@@ -168,7 +168,7 @@ export function ReviewsPanel({
 
       {selected ? (
         <section className="card p-6">
-          <h2 className="text-lg font-semibold">Answer {selected.subjectName}</h2>
+          <h2 className="h-section">Answer {selected.subjectName}</h2>
           {questions.length === 0 ? <p className="mt-3">No monthly review questions in this org yet.</p> : null}
           <div className="mt-4 space-y-4">
             {questions.map((question) => (
@@ -195,13 +195,13 @@ export function ReviewsPanel({
 
       {summary ? (
         <section className="card p-6">
-          <h2 className="text-lg font-semibold">Submitted</h2>
+          <h2 className="h-section">Submitted</h2>
           <p className="mt-3">{summary}</p>
         </section>
       ) : null}
 
       <section className="card p-6">
-        <h2 className="text-lg font-semibold">Start a monthly review</h2>
+        <h2 className="h-section">Start a monthly review</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <select className="input" value={subjectMembershipId} onChange={(event) => setSubjectMembershipId(event.target.value)}>
             {subjects.length === 0 ? <option value="">No subjects</option> : null}
@@ -216,7 +216,7 @@ export function ReviewsPanel({
         <button type="button" className="btn-primary mt-4" disabled={busy || !subjectMembershipId} onClick={() => void startPending()}>
           Add pending review
         </button>
-        {error ? <p className="mt-3 text-sm text-red-700">{error}</p> : null}
+        {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
       </section>
     </div>
   );

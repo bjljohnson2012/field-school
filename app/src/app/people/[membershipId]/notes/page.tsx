@@ -34,7 +34,7 @@ export default async function NotesPage({
     return (
       <main>
         <h1 className="h-page">Notes</h1>
-        <p className="mt-2 text-sm text-gray-600">Not allowed</p>
+        <p className="mt-2 text-sm text-muted-foreground">Not allowed</p>
       </main>
     );
   }
@@ -61,7 +61,7 @@ export default async function NotesPage({
     <main>
       <p className="eyebrow">{subject.stance}</p>
       <h1 className="h-page">Notes</h1>
-      <p className="mt-2 text-sm text-gray-600">{subject.name}</p>
+      <p className="mt-2 text-sm text-muted-foreground">{subject.name}</p>
       <NotesPanel subjectMembershipId={subject.membershipId} notes={notes} coach={surface === "coach"} />
     </main>
   );

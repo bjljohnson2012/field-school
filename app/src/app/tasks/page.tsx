@@ -47,7 +47,7 @@ export default async function TasksPage() {
   return (
     <main>
       <h1 className="h-page">Tasks</h1>
-      <p className="mt-2 text-sm text-gray-600">Open work for this org. An empty list is fine.</p>
+      <p className="mt-2 text-sm text-muted-foreground">Open work for this org. An empty list is fine.</p>
       <TasksBoard
         initialTasks={tasks}
         assignees={assignees}

@@ -92,19 +92,19 @@ export function PrepPanel({
     <div className="mt-6 grid gap-6">
       <section className="card p-6">
         <h2 className="h-section">1:1 prep</h2>
-        {!prep ? <p className="mt-4 text-sm text-gray-600">No prep yet.</p> : null}
+        {!prep ? <p className="mt-4 text-sm text-muted-foreground">No prep yet.</p> : null}
         {prep ? (
           <div className="mt-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{prep.status}</p>
-            {summary ? <p className="mt-2 text-sm text-gray-700">{summary}</p> : null}
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{prep.status}</p>
+            {summary ? <p className="mt-2 text-sm text-muted-foreground">{summary}</p> : null}
             {priorities.length ? (
-              <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-gray-700">
+              <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
                 {priorities.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
             ) : null}
-            {prep.status === "failed" && prep.error ? <p className="mt-2 text-sm text-red-700">{prep.error}</p> : null}
+            {prep.status === "failed" && prep.error ? <p className="mt-2 text-sm text-destructive">{prep.error}</p> : null}
           </div>
         ) : null}
       </section>
@@ -121,7 +121,7 @@ export function PrepPanel({
             value={prepDocText}
             onChange={(event) => setPrepDocText(event.target.value)}
           />
-          <label className="mt-3 flex items-center gap-2 text-sm text-gray-700">
+          <label className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
             <input
               type="checkbox"
               checked={crossReference}
@@ -139,7 +139,7 @@ export function PrepPanel({
             value={personalitySummary}
             onChange={(event) => setPersonalitySummary(event.target.value)}
           />
-          <label className="mt-3 flex items-center gap-2 text-sm text-gray-700">
+          <label className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
             <input
               type="checkbox"
               checked={confirmProfile}
@@ -160,10 +160,10 @@ export function PrepPanel({
         </section>
       ) : (
         <section className="card p-6">
-          <p className="text-sm text-gray-600">1:1 prep stays with the coach.</p>
+          <p className="text-sm text-muted-foreground">1:1 prep stays with the coach.</p>
         </section>
       )}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm text-destructive">{error}</p> : null}
     </div>
   );
 }
