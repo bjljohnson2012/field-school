@@ -88,8 +88,8 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
       <div className="card w-full max-w-md p-8">
         <div className="mb-6 flex items-center gap-3">
           <CoachMark />
-          <h1 className="h-section">
-            Field <span className="text-brand-orange">School</span>
+          <h1 className="font-display text-xl font-medium tracking-tight text-foreground">
+            Field School
           </h1>
         </div>
         <form
@@ -146,7 +146,7 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
             />
           </div>
           {error ? (
-            <div className="rounded-brand border border-brand-red/20 bg-brand-red/5 px-3 py-2 text-sm text-brand-red">
+            <div className="rounded-brand border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
               {error}
             </div>
           ) : null}
@@ -159,11 +159,10 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
   }
 
   return (
-    <main className="mx-auto max-w-md px-4 py-16">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Portal
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Sign in</h1>
+    <main className="mx-auto max-w-md px-6 py-8">
+      <div className="rounded-card border border-border bg-card p-8 shadow-card">
+      <p className="eyebrow">Portal</p>
+      <h1 className="h-page mt-2">Sign in</h1>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
         Members use Google, X, or email and password. Staff admin still needs an
         allowlisted Google or X account. Local name sign-in never grants admin.
@@ -179,7 +178,7 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
         .
       </p>
       {error ? (
-        <p className="mt-4 rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+        <p className="mt-4 rounded-brand border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
           {error}
         </p>
       ) : null}
@@ -225,7 +224,6 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@work.com"
             required
-            className="h-11 rounded-xl"
           />
         </div>
         <div className="space-y-2">
@@ -236,18 +234,15 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="h-11 rounded-xl"
           />
         </div>
-        <Button className="h-12 w-full rounded-xl" type="submit" disabled={pending}>
+        <Button className="w-full" type="submit" disabled={pending}>
           {pending ? "Signing in…" : "Sign in"}
         </Button>
       </form>
 
       <div className="mt-10 space-y-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          Other ways in
-        </p>
+        <p className="eyebrow">Other ways in</p>
         <form
           className="space-y-3"
           onSubmit={(e) => {
@@ -264,16 +259,15 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
               required
-              className="h-11 rounded-xl"
             />
           </div>
-          <Button className="h-12 w-full rounded-xl" variant="outline" type="submit">
+          <Button className="w-full" variant="outline" type="submit">
             Keep a dashboard
           </Button>
         </form>
         <button
           type="button"
-          className="h-12 w-full rounded-xl border border-border text-sm"
+          className="w-full rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand hover:bg-muted"
           onClick={() => {
             continueAsGuest();
             router.push("/c/grok-bot");
@@ -281,6 +275,7 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
         >
           Continue as guest
         </button>
+      </div>
       </div>
     </main>
   );

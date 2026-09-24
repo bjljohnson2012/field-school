@@ -61,7 +61,7 @@ export function YoutubeClip({
                 href={watch}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+                className="inline-flex items-center gap-2 rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all duration-200 ease-brand hover:bg-muted"
               >
                 <Play className="size-4" />
                 Watch on YouTube

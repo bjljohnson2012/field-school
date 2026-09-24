@@ -30,7 +30,7 @@ export function AssignmentPanel({
   const done = required.filter((i) => checks[i.id]).length;
 
   return (
-    <section className="card p-5 sm:p-6">
+    <section className="card border-border bg-card p-5 sm:p-6">
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">

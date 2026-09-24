@@ -30,8 +30,8 @@ export function CourseSubnav({ courseSlug }: { courseSlug: string }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex h-11 items-center px-3 text-muted-foreground hover:text-foreground",
-                  active && "text-foreground",
+                  "flex h-11 items-center border-b-2 border-transparent px-3 text-sm text-muted-foreground hover:text-foreground",
+                  active && "border-primary text-foreground",
                 )}
               >
                 {item.label}

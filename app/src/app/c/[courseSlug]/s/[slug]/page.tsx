@@ -51,9 +51,7 @@ export default function StationPage() {
   return (
     <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 lg:grid-cols-[220px_minmax(0,1fr)]">
       <aside className="hidden lg:block">
-        <p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          Stations
-        </p>
+        <p className="eyebrow mb-3">Stations</p>
         <ol className="space-y-1">
           {course.modules.map((m) => {
             const done = state?.modules[m.slug]?.passed;
@@ -62,10 +60,10 @@ export default function StationPage() {
                 <Link
                   href={`/c/${course.slug}/s/${m.slug}`}
                   className={cn(
-                    "flex h-10 items-center justify-between rounded-lg px-2 text-sm",
+                    "flex h-10 items-center justify-between border-l-2 px-2 text-sm",
                     m.slug === mod.slug
-                      ? "bg-secondary text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
+                      ? "border-primary text-foreground"
+                      : "border-transparent text-muted-foreground hover:text-foreground",
                   )}
                 >
                   <span className="truncate">
@@ -84,14 +82,14 @@ export default function StationPage() {
 
       <main className="space-y-8 pb-16">
         <div>
-          <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="eyebrow">
             Station {mod.station} · pass at {passPct}%
           </p>
           <h1 className="h-page mt-2">{mod.title}</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">{mod.summary}</p>
         </div>
 
-        <section className="card space-y-4 p-5">
+        <section className="card space-y-4 border-border bg-card p-5">
           <h2 className="h-section">Clip</h2>
           {mod.clips.map((clip) => (
             <YoutubeClip
@@ -125,7 +123,7 @@ export default function StationPage() {
           )}
         </section>
 
-        <section className="card px-5 py-5">
+        <section className="card border-border bg-card px-5 py-5">
           <h2 className="h-section">Thesis</h2>
           <p className="mt-3 text-sm leading-relaxed">{mod.thesis}</p>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-muted-foreground">

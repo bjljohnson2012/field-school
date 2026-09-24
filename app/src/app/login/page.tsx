@@ -13,10 +13,10 @@ export default function LoginPage() {
       fallback={
         coachingShell ? (
           <div className="card w-full max-w-md p-8">
-            <p className="text-sm text-gray-500">Loading sign in…</p>
+            <p className="text-sm text-muted-foreground">Loading sign in…</p>
           </div>
         ) : (
-          <main className="mx-auto max-w-md px-4 py-16">
+          <main className="mx-auto max-w-md px-6 py-8">
             <p className="text-sm text-muted-foreground">Loading sign in…</p>
           </main>
         )
