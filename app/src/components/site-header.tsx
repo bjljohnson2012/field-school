@@ -7,9 +7,9 @@ import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
 import { LeaveReturnNext } from "@/components/leave-return-next";
 import { OrgPicker } from "@/components/org-picker";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { COMPANY_NAME } from "@/lib/brand";
 
-const LEADER_STANCES = new Set(["admin", "guardian", "trainer", "teacher"]);
+export const LEADER_STANCES = new Set(["admin", "guardian", "trainer", "teacher"]);
 
 export const NEW_DOORS = [
   { href: "/library/video", label: "Long-form video" },
@@ -144,9 +144,9 @@ export function SiteHeader() {
           </Link>
           <Link
             href={homeHref}
-            className="hidden font-display text-sm font-medium tracking-tight text-foreground sm:inline"
+            className="font-display text-sm font-medium tracking-tight text-foreground"
           >
-            Field School
+            {COMPANY_NAME}
           </Link>
           {loggedIn ? <LeaveReturnNext /> : null}
         </div>
@@ -199,7 +199,6 @@ export function SiteHeader() {
                 {initial}
               </summary>
               <div className="absolute right-0 z-40 mt-1 flex min-w-40 flex-col gap-2 rounded-xl border border-border bg-background p-3 shadow-md">
-                <ThemeToggle />
                 <button
                   type="button"
                   onClick={() => signOutPortal("/login")}
