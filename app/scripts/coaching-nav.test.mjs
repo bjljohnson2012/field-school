@@ -42,7 +42,8 @@ test("sales learner without platformAdmin does not get Roster", () => {
   const course = items.find((item) => item.label === "Course");
   assert.equal(course?.href, "/o/sales/welcome");
   assert.equal(course?.disabled, false);
-  assert.equal(items.find((item) => item.label === "Improve")?.disabled, true);
+  assert.equal(items.find((item) => item.label === "Improve")?.href, "/improve");
+  assert.equal(items.find((item) => item.label === "Improve")?.disabled, false);
   assert.equal(items.some((item) => item.label === "Help" || item.href === "/help"), false);
 });
 
