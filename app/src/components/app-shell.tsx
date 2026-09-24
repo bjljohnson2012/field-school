@@ -170,7 +170,7 @@ export function AppShell({
             <div className="relative">
               <button
                 type="button"
-                className="grid size-9 place-items-center rounded-full bg-foreground from-brand-indigo text-sm font-medium text-background"
+                className="grid size-9 place-items-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
                 aria-expanded={menuOpen}
                 aria-haspopup="menu"
                 onClick={() => setMenuOpen((open) => !open)}

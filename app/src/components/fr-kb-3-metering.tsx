@@ -60,10 +60,8 @@ export function FrKb3Metering() {
 
   return (
     <section data-metering="fr-kb-3">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Knowledge-brain use
-      </p>
-      <h1 className="mt-3 font-display text-4xl tracking-tight">Metering</h1>
+      <p className="eyebrow">Knowledge-brain use</p>
+      <h1 className="h-page mt-2">Metering</h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
         Parent sees how Learn with Ben hire stays fair after checkout. Two
         models already in the product thesis. Prices stay on the locked
@@ -108,10 +106,10 @@ export function FrKb3Metering() {
         {METERING_MODELS.map((model) => (
           <article
             key={model.id}
-            className="rounded-xl border border-border bg-card px-5 py-6"
+            className="card px-5 py-6"
             data-metering-model={model.id}
           >
-            <h2 className="font-display text-2xl tracking-tight">{model.title}</h2>
+            <h2 className="h-section">{model.title}</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {model.body}
             </p>
@@ -119,16 +117,14 @@ export function FrKb3Metering() {
         ))}
       </div>
 
-      <h2 className="mt-10 font-display text-2xl tracking-tight">
-        Locked hire amounts
-      </h2>
+      <h2 className="h-section mt-10">Locked hire amounts</h2>
       <ul className="mt-4 flex flex-wrap gap-3">
         {HIRE.map((plan) => (
           <li key={plan.id}>
             <Link
               href={plan.href}
               data-metering-plan={plan.id}
-              className="inline-flex h-11 items-center rounded-xl border border-border px-4 text-sm"
+              className="btn border border-input bg-card text-foreground hover:bg-muted"
             >
               {plan.name} · {plan.priceLabel}
             </Link>

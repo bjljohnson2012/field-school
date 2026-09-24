@@ -39,7 +39,7 @@ export default function EditUserPage() {
 
   if (ready && !person) {
     return (
-      <main className="mx-auto max-w-xl px-4 py-16">
+      <main className="mx-auto max-w-xl px-6 py-8">
         <p className="text-muted-foreground">No one with that id.</p>
         <Link href="/admin/users" className="mt-4 inline-flex text-sm">
           Back to users
@@ -52,11 +52,9 @@ export default function EditUserPage() {
   const tally = ws ? courseTally("grok-bot", ws) : null;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Edit user
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">
+    <main className="mx-auto max-w-3xl px-6 py-8">
+      <p className="eyebrow">Edit user</p>
+      <h1 className="h-page mt-2">
         {person?.name ?? "User"}
       </h1>
       <p className="mt-3 text-sm text-muted-foreground">
@@ -80,7 +78,6 @@ export default function EditUserPage() {
               setSaved(false);
               setName(e.target.value);
             }}
-            className="h-11 rounded-xl"
           />
         </Field>
         <Field label="Email" id="email">
@@ -92,7 +89,6 @@ export default function EditUserPage() {
               setSaved(false);
               setEmail(e.target.value);
             }}
-            className="h-11 rounded-xl"
           />
         </Field>
         <Field label="Title" id="title">
@@ -103,11 +99,10 @@ export default function EditUserPage() {
               setSaved(false);
               setTitle(e.target.value);
             }}
-            className="h-11 rounded-xl"
           />
         </Field>
         <label className="block text-sm">
-          <span className="mb-2 block text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <span className="eyebrow mb-2">
             Role
           </span>
           <select
@@ -116,7 +111,7 @@ export default function EditUserPage() {
               setSaved(false);
               setRole(e.target.value as Role);
             }}
-            className="h-11 w-full rounded-xl border border-border bg-background px-3"
+            className="input"
           >
             <option value="student">student</option>
             <option value="admin">admin</option>
@@ -132,18 +127,16 @@ export default function EditUserPage() {
               setNotes(e.target.value);
             }}
             rows={4}
-            className="rounded-xl"
           />
         </Field>
         <div className="flex flex-wrap gap-3">
-          <Button className="h-11 rounded-xl px-5" type="submit" disabled={!isAdmin}>
+          <Button type="submit" disabled={!isAdmin}>
             Save record
           </Button>
           {isAdmin && person && person.role !== "admin" ? (
             <Button
               type="button"
               variant="outline"
-              className="h-11 rounded-xl px-5"
               onClick={() => {
                 impersonate(person.id);
                 router.push("/dashboard");
@@ -157,8 +150,8 @@ export default function EditUserPage() {
       </form>
 
       {tally && ws ? (
-        <section className="mt-10 rounded-xl border border-border bg-card px-5 py-5">
-          <h2 className="font-display text-2xl tracking-tight">Portal snapshot</h2>
+        <section className="card mt-10 px-5 py-5">
+          <h2 className="h-section">Portal snapshot</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Grok Bot {tally.passed}/{tally.total} stations
             {tally.exam ? ` · exam ${tally.exam.score}` : " · exam not taken"}

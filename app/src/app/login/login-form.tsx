@@ -5,9 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { OAuthSignInButtons } from "@/components/oauth-sign-in-buttons";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { usePortal } from "@/hooks/use-portal";
 import { isAdminRoute, safeMemberNext } from "@/lib/admin-gate";
 import type { OAuthProviderStatus } from "@/lib/auth/env";
@@ -17,7 +14,6 @@ import { continueAsGuest, signInLocal } from "@/lib/portal";
 
 type Props = {
   oauth: OAuthProviderStatus;
-  coachingShell?: boolean;
 };
 
 function CoachMark() {
@@ -49,7 +45,7 @@ function CoachMark() {
   );
 }
 
-export function LoginForm({ oauth, coachingShell = false }: Props) {
+export function LoginForm({ oauth }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: authSession, status } = useSession();
@@ -83,87 +79,15 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
     if (isAdminRoute(next)) router.replace(next);
   }, [ready, isStaff, router, next, memberNext, status, authSession]);
 
-  if (coachingShell) {
-    return (
-      <div className="card w-full max-w-md p-8">
-        <div className="mb-6 flex items-center gap-3">
-          <CoachMark />
-          <h1 className="font-display text-xl font-medium tracking-tight text-foreground">
-            Field School
-          </h1>
-        </div>
-        <form
-          className="space-y-4"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            setPending(true);
-            setError(null);
-            try {
-              const signed = await signIn("credentials", {
-                email,
-                password,
-                redirect: false,
-              });
-              if (signed?.error) {
-                setError(visibleLoginProviderError(signed.error, oauth));
-                return;
-              }
-              router.push(isAdminRoute(next) ? "/request-access?from=admin" : memberNext);
-            } catch {
-              setError("Could not reach the campus. Try again.");
-            } finally {
-              setPending(false);
-            }
-          }}
-        >
-          <div>
-            <label className="label" htmlFor="login-email">
-              Email
-            </label>
-            <input
-              id="login-email"
-              type="email"
-              required
-              className="input"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@work.com"
-            />
-          </div>
-          <div>
-            <label className="label" htmlFor="login-password">
-              Password
-            </label>
-            <input
-              id="login-password"
-              type="password"
-              required
-              className="input"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          {error ? (
-            <div className="rounded-brand border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-              {error}
-            </div>
-          ) : null}
-          <button type="submit" disabled={pending} className="btn-primary w-full">
-            {pending ? "Signing in…" : "Sign in"}
-          </button>
-        </form>
-      </div>
-    );
-  }
-
   return (
-    <main className="mx-auto max-w-md px-6 py-8">
-      <div className="rounded-card border border-border bg-card p-8 shadow-card">
-      <p className="eyebrow">Portal</p>
-      <h1 className="h-page mt-2">Sign in</h1>
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+    <div className="card w-full max-w-md p-8">
+      <div className="mb-6 flex items-center gap-3">
+        <CoachMark />
+        <h1 className="font-display text-xl font-medium tracking-tight text-foreground">
+          Field School
+        </h1>
+      </div>
+      <p className="text-sm leading-relaxed text-muted-foreground">
         Members use Google, X, or email and password. Staff admin still needs an
         allowlisted Google or X account. Local name sign-in never grants admin.
       </p>
@@ -178,21 +102,19 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
         .
       </p>
       {error ? (
-        <p className="mt-4 rounded-brand border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+        <div className="mt-4 rounded-brand border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
           {error}
-        </p>
+        </div>
       ) : null}
-
-      <div className="mt-8">
+      <div className="mt-6">
         <OAuthSignInButtons
           oauth={oauth}
           nextPath={oauthNext}
           tone={isAdminRoute(next) ? "staff" : "member"}
         />
       </div>
-
       <form
-        className="mt-8 space-y-4"
+        className="mt-6 space-y-4"
         onSubmit={async (e) => {
           e.preventDefault();
           setPending(true);
@@ -215,33 +137,40 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
           }
         }}
       >
-        <div className="space-y-2">
-          <Label htmlFor="login-email">Email</Label>
-          <Input
+        <div>
+          <label className="label" htmlFor="login-email">
+            Email
+          </label>
+          <input
             id="login-email"
             type="email"
+            required
+            className="input"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@work.com"
-            required
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="login-password">Password</Label>
-          <Input
+        <div>
+          <label className="label" htmlFor="login-password">
+            Password
+          </label>
+          <input
             id="login-password"
             type="password"
+            required
+            className="input"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
         </div>
-        <Button className="w-full" type="submit" disabled={pending}>
+        <button type="submit" disabled={pending} className="btn-primary w-full">
           {pending ? "Signing in…" : "Sign in"}
-        </Button>
+        </button>
       </form>
-
-      <div className="mt-10 space-y-3">
+      <div className="mt-8 space-y-3">
         <p className="eyebrow">Other ways in</p>
         <form
           className="space-y-3"
@@ -251,23 +180,26 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
             router.push(memberNext);
           }}
         >
-          <div className="space-y-2">
-            <Label htmlFor="name">Name on the certificate</Label>
-            <Input
+          <div>
+            <label className="label" htmlFor="name">
+              Name on the certificate
+            </label>
+            <input
               id="name"
+              className="input"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
               required
             />
           </div>
-          <Button className="w-full" variant="outline" type="submit">
+          <button type="submit" className="btn w-full border border-input bg-card text-foreground hover:bg-muted">
             Keep a dashboard
-          </Button>
+          </button>
         </form>
         <button
           type="button"
-          className="w-full rounded-brand border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 ease-brand hover:bg-muted"
+          className="btn w-full border border-input bg-card text-foreground hover:bg-muted"
           onClick={() => {
             continueAsGuest();
             router.push("/c/grok-bot");
@@ -276,7 +208,6 @@ export function LoginForm({ oauth, coachingShell = false }: Props) {
           Continue as guest
         </button>
       </div>
-      </div>
-    </main>
+    </div>
   );
 }

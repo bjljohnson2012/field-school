@@ -12,23 +12,21 @@ export default function AdminCatalogPage() {
   if (!ready || !isStaff) return null;
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Published
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Catalog</h1>
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <p className="eyebrow">Published</p>
+      <h1 className="h-page mt-2">Catalog</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">
         Courses and share pages use normal paths. Send /c/grok-bot or
         /share/desk — not a hash card.
       </p>
 
       <section className="mt-10">
-        <h2 className="font-display text-2xl tracking-tight">Courses</h2>
+        <h2 className="h-section">Courses</h2>
         <ul className="mt-4 grid gap-3">
           {courses.map((c) => (
             <li
               key={c.slug}
-              className="flex flex-col justify-between gap-2 rounded-xl border border-border bg-card px-5 py-4 sm:flex-row sm:items-center"
+              className="card flex flex-col justify-between gap-2 px-5 py-4 sm:flex-row sm:items-center"
             >
               <div>
                 <p className="font-medium">{c.title}</p>
@@ -36,7 +34,7 @@ export default function AdminCatalogPage() {
                   /c/{c.slug} · {c.stationCount} stations
                 </p>
               </div>
-              <Link href={`/c/${c.slug}`} className="text-sm text-primary">
+              <Link href={`/c/${c.slug}`} className="text-sm text-primary underline underline-offset-2">
                 Open
               </Link>
             </li>
@@ -45,12 +43,12 @@ export default function AdminCatalogPage() {
       </section>
 
       <section className="mt-10">
-        <h2 className="font-display text-2xl tracking-tight">Share pages</h2>
+        <h2 className="h-section">Share pages</h2>
         <ul className="mt-4 grid gap-3">
           {sharePages.map((s) => (
             <li
               key={s.slug}
-              className="flex flex-col justify-between gap-2 rounded-xl border border-border bg-card px-5 py-4 sm:flex-row sm:items-center"
+              className="card flex flex-col justify-between gap-2 px-5 py-4 sm:flex-row sm:items-center"
             >
               <div>
                 <p className="font-medium">{s.title}</p>
@@ -58,7 +56,7 @@ export default function AdminCatalogPage() {
                   /share/{s.slug}
                 </p>
               </div>
-              <Link href={`/share/${s.slug}`} className="text-sm text-primary">
+              <Link href={`/share/${s.slug}`} className="text-sm text-primary underline underline-offset-2">
                 Open
               </Link>
             </li>

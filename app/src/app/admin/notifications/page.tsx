@@ -14,13 +14,9 @@ export default function InboxPage() {
   if (!ready || !isStaff) return null;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Staff inbox
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">
-        Inbox
-      </h1>
+    <main className="mx-auto max-w-3xl px-6 py-8">
+      <p className="eyebrow">Staff inbox</p>
+      <h1 className="h-page mt-2">Inbox</h1>
       <p className="mt-3 text-muted-foreground">
         Feedback and messages from the campus. This is the staff Inbox.
       </p>
@@ -31,7 +27,7 @@ export default function InboxPage() {
         {unreadNotices > 0 ? (
           <button
             type="button"
-            className="h-10 rounded-xl border border-border px-4 text-sm"
+            className="btn border border-input bg-card text-foreground hover:bg-muted"
             onClick={() => markAllNoticesRead()}
           >
             Mark all read
@@ -41,7 +37,7 @@ export default function InboxPage() {
 
       <div className="mt-6 space-y-3">
         {notices.length === 0 ? (
-          <p className="rounded-xl border border-border bg-card px-5 py-6 text-sm text-muted-foreground">
+          <p className="card px-5 py-6 text-sm text-muted-foreground">
             Quiet. Run the student demo and submit feedback to see a notice
             land here.
           </p>
@@ -51,12 +47,12 @@ export default function InboxPage() {
             return (
               <article
                 key={notice.id}
-                className={`rounded-xl border bg-card px-5 py-4 ${
-                  notice.read ? "border-border" : "border-primary/40"
+                className={`card px-5 py-4 ${
+                  notice.read ? "" : "border-primary/40"
                 }`}
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                  <p className="eyebrow">
                     {notice.kind}
                     {!notice.read ? " · new" : ""}
                   </p>
@@ -64,7 +60,7 @@ export default function InboxPage() {
                     {formatDay(notice.at)}
                   </p>
                 </div>
-                <h2 className="mt-1 font-display text-xl tracking-tight">
+                <h2 className="h-section mt-1">
                   {notice.title}
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -74,12 +70,12 @@ export default function InboxPage() {
                   {from ? (
                     <Link
                       href={`/admin/users/${from.id}`}
-                      className="text-sm text-primary"
+                      className="text-sm text-primary underline underline-offset-2"
                     >
                       {from.name}
                     </Link>
                   ) : null}
-                  <Link href="/c/grok-bot" className="text-sm text-primary">
+                    <Link href="/c/grok-bot" className="text-sm text-primary underline underline-offset-2">
                     Course
                   </Link>
                   {!notice.read ? (

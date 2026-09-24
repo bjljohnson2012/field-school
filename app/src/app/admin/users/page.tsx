@@ -12,11 +12,9 @@ export default function UsersPage() {
   if (!ready || !isStaff) return null;
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        People
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Users</h1>
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <p className="eyebrow">People</p>
+      <h1 className="h-page mt-2">Users</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">
         Impersonate to see their portal. Edit to change the name on a
         certificate, the email on the header, or the notes staff keep.
@@ -29,7 +27,7 @@ export default function UsersPage() {
           return (
             <li
               key={person.id}
-              className="flex flex-col gap-4 rounded-xl border border-border bg-card px-5 py-5 lg:flex-row lg:items-center lg:justify-between"
+              className="card flex flex-col gap-4 px-5 py-5 lg:flex-row lg:items-center lg:justify-between"
             >
               <div>
                 <p className="font-medium">
@@ -51,14 +49,14 @@ export default function UsersPage() {
               <div className="flex flex-wrap gap-2">
                 <Link
                   href={`/admin/users/${person.id}`}
-                  className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm"
+                  className="btn border border-input bg-card text-foreground hover:bg-muted"
                 >
                   Edit
                 </Link>
                 {isAdmin && person.role !== "admin" ? (
                   <button
                     type="button"
-                    className="inline-flex h-10 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
+                    className="btn border border-input bg-card text-foreground hover:bg-muted"
                     onClick={() => {
                       impersonate(person.id);
                       router.push("/dashboard");

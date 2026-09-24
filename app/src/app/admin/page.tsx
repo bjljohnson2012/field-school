@@ -70,30 +70,26 @@ export default function AdminPage() {
   ];
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Staff
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Admin</h1>
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <p className="eyebrow">Staff</p>
+      <h1 className="h-page mt-2">Admin</h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">
         Start here. Courses are lessons. Assessments are Pattern and tools.
         Inbox is only on this desk.
       </p>
 
       <section className="mt-10">
-        <h2 className="font-display text-2xl tracking-tight">Start here</h2>
+        <h2 className="h-section">Start here</h2>
         <p className="mt-2 text-sm text-muted-foreground">Do this first.</p>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           {startHere.map((step, i) => (
             <Link
               key={step.href}
               href={step.href}
-              className="flex flex-col rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+              className="card flex flex-col px-5 py-5 transition-all duration-200 ease-brand hover:-translate-y-px hover:shadow-card-hover"
             >
-              <p className="font-mono text-xs text-muted-foreground">
-                0{i + 1}
-              </p>
-              <h3 className="mt-2 font-display text-2xl tracking-tight">
+              <p className="eyebrow">0{i + 1}</p>
+              <h3 className="h-card mt-2">
                 {step.title}
               </h3>
               <p className="mt-2 flex-1 text-sm text-muted-foreground">
@@ -109,19 +105,17 @@ export default function AdminPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="font-display text-2xl tracking-tight">Courses</h2>
+        <h2 className="h-section">Courses</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Lessons and stations. Not assessments.
         </p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <Link
             href="/o/household/welcome"
-            className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+            className="card block px-5 py-5 transition-all duration-200 ease-brand hover:-translate-y-px hover:shadow-card-hover"
           >
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-              home:welcome
-            </p>
-            <h3 className="mt-1 font-display text-2xl tracking-tight">
+            <p className="eyebrow">home:welcome</p>
+            <h3 className="h-card mt-1">
               Household welcome
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -130,12 +124,10 @@ export default function AdminPage() {
           </Link>
           <Link
             href="/o/sales/welcome"
-            className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+            className="card block px-5 py-5 transition-all duration-200 ease-brand hover:-translate-y-px hover:shadow-card-hover"
           >
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-              sales:welcome
-            </p>
-            <h3 className="mt-1 font-display text-2xl tracking-tight">
+            <p className="eyebrow">sales:welcome</p>
+            <h3 className="h-card mt-1">
               Welcome to the desk
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -148,12 +140,10 @@ export default function AdminPage() {
               <Link
                 key={c.slug}
                 href={`/c/${c.slug}`}
-                className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+                className="card block px-5 py-5 transition-all duration-200 ease-brand hover:-translate-y-px hover:shadow-card-hover"
               >
-                <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                  Course
-                </p>
-                <h3 className="mt-1 font-display text-2xl tracking-tight">
+                <p className="eyebrow">Course</p>
+                <h3 className="h-card mt-1">
                   {c.title}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -168,19 +158,17 @@ export default function AdminPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="font-display text-2xl tracking-tight">Assessments</h2>
+        <h2 className="h-section">Assessments</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Personality and tools. Field Pattern sits here.
         </p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <Link
             href="/pattern"
-            className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+            className="card block px-5 py-5 transition-all duration-200 ease-brand hover:-translate-y-px hover:shadow-card-hover"
           >
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-              Personality
-            </p>
-            <h3 className="mt-1 font-display text-2xl tracking-tight">
+            <p className="eyebrow">Personality</p>
+            <h3 className="h-card mt-1">
               Field Pattern
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -193,12 +181,12 @@ export default function AdminPage() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="rounded-xl border border-border bg-card px-5 py-5 hover:bg-secondary/40"
+                className="card block px-5 py-5 transition-all duration-200 ease-brand hover:-translate-y-px hover:shadow-card-hover"
               >
-                <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                <p className="eyebrow">
                   {tool.status === "live" ? "Live" : "Coming later"}
                 </p>
-                <h3 className="mt-1 font-display text-xl tracking-tight">
+                <h3 className="h-card mt-1">
                   {tool.title}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -215,17 +203,17 @@ export default function AdminPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="font-display text-2xl tracking-tight">Progress</h2>
+        <h2 className="h-section">Progress</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           More surfaces than a single course tally. People, children, Pattern,
           Inbox, and access.
         </p>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
-          <article className="rounded-xl border border-border bg-card px-5 py-5">
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <article className="card px-5 py-5">
+            <p className="eyebrow">
               People
             </p>
-            <p className="mt-2 font-display text-3xl">{peopleCount}</p>
+            <p className="mt-2 font-sans text-3xl font-semibold tracking-tight">{peopleCount}</p>
             <p className="mt-1 text-sm text-muted-foreground">
               {orgCount ? `${orgCount} orgs. ` : ""}Open{" "}
               <Link href="/people" className="underline">
@@ -234,11 +222,11 @@ export default function AdminPage() {
               .
             </p>
           </article>
-          <article className="rounded-xl border border-border bg-card px-5 py-5">
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <article className="card px-5 py-5">
+            <p className="eyebrow">
               Household children
             </p>
-            <p className="mt-2 font-display text-3xl">{householdKids}</p>
+            <p className="mt-2 font-sans text-3xl font-semibold tracking-tight">{householdKids}</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Welcome {welcomeDone}/{householdKids || 0}.{" "}
               <Link href="/children" className="underline">
@@ -247,11 +235,11 @@ export default function AdminPage() {
               .
             </p>
           </article>
-          <article className="rounded-xl border border-border bg-card px-5 py-5">
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <article className="card px-5 py-5">
+            <p className="eyebrow">
               Field Pattern
             </p>
-            <p className="mt-2 font-display text-3xl">{patternRun}</p>
+            <p className="mt-2 font-sans text-3xl font-semibold tracking-tight">{patternRun}</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Child profiles with a Pattern title.{" "}
               <Link href="/pattern" className="underline">
@@ -260,11 +248,11 @@ export default function AdminPage() {
               .
             </p>
           </article>
-          <article className="rounded-xl border border-border bg-card px-5 py-5">
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <article className="card px-5 py-5">
+            <p className="eyebrow">
               Inbox
             </p>
-            <p className="mt-2 font-display text-3xl">{unreadNotices}</p>
+            <p className="mt-2 font-sans text-3xl font-semibold tracking-tight">{unreadNotices}</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Unread.{" "}
               <Link href="/admin/notifications" className="underline">
@@ -273,22 +261,22 @@ export default function AdminPage() {
               .
             </p>
           </article>
-          <article className="rounded-xl border border-border bg-card px-5 py-5">
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <article className="card px-5 py-5">
+            <p className="eyebrow">
               Grok Bot
             </p>
-            <p className="mt-2 font-display text-3xl">
+            <p className="mt-2 font-sans text-3xl font-semibold tracking-tight">
               {courseTally("grok-bot").passed}/{courseTally("grok-bot").total}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
               Stations passed on this seat.
             </p>
           </article>
-          <article className="rounded-xl border border-border bg-card px-5 py-5">
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          <article className="card px-5 py-5">
+            <p className="eyebrow">
               Access requests
             </p>
-            <p className="mt-2 font-display text-3xl">{pendingAccess}</p>
+            <p className="mt-2 font-sans text-3xl font-semibold tracking-tight">{pendingAccess}</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Pending.{" "}
               <Link href="/admin/access-requests" className="underline">
@@ -303,13 +291,13 @@ export default function AdminPage() {
       <div className="mt-10 flex flex-wrap items-center gap-4">
         <Link
           href="/admin/demo"
-          className="inline-flex h-11 items-center rounded-xl border border-border px-5 text-sm"
+          className="btn border border-input bg-card text-foreground hover:bg-muted"
         >
           Student demo
         </Link>
         <button
           type="button"
-          className="h-10 rounded-xl border border-border px-4 text-sm text-muted-foreground hover:text-foreground"
+          className="btn border border-input bg-card text-muted-foreground hover:text-foreground"
           onClick={() => resetDemo()}
         >
           Reset demo data

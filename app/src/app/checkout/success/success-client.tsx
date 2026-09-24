@@ -71,11 +71,9 @@ export function CheckoutSuccessClient() {
   const granted = status?.status === "granted" ? status : null;
 
   return (
-    <main className="mx-auto max-w-md px-4 py-16">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Paid
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">You're in.</h1>
+    <main className="mx-auto max-w-md px-6 py-8">
+      <p className="eyebrow">Paid</p>
+      <h1 className="h-page mt-2">You're in.</h1>
 
       {!status || (status.status === "pending" && !granted) ? (
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -120,7 +118,7 @@ export function CheckoutSuccessClient() {
             <div className="mt-8 flex flex-col gap-3">
               <Link
                 href={granted.next || "/metering"}
-                className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+                className="btn-primary justify-center"
                 data-hire-next={granted.next || "/metering"}
               >
                 {granted.hireActivated ? "See metering" : "Sign in"}
@@ -128,14 +126,14 @@ export function CheckoutSuccessClient() {
               {granted.hireActivated ? (
                 <Link
                   href="/play/lesson-spine"
-                  className="inline-flex h-12 items-center justify-center rounded-xl border border-border px-5 text-sm"
+                  className="btn justify-center border border-input bg-card text-foreground hover:bg-muted"
                 >
                   Play LessonSpine
                 </Link>
               ) : (
                 <Link
                   href="/login"
-                  className="inline-flex h-12 items-center justify-center rounded-xl border border-border px-5 text-sm"
+                  className="btn justify-center border border-input bg-card text-foreground hover:bg-muted"
                 >
                   Sign in
                 </Link>
@@ -185,7 +183,7 @@ export function CheckoutSuccessClient() {
                 way to that inbox.
               </p>
               {error ? (
-                <p className="rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+                <p className="rounded-brand border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
                   {error}
                 </p>
               ) : null}
@@ -197,7 +195,6 @@ export function CheckoutSuccessClient() {
                   onChange={(event) => setName(event.target.value)}
                   placeholder="Your name"
                   required
-                  className="h-11 rounded-xl"
                 />
               </div>
               <div className="space-y-2">
@@ -210,10 +207,9 @@ export function CheckoutSuccessClient() {
                   placeholder="At least 8 characters"
                   required
                   minLength={8}
-                  className="h-11 rounded-xl"
                 />
               </div>
-              <Button className="h-12 w-full rounded-xl" type="submit" disabled={pending}>
+              <Button className="w-full" type="submit" disabled={pending}>
                 {pending ? "Saving…" : "Set password and enter"}
               </Button>
             </form>
@@ -223,7 +219,7 @@ export function CheckoutSuccessClient() {
         <div className="mt-8 flex flex-col gap-3">
           <Link
             href="/login"
-            className="inline-flex h-12 items-center justify-center rounded-xl border border-border px-5 text-sm"
+            className="btn justify-center border border-input bg-card text-foreground hover:bg-muted"
           >
             I already have a login
           </Link>

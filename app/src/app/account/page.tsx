@@ -30,19 +30,20 @@ export default async function AccountPage({
   const notice = noticeFor(params.error);
 
   return (
-    <main>
-      <h1 className="h-page">Account</h1>
-      <p className="mt-2 text-sm text-gray-600">
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <p className="eyebrow">Member</p>
+      <h1 className="h-page mt-2">Account</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
         Change the password for {email}.
       </p>
       <section className="card mt-6 max-w-md p-6">
         {saved ? (
-          <p className="mb-4 text-sm text-gray-700" role="status">
+          <p className="mb-4 text-sm text-foreground" role="status">
             Password updated.
           </p>
         ) : null}
         {notice ? (
-          <p className="mb-4 rounded-brand border border-brand-red/20 bg-brand-red/5 px-3 py-2 text-sm text-brand-red" role="alert">
+          <p className="mb-4 rounded-brand border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive" role="alert">
             {notice}
           </p>
         ) : null}

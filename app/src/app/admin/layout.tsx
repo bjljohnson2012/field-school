@@ -18,7 +18,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!ready || !isStaff) {
     return (
-      <main className="mx-auto max-w-md px-4 py-16">
+      <main className="mx-auto max-w-md px-6 py-8">
         <p className="text-sm text-muted-foreground">Checking staff access…</p>
       </main>
     );

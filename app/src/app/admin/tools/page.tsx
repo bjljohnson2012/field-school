@@ -10,13 +10,9 @@ export default function AdminToolsPage() {
   if (!ready || !isStaff) return null;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Tool shelf
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">
-        How to add a tool
-      </h1>
+    <main className="mx-auto max-w-3xl px-6 py-8">
+      <p className="eyebrow">Tool shelf</p>
+      <h1 className="h-page mt-2">How to add a tool</h1>
       <p className="mt-4 text-muted-foreground">
         Assessments are registered, not hardcoded into the dashboard. A new
         intelligence test, skill test, or later checklist is three files and
@@ -47,12 +43,12 @@ export default function AdminToolsPage() {
       </ol>
 
       <section className="mt-12">
-        <h2 className="font-display text-2xl tracking-tight">On the shelf now</h2>
+        <h2 className="h-section">On the shelf now</h2>
         <ul className="mt-4 grid gap-3">
           {assessmentTools.map((tool) => (
             <li
               key={tool.slug}
-              className="flex flex-col justify-between gap-2 rounded-xl border border-border bg-card px-5 py-4 sm:flex-row sm:items-center"
+              className="card flex flex-col justify-between gap-2 px-5 py-4 sm:flex-row sm:items-center"
             >
               <div>
                 <p className="font-medium">{tool.title}</p>
@@ -60,7 +56,7 @@ export default function AdminToolsPage() {
                   /tools/{tool.slug} · {tool.status} · {tool.category}
                 </p>
               </div>
-              <Link href={`/tools/${tool.slug}`} className="text-sm text-primary">
+              <Link href={`/tools/${tool.slug}`} className="text-sm text-primary underline underline-offset-2">
                 Open
               </Link>
             </li>
@@ -82,8 +78,8 @@ function How({
 }) {
   return (
     <li>
-      <p className="font-mono text-xs text-muted-foreground">{n}</p>
-      <h2 className="mt-1 font-display text-2xl tracking-tight">{title}</h2>
+      <p className="eyebrow">{n}</p>
+      <h2 className="h-section mt-1">{title}</h2>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
     </li>
   );

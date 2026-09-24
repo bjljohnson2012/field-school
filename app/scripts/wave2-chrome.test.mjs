@@ -81,11 +81,11 @@ test("admin start-here splits courses from assessments and shows progress", () =
   assert.match(admin, /Start here/);
   assert.match(admin, /Do this first/);
   assert.match(admin, /Courses are lessons/);
-  assert.match(admin, /<h2 className="font-display text-2xl tracking-tight">Courses<\/h2>/);
-  assert.match(admin, /<h2 className="font-display text-2xl tracking-tight">Assessments<\/h2>/);
+  assert.match(admin, /<h2 className="h-section">Courses<\/h2>/);
+  assert.match(admin, /<h2 className="h-section">Assessments<\/h2>/);
   assert.match(admin, /Field Pattern sits here/);
   assert.match(admin, /href="\/pattern"/);
-  assert.match(admin, /<h2 className="font-display text-2xl tracking-tight">Progress<\/h2>/);
+  assert.match(admin, /<h2 className="h-section">Progress<\/h2>/);
   assert.match(admin, /Household children/);
   assert.match(admin, /Field Pattern/);
   assert.match(admin, /Access requests/);
@@ -113,7 +113,7 @@ test("logged-in header hides About; Inbox lives only under Admin", () => {
   assert.doesNotMatch(nav, /label: "Notifications"/);
 
   assert.match(inbox, /router\.replace\(isStaff && !impersonating \? "\/admin\/notifications" : "\/dashboard"\)/);
-  assert.match(notices, /<h1 className="mt-2 font-display text-4xl tracking-tight">\s*Inbox\s*<\/h1>/);
+  assert.match(notices, /<h1 className="h-page mt-2">\s*Inbox\s*<\/h1>/);
   assert.match(feedback, /Admin → Inbox/);
   assert.doesNotMatch(feedback, /Admin → Notifications/);
 });
