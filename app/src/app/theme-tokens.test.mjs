@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -18,6 +18,11 @@ test("portal :root keeps Field School brand and AE non-brand tokens", () => {
   assert.match(block, /--accent:\s*#1f5eff/i);
   assert.match(block, /--ring:\s*#1f5eff/i);
   assert.match(block, /--card:\s*#ffffff/i);
+  assert.match(block, /--muted:\s*#efeae1/i);
+  assert.match(block, /--muted-foreground:\s*#5c5850/i);
+  assert.match(block, /--border:\s*#d8d2c6/i);
+  assert.match(block, /--input:\s*#8a8478/i);
+  assert.match(block, /--stone:\s*#7a746a/i);
   assert.match(block, /--surface-soft:\s*#efeae1/i);
   assert.match(block, /--ink-line:\s*#d8d2c6/i);
   assert.match(block, /--ink-soft-line:\s*#e5e7eb/i);
@@ -25,6 +30,14 @@ test("portal :root keeps Field School brand and AE non-brand tokens", () => {
   assert.doesNotMatch(block, /#ff6a1a/i);
   assert.doesNotMatch(block, /#0b1f3a/i);
   assert.doesNotMatch(block, /#1f3c88/i);
+  assert.doesNotMatch(css, /--color-brand-navy/);
+  assert.doesNotMatch(css, /--color-brand-orange/);
+  assert.doesNotMatch(css, /--color-brand-indigo/);
+  assert.match(css, /--radius-brand:\s*0\.875rem/);
+  assert.match(css, /--radius-card:\s*1\.25rem/);
+  assert.match(css, /--shadow-card:\s*0 8px 24px rgba\(26,\s*25,\s*22,/);
+  assert.match(css, /text-decoration-line:\s*underline/);
+  assert.match(css, /h1,\s*h2\s*\{[^}]*font-family:\s*var\(--font-fraunces\)/s);
   assert.match(css, /--font-sans:\s*var\(--font-ibm-sans\)/);
   assert.match(css, /--font-display:\s*var\(--font-fraunces\)/);
   assert.match(css, /--font-heading:\s*var\(--font-fraunces\)/);
@@ -66,4 +79,22 @@ test("Fraunces and IBM Plex stay the brand faces and ThemeScript stays light", (
   assert.doesNotMatch(theme, /classList\.(toggle|add)\(\s*["']dark["']/);
   assert.doesNotMatch(theme, /prefers-color-scheme/);
   assert.doesNotMatch(theme, /localStorage/);
+
+  const hits = [];
+  const walk = (dir) => {
+    for (const name of readdirSync(dir)) {
+      const path = join(dir, name);
+      if (statSync(path).isDirectory()) {
+        if (name === "node_modules" || name === ".next") continue;
+        walk(path);
+        continue;
+      }
+      if (!/\.(tsx|css)$/.test(name)) continue;
+      const text = readFileSync(path, "utf8");
+      if (/#0b1f3a|#ff6a1a/i.test(text)) hits.push(path);
+      if (/text-\[#7a746a\]/i.test(text)) hits.push(`${path} stone-on-text`);
+    }
+  };
+  walk(join(appRoot, "src"));
+  assert.deepEqual(hits, []);
 });

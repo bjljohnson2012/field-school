@@ -48,7 +48,7 @@ function NewMenu() {
 type NavLink = { href: string; label: string };
 
 const stoneLink =
-  "flex h-11 items-center px-2 text-[#7a746a] hover:text-foreground sm:px-2.5";
+  "flex h-11 items-center px-2 text-muted-foreground hover:text-foreground sm:px-2.5";
 
 function GuestOrgMenu() {
   return (
@@ -144,7 +144,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href={homeHref}
-            className="hidden text-sm text-foreground sm:inline"
+            className="hidden font-display text-sm font-medium tracking-tight text-foreground sm:inline"
           >
             Field School
           </Link>
@@ -172,7 +172,7 @@ export function SiteHeader() {
               ))}
               {guestChrome ? (
                 <>
-                  <p className="px-2 pt-2 text-xs uppercase tracking-[0.16em] text-[#7a746a]">
+                  <p className="px-2 pt-2 text-xs uppercase tracking-[0.16em] text-muted-foreground">
                     Org
                   </p>
                   <Link href="/o/household" className={stoneLink}>
@@ -219,7 +219,7 @@ export function SiteHeader() {
               </Link>
               <Link
                 href="/signup"
-                className="flex h-9 items-center rounded-xl border border-border px-3 text-sm text-[#7a746a] hover:text-foreground"
+                className="flex h-9 items-center rounded-xl border border-border px-3 text-sm text-muted-foreground hover:text-foreground"
               >
                 Join free
               </Link>

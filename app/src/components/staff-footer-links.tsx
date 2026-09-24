@@ -8,7 +8,7 @@ export function StaffFooterLinks() {
   if (!ready || !isStaff) return null;
   return (
     <>
-      <Link href="/admin" className="text-[#7a746a] hover:text-foreground">
+      <Link href="/admin" className="text-muted-foreground hover:text-foreground">
         Admin
       </Link>
     </>

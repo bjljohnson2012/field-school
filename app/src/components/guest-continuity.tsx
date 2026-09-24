@@ -5,7 +5,7 @@ export function GuestContinuity() {
   return (
     <section
       data-guest-continuity="s2"
-      className="rounded-xl border border-border px-5 py-5 text-sm leading-relaxed text-[#7a746a]"
+      className="rounded-xl border border-border px-5 py-5 text-sm leading-relaxed text-muted-foreground"
     >
       <h2 className="font-display text-xl tracking-tight text-foreground">
         What a guest keeps

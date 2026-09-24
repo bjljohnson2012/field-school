@@ -56,19 +56,13 @@
   --radius-2xl: 28px;
   --radius-3xl: 32px;
   --radius-4xl: 36px;
-  --color-brand-navy: #0b1f3a;
-  --color-brand-indigo: #1f3c88;
-  --color-brand-indigo-deep: #172e6b;
-  --color-brand-orange: #ff6a1a;
-  --color-brand-orange-deep: #e55a15;
   --color-brand-emerald: #0e9f6e;
   --color-brand-amber: #f59e0b;
   --color-brand-red: #dc2626;
   --radius-brand: 0.875rem;
   --radius-card: 1.25rem;
-  --shadow-card: 0 8px 24px rgba(11, 31, 58, 0.08);
-  --shadow-card-hover: 0 12px 30px rgba(11, 31, 58, 0.12);
-  --shadow-orange-glow: 0 10px 22px rgba(255, 106, 26, 0.28);
+  --shadow-card: 0 8px 24px rgba(26, 25, 22, 0.08);
+  --shadow-card-hover: 0 12px 30px rgba(26, 25, 22, 0.12);
   --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
   --animate-fade-in: fade-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
   --animate-slide-up: slide-up 220ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -122,9 +116,10 @@
   --accent-foreground: #ffffff;
   --destructive: #c05621;
   --border: #d8d2c6;
-  --input: #d8d2c6;
+  --input: #8a8478;
   --ring: #1f5eff;
   --faint: #8a8478;
+  --stone: #7a746a;
   --pass: #2f6b3a;
   --warn: #c05621;
   --chart-1: #1f5eff;
@@ -200,7 +195,7 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-brand bg-brand-orange px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-brand hover:bg-brand-orange-deep hover:shadow-orange-glow focus:outline-none focus:ring-4 focus:ring-brand-orange/25 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-brand bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-200 ease-brand hover:bg-primary/90 hover:shadow-card-hover focus:outline-none focus:ring-4 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .card {
@@ -208,7 +203,7 @@
   }
 
   .input {
-    @apply w-full rounded-brand border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm focus:border-brand-indigo focus:outline-none focus:ring-4 focus:ring-brand-indigo/15;
+    @apply w-full rounded-brand border border-input bg-white px-4 py-2.5 text-sm text-foreground shadow-sm focus:border-ring focus:outline-none focus:ring-4 focus:ring-ring/15;
   }
 
   .label {
@@ -224,7 +219,7 @@
   }
 
   .h-card {
-    @apply font-display text-lg font-semibold text-foreground;
+    @apply font-sans text-lg font-semibold text-foreground;
   }
 
   .eyebrow {
@@ -256,6 +251,16 @@
   h2,
   h3 {
     text-wrap: balance;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-fraunces), ui-serif, Georgia, "Times New Roman", serif;
+  }
+
+  :where(p, li, dd, blockquote, td, figcaption) a {
+    text-decoration-line: underline;
+    text-underline-offset: 0.15em;
   }
 
   p {
