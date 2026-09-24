@@ -23,6 +23,10 @@ const READY = new Set([
   "/coaching/questions",
   "/coaching/reviews",
   "/help",
+  "/coaching/knowledge",
+  "/coaching/products",
+  "/coaching/files",
+  "/knowledge",
 ]);
 
 function item(label: string, href: string): NavItem {

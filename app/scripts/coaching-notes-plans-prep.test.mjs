@@ -167,11 +167,11 @@ test("access uses assertCanAccessMember and a learner keeps the card view", () =
   assert.match(page, /href=\{`\/people\/\$\{subject\.membershipId\}\/plan`\}/);
   assert.match(page, /href=\{`\/people\/\$\{subject\.membershipId\}\/prep`\}/);
   assert.match(page, />Tasks</);
-  assert.match(page, />Reviews</);
+  assert.match(page, /Reviews/);
   assert.match(page, />Files</);
+  assert.match(page, /href=\{`\/coaching\/files\?subject=\$\{subject\.membershipId\}`\}/);
   assert.equal(page.includes('href="/tasks"'), false);
-  assert.equal(page.includes("/reviews"), false);
-  assert.equal(page.includes("/files"), false);
+  assert.match(page, /href=\{`\/coaching\/reviews\?subject=\$\{subject\.membershipId\}`\}/);
   assert.match(read("src/app/people/[membershipId]/notes/page.tsx"), /coach=\{surface === "coach"\}/);
 });
 

@@ -234,14 +234,11 @@ test("Reviews is a real link and Compare is not in center nav", () => {
   const person = read("src/app/people/[membershipId]/page.tsx");
   assert.match(person, /href=\{`\/coaching\/reviews\?subject=\$\{subject\.membershipId\}`\}/);
   assert.match(person, /Reviews/);
+  assert.match(person, /href=\{`\/coaching\/files\?subject=\$\{subject\.membershipId\}`\}/);
   assert.match(person, />Files</);
   assert.match(person, />Tasks</);
-  assert.equal(person.includes("/files"), false);
   assert.equal(person.includes('href="/tasks"'), false);
-  const filesAt = person.indexOf(">Files<");
   const tasksAt = person.lastIndexOf(">Tasks<");
-  assert.match(person.slice(filesAt - 220, filesAt), /<span/);
-  assert.doesNotMatch(person.slice(filesAt - 220, filesAt), /href=/);
   assert.match(person.slice(tasksAt - 220, tasksAt), /<span/);
   assert.doesNotMatch(person.slice(tasksAt - 220, tasksAt), /href=/);
 
