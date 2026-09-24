@@ -10,11 +10,11 @@ export function featureMode(features: unknown) {
   return typeof mode === "string" ? mode : "";
 }
 
-export async function syncFamilyMode(member: {
+export async function syncFamilyMode<T extends {
   id: string;
   kind: string;
   mode?: string | null;
-}) {
+}>(member: T) {
   const current = member.mode ?? "none";
   if ((member.kind ?? "adult") === "child") {
     return { ...member, mode: current };
