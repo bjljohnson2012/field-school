@@ -148,6 +148,13 @@ export function AppShell({
                   >
                     My card
                   </Link>
+                  <Link
+                    href="/account"
+                    role="menuitem"
+                    className="block w-full px-3 py-2 text-left text-white hover:bg-white/10"
+                  >
+                    Account
+                  </Link>
                   {memberships.length > 1
                     ? memberships.map((org) => (
                         <button
