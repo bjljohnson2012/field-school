@@ -66,3 +66,47 @@ npm run dev
 ```
 
 [http://127.0.0.1:43141](http://127.0.0.1:43141)
+
+## Coaching import
+
+Run this on the VPS, where campus Postgres and the AE Coach database are both on the Docker network. Do not run it from a laptop. Do not put either connection string in git. `COACHING_IMPORT` is a process environment variable for this script only. Do not flip `COACHING_SHELL` or `COACHING_WRITES` from this step. Do not flip `AUTH_URL`. Do not edit Caddy.
+
+`app/scripts/aecoach-org-map.json` ships as `[]`. The import creates one organization per source org. A later edit may add `{ "from": "<source slug>", "to": "sales" }` to attach that source org to the existing sales org. `to` may not be `household` or `field-school`. Household, sales, and `field-school` rows are not deleted. A source slug that is already `sales`, `household`, or `field-school` is stored as `{slug}-aecoach`, and `features.sourceSlug` keeps the original slug.
+
+The script reads `DATABASE_URL` for campus and `AECOACH_DATABASE_URL` for the source database. It refuses to start unless `COACHING_IMPORT=1`. It refuses a destination database named `aecoach`. It does not spawn Prisma. The AE boot command `npx prisma db push --accept-data-loss` is hostile to any database other than `aecoach`. Do not point that command at campus.
+
+Dry-run wraps the campus writes in a transaction and rolls back:
+
+```bash
+COACHING_IMPORT=1 node scripts/import-aecoach.mjs --dry-run
+```
+
+Stdout is counts only (`coaching.import table=… source=… dest=… skipped=…`). It does not print full emails, password hashes, invite URLs, or secrets. The import inserts `member_credentials` with `source=aecoach` when the source hash is present. It does not write or delete JSON-store passwords.
+
+A real run uses the same command without `--dry-run`, still with `COACHING_IMPORT=1` on that process only.
+
+## Coaching rollback
+
+Before cutover, rollback is flag off. Imported rows can sit unread.
+
+After cutover, before people rely on Field School for coaching, point Caddy back at the AE service, turn off the AE write-freeze, set `COACHING_WRITES=0`, and restart the AE cron sidecar. Then discard only campus rows created in Field School after the freeze that were not part of the import. Rows with a `legacy_ids` entry stay. The predicate is no `legacy_ids` row, and `created_at` after the recorded freeze instant.
+
+Do not run the deletes unless `COACHING_ROLLBACK_CONFIRM=1` is set in that process. Print counts. `:freeze_at` is the instant `AE_WRITES_FROZEN` was turned on, stored with the operator notes for that freeze. Do not guess it.
+
+```sql
+-- COACHING_ROLLBACK_CONFIRM=1 required. Repeat for each coaching table that has created_at.
+DELETE FROM work_items AS w
+WHERE w.created_at > :freeze_at
+  AND NOT EXISTS (
+    SELECT 1 FROM legacy_ids AS l
+    WHERE l.source = 'aecoach'
+      AND l.table_name = 'work_items'
+      AND l.new_id = w.id
+  );
+```
+
+Tables in that delete: `work_items`, `coaching_notes`, `coaching_plans`, `one_on_one_preps`, `recommendations`, `reviews`, `review_answers`, `answer_sets`, `answers`, `ad_hoc_quizzes`, `quiz_schedules`, `retake_requests`, `drill_attempts`, `performance_snapshots`, `coaching_sources`, `source_mappings`, `coaching_knowledge_units`, `knowledge_repos`, `products`, `questions` that have no legacy id, `coaching_profiles` created after the freeze with no legacy id, `audit_logs` in that window with no legacy id. Do not delete `organizations`, `members`, `memberships`, `member_profiles`, `instrument_runs`, or `wards`.
+
+`learning_events`: delete only rows with `created_at > :freeze_at`, no `raw.imported = true`, and `kind` in (`skill_override`, `monthly_review`, `drill`) or (`diagnostic` and `raw.scale = '0-100'`). Leave `watch`, `quiz`, `assignment`, and household 1–4 diagnostics. Do not revert imported `skill_states` with this delete. If a 0–100 score was written after the freeze onto a slug that has a legacy observation, restore `skill_states.score` from the latest `skill_observations` row with `raw.imported = true` for that membership and skill, and print that count too. Do not touch 1–4 desk slugs.
+
+If Field School has been the write path long enough that discarding those rows loses real coaching notes, rollback is a forward fix. Do not "fix" campus schema drift with `prisma db push`.
