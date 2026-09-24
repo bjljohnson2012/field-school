@@ -4,6 +4,8 @@ import { isTaskAdmin } from "@/app/api/coaching/tasks/access";
 import { listTasks, loadAssigneeChoices } from "@/app/api/coaching/tasks/persist";
 import { loadTaskActor } from "@/app/api/coaching/tasks/session";
 import { TasksBoard, type AssigneeChoice, type TaskItem } from "./tasks-board";
+import { RetakeSection } from "./retake-section";
+import { loadCoachRetakes, type CoachRetake } from "./retakes";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Tasks" };
@@ -24,12 +26,22 @@ export default async function TasksPage() {
 
   let tasks: TaskItem[] = [];
   let assignees: AssigneeChoice[] = [];
+  let retakes: CoachRetake[] = [];
+  let coach = false;
   try {
     tasks = await listTasks(loaded.world, loaded.actor);
     assignees = await loadAssigneeChoices(loaded.world, loaded.actor);
   } catch {
     tasks = [];
     assignees = [];
+  }
+  try {
+    const loadedRetakes = await loadCoachRetakes(loaded.world, loaded.actor);
+    retakes = loadedRetakes.requests;
+    coach = loadedRetakes.isCoach;
+  } catch {
+    retakes = [];
+    coach = false;
   }
 
   return (
@@ -42,6 +54,7 @@ export default async function TasksPage() {
         actorMembershipId={loaded.actor.membershipId}
         admin={isTaskAdmin(loaded.world, loaded.actor)}
       />
+      {coach ? <RetakeSection requests={retakes} /> : null}
     </main>
   );
 }
