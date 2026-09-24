@@ -8,9 +8,10 @@ import { ImpersonationBanner } from "@/components/impersonation-banner";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
+/** AppShell is the portal default. COACHING_SHELL=0 is the only rollback. */
 export function coachingShellEnabled() {
-  const value = process.env.COACHING_SHELL?.trim().toLowerCase();
-  return value === "1" || value === "true" || value === "on" || value === "yes";
+  const value = process.env.COACHING_SHELL?.trim();
+  return value !== "0";
 }
 
 export async function Chrome({ children }: { children: ReactNode }) {
