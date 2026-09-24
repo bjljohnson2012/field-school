@@ -22,6 +22,7 @@ const READY = new Set([
   "/o/household/welcome",
   "/coaching/questions",
   "/coaching/reviews",
+  "/help",
 ]);
 
 function item(label: string, href: string): NavItem {
@@ -45,6 +46,7 @@ function salesCoach(): NavItem[] {
     item("Knowledge", "/coaching/knowledge"),
     item("Files", "/coaching/files"),
     item("Reviews", "/coaching/reviews"),
+    item("Help", "/help"),
   ];
 }
 
