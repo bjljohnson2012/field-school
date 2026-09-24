@@ -187,7 +187,7 @@ export function KnowledgeEditor({
                 >
                   {repo.name}
                 </button>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-muted-foreground">
                   {repo.repoKind} · {repo.visibility}
                 </p>
               </li>
@@ -269,7 +269,7 @@ export function KnowledgeEditor({
           {units.filter((unit) => !repositoryId || unit.repositoryId === repositoryId).map((unit) => (
             <li key={unit.id} className="card p-3">
               <p className="font-semibold">{unit.title}</p>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-muted-foreground">
                 {unit.status} · {unit.visibility}
               </p>
               <div className="mt-2 flex gap-2">

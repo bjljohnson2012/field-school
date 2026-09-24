@@ -123,12 +123,12 @@ export function IntakeWizard({ kind }: { kind: "intake" | "director_intake" }) {
   }
 
   if (loading) {
-    return <section className="card mt-6 p-6 text-sm text-gray-600">Loading intake…</section>;
+    return <section className="card mt-6 p-6 text-sm text-muted-foreground">Loading intake…</section>;
   }
   if (!question) {
     return (
       <section className="card mt-6 p-6">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-muted-foreground">
           {error || "No intake questions are published yet."}
         </p>
       </section>
@@ -138,9 +138,9 @@ export function IntakeWizard({ kind }: { kind: "intake" | "director_intake" }) {
   const last = index >= total - 1;
   return (
     <section className="card mt-6 p-6">
-      <p className="text-sm text-gray-500">Question {index + 1} of {total}</p>
-      <div className="mt-2 h-1 overflow-hidden rounded-full bg-gray-200">
-        <div className="h-full bg-brand-orange" style={{ width: `${progress}%` }} />
+      <p className="text-sm text-muted-foreground">Question {index + 1} of {total}</p>
+      <div className="mt-2 h-1 overflow-hidden rounded-full bg-muted">
+        <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
       </div>
       <div className="mt-6">
         <WizardStep
@@ -149,7 +149,7 @@ export function IntakeWizard({ kind }: { kind: "intake" | "director_intake" }) {
           onChange={(value) => setAnswers((current) => ({ ...current, [question.id]: value }))}
         />
       </div>
-      {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="mt-4 text-sm text-destructive">{error}</p> : null}
       <div className="mt-6 flex flex-wrap gap-3">
         {index > 0 ? (
           <button type="button" className="btn-primary" disabled={busy} onClick={() => setIndex((n) => n - 1)}>

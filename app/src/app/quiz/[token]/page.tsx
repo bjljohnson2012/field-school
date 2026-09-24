@@ -107,7 +107,7 @@ export default async function QuizTokenPage({
       <main className="mx-auto max-w-2xl px-4 py-8">
         <section className="card p-8 text-center">
           <h1 className="h-page">Quiz unavailable</h1>
-          <p className="mt-3 text-sm text-gray-600">This link is no longer open.</p>
+          <p className="mt-3 text-sm text-muted-foreground">This link is no longer open.</p>
         </section>
       </main>
     );
@@ -119,7 +119,7 @@ export default async function QuizTokenPage({
         <section className="card p-8 text-center">
           <h1 className="h-page">Thank you</h1>
           <p className="mt-3 text-lg">{view.title}</p>
-          <p className="mt-2 text-sm text-gray-600">Your responses are in. Your coach will review them.</p>
+          <p className="mt-2 text-sm text-muted-foreground">Your responses are in. Your coach will review them.</p>
         </section>
       </main>
     );
@@ -133,7 +133,7 @@ export default async function QuizTokenPage({
         <input type="hidden" name="ids" value={view.questions.map((question) => question.id).join(",")} />
         {view.questions.map((question, index) => (
           <section key={question.id} className="card p-6">
-            <p className="text-xs uppercase tracking-wide text-gray-500">
+            <p className="eyebrow">
               {question.category.replaceAll("_", " ")} · {index + 1} of {view.questions.length}
             </p>
             <p className="mt-2 text-lg font-medium">{question.text}</p>
@@ -144,9 +144,9 @@ export default async function QuizTokenPage({
           </section>
         ))}
         {notice === "writes_disabled" ? (
-          <p className="text-sm text-gray-600">Quiz answers are not being saved right now.</p>
+          <p className="text-sm text-muted-foreground">Quiz answers are not being saved right now.</p>
         ) : null}
-        {notice === "invalid" ? <p className="text-sm text-gray-600">Answer at least one question.</p> : null}
+        {notice === "invalid" ? <p className="text-sm text-muted-foreground">Answer at least one question.</p> : null}
         <button className="btn-primary" type="submit">
           Submit quiz
         </button>

@@ -29,15 +29,15 @@ export function RetakeSection({
 
   return (
     <section className="card mt-6 p-6">
-      <h2 className="text-lg font-semibold">Retake requests</h2>
-      <p className="mt-2 text-sm text-gray-600">Open retake requests for people you coach.</p>
+      <h2 className="h-section">Retake requests</h2>
+      <p className="mt-2 text-sm text-muted-foreground">Open retake requests for people you coach.</p>
       {rows.length === 0 ? <p className="mt-3">No open retake requests.</p> : null}
       <ul className="mt-4 space-y-3">
         {rows.map((row) => (
           <li key={row.id} className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="font-semibold">{row.requesterName}</p>
-              <p className="text-sm text-gray-600">{row.status}</p>
+              <p className="text-sm text-muted-foreground">{row.status}</p>
             </div>
             <div className="flex gap-2">
               <button type="button" className="btn-primary" disabled={busy} onClick={() => void decide(row.id, "approved")}>
@@ -50,7 +50,7 @@ export function RetakeSection({
           </li>
         ))}
       </ul>
-      {error ? <p className="mt-3 text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
     </section>
   );
 }

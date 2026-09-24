@@ -43,9 +43,9 @@ export function SynthesisStatusBanner() {
 
   if (status === "generating") {
     return (
-      <section className="card mb-6 border-l-4 border-brand-orange px-5 py-4" aria-live="polite">
-        <div className="font-display font-semibold">Generating your profile</div>
-        <p className="mt-1 text-sm text-gray-600">
+      <section className="card mb-6 border-l-4 border-primary px-5 py-4" aria-live="polite">
+        <div className="font-semibold">Generating your profile</div>
+        <p className="mt-1 text-sm text-muted-foreground">
           Your answers are saved. This page checks again every few seconds.
         </p>
       </section>
@@ -53,10 +53,10 @@ export function SynthesisStatusBanner() {
   }
 
   return (
-    <section className="card mb-6 border-l-4 border-red-500 px-5 py-4" aria-live="polite">
-      <div className="font-display font-semibold">Synthesis failed</div>
-      <p className="mt-1 text-sm text-gray-600">Your answers are saved.</p>
-      {error ? <p className="mt-2 text-xs text-gray-500">{error.slice(0, 300)}</p> : null}
+    <section className="card mb-6 border-l-4 border-destructive px-5 py-4" aria-live="polite">
+      <div className="font-semibold">Synthesis failed</div>
+      <p className="mt-1 text-sm text-muted-foreground">Your answers are saved.</p>
+      {error ? <p className="mt-2 text-xs text-muted-foreground">{error.slice(0, 300)}</p> : null}
     </section>
   );
 }

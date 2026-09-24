@@ -38,7 +38,7 @@ export default async function PlanPage({
     return (
       <main>
         <h1 className="h-page">Plan</h1>
-        <p className="mt-2 text-sm text-gray-600">Not allowed</p>
+        <p className="mt-2 text-sm text-muted-foreground">Not allowed</p>
       </main>
     );
   }
@@ -68,7 +68,7 @@ export default async function PlanPage({
     <main>
       <p className="eyebrow">{subject.stance}</p>
       <h1 className="h-page">Plan</h1>
-      <p className="mt-2 text-sm text-gray-600">{subject.name}</p>
+      <p className="mt-2 text-sm text-muted-foreground">{subject.name}</p>
       <PlanPanel subjectMembershipId={subject.membershipId} plan={plan} coach={surface === "coach"} />
     </main>
   );

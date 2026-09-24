@@ -47,12 +47,12 @@ export default async function ImprovePage() {
     }
     return (
       <main className="mx-auto max-w-7xl px-6 py-8">
-        <Link href="/card" className="text-sm text-brand-indigo">
+        <Link href="/card" className="text-sm font-semibold text-primary underline underline-offset-2">
           Back
         </Link>
-        <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">{desk.label}</p>
+        <p className="eyebrow mt-2">{desk.label}</p>
         <h1 className="h-page mt-2">Sharpen one skill at a time</h1>
-        <p className="mt-2 max-w-2xl text-sm text-gray-600">
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
           Pick a skill. Get a real scenario. Type your response. Get instant feedback. Points and streak come from your own attempts.
         </p>
         <DrillRunner skills={desk.skills} stats={desk.stats} />

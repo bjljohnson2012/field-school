@@ -140,20 +140,20 @@ export function TasksBoard({
     <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
       <section className="card p-6">
         <h2 className="h-section">Open work</h2>
-        {tasks.length === 0 ? <p className="mt-4 text-sm text-gray-600">No open tasks.</p> : null}
+        {tasks.length === 0 ? <p className="mt-4 text-sm text-muted-foreground">No open tasks.</p> : null}
         <ul className="mt-4 space-y-3">
           {tasks.map((task) => {
             const assignee = task.assigneeMembershipId === actorMembershipId;
             const author = task.authorMembershipId === actorMembershipId;
             const progress = assignee || author;
             return (
-              <li key={task.id} className="rounded-card border border-gray-200 p-4">
+              <li key={task.id} className="rounded-card border border-border p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="font-semibold text-gray-900">{task.title}</h3>
-                  <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">{task.status}</span>
+                  <h3 className="font-semibold text-foreground">{task.title}</h3>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{task.status}</span>
                 </div>
-                {task.body ? <p className="mt-2 text-sm text-gray-700">{task.body}</p> : null}
-                <p className="mt-2 text-xs text-gray-500">
+                {task.body ? <p className="mt-2 text-sm text-muted-foreground">{task.body}</p> : null}
+                <p className="mt-2 text-xs text-muted-foreground">
                   {task.assigneeName}
                   {task.dueAt ? ` · due ${task.dueAt.slice(0, 10)}` : ""}
                 </p>
@@ -228,12 +228,12 @@ export function TasksBoard({
 
         <section className="card p-6">
           <h2 className="h-section">Generate</h2>
-          <p className="mt-2 text-sm text-gray-600">Write the next tasks for the selected assignee and save them.</p>
+          <p className="mt-2 text-sm text-muted-foreground">Write the next tasks for the selected assignee and save them.</p>
           <button type="button" className="btn-primary mt-4" disabled={busy} onClick={() => void generate()}>
             Generate
           </button>
         </section>
-        {error ? <p className="text-sm text-red-700">{error}</p> : null}
+        {error ? <p className="text-sm text-destructive">{error}</p> : null}
       </div>
     </div>
   );

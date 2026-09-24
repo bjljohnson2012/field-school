@@ -80,7 +80,7 @@ function QuestionCard({
 
   return (
     <article className="card p-6">
-      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         {question.scope === "platform" ? "Platform" : "This org"}
         {question.mutable ? "" : " · read only"}
       </p>
@@ -130,7 +130,7 @@ function QuestionCard({
         disabled={!question.mutable}
         onChange={(event) => setTags(event.target.value)}
       />
-      <label className="mt-3 flex items-center gap-2 text-sm text-gray-700">
+      <label className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
         <input type="checkbox" checked={active} disabled={!question.mutable} onChange={(event) => setActive(event.target.checked)} />
         Active
       </label>
@@ -144,7 +144,7 @@ function QuestionCard({
           </button>
         </div>
       ) : null}
-      {message ? <p className="mt-3 text-sm text-gray-600">{message}</p> : null}
+      {message ? <p className="mt-3 text-sm text-muted-foreground">{message}</p> : null}
     </article>
   );
 }
@@ -348,7 +348,7 @@ export function QuestionsEditor({
         <button type="button" className="btn-primary mt-4" onClick={() => void smartBulk()}>
           Generate smart bulk
         </button>
-        {analysis ? <p className="mt-3 text-sm text-gray-600">{analysis}</p> : null}
+        {analysis ? <p className="mt-3 text-sm text-muted-foreground">{analysis}</p> : null}
       </section>
 
       <section className="card p-6">
@@ -387,7 +387,7 @@ export function QuestionsEditor({
         </button>
       </section>
 
-      {message ? <p className="text-sm text-gray-700">{message}</p> : null}
+      {message ? <p className="text-sm text-muted-foreground">{message}</p> : null}
 
       {questions.length === 0 ? (
         <section className="card p-6">

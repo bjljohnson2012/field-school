@@ -35,7 +35,7 @@ export default async function CoachingKnowledgePage() {
   return (
     <main>
       <h1 className="h-page">Knowledge</h1>
-      <p className="mt-2 text-sm text-gray-600">Signed in as {loaded.name}</p>
+      <p className="mt-2 text-sm text-muted-foreground">Signed in as {loaded.name}</p>
       <KnowledgeEditor initialRepos={repos} initialUnits={units} />
     </main>
   );

@@ -12,8 +12,8 @@ export default async function IntakePage({
   const kind = params.kind === "director_intake" ? "director_intake" : "intake";
   return (
     <main>
-      <h1 className="font-display text-3xl tracking-tight">Intake</h1>
-      <p className="mt-3 text-sm text-gray-600">One question at a time. You can save and come back.</p>
+      <h1 className="h-page">Intake</h1>
+      <p className="mt-3 text-sm text-muted-foreground">One question at a time. You can save and come back.</p>
       <IntakeWizard kind={kind} />
     </main>
   );

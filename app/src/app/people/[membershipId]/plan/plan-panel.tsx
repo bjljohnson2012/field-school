@@ -71,13 +71,13 @@ export function PlanPanel({
     <div className="mt-6 grid gap-6">
       <section className="card p-6">
         <h2 className="h-section">Plan</h2>
-        {!plan ? <p className="mt-4 text-sm text-gray-600">No plan yet.</p> : null}
+        {!plan ? <p className="mt-4 text-sm text-muted-foreground">No plan yet.</p> : null}
         {plan ? (
           <div className="mt-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{plan.status}</p>
-            {generated.title ? <h3 className="mt-2 font-semibold text-gray-900">{generated.title}</h3> : null}
-            {generated.summary ? <p className="mt-2 text-sm text-gray-700">{generated.summary}</p> : null}
-            {plan.status === "failed" && plan.error ? <p className="mt-2 text-sm text-red-700">{plan.error}</p> : null}
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{plan.status}</p>
+            {generated.title ? <h3 className="mt-2 font-semibold text-foreground">{generated.title}</h3> : null}
+            {generated.summary ? <p className="mt-2 text-sm text-muted-foreground">{generated.summary}</p> : null}
+            {plan.status === "failed" && plan.error ? <p className="mt-2 text-sm text-destructive">{plan.error}</p> : null}
             {generated.ninetyDayCheckpoint ? (
               <textarea className="input mt-4" readOnly rows={3} value={generated.ninetyDayCheckpoint} />
             ) : null}
@@ -85,8 +85,8 @@ export function PlanPanel({
               <ul className="mt-4 space-y-3">
                 {generated.growthAreas.map((area) => (
                   <li key={area.area || area.why}>
-                    <p className="font-semibold text-gray-900">{area.area}</p>
-                    {area.why ? <p className="text-sm text-gray-700">{area.why}</p> : null}
+                    <p className="font-semibold text-foreground">{area.area}</p>
+                    {area.why ? <p className="text-sm text-muted-foreground">{area.why}</p> : null}
                   </li>
                 ))}
               </ul>
@@ -106,7 +106,7 @@ export function PlanPanel({
           </div>
         ) : null}
       </section>
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm text-destructive">{error}</p> : null}
     </div>
   );
 }

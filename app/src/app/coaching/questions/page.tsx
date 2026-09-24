@@ -28,7 +28,7 @@ export default async function QuestionsPage() {
   return (
     <main className="mx-auto max-w-7xl px-6 py-8">
       <h1 className="h-page">Questions</h1>
-      <p className="mt-2 text-sm text-gray-600">
+      <p className="mt-2 text-sm text-muted-foreground">
         Platform questions are shared. Org questions stay in this org.
       </p>
       <QuestionsEditor initial={bank} platformAdmin={loaded.actor.platformAdmin} />

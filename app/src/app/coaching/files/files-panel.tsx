@@ -162,7 +162,7 @@ export function FilesPanel({ initial, subject }: { initial: FileRow[]; subject: 
           Classify
         </button>
         {suggestion ? (
-          <p className="mt-3 text-sm text-gray-600">
+          <p className="mt-3 text-sm text-muted-foreground">
             Suggested {suggestion.kind} · {suggestion.intent} · {suggestion.rationale}
           </p>
         ) : null}
@@ -214,7 +214,7 @@ export function FilesPanel({ initial, subject }: { initial: FileRow[]; subject: 
           {rows.map((row) => (
             <li key={row.id} className="card p-4">
               <p className="font-semibold">{row.title}</p>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-muted-foreground">
                 {row.kind} · {row.mapping?.intent} · {row.visibility}
                 {row.subjectMembershipId ? ` · ${row.subjectMembershipId}` : ""}
               </p>

@@ -41,7 +41,7 @@ export default async function ReviewsPage({
   return (
     <main>
       <h1 className="h-page">Reviews</h1>
-      <p className="mt-2 text-sm text-gray-600">Pending monthly reviews for this org.</p>
+      <p className="mt-2 text-sm text-muted-foreground">Pending monthly reviews for this org.</p>
       <ReviewsPanel
         initialReviews={reviews}
         questions={questions}
