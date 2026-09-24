@@ -90,11 +90,10 @@ test("primitive variants use AE anatomy and Field School color tokens", () => {
   assert.match(primary, /font-semibold/);
   assert.match(primary, /duration-200/);
   assert.match(primary, /ease-brand/);
-  assert.match(primary, /focus-visible:ring-4/);
+  assert.match(primary, /focus-visible:\[box-shadow:0_0_0_4px_color-mix\(in_oklab,var\(--ring\)_25%,transparent\)\]/);
   assert.match(primary, /bg-primary/);
   assert.match(primary, /text-primary-foreground/);
   assert.match(primary, /hover:-translate-y-px/);
-  assert.match(primary, /focus-visible:ring-primary\/25/);
   assert.doesNotMatch(primary, /brand-orange|#ff6a1a/i);
 
   const secondary = buttonVariants({ variant: "secondary" });
@@ -102,7 +101,6 @@ test("primitive variants use AE anatomy and Field School color tokens", () => {
   assert.match(secondary, /bg-card/);
   assert.match(secondary, /text-primary/);
   assert.match(secondary, /hover:bg-primary\/5/);
-  assert.match(secondary, /focus-visible:ring-primary\/15/);
   assert.doesNotMatch(secondary, /bg-primary /);
 
   const ghost = buttonVariants({ variant: "ghost" });
@@ -112,7 +110,6 @@ test("primitive variants use AE anatomy and Field School color tokens", () => {
   const danger = buttonVariants({ variant: "destructive" });
   assert.match(danger, /bg-destructive/);
   assert.match(danger, /text-primary-foreground/);
-  assert.match(danger, /focus-visible:ring-destructive\/25/);
 
   const outline = buttonVariants({ variant: "outline" });
   assert.match(outline, /border-input/);
@@ -175,7 +172,7 @@ test("primitive sources have no AE orange", () => {
   assert.doesNotMatch(blob, /#0b1f3a/i);
   assert.match(readFileSync(join(here, "input.tsx"), "utf8"), /rounded-brand/);
   assert.match(readFileSync(join(here, "input.tsx"), "utf8"), /border-input/);
-  assert.match(readFileSync(join(here, "input.tsx"), "utf8"), /focus-visible:ring-4/);
+  assert.match(readFileSync(join(here, "input.tsx"), "utf8"), /0_0_0_4px_color-mix\(in_oklab,var\(--ring\)_15%,transparent\)/);
   assert.match(readFileSync(join(here, "input.tsx"), "utf8"), /px-4/);
   assert.match(readFileSync(join(here, "input.tsx"), "utf8"), /py-2\.5/);
   assert.match(readFileSync(join(here, "label.tsx"), "utf8"), /font-semibold/);
@@ -183,5 +180,5 @@ test("primitive sources have no AE orange", () => {
   assert.match(readFileSync(join(here, "label.tsx"), "utf8"), /mb-1\.5/);
   assert.match(readFileSync(join(here, "textarea.tsx"), "utf8"), /rounded-brand/);
   assert.match(readFileSync(join(here, "textarea.tsx"), "utf8"), /border-input/);
-  assert.match(readFileSync(join(here, "textarea.tsx"), "utf8"), /focus-visible:ring-4/);
+  assert.match(readFileSync(join(here, "textarea.tsx"), "utf8"), /0_0_0_4px_color-mix\(in_oklab,var\(--ring\)_15%,transparent\)/);
 });
