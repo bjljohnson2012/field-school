@@ -44,6 +44,7 @@ services:
     volumes:
       - field-school-data:/app/data
       - /opt/field-school/uploads:/opt/field-school/uploads
+      - /opt/field-school-plates/plates:/plates
     networks:
       - proxy
       - campus
