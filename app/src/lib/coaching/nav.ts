@@ -20,6 +20,7 @@ const READY = new Set([
   "/tasks",
   "/o/sales/welcome",
   "/o/household/welcome",
+  "/coaching/questions",
 ]);
 
 function item(label: string, href: string): NavItem {
