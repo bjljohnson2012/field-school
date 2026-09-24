@@ -281,7 +281,7 @@ test("teach live route and prior proof files stay on disk", () => {
 test("readout cites prior proofs and stays held", () => {
   const readout = readFileSync(readoutPath, "utf8");
   const lines = readout.trim().split("\n").filter((line) => line.startsWith("- "));
-  assert.equal(lines.length, 8);
+  assert.equal(lines.length, 9);
   const proven = [
     ["/people", "PR 220", "app/src/app/people/desk.test.mjs"],
     ["/insights", "PR 225", "app/src/app/insights/aggregate.test.mjs"],
@@ -289,6 +289,11 @@ test("readout cites prior proofs and stays held", () => {
     ["/dashboard", "PR 250", "app/src/lib/living-brain/model.test.mjs"],
     ["/insights", "PR 225", "app/src/app/insights/aggregate.test.mjs"],
     ["/o/:slug/teach", "PR 30", "app/scripts/wave3-composer.test.mjs"],
+    [
+      "/people/[membershipId]",
+      "PR 313",
+      "app/src/app/people/household-diagnostics.test.mjs",
+    ],
   ];
   for (const [route, pr, file] of proven) {
     const line = lines.find((row) => row.includes(route) && row.includes(pr) && row.includes(file));
@@ -300,12 +305,16 @@ test("readout cites prior proofs and stays held", () => {
   assert.doesNotMatch(lines[0], /NOT PROVEN/);
   assert.match(lines[0], /PR 206/);
   assert.match(lines[0], /app\/src\/components\/site-header\.test\.mjs/);
-  assert.match(lines[0], /\(test added in this PR\)/);
+  assert.match(lines[0], /\(test added in PR 331\)/);
   assert.match(lines[3], /PROVEN/);
   assert.doesNotMatch(lines[3], /NOT PROVEN/);
   assert.match(lines[3], /PR 214/);
   assert.match(lines[3], /app\/src\/components\/site-header\.test\.mjs/);
-  assert.match(lines[3], /\(test added in this PR\)/);
+  assert.match(lines[3], /\(test added in PR 331\)/);
+  assert.match(
+    lines[8],
+    /Household People desk zero sales diagnostics: PROVEN\. `\/people\/\[membershipId\]` · PR 313 · `app\/src\/app\/people\/household-diagnostics\.test\.mjs` \(test added in PR 331\)/,
+  );
   assert.equal(readout.trim().endsWith("Product stays HELD. Launch CLOSED 0/8."), true);
   assert.doesNotMatch(readout, /8\/8|Product \| PASS|Launch is OPEN/);
 });
