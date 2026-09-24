@@ -7,6 +7,7 @@ import { signOutPortal } from "@/lib/auth/sign-out";
 import { preferPlatformAdmin } from "@/lib/campus-runtime/lessons";
 import { coachingNav, tasksCount, type NavItem } from "@/lib/coaching/nav";
 import { SynthesisStatusBanner } from "@/components/synthesis-status-banner";
+import { TasksNavBadge } from "@/components/tasks-nav-badge";
 
 type OrgChoice = { slug: string; name: string };
 
@@ -117,11 +118,7 @@ export function AppShell({
               className="inline-flex items-center gap-2 rounded-brand bg-brand-orange px-3 py-1.5 text-sm font-semibold text-white"
             >
               Tasks
-              {openTasks > 0 ? (
-                <span className="grid min-w-5 place-items-center rounded-full bg-white px-1 text-xs text-brand-orange">
-                  {openTasks}
-                </span>
-              ) : null}
+              <TasksNavBadge fallback={openTasks} />
             </Link>
             <div className="relative">
               <button
