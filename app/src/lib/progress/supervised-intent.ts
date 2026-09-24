@@ -3,7 +3,14 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const SUPERVISED_INTENT_FR = ["FR-3", "FR-2"] as const;
-export const HIRE_PATH_CHILD_IDS = ["play-child", "hire-child"] as const;
+export const HIRE_PATH_CHILD_IDS = ["play-child"] as const;
+const DRIFT_CHILD_NAMES = /^(play child|hire child)$/i;
+
+function trackedChildName(name: unknown) {
+  const value = typeof name === "string" ? name.trim() : "";
+  if (!value || DRIFT_CHILD_NAMES.test(value)) return "Child";
+  return value.slice(0, 200);
+}
 
 export type HirePathChildId = (typeof HIRE_PATH_CHILD_IDS)[number];
 
@@ -129,7 +136,7 @@ function parseIntent(raw: string): SupervisedIntent | null {
       selected_child_id: selected,
       children: children.map((child) => ({
         id: child.id,
-        name: child.name,
+        name: trackedChildName(child.name),
         kind: "child",
         login: "none",
         user: false,

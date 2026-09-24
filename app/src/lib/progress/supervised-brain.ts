@@ -2,7 +2,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const HIRE_PATH_CHILD_IDS = ["play-child", "hire-child"] as const;
+export const HIRE_PATH_CHILD_IDS = ["play-child"] as const;
+const DRIFT_CHILD_NAMES = /^(play child|hire child)$/i;
 export type HirePathChildId = (typeof HIRE_PATH_CHILD_IDS)[number];
 export const SUPERVISED_BRAIN_FR = ["FR-KB-1", "FR-KB-2"] as const;
 export const BRAIN_STATUSES = ["suggested", "started", "updated"] as const;
@@ -124,8 +125,14 @@ export function emptySupervisedBrain(): SupervisedBrain {
   };
 }
 
-function defaultName(id: string, hint?: string) {
-  return hint || (id === "hire-child" ? "Hire Child" : "Play Child");
+function defaultName(_id: string, hint?: string) {
+  const value = hint?.trim() || "";
+  if (!value || DRIFT_CHILD_NAMES.test(value)) return "Child";
+  return value.slice(0, 200);
+}
+
+function cleanPhrase(value: string) {
+  return value.replace(/\bPlay Child\b/g, "Child").replace(/\bHire Child\b/g, "Child");
 }
 
 function asList(value: unknown, max = 16) {
@@ -216,16 +223,9 @@ function parsePathItems(value: unknown): Array<{ title: string; play: string }> 
   return items.slice(0, 12);
 }
 
-function defaultProgress(id: HirePathChildId): SupervisedBrainChild["progress"] {
-  if (id === "hire-child") {
-    return {
-      now: { title: "Learn with Ben hire", copy: "Hire Child waits on the recorded hire. Child is not a User." },
-      confidence: { state: "not_yet", label: "Not yet", owned: "hire_path" },
-      next: { title: "Start from parent intent", copy: "Parent owns the plan after hire. No child login." },
-    };
-  }
+function defaultProgress(_id: HirePathChildId): SupervisedBrainChild["progress"] {
   return {
-    now: { title: "LessonSpine Ready / HLS", copy: "Play Child is on the locked LessonSpine rail. Parent owns the plan." },
+    now: { title: "LessonSpine Ready / HLS", copy: "Child is on the locked LessonSpine rail. Parent owns the plan." },
     confidence: { state: "getting_there", label: "Getting there", owned: "hire_path" },
     next: { title: "QuizBumper next-up", copy: "Next is the next-up beat, then Parent review. No child login." },
   };
@@ -251,7 +251,7 @@ function suggestedChild(
     hint.portion?.horizon ||
     hint.intent?.timeHorizon ||
     existing?.portion.horizon ||
-    (id === "hire-child" ? "next portion" : "this hire");
+    "this hire";
   const pathItems = parsePathItems(hint.pathItems || existing?.paths.items);
   const portionItems = parsePathItems(hint.portion?.items || existing?.portion.items || pathItems);
   const progressHint = hint.progress;
@@ -272,8 +272,7 @@ function suggestedChild(
     kind: "child",
     login: "none",
     user: false,
-    title:
-      (hint.title || existing?.title || `${name} knowledge brain`).trim().slice(0, 200),
+    title: cleanPhrase((hint.title || existing?.title || `${name} knowledge brain`).trim()).slice(0, 200),
     status: existing?.status && existing.status !== "suggested" ? existing.status : "suggested",
     version: existing?.version || 0,
     intent: {
@@ -289,13 +288,13 @@ function suggestedChild(
     portion: { horizon, items: portionItems },
     progress: {
       now: {
-        title: progressHint?.now?.title || fallback.now.title,
-        copy: progressHint?.now?.copy || fallback.now.copy,
+        title: cleanPhrase(progressHint?.now?.title || fallback.now.title),
+        copy: cleanPhrase(progressHint?.now?.copy || fallback.now.copy),
       },
       confidence,
       next: {
-        title: progressHint?.next?.title || fallback.next.title,
-        copy: progressHint?.next?.copy || fallback.next.copy,
+        title: cleanPhrase(progressHint?.next?.title || fallback.next.title),
+        copy: cleanPhrase(progressHint?.next?.copy || fallback.next.copy),
       },
     },
     sources,

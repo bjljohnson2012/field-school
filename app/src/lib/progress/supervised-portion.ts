@@ -2,7 +2,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const HIRE_PATH_CHILD_IDS = ["play-child", "hire-child"] as const;
+export const HIRE_PATH_CHILD_IDS = ["play-child"] as const;
+const DRIFT_CHILD_NAMES = /^(play child|hire child)$/i;
 export type HirePathChildId = (typeof HIRE_PATH_CHILD_IDS)[number];
 export const SUPERVISED_PORTION_FR = ["FR-5"] as const;
 export const PORTION_STATUSES = ["suggested", "locked", "overridden"] as const;
@@ -85,14 +86,16 @@ function norm(value: string) {
   return value.toLowerCase().trim();
 }
 
-function defaultName(id: string, hint?: string) {
-  return hint || (id === "hire-child" ? "Hire Child" : "Play Child");
+function defaultName(_id: string, hint?: string) {
+  const value = hint?.trim() || "";
+  if (!value || DRIFT_CHILD_NAMES.test(value)) return "Child";
+  return value.slice(0, 200);
 }
 
-function asHorizon(value: string | undefined, childId: string) {
+function asHorizon(value: string | undefined, _childId: string) {
   const horizon = String(value || "").trim();
   if (horizon) return horizon.slice(0, 80);
-  return childId === "hire-child" ? "next portion" : "this hire";
+  return "this hire";
 }
 
 function sliceSize(horizon: string) {
@@ -169,7 +172,7 @@ function parsePortion(raw: string): SupervisedPortion | null {
         const status = PORTION_STATUSES.includes(child.status) ? child.status : "suggested";
         return {
           id: child.id,
-          name: child.name,
+          name: defaultName(child.id, child.name),
           kind: "child",
           login: "none",
           user: false,

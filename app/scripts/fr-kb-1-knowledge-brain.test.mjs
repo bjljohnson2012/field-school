@@ -37,7 +37,7 @@ test("Parent starts and sees a knowledge brain under the selected Child", () => 
       goals: ["Hold LessonSpine from parent intent"],
       subjects: ["LessonSpine"],
       timeHorizon: "this hire",
-      name: "Play Child",
+      name: "Child",
     },
     pathItems: [{ title: "LessonSpine Ready / HLS", play: "/play/lesson-spine" }],
     portion: { horizon: "this hire", items: [{ title: "LessonSpine Ready / HLS" }] },
@@ -52,8 +52,8 @@ test("Parent starts and sees a knowledge brain under the selected Child", () => 
   const dest = join(mkdtempSync(join(tmpdir(), "supervised-brain-")), "supervised-brain.json");
   process.env.SUPERVISED_BRAIN_PATH = dest;
   const started = writeSupervisedBrain("play-child", "start", {
-    name: "Play Child",
-    title: "Play Child knowledge brain",
+    name: "Child",
+    title: "Child knowledge brain",
     intent: { goals: ["Hold LessonSpine from parent intent"], timeHorizon: "this hire" },
     pathItems: [{ title: "LessonSpine Ready / HLS" }],
     portion: { horizon: "this hire", items: [{ title: "LessonSpine Ready / HLS" }] },
@@ -61,10 +61,12 @@ test("Parent starts and sees a knowledge brain under the selected Child", () => 
   assert.equal(started.ok, true);
   assert.equal(started.selected?.status, "started");
   assert.equal(started.selected?.user, false);
-  assert.match(started.selected?.title || "", /Play Child/);
+  assert.equal(started.selected?.name, "Child");
+  assert.match(started.selected?.title || "", /Child knowledge brain/);
+  assert.doesNotMatch(started.selected?.title || "", /Play Child|Hire Child/);
   const updated = writeSupervisedBrain("play-child", "update", {
-    name: "Play Child",
-    title: "Play Child knowledge brain",
+    name: "Child",
+    title: "Child knowledge brain",
     notes: ["Parent note on LessonSpine"],
     pathItems: [{ title: "LessonSpine Ready / HLS" }],
   });
