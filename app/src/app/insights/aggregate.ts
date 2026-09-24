@@ -1,5 +1,7 @@
 // Active org only. Sales drops tracked children. Household drops sales diagnostics.
 
+import type { BrainBoard } from "@/lib/living-brain/model";
+
 export const EMPTY_COPY = "no events in this org yet";
 
 export const SALES_DIAGNOSTIC_SLUGS = new Set([
@@ -164,22 +166,7 @@ export type InsightsModel = {
     login: "none" | "member";
     from: "outcomes" | "profile" | "stored";
   } | null;
-  brainBoard?: {
-    room: "household" | "sales";
-    facts: string;
-    outcome: string;
-    people: Array<{
-      membershipId: string;
-      name: string;
-      kind: string;
-      login: "none" | "member";
-      profile: string;
-      outcomes: string;
-      ownsOutcomes: false;
-      history?: Array<{ outcomes: string }>;
-      confidence?: string;
-    }>;
-  } | null;
+  brainBoard?: BrainBoard | null;
 };
 
 function norm(value: string) {

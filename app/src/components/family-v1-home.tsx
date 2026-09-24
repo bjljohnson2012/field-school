@@ -134,6 +134,7 @@ export function FamilyV1Home({
   if (!child) return null;
 
   async function saveChildName() {
+    if (!child) return;
     const name = childName.trim();
     if (!name) {
       setNote("Child name is required.");
@@ -150,6 +151,7 @@ export function FamilyV1Home({
   }
 
   async function syncBrain() {
+    if (!child) return;
     await fetch("/api/brain/sync", {
       method: "POST",
       headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
@@ -158,6 +160,7 @@ export function FamilyV1Home({
   }
 
   async function markUnit(action: "start" | "complete", title: string) {
+    if (!child) return;
     if (!title) return;
     const res = await fetch("/api/ledger", {
       method: "PATCH",
@@ -183,6 +186,7 @@ export function FamilyV1Home({
   }
 
   async function markConfidence(title: string, confidence: string, flag = "") {
+    if (!child) return;
     if (!title) return;
     const res = await fetch("/api/ledger", {
       method: "PATCH",
@@ -208,6 +212,7 @@ export function FamilyV1Home({
   }
 
   async function saveIntent() {
+    if (!child) return;
     const res = await fetch("/api/intent", {
       method: "POST",
       headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
@@ -230,6 +235,7 @@ export function FamilyV1Home({
   }
 
   async function proposePath() {
+    if (!child) return;
     const res = await fetch("/api/curriculum", {
       method: "POST",
       headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
@@ -245,6 +251,7 @@ export function FamilyV1Home({
   }
 
   async function acceptPath() {
+    if (!child) return;
     const res = await fetch("/api/curriculum", {
       method: "PATCH",
       headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
@@ -260,6 +267,7 @@ export function FamilyV1Home({
   }
 
   async function suggestPortion() {
+    if (!child) return;
     const res = await fetch("/api/portion", {
       method: "POST",
       headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },
@@ -275,6 +283,7 @@ export function FamilyV1Home({
   }
 
   async function lockPortion() {
+    if (!child) return;
     const res = await fetch("/api/portion", {
       method: "PATCH",
       headers: { "Content-Type": "application/json", ...HOUSEHOLD_HEADERS },

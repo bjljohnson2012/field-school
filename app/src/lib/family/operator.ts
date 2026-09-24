@@ -1,6 +1,6 @@
 import { buildFamilySignals, type SignalIntent, type SignalPortion, type SignalUnit } from "./signals.ts";
 
-export type FamilyOperatorIntent = SignalIntent & { version?: number };
+export type FamilyOperatorIntent = SignalIntent & { version?: number; constraints?: string[] };
 
 export type FamilyOperatorPath = {
   version?: number;
