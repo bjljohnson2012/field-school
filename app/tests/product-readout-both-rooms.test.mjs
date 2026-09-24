@@ -296,10 +296,16 @@ test("readout cites prior proofs and stays held", () => {
     assert.match(line, /PROVEN/);
     assert.doesNotMatch(line, /app\/tests\/product-readout-both-rooms\.test\.mjs/);
   }
-  assert.match(lines[0], /NOT PROVEN/);
-  assert.match(lines[0], /test that asserts those five words/);
-  assert.match(lines[3], /NOT PROVEN/);
-  assert.match(lines[3], /test that New opens those three doors/);
+  assert.match(lines[0], /PROVEN/);
+  assert.doesNotMatch(lines[0], /NOT PROVEN/);
+  assert.match(lines[0], /PR 206/);
+  assert.match(lines[0], /app\/src\/components\/site-header\.test\.mjs/);
+  assert.match(lines[0], /\(test added in this PR\)/);
+  assert.match(lines[3], /PROVEN/);
+  assert.doesNotMatch(lines[3], /NOT PROVEN/);
+  assert.match(lines[3], /PR 214/);
+  assert.match(lines[3], /app\/src\/components\/site-header\.test\.mjs/);
+  assert.match(lines[3], /\(test added in this PR\)/);
   assert.equal(readout.trim().endsWith("Product stays HELD. Launch CLOSED 0/8."), true);
   assert.doesNotMatch(readout, /8\/8|Product \| PASS|Launch is OPEN/);
 });

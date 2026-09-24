@@ -11,7 +11,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const LEADER_STANCES = new Set(["admin", "guardian", "trainer", "teacher"]);
 
-const NEW_DOORS = [
+export const NEW_DOORS = [
   { href: "/library/video", label: "Long-form video" },
   { href: "/library/wizard", label: "Wizard" },
   { href: "/settings/ai", label: "Connect AI" },
@@ -68,7 +68,7 @@ function GuestOrgMenu() {
   );
 }
 
-function navLinks(opts: {
+export function navLinks(opts: {
   loggedIn: boolean;
   guest: boolean;
   leader: boolean;

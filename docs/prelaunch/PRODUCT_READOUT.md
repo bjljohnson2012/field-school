@@ -2,10 +2,10 @@
 
 Both rooms. Not a launch PASS. Dated from tip `59d385a7`.
 
-- Five-word leader bar: NOT PROVEN. Header lists Learn, People, Library, Insights, New (PR 206). Missing: a test that asserts those five words.
+- Five-word leader bar: PROVEN. Header lists Learn, People, Library, Insights, New (PR 206) · `app/src/components/site-header.test.mjs` (test added in this PR).
 - Sales desk zero children: PROVEN. `/people` · PR 220 · `app/src/app/people/desk.test.mjs`
 - Household Insights zero sales diagnostics: PROVEN. `/insights` · PR 225 · `app/src/app/insights/aggregate.test.mjs`
-- New three doors: NOT PROVEN. Menu links `/library/video`, `/library/wizard`, `/settings/ai` (PR 214). Missing: a test that New opens those three doors.
+- New three doors: PROVEN. Menu links `/library/video`, `/library/wizard`, `/settings/ai` (PR 214) · `app/src/components/site-header.test.mjs` (test added in this PR).
 - LessonSpec: PROVEN. `/library/wizard` · PR 224 · `app/src/app/library/wizard/lesson-spec.test.mjs`
 - NextCard for salesperson and tracked child: PROVEN. `/dashboard` · PR 250 · `app/src/lib/living-brain/model.test.mjs`
 - Insights real aggregates + credit burn: PROVEN. `/insights` · PR 225 · `app/src/app/insights/aggregate.test.mjs`
