@@ -15,6 +15,7 @@ const HOUSEHOLD_TEACHER_CAPS = ["teacher", "guardian", "admin"] as const;
 
 const READY = new Set([
   "/card",
+  "/improve",
   "/roster",
   "/pattern",
   "/tasks",

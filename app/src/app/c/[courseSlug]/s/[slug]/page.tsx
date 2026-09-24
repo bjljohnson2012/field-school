@@ -49,7 +49,7 @@ export default function StationPage() {
   const passPct = Math.round(course.passRatio * 100);
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[220px_minmax(0,1fr)]">
+    <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 lg:grid-cols-[220px_minmax(0,1fr)]">
       <aside className="hidden lg:block">
         <p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted-foreground">
           Stations
@@ -87,11 +87,12 @@ export default function StationPage() {
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Station {mod.station} · pass at {passPct}%
           </p>
-          <h1 className="mt-2 font-display text-4xl tracking-tight">{mod.title}</h1>
+          <h1 className="h-page mt-2">{mod.title}</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">{mod.summary}</p>
         </div>
 
-        <div className="space-y-4">
+        <section className="card space-y-4 p-5">
+          <h2 className="h-section">Clip</h2>
           {mod.clips.map((clip) => (
             <YoutubeClip
               key={`${clip.start}-${clip.end}`}
@@ -115,17 +116,17 @@ export default function StationPage() {
                   });
                 }
               }}
-              className="inline-flex h-11 items-center rounded-xl border border-border bg-card px-4 text-sm"
+              className="btn-primary"
             >
               Mark clip watched
             </button>
           ) : (
             <p className="text-sm text-pass">Clip credited.</p>
           )}
-        </div>
+        </section>
 
-        <section className="rounded-xl border border-border bg-card px-5 py-5">
-          <h2 className="font-display text-2xl tracking-tight">Thesis</h2>
+        <section className="card px-5 py-5">
+          <h2 className="h-section">Thesis</h2>
           <p className="mt-3 text-sm leading-relaxed">{mod.thesis}</p>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-muted-foreground">
             {mod.bullets.map((b) => (

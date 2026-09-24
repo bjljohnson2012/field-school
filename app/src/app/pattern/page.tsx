@@ -4,7 +4,6 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type Item = { key: string; prompt: string; correspondence: string };
@@ -170,22 +169,24 @@ function PatternForm() {
 
   if (org === "sales" && !forChild) {
     return (
-      <main className="mx-auto max-w-xl px-4 py-16">
-        <h1 className="font-display text-3xl">Field Pattern</h1>
-        <p className="mt-4 text-muted-foreground">
+      <main className="mx-auto max-w-7xl px-6 py-8">
+        <h1 className="h-page">Field Pattern</h1>
+        <section className="card mt-6 max-w-xl p-6">
+        <p className="text-muted-foreground">
           Pattern lives on the person. It does not appear on the sales board.
           Switch to household to take or view it.
         </p>
+        </section>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
+    <main className="mx-auto max-w-7xl px-6 py-8">
       <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
         Field Pattern · fp-50-v1
       </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Field Pattern</h1>
+      <h1 className="h-page mt-2">Field Pattern</h1>
       <p className="mt-4 text-muted-foreground">
         Fifty Likert items, or the child subset from the pinned fp-50-v1
         table. A Pattern run resets Bearing. Papers, voice, and video
@@ -226,7 +227,7 @@ function PatternForm() {
       </div>
 
       {status === "unauthenticated" ? (
-        <p className="mt-6 rounded-xl border border-border bg-card px-5 py-4 text-sm text-muted-foreground">
+        <p className="card mt-6 px-5 py-4 text-sm text-muted-foreground">
           Sign in to store the profile in Postgres.{" "}
           <Link href="/login" className="underline underline-offset-4">
             Sign in
@@ -235,11 +236,11 @@ function PatternForm() {
       ) : null}
 
       {profile ? (
-        <section className="mt-8 rounded-xl border border-border bg-card px-5 py-5">
+        <section className="card mt-8 px-5 py-5">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Live profile {profile.locked ? "· locked" : ""}
           </p>
-          <p className="mt-2 font-display text-2xl tracking-tight">
+          <p className="h-section mt-2">
             {profile.narratives.working_title || `${profile.bearing.primary} / ${profile.bearing.secondary}`}
           </p>
           <ul className="mt-4 grid gap-2 text-sm">
@@ -274,7 +275,7 @@ function PatternForm() {
 
       <ol className="mt-10 space-y-4">
         {items.map((item, i) => (
-          <li key={item.key} className="rounded-xl border border-border bg-card px-4 py-4">
+          <li key={item.key} className="card px-4 py-4">
             <p className="text-sm font-medium">
               <span className="mr-2 text-muted-foreground">{i + 1}.</span>
               {item.prompt}
@@ -305,33 +306,36 @@ function PatternForm() {
         ))}
       </ol>
 
-      <Button
-        className="mt-6 h-11 w-full rounded-xl sm:w-auto"
+      <button
+        type="button"
+        className="btn-primary mt-6 w-full sm:w-auto"
         disabled={!signedIn || !allAnswered || busy}
         onClick={() => void submitRun()}
       >
         Save Pattern run (resets Bearing)
-      </Button>
+      </button>
 
-      <section className="mt-12 space-y-4 rounded-xl border border-border bg-card px-5 py-5">
-        <h2 className="font-display text-2xl tracking-tight">Nudge from work</h2>
+      <section className="card mt-12 space-y-4 p-5">
+        <h2 className="h-section">Nudge from work</h2>
         <p className="text-sm text-muted-foreground">
           Paste writing, or upload voice/video. Grok STT transcribes. Bearing
           moves a small step. A new Pattern run still resets it.
         </p>
         <textarea
-          className="min-h-28 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+          className="input min-h-28"
           value={paper}
           onChange={(e) => setPaper(e.target.value)}
           placeholder="Paste a paper, journal, or field note."
         />
         <div className="flex flex-wrap gap-3">
-          <Button
+          <button
+            type="button"
+            className="btn-primary"
             disabled={!signedIn || !paper.trim() || busy}
             onClick={() => void submitPaper()}
           >
             Ingest paper
-          </Button>
+          </button>
           <label className="inline-flex h-11 cursor-pointer items-center rounded-xl border border-border px-4 text-sm">
             Voice / video
             <input
@@ -347,20 +351,22 @@ function PatternForm() {
         </div>
       </section>
 
-      {forChild ? null : <section className="mt-12 space-y-3 rounded-xl border border-border bg-card px-5 py-5">
-        <h2 className="font-display text-2xl tracking-tight">Import an official result</h2>
+      {forChild ? null : <section className="card mt-12 space-y-3 p-5">
+        <h2 className="h-section">Import an official result</h2>
         <p className="text-sm text-muted-foreground">
           Paste a type-code or cluster list from an official report you already
           hold. This overrides correspondence estimates only. It does not
           change Bearing. We do not sell or name that other product here.
         </p>
         <textarea
-          className="min-h-20 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+          className="input min-h-20"
           value={importCode}
           onChange={(e) => setImportCode(e.target.value)}
           placeholder="Type-code or pasted summary"
         />
-        <Button
+        <button
+          type="button"
+          className="btn-primary"
           disabled={!signedIn || !importCode.trim() || busy}
           onClick={() => {
             void fetch("/api/pattern/import", {
@@ -378,7 +384,7 @@ function PatternForm() {
           }}
         >
           Override correspondence
-        </Button>
+        </button>
       </section>}
 
       {note ? <p className="mt-6 text-sm text-pass">{note}</p> : null}
@@ -390,7 +396,7 @@ export default function PatternPage() {
   return (
     <Suspense
       fallback={
-        <main className="mx-auto max-w-3xl px-4 py-12">
+        <main className="mx-auto max-w-7xl px-6 py-8">
           <p className="text-sm text-muted-foreground">Loading Field Pattern…</p>
         </main>
       }

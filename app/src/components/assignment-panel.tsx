@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { Module } from "@/lib/course/types";
-import { Button } from "@/components/ui/button";
 
 export function AssignmentPanel({
   module,
@@ -31,13 +30,13 @@ export function AssignmentPanel({
   const done = required.filter((i) => checks[i.id]).length;
 
   return (
-    <section className="rounded-xl border border-border bg-card p-5 sm:p-6">
+    <section className="card p-5 sm:p-6">
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Field work
           </p>
-          <h2 className="mt-1 font-display text-2xl tracking-tight">
+          <h2 className="h-section mt-1">
             {module.assignment.title}
           </h2>
         </div>
@@ -90,19 +89,20 @@ export function AssignmentPanel({
           }}
           rows={8}
           placeholder={module.assignment.notesPlaceholder}
-          className="w-full resize-y rounded-xl border border-border bg-background px-3 py-3 font-mono text-sm leading-relaxed placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="input min-h-40 resize-y font-mono"
         />
       </label>
       <div className="mt-4 flex items-center gap-3">
-        <Button
-          className="h-11 rounded-xl px-5"
+        <button
+          type="button"
+          className="btn-primary"
           onClick={() => {
             onSave(checks, text);
             setSaved(true);
           }}
         >
           Save field work
-        </Button>
+        </button>
         {saved ? <span className="text-sm text-pass">Saved to your portal</span> : null}
       </div>
     </section>

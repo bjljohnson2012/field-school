@@ -4,7 +4,6 @@ import { useState } from "react";
 import type { QuizQuestion } from "@/lib/course/types";
 import { passingScore } from "@/lib/course/content";
 import { ToolResultActions } from "@/components/tool-result-actions";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function QuizPanel({
@@ -34,10 +33,10 @@ export function QuizPanel({
   const allAnswered = questions.every((q) => answers[q.id] != null);
 
   return (
-    <section className="rounded-xl border border-border bg-card p-5 sm:p-6">
+    <section className="card p-5 sm:p-6">
       <div className="mb-5 flex items-end justify-between gap-3">
         <div>
-          <h2 className="font-display text-2xl tracking-tight">{title}</h2>
+          <h2 className="h-section">{title}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Pass at {need}/{questions.length}. You can retake.
           </p>
@@ -101,8 +100,9 @@ export function QuizPanel({
           </li>
         ))}
       </ol>
-      <Button
-        className="mt-6 h-11 w-full rounded-xl sm:w-auto"
+      <button
+        type="button"
+        className="btn-primary mt-6 w-full sm:w-auto"
         disabled={!allAnswered}
         onClick={() => {
           onSubmit(answers);
@@ -114,7 +114,7 @@ export function QuizPanel({
         }}
       >
         Submit
-      </Button>
+      </button>
       {result && shareTitle ? (
         <div className="mt-6">
           <ToolResultActions
