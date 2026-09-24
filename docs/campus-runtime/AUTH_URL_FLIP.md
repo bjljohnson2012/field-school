@@ -14,7 +14,9 @@ Canonical origin: `https://portal.fieldschool.ai`.
 
 Script: `app/deploy/flip-auth-url.sh` (dry-run default; `--apply` mutates).
 
-## Proof (after apply)
+## Proof (applied 2026-09-18 21:16Z)
+
+Shipped SHA `6527cd88b8772deb30af2b15ce314fdc06f44469`. Image unchanged (`a71af6c0…`). Four-model PASS on that SHA.
 
 | Check | Expect |
 |---|---|
@@ -29,6 +31,8 @@ Script: `app/deploy/flip-auth-url.sh` (dry-run default; `--apply` mutates).
 | `/checkout?plan=1000` | 307 `…aFa8wOgxHeUbcrG5sO8g007` |
 | `cap.fieldschool.ai/login` | 200 |
 | `edit.fieldschool.ai/health` | ok |
+
+Live matched every row at 21:16Z. Image stayed `a71af6c0…` (Wave 2 chrome). Guest home still has Continue as guest. `/children` still 404. `/o/household` still 401. Pattern instrument `fp-50-v1` count 50.
 
 Stripe cart implementation is a sibling worker. Learn with Ben stays `$100` / `$200` / `$1,000` unless that worker reports a cart change.
 
