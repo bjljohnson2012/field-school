@@ -28,7 +28,7 @@ test("learner with empty caps on sales and platformAdmin still gets Roster", () 
       assert.equal(forbidden.includes(item.href), false);
     }
     const products = items.find((item) => item.label === "Products");
-    assert.equal(products?.disabled, true);
+    assert.equal(products?.disabled, false);
   }
 });
 

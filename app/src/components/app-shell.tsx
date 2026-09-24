@@ -28,6 +28,7 @@ export function AppShell({
   capabilities: capabilitiesProp,
   platformAdmin: platformAdminProp = false,
   memberships: membershipsProp,
+  logoUrl = "",
 }: {
   name: string;
   children: ReactNode;
@@ -36,6 +37,7 @@ export function AppShell({
   capabilities?: readonly string[];
   platformAdmin?: boolean;
   memberships?: readonly OrgChoice[];
+  logoUrl?: string;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -128,7 +130,11 @@ export function AppShell({
                 aria-haspopup="menu"
                 onClick={() => setMenuOpen((open) => !open)}
               >
-                {initial}
+                {logoUrl.trim() ? (
+                  <img src={logoUrl.trim()} alt="" className="size-9 rounded-full object-cover" />
+                ) : (
+                  <span data-logo="monogram">{initial}</span>
+                )}
               </button>
               {menuOpen ? (
                 <div

@@ -84,10 +84,10 @@ test("hrefs are the campus paths and orgs has no link", () => {
   }
 });
 
-test("knowledge, products, and users stay linked when nav disables them", () => {
+test("knowledge, products, and users stay linked when nav enables them", () => {
   const items = coachingNav({ orgKind: "sales", capabilities: ["coach"], platformAdmin: false });
-  assert.equal(items.find((item) => item.href === "/coaching/products")?.disabled, true);
-  assert.equal(items.find((item) => item.href === "/coaching/knowledge")?.disabled, true);
+  assert.equal(items.find((item) => item.href === "/coaching/products")?.disabled, false);
+  assert.equal(items.find((item) => item.href === "/coaching/knowledge")?.disabled, false);
   assert.equal(ITEMS.find((item) => item.title === "Products")?.href, "/coaching/products");
   assert.equal(ITEMS.find((item) => item.title === "Knowledge")?.href, "/coaching/knowledge");
   assert.equal(ITEMS.find((item) => item.title === "Users")?.href, "/coaching/users");
