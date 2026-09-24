@@ -24,14 +24,14 @@ export default function CertificatePage() {
 
   if (!course || !ready || !tally.certified) {
     return (
-      <main className="mx-auto max-w-3xl px-4 py-16 text-sm text-muted-foreground">
+      <main data-plate className="mx-auto max-w-3xl px-4 py-16 text-sm text-muted-foreground">
         Checking the ladder…
       </main>
     );
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
+    <main data-plate className="mx-auto max-w-3xl px-4 py-12">
       <div className="rounded-xl border border-border bg-card px-6 py-10 sm:px-12">
         <p className="text-center text-xs uppercase tracking-[0.22em] text-muted-foreground">
           {UNI_NAME}

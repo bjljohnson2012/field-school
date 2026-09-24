@@ -17,10 +17,10 @@
   --color-warn: var(--warn);
   --color-accent: var(--primary);
   --color-accent-fg: var(--primary-foreground);
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-ibm-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-ibm-mono), ui-monospace, "SF Mono", Menlo, monospace;
-  --font-display: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
-  --font-heading: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, "Times New Roman", serif;
+  --font-heading: var(--font-fraunces), ui-serif, Georgia, serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -106,47 +106,44 @@
 
 :root {
   color-scheme: light;
-  --background: #f5f7fa;
-  --surface-soft: #f9fafb;
-  --ink: #111827;
-  --ink-slate: #374151;
-  --ink-muted: #6b7280;
-  --ink-line: #d1d5db;
-  --ink-soft-line: #e5e7eb;
-  --foreground: var(--ink);
+  --background: #f6f3ec;
+  --foreground: #1a1916;
   --card: #ffffff;
-  --card-foreground: var(--ink);
+  --card-foreground: #1a1916;
   --popover: #ffffff;
-  --popover-foreground: var(--ink);
-  --primary: #1f3c88;
+  --popover-foreground: #1a1916;
+  --primary: #1f5eff;
   --primary-foreground: #ffffff;
-  --secondary: var(--surface-soft);
-  --secondary-foreground: var(--ink);
-  --muted: var(--surface-soft);
-  --muted-foreground: var(--ink-muted);
-  --accent: #1f3c88;
+  --secondary: #efeae1;
+  --secondary-foreground: #1a1916;
+  --muted: #efeae1;
+  --muted-foreground: #5c5850;
+  --accent: #1f5eff;
   --accent-foreground: #ffffff;
-  --destructive: #dc2626;
-  --border: var(--ink-soft-line);
-  --input: var(--ink-line);
-  --ring: #1f3c88;
-  --faint: var(--ink-muted);
-  --pass: #0e9f6e;
-  --warn: #f59e0b;
-  --chart-1: #1f3c88;
-  --chart-2: #0e9f6e;
-  --chart-3: #f59e0b;
-  --chart-4: var(--ink-muted);
-  --chart-5: var(--ink);
+  --destructive: #c05621;
+  --border: #d8d2c6;
+  --input: #d8d2c6;
+  --ring: #1f5eff;
+  --faint: #8a8478;
+  --pass: #2f6b3a;
+  --warn: #c05621;
+  --chart-1: #1f5eff;
+  --chart-2: #2f6b3a;
+  --chart-3: #c05621;
+  --chart-4: #5c5850;
+  --chart-5: #1a1916;
+  --surface-soft: #efeae1;
+  --ink-line: #d8d2c6;
+  --ink-soft-line: #e5e7eb;
   --radius: 0.875rem;
-  --sidebar: #ffffff;
-  --sidebar-foreground: var(--ink);
-  --sidebar-primary: #1f3c88;
+  --sidebar: #fffdf8;
+  --sidebar-foreground: #1a1916;
+  --sidebar-primary: #1f5eff;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: var(--surface-soft);
-  --sidebar-accent-foreground: var(--ink);
-  --sidebar-border: var(--ink-soft-line);
-  --sidebar-ring: #1f3c88;
+  --sidebar-accent: #efeae1;
+  --sidebar-accent-foreground: #1a1916;
+  --sidebar-border: #d8d2c6;
+  --sidebar-ring: #1f5eff;
   --duration-fade: 200ms;
   --duration-slide-up: 220ms;
   --duration-slide-in-right: 240ms;
@@ -272,8 +269,8 @@
 }
 
 ::selection {
-  background: rgba(31, 60, 136, 0.18);
-  color: #0b1f3a;
+  background: rgba(31, 94, 255, 0.18);
+  color: #1a1916;
 }
 
 ::-webkit-scrollbar {
@@ -282,18 +279,17 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: #d8d2c6;
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: #8a8478;
 }
 
-/* Certificate and plate-adjacent preview keep Fraunces. Portal headings stay Space Grotesk. */
-main:has(.tracking-\[0\.22em\]) .font-display,
+[data-plate] .font-display,
 [data-remotion-player="lesson-spine"] .font-display {
-  font-family: var(--font-plate), ui-serif, Georgia, "Times New Roman", serif;
+  font-family: var(--font-fraunces), ui-serif, Georgia, "Times New Roman", serif;
 }
 
 @media (prefers-reduced-motion: reduce) {
