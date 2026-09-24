@@ -6,6 +6,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { preferPlatformAdmin } from "@/lib/campus-runtime/lessons";
 import { coachingNav, tasksCount, type NavItem } from "@/lib/coaching/nav";
+import { SynthesisStatusBanner } from "@/components/synthesis-status-banner";
 
 type OrgChoice = { slug: string; name: string };
 
@@ -184,7 +185,10 @@ export function AppShell({
           </div>
         ) : null}
       </header>
-      <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">{children}</div>
+      <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">
+        <SynthesisStatusBanner />
+        {children}
+      </div>
     </div>
   );
 }
