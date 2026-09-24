@@ -56,27 +56,92 @@ function buildNodeAuthConfig() {
           password: { label: "Password", type: "password" },
         },
         async authorize(credentials) {
-          const email =
-            typeof credentials?.email === "string" ? credentials.email : "";
+          const { normalizeEmail, roleForAuth } = await import("@/lib/members/policy");
+          const email = normalizeEmail(
+            typeof credentials?.email === "string" ? credentials.email : "",
+          );
           const password =
-            typeof credentials?.password === "string"
-              ? credentials.password
-              : "";
+            typeof credentials?.password === "string" ? credentials.password : "";
           if (!email || !password) return null;
+
+          const credentialMember = await matchMemberCredential(email, password);
           const { verifyMemberLogin } = await import("@/lib/members/store");
-          const member = await verifyMemberLogin(email, password);
-          if (!member) return null;
-          return {
-            id: member.id,
-            email: member.email,
-            name: member.name,
-            role: "member" as const,
-            provider: "credentials",
-          };
+          const jsonMember = await verifyMemberLogin(email, password);
+          return credentialSessionUser({
+            email,
+            role: roleForAuth("credentials", email),
+            jsonMember,
+            credentialMember,
+          });
         },
       }),
     ],
   };
+}
+
+type CredentialIdentity = { id: string; email: string; name: string };
+
+/**
+ * JSON-store match wins the session identity.
+ * A member_credentials match still signs the user in when the JSON store does not.
+ * Credentials cannot mint staff admin.
+ */
+export function credentialSessionUser(input: {
+  email: string;
+  role: "admin" | "member";
+  jsonMember: CredentialIdentity | null;
+  credentialMember: CredentialIdentity | null;
+}): {
+  id: string;
+  email: string;
+  name: string;
+  role: "member";
+  provider: "credentials";
+} | null {
+  const role = "member" as const;
+  if (input.role !== "member") return null;
+  if (input.jsonMember) {
+    return { ...input.jsonMember, role, provider: "credentials" };
+  }
+  if (input.credentialMember) {
+    return { ...input.credentialMember, role, provider: "credentials" };
+  }
+  return null;
+}
+
+async function matchMemberCredential(
+  email: string,
+  password: string,
+): Promise<CredentialIdentity | null> {
+  try {
+    const { databaseUrl, getSql } = await import("@/lib/db/client");
+    if (!databaseUrl()) return null;
+    const sql = getSql();
+    const rows = await sql<
+      { id: string; email: string; name: string; password_hash: string | null }[]
+    >`
+      SELECT m.id, m.email, m.name, c.password_hash
+      FROM members m
+      LEFT JOIN member_credentials c ON c.member_id = m.id
+      WHERE lower(m.email) = ${email}
+    `;
+    if (!rows.length) return null;
+    const { compare } = await import("bcryptjs");
+    for (const row of rows) {
+      const hash = row.password_hash;
+      if (!hash) continue;
+      try {
+        if (await compare(password, hash)) {
+          return { id: row.id, email: row.email, name: row.name };
+        }
+      } catch {
+        // A malformed hash is not a match.
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 const instance = NextAuth(
