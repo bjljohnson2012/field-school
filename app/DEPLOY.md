@@ -110,3 +110,21 @@ Tables in that delete: `work_items`, `coaching_notes`, `coaching_plans`, `one_on
 `learning_events`: delete only rows with `created_at > :freeze_at`, no `raw.imported = true`, and `kind` in (`skill_override`, `monthly_review`, `drill`) or (`diagnostic` and `raw.scale = '0-100'`). Leave `watch`, `quiz`, `assignment`, and household 1–4 diagnostics. Do not revert imported `skill_states` with this delete. If a 0–100 score was written after the freeze onto a slug that has a legacy observation, restore `skill_states.score` from the latest `skill_observations` row with `raw.imported = true` for that membership and skill, and print that count too. Do not touch 1–4 desk slugs.
 
 If Field School has been the write path long enough that discarding those rows loses real coaching notes, rollback is a forward fix. Do not "fix" campus schema drift with `prisma db push`.
+
+## Coaching cron sidecar
+
+`deploy/docker-compose.yml` defines service `coaching-cron` behind compose profile `coaching-cron`. The profile is off. `docker compose up` without `--profile coaching-cron` does not create that container. `deploy/deploy.sh` runs `docker compose up -d --build` with no profile, so a normal deploy does not start it. Merging this note does not enable the profile and does not set `CRON_SECRET`.
+
+When an operator later starts it with `--profile coaching-cron`, the sidecar POSTs `http://field-school-app:3000/api/cron/coaching` once an hour. That hostname is the app container on the campus network. The request sends `Authorization: Bearer` from `CRON_SECRET`. An empty body is job `all`. The route returns 401 when the secret is missing or does not match. Do not copy the AE fail-open. Put `CRON_SECRET` in `/opt/field-school.env` only at that operator step. Do not export `COMPOSE_PROFILES`. Do not start the sidecar from this change.
+
+## Coaching cutover checklist
+
+Docs only. Merging does not flip production. Do not enable the compose profile. Do not set `CRON_SECRET`. Do not set `AE_WRITES_FROZEN`. Do not stop the AE sidecar from this change. Do not flip `AUTH_URL`. Do not edit live Caddy. Do not flip `COACHING_SHELL`, `COACHING_WRITES`, or `COACHING_IMPORT`. Do not run an import.
+
+1. **Snapshot counts.** Record source and campus row counts before the freeze. A mismatch stops the cutover. Not executed here.
+2. **Freeze plus AE sidecar stop.** In the same operator step, set `AE_WRITES_FROZEN=1` and stop the AE cron sidecar. Not executed here.
+3. **Delta import.** After the freeze, import the delta. Counts must match the snapshot. Not executed here.
+4. **Caddy.** Working assumption: `portal.benjohnson.ai` 301s to `https://portal.fieldschool.ai`. Do not flip `AUTH_URL`. Do not install `field-school/deploy/caddy.university.conf`. Do not replace the live Caddy file with the short AE repo file. Not executed here.
+5. **Rollback SQL.** The deletes in [Coaching rollback](#coaching-rollback) run only when that process has `COACHING_ROLLBACK_CONFIRM=1`. `:freeze_at` is the recorded freeze instant. Not executed here.
+6. **30-day retention of the `aecoach` volume.** After the AE app container is stopped, keep that volume for 30 days. Do not delete it here.
+7. `/c/grok-bot` is expected to go away and is not a dependency. This PR does not delete that course.

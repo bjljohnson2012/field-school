@@ -48,6 +48,34 @@ services:
       - proxy
       - campus
 
+  # Coaching cron. Profile coaching-cron is off. `docker compose up` does not
+  # create this container. Do not set CRON_SECRET here. Do not enable the profile
+  # from deploy. One POST per hour to the app container on the campus network.
+  coaching-cron:
+    image: alpine:3.20
+    container_name: field-school-coaching-cron
+    profiles:
+      - coaching-cron
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      CRON_SECRET: ${CRON_SECRET:-}
+    networks:
+      - campus
+    command: >
+      sh -c "
+        apk add --no-cache curl > /dev/null;
+        while true; do
+          echo \"[cron] $$(date -u +%Y-%m-%dT%H:%M:%SZ) POST /api/cron/coaching\";
+          curl -sS -X POST \
+            -H \"Authorization: Bearer $$CRON_SECRET\" \
+            http://field-school-app:3000/api/cron/coaching || echo \"[cron] coaching failed\";
+          echo;
+          sleep 3600;
+        done
+      "
+
 volumes:
   field-school-data:
 
