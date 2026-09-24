@@ -26,24 +26,24 @@ function CoachMark() {
       width="48"
       height="48"
       viewBox="0 0 64 64"
-      className="rounded-brand shadow-orange-glow"
+      className="rounded-brand shadow-card"
       role="img"
       aria-label="Field School"
     >
       <defs>
         <linearGradient id="coach-mark-bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#0B1F3A" />
-          <stop offset="1" stopColor="#1F3C88" />
+          <stop stopColor="#1A1916" />
+          <stop offset="1" stopColor="#1F5EFF" />
         </linearGradient>
         <linearGradient id="coach-mark-bolt" x1="20" y1="14" x2="44" y2="50" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FF6A1A" />
-          <stop offset="1" stopColor="#F59E0B" />
+          <stop stopColor="#1F5EFF" />
+          <stop offset="1" stopColor="#1A1916" />
         </linearGradient>
       </defs>
       <rect width="64" height="64" rx="14" fill="url(#coach-mark-bg)" />
-      <rect x="14" y="38" width="6" height="14" rx="2" fill="#1F3C88" opacity="0.55" />
-      <rect x="24" y="30" width="6" height="22" rx="2" fill="#1F3C88" opacity="0.75" />
-      <rect x="34" y="22" width="6" height="30" rx="2" fill="#1F3C88" opacity="0.95" />
+      <rect x="14" y="38" width="6" height="14" rx="2" fill="#1F5EFF" opacity="0.55" />
+      <rect x="24" y="30" width="6" height="22" rx="2" fill="#1F5EFF" opacity="0.75" />
+      <rect x="34" y="22" width="6" height="30" rx="2" fill="#1F5EFF" opacity="0.95" />
       <path d="M44 14 L34 32 L41 32 L36 50 L52 28 L45 28 Z" fill="url(#coach-mark-bolt)" />
     </svg>
   );

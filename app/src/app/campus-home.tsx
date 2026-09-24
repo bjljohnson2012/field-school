@@ -41,11 +41,11 @@ export function CampusHome() {
                 Start Grok Bot
                 <ArrowRight className="size-4" />
               </Link>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#7a746a]">
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
                 Open the free campus course. Watch, work, and clear as a guest.
               </p>
             </div>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-[#7a746a]">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
               Three rails on this portal: campus ladder to start; Learn with Ben
               for LessonSpine, progress, and metering; Org for household and
               sales desks.
@@ -89,39 +89,39 @@ export function CampusHome() {
         </div>
         <div className="mx-auto max-w-6xl px-4 pb-12">
           <div>
-            <p className="text-xs uppercase tracking-[0.16em] text-[#7a746a]">
+            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
               Learn with Ben
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Link
                 href="/play/lesson-spine"
-                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-[#7a746a]"
+                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-muted-foreground"
               >
                 LessonSpine
               </Link>
               <Link
                 href="/progress"
-                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-[#7a746a]"
+                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-muted-foreground"
               >
                 Progress
               </Link>
               <Link
                 href="/metering"
-                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-[#7a746a]"
+                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-muted-foreground"
               >
                 Metering
               </Link>
             </div>
           </div>
           <div className="mt-6">
-            <p className="text-xs uppercase tracking-[0.16em] text-[#7a746a]">
+            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
               Org
             </p>
             <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-              <Link href="/o/household" className="text-[#7a746a] hover:text-foreground">
+              <Link href="/o/household" className="text-muted-foreground hover:text-foreground">
                 Household
               </Link>
-              <Link href="/o/sales" className="text-[#7a746a] hover:text-foreground">
+              <Link href="/o/sales" className="text-muted-foreground hover:text-foreground">
                 Sales
               </Link>
             </div>

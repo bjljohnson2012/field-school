@@ -203,9 +203,9 @@ export default function LearnPage() {
           <p className="mt-6 text-sm text-muted-foreground">Loading this org.</p>
         ) : (
           <section className="mt-8">
-            <p className="text-xs uppercase tracking-[0.16em] text-[#7a746a]">Org</p>
-            <p className="mt-2 text-sm text-[#7a746a]">Family</p>
-            <p className="mt-2 text-sm text-[#7a746a]">Loading</p>
+            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Org</p>
+            <p className="mt-2 text-sm text-muted-foreground">Family</p>
+            <p className="mt-2 text-sm text-muted-foreground">Loading</p>
           </section>
         )
       ) : (

@@ -16,7 +16,7 @@ export default async function LessonSpinePlayPage() {
   const session = await auth().catch(() => null);
   const signedIn = Boolean(session?.user?.email);
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
+    <main data-plate className="mx-auto max-w-6xl px-4 py-10">
       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
         Learn with Ben · filmed lesson
       </p>
