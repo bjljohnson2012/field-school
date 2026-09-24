@@ -19,7 +19,7 @@ const ibmMono = IBM_Plex_Mono({
 });
 
 const fraunces = Fraunces({
-  variable: "--font-fraunces",
+  variable: "--font-plate",
   subsets: ["latin"],
   weight: ["500", "600"],
 });
