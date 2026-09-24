@@ -199,7 +199,12 @@ export default async function PersonPage({
             1:1 prep
           </a>
           <span className="rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground">Tasks</span>
-          <span className="rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground">Reviews</span>
+          <a
+            href={`/coaching/reviews?subject=${subject.membershipId}`}
+            className="rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground"
+          >
+            Reviews
+          </a>
           <span className="rounded-brand px-3 py-1.5 text-sm font-semibold text-muted-foreground">Files</span>
         </div>
       ) : null}

@@ -21,6 +21,7 @@ const READY = new Set([
   "/o/sales/welcome",
   "/o/household/welcome",
   "/coaching/questions",
+  "/coaching/reviews",
 ]);
 
 function item(label: string, href: string): NavItem {
