@@ -20,14 +20,13 @@ export async function lessonSpineLiveBroll(options: MountOptions = {}) {
     if (error instanceof Error && error.message === "PEXELS_API_KEY is unset") return null;
     throw error;
   }
-  const mount = {
+  return mountLivePexelsBroll({
     requested: true,
     query: LESSON_SPINE_BROLL_QUERY,
     cacheDir: options.cacheDir ?? join(tmpdir(), "field-school-pexels"),
     fetchImpl: options.fetchImpl,
     apiKey,
-  };
-  return mountLivePexelsBroll(mount);
+  });
 }
 
 export async function lessonSpineBrollPayload(options: MountOptions = {}) {

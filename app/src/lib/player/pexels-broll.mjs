@@ -119,7 +119,10 @@ export function findCachedBroll(cacheDir, query) {
   return null;
 }
 
-/** Search, then a later call for the same query is a cache hit. Absent request stays null. */
+/**
+ * Search, then a later call for the same query is a cache hit. Absent request stays null.
+ * @param {{ requested?: boolean; query?: string; cacheDir?: string; apiKey?: string; fetchImpl?: typeof fetch }} [options]
+ */
 export async function mountLivePexelsBroll({
   requested = false,
   query,
