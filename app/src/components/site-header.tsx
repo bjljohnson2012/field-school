@@ -199,6 +199,12 @@ export function SiteHeader() {
                 {initial}
               </summary>
               <div className="absolute right-0 z-40 mt-1 flex min-w-40 flex-col gap-2 rounded-xl border border-border bg-background p-3 shadow-md">
+                <Link
+                  href="/profile"
+                  className="flex h-11 items-center text-sm text-muted-foreground hover:text-foreground"
+                >
+                  View Profile
+                </Link>
                 <ThemeToggle />
                 <button
                   type="button"
