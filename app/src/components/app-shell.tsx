@@ -1,300 +1,63 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useState, type ReactNode } from "react";
-import { signOutPortal } from "@/lib/auth/sign-out";
-import { preferPlatformAdmin } from "@/lib/campus-runtime/lessons";
-import { coachingNav, tasksCount, type NavItem } from "@/lib/coaching/nav";
+import { CommandPalette } from "@/components/command-palette";
+import { ImpersonationBanner } from "@/components/impersonation-banner";
+import { isLeader, navLinks, NEW_DOORS, SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { SynthesisStatusBanner } from "@/components/synthesis-status-banner";
-import { TasksNavBadge } from "@/components/tasks-nav-badge";
+import { parseShellViewer, roomOf, shellCommands, type ShellViewer } from "@/lib/shell/model";
+import { learnZone } from "@/lib/shell/routes";
 
-type OrgChoice = { slug: string; name: string };
-
-type ShellSession = {
-  kind: string;
-  name: string;
-  slug: string;
-  capabilities: string[];
-  memberships: OrgChoice[];
-  platformAdmin?: boolean;
-};
-
-export function AppShell({
-  name,
-  children,
-  orgKind: orgKindProp,
-  orgName: orgNameProp,
-  capabilities: capabilitiesProp,
-  platformAdmin: platformAdminProp = false,
-  memberships: membershipsProp,
-  logoUrl = "",
-}: {
-  name: string;
-  children: ReactNode;
-  orgKind?: string;
-  orgName?: string;
-  capabilities?: readonly string[];
-  platformAdmin?: boolean;
-  memberships?: readonly OrgChoice[];
-  logoUrl?: string;
-}) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [session, setSession] = useState<ShellSession | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const openTasks = tasksCount();
-
+/** Re-read on navigation so an Org switch re-filters the whole chrome without a reload. */
+function useShellViewer(signedIn: boolean, pathname: string) {
+  const [viewer, setViewer] = useState<ShellViewer | null>(null);
   useEffect(() => {
-    setMenuOpen(false);
-    setDrawerOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
+    if (!signedIn) {
+      setViewer(null);
+      return;
+    }
     let cancelled = false;
     void fetch("/api/me")
       .then((res) => res.json())
-      .then((data) => {
-        if (cancelled || !data?.authenticated) return;
-        const rows = Array.isArray(data.memberships) ? data.memberships : [];
-        const slug = typeof data.activeOrg?.slug === "string" ? data.activeOrg.slug : "";
-        const active = rows.find((row: { org?: string }) => row.org === slug) ?? null;
-        const stance = typeof active?.stance === "string" ? active.stance : "";
-        setSession({
-          kind: typeof active?.kind === "string" ? active.kind : "",
-          name:
-            (typeof active?.name === "string" && active.name) ||
-            (typeof data.activeOrg?.name === "string" ? data.activeOrg.name : ""),
-          slug: typeof active?.org === "string" ? active.org : slug,
-          capabilities: stance ? [stance] : [],
-          platformAdmin:
-            typeof data.platformAdmin === "boolean" ? data.platformAdmin : undefined,
-          memberships: rows
-            .filter((row: { org?: string }) => typeof row.org === "string" && row.org)
-            .map((row: { org: string; name?: string }) => ({
-              slug: row.org,
-              name: row.name || row.org,
-            })),
-        });
+      .then((json: unknown) => {
+        if (!cancelled) setViewer(parseShellViewer(json));
       })
-      .catch(() => {});
+      .catch(() => undefined);
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [signedIn, pathname]);
+  return viewer;
+}
 
-  const orgKind = orgKindProp ?? session?.kind ?? "";
-  const orgName = orgNameProp ?? session?.name ?? "";
-  const capabilities = capabilitiesProp ?? session?.capabilities ?? [];
-  const memberships = membershipsProp ?? session?.memberships ?? [];
-  const platformAdmin = preferPlatformAdmin(session?.platformAdmin, platformAdminProp);
-  const items = coachingNav({ orgKind, capabilities, platformAdmin });
-  const initial = (name || "F").slice(0, 1).toUpperCase();
-
-  async function switchOrg(slug: string) {
-    await fetch("/api/org/active", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ slug }),
-    });
-    setMenuOpen(false);
-    router.push(`/o/${slug}`);
-    router.refresh();
-  }
+/** The one shell host, for guests and signed-in viewers in either room. */
+export function AppShell({ children }: { children: ReactNode }) {
+  const { status } = useSession();
+  const pathname = usePathname();
+  const signedIn = status === "authenticated";
+  const viewer = useShellViewer(signedIn, pathname);
+  const leader = Boolean(viewer && isLeader(viewer.stance));
+  const bar = navLinks({ loggedIn: signedIn, guest: !signedIn, leader, org: viewer?.org ?? "" });
+  const commands = shellCommands({ bar, newDoors: leader ? NEW_DOORS : [], viewer: signedIn ? viewer : null });
+  const room = viewer ? roomOf(viewer.org) : null;
 
   return (
-    <div className="flex min-h-full flex-1 flex-col">
-      <header className="bg-brand-navy text-white">
-        <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4">
-          <Link
-            href={wordmarkHref(orgKind)}
-            className="font-display text-lg font-semibold tracking-tight text-white"
-          >
-            <Wordmark orgKind={orgKind} orgName={orgName} />
-          </Link>
-          <NavLinks items={items} pathname={pathname} className="hidden min-w-0 flex-1 items-center justify-center gap-1 md:flex" />
-          <div className="ml-auto flex items-center gap-2">
-            <Link
-              href="/tasks"
-              className="inline-flex items-center gap-2 rounded-brand bg-brand-orange px-3 py-1.5 text-sm font-semibold text-white"
-            >
-              Tasks
-              <TasksNavBadge fallback={openTasks} />
-            </Link>
-            <div className="relative">
-              <button
-                type="button"
-                className="grid size-9 place-items-center rounded-full bg-gradient-to-br from-brand-indigo to-brand-orange text-sm font-semibold text-white"
-                aria-expanded={menuOpen}
-                aria-haspopup="menu"
-                onClick={() => setMenuOpen((open) => !open)}
-              >
-                {logoUrl.trim() ? (
-                  <img src={logoUrl.trim()} alt="" className="size-9 rounded-full object-cover" />
-                ) : (
-                  <span data-logo="monogram">{initial}</span>
-                )}
-              </button>
-              {menuOpen ? (
-                <div
-                  role="menu"
-                  className="absolute right-0 z-20 mt-2 w-56 rounded-brand border border-white/10 bg-brand-navy py-1 text-sm shadow-card"
-                >
-                  <Link
-                    href="/card"
-                    role="menuitem"
-                    className="block w-full px-3 py-2 text-left text-white hover:bg-white/10"
-                  >
-                    My card
-                  </Link>
-                  <Link
-                    href="/account"
-                    role="menuitem"
-                    className="block w-full px-3 py-2 text-left text-white hover:bg-white/10"
-                  >
-                    Account
-                  </Link>
-                  {memberships.length > 1
-                    ? memberships.map((org) => (
-                        <button
-                          key={org.slug}
-                          type="button"
-                          role="menuitem"
-                          className="block w-full px-3 py-2 text-left text-white hover:bg-white/10"
-                          onClick={() => void switchOrg(org.slug)}
-                        >
-                          {org.name}
-                        </button>
-                      ))
-                    : null}
-                  <button
-                    type="button"
-                    role="menuitem"
-                    className="block w-full px-3 py-2 text-left font-semibold text-white hover:bg-white/10"
-                    onClick={() => signOutPortal("/login")}
-                  >
-                    Sign out
-                  </button>
-                </div>
-              ) : null}
-            </div>
-            <button
-              type="button"
-              className="px-2 text-sm font-semibold text-white md:hidden"
-              aria-expanded={drawerOpen}
-              onClick={() => setDrawerOpen((open) => !open)}
-            >
-              Menu
-            </button>
-          </div>
-        </div>
-        {drawerOpen ? (
-          <div className="border-t border-white/10 px-4 py-3 md:hidden">
-            <NavLinks items={items} pathname={pathname} className="flex flex-col items-start gap-1" />
+    <div className="flex min-h-full flex-1 flex-col" data-room={room ?? undefined}>
+      <SiteHeader viewer={viewer} />
+      <ImpersonationBanner />
+      <div className="flex-1" data-learn-zone={learnZone(pathname) ?? undefined}>
+        {room === "sales" ? (
+          <div className="mx-auto max-w-6xl px-4 pt-4">
+            <SynthesisStatusBanner />
           </div>
         ) : null}
-      </header>
-      <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">
-        <SynthesisStatusBanner />
         {children}
       </div>
-    </div>
-  );
-}
-
-function wordmarkHref(orgKind: string) {
-  const kind = orgKind.trim().toLowerCase();
-  if (kind === "sales" || kind === "company") return "/o/sales/welcome";
-  if (kind === "household" || kind === "homeschool") return "/o/household/welcome";
-  return "/";
-}
-
-function Wordmark({ orgKind, orgName }: { orgKind: string; orgName: string }) {
-  const kind = orgKind.trim().toLowerCase();
-  const sales = kind === "sales" || kind === "company";
-  if (!sales && (!orgName || orgName === "Field School")) {
-    return (
-      <>
-        Field <span className="text-brand-orange">School</span>
-      </>
-    );
-  }
-  return (
-    <>
-      {orgName || (sales ? "Sales" : "Field")}{" "}
-      <span className="text-brand-orange">{sales ? "Coach" : "Field School"}</span>
-    </>
-  );
-}
-
-function NavLinks({
-  items,
-  pathname,
-  className,
-}: {
-  items: NavItem[];
-  pathname: string;
-  className: string;
-}) {
-  return (
-    <nav className={className} aria-label="Coaching">
-      {items.map((item) =>
-        item.disabled ? (
-          <button
-            key={item.href}
-            type="button"
-            disabled
-            className="rounded-brand px-3 py-1.5 text-sm font-semibold text-white/50"
-          >
-            {item.label}
-          </button>
-        ) : (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={
-              pathname === item.href
-                ? "rounded-brand bg-white/10 px-3 py-1.5 text-sm font-semibold text-white"
-                : "rounded-brand px-3 py-1.5 text-sm font-semibold text-white/80 hover:text-white"
-            }
-            aria-current={pathname === item.href ? "page" : undefined}
-          >
-            {item.label}
-          </Link>
-        ),
-      )}
-    </nav>
-  );
-}
-
-export function GuestChrome({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
-  const login = pathname === "/login";
-  return (
-    <div className="flex min-h-full flex-1 flex-col">
-      <header className="bg-brand-navy text-white">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
-          <Link
-            href="/"
-            className="font-display text-lg font-semibold tracking-tight text-white"
-          >
-            Field <span className="text-brand-orange">School</span>
-          </Link>
-          <Link href="/login" className="text-sm font-semibold text-white">
-            Sign in
-          </Link>
-        </div>
-      </header>
-      {login ? (
-        <div className="flex flex-1 items-center justify-center px-4 py-16">
-          {children}
-        </div>
-      ) : (
-        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">
-          <div className="card p-6 md:p-8">{children}</div>
-        </main>
-      )}
+      <SiteFooter />
+      <CommandPalette commands={commands} />
     </div>
   );
 }

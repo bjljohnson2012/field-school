@@ -83,7 +83,7 @@ test("desk scores reject outside 1-4 and reject 0-100 slugs", () => {
   assert.match(skillsRoute, /skillScale\(skill\.slug\) !== "1-4"/);
 });
 
-test("platformAdmin folds across memberships, including field-school while sales is active", () => {
+test("platformAdmin folds across memberships, including field-school while sales is active", async () => {
   const folded = {
     memberships: [
       { id: "m-fs", orgId: "org-fs", memberId: "op", stance: "admin" },
@@ -116,16 +116,24 @@ test("platformAdmin folds across memberships, including field-school while sales
   const helper = read("src/lib/coaching/scores.ts");
   assert.match(helper, /memberHasPlatformAdmin\(/);
   assert.match(helper, /eq\(memberships\.memberId, memberId\)/);
-  const chrome = read("src/components/chrome.tsx");
-  assert.match(chrome, /platformAdmin=\{platformAdmin\}/);
-  assert.match(chrome, /memberPlatformAdmin/);
-  const shell = read("src/components/app-shell.tsx");
-  assert.match(shell, /preferPlatformAdmin\(session\?\.platformAdmin, platformAdminProp\)/);
-  assert.match(shell, /platformAdmin: platformAdminProp = false/);
-  assert.match(shell, /href="\/card"/);
-  assert.match(shell, /My card/);
-  assert.match(shell, /Sign out/);
-  assert.doesNotMatch(shell, /Help/);
+  const { accountItems, parseShellViewer, shellCommands } = await import("../src/lib/shell/model.ts");
+  const reply = (platformAdmin) => ({
+    authenticated: true,
+    platformAdmin,
+    member: { name: "Ada", kind: "adult" },
+    activeOrg: { slug: "sales", name: "Sales", stance: "learner" },
+  });
+  assert.equal(parseShellViewer(reply(true))?.platformAdmin, true);
+  assert.equal(parseShellViewer(reply("true"))?.platformAdmin, false);
+  assert.equal(parseShellViewer(reply(undefined))?.platformAdmin, false);
+  const viewer = parseShellViewer(reply(false));
+  assert.ok(viewer);
+  assert.equal(accountItems(viewer).find((item) => item.href === "/card")?.label, "My card");
+  const commands = shellCommands({ bar: [], newDoors: [], viewer });
+  assert.equal(commands.some((item) => /Help/.test(item.label)), false);
+  const header = read("src/components/site-header.tsx");
+  assert.match(header, /Sign out/);
+  assert.doesNotMatch(header, /Help/);
 });
 
 test("own membership is the card view and the learner DTO omits hints", () => {

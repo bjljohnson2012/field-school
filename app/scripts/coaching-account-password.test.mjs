@@ -183,17 +183,35 @@ function assertQuiet(chunks, secrets) {
   }
 }
 
-test("menu gains Account only and the page is signed-in", () => {
+test("menu gains Account only and the page is signed-in", async () => {
+  const { accountItems } = await import("../src/lib/shell/model.ts");
+  const viewer = (org) => ({
+    name: "Ada",
+    memberKind: "adult",
+    org,
+    orgName: org,
+    stance: "learner",
+    platformAdmin: false,
+    logoUrl: "",
+    memberships: [],
+    profiles: [],
+  });
+  for (const org of ["sales", "household", "field-school"]) {
+    const items = accountItems(viewer(org));
+    assert.equal(items.filter((item) => item.href === "/account").length, 1, org);
+    assert.equal(items.find((item) => item.href === "/account")?.label, "Account", org);
+  }
+  assert.equal(accountItems(viewer("sales")).find((item) => item.href === "/card")?.label, "My card");
+
+  const header = read("src/components/site-header.tsx");
   const shell = read("src/components/app-shell.tsx");
-  assert.equal(shell.match(/href="\/account"/g)?.length, 1);
-  assert.match(shell, />\s*Account\s*</);
-  assert.match(shell, />\s*My card\s*</);
-  assert.match(shell, />\s*Sign out\s*</);
-  assert.match(shell, /switchOrg/);
-  assert.match(shell, /signOutPortal\("\/login"\)/);
-  assert.equal(shell.split("<header").length - 1, 2);
-  assert.equal(shell.includes("function GuestChrome"), true);
-  assert.doesNotMatch(shell, /COACHING_SHELL|AUTH_URL/);
+  assert.match(header, />\s*Sign out\s*</);
+  assert.match(header, /signOutPortal\("\/login"\)/);
+  assert.match(header, /<OrgPicker /);
+  assert.match(read("src/components/org-picker.tsx"), /"\/api\/org\/active"/);
+  assert.equal(header.split("<header").length - 1, 1);
+  assert.equal(shell.includes("<header"), false);
+  assert.doesNotMatch(header + shell, /COACHING_SHELL|AUTH_URL/);
   assert.equal(read("src/lib/coaching/nav.ts").includes("/account"), false);
 
   const account = read("src/app/account/page.tsx");
