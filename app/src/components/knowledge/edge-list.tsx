@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EmptyState } from "@/components/desk/desk";
 import type { EdgeEnd, EdgeView } from "@/lib/knowledge/graph";
 
 function EndLabel({ end }: { end: EdgeEnd }) {
@@ -13,7 +14,7 @@ function EndLabel({ end }: { end: EdgeEnd }) {
 
 /** Every edge says why it exists, and opens to the rows that prove it. */
 export function EdgeList({ edges, hideFrom = false, empty }: { edges: readonly EdgeView[]; hideFrom?: boolean; empty: string }) {
-  if (!edges.length) return <p className="text-sm text-muted-foreground">{empty}</p>;
+  if (!edges.length) return <EmptyState>{empty}</EmptyState>;
   return (
     <ul className="grid gap-2">
       {edges.map((edge) => (

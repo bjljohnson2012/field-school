@@ -5,6 +5,8 @@ import Link from "next/link";
 import { assistDraft, assistFacts, brainBoard, type BrainBoard } from "@/lib/living-brain/model";
 import { LessonSpineHistory } from "@/components/lesson-spine-history";
 import { lessonSpineConfidence, lessonSpineRollup, lessonSpineStep } from "@/lib/player/play-rail-write";
+import { DeskCard, EmptyState, KpiStrip } from "@/components/desk/desk";
+import { insightsKpis } from "@/lib/desk/kpi";
 import { EMPTY_COPY, type InsightPerson, type InsightPoint, type InsightsModel } from "./aggregate";
 
 type OpenState = {
@@ -69,11 +71,9 @@ function ChartFrame({
   children: ReactNode;
 }) {
   return (
-    <section data-chart={id} aria-label={title} className="rounded-xl border border-border bg-card p-5">
-      <h2 className="font-display text-2xl tracking-tight">{title}</h2>
-      <p className="mt-1 text-sm text-muted-foreground">{hint}</p>
-      <div className="mt-4">{empty ? <p>{EMPTY_COPY}</p> : children}</div>
-    </section>
+    <DeskCard data-chart={id} title={title} hint={hint}>
+      {empty ? <EmptyState>{EMPTY_COPY}</EmptyState> : children}
+    </DeskCard>
   );
 }
 
@@ -200,19 +200,19 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
 
   return (
     <div data-org={model.orgSlug} data-children={model.childrenIncluded} data-sales-diagnostics={model.salesDiagnostics}>
+      <KpiStrip label="This org at a glance" items={insightsKpis(model)} />
       {board ? (
-        <section
+        <DeskCard
           data-chart="org-brain"
           data-brain-room={board.room}
           data-brain-count={board.people.length}
           data-sales-children={board.room === "sales" ? "0" : undefined}
           data-suggestion-source={suggestionSource || undefined}
-          aria-label="Org brain"
-          className="mb-4 rounded-xl border border-border bg-card p-5"
+          title="Org brain"
+          hint="Facts for this org, what this family or team is aiming for, then each person."
+          className="mb-4"
         >
-          <h2 className="font-display text-2xl tracking-tight">Org brain</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Facts for this org, what this family or team is aiming for, then each person.</p>
-          <p className="mt-4 text-sm" data-brain-facts={board.facts ? "yes" : "no"}>
+          <p className="text-sm" data-brain-facts={board.facts ? "yes" : "no"}>
             {board.facts || "No org facts yet."}
           </p>
           {lessonSpineRollup(board.people).length ? (
@@ -436,9 +436,11 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
               </table>
             </div>
           ) : (
-            <p className="mt-4 text-sm text-muted-foreground">No people on this brain yet.</p>
+            <div className="mt-4">
+              <EmptyState>No people on this brain yet.</EmptyState>
+            </div>
           )}
-        </section>
+        </DeskCard>
       ) : null}
       <div className="grid gap-4 md:grid-cols-2">
         <ChartFrame id="movement" title="Movement" hint="Moved in the last 7 days, and stalled." empty={model.empty}>
@@ -466,7 +468,7 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
           {model.checks.length ? (
             <Bars points={model.checks} scale="percent" onOpen={onOpen} />
           ) : (
-            <p className="text-sm text-muted-foreground">No quiz checks in this org.</p>
+            <EmptyState>No quiz checks in this org.</EmptyState>
           )}
         </ChartFrame>
         <ChartFrame id="credits" title="Credits" hint="Platform burn and BYOK usage, in units." empty={model.empty}>
@@ -521,7 +523,7 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
               </table>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No skill states in this org.</p>
+            <EmptyState>No skill states in this org.</EmptyState>
           )}
         </ChartFrame>
       </div>
@@ -554,7 +556,7 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
               brain={board?.people.find((row) => row.membershipId === open.person?.membershipId) ?? null}
             />
           ) : (
-            <p className="text-sm text-muted-foreground">Open a point to see a person.</p>
+            <EmptyState>Open a point to see a person.</EmptyState>
           )}
         </div>
       </aside>

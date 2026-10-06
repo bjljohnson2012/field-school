@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { DeskCard, DeskPage, EmptyState } from "@/components/desk/desk";
 import { EdgeList } from "@/components/knowledge/edge-list";
 import { edgeViews } from "@/lib/knowledge/graph";
 import { loadKnowledge } from "@/lib/knowledge/load";
@@ -14,11 +15,9 @@ export const metadata = {
 
 function Shell({ children }: { children: ReactNode }) {
   return (
-    <main className="mx-auto max-w-6xl px-4 py-12">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Operator</p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Insights</h1>
-      <div className="mt-8">{children}</div>
-    </main>
+    <DeskPage eyebrow="Operator" title="Insights">
+      {children}
+    </DeskPage>
   );
 }
 
@@ -69,26 +68,22 @@ export default async function InsightsPage() {
     <Shell>
       <p className="mb-6 text-sm text-muted-foreground">{result.model.orgName}</p>
       <InsightsBoard model={result.model} />
-      <section data-edges="people-milestones" aria-label="People and milestones" className="mt-10">
-        <h2 className="font-display text-2xl tracking-tight">People and milestones</h2>
+      <DeskCard
+        data-edges="people-milestones"
+        title="People and milestones"
+        hint={
+          household
+            ? "Tracked children on your family. No login. Each line opens to the row it came from."
+            : undefined
+        }
+        className="mt-10"
+      >
         {household ? (
-          <>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Tracked children on your family. No login. Each line opens to the row it came from.
-            </p>
-            <div className="mt-4">
-              <EdgeList
-                edges={people?.ok ? edgeViews(people.graph) : []}
-                empty="No intake or finished unit yet."
-              />
-            </div>
-          </>
+          <EdgeList edges={people?.ok ? edgeViews(people.graph) : []} empty="No intake or finished unit yet." />
         ) : (
-          <p className="mt-1 text-sm text-muted-foreground">
-            Login learners keep their own milestones on their profile. This desk does not read them.
-          </p>
+          <EmptyState>Login learners keep their own milestones on their profile. This desk does not read them.</EmptyState>
         )}
-      </section>
+      </DeskCard>
     </Shell>
   );
 }
