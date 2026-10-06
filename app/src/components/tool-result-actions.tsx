@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { ToolResult } from "@/lib/portal";
 import { saveToolResult } from "@/lib/portal";
+import { gateForTool } from "@/lib/profile/model";
 import { downloadAssessmentPdf } from "@/lib/tools/pdf";
 import { stashPendingTool } from "@/lib/tools/pending";
 import type { AssessmentShare } from "@/lib/tools/share";
@@ -54,6 +55,13 @@ export function ToolResultActions({
               onClick={() => {
                 saveToolResult(result);
                 setSaved(true);
+                if (gateForTool(result.toolSlug)) {
+                  void fetch("/api/profile/gates", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ tool: result.toolSlug }),
+                  }).catch(() => undefined);
+                }
               }}
             >
               Save to profile
