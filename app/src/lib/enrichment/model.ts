@@ -80,6 +80,10 @@ export function parseAcceptance(
   return { profileUrl, items: out };
 }
 
+export function mediaPath(id: string) {
+  return `/api/media/${id}`;
+}
+
 export function listOfAliases(raw: unknown): string[] {
   return Array.isArray(raw) ? raw.filter((value): value is string => typeof value === "string") : [];
 }

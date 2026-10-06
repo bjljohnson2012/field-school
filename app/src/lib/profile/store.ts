@@ -2,6 +2,7 @@ import { and, eq, inArray, isNotNull, max, min } from "drizzle-orm";
 import { applyProfileM2Sql } from "@/lib/assessments/sql";
 import { getDb } from "@/lib/db/client";
 import { assessmentRuns } from "@/lib/db/schema-profile-m2";
+import { mediaPath } from "@/lib/enrichment/model";
 import {
   instrumentRuns,
   kidProfiles,
@@ -82,7 +83,7 @@ async function personalityMark(memberId: string) {
 }
 
 async function ensureRow(owner: ProfileOwner) {
-  await applyProfileSql();
+  await applyProfileM2Sql();
   const db = getDb();
   await db
     .insert(userProfiles)
@@ -107,6 +108,7 @@ function shapeAdult(
     memberId: row.memberId,
     displayName: row.displayName || owner.name,
     photoUrl: row.photoUrl || "",
+    photoSrc: row.photoMediaId ? mediaPath(row.photoMediaId) : "",
     currentProjects: listOfStrings(row.currentProjects),
     skillsAdapted: listOfStrings(row.skillsAdapted),
     setup,

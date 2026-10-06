@@ -13,7 +13,7 @@ import {
 } from "@/lib/db/schema-profile-m2";
 import { candidatesFromText, type ImportCandidate } from "./linkedin";
 import { readPhoto, type PhotoRefusal } from "./media";
-import { listOfAliases, type ProjectInput, type SkillInput } from "./model";
+import { listOfAliases, mediaPath, type ProjectInput, type SkillInput } from "./model";
 import { findExact, matchKey, suggest, type Known } from "./names";
 import { fetchPhoto, type FetchRefusal } from "./photo-fetch";
 
@@ -25,10 +25,6 @@ async function ready(owner: Owner) {
     .insert(userProfiles)
     .values({ memberId: owner.memberId, displayName: owner.name })
     .onConflictDoNothing();
-}
-
-export function mediaPath(id: string) {
-  return `/api/media/${id}`;
 }
 
 export type PhotoSource = { kind: "upload"; bytes: Uint8Array } | { kind: "url"; url: string };
