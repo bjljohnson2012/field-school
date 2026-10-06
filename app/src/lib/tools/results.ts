@@ -1,3 +1,4 @@
+import { gateForTool, type AdultGateId } from "../profile/model.ts";
 import { intelligenceQuestions, scoreIntelligence } from "./intelligence.ts";
 import { scoreSkill, skillQuestions } from "./skill.ts";
 
@@ -84,6 +85,21 @@ export function latestByTool(results: readonly ToolResult[]): LatestToolResults 
     }
   }
   return latest;
+}
+
+/** Gates the saved results earn that the profile has not marked, each at the time of its first result. */
+export function owedGates(
+  results: readonly ToolResult[],
+  done: ReadonlySet<string>,
+): { gate: AdultGateId; at: string }[] {
+  const owed = new Map<AdultGateId, string>();
+  for (const result of results) {
+    const gate = gateForTool(result.toolSlug);
+    if (!gate || done.has(gate)) continue;
+    const prior = owed.get(gate);
+    if (!prior || Date.parse(result.completedAt) < Date.parse(prior)) owed.set(gate, result.completedAt);
+  }
+  return [...owed].map(([gate, at]) => ({ gate, at }));
 }
 
 export function scoreSubmission(submission: ToolSubmission, completedAt: Date): ToolResult {

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   latestByTool,
+  owedGates,
   parseToolSubmission,
   scoreSubmission,
   submissionBody,
@@ -85,4 +86,20 @@ test("latestByTool keeps the newest result per tool", () => {
   ]);
   assert.equal(latest.skill.summary, "new");
   assert.equal(latest.intelligence.summary, "only");
+});
+
+test("owedGates marks each unmarked gate once, at its first stored result", () => {
+  const row = (toolSlug, completedAt) => ({ toolSlug, attemptId, answers: {}, completedAt, summary: "", scores: {}, labels: {} });
+  const results = [
+    row("skill", "2026-10-03T00:00:00.000Z"),
+    row("skill", "2026-10-01T00:00:00.000Z"),
+    row("intelligence", "2026-10-02T00:00:00.000Z"),
+  ];
+  assert.deepEqual(owedGates(results, new Set()), [
+    { gate: "G-skills", at: "2026-10-01T00:00:00.000Z" },
+    { gate: "G-other", at: "2026-10-02T00:00:00.000Z" },
+  ]);
+  assert.deepEqual(owedGates(results, new Set(["G-skills"])), [{ gate: "G-other", at: "2026-10-02T00:00:00.000Z" }]);
+  assert.deepEqual(owedGates(results, new Set(["G-skills", "G-other"])), []);
+  assert.deepEqual(owedGates([], new Set()), []);
 });

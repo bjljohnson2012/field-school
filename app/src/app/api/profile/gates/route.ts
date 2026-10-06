@@ -3,7 +3,7 @@ import { loadSession } from "@/lib/campus-runtime/identity";
 import { DatabaseUnavailableError } from "@/lib/db/client";
 import { gateForTool } from "@/lib/profile/model";
 import { loadAdultProfile, recordAdultGate } from "@/lib/profile/store";
-import { latestByTool, parseToolSubmission } from "@/lib/tools/results";
+import { latestByTool, owedGates, parseToolSubmission } from "@/lib/tools/results";
 import { listToolResults, saveToolResult } from "@/lib/tools/results-store";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +29,6 @@ function databaseDown(error: unknown) {
   throw error;
 }
 
-/** The signed-in User's latest saved Tools results. */
 export async function GET(request: Request) {
   try {
     const auth = await adultSession(request);
@@ -41,7 +40,6 @@ export async function GET(request: Request) {
   }
 }
 
-/** Tools Skill → G-skills, Tools Intelligence → G-other. The server scores the answers and keeps the result. */
 export async function POST(request: Request) {
   try {
     const auth = await adultSession(request);
@@ -58,11 +56,14 @@ export async function POST(request: Request) {
     if (!gate) return NextResponse.json({ ok: false, error: "not_a_profile_gate" }, { status: 400 });
     const owner = { memberId: auth.session.member.id, name: auth.session.user.name };
     const saved = await saveToolResult(owner.memberId, parsed.submission);
-    const at = new Date(saved.result.completedAt);
-    let profile = saved.created ? await recordAdultGate(owner, gate, at) : await loadAdultProfile(owner);
-    // A replay re-marks only a gate the first save never reached (crash between insert and mark).
-    if (!profile.setup.gates.some((g) => g.id === gate && g.done)) {
-      profile = await recordAdultGate(owner, gate, at);
+    if (saved.result.toolSlug !== parsed.submission.toolSlug) {
+      return NextResponse.json({ ok: false, error: "attempt_reused" }, { status: 409 });
+    }
+    let profile = await loadAdultProfile(owner);
+    const done = new Set(profile.setup.gates.flatMap((g) => (g.done ? [g.id] : [])));
+    // A crash or a concurrent save can lose a gate mark; the stored results put it back.
+    for (const owed of owedGates(await listToolResults(owner.memberId), done)) {
+      profile = await recordAdultGate(owner, owed.gate, new Date(owed.at));
     }
     return NextResponse.json({ ok: true, gate, setup: profile.setup, result: saved.result });
   } catch (error) {

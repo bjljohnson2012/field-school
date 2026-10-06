@@ -1,7 +1,6 @@
--- Tools Skill and Intelligence results, one row per attempt, owned by the signed-in User (members.id).
 -- The server scores raw answers and stamps completed_at; the browser summary and clock are never stored.
 -- attempt_id is minted by the browser at "See results": a retried save of one attempt keeps the first row.
--- No org column: private to the User. Does not alter 0001-0017.
+-- No org column: private to the User.
 CREATE TABLE IF NOT EXISTS tool_results (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   member_id uuid NOT NULL REFERENCES members(id),
