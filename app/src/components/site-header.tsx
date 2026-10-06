@@ -259,7 +259,10 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
             <div className="h-8 w-8 animate-pulse rounded-full bg-secondary" />
           ) : loggedIn ? (
             <details className="relative ml-1">
-              <summary className="grid size-8 cursor-pointer list-none place-items-center overflow-hidden rounded-full bg-foreground text-xs font-medium text-background">
+              <summary
+                aria-label="Account menu"
+                className="grid size-8 cursor-pointer list-none place-items-center overflow-hidden rounded-full bg-foreground text-xs font-medium text-background"
+              >
                 {logoUrl ? (
                   <img src={logoUrl} alt="" className="size-8 object-cover" />
                 ) : (

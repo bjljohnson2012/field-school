@@ -8,12 +8,21 @@ import { ImpersonationBanner } from "@/components/impersonation-banner";
 import { isLeader, navLinks, NEW_DOORS, SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SynthesisStatusBanner } from "@/components/synthesis-status-banner";
-import { parseShellViewer, roomOf, shellCommands, type ShellViewer } from "@/lib/shell/model";
+import { ORG_SWITCH_EVENT, parseShellViewer, roomOf, shellCommands, type ShellViewer } from "@/lib/shell/model";
 import { learnZone } from "@/lib/shell/routes";
 
 /** Re-read on navigation so an Org switch re-filters the whole chrome without a reload. */
 function useShellViewer(signedIn: boolean, pathname: string) {
   const [viewer, setViewer] = useState<ShellViewer | null>(null);
+  const [switches, setSwitches] = useState(0);
+  useEffect(() => {
+    const onSwitch = () => {
+      setViewer(null);
+      setSwitches((n) => n + 1);
+    };
+    window.addEventListener(ORG_SWITCH_EVENT, onSwitch);
+    return () => window.removeEventListener(ORG_SWITCH_EVENT, onSwitch);
+  }, []);
   useEffect(() => {
     if (!signedIn) {
       setViewer(null);
@@ -25,15 +34,16 @@ function useShellViewer(signedIn: boolean, pathname: string) {
       .then((json: unknown) => {
         if (!cancelled) setViewer(parseShellViewer(json));
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (!cancelled) setViewer(null);
+      });
     return () => {
       cancelled = true;
     };
-  }, [signedIn, pathname]);
+  }, [signedIn, pathname, switches]);
   return viewer;
 }
 
-/** The one shell host, for guests and signed-in viewers in either room. */
 export function AppShell({ children }: { children: ReactNode }) {
   const { status } = useSession();
   const pathname = usePathname();

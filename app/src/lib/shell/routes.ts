@@ -1,8 +1,3 @@
-/**
- * Which bar door a route lights, and which Learn surface it is. Learn keeps four surfaces apart:
- * the desk (what next), the catalog (browse), a collection (one course), and the player (do the work).
- * Players stay where they are; this registry only names them.
- */
 export type Door = "learn" | "people" | "library" | "insights" | "me";
 export type LearnZone = "desk" | "catalog" | "collection" | "player";
 export type RouteEntry = { pattern: string; door: Door | null; zone: LearnZone | null };

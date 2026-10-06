@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import type { ShellMembership } from "@/lib/shell/model";
+import { ORG_SWITCH_EVENT, type ShellMembership } from "@/lib/shell/model";
 
 const VIEW_ALL = "__all__";
 
@@ -32,7 +32,10 @@ export function OrgPicker({ memberships, active }: { memberships: readonly Shell
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ slug }),
-          }).then(() => router.push(`/o/${slug}`));
+          }).then(() => {
+            window.dispatchEvent(new Event(ORG_SWITCH_EVENT));
+            router.push(`/o/${slug}`);
+          });
         }}
       >
         {memberships.map((org) => (

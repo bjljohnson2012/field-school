@@ -4,7 +4,6 @@ import { PROFILE_COPY } from "../profile/model.ts";
 
 export type ShellMembership = { org: string; name: string; stance: string };
 
-/** What the shell knows about the signed-in viewer. One read of /api/me feeds the bar, Org, avatar, and Cmd-K. */
 export type ShellViewer = {
   name: string;
   memberKind: "adult" | "child";
@@ -19,6 +18,9 @@ export type ShellViewer = {
 
 /** Cmd-K lives in the shell host; the bar and the avatar menu only ask it to open. */
 export const OPEN_PALETTE_EVENT = "fs:open-palette";
+
+/** Fired once the active org has changed on the server, so the shell drops the old room's viewer. */
+export const ORG_SWITCH_EVENT = "fs:org-switch";
 
 export type ShellGroup = "Go" | "New" | "Account" | "Profiles" | "Sales desk";
 export type ShellItem = { id: string; label: string; href: string; group: ShellGroup; badge?: "tasks"; hint?: string };
@@ -95,7 +97,6 @@ export function accountItems(viewer: ShellViewer): ShellItem[] {
   return [account];
 }
 
-/** Everything Cmd-K can open, derived from the bar, the New doors, and the avatar menu so no list is kept twice. */
 export function shellCommands(input: {
   bar: readonly Door[];
   newDoors: readonly Door[];
