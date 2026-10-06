@@ -51,6 +51,7 @@ test("one shell host: the root layout mounts AppShell and nothing else draws a b
   const header = read("src/components/site-header.tsx");
   assert.match(header, /<header data-bar=""/);
   assert.match(header, /useBarMenusClose\(pathname\);/);
+  assert.match(header, /loggedIn && !viewer\s*\?\s*\[\]/);
   assert.match(header, /header\[data-bar\] details\[open\]/);
   assert.match(header, /window\.addEventListener\(OPEN_PALETTE_EVENT, onPalette\)/);
 });

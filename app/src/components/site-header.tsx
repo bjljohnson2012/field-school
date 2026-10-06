@@ -152,12 +152,15 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
   const logoUrl = viewer?.logoUrl.trim() ?? "";
 
   const leader = LEADER_STANCES.has(stance);
-  const links = navLinks({
-    loggedIn,
-    guest: guestChrome,
-    leader,
-    org,
-  });
+  const links =
+    loggedIn && !viewer
+      ? []
+      : navLinks({
+          loggedIn,
+          guest: guestChrome,
+          leader,
+          org,
+        });
   const showNew = loggedIn && leader;
   const current = activeDoor(pathname, links.map((l) => l.door));
   const extras = loggedIn && viewer ? accountItems(viewer) : [];
