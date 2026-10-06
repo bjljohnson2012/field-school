@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
 import { activeDoor, type Door } from "@/lib/shell/routes";
@@ -33,6 +34,31 @@ function openPalette(event: { currentTarget: Element }) {
 function closeMenu(event: { currentTarget: Element }) {
   const root = event.currentTarget.closest("details");
   if (root) root.open = false;
+}
+
+/** `<details>` menus stay open on their own across navigation, Escape, ⌘K, and clicks elsewhere. */
+function useBarMenusClose(pathname: string) {
+  useEffect(() => {
+    const closeAll = (keep: Node | null) => {
+      for (const menu of document.querySelectorAll<HTMLDetailsElement>("header[data-bar] details[open]")) {
+        if (!keep || !menu.contains(keep)) menu.open = false;
+      }
+    };
+    closeAll(null);
+    const onDown = (event: MouseEvent) => closeAll(event.target instanceof Node ? event.target : null);
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" || ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k")) closeAll(null);
+    };
+    const onPalette = () => closeAll(null);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener(OPEN_PALETTE_EVENT, onPalette);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener(OPEN_PALETTE_EVENT, onPalette);
+    };
+  }, [pathname]);
 }
 
 const linkClass =
@@ -116,6 +142,7 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
   const { data: authSession, status } = useSession();
   const { session, ready } = usePortal();
   const pathname = usePathname();
+  useBarMenusClose(pathname);
   const guestChrome = status === "unauthenticated";
   const loggedIn = status === "authenticated" && Boolean(authSession?.user?.email);
   const initial = (viewer?.name || session?.name || "G").slice(0, 1).toUpperCase();
@@ -136,7 +163,7 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
   const extras = loggedIn && viewer ? accountItems(viewer) : [];
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background/88 backdrop-blur-md">
+    <header data-bar="" className="sticky top-0 z-30 border-b border-border bg-background/88 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
         <div className="flex min-w-0 items-center gap-2">
           <Link href={homeHref} className="flex items-center rounded-lg px-1.5 py-0.5">

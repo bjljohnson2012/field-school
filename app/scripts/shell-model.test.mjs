@@ -48,6 +48,11 @@ test("one shell host: the root layout mounts AppShell and nothing else draws a b
   assert.match(shell, /<CommandPalette commands=\{commands\} \/>/);
   assert.equal(shell.includes("<header"), false);
   assert.doesNotMatch(read("src/app/login/login-form.tsx"), /coachingShell|CoachMark/);
+  const header = read("src/components/site-header.tsx");
+  assert.match(header, /<header data-bar=""/);
+  assert.match(header, /useBarMenusClose\(pathname\);/);
+  assert.match(header, /header\[data-bar\] details\[open\]/);
+  assert.match(header, /window\.addEventListener\(OPEN_PALETTE_EVENT, onPalette\)/);
 });
 
 test("household adults see their tracked children; sales sees card and tasks; never both", () => {
