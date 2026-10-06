@@ -9,13 +9,13 @@ export type EntityRef =
 
 export type Entity = { key: string; ref: EntityRef; label: string; href: string | null };
 
-export type BrainItemTable = "brain_sources" | "brain_notes" | "brain_artifacts";
+const ITEM_TABLES = ["brain_sources", "brain_notes", "brain_artifacts"] as const;
+export type BrainItemTable = (typeof ITEM_TABLES)[number];
 
 export type Evidence =
   | { kind: "brain-item"; table: BrainItemTable; rowId: string; title: string; unitId: string; unitTitle: string }
   | { kind: "milestone"; source: MilestoneSource; at: string };
 
-/** An edge cannot be typed without at least one evidence row, so every edge can explain itself. */
 export type Edge = {
   key: string;
   rel: "draws-on" | "reached";
@@ -29,7 +29,6 @@ export type Graph = { entities: readonly Entity[]; edges: readonly Edge[] };
 
 export const EMPTY_GRAPH: Graph = { entities: [], edges: [] };
 
-/** What a surface asks about: the brain page, the Library desk, your profile, your family, or one child. */
 export type GraphFocus =
   | { kind: "brains" }
   | { kind: "library"; lessonIds?: readonly string[] }
@@ -66,7 +65,6 @@ export type BrainLessonRows = {
   lessons: readonly { id: string; title: string }[];
 };
 
-/** Sales never sees a tracked child's brain. Household sees family and child brains. */
 export function brainsForRoom<T extends { childMembershipId: string | null }>(room: Room | null, brains: readonly T[]) {
   return room === "sales" ? brains.filter((brain) => brain.childMembershipId === null) : [...brains];
 }
@@ -79,7 +77,7 @@ const ITEM_NOUN: Record<BrainItemTable, [string, string]> = {
 
 function countPhrase(evidence: readonly Extract<Evidence, { kind: "brain-item" }>[]) {
   const parts: string[] = [];
-  for (const table of Object.keys(ITEM_NOUN) as BrainItemTable[]) {
+  for (const table of ITEM_TABLES) {
     const n = evidence.filter((row) => row.table === table).length;
     if (n) parts.push(`${n} ${ITEM_NOUN[table][n === 1 ? 0 : 1]}`);
   }
@@ -161,7 +159,6 @@ export function mergeGraphs(...graphs: readonly Graph[]): Graph {
   return { entities: [...entities.values()], edges: [...edges.values()] };
 }
 
-/** Edges touching `key`, each with the entity on the other end. */
 export function neighbors(graph: Graph, key: string): { edge: Edge; other: Entity }[] {
   const byKey = new Map(graph.entities.map((entity) => [entity.key, entity]));
   return graph.edges.flatMap((edge) => {

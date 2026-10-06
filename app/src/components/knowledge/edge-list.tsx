@@ -12,7 +12,6 @@ function EndLabel({ end }: { end: EdgeEnd }) {
   );
 }
 
-/** Every edge says why it exists, and opens to the rows that prove it. */
 export function EdgeList({ edges, hideFrom = false, empty }: { edges: readonly EdgeView[]; hideFrom?: boolean; empty: string }) {
   if (!edges.length) return <EmptyState>{empty}</EmptyState>;
   return (

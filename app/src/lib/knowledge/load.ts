@@ -4,6 +4,7 @@ import { canReadBrain } from "@/lib/brain/rules";
 import { applyBrainSqlIfConfigured } from "@/lib/brain/sql";
 import { listKnowledgeBrains } from "@/lib/brain/store";
 import { identityFromRequest, type LearnerIdentity } from "@/lib/campus-runtime/identity";
+import { lessonVisibleTo } from "@/lib/composer/rules";
 import { knowledgeUnits, lessons } from "@/lib/composer/schema";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import type { Room } from "@/lib/living-brain/model";
@@ -28,6 +29,16 @@ type Auth = Extract<Awaited<ReturnType<typeof identityFromRequest>>, { ok: true 
 
 function roomOf(identity: LearnerIdentity): Room | null {
   return identity.orgSlug === "household" || identity.orgSlug === "sales" ? identity.orgSlug : null;
+}
+
+async function visibleLessons(identity: LearnerIdentity, ids: readonly string[]) {
+  const wanted = [...new Set(ids)];
+  if (!wanted.length) return [];
+  const rows = await getDb()
+    .select({ id: lessons.id, title: lessons.title, status: lessons.status, orgId: lessons.orgId })
+    .from(lessons)
+    .where(and(eq(lessons.orgId, identity.orgId), inArray(lessons.id, wanted)));
+  return rows.filter((lesson) => lessonVisibleTo(lesson, identity)).map(({ id, title }) => ({ id, title }));
 }
 
 async function brainLessons(auth: Auth, room: Room | null): Promise<Graph> {
@@ -61,13 +72,7 @@ async function brainLessons(auth: Auth, room: Room | null): Promise<Graph> {
     .select({ id: knowledgeUnits.id, lessonId: knowledgeUnits.lessonId, title: knowledgeUnits.title })
     .from(knowledgeUnits)
     .where(and(eq(knowledgeUnits.orgId, identity.orgId), inArray(knowledgeUnits.id, unitIds)));
-  const lessonIds = [...new Set(unitRows.flatMap((unit) => (unit.lessonId ? [unit.lessonId] : [])))];
-  const lessonRows = lessonIds.length
-    ? await db
-        .select({ id: lessons.id, title: lessons.title })
-        .from(lessons)
-        .where(and(eq(lessons.orgId, identity.orgId), inArray(lessons.id, lessonIds)))
-    : [];
+  const lessonRows = await visibleLessons(identity, unitRows.flatMap((unit) => (unit.lessonId ? [unit.lessonId] : [])));
   return brainLessonGraph(
     { brains: brainsForRoom(room, brains), items, units: unitRows, lessons: lessonRows },
     (id) => `/o/${identity.orgSlug}/l/${id}`,
@@ -106,7 +111,8 @@ export async function loadKnowledge(focus: GraphFocus, request?: Request): Promi
     if (focus.kind === "library") {
       const graph = await brainLessons(auth, room);
       const lessonIds = graph.entities.flatMap((entity) => (entity.ref.kind === "lesson" ? [entity.ref.id] : []));
-      return { ok: true, room, graph, media: await listMedia(identity.orgId, focus.lessonIds ?? lessonIds) };
+      const visible = await visibleLessons(identity, focus.lessonIds ?? lessonIds);
+      return { ok: true, room, graph, media: await listMedia(identity.orgId, visible.map((lesson) => lesson.id)) };
     }
     if (focus.kind === "self") {
       if (identity.kind === "child") return { ok: false, status: 403, error: "child_has_no_adult_profile" };

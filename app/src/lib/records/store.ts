@@ -50,7 +50,6 @@ export async function loadSelfMilestones(memberId: string): Promise<Milestone[]>
   });
 }
 
-/** Tracked children's milestones, limited to the family's own wards and the current ledger version. */
 export async function loadFamilyMilestones(family: Family): Promise<Milestone[]> {
   const ids = family.children.map((child) => child.person.membershipId);
   if (!ids.length) return [];
@@ -70,7 +69,14 @@ export async function loadFamilyMilestones(family: Family): Promise<Milestone[]>
         completedAt: progressLedgerUnits.completedAt,
       })
       .from(progressLedgerUnits)
-      .innerJoin(progressLedgers, eq(progressLedgers.id, progressLedgerUnits.ledgerId))
+      .innerJoin(
+        progressLedgers,
+        and(
+          eq(progressLedgers.id, progressLedgerUnits.ledgerId),
+          eq(progressLedgers.orgId, progressLedgerUnits.orgId),
+          eq(progressLedgers.childMembershipId, progressLedgerUnits.childMembershipId),
+        ),
+      )
       .where(
         and(
           eq(progressLedgerUnits.orgId, family.orgId),
@@ -97,7 +103,6 @@ function mediaKind(row: { fileName: string | null; url: string | null }): MediaD
   return row.url ? "link" : "text";
 }
 
-/** Lesson sources in one org, as Media docs. */
 export async function listMedia(orgId: string, lessonIds: readonly string[]): Promise<MediaDoc[]> {
   if (!lessonIds.length) return [];
   const rows = await getDb()

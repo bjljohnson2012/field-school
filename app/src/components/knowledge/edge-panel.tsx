@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { parseEdgeViews, type EdgeView } from "@/lib/knowledge/graph";
 import { EdgeList } from "./edge-list";
 
-/** Client surfaces fetch the same scoped read the server surfaces call directly. */
 export function EdgePanel({
   focus,
   title,

@@ -4,7 +4,7 @@ import { loadKnowledge } from "@/lib/knowledge/load";
 
 export const dynamic = "force-dynamic";
 
-/** Read-only inspectable edges for one focus. There is no write path: edges are joins over owned rows. */
+/** No write path: edges are joins over owned rows. */
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const focus = parseFocus(url.searchParams.get("focus"), url.searchParams.get("lessons"));

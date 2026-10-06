@@ -1,9 +1,5 @@
 import { ADULT_GATES, type AdultGateId, type GateMarks } from "../profile/model.ts";
 
-/**
- * Payload-shaped collections on Drizzle. Each collection is a typed read over tables that already
- * own the fact, so nothing here is a second copy: no CMS runtime and no generic document table.
- */
 export const COLLECTIONS = [
   { slug: "families", label: "Families", owner: "wards + memberships (household)" },
   { slug: "student-profiles", label: "Student Profiles", owner: "user_profiles + kid_profiles" },
@@ -39,7 +35,6 @@ export type MediaDoc = {
   url: string | null;
 };
 
-/** Where a milestone came from: the table and row a reader can open to check it. */
 export type MilestoneSource =
   | { table: "user_profiles.gates"; memberId: string; gate: AdultGateId }
   | { table: "user_profiles.completed_at"; memberId: string }
