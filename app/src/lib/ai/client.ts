@@ -133,7 +133,7 @@ export async function completeChat(input: {
   }
 
   let status = "failed";
-  let usage: unknown = null;
+  let usage: TokenUsage | null = null;
   try {
     const res = await fetch(endpoint("/chat/completions", env), {
       method: "POST",
@@ -156,7 +156,7 @@ export async function completeChat(input: {
       choices?: Array<{ message?: { content?: string | null } }>;
       usage?: unknown;
     };
-    usage = data.usage ?? null;
+    usage = tokenUsage(data.usage);
     status = "ok";
     return { content: data.choices?.[0]?.message?.content ?? "" };
   } finally {

@@ -12,7 +12,12 @@ export type DrillTicket = {
   exp: number;
 };
 
-export function drillTicketSecret(env: { AUTH_SECRET?: string; NEXTAUTH_SECRET?: string } = process.env): string {
+export function drillTicketSecret(
+  env: { AUTH_SECRET?: string; NEXTAUTH_SECRET?: string } = {
+    AUTH_SECRET: process.env.AUTH_SECRET,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+  },
+): string {
   return (env.AUTH_SECRET ?? env.NEXTAUTH_SECRET ?? "").trim();
 }
 

@@ -30,6 +30,7 @@ export type StoredPortionRow = {
   room: string;
   login: string;
   nextUnit?: string;
+  membershipId?: string;
   ownsPath?: boolean;
   buyer?: boolean;
   kind?: string;
