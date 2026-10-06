@@ -1,5 +1,7 @@
-import { and, eq, inArray, max, min } from "drizzle-orm";
+import { and, eq, inArray, isNotNull, max, min } from "drizzle-orm";
+import { applyProfileM2Sql } from "@/lib/assessments/sql";
 import { getDb } from "@/lib/db/client";
+import { assessmentRuns } from "@/lib/db/schema-profile-m2";
 import {
   instrumentRuns,
   kidProfiles,
@@ -31,8 +33,7 @@ async function ownMembershipIds(memberId: string) {
   return rows.map((row) => row.id);
 }
 
-/** G-personality reads the adult Field Pattern runs the User took about themself. */
-async function personalityMark(memberId: string) {
+async function fieldPatternSpan(memberId: string) {
   const ids = await ownMembershipIds(memberId);
   if (!ids.length) return null;
   const db = getDb();
@@ -47,7 +48,37 @@ async function personalityMark(memberId: string) {
       ),
     );
   if (!row?.firstAt || !row.lastAt) return null;
-  return { firstAt: new Date(row.firstAt).toISOString(), lastAt: new Date(row.lastAt).toISOString() };
+  return { firstAt: new Date(row.firstAt), lastAt: new Date(row.lastAt) };
+}
+
+async function wizardPersonalitySpan(memberId: string) {
+  await applyProfileM2Sql();
+  const [row] = await getDb()
+    .select({ firstAt: min(assessmentRuns.completedAt), lastAt: max(assessmentRuns.completedAt) })
+    .from(assessmentRuns)
+    .where(
+      and(
+        eq(assessmentRuns.memberId, memberId),
+        eq(assessmentRuns.track, "personality"),
+        isNotNull(assessmentRuns.completedAt),
+      ),
+    );
+  if (!row?.firstAt || !row.lastAt) return null;
+  return { firstAt: new Date(row.firstAt), lastAt: new Date(row.lastAt) };
+}
+
+/**
+ * G-personality reads the adult Field Pattern runs the User took about themself, and
+ * finished Personality runs of the assessment wizard. Either one meets the gate.
+ */
+async function personalityMark(memberId: string) {
+  const spans = [await fieldPatternSpan(memberId), await wizardPersonalitySpan(memberId)].flatMap((span) =>
+    span ? [span] : [],
+  );
+  if (!spans.length) return null;
+  const first = Math.min(...spans.map((span) => span.firstAt.getTime()));
+  const last = Math.max(...spans.map((span) => span.lastAt.getTime()));
+  return { firstAt: new Date(first).toISOString(), lastAt: new Date(last).toISOString() };
 }
 
 async function ensureRow(owner: ProfileOwner) {
