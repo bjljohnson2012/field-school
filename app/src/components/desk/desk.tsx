@@ -1,10 +1,6 @@
 import type { ComponentProps, ReactNode } from "react";
 import type { Kpi } from "@/lib/desk/kpi";
 
-/**
- * The four desk parts Insights, People, and Library share: page frame, card, KPI strip, table, empty line.
- * Structure only, on FS tokens. The visual system is the Designer's to seal.
- */
 
 const WIDTH = { "3xl": "max-w-3xl", "4xl": "max-w-4xl", "6xl": "max-w-6xl" } as const;
 

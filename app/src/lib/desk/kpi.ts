@@ -1,4 +1,3 @@
-/** A desk headline number. Every value is derived from rows the desk already loaded; nothing is stored. */
 export type Kpi = { id: string; label: string; value: string };
 
 type Point = { id: string; value: number };

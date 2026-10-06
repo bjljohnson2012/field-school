@@ -34,9 +34,16 @@ export default function PublishedCatalogPage() {
   const [media, setMedia] = useState<Map<string, number>>(new Map());
 
   useEffect(() => {
+    let cancelled = false;
+    setLessons([]);
+    setEdges([]);
+    setMedia(new Map());
+    setError(null);
+    setReady(false);
     void fetch("/api/composer/catalog", { headers: { "x-fs-org": slug } })
       .then((res) => res.json())
       .then((json) => {
+        if (cancelled) return;
         setReady(true);
         if (!json.ok) {
           setError(json.error || "unavailable");
@@ -45,6 +52,9 @@ export default function PublishedCatalogPage() {
         setCanTeach(Boolean(json.canTeach));
         setLessons((json.lessons as Lesson[]).filter((lesson) => lesson.status === "published"));
       });
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
   const lessonIds = lessons
