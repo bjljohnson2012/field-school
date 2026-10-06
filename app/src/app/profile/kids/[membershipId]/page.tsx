@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { EdgePanel } from "@/components/knowledge/edge-panel";
 import type { KidSetup } from "@/lib/profile/model";
 
 type Kid = { membershipId: string; displayName: string; login: "none"; setup: KidSetup };
@@ -153,6 +154,14 @@ export default function KidProfilePage() {
           </form>
         </section>
       )}
+
+      <EdgePanel
+        focus={`child:${kid.membershipId}`}
+        title="Milestones"
+        hint="Intake and finished units from this child's current plan. Each opens to its row."
+        empty="No milestones yet."
+        hideFrom
+      />
 
       <p className="text-sm">
         <Link href="/profile" className="underline underline-offset-4">

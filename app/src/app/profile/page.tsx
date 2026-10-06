@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { EdgePanel } from "@/components/knowledge/edge-panel";
 import { freshnessLabel, PROFILE_COPY, type AdultSetup, type KidSetup } from "@/lib/profile/model";
 
 type Profile = {
@@ -268,6 +269,14 @@ export default function ProfilePage() {
           </ul>
         </section>
       ) : null}
+
+      <EdgePanel
+        focus="self"
+        title="Your milestones"
+        hint="Each milestone opens to the row it came from. Only you see these."
+        empty="Nothing yet. Take a Tools assessment or the Field Pattern to start."
+        hideFrom
+      />
     </main>
   );
 }

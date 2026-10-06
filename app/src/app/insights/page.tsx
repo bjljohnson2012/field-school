@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { EdgeList } from "@/components/knowledge/edge-list";
+import { edgeViews } from "@/lib/knowledge/graph";
+import { loadKnowledge } from "@/lib/knowledge/load";
 import { InsightsBoard } from "./charts";
 import { loadInsights } from "./load";
 
@@ -60,10 +63,32 @@ export default async function InsightsPage() {
     );
   }
 
+  const household = result.model.orgSlug === "household";
+  const people = household ? await loadKnowledge({ kind: "family" }) : null;
   return (
     <Shell>
       <p className="mb-6 text-sm text-muted-foreground">{result.model.orgName}</p>
       <InsightsBoard model={result.model} />
+      <section data-edges="people-milestones" aria-label="People and milestones" className="mt-10">
+        <h2 className="font-display text-2xl tracking-tight">People and milestones</h2>
+        {household ? (
+          <>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Tracked children on your family. No login. Each line opens to the row it came from.
+            </p>
+            <div className="mt-4">
+              <EdgeList
+                edges={people?.ok ? edgeViews(people.graph) : []}
+                empty="No intake or finished unit yet."
+              />
+            </div>
+          </>
+        ) : (
+          <p className="mt-1 text-sm text-muted-foreground">
+            Login learners keep their own milestones on their profile. This desk does not read them.
+          </p>
+        )}
+      </section>
     </Shell>
   );
 }
