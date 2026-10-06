@@ -202,6 +202,10 @@ export function SiteHeader() {
                 <Link
                   href="/profile"
                   className="flex h-11 items-center text-sm text-muted-foreground hover:text-foreground"
+                  onClick={(event) => {
+                    const root = event.currentTarget.closest("details");
+                    if (root) root.open = false;
+                  }}
                 >
                   View Profile
                 </Link>
