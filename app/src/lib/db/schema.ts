@@ -269,6 +269,27 @@ export const kidProfiles = pgTable(
   ],
 );
 
+export const toolResults = pgTable(
+  "tool_results",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    memberId: uuid("member_id")
+      .notNull()
+      .references(() => members.id),
+    toolSlug: text("tool_slug").notNull(),
+    attemptId: uuid("attempt_id").notNull(),
+    answers: jsonb("answers").notNull(),
+    summary: text("summary").notNull(),
+    scores: jsonb("scores").notNull(),
+    labels: jsonb("labels").notNull(),
+    completedAt: timestamp("completed_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("tool_results_attempt").on(t.memberId, t.attemptId),
+    index("tool_results_member_idx").on(t.memberId, t.toolSlug, t.completedAt),
+  ],
+);
+
 export const instrumentRuns = pgTable("instrument_runs", {
   id: uuid("id").primaryKey().defaultRandom(),
   orgId: uuid("org_id")

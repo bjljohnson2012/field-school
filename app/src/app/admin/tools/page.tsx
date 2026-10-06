@@ -37,7 +37,7 @@ export default function AdminToolsPage() {
         <How
           n="03"
           title="Mount the form"
-          body="In src/app/tools/[slug]/page.tsx, branch on the slug and render the form. People can take it without login. Save to profile calls saveToolResult after they sign in. Export and email live on ToolResultActions."
+          body="In src/app/tools/[slug]/page.tsx, branch on the slug and render the form. People can take it without login. Save to profile posts the answers to /api/profile/gates after they sign in; the server scores and keeps them. Export and email live on ToolResultActions."
         />
         <How
           n="04"
