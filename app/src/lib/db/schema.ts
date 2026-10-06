@@ -230,6 +230,45 @@ export const memberProfileRevisions = pgTable(
   (t) => [index("member_profile_revisions_profile_idx").on(t.profileId, t.createdAt)],
 );
 
+export const userProfiles = pgTable("user_profiles", {
+  memberId: uuid("member_id")
+    .primaryKey()
+    .references(() => members.id),
+  displayName: text("display_name").notNull().default(""),
+  photoUrl: text("photo_url").notNull().default(""),
+  currentProjects: jsonb("current_projects").notNull().default([]),
+  skillsAdapted: jsonb("skills_adapted").notNull().default([]),
+  gates: jsonb("gates").notNull().default({}),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const kidProfiles = pgTable(
+  "kid_profiles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => organizations.id),
+    childMembershipId: uuid("child_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    parentMembershipId: uuid("parent_membership_id")
+      .notNull()
+      .references(() => memberships.id),
+    displayName: text("display_name").notNull().default(""),
+    intakeDoneAt: timestamp("intake_done_at", { withTimezone: true }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    unique("kid_profiles_child").on(t.orgId, t.childMembershipId),
+    index("kid_profiles_parent_idx").on(t.orgId, t.parentMembershipId),
+  ],
+);
+
 export const instrumentRuns = pgTable("instrument_runs", {
   id: uuid("id").primaryKey().defaultRandom(),
   orgId: uuid("org_id")
