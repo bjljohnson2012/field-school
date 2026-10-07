@@ -93,7 +93,7 @@ function lockedRows(run: LoadedRun, state: RunState, now: Date) {
     }));
 }
 
-async function finishGate(owner: Owner, row: RunRow) {
+async function finishGate(owner: Owner, row: RunRow, answers: readonly Answer[]) {
   if (!row.completedAt || row.gateRecordedAt || !isTrackId(row.track)) return;
   await recordTrackGate({
     owner,
@@ -101,6 +101,7 @@ async function finishGate(owner: Owner, row: RunRow) {
     gate: trackDef(row.track).gate,
     runId: row.id,
     completedAt: row.completedAt,
+    answers,
   });
   await getDb()
     .update(assessmentRuns)
@@ -254,7 +255,7 @@ export async function answerRun(owner: Owner, runId: string, answer: Answer, now
     const latest = await readRun(owner, runId);
     return latest ? { ok: true, view: latest } : { ok: false, error: "run_not_found" };
   }
-  if (finished) await finishGate(owner, written);
+  if (finished) await finishGate(owner, written, answers);
   return { ok: true, view: runView(def, row.id, after) };
 }
 
@@ -278,7 +279,10 @@ export async function wizardOverview(owner: Owner): Promise<TrackOverview[]> {
     .from(assessmentRuns)
     .where(and(eq(assessmentRuns.memberId, owner.memberId), inArray(assessmentRuns.status, ["in_progress", "complete", "ceiling_unsettled"])))
     .orderBy(desc(assessmentRuns.completedAt));
-  for (const row of rows) await finishGate(owner, row);
+  for (const row of rows) {
+    const kept = isTrackId(row.track) ? readAnswers(trackDef(row.track), row.answers) : null;
+    await finishGate(owner, row, kept ?? []);
+  }
   return Promise.all(
     TRACK_IDS.map(async (track) => {
       const def = trackDef(track);

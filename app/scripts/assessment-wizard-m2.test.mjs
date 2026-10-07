@@ -454,8 +454,33 @@ test("a finished wizard run draws the neural web, and motion can be reduced", ()
 
 test("gate seam: Skills and Profile write gate freshness through one function only", () => {
   const sink = code("src/lib/assessments/gate-sink.ts");
+  const store = code("src/lib/assessments/store.ts");
   assert.match(sink, /export async function recordTrackGate/);
+  assert.match(sink, /saveToolResult\(/);
+  assert.ok(sink.indexOf("saveToolResult(") < sink.indexOf("recordAdultGate("));
   assert.match(sink, /recordAdultGate\(/);
-  assert.doesNotMatch(code("src/lib/assessments/store.ts"), /recordAdultGate|tool_results|toolResults/);
-  assert.match(code("src/lib/assessments/store.ts"), /recordTrackGate\(/);
+  assert.doesNotMatch(store, /recordAdultGate|tool_results|toolResults/);
+  assert.match(store, /recordTrackGate\(/);
+  assert.match(store, /finishGate\(owner, written, answers\)/);
+});
+
+test("a finished run writes a tool result only when every official item was answered", async () => {
+  const { toolForGate, toolSubmissionFromRun } = await import("../src/lib/assessments/tool-bridge.ts");
+  assert.equal(toolForGate("G-personality"), null);
+  assert.equal(toolForGate("G-skills"), "skill");
+  assert.equal(toolForGate("G-other"), "intelligence");
+  const skill = ["brief", "logins", "ai", "tools", "ship", "track"].map((key) => ({ key, value: 4 }));
+  const submission = toolSubmissionFromRun("skill", "3f6c1a52-8d4e-4b7a-9c21-0e5f7d8a9b10", [
+    ...skill,
+    { key: "brief-handoff", value: 2 },
+  ]);
+  assert.equal(submission?.toolSlug, "skill");
+  assert.deepEqual(Object.keys(submission?.answers ?? {}).sort(), ["ai", "brief", "logins", "ship", "tools", "track"]);
+  assert.equal(toolSubmissionFromRun("skill", "3f6c1a52-8d4e-4b7a-9c21-0e5f7d8a9b10", skill.slice(1)), null);
+  assert.equal(
+    toolSubmissionFromRun("intelligence", "3f6c1a52-8d4e-4b7a-9c21-0e5f7d8a9b10", [
+      { key: "notice-signal", value: 4 },
+    ]),
+    null,
+  );
 });
