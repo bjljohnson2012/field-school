@@ -426,6 +426,17 @@ test("start, answer, resume, and result stay on the assessment routes", () => {
   assert.match(store, /latest: done \? await storedPlacementView\(done\) : null/);
 });
 
+test("the adult profile shows finished reads, and a firm category is 75% or higher", () => {
+  const page = code("src/app/profile/page.tsx");
+  const results = code("src/components/profile-m2/assessment-results.tsx");
+  assert.match(page, /<AssessmentResults \/>/);
+  assert.match(results, /data-assessment-results/);
+  assert.match(results, /placement\.state === "locked" && placement\.confidencePct >= 75/);
+  assert.match(results, /Best read/);
+  assert.doesNotMatch(results, /localStorage|sessionStorage/);
+  assert.doesNotMatch(code("src/app/profile/kids/[membershipId]/page.tsx"), /AssessmentResults|NeuralWeb/);
+});
+
 test("a finished wizard run draws the neural web, and motion can be reduced", () => {
   const wizard = code("src/components/profile-m2/assessment-wizard.tsx");
   const web = code("src/components/profile-m2/neural-web.tsx");

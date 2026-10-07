@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { EdgePanel } from "@/components/knowledge/edge-panel";
+import { AssessmentResults } from "@/components/profile-m2/assessment-results";
 import { AssessmentsLink } from "@/components/profile-m2/assessments-link";
 import { EnrichmentPanel } from "@/components/profile-m2/enrichment-panel";
 import { PhotoPanel } from "@/components/profile-m2/photo-panel";
@@ -189,6 +190,8 @@ export default function ProfilePage() {
       </section>
 
       <AssessmentsLink setup={setup} />
+
+      <AssessmentResults />
 
       <PhotoPanel photoSrc={profile.photoSrc} onChange={(photoSrc) => setProfile({ ...profile, photoSrc })} />
 
