@@ -122,12 +122,14 @@ test("logoUrl is read from features and a blank URL stays the monogram", () => {
   assert.equal(readOrgLogoUrl({ logoUrl: "  " }), "");
   assert.equal(readOrgLogoUrl({ logoUrl: 1 }), "");
   assert.equal(readOrgLogoUrl({ logoUrl: " https://cdn.example/logo.png " }), "https://cdn.example/logo.png");
-  const shell = read("src/components/app-shell.tsx");
-  const chrome = read("src/components/chrome.tsx");
-  assert.match(shell, /data-logo="monogram"/);
-  assert.match(shell, /logoUrl/);
-  assert.match(chrome, /readOrgLogoUrl\(loaded\?\.active\?\.features\)/);
-  assert.equal(chrome.includes("lib/ai/client"), false);
+  const header = read("src/components/site-header.tsx");
+  const me = read("src/app/api/me/route.ts");
+  assert.match(header, /data-logo="monogram"/);
+  assert.match(header, /const logoUrl = viewer\?\.logoUrl\.trim\(\) \?\? ""/);
+  assert.match(header, /\{logoUrl \? \(/);
+  assert.match(me, /logoUrl: readOrgLogoUrl\(active\?\.features\)/);
+  assert.equal(me.includes("lib/ai/client"), false);
+  assert.equal(read("src/components/app-shell.tsx").includes("lib/ai/client"), false);
 });
 
 test("uploads stay under the org directory and subject is recoverable", () => {

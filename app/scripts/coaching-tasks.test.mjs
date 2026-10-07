@@ -190,21 +190,36 @@ test("generate persists through generateTasksForAe and description is create-ass
   assert.doesNotMatch(api, /AUTH_URL/);
 });
 
-test("badge polls the count route, hides at zero, and mounts only on the orange tasks control", () => {
+test("badge polls the count route, hides at zero, and mounts only on the Tasks account item", async () => {
   const badge = read("src/components/tasks-nav-badge.tsx");
   assert.match(badge, /\/api\/coaching\/tasks\/count/);
   assert.match(badge, /60_000/);
   assert.match(badge, /if \(count <= 0\) return null/);
   assert.match(badge, /fallback = 0/);
 
-  const shell = read("src/components/app-shell.tsx");
-  const hrefs = shell.match(/href="\/tasks"/g) || [];
-  assert.equal(hrefs.length, 1);
-  const link = shell.indexOf('href="/tasks"');
-  const mount = shell.indexOf("<TasksNavBadge");
-  const avatar = shell.indexOf("from-brand-indigo");
-  assert.ok(link >= 0 && mount > link && mount < avatar);
-  assert.match(shell, /fallback=\{openTasks\}/);
+  const { accountItems } = await import("../src/lib/shell/model.ts");
+  const viewer = (org) => ({
+    name: "Ada",
+    memberKind: "adult",
+    org,
+    orgName: org,
+    stance: "learner",
+    platformAdmin: false,
+    logoUrl: "",
+    memberships: [],
+    profiles: [],
+  });
+  const sales = accountItems(viewer("sales"));
+  assert.deepEqual(
+    sales.filter((item) => item.badge === "tasks").map((item) => item.href),
+    ["/tasks"],
+  );
+  assert.equal(sales.filter((item) => item.href === "/tasks").length, 1);
+  assert.equal(accountItems(viewer("household")).some((item) => item.href === "/tasks" || item.badge), false);
+  const header = read("src/components/site-header.tsx");
+  assert.equal(header.match(/<TasksNavBadge/g)?.length, 1);
+  assert.match(header, /\{item\.badge === "tasks" \? <TasksNavBadge \/> : null\}/);
+  assert.equal(read("src/components/app-shell.tsx").includes("TasksNavBadge"), false);
 
   for (const sample of [
     { orgKind: "sales", capabilities: ["learner"], platformAdmin: false },

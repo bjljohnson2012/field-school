@@ -6,12 +6,24 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { ToolResult } from "@/lib/portal";
-import { saveToolResult } from "@/lib/portal";
 import { gateForTool } from "@/lib/profile/model";
 import { downloadAssessmentPdf } from "@/lib/tools/pdf";
 import { stashPendingTool } from "@/lib/tools/pending";
+import { submissionBody, type ToolSubmission } from "@/lib/tools/results";
 import type { AssessmentShare } from "@/lib/tools/share";
+
+export async function saveToProfile(submission: ToolSubmission): Promise<boolean> {
+  try {
+    const res = await fetch("/api/profile/gates", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(submissionBody(submission)),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
 export function ToolResultActions({
   share,
@@ -19,7 +31,7 @@ export function ToolResultActions({
   signedIn,
 }: {
   share: AssessmentShare;
-  result?: ToolResult;
+  result?: ToolSubmission;
   signedIn: boolean;
 }) {
   const router = useRouter();
@@ -27,7 +39,7 @@ export function ToolResultActions({
   const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState<"idle" | "saving" | "saved" | "failed">("idle");
 
   return (
     <section className="space-y-5 rounded-xl border border-border bg-card px-5 py-5">
@@ -52,15 +64,11 @@ export function ToolResultActions({
               type="button"
               variant="outline"
               className="h-11 rounded-xl px-5"
+              disabled={saved === "saving"}
               onClick={() => {
-                saveToolResult(result);
-                setSaved(true);
                 if (gateForTool(result.toolSlug)) {
-                  void fetch("/api/profile/gates", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ tool: result.toolSlug }),
-                  }).catch(() => undefined);
+                  setSaved("saving");
+                  void saveToProfile(result).then((ok) => setSaved(ok ? "saved" : "failed"));
                 }
               }}
             >
@@ -83,13 +91,15 @@ export function ToolResultActions({
           )
         ) : null}
       </div>
-      {saved ? (
+      {saved === "saved" ? (
         <p className="text-sm text-pass">
           Saved on your profile.{" "}
-          <Link href="/dashboard" className="underline underline-offset-4">
-            Open dashboard
+          <Link href="/profile" className="underline underline-offset-4">
+            Open your profile
           </Link>
         </p>
+      ) : saved === "failed" ? (
+        <p className="text-sm text-destructive">Could not save to your profile. Try again.</p>
       ) : null}
 
       <form

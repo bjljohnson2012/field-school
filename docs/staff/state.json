@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-23T16:09:00Z",
+  "updated": "2026-10-06T21:30:00Z",
   "launch": "CLOSED 0/8",
   "outcome": false,
   "company": {
@@ -116,8 +116,13 @@
       "evidence": "Draft PR on cursor/profile-m1-shell from main a5fd644. Adult profile on the User: View Profile in the existing name menu, setup checklist G-personality / G-skills / G-other, optional photo, self-edit name, projects, skills adapted, freshness per gate, done stays done on re-run. Kid profile under the parent: parent-only edit, read-only child view, G-intake stub, no photo, no public URL. No resume, LinkedIn, or nudge. Merge and deploy wait on CDM MERGE GO. Launch CLOSED 0/8."
     }
   },
+  "architecture_chrome": {
+    "status": "IN_FLIGHT",
+    "evidence": "Draft PR 343 on cursor/architecture-chrome from main 7f588965. One stream: Tools Skill and Intelligence results on the account (tool_results 0018, server scored, attempt id); Families, Student Profiles, Milestones, Media on Drizzle (no Payload runtime); inspectable brain-lesson and person-milestone edges in Library, Insights, brains, and profile; one AppShell host (bar, drawer, Cmd-K, room-aware account menu) with the COACHING_SHELL navy shell retired; shared desk frame, card, KPI, table, empty line on Insights, People, Library. Visual seal DEFERRED to Designer. Merge and deploy HOLD until CDM MERGE GO via CTO. Launch CLOSED 0/8."
+  },
   "in_flight": [
-    "PROFILE-M1"
+    "PROFILE-M1",
+    "ARCHITECTURE-CHROME"
   ],
   "last_pick": [
     "N15"

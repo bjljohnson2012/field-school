@@ -631,24 +631,6 @@ export function saveDesk(courseSlug: string, desk: StaffDesk) {
   return patchActiveCourse(courseSlug, (c) => ({ ...c, desk }));
 }
 
-export function saveToolResult(result: ToolResult) {
-  const state = read();
-  const userId = state.activeUserId;
-  if (!userId) return;
-  const ws = workspaceOf(state, userId);
-  const next = setWorkspace(state, userId, {
-    ...ws,
-    tools: { ...ws.tools, [result.toolSlug]: result },
-  });
-  write(
-    pushUserInbox(next, userId, {
-      title: "Assessment saved to your portal",
-      body: result.summary,
-      href: "/dashboard",
-    }),
-  );
-}
-
 export function submitCourseNote(input: {
   courseSlug: string;
   stationSlug?: string;

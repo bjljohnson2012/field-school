@@ -2,17 +2,17 @@
 
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
-import { ToolResultActions } from "@/components/tool-result-actions";
+import { saveToProfile, ToolResultActions } from "@/components/tool-result-actions";
 import { Button } from "@/components/ui/button";
-import { usePortal } from "@/hooks/use-portal";
-import { saveToolResult, type ToolResult } from "@/lib/portal";
 import {
   intelligenceQuestions,
   scoreIntelligence,
 } from "@/lib/tools/intelligence";
-import { takePendingTool } from "@/lib/tools/pending";
+import { clearPendingTool, peekPendingTool } from "@/lib/tools/pending";
 import { getTool } from "@/lib/tools/registry";
+import { isSavedTool, type ToolResult, type ToolSubmission } from "@/lib/tools/results";
 import { skillQuestions, scoreSkill } from "@/lib/tools/skill";
 import type { AssessmentShare } from "@/lib/tools/share";
 import { cn } from "@/lib/utils";
@@ -20,11 +20,10 @@ import { cn } from "@/lib/utils";
 export default function ToolPage() {
   const { slug } = useParams<{ slug: string }>();
   const tool = getTool(slug);
-  const { tools, session } = usePortal();
+  const { status } = useSession();
+  const signedIn = status === "authenticated";
+  const prior = useSavedResult(tool?.slug ?? "", signedIn);
   if (!tool) return notFound();
-
-  const prior = tools[tool.slug];
-  const signedIn = session?.mode === "signed";
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
@@ -55,9 +54,9 @@ export default function ToolPage() {
       ) : null}
       {prior ? (
         <p className="mt-6 text-sm text-pass">
-          Last saved on your portal: {prior.summary}{" "}
-          <Link href="/dashboard" className="underline underline-offset-4">
-            Open dashboard
+          Last saved on your profile: {prior.summary}{" "}
+          <Link href="/profile" className="underline underline-offset-4">
+            Open your profile
           </Link>
         </p>
       ) : null}
@@ -65,14 +64,48 @@ export default function ToolPage() {
   );
 }
 
+type SavedSummary = Pick<ToolResult, "summary" | "completedAt">;
+
+function readSaved(json: unknown, slug: string): SavedSummary | null {
+  if (typeof json !== "object" || json === null) return null;
+  const results: unknown = Object.getOwnPropertyDescriptor(json, "results")?.value;
+  if (typeof results !== "object" || results === null) return null;
+  const saved: unknown = Object.getOwnPropertyDescriptor(results, slug)?.value;
+  if (typeof saved !== "object" || saved === null) return null;
+  const summary: unknown = Object.getOwnPropertyDescriptor(saved, "summary")?.value;
+  const completedAt: unknown = Object.getOwnPropertyDescriptor(saved, "completedAt")?.value;
+  if (typeof summary !== "string" || typeof completedAt !== "string") return null;
+  return { summary, completedAt };
+}
+
+function useSavedResult(slug: string, signedIn: boolean) {
+  const [saved, setSaved] = useState<SavedSummary | null>(null);
+  useEffect(() => {
+    if (!signedIn || !isSavedTool(slug)) return;
+    let cancelled = false;
+    void fetch("/api/profile/gates")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json: unknown) => {
+        if (!cancelled) setSaved(readSaved(json, slug));
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [signedIn, slug]);
+  return saved;
+}
+
 function usePendingSave(slug: string, signedIn: boolean) {
   const [note, setNote] = useState<string | null>(null);
   useEffect(() => {
     if (!signedIn) return;
-    const pending = takePendingTool(slug);
+    const pending = peekPendingTool(slug);
     if (!pending) return;
-    saveToolResult(pending);
-    setNote(pending.summary);
+    void saveToProfile(pending).then((ok) => {
+      if (ok) clearPendingTool(pending.attemptId);
+      setNote(ok ? "Saved to your profile." : "Could not save to your profile. Try again.");
+    });
   }, [signedIn, slug]);
   return note;
 }
@@ -86,7 +119,7 @@ function SkillForm({
 }) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [share, setShare] = useState<AssessmentShare | null>(null);
-  const [result, setResult] = useState<ToolResult | null>(null);
+  const [result, setResult] = useState<ToolSubmission | null>(null);
   const pendingNote = usePendingSave("skill", signedIn);
   const all = skillQuestions.every((q) => answers[q.id] != null);
 
@@ -133,19 +166,7 @@ function SkillForm({
         onClick={() => {
           const scored = scoreSkill(answers);
           const completedAt = new Date().toISOString();
-          const nextResult: ToolResult = {
-            toolSlug: "skill",
-            completedAt,
-            summary: scored.summary,
-            scores: {
-              total: scored.total,
-              ...Object.fromEntries(
-                skillQuestions.map((q) => [q.id, answers[q.id] ?? 0]),
-              ),
-            },
-            labels: { band: scored.label },
-          };
-          setResult(nextResult);
+          setResult({ toolSlug: "skill", attemptId: crypto.randomUUID(), answers });
           setShare({
             toolSlug: "skill",
             title: "Skill assessment",
@@ -161,7 +182,7 @@ function SkillForm({
         See results
       </Button>
       {pendingNote ? (
-        <p className="text-sm text-pass">Saved to your profile: {pendingNote}</p>
+        <p className="text-sm text-pass">{pendingNote}</p>
       ) : null}
       {share && result ? (
         <ToolResultActions share={share} result={result} signedIn={signedIn} />
@@ -183,7 +204,7 @@ function IntelForm({
 }) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [share, setShare] = useState<AssessmentShare | null>(null);
-  const [result, setResult] = useState<ToolResult | null>(null);
+  const [result, setResult] = useState<ToolSubmission | null>(null);
   const pendingNote = usePendingSave("intelligence", signedIn);
   const all = intelligenceQuestions.every((q) => answers[q.id] != null);
   const preview = useMemo(
@@ -234,14 +255,7 @@ function IntelForm({
         onClick={() => {
           const scored = scoreIntelligence(answers);
           const completedAt = new Date().toISOString();
-          const nextResult: ToolResult = {
-            toolSlug: "intelligence",
-            completedAt,
-            summary: scored.summary,
-            scores: scored.axes,
-            labels: scored.labels,
-          };
-          setResult(nextResult);
+          setResult({ toolSlug: "intelligence", attemptId: crypto.randomUUID(), answers });
           setShare({
             toolSlug: "intelligence",
             title: "Intelligence assessment",
@@ -259,7 +273,7 @@ function IntelForm({
         See results
       </Button>
       {pendingNote ? (
-        <p className="text-sm text-pass">Saved to your profile: {pendingNote}</p>
+        <p className="text-sm text-pass">{pendingNote}</p>
       ) : null}
       {preview && !share ? (
         <p className="text-xs text-muted-foreground">

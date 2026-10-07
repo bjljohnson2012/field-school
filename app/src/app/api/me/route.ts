@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { readOrgLogoUrl } from "@/components/org-logo";
 import { loadSession } from "@/lib/campus-runtime/identity";
 import { memberPlatformAdmin } from "@/lib/coaching/scores";
+import { DatabaseUnavailableError } from "@/lib/db/client";
 import { featureMode } from "@/lib/intent/family-mode";
+import { listKidProfiles } from "@/lib/profile/store";
 
 export const dynamic = "force-dynamic";
 
@@ -24,9 +27,20 @@ export async function GET(request: Request) {
     ? session.active
     : null;
   const platformAdmin = await memberPlatformAdmin(session.member.id);
+  const household = active?.orgSlug === "household" && session.member.kind !== "child" ? active : null;
+  const profiles = household
+    ? await listKidProfiles({ orgId: household.orgId, parentMembershipId: household.membershipId }).catch(
+        (error: unknown) => {
+          if (error instanceof DatabaseUnavailableError) return [];
+          throw error;
+        },
+      )
+    : [];
   return NextResponse.json({
     authenticated: true,
     platformAdmin,
+    logoUrl: readOrgLogoUrl(active?.features),
+    profiles: profiles.map((kid) => ({ membershipId: kid.membershipId, displayName: kid.displayName })),
     member: {
       id: session.member.id,
       email: session.member.email,

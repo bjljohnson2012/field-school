@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { DeskPage, DeskTable, EmptyState, KpiStrip } from "@/components/desk/desk";
+import { peopleKpis } from "@/lib/desk/kpi";
 import { peopleContext, type LivingBrain } from "@/lib/living-brain/model";
 import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
 import {
@@ -131,17 +133,24 @@ export default function PeoplePage() {
   const copy = desk ? DESK_COPY[desk] : null;
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-12" data-desk={desk ?? "none"}>
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">People</p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">{copy?.title ?? "People"}</h1>
-      <p className="mt-3 max-w-2xl text-muted-foreground">{JOB_SENTENCE}</p>
-      <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
-        {copy
-          ? copy.lede
-          : "This desk shows one room. Sales lists login learners. Household lists tracked children. Login is none for a tracked child. A child is not a buyer."}
-      </p>
+    <DeskPage
+      eyebrow="People"
+      title={copy?.title ?? "People"}
+      width="4xl"
+      data-desk={desk ?? "none"}
+      lede={
+        <>
+          <p className="text-base">{JOB_SENTENCE}</p>
+          <p className="mt-3">
+            {copy
+              ? copy.lede
+              : "This desk shows one room. Sales lists login learners. Household lists tracked children. Login is none for a tracked child. A child is not a buyer."}
+          </p>
+        </>
+      }
+    >
       {choices.length > 1 ? (
-        <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Room">
+        <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label="Room">
           {choices.map((choice) => (
             <button
               key={choice}
@@ -160,10 +169,11 @@ export default function PeoplePage() {
           ))}
         </div>
       ) : null}
-      {error ? <p className="mt-6 text-sm">{error}</p> : null}
+      {error ? <p className="mb-6 text-sm">{error}</p> : null}
+      {desk && copy ? <KpiStrip label={`${copy.title} at a glance`} items={peopleKpis({ rows, lines, kindLabel: copy.kind })} /> : null}
       {aim || lines.some((line) => lessonSpineStep(line.nextStep)) ? (
         <p
-          className="mt-6 text-sm"
+          className="mb-6 text-sm"
           data-org-aim="yes"
           data-aim-from={!aim && lines.some((line) => lessonSpineStep(line.nextStep)) ? "outcomes" : undefined}
         >
@@ -176,87 +186,68 @@ export default function PeoplePage() {
         </p>
       ) : null}
       {desk && copy ? (
-        <div className="mt-8 overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
-            <caption className="sr-only">{copy.title}</caption>
-            <thead className="bg-card text-xs uppercase tracking-[0.12em] text-muted-foreground">
-              <tr>
-                <th className="px-4 py-3 font-medium">Name</th>
-                <th className="px-4 py-3 font-medium">Kind</th>
-                <th className="px-4 py-3 font-medium">Stance</th>
-                <th className="px-4 py-3 font-medium">Org</th>
-                <th className="px-4 py-3 font-medium">Login</th>
-                <th className="px-4 py-3 font-medium">How they are doing</th>
-                <th className="px-4 py-3 font-medium">Next step</th>
+        <DeskTable
+          caption={copy.title}
+          columns={["Name", "Kind", "Stance", "Org", "Login", "How they are doing", "Next step"]}
+          rowCount={rows.length}
+          empty={ready && !error ? copy.empty : null}
+        >
+          {rows.map((person) => {
+              const line = lines.find((row) => row.membershipId === person.membershipId);
+              const spine = line?.nextStep ? lessonSpineStep(line.nextStep) : null;
+              const spineConfidence = line?.nextStep ? lessonSpineConfidence(line.nextStep) : null;
+              return (
+              <tr
+                key={`${desk}-${person.membershipId}`}
+                className="border-t border-border"
+                data-room={desk}
+                data-kind={copy.kind}
+                data-sales-children={desk === "sales" ? "0" : undefined}
+              >
+                <td className="px-4 py-3">{person.name}</td>
+                <td className="px-4 py-3">{copy.kind}</td>
+                <td className="px-4 py-3">{person.stance}</td>
+                <td className="px-4 py-3">
+                  <Link href={`/o/${person.org}`} className="underline underline-offset-2">
+                    {person.orgName || person.org}
+                  </Link>
+                </td>
+                <td className="px-4 py-3">{copy.login}</td>
+                <td
+                  className="px-4 py-3 text-muted-foreground"
+                  data-confidence={person.membershipId}
+                  data-confidence-from={spineConfidence ? "outcomes" : undefined}
+                >
+                  {line?.confidence || spineConfidence ? (
+                    <>
+                      <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
+                        Confidence
+                      </span>
+                      {spineConfidence || line?.confidence}
+                    </>
+                  ) : (
+                    "No note on how they are doing yet."
+                  )}
+                </td>
+                <td
+                  className="px-4 py-3"
+                  data-next-step={person.membershipId}
+                  data-lesson-spine-next={spine || undefined}
+                  data-next-from={spine ? "outcomes" : undefined}
+                >
+                  {spine ? (
+                    <Link href="/play/lesson-spine">{spine}</Link>
+                  ) : (
+                    line?.nextStep || "No next step yet."
+                  )}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {rows.length === 0 && ready && !error ? (
-                <tr>
-                  <td className="px-4 py-6 text-muted-foreground" colSpan={7}>
-                    {copy.empty}
-                  </td>
-                </tr>
-              ) : (
-                rows.map((person) => {
-                  const line = lines.find((row) => row.membershipId === person.membershipId);
-                  const spine = line?.nextStep ? lessonSpineStep(line.nextStep) : null;
-                  const spineConfidence = line?.nextStep ? lessonSpineConfidence(line.nextStep) : null;
-                  return (
-                  <tr
-                    key={`${desk}-${person.membershipId}`}
-                    className="border-t border-border"
-                    data-room={desk}
-                    data-kind={copy.kind}
-                    data-sales-children={desk === "sales" ? "0" : undefined}
-                  >
-                    <td className="px-4 py-3">{person.name}</td>
-                    <td className="px-4 py-3">{copy.kind}</td>
-                    <td className="px-4 py-3">{person.stance}</td>
-                    <td className="px-4 py-3">
-                      <Link href={`/o/${person.org}`} className="underline underline-offset-2">
-                        {person.orgName || person.org}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3">{copy.login}</td>
-                    <td
-                      className="px-4 py-3 text-muted-foreground"
-                      data-confidence={person.membershipId}
-                      data-confidence-from={spineConfidence ? "outcomes" : undefined}
-                    >
-                      {line?.confidence || spineConfidence ? (
-                        <>
-                          <span className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground" data-confidence-label="Confidence">
-                            Confidence
-                          </span>
-                          {spineConfidence || line?.confidence}
-                        </>
-                      ) : (
-                        "No note on how they are doing yet."
-                      )}
-                    </td>
-                    <td
-                      className="px-4 py-3"
-                      data-next-step={person.membershipId}
-                      data-lesson-spine-next={spine || undefined}
-                      data-next-from={spine ? "outcomes" : undefined}
-                    >
-                      {spine ? (
-                        <Link href="/play/lesson-spine">{spine}</Link>
-                      ) : (
-                        line?.nextStep || "No next step yet."
-                      )}
-                    </td>
-                  </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+              );
+            })}
+        </DeskTable>
       ) : ready && !error ? (
-        <p className="mt-8 text-sm text-muted-foreground">Choose Sales or Household.</p>
+        <EmptyState>Choose Sales or Household.</EmptyState>
       ) : null}
-    </main>
+    </DeskPage>
   );
 }
