@@ -16,10 +16,10 @@ export function OrgPicker({ memberships, active }: { memberships: readonly Shell
   if (!memberships.length) return null;
 
   return (
-    <label className="flex items-center gap-2 text-xs text-muted-foreground">
+    <label className="flex flex-col gap-1 px-0.5 text-xs text-muted-foreground">
       Org
       <select
-        className="h-9 rounded-lg border border-border bg-background px-2 text-sm text-foreground"
+        className="h-10 w-full rounded-xl border border-border bg-background px-2 text-sm text-foreground"
         value={value}
         onChange={(e) => {
           const slug = e.target.value;

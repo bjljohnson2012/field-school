@@ -1883,7 +1883,7 @@ test("learn home reads the aim, how that person is doing, and the next step in b
   const board = brainBoard({ room: "sales", brain: withChild });
   assert.equal(board.people.some((person) => person.kind === "child"), false);
 
-  const page = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../app/dashboard/page.tsx"), "utf8");
+  const page = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../app/learn/page.tsx"), "utf8");
   const header = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../components/site-header.tsx"), "utf8");
   assert.match(page, /learnHomeContext/);
   assert.match(page, /data-org-aim=/);

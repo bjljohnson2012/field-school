@@ -13,9 +13,12 @@ export const metadata = {
   title: "Insights",
 };
 
+const INSIGHTS_LEDE =
+  "Insights is a read of this org. It shows who is moving, the next step, and what is already finished. A household shows tracked children, who do not sign in. A sales org shows the people who do.";
+
 function Shell({ children }: { children: ReactNode }) {
   return (
-    <DeskPage eyebrow="Operator" title="Insights">
+    <DeskPage eyebrow="Operator" title="Insights" lede={INSIGHTS_LEDE}>
       {children}
     </DeskPage>
   );

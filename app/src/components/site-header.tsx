@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { ArrowRight, Plus } from "lucide-react";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
 import { activeDoor, type Door } from "@/lib/shell/routes";
@@ -68,10 +69,11 @@ const currentClass = "flex h-11 items-center px-2 text-foreground underline unde
 function NewMenu() {
   return (
     <details className="relative">
-      <summary className={`${linkClass} cursor-pointer list-none`}>
+      <summary className="inline-flex h-10 cursor-pointer list-none items-center gap-1.5 rounded-xl border border-border bg-card px-3.5 text-sm font-medium text-foreground">
+        <Plus className="size-4" aria-hidden="true" />
         New
       </summary>
-      <div className="absolute right-0 z-40 mt-1 flex min-w-44 flex-col rounded-xl border border-border bg-background p-1 shadow-md">
+      <div className="absolute right-0 z-40 mt-1 flex min-w-44 flex-col rounded-2xl border border-border bg-card p-1 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
         {NEW_DOORS.map((door) => (
           <Link
             key={door.href}
@@ -91,7 +93,7 @@ function NewMenu() {
 type NavLink = { href: string; label: string; door: Door };
 
 const stoneLink =
-  "flex h-11 items-center px-2 text-[#7a746a] hover:text-foreground sm:px-2.5";
+  "flex h-11 items-center px-2 text-muted-foreground hover:text-foreground sm:px-2.5";
 
 function GuestOrgMenu() {
   return (
@@ -118,24 +120,48 @@ export function navLinks(opts: {
   org: string;
 }): NavLink[] {
   if (opts.guest || !opts.loggedIn) {
-    // Guest rooms: People, Library, Insights, and New stay hidden.
-    // Learn stays on the home page rail (Learn with Ben), not in the nav,
-    // because the signed-in Learn door is /dashboard.
+    // Guest rooms: Insights, People, Library, and New stay hidden.
+    // Learn is the signed-in action at /learn, not a guest tab.
     return [];
   }
   const org = opts.org;
   if (!opts.leader) {
     return [
-      { href: "/dashboard", label: "Learn", door: "learn" },
+      { href: "/learn", label: "Learn", door: "learn" },
       { href: org === "sales" ? "/skills" : "/pattern", label: "Me", door: "me" },
     ];
   }
   return [
-    { href: "/dashboard", label: "Learn", door: "learn" },
-    { href: "/people", label: "People", door: "people" },
-    { href: org ? `/o/${org}/l` : "/dashboard", label: "Library", door: "library" },
     { href: "/insights", label: "Insights", door: "insights" },
+    { href: "/people", label: "People", door: "people" },
+    { href: org ? `/o/${org}/l` : "/insights", label: "Library", door: "library" },
+    { href: "/learn", label: "Learn", door: "learn" },
   ];
+}
+
+function DoorLink({ link, current }: { link: NavLink; current: Door | null }) {
+  const on = current === link.door;
+  if (link.door === "learn") {
+    return (
+      <Link
+        href={link.href}
+        aria-current={on ? "page" : undefined}
+        className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-primary px-3.5 text-sm font-medium text-primary-foreground shadow-[0_12px_28px_-16px_rgba(31,94,255,0.9)]"
+      >
+        Learn
+        <ArrowRight className="size-4" aria-hidden="true" />
+      </Link>
+    );
+  }
+  return (
+    <Link
+      href={link.href}
+      className={on ? currentClass : linkClass}
+      aria-current={on ? "page" : undefined}
+    >
+      {link.label}
+    </Link>
+  );
 }
 
 export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
@@ -162,12 +188,14 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
           org,
         });
   const showNew = loggedIn && leader;
+  const learn = links.find((link) => link.door === "learn") ?? null;
+  const tabs = learn ? links.filter((link) => link.door !== "learn") : links;
   const current = activeDoor(pathname, links.map((l) => l.door));
   const extras = loggedIn && viewer ? accountItems(viewer) : [];
 
   return (
     <header data-bar="" className="sticky top-0 z-30 border-b border-border bg-background/88 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
+      <div className="mx-auto flex min-h-14 max-w-6xl items-center justify-between gap-2 px-4">
         <div className="flex min-w-0 items-center gap-2">
           <Link href={homeHref} className="flex items-center rounded-lg px-1.5 py-0.5">
             <img
@@ -186,26 +214,20 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
           </Link>
           {loggedIn ? <LeaveReturnNext /> : null}
         </div>
-        <nav className="flex items-center gap-0.5 text-sm" aria-label="Field School">
+        <nav className="flex items-center gap-1 text-sm" aria-label="Field School">
           <div className="hidden items-center gap-0.5 md:flex">
-            {links.map((l) => (
-              <Link
-                key={l.label}
-                href={l.href}
-                className={current === l.door ? currentClass : linkClass}
-                aria-current={current === l.door ? "page" : undefined}
-              >
-                {l.label}
-              </Link>
+            {tabs.map((l) => (
+              <DoorLink key={l.label} link={l} current={current} />
             ))}
             {guestChrome ? <GuestOrgMenu /> : null}
           </div>
           {showNew ? <NewMenu /> : null}
+          {learn ? <DoorLink link={learn} current={current} /> : null}
           <details className="relative md:hidden">
             <summary className="flex h-11 cursor-pointer list-none items-center px-2 text-muted-foreground">
               Menu
             </summary>
-            <div className="absolute right-0 z-40 mt-1 flex min-w-56 flex-col rounded-xl border border-border bg-background p-2 shadow-md">
+            <div className="absolute right-0 z-40 mt-1 flex min-w-56 flex-col rounded-2xl border border-border bg-card p-2 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
               {links.map((l) => (
                 <Link
                   key={l.label}
@@ -219,7 +241,7 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
               ))}
               {guestChrome ? (
                 <>
-                  <p className="px-2 pt-2 text-xs uppercase tracking-[0.16em] text-[#7a746a]">
+                  <p className="px-2 pt-2 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
                     Org
                   </p>
                   <Link href="/o/household" className={stoneLink}>
@@ -230,31 +252,8 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
                   </Link>
                 </>
               ) : null}
-              {loggedIn ? (
-                <>
-                  <div className="border-t border-border px-2 py-2">
-                    <OrgPicker memberships={viewer?.memberships ?? []} active={org} />
-                  </div>
-                  <Link href="/metering" className={linkClass} onClick={closeMenu}>
-                    Credits
-                  </Link>
-                  <button type="button" className={`${linkClass} text-left`} onClick={openPalette}>
-                    Jump to… <span className="ml-auto font-mono text-xs">⌘K</span>
-                  </button>
-                </>
-              ) : null}
             </div>
           </details>
-          {loggedIn ? (
-            <div className="hidden md:flex">
-              <OrgPicker memberships={viewer?.memberships ?? []} active={org} />
-            </div>
-          ) : null}
-          {loggedIn ? (
-            <Link href="/metering" className="hidden h-11 items-center px-2 text-sm text-muted-foreground hover:text-foreground md:flex">
-              Credits
-            </Link>
-          ) : null}
           {status === "loading" || !ready ? (
             <div className="h-8 w-8 animate-pulse rounded-full bg-secondary" />
           ) : loggedIn ? (
@@ -269,7 +268,7 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
                   <span data-logo="monogram">{initial}</span>
                 )}
               </summary>
-              <div className="absolute right-0 z-40 mt-1 flex min-w-56 flex-col gap-1 rounded-xl border border-border bg-background p-3 shadow-md">
+              <div className="absolute right-0 z-40 mt-1 flex min-w-64 flex-col gap-1 rounded-2xl border border-border bg-card p-3 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
                 <Link
                   href="/profile"
                   className="flex h-11 items-center text-sm text-muted-foreground hover:text-foreground"
@@ -277,6 +276,11 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
                 >
                   View Profile
                 </Link>
+                {viewer && viewer.memberships.length > 0 ? (
+                  <div className="border-b border-border pb-2">
+                    <OrgPicker memberships={viewer.memberships} active={org} />
+                  </div>
+                ) : null}
                 {extras.map((item) => (
                   <Link
                     key={item.id}
@@ -289,6 +293,9 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
                     {item.badge === "tasks" ? <TasksNavBadge /> : null}
                   </Link>
                 ))}
+                <Link href="/metering" className="flex h-11 items-center text-sm text-muted-foreground hover:text-foreground" onClick={closeMenu}>
+                  Credits
+                </Link>
                 <button
                   type="button"
                   className="flex h-11 items-center text-left text-sm text-muted-foreground hover:text-foreground"
@@ -316,7 +323,7 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
               </Link>
               <Link
                 href="/signup"
-                className="flex h-9 items-center rounded-xl border border-border px-3 text-sm text-[#7a746a] hover:text-foreground"
+                className="flex h-9 items-center rounded-xl border border-border px-3 text-sm text-muted-foreground hover:text-foreground"
               >
                 Join free
               </Link>

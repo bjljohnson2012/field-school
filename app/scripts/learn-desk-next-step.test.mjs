@@ -66,7 +66,7 @@ test("Learn reads the LessonSpine step play wrote", () => {
 });
 
 test("Learn desk shows the living-brain LessonSpine step and leaves guests alone", () => {
-  const page = read("src/app/dashboard/page.tsx");
+  const page = read("src/app/learn/page.tsx");
   assert.match(page, /lessonSpineStep/);
   assert.match(page, /data-lesson-spine-next=/);
   assert.match(page, /data-next-from="outcomes"/);

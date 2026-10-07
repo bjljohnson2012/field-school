@@ -85,7 +85,9 @@ test("Insights, People, and Library share one desk frame, card, KPI strip, table
   const charts = read("src/app/insights/charts.tsx");
   const people = read("src/app/people/page.tsx");
   const library = read("src/app/o/[slug]/l/page.tsx");
-  assert.match(insights, /<DeskPage eyebrow="Operator" title="Insights">/);
+  assert.match(insights, /eyebrow="Operator"/);
+  assert.match(insights, /title="Insights"/);
+  assert.match(insights, /who is moving/);
   assert.match(insights, /<DeskCard\s+data-edges="people-milestones"/);
   assert.match(charts, /<KpiStrip label="This org at a glance" items=\{insightsKpis\(model\)\} \/>/);
   assert.match(charts, /<DeskCard data-chart=\{id\} title=\{title\} hint=\{hint\}>/);

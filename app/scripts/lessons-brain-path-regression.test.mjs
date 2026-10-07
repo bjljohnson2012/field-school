@@ -123,7 +123,7 @@ test("a guest does not write and an empty desk does not invent a child", () => {
   const write = read("src/components/lesson-spine-play-write.tsx");
   assert.match(write, /if \(status !== "authenticated" \|\| !email\) return;/);
   assert.match(write, /Guests stay at the start and do not write/);
-  assert.match(read("src/app/dashboard/page.tsx"), /learnHomeContext/);
+  assert.match(read("src/app/learn/page.tsx"), /learnHomeContext/);
   assert.match(read("src/app/people/page.tsx"), /peopleContext/);
   assert.match(read("src/app/insights/charts.tsx"), /person\.login === "none" \? "No login"/);
   assert.match(read("src/app/insights/charts.tsx"), /lessonSpineRollup/);
