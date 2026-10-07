@@ -81,6 +81,26 @@ test("no taxonomy locks before six informing answers, and locks at 75% or more",
   assert.equal(band.category, "principal");
 });
 
+test("Enneagram, DISC, and Myers-Briggs lock at 75% or higher and then hold", () => {
+  const run = respond("personality", "max");
+  for (const taxonomy of ["enneagram", "disc", "mbti"]) {
+    const lockedAt = run.states.findIndex((state) =>
+      state.placements.some((placement) => placement.taxonomy === taxonomy && placement.kind === "locked"),
+    );
+    assert.ok(lockedAt >= 6, `${taxonomy} locked at step ${lockedAt}`);
+    const first = run.states[lockedAt].placements.find((placement) => placement.taxonomy === taxonomy);
+    assert.equal(first.kind, "locked");
+    assert.ok(first.confidence >= 0.75, `${taxonomy} at ${first.confidence}`);
+    for (const state of run.states.slice(lockedAt)) {
+      assert.deepEqual(
+        state.placements.find((placement) => placement.taxonomy === taxonomy),
+        first,
+        taxonomy,
+      );
+    }
+  }
+});
+
 test("a locked placement never moves on later answers", () => {
   const lockedAt = strongSkills.states.findIndex((s) => s.placements.some((p) => p.taxonomy === "skill_band" && p.kind === "locked"));
   assert.ok(lockedAt > 0);
