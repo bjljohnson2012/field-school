@@ -49,7 +49,7 @@ export function SignupForm({ oauth }: Props) {
         <Link href="/pricing" className="underline underline-offset-2">
           pricing
         </Link>
-        .
+        . Enroll signs you in. After you join, you are already on the campus.
         {plan ? ` This sign-up is for the ${plan} seat.` : ""}
       </p>
       </div>

@@ -527,8 +527,8 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
           )}
         </ChartFrame>
       </div>
-      <aside className="mt-6 rounded-xl border border-border bg-card p-5">
-        <h2 className="font-display text-2xl tracking-tight">Person</h2>
+      <aside id="report" className="mt-6 rounded-xl border border-border bg-card p-5">
+        <h2 className="font-display text-2xl tracking-tight">Report</h2>
         {open?.unitId ? (
           <p className="mt-3 text-sm" data-unit={open.unitId}>
             {open.unitLabel}

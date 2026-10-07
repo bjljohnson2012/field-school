@@ -78,7 +78,7 @@ export default function PricingPage() {
       </h1>
       <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
         The newsletter is free. One course is free. Paid seats take a card on
-        Stripe.
+        Stripe. Enroll signs you in. After you join, you are already on the campus.
       </p>
 
       <section className="mt-10 rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">

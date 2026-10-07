@@ -6,7 +6,15 @@ import { ORG_SWITCH_EVENT, type ShellMembership } from "@/lib/shell/model";
 
 const VIEW_ALL = "__all__";
 
-export function OrgPicker({ memberships, active }: { memberships: readonly ShellMembership[]; active: string }) {
+export function OrgPicker({
+  memberships,
+  active,
+  quiet = false,
+}: {
+  memberships: readonly ShellMembership[];
+  active: string;
+  quiet?: boolean;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const [picked, setPicked] = useState<string | null>(null);
@@ -22,7 +30,7 @@ export function OrgPicker({ memberships, active }: { memberships: readonly Shell
     <div className="px-0.5">
       <p className="text-sm font-medium text-foreground">{here}</p>
       <label className="mt-2 flex flex-col gap-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-        Switch org
+        <span className={quiet ? "sr-only" : undefined}>Switch org</span>
         <select
           className="h-10 w-full rounded-xl border border-border bg-background px-2 text-sm normal-case tracking-normal text-foreground"
           value={value}

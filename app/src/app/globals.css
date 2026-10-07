@@ -66,8 +66,8 @@
   --color-brand-red: #dc2626;
   --radius-brand: 0.875rem;
   --radius-card: 1.25rem;
-  --shadow-card: 0 8px 24px rgba(11, 31, 58, 0.08);
-  --shadow-card-hover: 0 12px 30px rgba(11, 31, 58, 0.12);
+  --shadow-card: 0 8px 24px rgba(26, 25, 22, 0.06);
+  --shadow-card-hover: 0 12px 30px rgba(26, 25, 22, 0.1);
   --shadow-orange-glow: 0 10px 22px rgba(255, 106, 26, 0.28);
   --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -79,22 +79,22 @@
   --card-foreground: #1a1916;
   --popover: #ffffff;
   --popover-foreground: #1a1916;
-  --primary: #1f5eff;
-  --primary-foreground: #ffffff;
+  --primary: #1e4e8c;
+  --primary-foreground: #f7f4ee;
   --secondary: #efeae1;
   --secondary-foreground: #1a1916;
   --muted: #efeae1;
   --muted-foreground: #5c5850;
-  --accent: #1f5eff;
-  --accent-foreground: #ffffff;
+  --accent: #1e4e8c;
+  --accent-foreground: #f7f4ee;
   --destructive: #c05621;
   --border: #d8d2c6;
   --input: #d8d2c6;
-  --ring: #1f5eff;
+  --ring: #1e4e8c;
   --faint: #8a8478;
   --pass: #2f6b3a;
   --warn: #c05621;
-  --chart-1: #1f5eff;
+  --chart-1: #1e4e8c;
   --chart-2: #2f6b3a;
   --chart-3: #c05621;
   --chart-4: #5c5850;
@@ -102,12 +102,12 @@
   --radius: 0.75rem;
   --sidebar: #fffdf8;
   --sidebar-foreground: #1a1916;
-  --sidebar-primary: #1f5eff;
-  --sidebar-primary-foreground: #ffffff;
+  --sidebar-primary: #1e4e8c;
+  --sidebar-primary-foreground: #f7f4ee;
   --sidebar-accent: #efeae1;
   --sidebar-accent-foreground: #1a1916;
   --sidebar-border: #d8d2c6;
-  --sidebar-ring: #1f5eff;
+  --sidebar-ring: #1e4e8c;
 }
 
 .dark {
@@ -153,15 +153,15 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-brand bg-brand-orange px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 ease-brand hover:bg-brand-orange-deep hover:shadow-orange-glow focus:outline-none focus:ring-4 focus:ring-brand-orange/25 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-brand bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-200 ease-brand hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .card {
-    @apply rounded-card border border-gray-200 bg-white shadow-card;
+    @apply rounded-card border border-border bg-card text-card-foreground shadow-card;
   }
 
   .input {
-    @apply w-full rounded-brand border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm focus:border-brand-indigo focus:outline-none focus:ring-4 focus:ring-brand-indigo/15;
+    @apply w-full rounded-brand border border-border bg-card px-4 py-2.5 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15;
   }
 
   .label {

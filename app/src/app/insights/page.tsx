@@ -75,6 +75,10 @@ export default async function InsightsPage() {
         <Link href="/knowledge" className="font-medium text-primary">
           Knowledge repository
         </Link>
+        {" · "}
+        <Link href="#report" className="font-medium text-primary">
+          View the report
+        </Link>
       </p>
       <InsightsBoard model={result.model} />
       <DeskCard
