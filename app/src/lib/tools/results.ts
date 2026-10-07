@@ -87,6 +87,11 @@ export function latestByTool(results: readonly ToolResult[]): LatestToolResults 
   return latest;
 }
 
+/** How many saved tools have a result. A retake stays one assessment. */
+export function assessmentCount(results: readonly ToolResult[]): number {
+  return Object.keys(latestByTool(results)).length;
+}
+
 /** Gates the saved results earn that the profile has not marked, each at the time of its first result. */
 export function owedGates(
   results: readonly ToolResult[],
