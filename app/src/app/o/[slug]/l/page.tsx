@@ -32,6 +32,10 @@ export default function PublishedCatalogPage() {
   const [ready, setReady] = useState(false);
   const [canTeach, setCanTeach] = useState(false);
   const [edges, setEdges] = useState<readonly EdgeView[]>([]);
+  const [revision, setRevision] = useState(0);
+  const [draft, setDraft] = useState("");
+  const [adding, setAdding] = useState(false);
+  const [edits, setEdits] = useState<Record<string, { title: string; body: string; status: string; open: boolean }>>({});
   const [media, setMedia] = useState<Map<string, number>>(new Map());
 
   useEffect(() => {
@@ -57,7 +61,7 @@ export default function PublishedCatalogPage() {
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, revision]);
 
   const lessonIds = lessons
     .slice(0, 100)
@@ -93,6 +97,40 @@ export default function PublishedCatalogPage() {
   return (
     <DeskPage eyebrow={slug} title="Lessons" width="3xl" lede="Published and unpublished lessons are both listed. An unpublished lesson stays off the child catalog.">
       {error ? <p className="mb-6 text-sm">{error}</p> : null}
+      {canTeach ? (
+        <form
+          className="mb-8 rounded-2xl border border-border bg-card p-4"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const body = draft.trim();
+            if (body.length < 12 || adding) return;
+            setAdding(true);
+            void fetch("/api/composer/lessons", {
+              method: "POST",
+              headers: { "content-type": "application/json", "x-fs-org": slug },
+              body: JSON.stringify({ kind: "text", title: "", body }),
+            })
+              .then(async (res) => {
+                if (!res.ok) return;
+                setDraft("");
+                setRevision((value) => value + 1);
+              })
+              .finally(() => setAdding(false));
+          }}
+        >
+          <p className="text-sm font-medium">Add a lesson</p>
+          <p className="mt-1 text-sm text-muted-foreground">Paste the lesson. It stays unpublished until you publish it.</p>
+          <textarea
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            rows={4}
+            className="mt-3 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none ring-primary/30 focus:ring-2"
+          />
+          <button type="submit" disabled={adding} className="mt-3 inline-flex h-11 items-center rounded-xl bg-primary px-4 text-sm text-primary-foreground">
+            Add lesson
+          </button>
+        </form>
+      ) : null}
       {lessons.length ? <KpiStrip label="This catalog at a glance" items={kpis} /> : null}
       {ready && !error && !lessons.length ? <EmptyState>No lessons in this org yet.</EmptyState> : null}
       <ul className="grid gap-3">
@@ -123,9 +161,109 @@ export default function PublishedCatalogPage() {
                     <Link href={`/o/${slug}/teach/${lesson.id}`} className="underline underline-offset-4">
                       Manage
                     </Link>
+                    {" · "}
+                    <button
+                      type="button"
+                      className="underline underline-offset-4"
+                      onClick={() => {
+                        const existing = edits[lesson.id];
+                        if (existing?.open) {
+                          setEdits((current) => ({
+                            ...current,
+                            [lesson.id]: { ...existing, open: false },
+                          }));
+                          return;
+                        }
+                        const opened = {
+                          title: existing?.title || readableTitle(lesson.title, ""),
+                          body: existing?.body || "",
+                          status: existing?.status || lesson.status,
+                          open: true,
+                        };
+                        setEdits((current) => ({ ...current, [lesson.id]: opened }));
+                        if (opened.body) return;
+                        void fetch(`/api/composer/lessons?id=${lesson.id}`, { headers: { "x-fs-org": slug } })
+                          .then((res) => res.json())
+                          .then((json: { lesson?: { body?: string } }) => {
+                            const body = typeof json.lesson?.body === "string" ? json.lesson.body : "";
+                            setEdits((current) => ({
+                              ...current,
+                              [lesson.id]: { ...(current[lesson.id] ?? opened), body, open: true },
+                            }));
+                          });
+                      }}
+                    >
+                      Edit
+                    </button>
                   </>
                 ) : null}
               </p>
+              {canTeach && edits[lesson.id]?.open ? (
+                <form
+                  className="mt-4 grid gap-3"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    const edit = edits[lesson.id];
+                    if (!edit) return;
+                    void fetch("/api/composer/lessons", {
+                      method: "PATCH",
+                      headers: { "content-type": "application/json", "x-fs-org": slug },
+                      body: JSON.stringify({
+                        id: lesson.id,
+                        title: edit.title,
+                        body: edit.body,
+                        status: edit.status === "published" ? "published" : "draft",
+                      }),
+                    }).then((res) => {
+                      if (res.ok) setRevision((value) => value + 1);
+                    });
+                  }}
+                >
+                  <input
+                    value={edits[lesson.id]?.title ?? ""}
+                    onChange={(event) => {
+                      const title = event.target.value;
+                      setEdits((current) => {
+                        const row = current[lesson.id];
+                        if (!row) return current;
+                        return { ...current, [lesson.id]: { ...row, title } };
+                      });
+                    }}
+                    className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
+                  />
+                  <textarea
+                    value={edits[lesson.id]?.body ?? ""}
+                    onChange={(event) => {
+                      const body = event.target.value;
+                      setEdits((current) => {
+                        const row = current[lesson.id];
+                        if (!row) return current;
+                        return { ...current, [lesson.id]: { ...row, body } };
+                      });
+                    }}
+                    rows={5}
+                    className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
+                  />
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={edits[lesson.id]?.status === "published"}
+                      onChange={(event) => {
+                        const status = event.target.checked ? "published" : "draft";
+                        setEdits((current) => {
+                          const row = current[lesson.id];
+                          if (!row) return current;
+                          return { ...current, [lesson.id]: { ...row, status } };
+                        });
+                      }}
+                    />
+                    Published
+                  </label>
+                  <button type="submit" className="h-10 justify-self-start rounded-xl bg-primary px-4 text-sm text-primary-foreground">
+                    Save lesson
+                  </button>
+                </form>
+              ) : null}
             </li>
           );
         })}

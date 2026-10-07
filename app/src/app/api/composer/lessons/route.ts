@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { requireMember, requireTeacher, deny } from "@/lib/composer/access";
 import { canTeach, isSourceKind } from "@/lib/composer/rules";
-import { createLesson, getLessonDetail, listLessons } from "@/lib/composer/store";
+import { createLesson, getLessonDetail, listLessons, updateLessonCopy } from "@/lib/composer/store";
+import { titleFromDrop } from "@/lib/library/teach-from-knowledge";
 
 export const dynamic = "force-dynamic";
 
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
   const text = typeof body.body === "string" ? body.body : "";
   if (!text.trim()) return deny(400, "supplied_text_required");
   const created = await createLesson(auth.identity, {
-    title,
+    title: title.trim() || titleFromDrop({ text }),
     kind,
     body: text,
     url: typeof body.url === "string" ? body.url : "",
@@ -97,5 +98,30 @@ export async function POST(request: Request) {
       id: unit.id,
       title: unit.title,
     })),
+  });
+}
+
+export async function PATCH(request: Request) {
+  const auth = await requireTeacher(request);
+  if (!auth.ok) return auth.response;
+  let body: Record<string, unknown>;
+  try {
+    body = (await request.json()) as Record<string, unknown>;
+  } catch {
+    return deny(400, "invalid_json");
+  }
+  const lessonId = typeof body.id === "string" ? body.id.trim() : "";
+  if (!lessonId) return deny(400, "unknown_lesson");
+  const status = body.status === "published" || body.status === "draft" ? body.status : undefined;
+  const saved = await updateLessonCopy(auth.identity, {
+    lessonId,
+    title: typeof body.title === "string" ? body.title : undefined,
+    body: typeof body.body === "string" ? body.body : undefined,
+    status,
+  });
+  if ("error" in saved) return deny(404, typeof saved.error === "string" ? saved.error : "unknown_lesson");
+  return NextResponse.json({
+    ok: true,
+    lesson: { id: saved.lesson.id, title: saved.lesson.title, status: saved.lesson.status },
   });
 }

@@ -17,7 +17,7 @@ import {
 
 export const dynamic = "force-dynamic";
 
-const HIRER_STANCES = new Set(["admin", "guardian", "trainer"]);
+const HIRER_STANCES = new Set(["admin"]);
 
 function deny(status: number, error: string) {
   return NextResponse.json({ ok: false, error }, { status });

@@ -38,7 +38,7 @@ const JOB =
 function messageFor(code: string) {
   if (code === "sign_in_required") return "Sign in to set this org.";
   if (code === "child_cannot_write") return "A child does not set the org key.";
-  if (code === "hirer_only") return "The hirer sets the org default.";
+  if (code === "hirer_only") return "An admin manages Connect AI for this org.";
   if (code === "byok_key_required") return "Paste a key to use your own key.";
   if (code === "secret_invalid" || code === "secret_required") return "That key cannot be saved.";
   if (code === "wrap_key_missing" || code === "wrap_key_invalid") {
@@ -219,6 +219,20 @@ export function AiKeysPanel({ initialError = null }: { initialError?: string | n
               </span>
             </label>
           </fieldset>
+
+          <label className="flex items-center gap-3 text-sm">
+            <input
+              type="checkbox"
+              checked={Boolean(state.stored && state.mode === mode)}
+              readOnly
+              aria-label="Selected and submitted"
+            />
+            <span>
+              {state.stored && state.mode === mode
+                ? "Selected and submitted"
+                : "Not submitted yet"}
+            </span>
+          </label>
 
           {last4 ? (
             <p className="font-mono text-sm" data-key-last4={last4}>

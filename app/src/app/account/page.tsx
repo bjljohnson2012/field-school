@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ACCOUNT_LOGIN, accountAccess } from "@/app/api/coaching/account/password/route";
+import { AiKeysPanel } from "@/app/settings/ai/ai-keys-panel";
 import { auth } from "@/auth";
+import { isStaffEmail } from "@/lib/auth/staff";
+import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { passwordError } from "@/lib/members/policy";
 
 export const dynamic = "force-dynamic";
@@ -28,6 +31,9 @@ export default async function AccountPage({
   const params = await searchParams;
   const saved = params.saved === "1";
   const notice = noticeFor(params.error);
+  const identity = await identityFromRequest();
+  const canManageAi =
+    identity.ok && (identity.identity.stance === "admin" || isStaffEmail(identity.identity.email));
 
   return (
     <main>
@@ -91,6 +97,11 @@ export default async function AccountPage({
           </button>
         </form>
       </section>
+      {canManageAi ? (
+        <section id="connect-ai" className="card mt-6 max-w-3xl p-6">
+          <AiKeysPanel />
+        </section>
+      ) : null}
     </main>
   );
 }
