@@ -23,7 +23,7 @@ const ERRORS: Record<string, string> = {
   household_org: "This door is for a leader on a team org.",
   outcome_required: "Name what they should be able to do after.",
   too_many_chapters: "Keep chapter titles to forty lines.",
-  child_cannot_draft: "A tracked child does not draft units.",
+  child_cannot_draft: "A child in this family does not draft units.",
   leader_only: "A leader drafts units for this org.",
   forbidden_org: "That org is not yours.",
   invalid_json: "Could not read that draft.",
@@ -112,7 +112,7 @@ export default function VideoInPage() {
       <main className="mx-auto max-w-xl px-4 py-16">
         <h1 className="font-display text-3xl">Leaders only</h1>
         <p className="mt-3 text-muted-foreground">
-          A tracked child is not the buyer and does not draft units.
+          A child in this family is not the buyer and does not draft units.
         </p>
       </main>
     );

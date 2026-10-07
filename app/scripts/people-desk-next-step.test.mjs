@@ -69,7 +69,8 @@ test("People desk shows the living-brain LessonSpine step in both rooms", () => 
   assert.match(page, /data-next-from=\{spine \? "outcomes" : undefined\}/);
   assert.match(page, /href="\/play\/lesson-spine"/);
   assert.match(page, /data-sales-children=\{desk === "sales" \? "0" : undefined\}/);
-  assert.match(page, /Login is none for a tracked child/);
+  assert.match(page, /Family lists the children in this home/);
+  assert.match(page, /Login is none/);
   assert.match(page, /data-next-step=/);
   assert.doesNotMatch(page, /JTBD|Jobs-to-be-Done|hire path|parent hire/);
 });

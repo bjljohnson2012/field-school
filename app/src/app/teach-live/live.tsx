@@ -217,7 +217,7 @@ export function TeachLive() {
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
           {room === "sales"
             ? "Assign a path to one team member first. They may sign in. You own the path. Their next step shows here after you return. This desk does not list children."
-            : "Assign a path to one tracked child first. That child has no login. The next step shows here after you return."}
+            : "Assign a path to one child in this family first. That child has no login. The next step shows here after you return."}
         </p>
         <TeachBrainLabels
           room={room}

@@ -103,7 +103,7 @@ function GuestOrgMenu() {
       </summary>
       <div className="absolute right-0 z-40 mt-1 flex min-w-44 flex-col rounded-xl border border-border bg-background p-1 shadow-md">
         <Link href="/o/household" className={stoneLink}>
-          Household
+          Family
         </Link>
         <Link href="/o/sales" className={stoneLink}>
           Sales
@@ -245,7 +245,7 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
                     Org
                   </p>
                   <Link href="/o/household" className={stoneLink}>
-                    Household
+                    Family
                   </Link>
                   <Link href="/o/sales" className={stoneLink}>
                     Sales

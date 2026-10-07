@@ -124,10 +124,11 @@ test("org switcher View all lists users and their org", () => {
   const peopleApi = readSrc("src/app/api/org/people/route.ts");
 
   assert.match(picker, /const VIEW_ALL = "__all__"/);
-  assert.match(picker, /<option value=\{VIEW_ALL\}>View all<\/option>/);
+  assert.match(picker, /<option value=\{VIEW_ALL\}>View Everybody<\/option>/);
+  assert.match(picker, /Switch org/);
   assert.match(picker, /router\.push\("\/people"\)/);
 
-  assert.match(peoplePage, /View all/);
+  assert.match(peoplePage, /View Everybody/);
   assert.match(peoplePage, /which org they belong to/);
   assert.match(peoplePage, /<th className="px-4 py-3 font-medium">Org<\/th>/);
   assert.match(peoplePage, /person\.kind === "child" \? "Child" : "Adult"/);

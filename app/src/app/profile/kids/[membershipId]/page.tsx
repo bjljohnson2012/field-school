@@ -101,7 +101,7 @@ export default function KidProfilePage() {
             {kidView ? "Child view · read-only" : "Child profile · you edit"}
           </p>
           <h1 className="h-section">{kid.displayName}</h1>
-          <p className="text-xs text-muted-foreground">Tracked child. No login. No public link.</p>
+          <p className="text-xs text-muted-foreground">Family. No login. No public link.</p>
         </div>
         <Link href={kidView ? base : `${base}?view=kid`} className="text-sm underline underline-offset-4">
           {kidView ? "Back to edit" : "See child view"}

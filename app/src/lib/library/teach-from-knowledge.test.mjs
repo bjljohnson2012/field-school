@@ -15,6 +15,9 @@ const {
   lessonProse,
   parseTeachPlan,
   planFromModel,
+  spineBlocks,
+  spineDraft,
+  titleFromDrop,
   wizardSuppliedText,
 } = await import("./teach-from-knowledge.ts");
 
@@ -154,6 +157,29 @@ test("wizard text keeps the pasted words and a link stays an address", () => {
   assert.doesNotMatch(link, /scraped/);
 });
 
+test("a drop names itself and the draft follows the lesson spine", () => {
+  assert.equal(
+    titleFromDrop({ text: "Wait for the answer before you pitch. Then ask." }),
+    "Wait for the answer before you pitch.",
+  );
+  assert.equal(titleFromDrop({ text: "short", filename: "call-notes.pdf" }), "call notes");
+  const body = spineDraft({
+    outcome: OUTCOME,
+    how: "Teach the opening line, then have them say it and wait.",
+    units: [UNIT],
+  });
+  assert.match(body, /^Objective\n/);
+  assert.match(body, /\nTeach\n/);
+  assert.match(body, /\nDo\n/);
+  assert.match(body, /\nRecap\n/);
+  assert.match(body, /wait for their answer/);
+  const blocks = spineBlocks(body);
+  assert.deepEqual(
+    blocks.map((block) => block.title),
+    ["Objective", "Teach", "Do", "Recap"],
+  );
+});
+
 test("generate checks the plan before it writes a quiz", () => {
   const route = readFileSync(join(appRoot, "src/app/api/library/generate/route.ts"), "utf8");
   const persist = readFileSync(join(appRoot, "src/lib/library/submit-knowledge.ts"), "utf8");
@@ -165,6 +191,8 @@ test("generate checks the plan before it writes a quiz", () => {
   const wizard = readFileSync(join(appRoot, "src/app/library/wizard/wizard-client.tsx"), "utf8");
   assert.match(wizard, />\s*Submit\s*</);
   assert.match(wizard, />\s*Generate Lesson\s*</);
+  assert.match(wizard, /\/api\/library\/intake/);
+  assert.doesNotMatch(wizard, /Lesson name/);
   const desk = readFileSync(join(appRoot, "src/app/o/[slug]/teach/[lessonId]/page.tsx"), "utf8");
   assert.match(desk, /Generate Lesson/);
   assert.match(desk, /source_unit_id/);

@@ -249,7 +249,7 @@ export default function ProfilePage() {
       {kids.length ? (
         <section className="rounded-xl border border-border bg-card px-5 py-5">
           <h2 className="text-sm font-semibold">Child profiles you edit</h2>
-          <p className="mt-1 text-xs text-muted-foreground">Tracked children. No login. Only you edit these.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Family. No login. Only you edit these.</p>
           <ul className="mt-3 divide-y divide-border">
             {kids.map((kid) => (
               <li key={kid.membershipId} className="flex items-center justify-between gap-3 py-3">
