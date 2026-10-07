@@ -128,7 +128,8 @@ test("org switcher View all lists users and their org", () => {
   assert.match(picker, /Switch org/);
   assert.match(picker, /router\.push\("\/people"\)/);
 
-  assert.match(peoplePage, /View Everybody/);
+  assert.match(peoplePage, /Master view/);
+  assert.match(peoplePage, /In super admin view/);
   assert.match(peoplePage, /which org they belong to/);
   assert.match(peoplePage, /<th className="px-4 py-3 font-medium">Org<\/th>/);
   assert.match(peoplePage, /person\.kind === "child" \? "Child" : "Adult"/);

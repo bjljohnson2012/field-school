@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { DeskPage, DeskTable, EmptyState, KpiStrip } from "@/components/desk/desk";
 import { COLLECTIONS, type CollectionSlug } from "@/lib/evolution/collections";
@@ -34,6 +34,9 @@ export default function PeoplePage() {
   const [canEdit, setCanEdit] = useState(false);
   const [names, setNames] = useState<Record<string, string>>({});
   const [nameNote, setNameNote] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [anchor, setAnchor] = useState<string | null>(null);
+  const shiftPick = useRef(false);
 
   async function loadLines(room: Desk) {
     try {
@@ -171,6 +174,31 @@ export default function PeoplePage() {
 
   const rows = desk ? peopleForDesk(roster, desk) : [];
   const copy = desk ? DESK_COPY[desk] : null;
+  const picked = roster.filter((person) => selected.includes(person.membershipId));
+
+  function masterOrgLabel(person: PersonRow) {
+    const name = person.orgName || person.org;
+    if (person.org === "household" && name === "Family") return "Household";
+    return name;
+  }
+
+  function pickPerson(id: string, shift: boolean) {
+    setSelected((current) => {
+      if (shift && anchor) {
+        const ids = roster.map((person) => person.membershipId);
+        const from = ids.indexOf(anchor);
+        const to = ids.indexOf(id);
+        if (from >= 0 && to >= 0) {
+          const [start, end] = from < to ? [from, to] : [to, from];
+          const range = new Set(current);
+          for (const item of ids.slice(start, end + 1)) range.add(item);
+          return ids.filter((item) => range.has(item));
+        }
+      }
+      return current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+    });
+    setAnchor(id);
+  }
 
   return (
     <DeskPage
@@ -191,7 +219,12 @@ export default function PeoplePage() {
     >
       <section className="mb-10">
         <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Everyone</p>
-        <h2 className="mt-2 font-display text-4xl leading-[1.02] tracking-[-0.035em]">View Everybody</h2>
+        <h2 className="mt-2 font-display text-4xl leading-[1.02] tracking-[-0.035em]">Master view</h2>
+        {staff ? (
+          <p className="mt-4 rounded-xl border border-border bg-secondary px-4 py-3 text-sm font-medium">
+            In super admin view
+          </p>
+        ) : null}
         <p className="mt-3 max-w-xl text-muted-foreground">
           Each person, and which org they belong to.
         </p>
@@ -199,6 +232,19 @@ export default function PeoplePage() {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                {canEdit ? (
+                  <th className="w-10 px-4 py-3 font-medium">
+                    <input
+                      type="checkbox"
+                      aria-label="Select all"
+                      checked={roster.length > 0 && picked.length === roster.length}
+                      onChange={(event) => {
+                        setAnchor(null);
+                        setSelected(event.target.checked ? roster.map((person) => person.membershipId) : []);
+                      }}
+                    />
+                  </th>
+                ) : null}
                 <th className="px-4 py-3 font-medium">Name</th>
                 <th className="px-4 py-3 font-medium">Kind</th>
                 <th className="px-4 py-3 font-medium">Org</th>
@@ -208,11 +254,27 @@ export default function PeoplePage() {
             <tbody>
               {roster.map((person) => (
                 <tr key={`all-${person.membershipId}`} className="border-t border-border">
+                  {canEdit ? (
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        aria-label={`Select ${person.name}`}
+                        checked={selected.includes(person.membershipId)}
+                        onPointerDown={(event) => {
+                          shiftPick.current = event.shiftKey;
+                        }}
+                        onKeyDown={(event) => {
+                          shiftPick.current = event.shiftKey;
+                        }}
+                        onChange={() => pickPerson(person.membershipId, shiftPick.current)}
+                      />
+                    </td>
+                  ) : null}
                   <td className="px-4 py-3">{person.name}</td>
                   <td className="px-4 py-3">{person.kind === "child" ? "Child" : "Adult"}</td>
                   <td className="px-4 py-3">
                     <Link href={`/o/${person.org}`} className="underline underline-offset-2">
-                      {person.orgName || person.org}
+                      {masterOrgLabel(person)}
                     </Link>
                   </td>
                   <td className="px-4 py-3">{person.kind === "child" ? "None" : "Member"}</td>
@@ -226,7 +288,7 @@ export default function PeoplePage() {
             className="mt-6 rounded-2xl border border-border bg-card p-4"
             onSubmit={(event) => {
               event.preventDefault();
-              const updates = roster
+              const updates = picked
                 .map((person) => ({ membershipId: person.membershipId, name: (names[person.membershipId] ?? person.name).trim() }))
                 .filter((row) => row.name.length >= 2);
               void fetch("/api/org/people", {
@@ -243,25 +305,32 @@ export default function PeoplePage() {
           >
             <p className="text-sm font-medium">Edit people</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Change a name, or several at once. People stay in their org. A family child is not moved onto the sales desk.
+              Select people with the checkboxes. Click down the line to select a range. People stay in their org. A family child is not moved onto the sales desk.
             </p>
-            <div className="mt-4 grid gap-3">
-              {roster.map((person) => (
-                <label key={`edit-${person.membershipId}`} className="grid gap-1 text-sm sm:grid-cols-[1fr_8rem] sm:items-center">
-                  <input
-                    className="h-11 rounded-xl border border-border bg-background px-3"
-                    value={names[person.membershipId] ?? person.name}
-                    onChange={(event) =>
-                      setNames((current) => ({ ...current, [person.membershipId]: event.target.value }))
-                    }
-                  />
-                  <span className="text-muted-foreground">{person.orgName || person.org}</span>
-                </label>
-              ))}
-            </div>
-            <button type="submit" className="mt-4 inline-flex h-11 items-center rounded-xl bg-primary px-4 text-sm text-primary-foreground">
-              Save names
-            </button>
+            {picked.length > 0 ? (
+              <div className="mt-4 grid gap-3">
+                {picked.map((person) => (
+                  <label key={`edit-${person.membershipId}`} className="grid gap-1 text-sm sm:grid-cols-[1fr_8rem] sm:items-center">
+                    <input
+                      className="h-11 rounded-xl border border-border bg-background px-3"
+                      aria-label={`Name for ${person.name}`}
+                      value={names[person.membershipId] ?? person.name}
+                      onChange={(event) =>
+                        setNames((current) => ({ ...current, [person.membershipId]: event.target.value }))
+                      }
+                    />
+                    <span className="text-muted-foreground">{masterOrgLabel(person)}</span>
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-4 text-sm text-muted-foreground">Select people above to edit their names.</p>
+            )}
+            {picked.length > 0 ? (
+              <button type="submit" className="mt-4 inline-flex h-11 items-center rounded-xl bg-primary px-4 text-sm text-primary-foreground">
+                Save names
+              </button>
+            ) : null}
             {nameNote ? <p className="mt-3 text-sm">{nameNote}</p> : null}
           </form>
         ) : null}
@@ -327,7 +396,7 @@ export default function PeoplePage() {
           </label>
           <button
             type="submit"
-            className="inline-flex h-11 items-center rounded-xl bg-primary px-4 text-sm text-primary-foreground shadow-[0_12px_28px_-16px_rgba(31,94,255,0.9)]"
+            className="inline-flex h-11 items-center rounded-xl bg-primary px-4 text-sm text-primary-foreground shadow-[0_8px_20px_-14px_rgba(26,25,22,0.45)]"
           >
             Add a child
           </button>
