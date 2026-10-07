@@ -4,7 +4,8 @@ export type RouteEntry = { pattern: string; door: Door | null; zone: LearnZone |
 
 /** Ordered: the first match wins, so specific patterns come before their parents. `:x` is one segment, `*` the rest. */
 export const ROUTES: readonly RouteEntry[] = [
-  { pattern: "/dashboard", door: "learn", zone: "desk" },
+  { pattern: "/learn", door: "learn", zone: "desk" },
+  { pattern: "/dashboard", door: "insights", zone: null },
   { pattern: "/c/:course/desk", door: "learn", zone: "desk" },
   { pattern: "/c/:course/s/:station", door: "learn", zone: "player" },
   { pattern: "/c/:course/exam", door: "learn", zone: "player" },

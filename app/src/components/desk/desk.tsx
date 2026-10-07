@@ -19,10 +19,10 @@ export function DeskPage({
   children: ReactNode;
 } & Omit<ComponentProps<"main">, "title" | "children">) {
   return (
-    <main {...rest} data-desk-page="" className={`mx-auto ${WIDTH[width]} px-4 py-12`}>
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{eyebrow}</p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">{title}</h1>
-      {lede ? <div className="mt-3 max-w-2xl text-sm text-muted-foreground">{lede}</div> : null}
+    <main {...rest} data-desk-page="" className={`mx-auto ${WIDTH[width]} px-4 py-12 lg:py-16`}>
+      <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">{eyebrow}</p>
+      <h1 className="mt-3 max-w-[18ch] font-display text-5xl leading-[1.02] tracking-[-0.035em]">{title}</h1>
+      {lede ? <div className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">{lede}</div> : null}
       <div className="mt-8">{children}</div>
     </main>
   );
@@ -41,7 +41,7 @@ export function DeskCard({
   className?: string;
 } & Omit<ComponentProps<"section">, "title" | "children" | "className">) {
   return (
-    <section aria-label={title} {...rest} data-desk-card="" className={`rounded-xl border border-border bg-card p-5 ${className}`}>
+    <section aria-label={title} {...rest} data-desk-card="" className={`rounded-2xl border border-border bg-card p-5 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)] ${className}`}>
       <h2 className="font-display text-2xl tracking-tight">{title}</h2>
       {hint ? <p className="mt-1 text-sm text-muted-foreground">{hint}</p> : null}
       <div className="mt-4">{children}</div>
@@ -54,7 +54,7 @@ export function KpiStrip({ items, label }: { items: readonly Kpi[]; label: strin
   return (
     <dl aria-label={label} data-kpis="" className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
       {items.map((kpi) => (
-        <div key={kpi.id} data-kpi={kpi.id} className="rounded-xl border border-border bg-card px-4 py-3">
+        <div key={kpi.id} data-kpi={kpi.id} className="rounded-2xl border border-border bg-card px-4 py-3 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
           <dt className="text-xs uppercase tracking-[0.12em] text-muted-foreground">{kpi.label}</dt>
           <dd className="mt-1 font-display text-3xl tracking-tight">{kpi.value}</dd>
         </div>

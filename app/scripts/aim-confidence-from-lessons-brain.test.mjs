@@ -70,7 +70,7 @@ test("Aim and Confidence read LessonSpine progress in both rooms", () => {
 });
 
 test("desks render Aim and Confidence from a LessonSpine outcome", () => {
-  const learn = read("src/app/dashboard/page.tsx");
+  const learn = read("src/app/learn/page.tsx");
   const people = read("src/app/people/page.tsx");
   const teach = read("src/app/teach-live/live.tsx");
   const assign = read("src/app/assign/assign-desk.tsx");

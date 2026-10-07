@@ -11,7 +11,7 @@ const appRoot = join(here, "..", "..");
 const headerSource = readFileSync(headerPath, "utf8");
 
 const LEADER_STANCES = ["admin", "guardian", "trainer", "teacher"];
-const LEADER_LABELS = ["Learn", "People", "Library", "Insights"];
+const LEADER_LABELS = ["Insights", "People", "Library", "Learn"];
 const NEW_DOOR_HREFS = ["/library/video", "/library/wizard", "/settings/ai"];
 
 function findTypescript(start) {
@@ -41,6 +41,8 @@ function hookSource(tsPath) {
     "export function useRouter(){return { push(){}, replace(){} }}",
     "export function Moon(){return null}",
     "export function Sun(){return null}",
+    "export function Plus(){return null}",
+    "export function ArrowRight(){return null}",
     "export default function Component(){return null}",
   ].join("\n");
   return `
@@ -102,7 +104,7 @@ function leaderStanceSet() {
   return [...match[1].matchAll(/"([^"]+)"/g)].map((item) => item[1]);
 }
 
-test("leader bar shows Learn, People, Library, Insights, and New for leader stances", () => {
+test("leader bar shows Insights, People, Library, Learn, and New for leader stances", () => {
   assert.deepEqual(leaderStanceSet(), LEADER_STANCES);
   assert.match(headerSource, /const leader = LEADER_STANCES\.has\(stance\)/);
   assert.match(headerSource, /const showNew = loggedIn && leader/);

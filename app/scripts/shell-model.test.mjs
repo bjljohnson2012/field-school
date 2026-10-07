@@ -32,10 +32,10 @@ function viewer(org, extra = {}) {
 }
 
 const LEADER_BAR = [
-  { href: "/dashboard", label: "Learn" },
+  { href: "/insights", label: "Insights" },
   { href: "/people", label: "People" },
   { href: "/o/sales/l", label: "Library" },
-  { href: "/insights", label: "Insights" },
+  { href: "/learn", label: "Learn" },
 ];
 const NEW = [{ href: "/library/video", label: "Long-form video" }];
 
@@ -133,7 +133,8 @@ test("parseShellViewer reads /api/me without trusting its shape", () => {
 });
 
 test("Learn keeps desk, catalog, collection, and player apart", () => {
-  assert.equal(learnZone("/dashboard"), "desk");
+  assert.equal(learnZone("/learn"), "desk");
+  assert.equal(learnZone("/dashboard"), null);
   assert.equal(learnZone("/c/grok-bot/desk"), "desk");
   assert.equal(learnZone("/c/grok-bot"), "collection");
   assert.equal(learnZone("/c/grok-bot/units"), "collection");
@@ -154,6 +155,9 @@ test("the bar lights one door, and a learner on a Library player lights Learn", 
   assert.equal(activeDoor("/o/household/l", leader), "library");
   assert.equal(activeDoor("/o/household/teach/new", leader), "library");
   assert.equal(activeDoor("/insights", leader), "insights");
+  assert.equal(activeDoor("/dashboard", leader), "insights");
+  assert.equal(activeDoor("/learn", leader), "learn");
+  assert.equal(activeDoor("/learn", learner), "learn");
   assert.equal(activeDoor(`/o/sales/l/${KID}`, learner), "learn");
   assert.equal(activeDoor("/skills", learner), "me");
   assert.equal(activeDoor("/insights", learner), null);
