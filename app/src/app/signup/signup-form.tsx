@@ -35,14 +35,15 @@ export function SignupForm({ oauth }: Props) {
   const [pending, setPending] = useState(false);
 
   return (
-    <main className="mx-auto max-w-md px-4 py-16">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+    <main className="mx-auto grid max-w-6xl gap-10 px-4 py-12 lg:grid-cols-[0.85fr_1fr] lg:items-start lg:py-16">
+      <div>
+      <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
         Free beta
       </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">
+      <h1 className="mt-3 font-display text-5xl leading-[1.02] tracking-[-0.035em]">
         Join the Field School training portal
       </h1>
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+      <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
         Enroll in the training portal. Learn at your pace. The first course
         is free. Paid seats take a card on{" "}
         <Link href="/pricing" className="underline underline-offset-2">
@@ -51,7 +52,9 @@ export function SignupForm({ oauth }: Props) {
         .
         {plan ? ` This sign-up is for the ${plan} seat.` : ""}
       </p>
-      <div className="mt-8">
+      </div>
+      <div className="rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)] sm:px-8">
+      <div>
         <GuestContinuity />
       </div>
       {error ? (
@@ -175,6 +178,7 @@ export function SignupForm({ oauth }: Props) {
         >
           Continue as guest
         </button>
+      </div>
       </div>
     </main>
   );

@@ -69,11 +69,11 @@ const coaching = [
 
 export default function PricingPage() {
   return (
-    <main className="mx-auto max-w-5xl px-4 py-14">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+    <main className="mx-auto max-w-6xl px-4 py-12 lg:py-16">
+      <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
         Pricing
       </p>
-      <h1 className="mt-3 font-display text-4xl tracking-tight sm:text-5xl">
+      <h1 className="mt-3 max-w-[16ch] font-display text-5xl leading-[1.02] tracking-[-0.035em] sm:text-6xl">
         Start free. Pay when you want more.
       </h1>
       <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
@@ -81,7 +81,7 @@ export default function PricingPage() {
         Stripe.
       </p>
 
-      <section className="mt-10 rounded-xl border border-border bg-card px-5 py-6">
+      <section className="mt-10 rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
         <h2 className="font-display text-2xl tracking-tight">Newsletter</h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           One email a week. Free.
@@ -101,7 +101,7 @@ export default function PricingPage() {
         {portalPlans.map((plan) => (
           <article
             key={plan.name}
-            className="flex flex-col rounded-xl border border-border bg-card px-5 py-6"
+            className="flex flex-col rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]"
           >
             <h3 className="font-display text-2xl tracking-tight">{plan.name}</h3>
             <p className="mt-4 font-display text-4xl tracking-tight">
@@ -117,7 +117,7 @@ export default function PricingPage() {
             </p>
             <Link
               href={plan.href}
-              className="mt-6 inline-flex h-11 items-center text-sm"
+              className="mt-6 inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
             >
               {plan.label}
             </Link>
@@ -136,7 +136,7 @@ export default function PricingPage() {
         {coaching.map((plan) => (
           <article
             key={plan.name}
-            className="flex flex-col rounded-xl border border-border bg-card px-5 py-6"
+            className="flex flex-col rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]"
           >
             <h3 className="font-display text-2xl tracking-tight">{plan.name}</h3>
             <p className="mt-4 font-display text-4xl tracking-tight">
@@ -150,7 +150,7 @@ export default function PricingPage() {
             </p>
             <Link
               href={plan.href}
-              className="mt-6 inline-flex h-11 items-center text-sm"
+              className="mt-6 inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
             >
               Enroll {plan.price}
             </Link>

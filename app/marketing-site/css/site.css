@@ -84,13 +84,13 @@ summary:focus-visible {
 
 .header-bar {
   width: min(100%, var(--wrap));
-  height: var(--header-h);
+  min-height: var(--header-h);
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0.45rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .wordmark {
@@ -105,10 +105,11 @@ summary:focus-visible {
 
 .wordmark-mark {
   display: block;
-  height: calc(var(--header-h) - 16px);
+  height: 2rem;
   width: auto;
-  max-width: min(14rem, 48vw);
+  max-width: min(8.25rem, 42vw);
   object-fit: contain;
+  object-position: left center;
 }
 
 .wordmark[aria-current="page"] {
@@ -187,6 +188,7 @@ summary:focus-visible {
   min-height: 44px;
   min-width: 44px;
   padding: 0 0.85rem;
+  flex: 0 0 auto;
 }
 
 .btn-newsletter {
@@ -226,7 +228,7 @@ summary:focus-visible {
 
 .nav-panel {
   position: absolute;
-  top: var(--header-h);
+  top: 100%;
   left: 0;
   right: 0;
   display: flex;
@@ -255,7 +257,7 @@ summary:focus-visible {
 .wrap {
   width: min(100%, var(--wrap));
   margin: 0 auto;
-  padding: 2.5rem 1rem 4rem;
+  padding: 3rem 1.25rem 4.5rem;
 }
 
 .lede {
@@ -278,10 +280,10 @@ summary:focus-visible {
 .lede-display {
   margin: 0 0 1.15rem;
   font-family: var(--font-display);
-  font-size: clamp(1.85rem, 4.6vw, 3rem);
+  font-size: clamp(2.35rem, 6vw, 4.35rem);
   font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.12;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
 }
 
 .lede p,
@@ -309,11 +311,11 @@ summary:focus-visible {
 h1.page-title {
   margin: 0 0 1.15rem;
   font-family: var(--font-display);
-  font-size: clamp(1.85rem, 4.2vw, 2.65rem);
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
   font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
-  max-width: 40rem;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  max-width: 18ch;
 }
 
 h2.section-title {
@@ -340,8 +342,9 @@ h2.section-title {
 .card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 1.25rem;
   padding: 1.35rem 1.25rem 1.45rem;
+  box-shadow: 0 16px 36px -24px rgba(26, 25, 22, 0.55);
 }
 
 .card-note {
@@ -443,8 +446,15 @@ h2.section-title {
   flex-direction: column;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.2rem 1.15rem 1.3rem;
+  border-radius: 1.25rem;
+  padding: 1.35rem 1.25rem 1.4rem;
+  box-shadow: 0 16px 36px -24px rgba(26, 25, 22, 0.55);
+}
+
+.expect-grid article:hover,
+.tool:hover,
+.plan:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, var(--border));
 }
 
 .expect-grid h3,
@@ -538,8 +548,53 @@ h2.section-title {
   flex-direction: column;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.35rem 1.25rem 1.4rem;
+  border-radius: 1.25rem;
+  padding: 1.45rem 1.3rem 1.5rem;
+  box-shadow: 0 16px 36px -24px rgba(26, 25, 22, 0.55);
+}
+
+.start-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1.35rem 1.25rem 1.2rem;
+  box-shadow: 0 16px 36px -24px rgba(26, 25, 22, 0.55);
+}
+
+.start-card h2 {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.start-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.start-list li {
+  border-top: 1px solid var(--border);
+}
+
+.start-list a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3rem;
+  align-items: center;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.start-list a span {
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
 }
 
 .plan h2 {
@@ -830,6 +885,11 @@ h2.section-title {
 
 @media (min-width: 720px) {
   .btn-newsletter { display: inline-flex; }
+
+  .wordmark-mark {
+    height: calc(var(--header-h) - 16px);
+    max-width: 14rem;
+  }
 }
 
 @media (min-width: 800px) {

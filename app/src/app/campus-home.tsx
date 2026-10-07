@@ -18,12 +18,12 @@ export function CampusHome() {
   return (
     <main>
       <section className="border-b border-border">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:py-16">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:py-20">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
               Field School training portal
             </p>
-            <h1 className="mt-4 font-display text-4xl leading-[1.1] tracking-tight sm:text-5xl">
+            <h1 className="mt-4 max-w-[14ch] font-display text-5xl leading-[1.02] tracking-[-0.035em] sm:text-6xl">
               Lead yourself. Learn yourself. Do the Work.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -36,16 +36,16 @@ export function CampusHome() {
               <Link
                 href="/c/grok-bot"
                 onClick={() => guest()}
-                className="inline-flex h-12 items-center gap-2 rounded-xl bg-[#1f5eff] px-5 text-sm font-medium text-white"
+                className="inline-flex h-12 items-center gap-2 rounded-xl bg-[#1f5eff] px-5 text-sm font-medium text-white shadow-[0_12px_28px_-16px_rgba(31,94,255,0.9)]"
               >
                 Start Grok Bot
                 <ArrowRight className="size-4" />
               </Link>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#7a746a]">
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
                 Open the free campus course. Watch, work, and clear as a guest.
               </p>
             </div>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-[#7a746a]">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
               Three rails on this portal: campus ladder to start; Learn with Ben
               for LessonSpine, progress, and metering; Org for household and
               sales desks.
@@ -87,41 +87,41 @@ export function CampusHome() {
           </div>
           <CampusLadder />
         </div>
-        <div className="mx-auto max-w-6xl px-4 pb-12">
-          <div>
-            <p className="text-xs uppercase tracking-[0.16em] text-[#7a746a]">
+        <div className="mx-auto grid max-w-6xl gap-4 px-4 pb-14 md:grid-cols-2">
+          <div className="rounded-2xl border border-border bg-card px-5 py-5 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
               Learn with Ben
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Link
                 href="/play/lesson-spine"
-                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-[#7a746a]"
+                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm"
               >
                 LessonSpine
               </Link>
               <Link
                 href="/progress"
-                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-[#7a746a]"
+                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm"
               >
                 Progress
               </Link>
               <Link
                 href="/metering"
-                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm text-[#7a746a]"
+                className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm"
               >
                 Metering
               </Link>
             </div>
           </div>
-          <div className="mt-6">
-            <p className="text-xs uppercase tracking-[0.16em] text-[#7a746a]">
+          <div className="rounded-2xl border border-border bg-card px-5 py-5 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
               Org
             </p>
-            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-              <Link href="/o/household" className="text-[#7a746a] hover:text-foreground">
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+              <Link href="/o/household" className="hover:text-foreground">
                 Household
               </Link>
-              <Link href="/o/sales" className="text-[#7a746a] hover:text-foreground">
+              <Link href="/o/sales" className="hover:text-foreground">
                 Sales
               </Link>
             </div>
@@ -215,7 +215,7 @@ function PassCard({
   body: string;
 }) {
   return (
-    <article className="rounded-xl border border-border bg-card px-5 py-5">
+    <article className="rounded-2xl border border-border bg-card px-5 py-5 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
       <p className="font-mono text-xs text-muted-foreground">{n}</p>
       <h3 className="mt-2 font-display text-2xl tracking-tight">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
