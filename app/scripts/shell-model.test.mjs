@@ -155,6 +155,7 @@ test("the bar lights one door, and a learner on a Library player lights Learn", 
   assert.equal(activeDoor("/o/household/l", leader), "library");
   assert.equal(activeDoor("/o/household/teach/new", leader), "library");
   assert.equal(activeDoor("/insights", leader), "insights");
+  assert.equal(activeDoor("/networks", leader), "insights");
   assert.equal(activeDoor("/dashboard", leader), "insights");
   assert.equal(activeDoor("/learn", leader), "learn");
   assert.equal(activeDoor("/learn", learner), "learn");

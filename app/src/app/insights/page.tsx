@@ -69,7 +69,13 @@ export default async function InsightsPage() {
   const people = household ? await loadKnowledge({ kind: "family" }) : null;
   return (
     <Shell>
-      <p className="mb-6 text-sm text-muted-foreground">{result.model.orgName}</p>
+      <p className="mb-6 text-sm text-muted-foreground">
+        {result.model.orgName}
+        {" · "}
+        <Link href="/networks" className="font-medium text-primary">
+          Knowledge repository
+        </Link>
+      </p>
       <InsightsBoard model={result.model} />
       <DeskCard
         data-edges="people-milestones"
