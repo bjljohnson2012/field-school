@@ -1,0 +1,139 @@
+{
+  "updated": "2026-10-07T15:10:00Z",
+  "launch": "CLOSED 0/8",
+  "outcome": {
+    "done": false,
+    "statement": "An adult hirer finishes an assessment, sees the placement on their profile, and skill and intelligence results stay on the account. Staff can see how many of those tools are saved. A child profile stays private and has no photo. Launch stays CLOSED 0/8.",
+    "requires": ["E1", "E2", "E3", "E5"]
+  },
+  "goals": [
+    {
+      "id": "G1",
+      "name": "Durable tools",
+      "serves": "C7",
+      "statement": "Skill and Intelligence results are server-scored rows on the member, one row per attempt."
+    },
+    {
+      "id": "G2",
+      "name": "One chrome",
+      "serves": "C5",
+      "statement": "One AppShell host. The navy coaching shell is retired."
+    },
+    {
+      "id": "G3",
+      "name": "Adult placement",
+      "serves": "C2",
+      "statement": "Enneagram, DISC, and Myers-Briggs lock at 75 percent confidence, or the run ends with an honest best read. The copy stays a Field School estimate."
+    },
+    {
+      "id": "G4",
+      "name": "Profile shows the placement",
+      "serves": "C2",
+      "statement": "The adult profile lists a locked category at 75 percent or higher and labels a weaker read as a best read."
+    },
+    {
+      "id": "G5",
+      "name": "Staff count",
+      "serves": "C6",
+      "statement": "The admin user snapshot counts saved tools for that email and returns the number alone."
+    },
+    {
+      "id": "G6",
+      "name": "Fresh gates",
+      "serves": "C7",
+      "statement": "A retake moves lastAt. The atomic JSONB merge stays with the Profile M1 owner."
+    },
+    {
+      "id": "G7",
+      "name": "One gate write",
+      "serves": "C7",
+      "statement": "After PR 343 is on main, a finished wizard track writes tool_results through the same gate path."
+    }
+  ],
+  "nodes": [
+    {
+      "id": "E1",
+      "name": "Architecture and chrome",
+      "goals": ["G1", "G2", "G6"],
+      "status": "BUILT",
+      "needs": [],
+      "pr": 343,
+      "branch": "cursor/architecture-chrome",
+      "sha": "c929da985bc33279b38bd588263b22a3b9bd5f2d",
+      "room": "team",
+      "done": "Tool results, records, knowledge edges, and one AppShell are on the draft. Item 9 refreshes lastAt on a retake. Visual seal stays with Designer."
+    },
+    {
+      "id": "E2",
+      "name": "Assessment wizard",
+      "goals": ["G3", "G4"],
+      "status": "BUILT",
+      "needs": [],
+      "pr": 344,
+      "branch": "cursor/assessment-wizard-m2",
+      "sha": "86e022576fa132f6aa7dab25f6ddda96ffce10a8",
+      "room": "team",
+      "done": "Personality placement, start answer resume result, wizard meter, neural-web finish, and adult profile results are on the draft. Kid page stays free of that UI."
+    },
+    {
+      "id": "E3",
+      "name": "Admin assessment count",
+      "goals": ["G5"],
+      "status": "BUILT",
+      "needs": ["E1"],
+      "pr": 345,
+      "branch": "cursor/admin-assessment-count",
+      "sha": "ad8bb66e547081af0f19435651a183c47bab376d",
+      "room": "team",
+      "done": "The user snapshot joins tool_results by email, counts one saved tool per adult, and skips a child member."
+    },
+    {
+      "id": "E4",
+      "name": "Atomic gate merge",
+      "goals": ["G6"],
+      "status": "HELD",
+      "needs": [],
+      "pr": null,
+      "branch": null,
+      "sha": null,
+      "room": "team",
+      "done": "recordAdultGate writes the gates JSON in one atomic update. The M1 owner opens that seal."
+    },
+    {
+      "id": "E5",
+      "name": "Rebind wizard gates",
+      "goals": ["G7"],
+      "status": "BLOCKED",
+      "needs": ["E1"],
+      "pr": 344,
+      "branch": "cursor/assessment-wizard-m2",
+      "sha": null,
+      "room": "team",
+      "done": "After E1 is PASS on main, rebase the wizard, renumber 0019 and 0020 only if 0018 collides, and point recordTrackGate at tool_results."
+    },
+    {
+      "id": "E6",
+      "name": "Product MATCH",
+      "goals": [],
+      "status": "HUMAN",
+      "needs": ["E1", "E2", "E3"],
+      "pr": null,
+      "branch": null,
+      "sha": null,
+      "room": "company-prose",
+      "done": "Product re-MATCHes PR 343 item 9 and the PR 344 proofs on the SHAs in this graph."
+    },
+    {
+      "id": "E7",
+      "name": "MERGE GO",
+      "goals": [],
+      "status": "HELD",
+      "needs": ["E6"],
+      "pr": null,
+      "branch": null,
+      "sha": null,
+      "room": "company-prose",
+      "done": "Ben gives MERGE GO. Until then the drafts stay drafts."
+    }
+  ]
+}
