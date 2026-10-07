@@ -405,6 +405,27 @@ test("wiring: routes refuse before they act; photo is shown from campus only; no
   assert.doesNotMatch(code("src/app/profile/kids/[membershipId]/page.tsx"), /PhotoPanel|profile-m2/);
 });
 
+test("start, answer, resume, and result stay on the assessment routes", () => {
+  const start = code("src/app/api/assessments/runs/route.ts");
+  assert.match(start, /export async function POST/);
+  assert.ok(start.indexOf("wizardRefusal(") < start.indexOf("openRun("));
+  const answer = code("src/app/api/assessments/runs/[runId]/answers/route.ts");
+  assert.match(answer, /export async function POST/);
+  assert.ok(answer.indexOf("wizardRefusal(") < answer.indexOf("answerRun("));
+  const resume = code("src/app/api/assessments/runs/[runId]/route.ts");
+  assert.match(resume, /export async function GET/);
+  assert.match(resume, /readRun\(/);
+  assert.ok(resume.indexOf("wizardRefusal(") < resume.indexOf("return NextResponse.json"));
+  const result = code("src/app/api/assessments/route.ts");
+  assert.match(result, /export async function GET/);
+  assert.ok(result.indexOf("wizardRefusal(") < result.indexOf("wizardOverview("));
+  const store = code("src/lib/assessments/store.ts");
+  assert.match(store, /export async function openRun/);
+  assert.match(store, /export async function answerRun/);
+  assert.match(store, /export async function readRun/);
+  assert.match(store, /latest: done \? await storedPlacementView\(done\) : null/);
+});
+
 test("gate seam: Skills and Profile write gate freshness through one function only", () => {
   const sink = code("src/lib/assessments/gate-sink.ts");
   assert.match(sink, /export async function recordTrackGate/);
