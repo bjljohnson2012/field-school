@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { NEEDS_MORE } from "@/lib/library/teach-from-knowledge";
 
 type Lesson = {
   id: string;
@@ -57,6 +58,21 @@ export default function TeachPage() {
       body: JSON.stringify({ slug }),
     }).then(() => load());
   }, [slug]);
+
+  async function generate(lessonId: string) {
+    const res = await fetch("/api/library/generate", {
+      method: "POST",
+      headers: headers(),
+      body: JSON.stringify({ lesson_id: lessonId }),
+    });
+    const json = await res.json();
+    if (!res.ok) {
+      setNote(json.error || "Could not generate the lesson.");
+      return;
+    }
+    setNote(typeof json.message === "string" ? json.message : "Could not generate the lesson.");
+    if (json.status === "ready") await load();
+  }
 
   async function create() {
     const res = await fetch("/api/composer/lessons", {
@@ -174,20 +190,25 @@ export default function TeachPage() {
                 {lesson.kind} · {lesson.status}
               </p>
               <p className="mt-1 font-display text-xl">{lesson.title}</p>
-              <p className="mt-3 text-sm">
+              <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
+                <Button type="button" variant="outline" onClick={() => void generate(lesson.id)}>
+                  Generate Lesson
+                </Button>
                 <Link
                   href={`/o/${slug}/teach/${lesson.id}`}
                   className="underline underline-offset-4"
                 >
                   Open desk
                 </Link>
-              </p>
+              </div>
             </li>
           ))}
         </ul>
       </section>
 
-      {note ? <p className="mt-6 text-sm text-pass">{note}</p> : null}
+      {note ? (
+        <p className={note === NEEDS_MORE ? "mt-6 text-sm" : "mt-6 text-sm text-pass"}>{note}</p>
+      ) : null}
       <p className="mt-8 text-sm">
         <Link href={`/o/${slug}`} className="underline underline-offset-4">
           Back to org

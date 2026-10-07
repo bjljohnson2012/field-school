@@ -73,6 +73,11 @@ export function WizardClient() {
   const [videoCut, setVideoCut] = useState<boolean | null>(null);
   const [units, setUnits] = useState<DraftUnit[]>([]);
   const [approved, setApproved] = useState<string[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [knowledgeId, setKnowledgeId] = useState<string | null>(null);
+  const [knowledgeNote, setKnowledgeNote] = useState<string | null>(null);
+  const [teachHow, setTeachHow] = useState<string | null>(null);
   const [specId] = useState(() => crypto.randomUUID());
   const headingRef = useRef<HTMLHeadingElement>(null);
   const titleId = useId();
@@ -187,9 +192,72 @@ export function WizardClient() {
   }
 
   function toggleUnit(id: string) {
+    setKnowledgeId(null);
+    setKnowledgeNote(null);
+    setTeachHow(null);
     setApproved((current) =>
       current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
     );
+  }
+
+  async function submitKnowledge() {
+    if (!spec || !kind || submitting) return;
+    setSubmitting(true);
+    setKnowledgeNote(null);
+    setTeachHow(null);
+    try {
+      const res = await fetch("/api/library/wizard/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-fs-org": orgSlug },
+        body: JSON.stringify({
+          title,
+          outcome,
+          kind,
+          detail,
+          mode: spec.mode,
+          audience: chosen.map((person) => person.name),
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setKnowledgeNote(json.error || "Could not add this knowledge.");
+        return;
+      }
+      setKnowledgeId(typeof json.lessonId === "string" ? json.lessonId : null);
+      if (json.status === "needs_more") {
+        setKnowledgeNote(typeof json.message === "string" ? json.message : "needs more information");
+        return;
+      }
+      setKnowledgeNote("Added to this org's knowledge.");
+      setTeachHow(typeof json.how === "string" && json.how ? json.how : null);
+    } catch {
+      setKnowledgeNote("Could not add this knowledge.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function generateLesson() {
+    if (!knowledgeId || generating) return;
+    setGenerating(true);
+    try {
+      const res = await fetch("/api/library/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-fs-org": orgSlug },
+        body: JSON.stringify({ lesson_id: knowledgeId }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setKnowledgeNote(json.error || "Could not generate the lesson.");
+        return;
+      }
+      setKnowledgeNote(typeof json.message === "string" ? json.message : "Could not generate the lesson.");
+      if (typeof json.how === "string" && json.how) setTeachHow(json.how);
+    } catch {
+      setKnowledgeNote("Could not generate the lesson.");
+    } finally {
+      setGenerating(false);
+    }
   }
 
   const question = QUESTIONS[step];
@@ -508,6 +576,40 @@ export function WizardClient() {
               ) : (
                 <p className="mt-6 text-sm text-muted-foreground">Approve every unit to see the spec.</p>
               )}
+              <div className="mt-6 flex flex-wrap gap-2">
+                <Button
+                  className="h-11"
+                  type="button"
+                  disabled={!spec || submitting}
+                  onClick={() => void submitKnowledge()}
+                >
+                  Submit
+                </Button>
+                {knowledgeId ? (
+                  <Button
+                    className="h-11"
+                    type="button"
+                    variant="outline"
+                    disabled={generating}
+                    onClick={() => void generateLesson()}
+                  >
+                    Generate Lesson
+                  </Button>
+                ) : null}
+              </div>
+              {knowledgeNote ? (
+                <p className="mt-4 text-sm" aria-live="polite">
+                  {knowledgeNote}
+                </p>
+              ) : null}
+              {teachHow ? <p className="mt-2 text-sm text-muted-foreground">{teachHow}</p> : null}
+              {knowledgeId ? (
+                <p className="mt-4 text-sm">
+                  <Link href={`/o/${orgSlug}/teach/${knowledgeId}`} className="underline underline-offset-4">
+                    Open this knowledge
+                  </Link>
+                </p>
+              ) : null}
             </>
           ) : null}
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { NEEDS_MORE, decodeLessonBody, lessonProse } from "@/lib/library/teach-from-knowledge";
 
 type Unit = { id: string; title: string; body: string };
 type Quiz = { id: string; sourceUnitId: string; prompt: string };
@@ -87,6 +88,23 @@ export default function TeachLessonPage() {
     }
   }
 
+  async function generate() {
+    const res = await fetch("/api/library/generate", {
+      method: "POST",
+      headers: headers(),
+      body: JSON.stringify({ lesson_id: lessonId }),
+    });
+    const json = await res.json();
+    setNote(
+      res.ok
+        ? typeof json.message === "string"
+          ? json.message
+          : "Could not generate the lesson."
+        : json.error || "Could not generate the lesson.",
+    );
+    if (res.ok && json.status === "ready") await load();
+  }
+
   async function publish() {
     const res = await fetch("/api/composer/publish", {
       method: "POST",
@@ -130,7 +148,8 @@ export default function TeachLessonPage() {
         {data.lesson.kind} · {data.lesson.status}
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">{data.lesson.title}</h1>
-      <p className="mt-4 whitespace-pre-wrap text-muted-foreground">{data.lesson.body}</p>
+      <p className="mt-4 whitespace-pre-wrap text-muted-foreground">{lessonProse(data.lesson.body)}</p>
+      <LessonGate body={data.lesson.body} onGenerate={() => void generate()} />
 
       <section className="mt-10">
         <h2 className="font-display text-2xl">Units from supplied text</h2>
@@ -208,7 +227,9 @@ export default function TeachLessonPage() {
         </ul>
       </section>
 
-      {note ? <p className="mt-6 text-sm text-pass">{note}</p> : null}
+      {note ? (
+        <p className={note === NEEDS_MORE ? "mt-6 text-sm" : "mt-6 text-sm text-pass"}>{note}</p>
+      ) : null}
       <p className="mt-8 text-sm">
         <Link href={`/o/${slug}/teach`} className="underline underline-offset-4">
           Back to teach
@@ -223,5 +244,22 @@ export default function TeachLessonPage() {
         ) : null}
       </p>
     </main>
+  );
+}
+
+function LessonGate({ body, onGenerate }: { body: string; onGenerate: () => void }) {
+  const plan = decodeLessonBody(body).plan;
+  return (
+    <section className="mt-8 rounded-xl border border-border bg-card px-5 py-5">
+      <h2 className="font-display text-2xl">Generate Lesson</h2>
+      {plan && !plan.ready ? <p className="mt-3 text-sm">{NEEDS_MORE}</p> : null}
+      {plan?.ready ? <p className="mt-3 text-sm text-muted-foreground">{plan.how}</p> : null}
+      <p className="mt-3 text-sm text-muted-foreground">
+        Quizzes cite a source_unit_id already in this knowledge.
+      </p>
+      <Button className="mt-4" type="button" onClick={onGenerate}>
+        Generate Lesson
+      </Button>
+    </section>
   );
 }
