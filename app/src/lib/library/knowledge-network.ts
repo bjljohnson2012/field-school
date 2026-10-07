@@ -16,7 +16,8 @@ export type KnowledgePiece = {
   excerpt: string;
   href: string | null;
   generated: boolean;
-  sourceKind: string;
+  statusLabel: "Published" | "Unpublished";
+  sourceLabel: string | null;
   units: KnowledgeUnitNode[];
 };
 

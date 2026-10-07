@@ -11,7 +11,7 @@ const appRoot = join(here, "..", "..");
 const headerSource = readFileSync(headerPath, "utf8");
 
 const LEADER_STANCES = ["admin", "guardian", "trainer", "teacher"];
-const LEADER_LABELS = ["Insights", "People", "Library", "Learn"];
+const LEADER_LABELS = ["Insights", "People", "Library", "Knowledge", "Learn"];
 const NEW_DOOR_HREFS = ["/library/video", "/library/wizard", "/settings/ai"];
 
 function findTypescript(start) {
@@ -104,7 +104,7 @@ function leaderStanceSet() {
   return [...match[1].matchAll(/"([^"]+)"/g)].map((item) => item[1]);
 }
 
-test("leader bar shows Insights, People, Library, Learn, and New for leader stances", () => {
+test("leader bar shows Insights, People, Library, Knowledge, Learn, and New for leader stances", () => {
   assert.deepEqual(leaderStanceSet(), LEADER_STANCES);
   assert.match(headerSource, /const leader = LEADER_STANCES\.has\(stance\)/);
   assert.match(headerSource, /const showNew = loggedIn && leader/);
@@ -118,6 +118,7 @@ test("leader bar shows Insights, People, Library, Learn, and New for leader stan
       links.map((link) => link.label),
       LEADER_LABELS,
     );
+    assert.equal(links.find((link) => link.label === "Knowledge")?.href, "/knowledge");
     assert.equal(
       links.some((link) => link.label === "New"),
       false,

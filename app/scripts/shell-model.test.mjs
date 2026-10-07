@@ -35,6 +35,7 @@ const LEADER_BAR = [
   { href: "/insights", label: "Insights" },
   { href: "/people", label: "People" },
   { href: "/o/sales/l", label: "Library" },
+  { href: "/knowledge", label: "Knowledge" },
   { href: "/learn", label: "Learn" },
 ];
 const NEW = [{ href: "/library/video", label: "Long-form video" }];
@@ -148,19 +149,21 @@ test("Learn keeps desk, catalog, collection, and player apart", () => {
 });
 
 test("the bar lights one door, and a learner on a Library player lights Learn", () => {
-  const leader = ["learn", "people", "library", "insights"];
+  const leader = ["learn", "people", "library", "knowledge", "insights"];
   const learner = ["learn", "me"];
   assert.equal(activeDoor("/people/abc", leader), "people");
   assert.equal(activeDoor("/brain", leader), "people");
   assert.equal(activeDoor("/o/household/l", leader), "library");
   assert.equal(activeDoor("/o/household/teach/new", leader), "library");
   assert.equal(activeDoor("/insights", leader), "insights");
-  assert.equal(activeDoor("/networks", leader), "insights");
+  assert.equal(activeDoor("/knowledge", leader), "knowledge");
+  assert.equal(activeDoor("/networks", leader), "knowledge");
   assert.equal(activeDoor("/dashboard", leader), "insights");
   assert.equal(activeDoor("/learn", leader), "learn");
   assert.equal(activeDoor("/learn", learner), "learn");
   assert.equal(activeDoor(`/o/sales/l/${KID}`, learner), "learn");
   assert.equal(activeDoor("/skills", learner), "me");
   assert.equal(activeDoor("/insights", learner), null);
+  assert.equal(activeDoor("/knowledge", learner), null);
   assert.equal(activeDoor("/profile", leader), null);
 });

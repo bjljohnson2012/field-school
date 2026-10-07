@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { publishLabel, readableTitle } from "@/lib/library/knowledge-labels";
+import { lessonProse } from "@/lib/library/teach-from-knowledge";
 
 type Unit = { id: string; title: string; body: string };
 type Detail = {
@@ -42,13 +44,13 @@ export default function PublishedLessonPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12">
-      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{slug}</p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">{data.lesson.title}</h1>
-      <p className="mt-4 whitespace-pre-wrap text-lg text-muted-foreground">{data.lesson.body}</p>
+      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{publishLabel(data.lesson.status)}</p>
+      <h1 className="mt-2 font-display text-4xl tracking-tight">{readableTitle(data.lesson.title, lessonProse(data.lesson.body))}</h1>
+      <p className="mt-4 whitespace-pre-wrap text-lg text-muted-foreground">{lessonProse(data.lesson.body)}</p>
       <section className="mt-10 grid gap-4">
         {(data.units ?? []).map((unit) => (
           <article key={unit.id} className="rounded-xl border border-border bg-card px-5 py-4">
-            <h2 className="font-display text-2xl">{unit.title}</h2>
+            <h2 className="font-display text-2xl">{readableTitle(unit.title, unit.body)}</h2>
             <p className="mt-2 whitespace-pre-wrap text-muted-foreground">{unit.body}</p>
           </article>
         ))}

@@ -95,7 +95,7 @@ test("Insights, People, and Library share one desk frame, card, KPI strip, table
   assert.match(people, /<DeskPage\s+eyebrow="People"/);
   assert.match(people, /<DeskTable\s+caption=\{copy\.title\}/);
   assert.match(people, /peopleKpis\(\{ rows, lines, kindLabel: copy\.kind \}\)/);
-  assert.match(library, /<DeskPage eyebrow=\{slug\} title="Published lessons"/);
+  assert.match(library, /<DeskPage eyebrow=\{slug\} title="Lessons"/);
   assert.match(library, /libraryKpis\(/);
   for (const source of [insights, charts, people, library]) {
     assert.doesNotMatch(source, /<main className=/);

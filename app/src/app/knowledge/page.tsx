@@ -1,16 +1,67 @@
-import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { listLearnerUnits } from "@/app/api/coaching/knowledge/library";
 import { learnerCanReadUnit } from "@/app/api/coaching/knowledge/visibility";
+import { DeskPage } from "@/components/desk/desk";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { DatabaseUnavailableError } from "@/lib/db/client";
+import { loadNetworks } from "../networks/load";
+import { NetworkBoard } from "../networks/network-board";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Knowledge" };
 
-export default async function LearnerKnowledgePage() {
+export const metadata = {
+  title: "Knowledge",
+};
+
+const LEDE =
+  "Every document stored for this org is listed here, with a plain label. Expand one when you want a short reading and a follow-up question.";
+
+function Shell({ children }: { children: ReactNode }) {
+  return (
+    <DeskPage eyebrow="Knowledge" title="Knowledge repository" lede={LEDE}>
+      {children}
+    </DeskPage>
+  );
+}
+
+export default async function KnowledgePage() {
   const auth = await identityFromRequest();
-  if (!auth.ok) redirect("/login?next=/knowledge");
+  if (!auth.ok) {
+    if (auth.error === "sign_in_required") redirect("/login?next=/knowledge");
+    redirect("/login?next=/knowledge");
+  }
+
+  const result = await loadNetworks();
+  if (result.ok) {
+    return (
+      <Shell>
+        <p className="mb-6 text-sm text-muted-foreground">{result.model.orgName}</p>
+        <NetworkBoard model={result.model} />
+      </Shell>
+    );
+  }
+  if (result.error === "child_has_no_login") {
+    return (
+      <Shell>
+        <p>A child in this family has no login on this desk.</p>
+      </Shell>
+    );
+  }
+  if (result.error === "database_unavailable") {
+    return (
+      <Shell>
+        <p className="text-muted-foreground">The campus database is not connected.</p>
+      </Shell>
+    );
+  }
+  if (result.error !== "hirer_only") {
+    return (
+      <Shell>
+        <p className="text-muted-foreground">This org is not active for you.</p>
+      </Shell>
+    );
+  }
 
   let units: Awaited<ReturnType<typeof listLearnerUnits>> = [];
   try {
