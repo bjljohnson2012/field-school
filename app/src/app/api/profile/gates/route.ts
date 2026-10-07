@@ -65,6 +65,11 @@ export async function POST(request: Request) {
     for (const owed of owedGates(await listToolResults(owner.memberId), done)) {
       profile = await recordAdultGate(owner, owed.gate, new Date(owed.at));
     }
+    // A retake of an already-done gate still creates a tool_results row. owedGates
+    // skips done gates, so refresh lastAt whenever a new row lands.
+    if (saved.created) {
+      profile = await recordAdultGate(owner, gate, new Date(saved.result.completedAt));
+    }
     return NextResponse.json({ ok: true, gate, setup: profile.setup, result: saved.result });
   } catch (error) {
     return databaseDown(error);

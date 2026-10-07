@@ -69,7 +69,7 @@ npm run dev
 
 ## Coaching import
 
-Run this on the VPS, where campus Postgres and the AE Coach database are both on the Docker network. Do not run it from a laptop. Do not put either connection string in git. `COACHING_IMPORT` is a process environment variable for this script only. Do not flip `COACHING_SHELL` or `COACHING_WRITES` from this step. Do not flip `AUTH_URL`. Do not edit Caddy.
+Run this on the VPS, where campus Postgres and the AE Coach database are both on the Docker network. Do not run it from a laptop. Do not put either connection string in git. `COACHING_IMPORT` is a process environment variable for this script only. Do not flip `COACHING_WRITES` from this step. Do not flip `AUTH_URL`. Do not edit Caddy.
 
 `app/scripts/aecoach-org-map.json` ships as `[]`. The import creates one organization per source org. A later edit may add `{ "from": "<source slug>", "to": "sales" }` to attach that source org to the existing sales org. `to` may not be `household` or `field-school`. Household, sales, and `field-school` rows are not deleted. A source slug that is already `sales`, `household`, or `field-school` is stored as `{slug}-aecoach`, and `features.sourceSlug` keeps the original slug.
 
@@ -119,7 +119,7 @@ When an operator later starts it with `--profile coaching-cron`, the sidecar POS
 
 ## Coaching cutover checklist
 
-Docs only. Merging does not flip production. Do not enable the compose profile. Do not set `CRON_SECRET`. Do not set `AE_WRITES_FROZEN`. Do not stop the AE sidecar from this change. Do not flip `AUTH_URL`. Do not edit live Caddy. Do not flip `COACHING_SHELL`, `COACHING_WRITES`, or `COACHING_IMPORT`. Do not run an import.
+Docs only. Merging does not flip production. Do not enable the compose profile. Do not set `CRON_SECRET`. Do not set `AE_WRITES_FROZEN`. Do not stop the AE sidecar from this change. Do not flip `AUTH_URL`. Do not edit live Caddy. Do not flip `COACHING_WRITES` or `COACHING_IMPORT`. Do not run an import.
 
 1. **Snapshot counts.** Record source and campus row counts before the freeze. A mismatch stops the cutover. Not executed here.
 2. **Freeze plus AE sidecar stop.** In the same operator step, set `AE_WRITES_FROZEN=1` and stop the AE cron sidecar. Not executed here.

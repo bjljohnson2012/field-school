@@ -103,3 +103,16 @@ test("owedGates marks each unmarked gate once, at its first stored result", () =
   assert.deepEqual(owedGates(results, new Set(["G-skills", "G-other"])), []);
   assert.deepEqual(owedGates([], new Set()), []);
 });
+
+test("gates route refreshes lastAt on a new tool_results row even when the gate is already done", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { dirname, join } = await import("node:path");
+  const { fileURLToPath } = await import("node:url");
+  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+  const route = readFileSync(join(root, "src/app/api/profile/gates/route.ts"), "utf8");
+  assert.match(route, /if \(saved\.created\)/);
+  assert.match(route, /recordAdultGate\(owner, gate, new Date\(saved\.result\.completedAt\)\)/);
+  // Retakes of done gates are invisible to owedGates; the created branch is what moves lastAt.
+  const row = (toolSlug, completedAt) => ({ toolSlug, attemptId, answers: {}, completedAt, summary: "", scores: {}, labels: {} });
+  assert.deepEqual(owedGates([row("skill", "2026-10-06T12:00:00.000Z")], new Set(["G-skills"])), []);
+});
