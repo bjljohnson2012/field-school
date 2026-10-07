@@ -215,9 +215,11 @@ export function AssessmentWizard() {
             <ul className="grid gap-2 sm:grid-cols-2">
               {run.meter.taxonomies.map((meter) => {
                 const placement = run.placements.find((entry) => entry.taxonomy === meter.taxonomy);
+                const locked = placement?.state === "locked";
+                const value = placement?.state === "unsettled" ? placement.confidencePct / 100 : meter.progress;
                 return (
                   <li key={meter.taxonomy} className="text-xs">
-                    <Meter value={meter.progress} label={`${placement?.label ?? meter.taxonomy}${meter.settled ? " ✓" : ""}`} />
+                    <Meter value={value} label={`${placement?.label ?? meter.taxonomy}${locked ? " ✓" : ""}`} />
                   </li>
                 );
               })}

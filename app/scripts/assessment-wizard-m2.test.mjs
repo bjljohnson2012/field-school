@@ -442,6 +442,9 @@ test("a finished wizard run draws the neural web, and motion can be reduced", ()
   const web = code("src/components/profile-m2/neural-web.tsx");
   assert.ok(wizard.indexOf("run.next ?") < wizard.indexOf("<NeuralWeb"));
   assert.match(wizard, /<NeuralWeb title=\{label\(run\.track\)\} placements=\{run\.placements\} \/>/);
+  assert.match(wizard, /const locked = placement\?\.state === "locked"/);
+  assert.match(wizard, /locked \? " ✓" : ""/);
+  assert.match(wizard, /placement\?\.state === "unsettled" \? placement\.confidencePct \/ 100 : meter\.progress/);
   assert.match(web, /data-neural-web/);
   assert.match(web, /animateMotion/);
   assert.match(web, /prefers-reduced-motion:\s*reduce/);
