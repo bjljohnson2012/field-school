@@ -154,6 +154,11 @@ export default function ProfilePage() {
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Your profile</p>
           <h1 className="h-section truncate">{profile.displayName}</h1>
           <p className="text-xs text-muted-foreground">Only you see this page.</p>
+          <p className="mt-2 text-sm">
+            <Link href="/knowledge/goals?scope=person" className="underline underline-offset-2">
+              Set a learning goal
+            </Link>
+          </p>
         </div>
       </section>
 

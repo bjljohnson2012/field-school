@@ -23,6 +23,8 @@ export const ROUTES: readonly RouteEntry[] = [
   { pattern: "/children", door: "people", zone: null },
   { pattern: "/roster", door: "people", zone: null },
   { pattern: "/brain", door: "people", zone: null },
+  { pattern: "/knowledge/goals/:id", door: "knowledge", zone: null },
+  { pattern: "/knowledge/goals", door: "knowledge", zone: null },
   { pattern: "/knowledge", door: "knowledge", zone: null },
   { pattern: "/networks", door: "knowledge", zone: null },
   { pattern: "/insights", door: "insights", zone: null },
