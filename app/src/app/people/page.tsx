@@ -31,6 +31,9 @@ export default function PeoplePage() {
   const [childName, setChildName] = useState("");
   const [childNote, setChildNote] = useState<string | null>(null);
   const [collection, setCollection] = useState<CollectionSlug>("families");
+  const [canEdit, setCanEdit] = useState(false);
+  const [names, setNames] = useState<Record<string, string>>({});
+  const [nameNote, setNameNote] = useState<string | null>(null);
 
   async function loadLines(room: Desk) {
     try {
@@ -71,6 +74,7 @@ export default function PeoplePage() {
           error?: string;
           org?: string;
           staff?: boolean;
+          canEdit?: boolean;
           people?: PersonRow[];
         };
         if (cancelled) return;
@@ -86,6 +90,10 @@ export default function PeoplePage() {
         const slugs = (me.memberships ?? []).map((row) => row.org || "");
         const isStaff = Boolean(data.staff);
         setStaff(isStaff);
+        setCanEdit(Boolean(data.canEdit));
+        const nextNames: Record<string, string> = {};
+        for (const person of data.people ?? []) nextNames[person.membershipId] = person.name;
+        setNames(nextNames);
         setChoices(roomsFor(slugs, isStaff));
         const active = initialDesk({
           activeSlug: me.activeOrg?.slug || data.org || "",
@@ -213,6 +221,50 @@ export default function PeoplePage() {
             </tbody>
           </table>
         </div>
+        {canEdit ? (
+          <form
+            className="mt-6 rounded-2xl border border-border bg-card p-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const updates = roster
+                .map((person) => ({ membershipId: person.membershipId, name: (names[person.membershipId] ?? person.name).trim() }))
+                .filter((row) => row.name.length >= 2);
+              void fetch("/api/org/people", {
+                method: "PATCH",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({ updates }),
+              })
+                .then(async (res) => {
+                  const body = (await res.json().catch(() => ({}))) as { saved?: number };
+                  setNameNote(res.ok ? `Saved ${body.saved ?? 0} names. People stay in their org.` : "Names could not be saved.");
+                })
+                .catch(() => setNameNote("Names could not be saved."));
+            }}
+          >
+            <p className="text-sm font-medium">Edit people</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Change a name, or several at once. People stay in their org. A family child is not moved onto the sales desk.
+            </p>
+            <div className="mt-4 grid gap-3">
+              {roster.map((person) => (
+                <label key={`edit-${person.membershipId}`} className="grid gap-1 text-sm sm:grid-cols-[1fr_8rem] sm:items-center">
+                  <input
+                    className="h-11 rounded-xl border border-border bg-background px-3"
+                    value={names[person.membershipId] ?? person.name}
+                    onChange={(event) =>
+                      setNames((current) => ({ ...current, [person.membershipId]: event.target.value }))
+                    }
+                  />
+                  <span className="text-muted-foreground">{person.orgName || person.org}</span>
+                </label>
+              ))}
+            </div>
+            <button type="submit" className="mt-4 inline-flex h-11 items-center rounded-xl bg-primary px-4 text-sm text-primary-foreground">
+              Save names
+            </button>
+            {nameNote ? <p className="mt-3 text-sm">{nameNote}</p> : null}
+          </form>
+        ) : null}
       </section>
       <div className="grid gap-8 lg:grid-cols-[200px_1fr]">
         <nav aria-label="Collections">

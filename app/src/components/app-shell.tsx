@@ -66,7 +66,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         ) : null}
         {children}
       </div>
-      <SiteFooter />
+      {signedIn ? null : <SiteFooter />}
       <CommandPalette commands={commands} />
     </div>
   );

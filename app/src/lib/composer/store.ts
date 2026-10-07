@@ -174,6 +174,51 @@ export async function createLesson(
   return { course, lesson, source, units: insertedUnits };
 }
 
+export async function updateLessonCopy(
+  identity: LearnerIdentity,
+  input: { lessonId: string; title?: string; body?: string; status?: "published" | "draft" },
+) {
+  const db = getDb();
+  const [lesson] = await db
+    .select()
+    .from(lessons)
+    .where(and(eq(lessons.id, input.lessonId), eq(lessons.orgId, identity.orgId)))
+    .limit(1);
+  if (!lesson) return { error: "unknown_lesson" as const };
+  const title = input.title?.replace(/\s+/g, " ").trim().slice(0, 180) || lesson.title;
+  const body = typeof input.body === "string" ? input.body.slice(0, 20000) : lesson.body;
+  const status = input.status === "published" || input.status === "draft" ? input.status : lesson.status;
+  const now = new Date();
+  const [updated] = await db
+    .update(lessons)
+    .set({ title, body, status, updatedAt: now })
+    .where(and(eq(lessons.id, lesson.id), eq(lessons.orgId, identity.orgId)))
+    .returning();
+  if (!updated) return { error: "unknown_lesson" as const };
+  await db
+    .update(courses)
+    .set({ title, status, updatedAt: now })
+    .where(and(eq(courses.id, lesson.courseId), eq(courses.orgId, identity.orgId)));
+  return { lesson: updated };
+}
+
+export async function updateKnowledgeUnit(
+  identity: LearnerIdentity,
+  input: { unitId: string; title: string; body: string },
+) {
+  const title = input.title.replace(/\s+/g, " ").trim().slice(0, 180);
+  const body = input.body.trim().slice(0, 8000);
+  if (title.length < 2 || body.length < 2) return { error: "needs_more" as const };
+  const db = getDb();
+  const [updated] = await db
+    .update(knowledgeUnits)
+    .set({ title, body })
+    .where(and(eq(knowledgeUnits.id, input.unitId), eq(knowledgeUnits.orgId, identity.orgId)))
+    .returning({ id: knowledgeUnits.id });
+  if (!updated) return { error: "unknown_unit" as const };
+  return { unit: updated };
+}
+
 export async function addSource(
   identity: LearnerIdentity,
   input: {

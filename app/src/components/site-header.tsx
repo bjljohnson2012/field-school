@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
@@ -23,7 +23,6 @@ export function isLeader(stance: string) {
 export const NEW_DOORS: readonly { href: string; label: string; hint?: string }[] = [
   { href: "/library/video", label: "Long-form video" },
   { href: "/library/wizard", label: "Wizard", hint: "One branched flow" },
-  { href: "/settings/ai", label: "Connect AI" },
 ];
 
 function openPalette(event: { currentTarget: Element }) {
@@ -35,6 +34,44 @@ function openPalette(event: { currentTarget: Element }) {
 function closeMenu(event: { currentTarget: Element }) {
   const root = event.currentTarget.closest("details");
   if (root) root.open = false;
+}
+
+const HELP_LINKS = [
+  { href: "/docs/api", label: "API" },
+  { href: "/privacy", label: "Privacy" },
+  { href: "/terms", label: "Terms" },
+  { href: "/c/grok-bot", label: "Catalog" },
+  { href: "/tools", label: "Tools" },
+] as const;
+
+function CreditsBanner() {
+  const [label, setLabel] = useState("Usage");
+  useEffect(() => {
+    let cancelled = false;
+    void fetch("/api/credits")
+      .then(async (res) => {
+        const body = (await res.json().catch(() => ({}))) as {
+          account?: { units?: number } | null;
+        };
+        if (cancelled) return;
+        const units = body.account?.units;
+        setLabel(typeof units === "number" ? `${units} units` : "Usage");
+      })
+      .catch(() => {
+        if (!cancelled) setLabel("Usage");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return (
+    <Link
+      href="/metering"
+      className="hidden h-9 items-center rounded-full border border-primary/30 bg-primary/10 px-3 text-xs font-medium text-foreground sm:inline-flex"
+    >
+      {label}
+    </Link>
+  );
 }
 
 /** `<details>` menus stay open on their own across navigation, Escape, ⌘K, and clicks elsewhere. */
@@ -167,7 +204,7 @@ function DoorLink({ link, current }: { link: NavLink; current: Door | null }) {
 
 export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
   const { data: authSession, status } = useSession();
-  const { session, ready } = usePortal();
+  const { session, ready, isStaff } = usePortal();
   const pathname = usePathname();
   useBarMenusClose(pathname);
   const guestChrome = status === "unauthenticated";
@@ -195,7 +232,7 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
   const extras = loggedIn && viewer ? accountItems(viewer) : [];
 
   return (
-    <header data-bar="" className="sticky top-0 z-30 border-b border-border bg-background/88 backdrop-blur-md">
+    <header data-bar="" className="sticky top-0 z-30 border-b-2 border-primary bg-card shadow-[0_12px_32px_-20px_rgba(26,25,22,0.55)]">
       <div className="mx-auto flex min-h-14 max-w-6xl items-center justify-between gap-2 px-4">
         <div className="flex min-w-0 items-center gap-2">
           <Link href={homeHref} className="flex items-center rounded-lg px-1.5 py-0.5">
@@ -224,6 +261,29 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
           </div>
           {showNew ? <NewMenu /> : null}
           {learn ? <DoorLink link={learn} current={current} /> : null}
+          {loggedIn ? (
+            <details className="relative">
+              <summary
+                aria-label="Help"
+                className="grid size-9 cursor-pointer list-none place-items-center rounded-full border border-border bg-background text-sm font-medium"
+              >
+                ?
+              </summary>
+              <div className="absolute right-0 z-40 mt-1 flex min-w-44 flex-col rounded-2xl border border-border bg-card p-2 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
+                {HELP_LINKS.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="flex h-11 items-center rounded-lg px-2 text-sm text-muted-foreground hover:text-foreground"
+                    onClick={closeMenu}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </details>
+          ) : null}
+          {loggedIn ? <CreditsBanner /> : null}
           <details className="relative md:hidden">
             <summary className="flex h-11 cursor-pointer list-none items-center px-2 text-muted-foreground">
               Menu
@@ -277,6 +337,24 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
                 >
                   View Profile
                 </Link>
+                {viewer && (isStaff || viewer.platformAdmin || viewer.stance === "admin") ? (
+                  <>
+                    <Link
+                      href="/admin"
+                      className="flex h-11 items-center text-sm text-muted-foreground hover:text-foreground"
+                      onClick={closeMenu}
+                    >
+                      Admin
+                    </Link>
+                    <Link
+                      href="/account#connect-ai"
+                      className="flex h-11 items-center text-sm text-muted-foreground hover:text-foreground"
+                      onClick={closeMenu}
+                    >
+                      Connect AI
+                    </Link>
+                  </>
+                ) : null}
                 {viewer && viewer.memberships.length > 0 ? (
                   <div className="border-b border-border pb-2">
                     <OrgPicker memberships={viewer.memberships} active={org} />

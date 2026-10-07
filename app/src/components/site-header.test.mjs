@@ -12,7 +12,7 @@ const headerSource = readFileSync(headerPath, "utf8");
 
 const LEADER_STANCES = ["admin", "guardian", "trainer", "teacher"];
 const LEADER_LABELS = ["Insights", "People", "Library", "Knowledge", "Learn"];
-const NEW_DOOR_HREFS = ["/library/video", "/library/wizard", "/settings/ai"];
+const NEW_DOOR_HREFS = ["/library/video", "/library/wizard"];
 
 function findTypescript(start) {
   let dir = start;
@@ -139,10 +139,10 @@ test("leader bar shows Insights, People, Library, Knowledge, Learn, and New for 
   assert.deepEqual(navLinks({ loggedIn: false, guest: false, leader: true, org: "sales" }), []);
 });
 
-test("New doors are video, wizard, and connect AI in that order", () => {
+test("New doors are video and wizard in that order", () => {
   assert.deepEqual(
     NEW_DOORS.map((door) => door.href),
     NEW_DOOR_HREFS,
   );
-  assert.equal(NEW_DOORS.length, 3);
+  assert.equal(NEW_DOORS.length, 2);
 });

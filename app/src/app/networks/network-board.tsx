@@ -30,6 +30,123 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
   const [readings, setReadings] = useState<Record<string, Reading>>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<string | null>(null);
+  const [composer, setComposer] = useState(false);
+  const [bulk, setBulk] = useState("");
+  const [notion, setNotion] = useState("");
+  const [addNote, setAddNote] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [drafts, setDrafts] = useState<
+    Record<string, { title: string; body: string; units: { id: string; title: string; body: string }[] }>
+  >({});
+
+  async function addKnowledge(event: { preventDefault: () => void; currentTarget: HTMLFormElement }) {
+    event.preventDefault();
+    const items = bulk
+      .split(/\n---\n/)
+      .map((text) => text.trim())
+      .filter((text) => text.length >= 12)
+      .slice(0, 12)
+      .map((text) => ({ text, kind: "text" }));
+    const link = notion.trim();
+    if (link) {
+      items.push({
+        text: link,
+        kind: /notion\.(so|site)|https?:\/\//i.test(link) ? "link" : "text",
+      });
+    }
+    const form = new FormData(event.currentTarget);
+    const files = form.getAll("files").filter((value) => value instanceof File && value.size > 0);
+    if (!items.length && !files.length) {
+      setAddNote("Paste knowledge, a Notion link, or a file.");
+      return;
+    }
+    setBusy("add");
+    setAddNote(null);
+    try {
+      const payload = new FormData();
+      if (items.length) payload.set("items", JSON.stringify(items));
+      for (const file of files) payload.append("files", file);
+      const response = await fetch("/api/library/intake", { method: "POST", body: payload });
+      const data = (await response.json().catch(() => ({}))) as { message?: string; items?: unknown[] };
+      if (!response.ok) {
+        setAddNote("That knowledge was not stored.");
+        return;
+      }
+      setBulk("");
+      setNotion("");
+      setAddNote(
+        data.message === "needs more information"
+          ? "needs more information"
+          : `Stored ${Array.isArray(data.items) ? data.items.length : 0} documents.`,
+      );
+      router.refresh();
+    } catch {
+      setAddNote("That knowledge was not stored.");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function openEdit(piece: KnowledgePiece) {
+    if (editing === piece.id) {
+      setEditing(null);
+      return;
+    }
+    setEditing(piece.id);
+    if (!piece.href) {
+      setDrafts((current) => ({
+        ...current,
+        [piece.id]: {
+          title: piece.title,
+          body: piece.excerpt,
+          units: piece.units.map((unit) => ({ id: unit.id, title: unit.title, body: unit.excerpt })),
+        },
+      }));
+      return;
+    }
+    const response = await fetch(`/api/composer/lessons?id=${piece.id}`, {
+      headers: { "x-fs-org": model.orgSlug },
+    });
+    const data = (await response.json().catch(() => ({}))) as {
+      lesson?: { title?: string; body?: string };
+      units?: { id: string; title: string; body: string }[];
+    };
+    setDrafts((current) => ({
+      ...current,
+      [piece.id]: {
+        title: data.lesson?.title || piece.title,
+        body: data.lesson?.body || piece.excerpt,
+        units: (data.units ?? piece.units).map((unit) => ({
+          id: unit.id,
+          title: unit.title,
+          body: "body" in unit && unit.body ? unit.body : piece.units.find((row) => row.id === unit.id)?.excerpt || "",
+        })),
+      },
+    }));
+  }
+
+  async function saveEdit(piece: KnowledgePiece) {
+    const draft = drafts[piece.id];
+    if (!draft) return;
+    setBusy(`edit:${piece.id}`);
+    try {
+      const response = await fetch("/api/library/documents", {
+        method: "PATCH",
+        headers: { "content-type": "application/json", "x-fs-org": model.orgSlug },
+        body: JSON.stringify({
+          lessonId: piece.href ? piece.id : "",
+          title: draft.title,
+          body: draft.body,
+          units: draft.units,
+        }),
+      });
+      if (!response.ok) return;
+      setEditing(null);
+      router.refresh();
+    } finally {
+      setBusy(null);
+    }
+  }
 
   async function expand(pieceId: string) {
     setBusy(pieceId);
@@ -113,16 +230,61 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
             <dd className="font-display text-3xl tracking-tight">{generated}</dd>
           </div>
         </dl>
-        <label className="block min-w-48 flex-1 sm:max-w-xs">
-          <span className="sr-only">Find knowledge</span>
+        <div className="flex min-w-48 flex-1 flex-wrap items-center justify-end gap-2 sm:max-w-md">
+          <button
+            type="button"
+            onClick={() => setComposer((open) => !open)}
+            className="inline-flex h-10 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
+          >
+            Add knowledge
+          </button>
+          <label className="block min-w-48 flex-1 sm:max-w-xs">
+            <span className="sr-only">Find knowledge</span>
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Find knowledge"
             className="h-10 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none ring-primary/30 focus:ring-2"
           />
-        </label>
+          </label>
+        </div>
       </div>
+
+      {composer ? (
+        <form className="mb-6 rounded-2xl border border-border bg-card p-4" onSubmit={(event) => void addKnowledge(event)}>
+          <p className="text-sm font-medium">Add knowledge</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Paste one document, or several separated by a line that is only ---. A Notion link is stored as a link. Files land as documents too.
+          </p>
+          <textarea
+            value={bulk}
+            onChange={(event) => setBulk(event.target.value)}
+            rows={5}
+            placeholder="First document&#10;---&#10;Second document"
+            className="mt-3 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none ring-primary/30 focus:ring-2"
+          />
+          <label className="mt-3 block text-sm">
+            Notion or other link
+            <input
+              value={notion}
+              onChange={(event) => setNotion(event.target.value)}
+              placeholder="https://www.notion.so/…"
+              className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm"
+            />
+          </label>
+          <label className="mt-3 block text-sm">
+            Files
+            <input name="files" type="file" multiple className="mt-1 block w-full text-sm" />
+          </label>
+          <p className="mt-3 text-sm text-muted-foreground">
+            A signed-in teacher can also POST documents to <span className="font-mono">/api/library/intake</span> from Grokbot or another MCP tool. Send JSON {"{ items: [{ text, kind }] }"}.
+          </p>
+          <button type="submit" disabled={busy === "add"} className="mt-3 inline-flex h-11 items-center rounded-xl bg-primary px-4 text-sm text-primary-foreground">
+            Store knowledge
+          </button>
+          {addNote ? <p className="mt-3 text-sm">{addNote}</p> : null}
+        </form>
+      ) : null}
 
       <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter knowledge">
         {(
@@ -286,7 +448,7 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
                   : "Drop a file, an idea, or a minute of audio. It lands here once it is stored."}
               </p>
               <Link href="/library/wizard" className="mt-5 inline-flex text-sm font-medium text-primary">
-                Add knowledge
+                Open the wizard
               </Link>
             </>
           )}
@@ -347,7 +509,82 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
                       Open this lesson
                     </Link>
                   ) : null}
+                  <button type="button" className="text-sm font-medium text-primary" onClick={() => void openEdit(piece)}>
+                    Edit
+                  </button>
                 </div>
+                {editing === piece.id && drafts[piece.id] ? (
+                  <form
+                    className="mt-4 grid gap-3 border-t border-border pt-4"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      void saveEdit(piece);
+                    }}
+                  >
+                    <input
+                      value={drafts[piece.id]?.title ?? ""}
+                      onChange={(event) => {
+                        const title = event.target.value;
+                        setDrafts((current) => {
+                          const row = current[piece.id];
+                          if (!row) return current;
+                          return { ...current, [piece.id]: { ...row, title } };
+                        });
+                      }}
+                      className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
+                    />
+                    <textarea
+                      value={drafts[piece.id]?.body ?? ""}
+                      onChange={(event) => {
+                        const body = event.target.value;
+                        setDrafts((current) => {
+                          const row = current[piece.id];
+                          if (!row) return current;
+                          return { ...current, [piece.id]: { ...row, body } };
+                        });
+                      }}
+                      rows={4}
+                      className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    {(drafts[piece.id]?.units ?? []).map((unit, index) => (
+                      <label key={unit.id} className="grid gap-1 text-sm">
+                        Point
+                        <input
+                          value={unit.title}
+                          onChange={(event) => {
+                            const title = event.target.value;
+                            setDrafts((current) => {
+                              const row = current[piece.id];
+                              if (!row) return current;
+                              const next = row.units.slice();
+                              next[index] = { ...unit, title };
+                              return { ...current, [piece.id]: { ...row, units: next } };
+                            });
+                          }}
+                          className="h-10 rounded-xl border border-border bg-background px-3"
+                        />
+                        <textarea
+                          value={unit.body}
+                          onChange={(event) => {
+                            const body = event.target.value;
+                            setDrafts((current) => {
+                              const row = current[piece.id];
+                              if (!row) return current;
+                              const next = row.units.slice();
+                              next[index] = { ...unit, body };
+                              return { ...current, [piece.id]: { ...row, units: next } };
+                            });
+                          }}
+                          rows={3}
+                          className="rounded-xl border border-border bg-background px-3 py-2"
+                        />
+                      </label>
+                    ))}
+                    <button type="submit" disabled={busy === `edit:${piece.id}`} className="h-10 justify-self-start rounded-xl bg-primary px-4 text-sm text-primary-foreground">
+                      Save document
+                    </button>
+                  </form>
+                ) : null}
                 {reading ? (
                   <div className="mt-4 border-t border-border pt-4">
                     <p className="text-sm leading-relaxed">{reading.expansion}</p>
