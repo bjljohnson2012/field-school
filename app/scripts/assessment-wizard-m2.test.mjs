@@ -426,6 +426,18 @@ test("start, answer, resume, and result stay on the assessment routes", () => {
   assert.match(store, /latest: done \? await storedPlacementView\(done\) : null/);
 });
 
+test("a finished wizard run draws the neural web, and motion can be reduced", () => {
+  const wizard = code("src/components/profile-m2/assessment-wizard.tsx");
+  const web = code("src/components/profile-m2/neural-web.tsx");
+  assert.ok(wizard.indexOf("run.next ?") < wizard.indexOf("<NeuralWeb"));
+  assert.match(wizard, /<NeuralWeb title=\{label\(run\.track\)\} placements=\{run\.placements\} \/>/);
+  assert.match(web, /data-neural-web/);
+  assert.match(web, /animateMotion/);
+  assert.match(web, /prefers-reduced-motion:\s*reduce/);
+  assert.match(web, /neural-pulse \{ display: none; \}/);
+  assert.doesNotMatch(web, /localStorage|sessionStorage/);
+});
+
 test("gate seam: Skills and Profile write gate freshness through one function only", () => {
   const sink = code("src/lib/assessments/gate-sink.ts");
   assert.match(sink, /export async function recordTrackGate/);

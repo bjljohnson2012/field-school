@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import type { PlacementView, RunView } from "@/lib/assessments/model";
+import { NeuralWeb } from "@/components/profile-m2/neural-web";
 import type { TrackOverview } from "@/lib/assessments/store";
 import type { TrackId } from "@/lib/assessments/tracks";
 import { PROFILE_COPY, type AdultSetup } from "@/lib/profile/model";
@@ -241,6 +242,7 @@ export function AssessmentWizard() {
             </fieldset>
           ) : (
             <div className="mt-5 space-y-4">
+              <NeuralWeb title={label(run.track)} placements={run.placements} />
               <Placements placements={run.placements} copy={copy} />
               <button type="button" className="btn-primary" disabled={busy} onClick={() => void open(run.track)}>
                 {copy.rerun}
