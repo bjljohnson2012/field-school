@@ -236,6 +236,7 @@ export const userProfiles = pgTable("user_profiles", {
     .references(() => members.id),
   displayName: text("display_name").notNull().default(""),
   photoUrl: text("photo_url").notNull().default(""),
+  photoMediaId: uuid("photo_media_id"),
   currentProjects: jsonb("current_projects").notNull().default([]),
   skillsAdapted: jsonb("skills_adapted").notNull().default([]),
   gates: jsonb("gates").notNull().default({}),

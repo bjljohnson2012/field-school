@@ -3,11 +3,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { EdgePanel } from "@/components/knowledge/edge-panel";
+import { AssessmentResults } from "@/components/profile-m2/assessment-results";
+import { AssessmentsLink } from "@/components/profile-m2/assessments-link";
+import { EnrichmentPanel } from "@/components/profile-m2/enrichment-panel";
+import { PhotoPanel } from "@/components/profile-m2/photo-panel";
 import { freshnessLabel, PROFILE_COPY, type AdultSetup, type KidSetup } from "@/lib/profile/model";
 
 type Profile = {
   displayName: string;
-  photoUrl: string;
+  photoSrc: string;
   currentProjects: string[];
   skillsAdapted: string[];
   setup: AdultSetup;
@@ -37,7 +41,6 @@ export default function ProfilePage() {
   const [status, setStatus] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState("");
-  const [photo, setPhoto] = useState("");
   const [projects, setProjects] = useState("");
   const [skills, setSkills] = useState("");
   const now = new Date();
@@ -45,7 +48,6 @@ export default function ProfilePage() {
   function fill(next: Profile) {
     setProfile(next);
     setName(next.displayName);
-    setPhoto(next.photoUrl);
     setProjects(next.currentProjects.join("\n"));
     setSkills(next.skillsAdapted.join("\n"));
   }
@@ -81,7 +83,6 @@ export default function ProfilePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           displayName: name,
-          photoUrl: photo,
           currentProjects: lines(projects),
           skillsAdapted: lines(skills),
         }),
@@ -142,9 +143,9 @@ export default function ProfilePage() {
       </section>
 
       <section className="flex items-center gap-4">
-        {profile.photoUrl ? (
+        {profile.photoSrc ? (
           <img
-            src={profile.photoUrl}
+            src={profile.photoSrc}
             alt=""
             className="size-16 rounded-full border border-border object-cover"
           />
@@ -188,6 +189,12 @@ export default function ProfilePage() {
         ) : null}
       </section>
 
+      <AssessmentsLink setup={setup} />
+
+      <AssessmentResults />
+
+      <PhotoPanel photoSrc={profile.photoSrc} onChange={(photoSrc) => setProfile({ ...profile, photoSrc })} />
+
       <section className="rounded-xl border border-border bg-card px-5 py-5">
         <h2 className="text-sm font-semibold">About you</h2>
         <form className="mt-4 space-y-4" onSubmit={save}>
@@ -202,19 +209,6 @@ export default function ProfilePage() {
               maxLength={80}
               onChange={(event) => setName(event.target.value)}
               required
-            />
-          </div>
-          <div>
-            <label className="label" htmlFor="profile-photo">
-              Photo link (optional)
-            </label>
-            <input
-              id="profile-photo"
-              className="input"
-              type="url"
-              placeholder="https://"
-              value={photo}
-              onChange={(event) => setPhoto(event.target.value)}
             />
           </div>
           <div>
@@ -249,6 +243,8 @@ export default function ProfilePage() {
           </div>
         </form>
       </section>
+
+      <EnrichmentPanel />
 
       {kids.length ? (
         <section className="rounded-xl border border-border bg-card px-5 py-5">

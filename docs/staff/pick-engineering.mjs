@@ -35,7 +35,7 @@ export function pickEngineering(graph) {
 function goalLine(graph, goal) {
   const owners = graph.nodes.filter((node) => node.goals.includes(goal.id));
   const open = owners.filter((node) => node.status !== "BUILT" && node.status !== "PASS");
-  const mark = open.length ? "open" : "built, merge held";
+  const mark = open.length ? "open" : owners.every((node) => node.status === "PASS") ? "on main" : "built, merge held";
   return `${goal.id} ${goal.name} — ${mark}. ${goal.statement}`;
 }
 
@@ -61,7 +61,7 @@ export function formatEngineering(graph, pick = pickEngineering(graph)) {
     if (node.sha) lines.push(`sha: ${node.sha}`);
     lines.push("");
   }
-  lines.push("Drafts stay drafts until Ben gives MERGE GO. Sealed Profile M1 stays sealed. Launch stays CLOSED 0/8.");
+  lines.push("E4 stays with the Profile M1 owner. Launch stays CLOSED 0/8.");
   return lines.join("\n") + "\n";
 }
 
