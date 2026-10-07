@@ -72,7 +72,7 @@ export default async function InsightsPage() {
       <p className="mb-6 text-sm text-muted-foreground">
         {result.model.orgName}
         {" · "}
-        <Link href="/networks" className="font-medium text-primary">
+        <Link href="/knowledge" className="font-medium text-primary">
           Knowledge repository
         </Link>
       </p>

@@ -2,14 +2,20 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { SCOPE_QUESTION } from "@/lib/library/expand-knowledge";
 import { layoutRepository, type KnowledgePiece, type RepositoryModel } from "@/lib/library/knowledge-network";
+import { NEEDS_MORE } from "@/lib/library/teach-from-knowledge";
 import { cn } from "@/lib/utils";
 
-type Filter = "all" | "generated" | "waiting";
+type Filter = "all" | "generated" | "waiting" | "published" | "unpublished";
+type Reading = { expansion: string; questions: string[]; note: string };
 
 function matches(piece: KnowledgePiece, filter: Filter, query: string) {
   if (filter === "generated" && !piece.generated) return false;
   if (filter === "waiting" && piece.generated) return false;
+  if (filter === "published" && piece.statusLabel !== "Published") return false;
+  if (filter === "unpublished" && piece.statusLabel !== "Unpublished") return false;
   const needle = query.trim().toLowerCase();
   if (!needle) return true;
   const hay = `${piece.title} ${piece.excerpt} ${piece.units.map((unit) => unit.title).join(" ")}`.toLowerCase();
@@ -17,9 +23,68 @@ function matches(piece: KnowledgePiece, filter: Filter, query: string) {
 }
 
 export function NetworkBoard({ model }: { model: RepositoryModel }) {
+  const router = useRouter();
   const [focus, setFocus] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
+  const [readings, setReadings] = useState<Record<string, Reading>>({});
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [busy, setBusy] = useState<string | null>(null);
+
+  async function expand(pieceId: string) {
+    setBusy(pieceId);
+    setFocus(pieceId);
+    try {
+      const response = await fetch("/api/library/expand", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ lessonId: pieceId }),
+      });
+      const data = (await response.json()) as { expansion?: string; questions?: string[] };
+      setReadings((current) => ({
+        ...current,
+        [pieceId]: {
+          expansion: data.expansion || NEEDS_MORE,
+          questions: data.questions?.length ? data.questions : [SCOPE_QUESTION],
+          note: response.ok ? "" : NEEDS_MORE,
+        },
+      }));
+    } catch {
+      setReadings((current) => ({
+        ...current,
+        [pieceId]: {
+          expansion: NEEDS_MORE,
+          questions: [SCOPE_QUESTION],
+          note: "",
+        },
+      }));
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function saveAnswer(pieceId: string, question: string) {
+    const key = `${pieceId}:${question}`;
+    const answer = (answers[key] ?? "").trim();
+    if (answer.length < 12) return;
+    setBusy(key);
+    try {
+      const response = await fetch("/api/library/expand", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ lessonId: pieceId, question, answer }),
+      });
+      if (!response.ok) return;
+      setAnswers((current) => ({ ...current, [key]: "" }));
+      setReadings((current) => ({
+        ...current,
+        [pieceId]: { ...(current[pieceId] as Reading), note: "Saved into this document." },
+      }));
+      router.refresh();
+    } finally {
+      setBusy(null);
+    }
+  }
   const visible = useMemo(
     () => model.pieces.filter((piece) => matches(piece, filter, query)),
     [model.pieces, filter, query],
@@ -63,6 +128,8 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
         {(
           [
             ["all", "All"],
+            ["published", "Published"],
+            ["unpublished", "Unpublished"],
             ["generated", "Generated"],
             ["waiting", "Not generated yet"],
           ] as const
@@ -180,8 +247,9 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
           {open ? (
             <>
               <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                {open.generated ? "Generated" : "Not generated yet"}
-                {open.sourceKind ? ` · ${open.sourceKind}` : ""}
+                {open.statusLabel}
+                {open.sourceLabel ? ` · ${open.sourceLabel}` : ""}
+                {open.generated ? " · Generated" : " · Not generated yet"}
               </p>
               <h2 className="mt-2 font-display text-2xl tracking-tight">{open.title}</h2>
               {open.excerpt ? <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{open.excerpt}</p> : null}
@@ -231,32 +299,95 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
         </p>
       ) : null}
 
-      <ul className="mt-6 divide-y divide-border rounded-2xl border border-border bg-card" aria-label="All knowledge">
+      <div className="mt-8 grid gap-4" aria-label="All knowledge">
         {visible.length === 0 ? (
-          <li className="px-4 py-4 text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {model.pieces.length === 0 ? "Nothing is stored for this org yet." : "Nothing matches."}
-          </li>
+          </p>
         ) : (
-          visible.map((piece) => (
-            <li key={piece.id}>
-              <button
-                type="button"
-                onClick={() => setFocus(piece.id)}
-                className={cn(
-                  "flex w-full items-baseline justify-between gap-4 px-4 py-3 text-left text-sm",
-                  focusId === piece.id && "bg-secondary/70",
+          visible.map((piece) => {
+            const reading = readings[piece.id];
+            return (
+              <article key={piece.id} className="rounded-2xl border border-border bg-card p-5 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
+                <p className="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  <span>{piece.statusLabel}</span>
+                  {piece.sourceLabel ? <span>{piece.sourceLabel}</span> : null}
+                  <span>{piece.generated ? "Generated" : "Not generated yet"}</span>
+                </p>
+                <h3 className="mt-2 font-display text-2xl tracking-tight">{piece.title}</h3>
+                {piece.excerpt ? <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{piece.excerpt}</p> : null}
+                {piece.units.length ? (
+                  <ul className="mt-4 grid gap-3">
+                    {piece.units.map((unit) => (
+                      <li key={unit.id} className="rounded-xl border border-border px-4 py-3">
+                        <p className="text-sm font-medium">{unit.title}</p>
+                        {unit.excerpt && unit.excerpt !== unit.title ? (
+                          <p className="mt-1 text-sm text-muted-foreground">{unit.excerpt}</p>
+                        ) : null}
+                        <p className="mt-1 text-xs text-muted-foreground">{unit.quizCount > 0 ? "Quiz written" : "No quiz yet"}</p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-4 text-sm text-muted-foreground">No point is stored on this document yet.</p>
                 )}
-              >
-                <span className="font-medium">{piece.title}</span>
-                <span className="shrink-0 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-                  {piece.generated ? "Generated" : "Not generated yet"}
-                  {piece.units.length ? ` · ${piece.units.length}` : ""}
-                </span>
-              </button>
-            </li>
-          ))
+                <div className="mt-4 flex flex-wrap items-center gap-4">
+                  {piece.href ? (
+                    <button
+                      type="button"
+                      onClick={() => void expand(piece.id)}
+                      disabled={busy === piece.id}
+                      className="h-9 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground"
+                    >
+                      {busy === piece.id ? "Reading" : "Expand with AI"}
+                    </button>
+                  ) : null}
+                  {piece.href ? (
+                    <Link href={piece.href} className="text-sm font-medium text-primary">
+                      Open this lesson
+                    </Link>
+                  ) : null}
+                </div>
+                {reading ? (
+                  <div className="mt-4 border-t border-border pt-4">
+                    <p className="text-sm leading-relaxed">{reading.expansion}</p>
+                    <div className="mt-4 grid gap-4">
+                      {reading.questions.map((question, index) => {
+                        const key = `${piece.id}:${question}`;
+                        const fieldId = `expand-${piece.id}-${index}`;
+                        return (
+                          <form
+                            key={question}
+                            onSubmit={(event) => {
+                              event.preventDefault();
+                              void saveAnswer(piece.id, question);
+                            }}
+                          >
+                            <label className="block text-sm font-medium" htmlFor={fieldId}>
+                              {question}
+                            </label>
+                            <textarea
+                              id={fieldId}
+                              value={answers[key] ?? ""}
+                              onChange={(event) => setAnswers((current) => ({ ...current, [key]: event.target.value }))}
+                              rows={3}
+                              className="mt-2 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none ring-primary/30 focus:ring-2"
+                            />
+                            <button type="submit" className="mt-2 text-sm font-medium text-primary" disabled={busy === key}>
+                              Save answer
+                            </button>
+                          </form>
+                        );
+                      })}
+                    </div>
+                    {reading.note ? <p className="mt-3 text-sm text-muted-foreground">{reading.note}</p> : null}
+                  </div>
+                ) : null}
+              </article>
+            );
+          })
         )}
-      </ul>
+      </div>
     </div>
   );
 }

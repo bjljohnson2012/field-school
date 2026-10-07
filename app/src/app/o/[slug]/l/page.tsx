@@ -7,8 +7,9 @@ import { DeskPage, EmptyState, KpiStrip } from "@/components/desk/desk";
 import { EdgeList } from "@/components/knowledge/edge-list";
 import { libraryKpis } from "@/lib/desk/kpi";
 import { entityKey, parseEdgeViews, type EdgeView } from "@/lib/knowledge/graph";
+import { publishLabel, readableTitle } from "@/lib/library/knowledge-labels";
 
-type Lesson = { id: string; title: string; status: string; kind: string };
+type Lesson = { id: string; title: string; status: string };
 
 function mediaCounts(json: unknown): Map<string, number> {
   const counts = new Map<string, number>();
@@ -46,11 +47,12 @@ export default function PublishedCatalogPage() {
         if (cancelled) return;
         setReady(true);
         if (!json.ok) {
-          setError(json.error || "unavailable");
+          const code = typeof json.error === "string" ? json.error : "";
+          setError(code === "sign_in_required" ? "Sign in to see this org." : "This catalog is not available.");
           return;
         }
         setCanTeach(Boolean(json.canTeach));
-        setLessons((json.lessons as Lesson[]).filter((lesson) => lesson.status === "published"));
+        setLessons(json.lessons as Lesson[]);
       });
     return () => {
       cancelled = true;
@@ -85,21 +87,23 @@ export default function PublishedCatalogPage() {
     usedBy.set(lesson.id, list);
     usedCount.set(lesson.id, list.length);
   }
-  const kpis = libraryKpis({ lessonIds: lessons.map((lesson) => lesson.id), usedBy: usedCount, sources: media });
+  const publishedIds = lessons.filter((lesson) => lesson.status === "published").map((lesson) => lesson.id);
+  const kpis = libraryKpis({ lessonIds: publishedIds, usedBy: usedCount, sources: media });
 
   return (
-    <DeskPage eyebrow={slug} title="Published lessons" width="3xl" lede="Drafts stay hidden. This catalog stays inside this org.">
+    <DeskPage eyebrow={slug} title="Lessons" width="3xl" lede="Published and unpublished lessons are both listed. An unpublished lesson stays off the child catalog.">
       {error ? <p className="mb-6 text-sm">{error}</p> : null}
       {lessons.length ? <KpiStrip label="This catalog at a glance" items={kpis} /> : null}
-      {ready && !error && !lessons.length ? <EmptyState>No published lessons in this org yet.</EmptyState> : null}
+      {ready && !error && !lessons.length ? <EmptyState>No lessons in this org yet.</EmptyState> : null}
       <ul className="grid gap-3">
         {lessons.map((lesson) => {
           const lessonEdges = usedBy.get(lesson.id) ?? [];
           const files = media.get(lesson.id) ?? 0;
+          const label = publishLabel(lesson.status);
           return (
             <li key={lesson.id} className="rounded-xl border border-border bg-card px-5 py-4">
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{lesson.kind}</p>
-              <p className="mt-1 font-display text-xl">{lesson.title}</p>
+              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
+              <p className="mt-1 font-display text-xl">{readableTitle(lesson.title, "")}</p>
               <p className="mt-1 text-xs text-muted-foreground" data-lesson-adjacency={lesson.id}>
                 {files} {files === 1 ? "source" : "sources"} · used by {lessonEdges.length}{" "}
                 {lessonEdges.length === 1 ? "brain" : "brains"} you can see
@@ -113,6 +117,14 @@ export default function PublishedCatalogPage() {
                 <Link href={`/o/${slug}/l/${lesson.id}`} className="underline underline-offset-4">
                   Open
                 </Link>
+                {canTeach ? (
+                  <>
+                    {" · "}
+                    <Link href={`/o/${slug}/teach/${lesson.id}`} className="underline underline-offset-4">
+                      Manage
+                    </Link>
+                  </>
+                ) : null}
               </p>
             </li>
           );

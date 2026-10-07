@@ -1,4 +1,4 @@
-export type Door = "learn" | "people" | "library" | "insights" | "me";
+export type Door = "learn" | "people" | "library" | "knowledge" | "insights" | "me";
 export type LearnZone = "desk" | "catalog" | "collection" | "player";
 export type RouteEntry = { pattern: string; door: Door | null; zone: LearnZone | null };
 
@@ -23,7 +23,8 @@ export const ROUTES: readonly RouteEntry[] = [
   { pattern: "/children", door: "people", zone: null },
   { pattern: "/roster", door: "people", zone: null },
   { pattern: "/brain", door: "people", zone: null },
-  { pattern: "/networks", door: "insights", zone: null },
+  { pattern: "/knowledge", door: "knowledge", zone: null },
+  { pattern: "/networks", door: "knowledge", zone: null },
   { pattern: "/insights", door: "insights", zone: null },
   { pattern: "/pattern", door: "me", zone: null },
   { pattern: "/skills", door: "me", zone: null },

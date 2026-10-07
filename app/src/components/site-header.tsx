@@ -120,7 +120,7 @@ export function navLinks(opts: {
   org: string;
 }): NavLink[] {
   if (opts.guest || !opts.loggedIn) {
-    // Guest rooms: Insights, People, Library, and New stay hidden.
+    // Guest rooms: Insights, People, Library, Knowledge, and New stay hidden.
     // Learn is the signed-in action at /learn, not a guest tab.
     return [];
   }
@@ -135,6 +135,7 @@ export function navLinks(opts: {
     { href: "/insights", label: "Insights", door: "insights" },
     { href: "/people", label: "People", door: "people" },
     { href: org ? `/o/${org}/l` : "/insights", label: "Library", door: "library" },
+    { href: "/knowledge", label: "Knowledge", door: "knowledge" },
     { href: "/learn", label: "Learn", door: "learn" },
   ];
 }

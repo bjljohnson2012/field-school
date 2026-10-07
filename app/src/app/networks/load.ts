@@ -3,6 +3,7 @@ import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { knowledgeUnits, lessons, quizItems, sources } from "@/lib/composer/schema";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import { organizations } from "@/lib/db/schema";
+import { publishLabel, readableTitle, sourceLabel } from "@/lib/library/knowledge-labels";
 import type { KnowledgePiece, RepositoryModel } from "@/lib/library/knowledge-network";
 import { lessonProse } from "@/lib/library/teach-from-knowledge";
 
@@ -43,6 +44,7 @@ export async function loadNetworks(): Promise<NetworksLoad> {
         id: lessons.id,
         title: lessons.title,
         body: lessons.body,
+        status: lessons.status,
         updatedAt: lessons.updatedAt,
       })
       .from(lessons)
@@ -95,36 +97,44 @@ export async function loadNetworks(): Promise<NetworksLoad> {
     }
 
     const pieces: KnowledgePiece[] = lessonRows.map((lesson) => {
+      const excerpt = excerptOf(lesson.body);
       const units = (unitsByLesson.get(lesson.id) ?? [])
         .slice()
         .sort((a, b) => a.sortOrder - b.sortOrder)
-        .map((unit) => ({
-          id: unit.id,
-          title: unit.title,
-          excerpt: excerptOf(unit.body),
-          quizCount: quizzesByUnit.get(unit.id) ?? 0,
-        }));
+        .map((unit) => {
+          const unitExcerpt = excerptOf(unit.body);
+          return {
+            id: unit.id,
+            title: readableTitle(unit.title, unitExcerpt),
+            excerpt: unitExcerpt,
+            quizCount: quizzesByUnit.get(unit.id) ?? 0,
+          };
+        });
       return {
         id: lesson.id,
-        title: lesson.title,
-        excerpt: excerptOf(lesson.body),
+        title: readableTitle(lesson.title, excerpt),
+        excerpt,
         href: `/o/${org.slug}/teach/${lesson.id}`,
         generated: (quizzesByLesson.get(lesson.id) ?? 0) > 0,
-        sourceKind: kindByLesson.get(lesson.id) ?? "text",
+        statusLabel: publishLabel(lesson.status),
+        sourceLabel: sourceLabel(kindByLesson.get(lesson.id) ?? ""),
         units,
       };
     });
 
     for (const unit of loose) {
       const quizCount = quizzesByUnit.get(unit.id) ?? 0;
+      const excerpt = excerptOf(unit.body);
+      const title = readableTitle(unit.title, excerpt);
       pieces.push({
         id: unit.id,
-        title: unit.title,
-        excerpt: excerptOf(unit.body),
+        title,
+        excerpt,
         href: null,
         generated: quizCount > 0,
-        sourceKind: "text",
-        units: [],
+        statusLabel: "Unpublished",
+        sourceLabel: "Note",
+        units: [{ id: unit.id, title, excerpt, quizCount }],
       });
     }
 

@@ -15,7 +15,8 @@ function piece(id, title, extra = {}) {
     excerpt: "A stored line of knowledge.",
     href: `/o/household/teach/${id}`,
     generated: false,
-    sourceKind: "text",
+    statusLabel: "Unpublished",
+    sourceLabel: "Note",
     units: [],
     ...extra,
   };
@@ -87,17 +88,22 @@ test("a long title is clipped and the map keeps the first 18 pieces", () => {
   assert.equal(map.nodes.filter((node) => node.kind === "lesson").length, 18);
 });
 
-test("Networks is the knowledge repository for this org", () => {
-  const page = read("src/app/networks/page.tsx");
+test("Knowledge is its own tab and holds the repository for this org", () => {
+  const page = read("src/app/knowledge/page.tsx");
   const board = read("src/app/networks/network-board.tsx");
   const insights = read("src/app/insights/page.tsx");
-  assert.match(page, /eyebrow="Networks"/);
+  const networks = read("src/app/networks/page.tsx");
+  assert.match(page, /eyebrow="Knowledge"/);
   assert.match(page, /title="Knowledge repository"/);
   assert.match(page, /child_has_no_login/);
   assert.match(page, /sign_in_required/);
   assert.match(board, /data-knowledge-repository=""/);
   assert.match(board, /Nothing is stored for this org yet/);
-  assert.match(insights, /href="\/networks"/);
+  assert.match(board, /Expand with AI/);
+  assert.match(board, /SCOPE_QUESTION/);
+  assert.match(read("src/lib/library/expand-knowledge.ts"), /What is the scope or limit of the knowledge\?/);
+  assert.match(insights, /href="\/knowledge"/);
+  assert.match(networks, /redirect\("\/knowledge"\)/);
   assert.doesNotMatch(page + board, /Lesson name|Tracked child|JTBD|Jobs-to-be-Done/);
   assert.doesNotMatch(page + board, /brand-navy|brand-orange|brand-indigo/);
 });
