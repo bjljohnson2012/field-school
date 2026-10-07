@@ -54,25 +54,28 @@ export function LoginForm({ oauth }: Props) {
   }, [ready, isStaff, router, next, memberNext, status, authSession]);
 
   return (
-    <main className="mx-auto max-w-md px-4 py-16">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Portal
-      </p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Sign in</h1>
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Members use Google, X, or email and password. Staff admin still needs an
-        allowlisted Google or X account. Local name sign-in never grants admin.
-      </p>
-      <p className="mt-3 text-sm">
-        New here?{" "}
-        <Link
-          href={next ? `/signup?next=${encodeURIComponent(next)}` : "/signup"}
-          className="underline underline-offset-2"
-        >
-          Join the free beta
-        </Link>
-        .
-      </p>
+    <main className="mx-auto grid max-w-6xl gap-10 px-4 py-12 lg:grid-cols-[0.85fr_1fr] lg:items-start lg:py-16">
+      <div>
+        <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+          Portal
+        </p>
+        <h1 className="mt-3 font-display text-5xl leading-[1.02] tracking-[-0.035em]">Sign in</h1>
+        <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
+          Members use Google, X, or email and password. Staff admin still needs an
+          allowlisted Google or X account. Local name sign-in never grants admin.
+        </p>
+        <p className="mt-4 text-sm">
+          New here?{" "}
+          <Link
+            href={next ? `/signup?next=${encodeURIComponent(next)}` : "/signup"}
+            className="underline underline-offset-2"
+          >
+            Join the free beta
+          </Link>
+          .
+        </p>
+      </div>
+      <div className="rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)] sm:px-8">
       {error ? (
         <p className="mt-4 rounded-xl border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
           {error}
@@ -176,6 +179,7 @@ export function LoginForm({ oauth }: Props) {
         >
           Continue as guest
         </button>
+      </div>
       </div>
     </main>
   );

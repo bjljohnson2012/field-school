@@ -12,11 +12,11 @@ export const metadata: Metadata = {
 
 export default function ToolsPage() {
   return (
-    <main className="mx-auto max-w-6xl px-4 py-14">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+    <main className="mx-auto max-w-6xl px-4 py-12 lg:py-16">
+      <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
         Tools
       </p>
-      <h1 className="mt-3 max-w-2xl font-display text-4xl tracking-tight">
+      <h1 className="mt-3 max-w-[16ch] font-display text-5xl leading-[1.02] tracking-[-0.035em] sm:text-6xl">
         Assessments you can keep on the portal
       </h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
@@ -29,7 +29,7 @@ export default function ToolsPage() {
         {assessmentTools.map((tool) => (
           <article
             key={tool.slug}
-            className="flex flex-col rounded-xl border border-border bg-card px-5 py-5"
+            className="flex flex-col rounded-2xl border border-border bg-card px-5 py-5 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]"
           >
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
               {tool.kicker} · {tool.minutes}
@@ -55,7 +55,7 @@ export default function ToolsPage() {
         ))}
       </div>
 
-      <section className="mt-16 max-w-2xl rounded-xl border border-border bg-card px-5 py-6">
+      <section className="mt-16 max-w-2xl rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
         <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
           Community
         </p>
