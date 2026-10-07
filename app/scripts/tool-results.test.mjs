@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  assessmentCount,
   latestByTool,
   owedGates,
   parseToolSubmission,
@@ -115,4 +116,55 @@ test("gates route refreshes lastAt on a new tool_results row even when the gate 
   // Retakes of done gates are invisible to owedGates; the created branch is what moves lastAt.
   const row = (toolSlug, completedAt) => ({ toolSlug, attemptId, answers: {}, completedAt, summary: "", scores: {}, labels: {} });
   assert.deepEqual(owedGates([row("skill", "2026-10-06T12:00:00.000Z")], new Set(["G-skills"])), []);
+});
+
+test("admin snapshot counts saved tools from tool_results, one per tool", async () => {
+  const row = (toolSlug, completedAt) => ({
+    toolSlug,
+    attemptId,
+    answers: {},
+    completedAt,
+    summary: "",
+    scores: {},
+    labels: {},
+  });
+  assert.equal(assessmentCount([]), 0);
+  assert.equal(
+    assessmentCount([
+      row("skill", "2026-10-01T00:00:00.000Z"),
+      row("skill", "2026-10-05T00:00:00.000Z"),
+      row("intelligence", "2026-10-02T00:00:00.000Z"),
+    ]),
+    2,
+  );
+
+  const { readFileSync } = await import("node:fs");
+  const { dirname, join } = await import("node:path");
+  const { fileURLToPath } = await import("node:url");
+  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+  const read = (path) => readFileSync(join(root, path), "utf8");
+
+  const store = read("src/lib/tools/results-store.ts");
+  const fn = store.slice(store.indexOf("export async function countAdultAssessments"));
+  const child = fn.indexOf('=== "child"');
+  const listed = fn.indexOf("listToolResults");
+  assert.ok(child >= 0 && listed > child, "a child member is not read");
+  assert.match(fn, /assessmentCount\(await listToolResults\(member\.id\)\)/);
+
+  const route = read("src/app/api/admin/members/assessments/route.ts");
+  const staff = route.indexOf("isStaffSession");
+  const valid = route.indexOf("isValidEmail");
+  const call = route.indexOf("countAdultAssessments");
+  assert.ok(staff >= 0 && staff < valid && valid < call);
+  assert.match(route, /NextResponse\.json\(\{ ok: true, count \}\)/);
+  assert.doesNotMatch(route, /answers|scores|summary|labels/);
+
+  const page = read("src/app/admin/users/[id]/page.tsx");
+  assert.doesNotMatch(page, /Object\.keys\(ws\.tools\)/);
+  assert.match(page, /<AssessmentCount email=\{person\.email\} \/>/);
+
+  const widget = read("src/components/admin/assessment-count.tsx");
+  assert.match(widget, /\/api\/admin\/members\/assessments\?email=/);
+  assert.match(widget, /assessments unavailable/);
+  assert.doesNotMatch(widget, /localStorage|ws\.tools/);
 });

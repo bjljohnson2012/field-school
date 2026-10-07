@@ -1,8 +1,15 @@
 import { and, asc, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
-import { toolResults } from "@/lib/db/schema";
+import { members, toolResults } from "@/lib/db/schema";
+import { normalizeEmail } from "@/lib/members/policy";
 import { applyProfileSql } from "@/lib/profile/sql";
-import { isSavedTool, scoreSubmission, type ToolResult, type ToolSubmission } from "./results";
+import {
+  assessmentCount,
+  isSavedTool,
+  scoreSubmission,
+  type ToolResult,
+  type ToolSubmission,
+} from "./results";
 
 function numberRecord(raw: unknown): Record<string, number> | null {
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return null;
@@ -87,4 +94,22 @@ export async function listToolResults(memberId: string): Promise<ToolResult[]> {
     .where(eq(toolResults.memberId, memberId))
     .orderBy(asc(toolResults.completedAt));
   return rows.flatMap((row) => readRow(row) ?? []);
+}
+
+/**
+ * Saved-tool count for the adult member with this email.
+ * Campus user ids are not member ids, so the admin snapshot joins on email.
+ * A missing member or a child is not read. Callers return this number alone.
+ */
+export async function countAdultAssessments(email: string): Promise<number> {
+  const mail = normalizeEmail(email);
+  if (!mail) return 0;
+  await applyProfileSql();
+  const [member] = await getDb()
+    .select({ id: members.id, kind: members.kind })
+    .from(members)
+    .where(eq(members.email, mail))
+    .limit(1);
+  if (!member || (member.kind ?? "adult") === "child") return 0;
+  return assessmentCount(await listToolResults(member.id));
 }

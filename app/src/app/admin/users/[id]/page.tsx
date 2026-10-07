@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { AssessmentCount } from "@/components/admin/assessment-count";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -156,7 +157,7 @@ export default function EditUserPage() {
         </div>
       </form>
 
-      {tally && ws ? (
+      {person && tally && ws ? (
         <section className="mt-10 rounded-xl border border-border bg-card px-5 py-5">
           <h2 className="font-display text-2xl tracking-tight">Portal snapshot</h2>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -165,7 +166,7 @@ export default function EditUserPage() {
             {tally.certified ? " · certified" : ""}.
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            {Object.keys(ws.tools).length} assessments · {ws.inbox.length} inbox
+            <AssessmentCount email={person.email} /> · {ws.inbox.length} inbox
             notes
             {ws.inbox[0] ? ` · last ${formatDay(ws.inbox[0].at)}` : ""}.
           </p>
