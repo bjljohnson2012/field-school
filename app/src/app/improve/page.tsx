@@ -27,7 +27,7 @@ export default async function ImprovePage() {
       <main className="mx-auto max-w-7xl px-6 py-8">
         <h1 className="h-page">Improve</h1>
         <section className="card mt-6 p-6">
-          <p>Drills are for the signed-in learner. A tracked child does not run them.</p>
+          <p>Drills are for the signed-in learner. A child in this family does not run them.</p>
         </section>
       </main>
     );

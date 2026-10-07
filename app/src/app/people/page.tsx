@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { DeskPage, DeskTable, EmptyState, KpiStrip } from "@/components/desk/desk";
+import { COLLECTIONS, type CollectionSlug } from "@/lib/evolution/collections";
 import { peopleKpis } from "@/lib/desk/kpi";
 import { peopleContext, type LivingBrain } from "@/lib/living-brain/model";
 import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
@@ -27,6 +28,9 @@ export default function PeoplePage() {
   const [ready, setReady] = useState(false);
   const [lines, setLines] = useState<BrainLine[]>([]);
   const [aim, setAim] = useState("");
+  const [childName, setChildName] = useState("");
+  const [childNote, setChildNote] = useState<string | null>(null);
+  const [collection, setCollection] = useState<CollectionSlug>("families");
 
   async function loadLines(room: Desk) {
     try {
@@ -105,6 +109,34 @@ export default function PeoplePage() {
     };
   }, []);
 
+  async function refreshRoster() {
+    const peopleRes = await fetch("/api/org/people");
+    const data = (await peopleRes.json()) as { people?: PersonRow[] };
+    if (peopleRes.ok) setRoster(data.people ?? []);
+  }
+
+  async function addChild(event: FormEvent) {
+    event.preventDefault();
+    setChildNote(null);
+    try {
+      const res = await fetch("/api/children", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: childName.trim() }),
+      });
+      const json = (await res.json()) as { child?: { name?: string } };
+      if (!res.ok) {
+        setChildNote("Could not add a child.");
+        return;
+      }
+      setChildName("");
+      setChildNote(json.child?.name ? `${json.child.name} is in the family.` : "Added to the family.");
+      await refreshRoster();
+    } catch {
+      setChildNote("Could not add a child.");
+    }
+  }
+
   async function choose(next: Desk) {
     const previous = desk;
     setDesk(next);
@@ -144,11 +176,69 @@ export default function PeoplePage() {
           <p className="mt-3">
             {copy
               ? copy.lede
-              : "This desk shows one room. Sales lists login learners. Household lists tracked children. Login is none for a tracked child. A child is not a buyer."}
+              : "This desk shows one room. Sales lists login learners. Family lists the children in this home. Login is none. A child is not a buyer."}
           </p>
         </>
       }
     >
+      <section className="mb-10">
+        <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Everyone</p>
+        <h2 className="mt-2 font-display text-4xl leading-[1.02] tracking-[-0.035em]">View Everybody</h2>
+        <p className="mt-3 max-w-xl text-muted-foreground">
+          Each person, and which org they belong to.
+        </p>
+        <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                <th className="px-4 py-3 font-medium">Name</th>
+                <th className="px-4 py-3 font-medium">Kind</th>
+                <th className="px-4 py-3 font-medium">Org</th>
+                <th className="px-4 py-3 font-medium">Login</th>
+              </tr>
+            </thead>
+            <tbody>
+              {roster.map((person) => (
+                <tr key={`all-${person.membershipId}`} className="border-t border-border">
+                  <td className="px-4 py-3">{person.name}</td>
+                  <td className="px-4 py-3">{person.kind === "child" ? "Child" : "Adult"}</td>
+                  <td className="px-4 py-3">
+                    <Link href={`/o/${person.org}`} className="underline underline-offset-2">
+                      {person.orgName || person.org}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3">{person.kind === "child" ? "None" : "Member"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <div className="grid gap-8 lg:grid-cols-[200px_1fr]">
+        <nav aria-label="Collections">
+          <ul className="space-y-1">
+            {COLLECTIONS.map((item) => (
+              <li key={item.slug}>
+                <button
+                  type="button"
+                  aria-pressed={collection === item.slug}
+                  onClick={() => setCollection(item.slug)}
+                  className={
+                    collection === item.slug
+                      ? "flex w-full flex-col rounded-lg bg-secondary px-3 py-2 text-left"
+                      : "flex w-full flex-col rounded-lg px-3 py-2 text-left hover:bg-secondary/70"
+                  }
+                >
+                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className="text-xs text-muted-foreground">{item.hint}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div>
+      {collection === "families" ? (
+      <>
       {choices.length > 1 ? (
         <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label="Room">
           {choices.map((choice) => (
@@ -164,10 +254,33 @@ export default function PeoplePage() {
                   : "inline-flex h-9 items-center rounded-lg border border-border px-3 text-sm"
               }
             >
-              {choice === "sales" ? "Sales" : "Household"}
+              {choice === "sales" ? "Sales" : "Family"}
             </button>
           ))}
         </div>
+      ) : null}
+      {desk === "household" ? (
+        <form
+          onSubmit={(event) => void addChild(event)}
+          className="mb-6 flex flex-wrap items-end gap-3 rounded-2xl border border-border bg-card p-4 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]"
+        >
+          <label className="grid min-w-48 flex-1 gap-1 text-sm">
+            Child name
+            <input
+              className="h-11 rounded-xl border border-border bg-background px-3"
+              value={childName}
+              placeholder="Name"
+              onChange={(event) => setChildName(event.target.value)}
+            />
+          </label>
+          <button
+            type="submit"
+            className="inline-flex h-11 items-center rounded-xl bg-primary px-4 text-sm text-primary-foreground shadow-[0_12px_28px_-16px_rgba(31,94,255,0.9)]"
+          >
+            Add a child
+          </button>
+          {childNote ? <p className="w-full text-sm">{childNote}</p> : null}
+        </form>
       ) : null}
       {error ? <p className="mb-6 text-sm">{error}</p> : null}
       {desk && copy ? <KpiStrip label={`${copy.title} at a glance`} items={peopleKpis({ rows, lines, kindLabel: copy.kind })} /> : null}
@@ -246,8 +359,61 @@ export default function PeoplePage() {
             })}
         </DeskTable>
       ) : ready && !error ? (
-        <EmptyState>Choose Sales or Household.</EmptyState>
+        <EmptyState>Choose Sales or Family.</EmptyState>
       ) : null}
+      </>
+      ) : null}
+      {collection === "profiles" ? (
+        <ul className="grid gap-3">
+          {(rows.length ? rows : roster).map((person) => (
+            <li key={`profile-${person.membershipId}`} className="rounded-2xl border border-border bg-card px-5 py-4">
+              <p className="font-display text-2xl">{person.name}</p>
+              <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-3">
+                <div>
+                  <dt className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Family</dt>
+                  <dd className="mt-1">{person.orgName || person.org}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Kind</dt>
+                  <dd className="mt-1">{person.kind === "child" ? "Child" : "Adult"}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Login</dt>
+                  <dd className="mt-1">{person.login === "none" ? "None" : "Member"}</dd>
+                </div>
+              </dl>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {collection === "milestones" ? (
+        <ul className="grid gap-3">
+          {lines.length ? lines.map((line) => {
+            const person = roster.find((row) => row.membershipId === line.membershipId);
+            return (
+              <li key={`mile-${line.membershipId}`} className="rounded-2xl border border-border bg-card px-5 py-4">
+                <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">{person?.name || "Profile"}</p>
+                <p className="mt-1 font-medium">{line.nextStep || "No next step yet."}</p>
+                <p className="mt-2 text-sm text-muted-foreground">{line.confidence || "No note yet."}</p>
+              </li>
+            );
+          }) : (
+            <li className="text-sm text-muted-foreground">No milestones in this room yet.</li>
+          )}
+        </ul>
+      ) : null}
+      {collection === "media" ? (
+        <div className="rounded-2xl border border-border bg-card px-5 py-5">
+          <p className="text-sm text-muted-foreground">
+            Media is a file, a PDF, or a minute of audio. It relates to a profile. Drop it in the wizard and it stays in the knowledge until you generate a lesson.
+          </p>
+          <p className="mt-4 text-sm">
+            <Link href="/library/wizard" className="underline underline-offset-4">Open the wizard</Link>
+          </p>
+        </div>
+      ) : null}
+        </div>
+      </div>
     </DeskPage>
   );
 }

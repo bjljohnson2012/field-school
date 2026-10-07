@@ -3,7 +3,7 @@ import { TeachLive } from "./live";
 
 export const metadata: Metadata = {
   title: "Teach live",
-  description: "Presenter view of the open path. Household is one tracked child with no login.",
+  description: "Presenter view of the open path. Family is one child with no login.",
 };
 
 export default function TeachLivePage() {

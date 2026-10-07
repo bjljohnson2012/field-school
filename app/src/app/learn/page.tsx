@@ -46,7 +46,7 @@ function learnHomeFor(
         lesson?.body ||
         "This is a household lesson. It is not the Grok Bot catalog. Watch is a text station. Progress stays in this org.",
       willDo:
-        "A tracked child keeps a progress record in this org and does not sign in. The parent is the user. The next step stays here when the parent is away.",
+        "A child in this family keeps a progress record in this org and does not sign in. The parent is the user. The next step stays here when the parent is away.",
       aim: context?.aim || "",
       confidence: context?.confidence || "",
       personId: context?.personId || "",

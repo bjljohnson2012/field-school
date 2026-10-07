@@ -155,7 +155,7 @@ test("desk copy names the job, the buyer, and login none", () => {
   assert.match(prose, new RegExp(JOB_SENTENCE.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   assert.match(DESK_COPY.sales.lede, /login learners/);
   assert.match(DESK_COPY.sales.lede, /A child is not a buyer/);
-  assert.match(DESK_COPY.household.lede, /tracked children/);
+  assert.match(DESK_COPY.household.lede, /Family/);
   assert.match(DESK_COPY.household.lede, /Login is none/);
   assert.match(DESK_COPY.household.lede, /A child is not a buyer/);
   assert.equal(DESK_COPY.household.login, "None");

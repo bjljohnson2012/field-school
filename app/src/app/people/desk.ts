@@ -28,10 +28,10 @@ export const DESK_COPY: Record<
     login: "Member",
   },
   household: {
-    title: "Tracked children",
-    lede: "Household lists tracked children. Login is none. A child is not a buyer. The parent is the User.",
-    empty: "No tracked children in Household yet.",
-    kind: "Tracked child",
+    title: "Family",
+    lede: "Family lists the children in this home. Login is none. A child is not a buyer. The parent is the User.",
+    empty: "No one in the family yet.",
+    kind: "Child",
     login: "None",
   },
 };
@@ -50,7 +50,7 @@ function loginIsNone(person: PersonRow) {
   return person.login.trim().toLowerCase() === "none";
 }
 
-/** One room per call. Sales is login learners. Household is tracked children with login none. */
+/** One room per call. Sales is login learners. Household is the family room: children, login none. */
 export function peopleForDesk(people: readonly PersonRow[], desk: Desk): PersonRow[] {
   if (desk === "sales") {
     return people.filter(

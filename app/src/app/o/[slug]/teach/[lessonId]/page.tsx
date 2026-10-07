@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { NEEDS_MORE, decodeLessonBody, lessonProse } from "@/lib/library/teach-from-knowledge";
+import { NEEDS_MORE, decodeLessonBody, lessonProse, spineBlocks } from "@/lib/library/teach-from-knowledge";
 
 type Unit = { id: string; title: string; body: string };
 type Quiz = { id: string; sourceUnitId: string; prompt: string };
@@ -142,14 +142,54 @@ export default function TeachLessonPage() {
     );
   }
 
+  const prose = lessonProse(data.lesson.body);
+  const activities = spineBlocks(prose);
+  const outline = [
+    { title: "Objective", kind: "Document" },
+    { title: "Teach", kind: "Document" },
+    { title: "Do", kind: "Assignment" },
+    { title: "Recap", kind: "Document" },
+    { title: "Quiz", kind: "Quiz" },
+  ];
+
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
+    <main className="mx-auto grid max-w-6xl gap-8 px-4 py-12 lg:grid-cols-[220px_1fr]">
+      <nav aria-label="Course" className="lg:sticky lg:top-20 lg:self-start">
+        <p className="text-sm font-medium">{data.lesson.title}</p>
+        <ul className="mt-3 space-y-1">
+          {outline.map((item) => (
+            <li key={item.title}>
+              <a href={`#activity-${item.title}`} className="flex flex-col rounded-lg px-2 py-1.5 hover:bg-secondary">
+                <span className="text-xs uppercase tracking-[0.12em] text-muted-foreground">{item.kind}</span>
+                <span className="text-sm">{item.title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div>
       <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
         {data.lesson.kind} · {data.lesson.status}
       </p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">{data.lesson.title}</h1>
-      <p className="mt-4 whitespace-pre-wrap text-muted-foreground">{lessonProse(data.lesson.body)}</p>
+      {activities.length ? (
+        <div className="mt-6 grid gap-4">
+          {activities.map((block) => (
+            <article id={`activity-${block.title}`} key={block.title} className="rounded-2xl border border-border bg-card px-5 py-5">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                {block.title === "Do" ? "Assignment" : "Document"}
+              </p>
+              <h2 className="mt-1 font-display text-2xl">{block.title}</h2>
+              <p className="mt-3 whitespace-pre-wrap text-sm leading-6">{block.body}</p>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-4 whitespace-pre-wrap text-muted-foreground">{prose}</p>
+      )}
+      <div id="activity-Quiz">
       <LessonGate body={data.lesson.body} onGenerate={() => void generate()} />
+      </div>
 
       <section className="mt-10">
         <h2 className="font-display text-2xl">Units from supplied text</h2>
@@ -243,6 +283,7 @@ export default function TeachLessonPage() {
           </>
         ) : null}
       </p>
+      </div>
     </main>
   );
 }

@@ -4,7 +4,7 @@ import { WizardClient } from "./wizard-client";
 export const metadata: Metadata = {
   title: "Wizard",
   description:
-    "Questions for one lesson in this org: what it is, who it is for, what they should be able to do after, teach live or self-serve or both, and whether a video cut is needed.",
+    "Drop a file, an idea, or a minute of audio. Submit adds it to the knowledge. Generate Lesson writes the lesson after.",
 };
 
 export default function LibraryWizardPage() {

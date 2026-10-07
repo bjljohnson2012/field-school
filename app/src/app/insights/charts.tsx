@@ -89,7 +89,7 @@ function PersonCard({
   } | null;
 }) {
   const role =
-    person.kind === "child" ? "Tracked child" : person.stance === "learner" ? "Login learner" : "Hirer";
+    person.kind === "child" ? "Child" : person.stance === "learner" ? "Login learner" : "Hirer";
   const spine = brain ? lessonSpineStep(brain.outcomes) : null;
   return (
     <article

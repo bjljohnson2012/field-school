@@ -83,7 +83,7 @@ export function TeachDeck({
       <h1 className="mt-2 font-display text-4xl tracking-tight">{spec.title}</h1>
       <p className="mt-3 max-w-3xl text-sm text-muted-foreground">
         {spec.org === "household"
-          ? "Household. The parent presents. The tracked child has no login, is not the buyer, and does not own the path."
+          ? "Family. The parent presents. The child has no login, is not the buyer, and does not own the path."
           : "Team room. Org sales. The leader presents. The teammate is in development, is not the buyer, and does not own the path. This desk lists zero children."}
       </p>
       <p data-outcome="" className="mt-6 max-w-3xl text-lg leading-relaxed">

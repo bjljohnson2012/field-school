@@ -14,7 +14,7 @@ export const metadata = {
 };
 
 const INSIGHTS_LEDE =
-  "Insights is a read of this org. It shows who is moving, the next step, and what is already finished. A household shows tracked children, who do not sign in. A sales org shows the people who do.";
+  "Insights is a read of this org. It shows who is moving, the next step, and what is already finished. Family shows the children in this home, who do not sign in. A sales org shows the people who do.";
 
 function Shell({ children }: { children: ReactNode }) {
   return (
@@ -40,7 +40,7 @@ export default async function InsightsPage() {
     if (result.error === "child_has_no_login") {
       return (
         <Shell>
-          <p>A tracked child has no login on this desk.</p>
+          <p>A child in this family has no login on this desk.</p>
         </Shell>
       );
     }
@@ -76,7 +76,7 @@ export default async function InsightsPage() {
         title="People and milestones"
         hint={
           household
-            ? "Tracked children on your family. No login. Each line opens to the row it came from."
+            ? "Family. No login. Each line opens to the row it came from."
             : undefined
         }
         className="mt-10"

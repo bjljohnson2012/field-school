@@ -36,6 +36,7 @@ export default function TeachPage() {
   const [url, setUrl] = useState("");
   const [bookTitle, setBookTitle] = useState("");
   const [note, setNote] = useState<string | null>(null);
+  const [waiting, setWaiting] = useState<Lesson[]>([]);
 
   function headers() {
     return { "Content-Type": "application/json", "x-fs-org": slug };
@@ -49,6 +50,11 @@ export default function TeachPage() {
       return;
     }
     setData(json);
+    const openRes = await fetch("/api/library/candidates", { headers: { "x-fs-org": slug } });
+    if (openRes.ok) {
+      const openJson = (await openRes.json()) as { lessons?: Lesson[] };
+      setWaiting(Array.isArray(openJson.lessons) ? openJson.lessons : []);
+    }
   }
 
   useEffect(() => {
@@ -179,6 +185,28 @@ export default function TeachPage() {
             Save draft
           </Button>
         </div>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="font-display text-2xl">Not generated yet</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Knowledge in this org that does not have a lesson yet. Generate Lesson writes Objective, Teach,
+          Do, and Recap only when the stored knowledge can teach it.
+        </p>
+        {waiting.length ? (
+          <ul className="mt-4 grid gap-3">
+            {waiting.map((lesson) => (
+              <li key={lesson.id} className="rounded-2xl border border-border bg-card px-5 py-4 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
+                <p className="font-display text-xl">{lesson.title}</p>
+                <Button className="mt-3" type="button" variant="outline" onClick={() => void generate(lesson.id)}>
+                  Generate Lesson
+                </Button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-4 text-sm text-muted-foreground">Nothing is waiting.</p>
+        )}
       </section>
 
       <section className="mt-10">

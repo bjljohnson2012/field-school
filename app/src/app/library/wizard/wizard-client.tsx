@@ -1,88 +1,53 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Mic, Square, X } from "lucide-react";
 import { canTeach } from "@/lib/composer/rules";
+import { COLLECTIONS, traitsFromDrop } from "@/lib/evolution/collections";
+import { titleFromDrop } from "@/lib/library/teach-from-knowledge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import {
-  JOB,
-  buildLessonSpec,
-  draftUnits,
-  formatLessonSpec,
-  peopleOnDesk,
-  substanceError,
-  type Delivery,
-  type DraftUnit,
-  type OrgPerson,
-  type SourceKind,
-} from "./lesson-spec";
 
-type Step = "what" | "substance" | "who" | "outcome" | "delivery" | "video" | "approve";
 type Gate = "loading" | "guest" | "child" | "hirer" | "no-org" | "error" | "ready";
+type DropKind = "text" | "idea" | "file" | "audio";
 
-const QUESTIONS: Record<Step, number | null> = {
-  what: 1,
-  substance: 1,
-  who: 2,
-  outcome: 3,
-  delivery: 4,
-  video: 5,
-  approve: null,
+type DropItem = {
+  id: string;
+  kind: DropKind;
+  label: string;
+  text?: string;
+  file?: File;
 };
 
-const PREVIOUS: Record<Step, Step | null> = {
-  what: null,
-  substance: "what",
-  who: "substance",
-  outcome: "who",
-  delivery: "outcome",
-  video: "delivery",
-  approve: "video",
-};
+type StoredItem = { lessonId: string; title: string };
+type OpenLesson = { id: string; title: string };
 
-const KINDS: { value: SourceKind; title: string; detail: string }[] = [
-  { value: "file", title: "A file", detail: "Something you already have." },
-  { value: "link", title: "A link", detail: "We keep the address. We do not pull the page." },
-  { value: "text", title: "Text", detail: "Words you paste. A blank line starts another unit." },
-  { value: "idea", title: "An idea in your head", detail: "Say it in a few sentences." },
-];
-
-const DELIVERIES: { value: Delivery; title: string; detail: string }[] = [
-  { value: "teach", title: "Teach live", detail: "You are in the room." },
-  { value: "assign", title: "Self-serve", detail: "They keep moving when you are not in the room." },
-  { value: "both", title: "Both", detail: "Teach it live, and they can take it when you leave." },
-];
+const CARD =
+  "rounded-3xl border border-border bg-card shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]";
 
 export function WizardClient() {
+  const router = useRouter();
+  const titleId = useId();
   const [gate, setGate] = useState<Gate>("loading");
   const [error, setError] = useState<string | null>(null);
   const [orgSlug, setOrgSlug] = useState("");
   const [orgName, setOrgName] = useState("");
-  const [people, setPeople] = useState<OrgPerson[]>([]);
-  const [step, setStep] = useState<Step>("what");
-  const [kind, setKind] = useState<SourceKind | null>(null);
-  const [title, setTitle] = useState("");
-  const [detail, setDetail] = useState("");
-  const [detailError, setDetailError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [outcome, setOutcome] = useState("");
-  const [delivery, setDelivery] = useState<Delivery | null>(null);
-  const [videoCut, setVideoCut] = useState<boolean | null>(null);
-  const [units, setUnits] = useState<DraftUnit[]>([]);
-  const [approved, setApproved] = useState<string[]>([]);
-  const [submitting, setSubmitting] = useState(false);
-  const [generating, setGenerating] = useState(false);
-  const [knowledgeId, setKnowledgeId] = useState<string | null>(null);
-  const [knowledgeNote, setKnowledgeNote] = useState<string | null>(null);
-  const [teachHow, setTeachHow] = useState<string | null>(null);
-  const [specId] = useState(() => crypto.randomUUID());
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const titleId = useId();
-  const detailId = useId();
-  const outcomeId = useId();
+  const [draft, setDraft] = useState("");
+  const [pile, setPile] = useState<DropItem[]>([]);
+  const [recording, setRecording] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const [note, setNote] = useState<string | null>(null);
+  const [stored, setStored] = useState<StoredItem[]>([]);
+  const [open, setOpen] = useState<OpenLesson[]>([]);
+  const [generatingId, setGeneratingId] = useState<string | null>(null);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const timerRef = useRef<number | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let cancel = false;
@@ -109,17 +74,8 @@ export function WizardClient() {
           setGate("hirer");
           return;
         }
-        const peopleRes = await fetch("/api/org/people");
-        const peopleJson = await peopleRes.json();
-        if (cancel) return;
-        if (!peopleRes.ok) {
-          setError(peopleJson.error || "Could not load people in this org.");
-          setGate("error");
-          return;
-        }
         setOrgSlug(me.activeOrg.slug);
         setOrgName(me.activeOrg.name || me.activeOrg.slug);
-        setPeople(Array.isArray(peopleJson.people) ? peopleJson.people : []);
         setGate("ready");
       } catch {
         if (!cancel) {
@@ -135,524 +91,401 @@ export function WizardClient() {
   }, []);
 
   useEffect(() => {
-    headingRef.current?.focus();
-  }, [step, gate]);
+    return () => {
+      stopRecording(false);
+    };
+  }, []);
 
-  const desk = useMemo(() => peopleOnDesk(orgSlug, people), [orgSlug, people]);
-  const labels = new Set(desk.people.map((person) => person.label));
-  const mixed = desk.room === "held" || labels.size > 1;
-  const chosen = desk.people.filter((person) => selected.includes(person.membershipId));
+  useEffect(() => {
+    if (gate !== "ready" || !orgSlug) return;
+    void loadOpen(orgSlug);
+  }, [gate, orgSlug]);
 
-  const spec =
-    gate === "ready" && kind && delivery && videoCut !== null
-      ? buildLessonSpec({
-          id: specId,
-          org: orgSlug,
-          title,
-          outcome,
-          delivery,
-          videoCut,
-          units,
-          approvedUnitIds: approved,
-        })
-      : null;
-
-  function chooseKind(next: SourceKind) {
-    setKind(next);
-    setDetail("");
-    setDetailError(null);
-    setStep("substance");
+  function stopRecording(keep: boolean) {
+    if (timerRef.current) {
+      window.clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    const recorder = recorderRef.current;
+    recorderRef.current = null;
+    if (recorder && recorder.state !== "inactive") {
+      if (!keep) recorder.onstop = null;
+      recorder.stop();
+    }
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    setRecording(false);
   }
 
-  function continueSubstance() {
-    if (!kind) return;
-    const problem = substanceError(kind, title, detail);
-    setDetailError(problem);
-    if (problem) return;
-    setStep("who");
+  function addDrop(item: DropItem) {
+    setPile((current) => [...current, item].slice(0, 12));
+    setNote(null);
   }
 
-  function chooseDelivery(next: Delivery) {
-    setDelivery(next);
-    setStep("video");
+  function addWords(kind: "text" | "idea") {
+    const text = draft.trim();
+    if (text.length < 3) return;
+    addDrop({ id: crypto.randomUUID(), kind, text, label: text.replace(/\s+/g, " ").slice(0, 90) });
+    setDraft("");
   }
 
-  function chooseVideo(cut: boolean) {
-    if (!kind) return;
-    setVideoCut(cut);
-    setUnits(draftUnits({ kind, title, detail, nextId: () => crypto.randomUUID() }));
-    setApproved([]);
-    setStep("approve");
-  }
-
-  function togglePerson(id: string) {
-    setSelected((current) =>
-      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
-    );
-  }
-
-  function toggleUnit(id: string) {
-    setKnowledgeId(null);
-    setKnowledgeNote(null);
-    setTeachHow(null);
-    setApproved((current) =>
-      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
-    );
-  }
-
-  async function submitKnowledge() {
-    if (!spec || !kind || submitting) return;
-    setSubmitting(true);
-    setKnowledgeNote(null);
-    setTeachHow(null);
-    try {
-      const res = await fetch("/api/library/wizard/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-fs-org": orgSlug },
-        body: JSON.stringify({
-          title,
-          outcome,
-          kind,
-          detail,
-          mode: spec.mode,
-          audience: chosen.map((person) => person.name),
-        }),
+  function addFiles(list: FileList | null) {
+    if (!list) return;
+    for (const file of Array.from(list)) {
+      addDrop({
+        id: crypto.randomUUID(),
+        kind: file.type.startsWith("audio/") ? "audio" : "file",
+        file,
+        label: file.name || "Document",
       });
-      const json = await res.json();
-      if (!res.ok) {
-        setKnowledgeNote(json.error || "Could not add this knowledge.");
-        return;
-      }
-      setKnowledgeId(typeof json.lessonId === "string" ? json.lessonId : null);
-      if (json.status === "needs_more") {
-        setKnowledgeNote(typeof json.message === "string" ? json.message : "needs more information");
-        return;
-      }
-      setKnowledgeNote("Added to this org's knowledge.");
-      setTeachHow(typeof json.how === "string" && json.how ? json.how : null);
-    } catch {
-      setKnowledgeNote("Could not add this knowledge.");
-    } finally {
-      setSubmitting(false);
     }
   }
 
-  async function generateLesson() {
-    if (!knowledgeId || generating) return;
-    setGenerating(true);
+  async function startMic() {
+    if (recording) {
+      stopRecording(true);
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      const mime = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "";
+      const recorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+      const chunks: Blob[] = [];
+      recorder.ondataavailable = (event) => {
+        if (event.data.size) chunks.push(event.data);
+      };
+      recorder.onstop = () => {
+        stream.getTracks().forEach((track) => track.stop());
+        if (!chunks.length) return;
+        const type = recorder.mimeType || "audio/webm";
+        const file = new File(chunks, "voice.webm", { type });
+        addDrop({ id: crypto.randomUUID(), kind: "audio", file, label: "Voice" });
+      };
+      recorderRef.current = recorder;
+      recorder.start();
+      setSeconds(0);
+      setRecording(true);
+      timerRef.current = window.setInterval(() => {
+        setSeconds((value) => {
+          if (value >= 59) {
+            window.setTimeout(() => stopRecording(true), 0);
+            return 60;
+          }
+          return value + 1;
+        });
+      }, 1000);
+    } catch {
+      setNote("The microphone did not open.");
+    }
+  }
+
+  async function loadOpen(slug: string) {
+    const res = await fetch("/api/library/candidates", { headers: { "x-fs-org": slug } });
+    if (!res.ok) return;
+    const json = (await res.json()) as { lessons?: OpenLesson[] };
+    setOpen(Array.isArray(json.lessons) ? json.lessons : []);
+  }
+
+  async function submit() {
+    if (!pile.length || busy || recording) return;
+    setBusy(true);
+    setNote(null);
+    const notes = pile
+      .filter((item) => item.text?.trim())
+      .map((item) => ({ text: item.text, kind: item.kind, filename: item.label }));
+    const files = pile.flatMap((item) => (item.file ? [item.file] : []));
+    try {
+      const headers: Record<string, string> = { "x-fs-org": orgSlug };
+      let res: Response;
+      if (files.length) {
+        const form = new FormData();
+        form.set("items", JSON.stringify(notes));
+        for (const file of files) form.append("file", file);
+        res = await fetch("/api/library/intake", { method: "POST", headers, body: form });
+      } else {
+        headers["Content-Type"] = "application/json";
+        res = await fetch("/api/library/intake", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ items: notes }),
+        });
+      }
+      const json = await res.json();
+      if (!res.ok) {
+        setNote(json.error || "Could not add this knowledge.");
+        return;
+      }
+      if (json.status === "needs_more") {
+        setNote(typeof json.message === "string" ? json.message : "needs more information");
+        return;
+      }
+      const items = Array.isArray(json.items) ? (json.items as StoredItem[]) : [];
+      setStored(items);
+      setPile([]);
+      setNote("Added to this org's knowledge. A lesson is not written until you generate one.");
+      await loadOpen(orgSlug);
+    } catch {
+      setNote("Could not add this knowledge.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function generateLesson(lessonId: string) {
+    if (generatingId) return;
+    setGeneratingId(lessonId);
+    setNote(null);
     try {
       const res = await fetch("/api/library/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-fs-org": orgSlug },
-        body: JSON.stringify({ lesson_id: knowledgeId }),
+        body: JSON.stringify({ lesson_id: lessonId }),
       });
       const json = await res.json();
-      if (!res.ok) {
-        setKnowledgeNote(json.error || "Could not generate the lesson.");
-        return;
-      }
-      setKnowledgeNote(typeof json.message === "string" ? json.message : "Could not generate the lesson.");
-      if (typeof json.how === "string" && json.how) setTeachHow(json.how);
+      setNote(typeof json.message === "string" ? json.message : json.error || "Could not generate the lesson.");
+      if (json.status === "ready") await loadOpen(orgSlug);
     } catch {
-      setKnowledgeNote("Could not generate the lesson.");
+      setNote("Could not generate the lesson.");
     } finally {
-      setGenerating(false);
+      setGeneratingId(null);
     }
   }
 
-  const question = QUESTIONS[step];
+  const clock = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+  const docTitle = pile.length
+    ? titleFromDrop({
+        text: pile.find((item) => item.text)?.text ?? "",
+        filename: pile.find((item) => item.file)?.file?.name,
+      })
+    : "Untitled";
+  const relations = pile.flatMap((item) =>
+    traitsFromDrop({
+      text: item.text,
+      filename: item.file?.name,
+      kind: item.kind,
+      orgName,
+    }),
+  );
 
   return (
-    <main className="mx-auto max-w-xl px-4 py-12">
-      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Library</p>
-      <p className="mt-4 text-sm leading-6 text-muted-foreground">{JOB}</p>
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[rgba(26,25,22,0.46)] p-3 sm:items-center sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+    >
+      <div className={cn(CARD, "grid h-[min(44rem,calc(100vh-1.5rem))] w-full max-w-5xl overflow-hidden bg-background lg:grid-cols-[220px_1fr]")}>
+        <aside className="overflow-y-auto border-b border-border bg-card px-4 py-5 lg:border-b-0 lg:border-r">
+          <p className="text-sm font-medium">{orgName || "This org"}</p>
+          <p className="mt-1 text-xs text-muted-foreground">Course</p>
+          <ul className="mt-3 space-y-1">
+            {["Objective", "Teach", "Do", "Recap", "Quiz"].map((activity) => (
+              <li key={activity}>
+                <span className="flex items-center rounded-lg px-2 py-1.5 text-sm text-muted-foreground">
+                  {activity}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 text-xs text-muted-foreground">Collections</p>
+          <ul className="mt-2 space-y-1">
+            {COLLECTIONS.map((collection) => {
+              const count = relations.filter((trait) => trait.collection === collection.slug).length;
+              return (
+                <li key={collection.slug} className="flex items-center justify-between rounded-lg px-2 py-1.5 text-sm">
+                  <span>{collection.label}</span>
+                  <span className="text-xs text-muted-foreground">{count || ""}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </aside>
+        <div className="flex min-h-0 flex-col">
+        <div className="flex items-start justify-between gap-4 px-6 pt-6">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+              {orgName || "Library"}
+            </p>
+            <h1 id={titleId} className="mt-2 font-display text-4xl leading-[1.02] tracking-[-0.035em]">
+              Drop it in
+            </h1>
+          </div>
+          <button
+            type="button"
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border"
+            aria-label="Close"
+            onClick={() => router.back()}
+          >
+            <X className="size-4" />
+          </button>
+        </div>
 
-      {gate === "loading" ? <p className="mt-10 text-sm">Loading this org.</p> : null}
-
-      {gate === "guest" ? (
-        <section className="mt-10">
-          <h1 ref={headingRef} tabIndex={-1} className="font-display text-4xl tracking-tight outline-none">
-            Wizard
-          </h1>
-          <p className="mt-4 text-muted-foreground">
-            Sign in as the person accountable for this org.
-          </p>
-          <p className="mt-6">
-            <Link href="/login" className="underline underline-offset-4">
-              Sign in
-            </Link>
-          </p>
-        </section>
-      ) : null}
-
-      {gate === "child" ? (
-        <section className="mt-10">
-          <h1 ref={headingRef} tabIndex={-1} className="font-display text-4xl tracking-tight outline-none">
-            Wizard
-          </h1>
-          <p className="mt-4 text-muted-foreground">
-            A tracked child does not use this wizard. The person who owns the path does.
-          </p>
-        </section>
-      ) : null}
-
-      {gate === "hirer" ? (
-        <section className="mt-10">
-          <h1 ref={headingRef} tabIndex={-1} className="font-display text-4xl tracking-tight outline-none">
-            Wizard
-          </h1>
-          <p className="mt-4 text-muted-foreground">
-            This wizard is for the person accountable for people in {orgName || "this org"}.
-          </p>
-        </section>
-      ) : null}
-
-      {gate === "no-org" ? (
-        <section className="mt-10">
-          <h1 ref={headingRef} tabIndex={-1} className="font-display text-4xl tracking-tight outline-none">
-            Wizard
-          </h1>
-          <p className="mt-4 text-muted-foreground">No org is selected.</p>
-        </section>
-      ) : null}
-
-      {gate === "error" ? (
-        <section className="mt-10">
-          <h1 ref={headingRef} tabIndex={-1} className="font-display text-4xl tracking-tight outline-none">
-            Wizard
-          </h1>
-          <p className="mt-4 text-muted-foreground">{error}</p>
-        </section>
-      ) : null}
-
-      {gate === "ready" ? (
-        <section className="mt-10">
-          <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-            {orgName}
-            {question ? ` · Question ${question} of 5` : " · Review"}
-          </p>
-
-          {step === "what" ? (
-            <>
-              <h1 ref={headingRef} tabIndex={-1} className="mt-3 font-display text-4xl tracking-tight outline-none">
-                What is this?
-              </h1>
-              <div className="mt-6 grid gap-3">
-                {KINDS.map((item) => (
-                  <Choice
-                    key={item.value}
-                    pressed={kind === item.value}
-                    title={item.title}
-                    detail={item.detail}
-                    onClick={() => chooseKind(item.value)}
-                  />
-                ))}
-              </div>
-            </>
+        <div className="mt-4 flex-1 overflow-y-auto px-6 pb-6">
+          {gate === "loading" ? <p className="text-sm text-muted-foreground">Opening this org.</p> : null}
+          {gate === "guest" ? (
+            <p className="text-sm text-muted-foreground">
+              Sign in as the person accountable for this org.{" "}
+              <Link href="/login" className="underline underline-offset-4">
+                Sign in
+              </Link>
+            </p>
           ) : null}
+          {gate === "child" ? (
+            <p className="text-sm text-muted-foreground">
+              A child in this family does not use this. The person who owns the path does.
+            </p>
+          ) : null}
+          {gate === "hirer" ? (
+            <p className="text-sm text-muted-foreground">
+              This is for the person accountable for people in {orgName || "this org"}.
+            </p>
+          ) : null}
+          {gate === "no-org" ? <p className="text-sm text-muted-foreground">No org is selected.</p> : null}
+          {gate === "error" ? <p className="text-sm text-muted-foreground">{error}</p> : null}
 
-          {step === "substance" && kind ? (
+          {gate === "ready" ? (
             <>
-              <h1 ref={headingRef} tabIndex={-1} className="mt-3 font-display text-4xl tracking-tight outline-none">
-                {kind === "file"
-                  ? "Name the file."
-                  : kind === "link"
-                    ? "Paste the link."
-                    : kind === "text"
-                      ? "Paste the text."
-                      : "Say the idea."}
-              </h1>
-              <p className="mt-3 text-sm text-muted-foreground">
-                {kind === "link"
-                  ? "We keep the address. We do not pull the page."
-                  : "This name is the lesson in this org."}
+              <p className="font-display text-4xl leading-[1.02] tracking-[-0.035em]">{docTitle}</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                The name comes from what you drop. Insert a block, then submit. That adds knowledge
+                and relates it to the family, the profile, a milestone, and any media. Generate Lesson
+                comes after.
               </p>
-              <div className="mt-6 grid gap-3">
-                <label className="grid gap-2 text-sm" htmlFor={titleId}>
-                  Lesson name
-                  <Input
-                    id={titleId}
-                    className="h-11"
-                    value={title}
-                    onChange={(event) => setTitle(event.target.value)}
-                  />
-                </label>
-                {kind === "file" ? (
-                  <label className="grid gap-2 text-sm" htmlFor={detailId}>
-                    File name
-                    <Input
-                      id={detailId}
-                      className="h-11"
-                      value={detail}
-                      onChange={(event) => setDetail(event.target.value)}
-                    />
-                  </label>
-                ) : null}
-                {kind === "link" ? (
-                  <label className="grid gap-2 text-sm" htmlFor={detailId}>
-                    Link
-                    <Input
-                      id={detailId}
-                      className="h-11"
-                      inputMode="url"
-                      value={detail}
-                      onChange={(event) => setDetail(event.target.value)}
-                    />
-                  </label>
-                ) : null}
-                {kind === "text" || kind === "idea" ? (
-                  <label className="grid gap-2 text-sm" htmlFor={detailId}>
-                    {kind === "text" ? "Text" : "Idea"}
-                    <Textarea
-                      id={detailId}
-                      className="min-h-36"
-                      value={detail}
-                      onChange={(event) => setDetail(event.target.value)}
-                    />
-                  </label>
-                ) : null}
-                {detailError ? <p className="text-sm text-destructive">{detailError}</p> : null}
-                <Button className="h-11" type="button" onClick={continueSubstance}>
-                  Continue
+
+              <div
+                className="mt-6"
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  addFiles(event.dataTransfer.files);
+                }}
+              >
+                <input
+                  ref={fileRef}
+                  className="sr-only"
+                  type="file"
+                  multiple
+                  accept=".pdf,.txt,.md,.docx,application/pdf,text/plain,audio/*"
+                  onChange={(event) => {
+                    addFiles(event.target.files);
+                    event.target.value = "";
+                  }}
+                />
+                {pile.length ? (
+                  <ul className="grid gap-3">
+                    {pile.map((item) => (
+                      <li key={item.id} className="rounded-2xl border border-border bg-card px-4 py-4">
+                        <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">{item.kind}</p>
+                        <p className="mt-1 whitespace-pre-wrap text-sm">{item.text || item.label}</p>
+                        <button
+                          type="button"
+                          className="mt-3 text-sm underline underline-offset-4"
+                          onClick={() => setPile((current) => current.filter((row) => row.id !== item.id))}
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="rounded-2xl border border-dashed border-border px-4 py-8 text-sm text-muted-foreground">
+                    This document is empty. Insert text, an idea, a file, or a minute of audio.
+                  </p>
+                )}
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4">
+                <span className="text-sm text-muted-foreground">Insert</span>
+                <Button className="h-11" type="button" variant="outline" onClick={() => fileRef.current?.click()}>
+                  File
+                </Button>
+                <Button className="h-11" type="button" variant="outline" onClick={() => addWords("text")}>
+                  Text
+                </Button>
+                <Button className="h-11" type="button" variant="outline" onClick={() => addWords("idea")}>
+                  Idea
+                </Button>
+                <Button
+                  className="h-11"
+                  type="button"
+                  variant={recording ? "default" : "outline"}
+                  onClick={() => void startMic()}
+                >
+                  {recording ? <Square /> : <Mic />}
+                  {recording ? `Stop ${clock}` : "Talk"}
                 </Button>
               </div>
-            </>
-          ) : null}
-
-          {step === "who" ? (
-            <>
-              <h1 ref={headingRef} tabIndex={-1} className="mt-3 font-display text-4xl tracking-tight outline-none">
-                Who in this org is it for?
-              </h1>
-              <p className="mt-3 text-sm text-muted-foreground">
-                {desk.room === "household"
-                  ? "Tracked children only. Login stays none."
-                  : desk.room === "team"
-                    ? "Login learners only."
-                    : "This desk will not mix tracked children and login learners."}
-              </p>
-              {mixed ? null : desk.people.length === 0 ? (
-                <p className="mt-6 text-sm text-muted-foreground">
-                  {desk.room === "household"
-                    ? "No tracked children in this org yet."
-                    : "No login learners in this org yet."}
+              <label className="mt-3 grid gap-2 text-sm">
+                Block
+                <Textarea
+                  className="min-h-24 rounded-2xl"
+                  value={draft}
+                  placeholder="Write the block, then insert it as text or an idea."
+                  onChange={(event) => setDraft(event.target.value)}
+                />
+              </label>
+              {recording ? (
+                <p className="mt-2 text-sm text-muted-foreground" aria-live="polite">
+                  Listening. It stops at one minute.
                 </p>
-              ) : (
-                <div className="mt-6 grid gap-3">
-                  {desk.people.map((person) => (
-                    <Choice
-                      key={person.membershipId}
-                      pressed={selected.includes(person.membershipId)}
-                      title={person.name}
-                      detail={`${person.label}. Login: ${person.login === "none" ? "none" : "member"}.`}
-                      onClick={() => togglePerson(person.membershipId)}
-                    />
-                  ))}
-                </div>
-              )}
-              <div className="mt-6">
+              ) : null}
+
+              <div className="mt-5">
                 <Button
-                  className="h-11"
+                  className="h-11 shadow-[0_12px_28px_-16px_rgba(31,94,255,0.9)]"
                   type="button"
-                  disabled={chosen.length === 0}
-                  onClick={() => setStep("outcome")}
-                >
-                  Continue
-                </Button>
-              </div>
-            </>
-          ) : null}
-
-          {step === "outcome" ? (
-            <>
-              <h1 ref={headingRef} tabIndex={-1} className="mt-3 font-display text-4xl tracking-tight outline-none">
-                What should they be able to do after?
-              </h1>
-              <div className="mt-6 grid gap-3">
-                <label className="grid gap-2 text-sm" htmlFor={outcomeId}>
-                  Outcome
-                  <Textarea
-                    id={outcomeId}
-                    className="min-h-28"
-                    value={outcome}
-                    onChange={(event) => setOutcome(event.target.value)}
-                  />
-                </label>
-                <Button
-                  className="h-11"
-                  type="button"
-                  disabled={!outcome.trim()}
-                  onClick={() => setStep("delivery")}
-                >
-                  Continue
-                </Button>
-              </div>
-            </>
-          ) : null}
-
-          {step === "delivery" ? (
-            <>
-              <h1 ref={headingRef} tabIndex={-1} className="mt-3 font-display text-4xl tracking-tight outline-none">
-                Teach live, self-serve, or both?
-              </h1>
-              <div className="mt-6 grid gap-3">
-                {DELIVERIES.map((item) => (
-                  <Choice
-                    key={item.value}
-                    pressed={delivery === item.value}
-                    title={item.title}
-                    detail={item.detail}
-                    onClick={() => chooseDelivery(item.value)}
-                  />
-                ))}
-              </div>
-            </>
-          ) : null}
-
-          {step === "video" ? (
-            <>
-              <h1 ref={headingRef} tabIndex={-1} className="mt-3 font-display text-4xl tracking-tight outline-none">
-                Do you need a video cut?
-              </h1>
-              <div className="mt-6 grid gap-3">
-                <Choice
-                  pressed={videoCut === true}
-                  title="Yes, a video cut"
-                  detail="Mode on the spec becomes video."
-                  onClick={() => chooseVideo(true)}
-                />
-                <Choice
-                  pressed={videoCut === false}
-                  title="No cut"
-                  detail="Teach live and both record mode teach. Self-serve records mode assign."
-                  onClick={() => chooseVideo(false)}
-                />
-              </div>
-            </>
-          ) : null}
-
-          {step === "approve" && delivery && videoCut !== null ? (
-            <>
-              <h1 ref={headingRef} tabIndex={-1} className="mt-3 font-display text-4xl tracking-tight outline-none">
-                Approve units
-              </h1>
-              <p className="mt-3 text-sm text-muted-foreground">
-                For {chosen.map((person) => person.name).join(", ") || "this org"}. Each check must
-                cite source_unit_id. The spec stays hidden until you approve every unit.
-              </p>
-              <p className="mt-3 text-sm text-muted-foreground">
-                A video cut sets mode to video. Self-serve sets mode to assign. Teach live, and both
-                without a cut, set mode to teach.
-              </p>
-              <ul className="mt-6 grid gap-3">
-                {units.map((unit) => {
-                  const on = approved.includes(unit.id);
-                  return (
-                    <li key={unit.id} className="rounded-xl border border-border bg-card px-4 py-4">
-                      <p className="font-medium">{unit.title}</p>
-                      <p className="mt-2 font-mono text-xs text-muted-foreground">
-                        source_unit_id {unit.source_unit_id}
-                      </p>
-                      <Button
-                        className="mt-4 h-11"
-                        type="button"
-                        variant={on ? "secondary" : "default"}
-                        aria-pressed={on}
-                        onClick={() => toggleUnit(unit.id)}
-                      >
-                        {on ? "Approved" : "Approve checks for this unit"}
-                      </Button>
-                    </li>
-                  );
-                })}
-              </ul>
-              {spec ? (
-                <div className="mt-8" aria-live="polite">
-                  <h2 className="font-display text-2xl">LessonSpec</h2>
-                  <pre className="mt-3 overflow-x-auto rounded-xl border border-border bg-card p-4 font-mono text-xs leading-5">
-                    {formatLessonSpec(spec)}
-                  </pre>
-                </div>
-              ) : (
-                <p className="mt-6 text-sm text-muted-foreground">Approve every unit to see the spec.</p>
-              )}
-              <div className="mt-6 flex flex-wrap gap-2">
-                <Button
-                  className="h-11"
-                  type="button"
-                  disabled={!spec || submitting}
-                  onClick={() => void submitKnowledge()}
+                  disabled={!pile.length || busy || recording}
+                  onClick={() => void submit()}
                 >
                   Submit
                 </Button>
-                {knowledgeId ? (
-                  <Button
-                    className="h-11"
-                    type="button"
-                    variant="outline"
-                    disabled={generating}
-                    onClick={() => void generateLesson()}
-                  >
-                    Generate Lesson
-                  </Button>
-                ) : null}
               </div>
-              {knowledgeNote ? (
-                <p className="mt-4 text-sm" aria-live="polite">
-                  {knowledgeNote}
+
+              <section className="mt-8">
+                <h2 className="font-display text-2xl tracking-tight">Not generated yet</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Knowledge with no lesson. A generated lesson is Objective, Teach, Do, Recap, then a quiz
+                  from what is already stored. If that is not enough, it says needs more information.
                 </p>
-              ) : null}
-              {teachHow ? <p className="mt-2 text-sm text-muted-foreground">{teachHow}</p> : null}
-              {knowledgeId ? (
-                <p className="mt-4 text-sm">
-                  <Link href={`/o/${orgSlug}/teach/${knowledgeId}`} className="underline underline-offset-4">
-                    Open this knowledge
-                  </Link>
-                </p>
-              ) : null}
+                <ul className="mt-4 grid gap-3">
+                  {[...stored.map((item) => ({ id: item.lessonId, title: item.title })), ...open]
+                    .filter((item, index, all) => all.findIndex((row) => row.id === item.id) === index)
+                    .map((item) => (
+                      <li key={item.id} className="rounded-2xl border border-border bg-card px-4 py-4">
+                        <p className="font-medium">{item.title}</p>
+                        <div className="mt-3 flex flex-wrap items-center gap-3">
+                          <Button
+                            className="h-11"
+                            type="button"
+                            variant="outline"
+                            disabled={generatingId === item.id}
+                            onClick={() => void generateLesson(item.id)}
+                          >
+                            Generate Lesson
+                          </Button>
+                          <Link href={`/o/${orgSlug}/teach/${item.id}`} className="text-sm underline underline-offset-4">
+                            Open
+                          </Link>
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+                {!stored.length && !open.length ? (
+                  <p className="mt-3 text-sm text-muted-foreground">Nothing is waiting.</p>
+                ) : null}
+              </section>
             </>
           ) : null}
 
-          {PREVIOUS[step] ? (
-            <p className="mt-8">
-              <button
-                type="button"
-                className="text-sm underline underline-offset-4"
-                onClick={() => setStep(PREVIOUS[step] as Step)}
-              >
-                Back
-              </button>
+          {note ? (
+            <p className="mt-4 text-sm" aria-live="polite">
+              {note}
             </p>
           ) : null}
-        </section>
-      ) : null}
-    </main>
-  );
-}
-
-function Choice({
-  pressed,
-  title,
-  detail,
-  onClick,
-}: {
-  pressed: boolean;
-  title: string;
-  detail: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={pressed}
-      onClick={onClick}
-      className={cn(
-        "rounded-xl border px-4 py-4 text-left transition-colors",
-        pressed ? "border-foreground bg-secondary" : "border-border bg-card hover:bg-secondary/70",
-      )}
-    >
-      <span className="block font-medium">{title}</span>
-      <span className="mt-1 block text-sm text-muted-foreground">{detail}</span>
-    </button>
+        </div>
+        </div>
+      </div>
+    </div>
   );
 }

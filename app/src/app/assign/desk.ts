@@ -69,11 +69,11 @@ export const DESK_COPY: Record<
     loginLine: "Login: member. Does not buy. Does not own the path.",
   },
   household: {
-    eyebrow: "Household desk",
-    law: "Tracked children only. A child has no login. You own the path. The child does not buy.",
-    empty: "No tracked child on this desk yet.",
-    person: "Tracked child",
-    loginLine: "Login: none. Tracked child. No login.",
+    eyebrow: "Family",
+    law: "Family only. A child has no login. You own the path. The child does not buy.",
+    empty: "No one in the family yet.",
+    person: "Child",
+    loginLine: "Login: none. No login.",
   },
 };
 
@@ -94,7 +94,7 @@ export const ERROR_COPY: Record<string, string> = {
   child_has_no_login: CHILD_COPY,
   not_leader: LEARNER_COPY,
   wrong_desk: "That person is not on this desk.",
-  not_your_child: "That tracked child is not on your household desk.",
+  not_your_child: "That child is not on your family desk.",
   spec_invalid: "The lesson needs a title, an outcome, and a unit with a source unit id.",
   spec_mode: "This desk only assigns. Mode stays assign.",
   spec_org: "The lesson belongs to the open desk.",

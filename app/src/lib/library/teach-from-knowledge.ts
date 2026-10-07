@@ -143,19 +143,77 @@ export function decideLesson(plan: TeachPlan | null, units: KnowledgeUnit[]): Le
     return typeof body === "string" && grounded(check, body);
   });
   if (quiz.length === 0) return { status: "needs_more", message: NEEDS_MORE };
-  const sections = units
-    .filter((unit) => {
-      const body = unit.body.trim();
-      return body && body !== plan.outcome.trim() && !isThinBody(body);
-    })
-    .map((unit) => `${unit.title}\n${unit.body.trim()}`)
-    .join("\n\n");
   return {
     status: "ready",
     how: plan.how.trim(),
-    body: [plan.how.trim(), sections].filter(Boolean).join("\n\n"),
+    body: spineDraft({ outcome: plan.outcome, how: plan.how, units }),
     quiz,
   };
+}
+
+/** A name from the drop itself. The person does not type a lesson title. */
+export function titleFromDrop(input: { text?: string; filename?: string }): string {
+  const text = (input.text ?? "").replace(/\s+/g, " ").trim();
+  const sentence = text.split(/(?<=[.!?])\s/)[0]?.trim() || text;
+  if (sentence.length >= 12) {
+    return sentence.length > 72 ? `${sentence.slice(0, 69).trim()}…` : sentence;
+  }
+  const file = (input.filename ?? "")
+    .replace(/\.[a-z0-9]{1,8}$/i, "")
+    .replace(/[-_]+/g, " ")
+    .trim();
+  if (file.length >= 3) return file.slice(0, 72);
+  if (sentence.length >= 3) return sentence;
+  return "New knowledge";
+}
+
+/**
+ * Draft shape from the lesson spine already in this repo:
+ * objective, teach, do, recap. The quiz is stored as items, not invented prose.
+ */
+export function spineDraft(input: { outcome: string; how: string; units: KnowledgeUnit[] }): string {
+  const teachable = input.units.filter((unit) => {
+    const body = unit.body.trim();
+    return body && body !== input.outcome.trim() && !isThinBody(body);
+  });
+  const teach = teachable.map((unit) => `${unit.title}\n${unit.body.trim()}`).join("\n\n");
+  const practice = teachable[0]?.body.trim().split(/(?<=[.!?])\s/)[0]?.trim() || "";
+  const recap = teachable.map((unit) => unit.title.trim()).filter(Boolean).join("\n");
+  return [
+    "Objective",
+    input.outcome.trim() || input.how.trim(),
+    "",
+    "Teach",
+    [input.how.trim(), teach].filter(Boolean).join("\n\n"),
+    "",
+    "Do",
+    practice ? `Practice this line from the knowledge: ${practice}` : input.how.trim(),
+    "",
+    "Recap",
+    recap || input.how.trim(),
+  ].join("\n");
+}
+
+const SPINE_TITLES = ["Objective", "Teach", "Do", "Recap"] as const;
+
+/** Split a generated draft into the course activities a learner opens one at a time. */
+export function spineBlocks(prose: string): { title: string; body: string }[] {
+  const blocks: { title: string; body: string }[] = [];
+  let current: { title: string; body: string } | null = null;
+  for (const line of prose.replace(/\r\n/g, "\n").split("\n")) {
+    const heading = SPINE_TITLES.find((title) => title === line.trim());
+    if (heading) {
+      if (current) blocks.push(current);
+      current = { title: heading, body: "" };
+      continue;
+    }
+    if (!current) continue;
+    current.body = current.body ? `${current.body}\n${line}` : line;
+  }
+  if (current) blocks.push(current);
+  return blocks
+    .map((block) => ({ title: block.title, body: block.body.trim() }))
+    .filter((block) => block.body);
 }
 
 /** Drop a model plan the stored units cannot teach. */

@@ -2,15 +2,17 @@ import { and, eq } from "drizzle-orm";
 import { completeWithConfiguredAi } from "@/lib/living-brain/ai";
 import type { LearnerIdentity } from "@/lib/campus-runtime/identity";
 import { getDb } from "@/lib/db/client";
-import { lessons } from "@/lib/composer/schema";
-import { addQuizItem, createLesson, getLessonDetail } from "@/lib/composer/store";
+import { lessons, quizItems } from "@/lib/composer/schema";
+import { addQuizItem, createLesson, getLessonDetail, listLessons } from "@/lib/composer/store";
 import {
   NEEDS_MORE,
   decideLesson,
   decodeLessonBody,
+  emptyPlan,
   encodeLessonBody,
   gatePlan,
   planFromModel,
+  titleFromDrop,
   wizardSourceKind,
   wizardSuppliedText,
   type KnowledgeUnit,
@@ -98,12 +100,67 @@ export async function submitWizardKnowledge(identity: LearnerIdentity, input: Wi
   };
 }
 
+export async function intakeKnowledge(
+  identity: LearnerIdentity,
+  items: { text: string; filename?: string; kind?: string }[],
+) {
+  const saved: { lessonId: string; title: string }[] = [];
+  for (const item of items.slice(0, 12)) {
+    const text = item.text.trim();
+    if (!text) continue;
+    const title = titleFromDrop({ text, filename: item.filename });
+    const created = await createLesson(identity, {
+      title,
+      kind: item.kind === "link" ? "link" : "text",
+      body: text,
+      url: item.kind === "link" ? text : "",
+    });
+    const stored = await writeLessonBody(
+      identity,
+      created.lesson.id,
+      encodeLessonBody(created.lesson.body, emptyPlan(title)),
+    );
+    if (!stored) continue;
+    saved.push({ lessonId: created.lesson.id, title });
+  }
+  if (!saved.length) return { error: "supplied_text_required" as const };
+  return { ok: true as const, items: saved };
+}
+
+export async function listOpenKnowledge(identity: LearnerIdentity) {
+  const lessons = await listLessons(identity);
+  const db = getDb();
+  const quizRows = await db
+    .select({ lessonId: quizItems.lessonId })
+    .from(quizItems)
+    .where(eq(quizItems.orgId, identity.orgId));
+  const generated = new Set(quizRows.map((row) => row.lessonId).filter((id): id is string => Boolean(id)));
+  return lessons
+    .filter((lesson) => !generated.has(lesson.id))
+    .map((lesson) => ({ id: lesson.id, title: lesson.title, status: lesson.status }));
+}
+
 export async function generateLessonFromKnowledge(identity: LearnerIdentity, lessonId: string) {
   const detail = await getLessonDetail(identity, lessonId);
   if (!detail) return { error: "unknown_lesson" as const };
   const units = unitsOf(detail.units);
   const stored = decodeLessonBody(detail.lesson.body);
-  const plan: TeachPlan | null = stored.plan;
+  let plan: TeachPlan | null = stored.plan;
+  if (!plan?.ready) {
+    const outcome =
+      plan?.outcome && plan.outcome.trim().length >= 12
+        ? plan.outcome
+        : titleFromDrop({ text: stored.prose || detail.lesson.title });
+    const asked = await completeWithConfiguredAi(
+      identity.orgId,
+      `${TEACH_PROMPT}\n\n${JSON.stringify({
+        title: detail.lesson.title,
+        outcome,
+        units,
+      })}`,
+    );
+    plan = gatePlan(planFromModel(asked, units, outcome), units);
+  }
   const decision = decideLesson(plan, units);
   if (decision.status === "needs_more") {
     return { ok: true as const, status: "needs_more" as const, message: NEEDS_MORE, lessonId };

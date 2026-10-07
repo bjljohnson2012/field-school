@@ -15,36 +15,42 @@ export function OrgPicker({ memberships, active }: { memberships: readonly Shell
 
   if (!memberships.length) return null;
 
+  const shown = memberships.find((org) => org.org === (picked ?? active));
+  const here = value === VIEW_ALL ? "Everybody" : shown?.name || shown?.org || "This org";
+
   return (
-    <label className="flex flex-col gap-1 px-0.5 text-xs text-muted-foreground">
-      Org
-      <select
-        className="h-10 w-full rounded-xl border border-border bg-background px-2 text-sm text-foreground"
-        value={value}
-        onChange={(e) => {
-          const slug = e.target.value;
-          if (slug === VIEW_ALL) {
-            router.push("/people");
-            return;
-          }
-          setPicked(slug);
-          void fetch("/api/org/active", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ slug }),
-          }).then(() => {
-            window.dispatchEvent(new Event(ORG_SWITCH_EVENT));
-            router.push(`/o/${slug}`);
-          });
-        }}
-      >
-        {memberships.map((org) => (
-          <option key={org.org} value={org.org}>
-            {org.name || org.org}
-          </option>
-        ))}
-        <option value={VIEW_ALL}>View all</option>
-      </select>
-    </label>
+    <div className="px-0.5">
+      <p className="text-sm font-medium text-foreground">{here}</p>
+      <label className="mt-2 flex flex-col gap-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">
+        Switch org
+        <select
+          className="h-10 w-full rounded-xl border border-border bg-background px-2 text-sm normal-case tracking-normal text-foreground"
+          value={value}
+          onChange={(e) => {
+            const slug = e.target.value;
+            if (slug === VIEW_ALL) {
+              router.push("/people");
+              return;
+            }
+            setPicked(slug);
+            void fetch("/api/org/active", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ slug }),
+            }).then(() => {
+              window.dispatchEvent(new Event(ORG_SWITCH_EVENT));
+              router.push(`/o/${slug}`);
+            });
+          }}
+        >
+          {memberships.map((org) => (
+            <option key={org.org} value={org.org}>
+              {org.name || org.org}
+            </option>
+          ))}
+          <option value={VIEW_ALL}>View Everybody</option>
+        </select>
+      </label>
+    </div>
   );
 }
