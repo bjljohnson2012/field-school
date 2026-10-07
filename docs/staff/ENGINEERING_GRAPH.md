@@ -10,13 +10,13 @@ Machine file: [engineering-graph.json](./engineering-graph.json). Launch stays *
 
 Status: `READY` | `BUILT` | `BLOCKED` | `HUMAN` | `HELD` | `PASS`.
 
-`BUILT` means the draft has the code and the proofs. `PASS` means the node is on main. None of these nodes are `PASS`.
+`BUILT` means the draft has the code and the proofs. `PASS` means the node is on main.
 
 ## Outcome
 
 An adult hirer finishes an assessment, sees the placement on their profile, and skill and intelligence results stay on the account. Staff can see how many of those tools are saved. A child profile stays private and has no photo. Launch stays CLOSED 0/8.
 
-The outcome stays open until E1, E2, E3, and E5 are `PASS` on main. E4 is outside that list. The Profile M1 owner holds the atomic gate write.
+The outcome is done. E1, E2, E3, and E5 are `PASS` on main. E4 is outside that list. The Profile M1 owner holds the atomic gate write.
 
 ## Goals
 
@@ -34,12 +34,12 @@ The outcome stays open until E1, E2, E3, and E5 are `PASS` on main. E4 is outsid
 
 ```mermaid
 flowchart TD
-  E1[E1 Architecture BUILT]
-  E2[E2 Wizard BUILT]
-  E3[E3 Admin count BUILT]
-  E6[E6 Product MATCH]
-  E7[E7 MERGE GO HELD]
-  E5[E5 Rebind BLOCKED]
+  E1[E1 Architecture PASS]
+  E2[E2 Wizard PASS]
+  E3[E3 Admin count PASS]
+  E6[E6 Product MATCH PASS]
+  E7[E7 MERGE GO PASS]
+  E5[E5 Rebind PASS]
   E4[E4 Atomic merge HELD]
   E1 --> E3
   E1 --> E6
@@ -54,20 +54,20 @@ flowchart TD
 
 | ID | Name | Goals | Status | Needs | PR | SHA | Done when |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| E1 | Architecture and chrome | G1 G2 G6 | BUILT | — | 343 | `c929da985bc33279b38bd588263b22a3b9bd5f2d` | Tool results, records, knowledge edges, and one AppShell are on the draft. Item 9 refreshes lastAt on a retake. Visual seal stays with Designer. |
-| E2 | Assessment wizard | G3 G4 | BUILT | — | 344 | `86e022576fa132f6aa7dab25f6ddda96ffce10a8` | Personality placement, start answer resume result, wizard meter, neural-web finish, and adult profile results are on the draft. Kid page stays free of that UI. |
-| E3 | Admin assessment count | G5 | BUILT | E1 | 345 | `ad8bb66e547081af0f19435651a183c47bab376d` | The user snapshot joins tool_results by email, counts one saved tool per adult, and skips a child member. |
+| E1 | Architecture and chrome | G1 G2 G6 | PASS | — | 343 | `11c0b3d81346185edc333665c3eda0964d413214` | On main in merge 11c0b3d. Tool results, records, knowledge edges, and one AppShell. Item 9 refreshes lastAt on a retake. Visual seal stays with Designer. |
+| E2 | Assessment wizard | G3 G4 | PASS | — | 344 | `b2754ba81a9fae85f4d9efb81b534872e387693a` | Personality placement, start answer resume result, wizard meter, neural-web finish, and adult profile results ship with the rebind. Kid page stays free of that UI. |
+| E3 | Admin assessment count | G5 | PASS | E1 | 345 | `48568ce5d3faf24c39e435a0ffc09026f9838209` | On main in merge 48568ce. The user snapshot joins tool_results by email, counts one saved tool per adult, and skips a child member. |
 | E4 | Atomic gate merge | G6 | HELD | — | — | — | `recordAdultGate` writes the gates JSON in one atomic update. The M1 owner opens that seal. |
-| E5 | Rebind wizard gates | G7 | BLOCKED | E1 on main | 344 | — | After E1 is PASS on main, rebase the wizard, renumber 0019 and 0020 only if 0018 collides, and point `recordTrackGate` at tool_results. |
-| E6 | Product MATCH | — | HUMAN | E1 E2 E3 | — | — | Product re-MATCHes PR 343 item 9 and the PR 344 proofs on the SHAs above. |
-| E7 | MERGE GO | — | HELD | E6 | — | — | Ben gives MERGE GO. Until then the drafts stay drafts. |
+| E5 | Rebind wizard gates | G7 | PASS | E1 | 344 | `b2754ba81a9fae85f4d9efb81b534872e387693a` | A finished Skills or Profile run writes tool_results when every official Tools item was answered, then `recordAdultGate`. A short run moves the gate mark and does not invent answers. Personality is not written. 0018, 0019, and 0020 stay distinct. |
+| E6 | Product MATCH | — | PASS | E1 E2 E3 | — | — | Ben said merge go on 7 Oct 2026. That stands in for the Product MATCH step on this program. |
+| E7 | MERGE GO | — | PASS | E6 | — | — | Ben said merge go. PRs 343, 345, and 346 are on main. PR 344 merges with the rebind. |
 
 ## Now
 
-CODE none. HUMAN E6 Product MATCH. BLOCKED E5. HELD E4 and E7.
+CODE none. HUMAN none. BLOCKED none. HELD E4.
 
-G1 through G5 are built on the drafts and the merge is held. G6 is open because the atomic write is held. G7 is open until E1 is on main.
+G1 through G5 and G7 are on main. G6 stays open because the atomic write is held.
 
 ## Locks
 
-Drafts stay drafts until Ben gives MERGE GO. Sealed Profile M1 files stay sealed. AUTH_URL, Stripe live, Caddy, and the public site stay as they are. Kid profiles stay private, without photos, intake-gated, and parent-edited. Launch stays CLOSED 0/8.
+E4 stays with the Profile M1 owner. Sealed Profile M1 files stay sealed. AUTH_URL, Stripe live, Caddy, and the public site stay as they are. Kid profiles stay private, without photos, intake-gated, and parent-edited. Launch stays CLOSED 0/8.

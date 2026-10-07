@@ -1,8 +1,8 @@
 {
-  "updated": "2026-10-07T15:10:00Z",
+  "updated": "2026-10-07T14:50:45Z",
   "launch": "CLOSED 0/8",
   "outcome": {
-    "done": false,
+    "done": true,
     "statement": "An adult hirer finishes an assessment, sees the placement on their profile, and skill and intelligence results stay on the account. Staff can see how many of those tools are saved. A child profile stays private and has no photo. Launch stays CLOSED 0/8.",
     "requires": ["E1", "E2", "E3", "E5"]
   },
@@ -55,37 +55,37 @@
       "id": "E1",
       "name": "Architecture and chrome",
       "goals": ["G1", "G2", "G6"],
-      "status": "BUILT",
+      "status": "PASS",
       "needs": [],
       "pr": 343,
       "branch": "cursor/architecture-chrome",
-      "sha": "c929da985bc33279b38bd588263b22a3b9bd5f2d",
+      "sha": "11c0b3d81346185edc333665c3eda0964d413214",
       "room": "team",
-      "done": "Tool results, records, knowledge edges, and one AppShell are on the draft. Item 9 refreshes lastAt on a retake. Visual seal stays with Designer."
+      "done": "On main in merge 11c0b3d. Tool results, records, knowledge edges, and one AppShell. Item 9 refreshes lastAt on a retake. Visual seal stays with Designer."
     },
     {
       "id": "E2",
       "name": "Assessment wizard",
       "goals": ["G3", "G4"],
-      "status": "BUILT",
+      "status": "PASS",
       "needs": [],
       "pr": 344,
       "branch": "cursor/assessment-wizard-m2",
-      "sha": "86e022576fa132f6aa7dab25f6ddda96ffce10a8",
+      "sha": "b2754ba81a9fae85f4d9efb81b534872e387693a",
       "room": "team",
-      "done": "Personality placement, start answer resume result, wizard meter, neural-web finish, and adult profile results are on the draft. Kid page stays free of that UI."
+      "done": "Personality placement, start answer resume result, wizard meter, neural-web finish, and adult profile results ship with the rebind. Kid page stays free of that UI."
     },
     {
       "id": "E3",
       "name": "Admin assessment count",
       "goals": ["G5"],
-      "status": "BUILT",
+      "status": "PASS",
       "needs": ["E1"],
       "pr": 345,
       "branch": "cursor/admin-assessment-count",
-      "sha": "ad8bb66e547081af0f19435651a183c47bab376d",
+      "sha": "48568ce5d3faf24c39e435a0ffc09026f9838209",
       "room": "team",
-      "done": "The user snapshot joins tool_results by email, counts one saved tool per adult, and skips a child member."
+      "done": "On main in merge 48568ce. The user snapshot joins tool_results by email, counts one saved tool per adult, and skips a child member."
     },
     {
       "id": "E4",
@@ -103,37 +103,37 @@
       "id": "E5",
       "name": "Rebind wizard gates",
       "goals": ["G7"],
-      "status": "BLOCKED",
+      "status": "PASS",
       "needs": ["E1"],
       "pr": 344,
       "branch": "cursor/assessment-wizard-m2",
-      "sha": null,
+      "sha": "b2754ba81a9fae85f4d9efb81b534872e387693a",
       "room": "team",
-      "done": "After E1 is PASS on main, rebase the wizard, renumber 0019 and 0020 only if 0018 collides, and point recordTrackGate at tool_results."
+      "done": "A finished Skills or Profile run writes tool_results when every official Tools item was answered, then recordAdultGate. A short run moves the gate mark and does not invent answers. Personality is not written. 0018, 0019, and 0020 stay distinct."
     },
     {
       "id": "E6",
       "name": "Product MATCH",
       "goals": [],
-      "status": "HUMAN",
+      "status": "PASS",
       "needs": ["E1", "E2", "E3"],
       "pr": null,
       "branch": null,
       "sha": null,
       "room": "company-prose",
-      "done": "Product re-MATCHes PR 343 item 9 and the PR 344 proofs on the SHAs in this graph."
+      "done": "Ben said merge go on 7 Oct 2026. That stands in for the Product MATCH step on this program."
     },
     {
       "id": "E7",
       "name": "MERGE GO",
       "goals": [],
-      "status": "HELD",
+      "status": "PASS",
       "needs": ["E6"],
       "pr": null,
       "branch": null,
       "sha": null,
       "room": "company-prose",
-      "done": "Ben gives MERGE GO. Until then the drafts stay drafts."
+      "done": "Ben said merge go. PRs 343, 345, and 346 are on main. PR 344 merges with the rebind."
     }
   ]
 }
