@@ -12,3 +12,5 @@ node docs/staff/pick-next.mjs
 Expected on untouched main: `PICK N1 C2`.
 
 Outcome is false until LOOP.md outcome is true. Launch stays CLOSED 0/8.
+
+Current program: [ENGINEERING_GRAPH.md](./ENGINEERING_GRAPH.md). Run `node docs/staff/pick-engineering.mjs`. N1–N15 stay on `pick-next.mjs`.
