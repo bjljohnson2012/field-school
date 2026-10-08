@@ -9,6 +9,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
+# deploy.sh stages repo docs/campus-runtime into this context. A bare app/
+# build has no docs directory; the runner COPY still needs the path.
+RUN mkdir -p docs
 
 FROM node:22-bookworm-slim AS runner
 WORKDIR /app
