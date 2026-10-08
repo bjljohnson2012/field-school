@@ -7,20 +7,23 @@ set -euo pipefail
 APPLY=0
 if [ "${1:-}" = "--apply" ]; then
   APPLY=1
-elif [ -n "${1:-}" ]; then
-  echo "usage: $0 [--apply]" >&2
+elif [ "${1:-}" = "--dry-run" ] || [ -z "${1:-}" ]; then
+  APPLY=0
+else
+  echo "usage: $0 [--dry-run|--apply]" >&2
   exit 2
 fi
 
 VPS_HOST="${VPS_HOST:-root@2.24.70.248}"
-KEY="${VPS_SSH_KEY:-$HOME/.ssh/vps_deploy}"
-if [ ! -f "$KEY" ] && [ -f "$HOME/.ssh/field-school-agent" ]; then
-  KEY="$HOME/.ssh/field-school-agent"
+KEY="${VPS_SSH_KEY:-}"
+if [ -z "$KEY" ] || [ ! -f "$KEY" ]; then
+  for candidate in "$HOME/.ssh/vps_deploy" "$HOME/.ssh/field-school-agent" "$HOME/.ssh/id_ed25519_hostinger"; do
+    if [ -f "$candidate" ]; then
+      KEY="$candidate"
+      break
+    fi
+  done
 fi
-if [ ! -f "$KEY" ] && [ -f "$HOME/.ssh/id_ed25519_hostinger" ]; then
-  KEY="$HOME/.ssh/id_ed25519_hostinger"
-fi
-SSH=(ssh -i "$KEY" -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new)
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 if [ -f "$ROOT/vite.config.ts" ] || [ -d "$ROOT/src/routes" ]; then
@@ -47,11 +50,22 @@ echo "srv1643164.hstgr.cloud stays reverse_proxy field-school-app:3000"
 echo "portal.fieldschool.ai block unchanged"
 echo "recreate field-school-app --no-build (existing image)"
 echo "will not wipe /opt/field-school, rotate AUTH_SECRET, or touch Stripe"
+if [ -n "${KEY}" ]; then
+  echo "ssh key: $KEY"
+else
+  echo "ssh key: none"
+fi
 
 if [ "$APPLY" -eq 0 ]; then
   echo "dry-run. pass --apply to mutate the VPS."
   exit 0
 fi
+
+if [ -z "$KEY" ] || [ ! -f "$KEY" ]; then
+  echo "missing SSH key (tried VPS_SSH_KEY, vps_deploy, field-school-agent, id_ed25519_hostinger)" >&2
+  exit 1
+fi
+SSH=(ssh -i "$KEY" -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new)
 
 echo "==> applying on $VPS_HOST"
 "${SSH[@]}" "$VPS_HOST" bash -s <<REMOTE
@@ -81,8 +95,9 @@ fi
 umask 077
 cp -a "\$ENV_FILE" "\$ENV_FILE.bak.auth-\$STAMP"
 python3 - <<'PY'
+import os
 from pathlib import Path
-p = Path("/opt/field-school.env")
+p = Path(os.environ.get("FLIP_ENV_FILE", "/opt/field-school.env"))
 lines = p.read_text().splitlines()
 out = []
 found = False
@@ -96,7 +111,7 @@ for line in lines:
         out.append(line)
 if not found:
     raise SystemExit("AUTH_URL line missing")
-text = "\\n".join(out) + "\\n"
+text = "\n".join(out) + "\n"
 p.write_text(text)
 PY
 chmod 600 "\$ENV_FILE"
@@ -111,8 +126,9 @@ if grep -q '^AUTH_SECRET=' "\$ENV_FILE.bak.auth-\$STAMP"; then
 fi
 cp -a "\$CADDY" "\$CADDY.bak.auth-\$STAMP"
 python3 - <<'PY'
+import os
 from pathlib import Path
-p = Path("/opt/ae-coach/docker/Caddyfile")
+p = Path(os.environ.get("FLIP_CADDY_FILE", "/opt/ae-coach/docker/Caddyfile"))
 text = p.read_text()
 old = """university.benjohnson.ai, srv1643164.hstgr.cloud {
     encode gzip
