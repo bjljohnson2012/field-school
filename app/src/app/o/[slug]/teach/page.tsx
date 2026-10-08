@@ -190,26 +190,17 @@ export default function TeachPage() {
         Text, upload, book, or link. Units come from the text you supply.
       </p>
 
-      <section className="mt-6 rounded-2xl border border-border bg-card px-5 py-5">
-        <h2 className="font-display text-2xl">New lesson</h2>
+      <section className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_14rem]">
+        <div className="rounded-2xl border border-border bg-card px-5 py-5">
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Document</p>
+        <h2 className="mt-2 font-display text-3xl tracking-tight">New lesson</h2>
         <div className="mt-4 grid gap-3">
           <input
-            className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
+            className="w-full bg-transparent font-display text-3xl tracking-tight outline-none"
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <select
-            className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
-            value={kind}
-            onChange={(e) => setKind(e.target.value)}
-          >
-            {KINDS.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </select>
           {kind === "link" ? (
             <input
               className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
@@ -236,6 +227,24 @@ export default function TeachPage() {
             Save draft
           </Button>
         </div>
+        </div>
+        <aside className="rounded-2xl border border-border bg-secondary/40 p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Fields</p>
+          <label className="mt-3 block text-sm">
+            Kind
+            <select
+              className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm"
+              value={kind}
+              onChange={(e) => setKind(e.target.value)}
+            >
+              {KINDS.map((item) => (
+                <option key={item.value} value={item.value}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </aside>
       </section>
 
       <section className="mt-10">

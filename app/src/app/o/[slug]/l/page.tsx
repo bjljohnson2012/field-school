@@ -123,8 +123,9 @@ export default function PublishedCatalogPage() {
     >
       {error ? <p className="mb-6 text-sm">{error}</p> : null}
       {canTeach && addOpen ? (
-        <Dialog title="Add a lesson" onClose={() => setAddOpen(false)}>
+        <Dialog title="Add a lesson" size="lg" onClose={() => setAddOpen(false)}>
         <form
+          className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_12rem]"
           onSubmit={(event) => {
             event.preventDefault();
             const body = draft.trim();
@@ -144,16 +145,25 @@ export default function PublishedCatalogPage() {
               .finally(() => setAdding(false));
           }}
         >
-          <p className="text-sm text-muted-foreground">Paste the lesson. It stays unpublished until you publish it.</p>
-          <textarea
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            rows={4}
-            className="mt-3 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none ring-primary/30 focus:ring-2"
-          />
-          <button type="submit" disabled={adding} className="mt-3 inline-flex h-11 items-center rounded-xl bg-primary px-4 text-sm text-primary-foreground">
-            Add lesson
-          </button>
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Document</p>
+            <p className="mt-3 text-sm text-muted-foreground">Paste the lesson. It stays unpublished until you publish it.</p>
+            <textarea
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              rows={8}
+              className="mt-3 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none ring-primary/30 focus:ring-2"
+            />
+          </div>
+          <aside className="rounded-xl border border-border bg-secondary/50 p-3">
+            <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Fields</p>
+            <p className="mt-3 text-sm">Kind</p>
+            <p className="mt-1 text-sm text-muted-foreground">Text</p>
+            <p className="mt-3 text-xs text-muted-foreground">Unpublished until you publish it.</p>
+            <button type="submit" disabled={adding} className="mt-4 inline-flex h-10 w-full items-center justify-center rounded-xl bg-primary px-4 text-sm text-primary-foreground">
+              Add lesson
+            </button>
+          </aside>
         </form>
         </Dialog>
       ) : null}
@@ -198,11 +208,15 @@ export default function PublishedCatalogPage() {
       {listed.length && !shown.length ? <p className="text-sm text-muted-foreground">Nothing matches.</p> : null}
       {shown.length ? (
       <div className="overflow-hidden rounded-xl border border-border bg-card">
-        <div className="hidden grid-cols-[minmax(0,1.4fr)_8rem_minmax(0,1fr)_8rem] gap-3 border-b border-border px-4 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground sm:grid">
+        <p className="border-b border-border px-4 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+          Collection
+        </p>
+        <div className="hidden grid-cols-[minmax(0,1.4fr)_8rem_minmax(0,1fr)_5rem_auto] gap-3 border-b border-border px-4 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground sm:grid">
           <span>Lesson</span>
           <span>Status</span>
           <span>Sources</span>
           <span>Used by</span>
+          <span className="sr-only">Actions</span>
         </div>
       <ul>
         {shown.map((lesson) => {
@@ -211,7 +225,7 @@ export default function PublishedCatalogPage() {
           const label = publishLabel(lesson.status);
           return (
             <li key={lesson.id} className="border-b border-border px-4 py-4 last:border-b-0">
-              <div className="grid gap-2 sm:grid-cols-[minmax(0,1.4fr)_8rem_minmax(0,1fr)_8rem] sm:items-center sm:gap-3">
+              <div className="grid gap-2 sm:grid-cols-[minmax(0,1.4fr)_8rem_minmax(0,1fr)_5rem_auto] sm:items-center sm:gap-3">
               <p className="truncate text-sm font-medium">{readableTitle(lesson.title, "")}</p>
               <p>
                 <span className={label === "Published" ? "inline-flex h-6 items-center rounded-full bg-pass/15 px-2 text-xs text-pass" : "inline-flex h-6 items-center rounded-full bg-secondary px-2 text-xs text-muted-foreground"}>
@@ -223,13 +237,7 @@ export default function PublishedCatalogPage() {
                 {lessonEdges.length === 1 ? "brain" : "brains"} you can see
               </p>
               <p className="hidden text-sm tabular-nums text-muted-foreground sm:block sm:text-right">{lessonEdges.length}</p>
-              </div>
-              {lessonEdges.length ? (
-                <div className="mt-3">
-                  <EdgeList edges={lessonEdges} empty="" />
-                </div>
-              ) : null}
-              <p className="mt-3 text-sm">
+              <p className="text-sm sm:text-right">
                 <Link href={`/o/${slug}/l/${lesson.id}`} className="underline underline-offset-4">
                   Open
                 </Link>
@@ -276,9 +284,16 @@ export default function PublishedCatalogPage() {
                   </>
                 ) : null}
               </p>
+              </div>
+              {lessonEdges.length ? (
+                <div className="mt-3">
+                  <EdgeList edges={lessonEdges} empty="" />
+                </div>
+              ) : null}
               {canTeach && edits[lesson.id]?.open ? (
                 <Dialog
                   title="Edit lesson"
+                  size="lg"
                   onClose={() =>
                     setEdits((current) => {
                       const row = current[lesson.id];
@@ -288,7 +303,7 @@ export default function PublishedCatalogPage() {
                   }
                 >
                 <form
-                  className="grid gap-3"
+                  className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_12rem]"
                   onSubmit={(event) => {
                     event.preventDefault();
                     const edit = edits[lesson.id];
@@ -307,49 +322,55 @@ export default function PublishedCatalogPage() {
                     });
                   }}
                 >
-                  <input
-                    value={edits[lesson.id]?.title ?? ""}
-                    onChange={(event) => {
-                      const title = event.target.value;
-                      setEdits((current) => {
-                        const row = current[lesson.id];
-                        if (!row) return current;
-                        return { ...current, [lesson.id]: { ...row, title } };
-                      });
-                    }}
-                    className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
-                  />
-                  <textarea
-                    value={edits[lesson.id]?.body ?? ""}
-                    onChange={(event) => {
-                      const body = event.target.value;
-                      setEdits((current) => {
-                        const row = current[lesson.id];
-                        if (!row) return current;
-                        return { ...current, [lesson.id]: { ...row, body } };
-                      });
-                    }}
-                    rows={5}
-                    className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
-                  />
-                  <label className="flex items-center gap-2 text-sm">
+                  <div>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Document</p>
                     <input
-                      type="checkbox"
-                      checked={edits[lesson.id]?.status === "published"}
+                      value={edits[lesson.id]?.title ?? ""}
                       onChange={(event) => {
-                        const status = event.target.checked ? "published" : "draft";
+                        const title = event.target.value;
                         setEdits((current) => {
                           const row = current[lesson.id];
                           if (!row) return current;
-                          return { ...current, [lesson.id]: { ...row, status } };
+                          return { ...current, [lesson.id]: { ...row, title } };
                         });
                       }}
+                      className="mt-2 w-full bg-transparent font-display text-3xl tracking-tight outline-none"
                     />
-                    Published
-                  </label>
-                  <button type="submit" className="h-10 justify-self-start rounded-xl bg-primary px-4 text-sm text-primary-foreground">
-                    Save lesson
-                  </button>
+                    <textarea
+                      value={edits[lesson.id]?.body ?? ""}
+                      onChange={(event) => {
+                        const body = event.target.value;
+                        setEdits((current) => {
+                          const row = current[lesson.id];
+                          if (!row) return current;
+                          return { ...current, [lesson.id]: { ...row, body } };
+                        });
+                      }}
+                      rows={8}
+                      className="mt-4 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+                    />
+                  </div>
+                  <aside className="rounded-xl border border-border bg-secondary/50 p-3">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Fields</p>
+                    <label className="mt-3 flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={edits[lesson.id]?.status === "published"}
+                        onChange={(event) => {
+                          const status = event.target.checked ? "published" : "draft";
+                          setEdits((current) => {
+                            const row = current[lesson.id];
+                            if (!row) return current;
+                            return { ...current, [lesson.id]: { ...row, status } };
+                          });
+                        }}
+                      />
+                      Published
+                    </label>
+                    <button type="submit" className="mt-4 h-10 w-full rounded-xl bg-primary px-4 text-sm text-primary-foreground">
+                      Save lesson
+                    </button>
+                  </aside>
                 </form>
                 </Dialog>
               ) : null}

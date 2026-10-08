@@ -83,31 +83,43 @@ export default function CourseHome() {
       ) : null}
 
       <section id="ladder" className="py-10">
-        <h2 className="font-display text-3xl tracking-tight">The ladder</h2>
+        <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Chapter</p>
+        <h2 className="mt-1 font-display text-3xl tracking-tight">The ladder</h2>
         <p className="mt-3 max-w-2xl text-muted-foreground">
           Watch the clip, finish the required field work, score 75% on the
           station quiz. Then 8/10 on the exam for a Field School certificate.
         </p>
-        <ol className="mt-8 grid gap-3">
+        <p className="mt-4 text-sm text-muted-foreground">
+          {tally.passed} of {course.modules.length} activities passed
+        </p>
+        <ol className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
           {course.modules.map((mod) => {
             const p = state?.modules[mod.slug];
             return (
-              <li key={mod.slug}>
+              <li key={mod.slug} className="border-b border-border last:border-b-0">
                 <Link
                   href={`/c/${course.slug}/s/${mod.slug}`}
                   className={cn(
-                    "flex flex-col gap-2 rounded-xl border border-border bg-card px-4 py-4 transition-colors hover:bg-secondary/40 sm:flex-row sm:items-center sm:justify-between",
-                    p?.passed && "border-pass/30",
+                    "flex flex-col gap-2 px-4 py-4 transition-colors hover:bg-secondary/40 sm:flex-row sm:items-center sm:justify-between",
+                    p?.passed && "bg-pass/5",
                   )}
                 >
-                  <div className="min-w-0">
-                    <p className="text-xs tabular-nums text-muted-foreground">
-                      Station {mod.station} · {mod.durationLabel}
-                    </p>
-                    <h3 className="mt-1 font-display text-xl tracking-tight">
-                      {mod.title}
-                    </h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{mod.kicker}</p>
+                  <div className="flex min-w-0 items-start gap-3">
+                    <span className="grid size-8 shrink-0 place-items-center rounded-full bg-secondary font-mono text-[11px] text-muted-foreground">
+                      {mod.station}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-xs tabular-nums text-muted-foreground">
+                        Station {mod.station} · {mod.durationLabel}
+                      </p>
+                      <h3 className="mt-1 font-display text-xl tracking-tight">
+                        {mod.title}
+                      </h3>
+                      <p className="mt-1 text-sm text-muted-foreground">{mod.kicker}</p>
+                      <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                        Video · Document · Assignment · Quiz
+                      </p>
+                    </div>
                   </div>
                   <span className="inline-flex h-11 shrink-0 items-center gap-2 text-sm">
                     {p?.passed ? (

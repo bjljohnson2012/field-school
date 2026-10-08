@@ -169,21 +169,28 @@ export default function TeachLessonPage() {
   ];
 
   return (
-    <main className="mx-auto grid max-w-6xl gap-8 px-4 py-12 lg:grid-cols-[220px_1fr]">
-      <nav aria-label="Course" className="rounded-2xl border border-border bg-card/50 p-3 lg:sticky lg:top-14 lg:max-h-[calc(100vh-4.5rem)] lg:self-start lg:overflow-y-auto">
-        <p className="text-sm font-medium">{data.lesson.title}</p>
+    <main className="mx-auto grid max-w-6xl lg:grid-cols-[16rem_minmax(0,1fr)]">
+      <nav aria-label="Course" className="border-b border-border px-4 py-6 lg:sticky lg:top-14 lg:max-h-[calc(100vh-3.5rem)] lg:self-start lg:overflow-y-auto lg:border-b-0 lg:border-r">
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Chapter</p>
+        <p className="mt-2 text-sm font-medium">{data.lesson.title}</p>
         <ul className="mt-3 space-y-1">
-          {outline.map((item) => (
+          {outline.map((item, index) => (
             <li key={item.title}>
-              <a href={`#activity-${item.title}`} className="flex flex-col rounded-lg px-2 py-1.5 hover:bg-secondary">
-                <span className="text-xs uppercase tracking-[0.12em] text-muted-foreground">{item.kind}</span>
-                <span className="text-sm">{item.title}</span>
+              <a href={`#activity-${item.title}`} className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-secondary">
+                <span className="grid size-5 shrink-0 place-items-center rounded-full bg-secondary font-mono text-[10px] text-muted-foreground">
+                  {index + 1}
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{item.kind}</span>
+                  <span className="block truncate text-sm">{item.title}</span>
+                </span>
               </a>
             </li>
           ))}
         </ul>
       </nav>
-      <div>
+      <div className="min-w-0 px-4 py-8 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-2xl">
       <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
         {data.lesson.kind} · {data.lesson.status}
       </p>
@@ -191,12 +198,12 @@ export default function TeachLessonPage() {
       {activities.length ? (
         <div className="mt-6 grid gap-4">
           {activities.map((block) => (
-            <article id={`activity-${block.title}`} key={block.title} className="rounded-2xl border border-border bg-card px-5 py-5">
-              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            <article id={`activity-${block.title}`} key={block.title} className="scroll-mt-24 border-b border-border py-8">
+              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 {block.title === "Do" ? "Assignment" : "Document"}
               </p>
-              <h2 className="mt-1 font-display text-2xl">{block.title}</h2>
-              <p className="mt-3 whitespace-pre-wrap text-sm leading-6">{block.body}</p>
+              <h2 className="mt-2 font-display text-3xl tracking-tight">{block.title}</h2>
+              <p className="mt-4 whitespace-pre-wrap text-base leading-7">{block.body}</p>
             </article>
           ))}
         </div>
@@ -301,6 +308,7 @@ export default function TeachLessonPage() {
           </>
         ) : null}
       </p>
+      </div>
       </div>
     </main>
   );

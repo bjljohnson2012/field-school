@@ -214,9 +214,9 @@ export default function LearnPage() {
           </section>
         )
       ) : (
-        <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_16rem]">
+        <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card lg:grid lg:grid-cols-[minmax(0,1fr)_16rem]">
         <section
-          className="rounded-xl border border-border bg-card px-5 py-6"
+          className="px-6 py-6 lg:px-8 lg:py-8"
           data-learn-org={card.org}
           data-sales-children={card.org === "sales" ? "0" : undefined}
           data-login={nextStep?.login}
@@ -317,8 +317,26 @@ export default function LearnPage() {
             {card.nextTitle}
           </Link>
         </section>
-        <aside className="rounded-xl border border-border bg-card p-5">
-          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">This lesson</p>
+        <aside className="border-t border-border bg-secondary/40 p-5 lg:border-t-0 lg:border-l">
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Chapter</p>
+          <ol className="mt-3">
+            {[
+              ["Document", "What it is about"],
+              ["Document", "What it will do"],
+              ["Activity", "Next step"],
+            ].map(([kind, label], index) => (
+              <li
+                key={label}
+                className={index === 2 ? "border-s-2 border-primary bg-background px-2 py-2" : "border-s-2 border-transparent px-2 py-2"}
+              >
+                <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  {index + 1} · {kind}
+                </span>
+                <span className="block text-sm">{label}</span>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-6 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">This lesson</p>
           <p className="mt-2 text-sm font-medium">{card.course}</p>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             Open the next step to stay in the lesson. The course outline stays with the course.
