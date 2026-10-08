@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { createServer } from "node:http";
 import { once } from "node:events";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { resolveTargets, smokeLive } from "./smoke-live.mjs";
 
@@ -19,7 +20,9 @@ function close(server) {
   return once(server, "close");
 }
 
-function portalHandler(portalOrigin, { googleRedirectHost = "http://127.0.0.1", signupStatus = 200 } = {}) {
+function portalHandler(portalOrigin, options = {}) {
+  const googleRedirectHost = options.googleRedirectHost ?? portalOrigin;
+  const signupStatus = options.signupStatus ?? 200;
   const seen = [];
   const handler = (req, res) => {
     const url = new URL(req.url, portalOrigin);
@@ -100,12 +103,13 @@ test("public portal origin selects the live site, www, and university", () => {
 });
 
 test("smoke accepts a portal, the site pages, and the university 301", async () => {
-  const draft = portalHandler("http://127.0.0.1");
-  const portal = await listen(draft.handler);
-  draft.handler = null;
+  let current = (_req, res) => {
+    res.writeHead(500);
+    res.end();
+  };
+  const portal = await listen((req, res) => current(req, res));
   const fixed = portalHandler(portal.origin);
-  portal.server.removeAllListeners("request");
-  portal.server.on("request", fixed.handler);
+  current = fixed.handler;
   const university = await listen((req, res) => {
     const url = new URL(req.url, "http://127.0.0.1");
     res.writeHead(301, { location: `${portal.origin}${url.pathname}` });
@@ -196,12 +200,20 @@ test("smoke rejects a wrong callback host, a stripe signup redirect, and a missi
 });
 
 test("the CLI exits 0 against the same local contract", async () => {
-  const built = portalHandler("http://127.0.0.1");
-  const portal = await listen((req, res) => built.handler(req, res));
+  let current = (_req, res) => {
+    res.writeHead(500);
+    res.end();
+  };
+  const portal = await listen((req, res) => current(req, res));
+  const built = portalHandler(portal.origin);
+  current = built.handler;
   const child = spawn(
     process.execPath,
     ["scripts/smoke-live.mjs", "--origin", portal.origin],
-    { cwd: new URL(".", import.meta.url), stdio: ["ignore", "pipe", "pipe"] },
+    {
+      cwd: fileURLToPath(new URL("..", import.meta.url)),
+      stdio: ["ignore", "pipe", "pipe"],
+    },
   );
   let stdout = "";
   let stderr = "";
