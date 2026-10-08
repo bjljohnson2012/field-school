@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { DeskPage, EmptyState, KpiStrip } from "@/components/desk/desk";
+import { Dialog } from "@/components/saas/dialog";
 import { EdgeList } from "@/components/knowledge/edge-list";
 import { libraryKpis } from "@/lib/desk/kpi";
 import { entityKey, parseEdgeViews, type EdgeView } from "@/lib/knowledge/graph";
@@ -35,23 +36,25 @@ export default function PublishedCatalogPage() {
   const [revision, setRevision] = useState(0);
   const [draft, setDraft] = useState("");
   const [adding, setAdding] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "Published" | "Unpublished">("all");
   const [edits, setEdits] = useState<Record<string, { title: string; body: string; status: string; open: boolean }>>({});
   const [media, setMedia] = useState<Map<string, number>>(new Map());
+  const [forSlug, setForSlug] = useState("");
 
   useEffect(() => {
     let cancelled = false;
-    setLessons([]);
-    setEdges([]);
-    setMedia(new Map());
-    setError(null);
-    setReady(false);
     void fetch("/api/composer/catalog", { headers: { "x-fs-org": slug } })
       .then((res) => res.json())
       .then((json) => {
         if (cancelled) return;
+        setForSlug(slug);
         setReady(true);
+        setError(null);
         if (!json.ok) {
           const code = typeof json.error === "string" ? json.error : "";
+          setLessons([]);
           setError(code === "sign_in_required" ? "Sign in to see this org." : "This catalog is not available.");
           return;
         }
@@ -63,7 +66,8 @@ export default function PublishedCatalogPage() {
     };
   }, [slug, revision]);
 
-  const lessonIds = lessons
+  const listed = forSlug === slug ? lessons : [];
+  const lessonIds = listed
     .slice(0, 100)
     .map((lesson) => lesson.id)
     .join(",");
@@ -85,21 +89,42 @@ export default function PublishedCatalogPage() {
 
   const usedBy = new Map<string, EdgeView[]>();
   const usedCount = new Map<string, number>();
-  for (const lesson of lessons) {
+  for (const lesson of listed) {
     const key = entityKey({ kind: "lesson", id: lesson.id });
     const list = edges.filter((edge) => edge.to.key === key);
     usedBy.set(lesson.id, list);
     usedCount.set(lesson.id, list.length);
   }
-  const publishedIds = lessons.filter((lesson) => lesson.status === "published").map((lesson) => lesson.id);
+  const publishedIds = listed.filter((lesson) => lesson.status === "published").map((lesson) => lesson.id);
   const kpis = libraryKpis({ lessonIds: publishedIds, usedBy: usedCount, sources: media });
 
+  const shown = listed.filter((lesson) => {
+    const label = publishLabel(lesson.status);
+    if (statusFilter !== "all" && label !== statusFilter) return false;
+    const needle = query.trim().toLowerCase();
+    if (!needle) return true;
+    return readableTitle(lesson.title, "").toLowerCase().includes(needle);
+  });
   return (
-    <DeskPage eyebrow={slug} title="Lessons" width="3xl" lede="Published and unpublished lessons are both listed. An unpublished lesson stays off the child catalog.">
+    <DeskPage eyebrow={slug} title="Lessons"
+      width="6xl"
+      lede="Published and unpublished lessons are both listed. An unpublished lesson stays off the child catalog."
+      actions={
+        canTeach ? (
+          <button
+            type="button"
+            onClick={() => setAddOpen(true)}
+            className="inline-flex h-10 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
+          >
+            New lesson
+          </button>
+        ) : null
+      }
+    >
       {error ? <p className="mb-6 text-sm">{error}</p> : null}
-      {canTeach ? (
+      {canTeach && addOpen ? (
+        <Dialog title="Add a lesson" onClose={() => setAddOpen(false)}>
         <form
-          className="mb-8 rounded-2xl border border-border bg-card p-4"
           onSubmit={(event) => {
             event.preventDefault();
             const body = draft.trim();
@@ -113,13 +138,13 @@ export default function PublishedCatalogPage() {
               .then(async (res) => {
                 if (!res.ok) return;
                 setDraft("");
+                setAddOpen(false);
                 setRevision((value) => value + 1);
               })
               .finally(() => setAdding(false));
           }}
         >
-          <p className="text-sm font-medium">Add a lesson</p>
-          <p className="mt-1 text-sm text-muted-foreground">Paste the lesson. It stays unpublished until you publish it.</p>
+          <p className="text-sm text-muted-foreground">Paste the lesson. It stays unpublished until you publish it.</p>
           <textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
@@ -130,22 +155,75 @@ export default function PublishedCatalogPage() {
             Add lesson
           </button>
         </form>
+        </Dialog>
       ) : null}
-      {lessons.length ? <KpiStrip label="This catalog at a glance" items={kpis} /> : null}
-      {ready && !error && !lessons.length ? <EmptyState>No lessons in this org yet.</EmptyState> : null}
-      <ul className="grid gap-3">
-        {lessons.map((lesson) => {
+      {listed.length ? <KpiStrip label="This catalog at a glance" items={kpis} /> : null}
+      {ready && forSlug === slug && !error && !listed.length ? <EmptyState>No lessons in this org yet.</EmptyState> : null}
+      {listed.length ? (
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <label className="min-w-48 flex-1">
+            <span className="sr-only">Find a lesson</span>
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Find a lesson"
+              className="h-10 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none ring-primary/30 focus:ring-2"
+            />
+          </label>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter lessons">
+            {(
+              [
+                ["all", "All"],
+                ["Published", "Published"],
+                ["Unpublished", "Unpublished"],
+              ] as const
+            ).map(([id, name]) => (
+              <button
+                key={id}
+                type="button"
+                aria-pressed={statusFilter === id}
+                onClick={() => setStatusFilter(id)}
+                className={
+                  statusFilter === id
+                    ? "h-8 rounded-full bg-primary px-3 text-xs text-primary-foreground"
+                    : "h-8 rounded-full border border-border bg-card px-3 text-xs"
+                }
+              >
+                {name}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      {listed.length && !shown.length ? <p className="text-sm text-muted-foreground">Nothing matches.</p> : null}
+      {shown.length ? (
+      <div className="overflow-hidden rounded-xl border border-border bg-card">
+        <div className="hidden grid-cols-[minmax(0,1.4fr)_8rem_minmax(0,1fr)_8rem] gap-3 border-b border-border px-4 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground sm:grid">
+          <span>Lesson</span>
+          <span>Status</span>
+          <span>Sources</span>
+          <span>Used by</span>
+        </div>
+      <ul>
+        {shown.map((lesson) => {
           const lessonEdges = usedBy.get(lesson.id) ?? [];
           const files = media.get(lesson.id) ?? 0;
           const label = publishLabel(lesson.status);
           return (
-            <li key={lesson.id} className="rounded-xl border border-border bg-card px-5 py-4">
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
-              <p className="mt-1 font-display text-xl">{readableTitle(lesson.title, "")}</p>
-              <p className="mt-1 text-xs text-muted-foreground" data-lesson-adjacency={lesson.id}>
+            <li key={lesson.id} className="border-b border-border px-4 py-4 last:border-b-0">
+              <div className="grid gap-2 sm:grid-cols-[minmax(0,1.4fr)_8rem_minmax(0,1fr)_8rem] sm:items-center sm:gap-3">
+              <p className="truncate text-sm font-medium">{readableTitle(lesson.title, "")}</p>
+              <p>
+                <span className={label === "Published" ? "inline-flex h-6 items-center rounded-full bg-pass/15 px-2 text-xs text-pass" : "inline-flex h-6 items-center rounded-full bg-secondary px-2 text-xs text-muted-foreground"}>
+                  {label}
+                </span>
+              </p>
+              <p className="text-sm text-muted-foreground" data-lesson-adjacency={lesson.id}>
                 {files} {files === 1 ? "source" : "sources"} · used by {lessonEdges.length}{" "}
                 {lessonEdges.length === 1 ? "brain" : "brains"} you can see
               </p>
+              <p className="hidden text-sm tabular-nums text-muted-foreground sm:block sm:text-right">{lessonEdges.length}</p>
+              </div>
               {lessonEdges.length ? (
                 <div className="mt-3">
                   <EdgeList edges={lessonEdges} empty="" />
@@ -199,8 +277,18 @@ export default function PublishedCatalogPage() {
                 ) : null}
               </p>
               {canTeach && edits[lesson.id]?.open ? (
+                <Dialog
+                  title="Edit lesson"
+                  onClose={() =>
+                    setEdits((current) => {
+                      const row = current[lesson.id];
+                      if (!row) return current;
+                      return { ...current, [lesson.id]: { ...row, open: false } };
+                    })
+                  }
+                >
                 <form
-                  className="mt-4 grid gap-3"
+                  className="grid gap-3"
                   onSubmit={(event) => {
                     event.preventDefault();
                     const edit = edits[lesson.id];
@@ -263,11 +351,14 @@ export default function PublishedCatalogPage() {
                     Save lesson
                   </button>
                 </form>
+                </Dialog>
               ) : null}
             </li>
           );
         })}
       </ul>
+      </div>
+      ) : null}
       <p className="mt-8 text-sm">
         <Link href={`/o/${slug}`} className="underline underline-offset-4">
           Back to org

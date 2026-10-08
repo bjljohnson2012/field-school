@@ -9,6 +9,7 @@ export function DeskPage({
   title,
   lede,
   width = "6xl",
+  actions,
   children,
   ...rest
 }: {
@@ -16,14 +17,20 @@ export function DeskPage({
   title: string;
   lede?: ReactNode;
   width?: keyof typeof WIDTH;
+  actions?: ReactNode;
   children: ReactNode;
 } & Omit<ComponentProps<"main">, "title" | "children">) {
   return (
-    <main {...rest} data-desk-page="" className={`mx-auto ${WIDTH[width]} px-4 py-12 lg:py-16`}>
-      <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">{eyebrow}</p>
-      <h1 className="mt-3 max-w-[18ch] font-display text-5xl leading-[1.02] tracking-[-0.035em]">{title}</h1>
-      {lede ? <div className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">{lede}</div> : null}
-      <div className="mt-8">{children}</div>
+    <main {...rest} data-desk-page="" className={`mx-auto ${WIDTH[width]} px-4 py-8 lg:py-10`}>
+      <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6">
+        <div className="min-w-0">
+          <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">{eyebrow}</p>
+          <h1 className="mt-2 font-display text-4xl tracking-tight">{title}</h1>
+          {lede ? <div className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{lede}</div> : null}
+        </div>
+        {actions ? <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div> : null}
+      </div>
+      <div className="mt-6">{children}</div>
     </main>
   );
 }

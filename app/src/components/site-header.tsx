@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
+import { Dialog } from "@/components/saas/dialog";
 import { signOutPortal } from "@/lib/auth/sign-out";
 import { usePortal } from "@/hooks/use-portal";
 import { activeDoor, type Door } from "@/lib/shell/routes";
@@ -88,27 +89,79 @@ const linkClass =
   "flex h-11 items-center px-2 text-muted-foreground hover:text-foreground sm:px-2.5";
 const currentClass = "flex h-11 items-center px-2 text-foreground underline underline-offset-8 sm:px-2.5";
 
-function NewMenu() {
+const NEW_DELIVERY: Record<string, { delivers: string; body: string }> = {
+  "/library/wizard": {
+    delivers: "New knowledge",
+    body: "This stores a new piece of knowledge. Drop a file, an idea, or a minute of audio. Submit adds it to the knowledge repository. Generate Lesson writes the lesson after, and only from what you stored.",
+  },
+  "/library/video": {
+    delivers: "New lesson",
+    body: "This starts a lesson from a long video. You mark the parts worth teaching. The lesson is written from those parts and stays unpublished until you publish it.",
+  },
+};
+
+export function NewMenu() {
+  const [open, setOpen] = useState(false);
+  const [picked, setPicked] = useState<string | null>(null);
+  const choice = NEW_DOORS.find((door) => door.href === picked) ?? null;
+  const delivery = picked ? NEW_DELIVERY[picked] : null;
+
   return (
-    <details className="relative">
-      <summary className="inline-flex h-10 cursor-pointer list-none items-center gap-1.5 rounded-xl border border-border bg-card px-3.5 text-sm font-medium text-foreground">
+    <>
+      <button
+        type="button"
+        className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-primary px-3.5 text-sm font-medium text-primary-foreground"
+        onClick={() => {
+          setPicked(null);
+          setOpen(true);
+        }}
+      >
         <Plus className="size-4" aria-hidden="true" />
         New
-      </summary>
-      <div className="absolute right-0 z-40 mt-1 flex min-w-44 flex-col rounded-2xl border border-border bg-card p-1 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
-        {NEW_DOORS.map((door) => (
-          <Link
-            key={door.href}
-            href={door.href}
-            className={`${linkClass} gap-2 whitespace-nowrap`}
-            onClick={closeMenu}
-          >
-            {door.label}
-            {door.hint ? <span className="text-xs">{door.hint}</span> : null}
-          </Link>
-        ))}
-      </div>
-    </details>
+      </button>
+      {open ? (
+        <Dialog
+          title={delivery ? delivery.delivers : "What are you adding?"}
+          onClose={() => setOpen(false)}
+        >
+          {delivery && choice ? (
+            <div>
+              <p className="text-sm leading-relaxed text-muted-foreground">{delivery.body}</p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <Link
+                  href={choice.href}
+                  className="inline-flex h-10 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
+                  onClick={() => setOpen(false)}
+                >
+                  Continue
+                </Link>
+                <button type="button" className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm" onClick={() => setPicked(null)}>
+                  Back
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="grid gap-2">
+              <p className="text-sm text-muted-foreground">
+                Choose knowledge or a lesson. The next step explains what will be delivered before you leave this page.
+              </p>
+              {NEW_DOORS.map((door) => (
+                <button
+                  key={door.href}
+                  type="button"
+                  className="rounded-xl border border-border px-4 py-3 text-left hover:bg-secondary"
+                  onClick={() => setPicked(door.href)}
+                >
+                  <span className="block text-sm font-medium">{door.label}</span>
+                  <span className="mt-1 block text-xs text-muted-foreground">{NEW_DELIVERY[door.href]?.delivers}</span>
+                  {door.hint ? <span className="mt-1 block text-xs text-muted-foreground">{door.hint}</span> : null}
+                </button>
+              ))}
+            </div>
+          )}
+        </Dialog>
+      ) : null}
+    </>
   );
 }
 

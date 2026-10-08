@@ -34,6 +34,7 @@ function hookSource(tsPath) {
     "export const Fragment = Symbol.for('react.fragment')",
     "export function useEffect(){}",
     "export function useState(v){return [v, function(){}]}",
+    "export function useRef(v){return {current:v}}",
     "export function useSyncExternalStore(_s, get, server){return server ? server() : get()}",
     "export function useSession(){return { data: null, status: 'unauthenticated' }}",
     "export function signOut(){return Promise.resolve()}",

@@ -7,6 +7,8 @@ import { SCOPE_QUESTION } from "@/lib/library/expand-knowledge";
 import { layoutRepository, type KnowledgePiece, type RepositoryModel } from "@/lib/library/knowledge-network";
 import { NEEDS_MORE } from "@/lib/library/teach-from-knowledge";
 import { cn } from "@/lib/utils";
+import { KnowledgeTree } from "@/components/knowledge/knowledge-tree";
+import { Dialog } from "@/components/saas/dialog";
 import { DropWell } from "@/components/workspace/drop-well";
 
 type Filter = "all" | "generated" | "waiting" | "published" | "unpublished";
@@ -234,7 +236,7 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
         <div className="flex min-w-48 flex-1 flex-wrap items-center justify-end gap-2 sm:max-w-md">
           <button
             type="button"
-            onClick={() => setComposer((open) => !open)}
+            onClick={() => setComposer(true)}
             className="inline-flex h-10 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
           >
             Add knowledge
@@ -252,12 +254,12 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
       </div>
 
       {composer ? (
-        <form className="mb-6 rounded-2xl border border-border bg-card p-4" onSubmit={(event) => void addKnowledge(event)}>
-          <p className="text-sm font-medium">Add knowledge</p>
-          <p className="mt-1 text-sm text-muted-foreground">
+        <Dialog title="Add knowledge" size="lg" onClose={() => setComposer(false)}>
+        <form onSubmit={(event) => void addKnowledge(event)}>
+          <p className="text-sm text-muted-foreground">
             Paste one document, or several separated by a line that is only ---. A Notion link is stored as a link. Files land as documents too.
           </p>
-          <div className="mt-3 grid items-stretch gap-3 lg:grid-cols-[minmax(0,1fr)_16rem]">
+          <div className="mt-3 grid items-stretch gap-3">
             <div>
           <textarea
             value={bulk}
@@ -286,6 +288,7 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
           </button>
           {addNote ? <p className="mt-3 text-sm">{addNote}</p> : null}
         </form>
+        </Dialog>
       ) : null}
 
       <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter knowledge">
@@ -311,7 +314,68 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
             {label}
           </button>
         ))}
-        <span className="ml-auto flex items-center gap-3 text-[11px] text-muted-foreground">
+      </div>
+
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
+        <KnowledgeTree
+          pieces={visible}
+          focusId={focusId}
+          empty={model.pieces.length === 0 ? "Nothing is stored for this org yet." : "Nothing matches."}
+          onFocus={setFocus}
+        />
+        <aside className="rounded-xl border border-border bg-card p-5">
+          {open ? (
+            <>
+              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                {open.statusLabel}
+                {open.sourceLabel ? ` · ${open.sourceLabel}` : ""}
+                {open.generated ? " · Generated" : " · Not generated yet"}
+              </p>
+              <h2 className="mt-2 font-display text-2xl tracking-tight">{open.title}</h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                {open.units.length} {open.units.length === 1 ? "part" : "parts"} of subknowledge
+              </p>
+              <div className="mt-4 flex flex-col items-start gap-3">
+                {open.href ? (
+                  <button
+                    type="button"
+                    onClick={() => void expand(open.id)}
+                    disabled={busy === open.id}
+                    className="h-9 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground"
+                  >
+                    {busy === open.id ? "Reading" : "Expand with AI"}
+                  </button>
+                ) : null}
+                {open.href ? (
+                  <Link href={open.href} className="text-sm font-medium text-primary">
+                    Open this lesson
+                  </Link>
+                ) : null}
+                <button type="button" className="text-sm font-medium text-primary" onClick={() => void openEdit(open)}>
+                  Edit
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">This org</p>
+              <h2 className="mt-2 font-display text-2xl tracking-tight">{model.orgName}</h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {model.pieces.length
+                  ? "Open a piece to read its subknowledge. Generated means a quiz was written from that knowledge."
+                  : "Drop a file, an idea, or a minute of audio. It lands here once it is stored."}
+              </p>
+              <Link href="/library/wizard" className="mt-5 inline-flex text-sm font-medium text-primary">
+                Open the wizard
+              </Link>
+            </>
+          )}
+        </aside>
+      </div>
+
+      <details className="mt-6 rounded-xl border border-border bg-card px-4 py-3">
+        <summary className="cursor-pointer text-sm font-medium">Map</summary>
+        <p className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
             <span className="size-2 rounded-full bg-primary" aria-hidden="true" />
             Generated
@@ -320,10 +384,8 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
             <span className="size-2 rounded-full bg-foreground/80" aria-hidden="true" />
             Not generated yet
           </span>
-        </span>
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
+        </p>
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
         <div
           className="relative h-[28rem] overflow-hidden rounded-2xl border border-border bg-card shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)] sm:h-[36rem]"
           style={{
@@ -456,20 +518,16 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
           )}
         </aside>
       </div>
-
       {map.hiddenLessons > 0 ? (
         <p className="mt-3 text-xs text-muted-foreground">
           {map.shownLessons} of {visible.length} pieces are on the map. The list has every match.
         </p>
       ) : null}
+      </details>
 
-      <div className="mt-8 grid gap-4" aria-label="All knowledge">
-        {visible.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            {model.pieces.length === 0 ? "Nothing is stored for this org yet." : "Nothing matches."}
-          </p>
-        ) : (
-          visible.map((piece) => {
+      {open ? (
+      <div className="mt-6 grid gap-4" aria-label="All knowledge">
+          {[open].map((piece) => {
             const reading = readings[piece.id];
             return (
               <article key={piece.id} className="rounded-2xl border border-border bg-card p-5 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
@@ -479,22 +537,7 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
                   <span>{piece.generated ? "Generated" : "Not generated yet"}</span>
                 </p>
                 <h3 className="mt-2 font-display text-2xl tracking-tight">{piece.title}</h3>
-                {piece.excerpt ? <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{piece.excerpt}</p> : null}
-                {piece.units.length ? (
-                  <ul className="mt-4 grid gap-3">
-                    {piece.units.map((unit) => (
-                      <li key={unit.id} className="rounded-xl border border-border px-4 py-3">
-                        <p className="text-sm font-medium">{unit.title}</p>
-                        {unit.excerpt && unit.excerpt !== unit.title ? (
-                          <p className="mt-1 text-sm text-muted-foreground">{unit.excerpt}</p>
-                        ) : null}
-                        <p className="mt-1 text-xs text-muted-foreground">{unit.quizCount > 0 ? "Quiz written" : "No quiz yet"}</p>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="mt-4 text-sm text-muted-foreground">No point is stored on this document yet.</p>
-                )}
+                <p className="mt-2 text-sm text-muted-foreground">The points of this document are in the list above. Expand writes a short reading. Edit changes the document.</p>
                 <div className="mt-4 flex flex-wrap items-center gap-4">
                   {piece.href ? (
                     <button
@@ -624,9 +667,9 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
                 ) : null}
               </article>
             );
-          })
-        )}
+          })}
       </div>
+      ) : null}
     </div>
   );
 }

@@ -176,11 +176,16 @@ export default function LearnPage() {
   const card = learnHomeFor(signedIn ? orgSlug : "", signedIn ? orgName : "", nextStep, signedIn ? brainContext : null);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-12 lg:py-16">
-      <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+    <main className="mx-auto max-w-6xl px-4 py-8 lg:py-10">
+      <div className="border-b border-border pb-6">
+      <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
         {signedIn && loadedFor === email ? card.orgLabel : "Learn"}
       </p>
-      <h1 className="mt-3 max-w-[14ch] font-display text-5xl leading-[1.02] tracking-[-0.035em]">Learn</h1>
+      <h1 className="mt-2 font-display text-4xl tracking-tight">Learn</h1>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        The next step for this org, and what the lesson will do.
+      </p>
+      </div>
       {!signedIn && !waiting ? (
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
@@ -209,8 +214,9 @@ export default function LearnPage() {
           </section>
         )
       ) : (
+        <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_16rem]">
         <section
-          className="mt-8 max-w-2xl rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]"
+          className="rounded-xl border border-border bg-card px-5 py-6"
           data-learn-org={card.org}
           data-sales-children={card.org === "sales" ? "0" : undefined}
           data-login={nextStep?.login}
@@ -311,6 +317,14 @@ export default function LearnPage() {
             {card.nextTitle}
           </Link>
         </section>
+        <aside className="rounded-xl border border-border bg-card p-5">
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">This lesson</p>
+          <p className="mt-2 text-sm font-medium">{card.course}</p>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            Open the next step to stay in the lesson. The course outline stays with the course.
+          </p>
+        </aside>
+        </div>
       )}
     </main>
   );
