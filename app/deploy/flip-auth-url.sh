@@ -13,12 +13,18 @@ elif [ -n "${1:-}" ]; then
 fi
 
 VPS_HOST="${VPS_HOST:-root@2.24.70.248}"
-KEY="${VPS_SSH_KEY:-$HOME/.ssh/vps_deploy}"
-if [ ! -f "$KEY" ] && [ -f "$HOME/.ssh/field-school-agent" ]; then
-  KEY="$HOME/.ssh/field-school-agent"
+KEY="${VPS_SSH_KEY:-}"
+if [ -z "$KEY" ] || [ ! -f "$KEY" ]; then
+  for candidate in "$HOME/.ssh/vps_deploy" "$HOME/.ssh/field-school-agent" "$HOME/.ssh/id_ed25519_hostinger"; do
+    if [ -f "$candidate" ]; then
+      KEY="$candidate"
+      break
+    fi
+  done
 fi
-if [ ! -f "$KEY" ] && [ -f "$HOME/.ssh/id_ed25519_hostinger" ]; then
-  KEY="$HOME/.ssh/id_ed25519_hostinger"
+if [ -z "$KEY" ] || [ ! -f "$KEY" ]; then
+  echo "missing SSH key (tried VPS_SSH_KEY, vps_deploy, field-school-agent, id_ed25519_hostinger)" >&2
+  exit 1
 fi
 SSH=(ssh -i "$KEY" -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new)
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
