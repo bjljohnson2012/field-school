@@ -113,6 +113,8 @@ Live `AUTH_URL` is `https://portal.fieldschool.ai`. Register these redirect URIs
 - Google: `https://portal.fieldschool.ai/api/auth/callback/google`
 - X: `https://portal.fieldschool.ai/api/auth/callback/twitter`
 
+Ben reads the live `AUTH_URL` before changing it. Dry-run is `deploy/flip-auth-url.sh --dry-run`, then `--apply`. The checklist is `docs/GO-LIVE.md`. This repo does not apply the flip.
+
 ## Local development
 
 ```bash
