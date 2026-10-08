@@ -110,7 +110,9 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
 
   assert.doesNotMatch(home, /data-form="saturday_note"/);
   assert.doesNotMatch(home, /University/);
-  assert.match(home, /Field School is the organization/);
+  assert.match(home, /We need to get better/);
+  assert.match(home, /learning, developing, and AI-powered knowledge/);
+  assert.doesNotMatch(home, /Field School is the organization/);
   assert.match(home, /training portal/);
   assert.match(home, /href="\/portal"/);
   assert.match(home, /href="\/community"/);
@@ -118,7 +120,12 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
   assert.match(home, /Join our Newsletter/);
   assert.match(home, /Enroll/);
   assert.doesNotMatch(home, /mailto:ben@fieldschool.ai/);
-  assert.match(about, /Field School is the organization/);
+  assert.match(about, /We need to get better/);
+  assert.match(about, /learning, developing, and AI-powered knowledge/);
+  assert.doesNotMatch(about, /Field School is the organization/);
+  assert.match(pricing, /learning, developing, and AI-powered knowledge/);
+  assert.doesNotMatch(pricing, /Field School is the organization/);
+  assert.doesNotMatch(readSrc("marketing-site/founder.html"), /Field School is the organization/);
   assert.match(portal, /The Field School training portal/);
   assert.match(community, /The Field School community/);
   assert.match(coaching, /Field School coaching/);
