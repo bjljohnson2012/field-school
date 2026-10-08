@@ -4,6 +4,8 @@ Production campus: [https://portal.fieldschool.ai](https://portal.fieldschool.ai
 
 `university.benjohnson.ai` 301s to portal. AUTH_URL is `https://portal.fieldschool.ai`. Apply that flip with [deploy/flip-auth-url.sh](deploy/flip-auth-url.sh). Do not wipe the live Next tree from a `main`-only branch.
 
+Dry-run is `bash deploy/flip-auth-url.sh --dry-run`. `--apply` is Ben's step. Live Stripe env names are in `docs/GO-LIVE.md`.
+
 This Next.js portal **replaces** the older TanStack container. Caddy sends `portal.fieldschool.ai` to `field-school-app:3000` on Docker network `ae-coach_default`. Keep that container name.
 
 ## Source of truth
