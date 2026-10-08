@@ -1,19 +1,22 @@
 {
   "ok": true,
-  "fr": ["FR-2", "FR-6"],
+  "fr": [
+    "FR-2",
+    "FR-6"
+  ],
   "distribute": false,
   "launch": "CLOSED 0/8",
   "selected_child_id": "play-child",
   "children": [
     {
       "id": "play-child",
-      "name": "Play Child",
+      "name": "Child",
       "kind": "child",
       "login": "none",
       "user": false,
       "now": {
         "title": "LessonSpine Ready / HLS",
-        "copy": "Play Child is on the locked LessonSpine rail. Parent owns the plan. Child is not a User."
+        "copy": "Child is on the locked LessonSpine rail. Parent owns the plan. Child is not a User."
       },
       "confidence": {
         "state": "getting_there",
@@ -22,25 +25,6 @@
       "next": {
         "title": "QuizBumper next-up",
         "copy": "Next is the next-up beat, then Parent review. No child login."
-      }
-    },
-    {
-      "id": "hire-child",
-      "name": "Hire Child",
-      "kind": "child",
-      "login": "none",
-      "user": false,
-      "now": {
-        "title": "Learn with Ben hire",
-        "copy": "Hire Child sits under the Parent after webhook hire activation. Ledger stays supervised."
-      },
-      "confidence": {
-        "state": "not_yet",
-        "label": "Not yet"
-      },
-      "next": {
-        "title": "Open metering, then play",
-        "copy": "Next is /metering then /play/lesson-spine. Parent owns intent."
       }
     }
   ]

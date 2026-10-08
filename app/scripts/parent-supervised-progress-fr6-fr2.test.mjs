@@ -34,11 +34,15 @@ test("Now / Confidence / Next hangs on the selected Child", () => {
   assert.equal(play.selected?.login, "none");
   assert.equal(play.selected?.user, false);
   assert.equal(play.selected?.confidence.label, "Getting there");
+  assert.equal(play.selected?.name, "Child");
+  assert.match(play.selected?.now.copy || "", /Child is on the locked LessonSpine/);
+  assert.doesNotMatch(play.selected?.now.copy || "", /Play Child|Hire Child/);
   assert.match(play.selected?.now.title || "", /LessonSpine/);
   assert.match(play.selected?.next.title || "", /next-up/i);
+  assert.equal(play.children.length, 1);
   const hire = selectSupervisedChild("hire-child");
-  assert.equal(hire.selected?.id, "hire-child");
-  assert.equal(hire.selected?.confidence.state, "not_yet");
+  assert.equal(hire.selected?.id, "play-child");
+  assert.equal(hire.children.some((child) => child.id === "hire-child"), false);
   assert.equal(play.distribute, false);
   assert.equal(play.launch, "CLOSED 0/8");
 });

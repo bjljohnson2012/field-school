@@ -1,102 +1,83 @@
 {
   "ok": true,
-  "fr": ["FR-KB-1", "FR-KB-2"],
+  "fr": [
+    "FR-KB-1",
+    "FR-KB-2"
+  ],
   "distribute": false,
   "launch": "CLOSED 0/8",
   "selected_child_id": "play-child",
   "children": [
     {
       "id": "play-child",
-      "name": "Play Child",
+      "name": "Child",
       "kind": "child",
       "login": "none",
       "user": false,
-      "title": "Play Child knowledge brain",
+      "title": "Child knowledge brain",
       "status": "suggested",
       "version": 0,
       "intent": {
-        "goals": ["Hold LessonSpine from parent intent"],
-        "subjects": ["LessonSpine"],
-        "themes": ["parent-owned plan"],
+        "goals": [
+          "Hold LessonSpine from parent intent"
+        ],
+        "subjects": [
+          "LessonSpine"
+        ],
+        "themes": [
+          "parent-owned plan"
+        ],
         "timeHorizon": "this hire",
-        "constraints": ["Child is not a User", "No child login"]
+        "constraints": [
+          "Child is not a User",
+          "No child login"
+        ]
       },
       "paths": {
         "items": [
-          { "title": "LessonSpine Ready / HLS", "play": "/play/lesson-spine" },
-          { "title": "Hold LessonSpine from parent intent", "play": "/play/lesson-spine" },
-          { "title": "parent-owned plan through LessonSpine", "play": "/progress" }
+          {
+            "title": "LessonSpine Ready / HLS",
+            "play": "/play/lesson-spine"
+          },
+          {
+            "title": "Hold LessonSpine from parent intent",
+            "play": "/play/lesson-spine"
+          },
+          {
+            "title": "parent-owned plan through LessonSpine",
+            "play": "/progress"
+          }
         ]
       },
       "portion": {
         "horizon": "this hire",
         "items": [
-          { "title": "LessonSpine Ready / HLS", "play": "/play/lesson-spine" },
-          { "title": "Hold LessonSpine from parent intent", "play": "/play/lesson-spine" },
-          { "title": "parent-owned plan through LessonSpine", "play": "/progress" }
+          {
+            "title": "LessonSpine Ready / HLS",
+            "play": "/play/lesson-spine"
+          },
+          {
+            "title": "Hold LessonSpine from parent intent",
+            "play": "/play/lesson-spine"
+          },
+          {
+            "title": "parent-owned plan through LessonSpine",
+            "play": "/progress"
+          }
         ]
       },
       "progress": {
         "now": {
           "title": "LessonSpine Ready / HLS",
-          "copy": "Play Child is on the locked LessonSpine rail. Parent owns the plan."
+          "copy": "Child is on the locked LessonSpine rail. Parent owns the plan."
         },
-        "confidence": { "state": "getting_there", "label": "Getting there" },
+        "confidence": {
+          "state": "getting_there",
+          "label": "Getting there"
+        },
         "next": {
           "title": "QuizBumper next-up",
           "copy": "Next is the next-up beat, then Parent review. No child login."
-        }
-      },
-      "sources": [],
-      "notes": [],
-      "summary": {
-        "sources": 0,
-        "notes": 0,
-        "intent_bound": true,
-        "path_bound": true,
-        "portion_bound": true
-      }
-    },
-    {
-      "id": "hire-child",
-      "name": "Hire Child",
-      "kind": "child",
-      "login": "none",
-      "user": false,
-      "title": "Hire Child knowledge brain",
-      "status": "suggested",
-      "version": 0,
-      "intent": {
-        "goals": ["Start curriculum from parent intent after hire"],
-        "subjects": ["Learn with Ben"],
-        "themes": ["hire path"],
-        "timeHorizon": "next portion",
-        "constraints": ["Child is not a User", "No child login"]
-      },
-      "paths": {
-        "items": [
-          { "title": "Learn with Ben hire", "play": "/metering" },
-          { "title": "Start curriculum from parent intent after hire", "play": "/play/lesson-spine" },
-          { "title": "hire path through Learn with Ben", "play": "/progress" }
-        ]
-      },
-      "portion": {
-        "horizon": "next portion",
-        "items": [
-          { "title": "Learn with Ben hire", "play": "/metering" },
-          { "title": "Start curriculum from parent intent after hire", "play": "/play/lesson-spine" },
-          { "title": "hire path through Learn with Ben", "play": "/progress" }
-        ]
-      },
-      "progress": {
-        "now": {
-          "title": "Learn with Ben hire",
-          "copy": "Hire Child waits on the recorded hire. Child is not a User."
-        },
-        "confidence": { "state": "not_yet", "label": "Not yet" },
-        "next": {
-          "title": "Start from parent intent",
-          "copy": "Parent owns the plan after hire. No child login."
         }
       },
       "sources": [],

@@ -56,14 +56,14 @@ test("Next slice under the selected Child from assembled path and parent intent"
   const dest = join(mkdtempSync(join(tmpdir(), "supervised-portion-")), "supervised-portion.json");
   process.env.SUPERVISED_PORTION_PATH = dest;
   const locked = writeSupervisedPortion("play-child", "lock", {
-    name: "Play Child",
+    name: "Child",
     horizon: "this hire",
     pathItems: [{ title: "LessonSpine Ready / HLS", play: "/play/lesson-spine" }],
   });
   assert.equal(locked.ok, true);
   assert.equal(locked.selected?.status, "locked");
   const overridden = writeSupervisedPortion("play-child", "override", {
-    name: "Play Child",
+    name: "Child",
     horizon: "this hire",
     items: ["QuizBumper next-up"],
   });

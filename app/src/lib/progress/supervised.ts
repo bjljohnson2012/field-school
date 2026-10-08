@@ -54,16 +54,31 @@ function parseProgress(raw: string): SupervisedProgress | null {
   try {
     const body = JSON.parse(raw) as SupervisedProgress;
     const children = Array.isArray(body.children)
-      ? body.children.filter(
-          (child) =>
-            child &&
-            child.kind === "child" &&
-            child.login === "none" &&
-            child.user === false &&
-            child.now &&
-            child.confidence &&
-            child.next,
-        )
+      ? body.children
+          .filter(
+            (child) =>
+              child &&
+              child.id === "play-child" &&
+              child.kind === "child" &&
+              child.login === "none" &&
+              child.user === false &&
+              child.now &&
+              child.confidence &&
+              child.next,
+          )
+          .map((child) => ({
+            ...child,
+            name:
+              !child.name || /^(play child|hire child)$/i.test(child.name.trim())
+                ? "Child"
+                : child.name,
+            now: {
+              ...child.now,
+              copy: child.now.copy
+                .replace(/\bPlay Child\b/g, "Child")
+                .replace(/\bHire Child\b/g, "Child"),
+            },
+          }))
       : [];
     const selected =
       children.find((child) => child.id === body.selected_child_id)?.id ||

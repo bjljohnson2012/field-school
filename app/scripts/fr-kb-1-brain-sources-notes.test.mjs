@@ -62,21 +62,21 @@ function writeSourceAndNote(childId, name, sourceBody, noteBody) {
   return selected;
 }
 
-test("Parent adds a source and a note under Play Child and Hire Child", () => {
+test("Parent adds a source and a note under the tracked Child", () => {
   const dest = join(mkdtempSync(join(tmpdir(), "supervised-brain-sources-")), "supervised-brain.json");
   process.env.SUPERVISED_BRAIN_PATH = dest;
   writeSourceAndNote(
     "play-child",
-    "Play Child",
+    "Child",
     "LessonSpine Ready / HLS private source",
-    "Play Child parent note on private curriculum",
+    "Child parent note on private curriculum",
   );
-  writeSourceAndNote(
-    "hire-child",
-    "Hire Child",
-    "Learn with Ben hire private source",
-    "Hire Child parent note on private curriculum",
-  );
+  const salesperson = writeSupervisedBrain("hire-child", "update", {
+    sources: ["A salesperson is a login user"],
+    notes: ["not a child"],
+  });
+  assert.equal(salesperson.ok, false);
+  assert.equal(salesperson.error, "unknown_child");
   const unknown = writeSupervisedBrain("not-a-child", "update", {
     sources: ["no"],
     notes: ["no"],

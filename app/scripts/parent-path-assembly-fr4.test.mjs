@@ -41,11 +41,13 @@ test("Path assembles under the selected Child from parent intent", () => {
   assert.match(play.selected?.items[0]?.title || "", /LessonSpine/);
   assert.equal(play.selected?.items[0]?.source, "catalog");
   assert.match(play.selected?.intent.subjects.join(" ") || "", /LessonSpine/);
+  assert.equal(play.selected?.name, "Child");
+  assert.equal(play.children.length, 1);
   assert.equal(play.distribute, false);
   assert.equal(play.launch, "CLOSED 0/8");
   const hire = selectSupervisedPath("hire-child");
-  assert.equal(hire.selected?.id, "hire-child");
-  assert.match(hire.selected?.items[0]?.title || "", /Learn with Ben/);
+  assert.equal(hire.selected?.id, "play-child");
+  assert.equal(hire.children.some((child) => child.id === "hire-child"), false);
   const items = assembleHirePathItems({
     goals: ["Hold the rail from parent intent"],
     subjects: ["LessonSpine"],
@@ -58,7 +60,7 @@ test("Path assembles under the selected Child from parent intent", () => {
   const dest = join(mkdtempSync(join(tmpdir(), "supervised-path-")), "supervised-path.json");
   process.env.SUPERVISED_PATH_PATH = dest;
   const assembled = assembleSupervisedPath("play-child", {
-    name: "Play Child",
+    name: "Child",
     goals: ["Hold the rail from parent intent"],
     subjects: ["LessonSpine"],
     themes: ["parent-owned plan"],
