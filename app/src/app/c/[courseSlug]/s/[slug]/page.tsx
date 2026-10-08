@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { AssignmentPanel } from "@/components/assignment-panel";
 import { GuestContinuity } from "@/components/guest-continuity";
 import { QuizPanel } from "@/components/quiz-panel";
@@ -13,7 +13,6 @@ import { postLearningEvent } from "@/lib/campus-runtime/client";
 import { getCourse } from "@/lib/course/catalog";
 import { emptyProgress, passingScore } from "@/lib/course/content";
 import { saveQuizAnswers, upsertModule } from "@/lib/portal";
-import { cn } from "@/lib/utils";
 
 export default function StationPage() {
   const { courseSlug, slug } = useParams<{ courseSlug: string; slug: string }>();
@@ -48,41 +47,15 @@ export default function StationPage() {
   const progress = state?.modules[mod.slug] ?? emptyProgress();
   const passPct = Math.round(course.passRatio * 100);
 
-  return (
-    <div className="mx-auto grid max-w-7xl gap-8 px-6 py-8 lg:grid-cols-[220px_minmax(0,1fr)]">
-      <aside className="hidden lg:block">
-        <p className="mb-3 text-xs uppercase tracking-[0.16em] text-muted-foreground">
-          Stations
-        </p>
-        <ol className="space-y-1">
-          {course.modules.map((m) => {
-            const done = state?.modules[m.slug]?.passed;
-            return (
-              <li key={m.slug}>
-                <Link
-                  href={`/c/${course.slug}/s/${m.slug}`}
-                  className={cn(
-                    "flex h-10 items-center justify-between rounded-lg px-2 text-sm",
-                    m.slug === mod.slug
-                      ? "bg-secondary text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  <span className="truncate">
-                    <span className="mr-2 font-mono text-[11px] text-faint">
-                      {m.station}
-                    </span>
-                    {m.title}
-                  </span>
-                  {done ? <Check className="size-3.5 text-pass" /> : null}
-                </Link>
-              </li>
-            );
-          })}
-        </ol>
-      </aside>
+  const parts = [
+    { href: "#clip", label: "Clip" },
+    { href: "#thesis", label: "Thesis" },
+    { href: "#field-work", label: "Field work" },
+    { href: "#quiz", label: "Quiz" },
+  ];
 
-      <main className="space-y-8 pb-16">
+  return (
+    <main className="mx-auto max-w-3xl pb-8">
         <div>
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Station {mod.station} · pass at {passPct}%
@@ -91,7 +64,47 @@ export default function StationPage() {
           <p className="mt-3 max-w-2xl text-muted-foreground">{mod.summary}</p>
         </div>
 
-        <section className="card space-y-4 p-5">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
+          {prev ? (
+            <Link
+              href={`/c/${course.slug}/s/${prev.slug}`}
+              className="inline-flex h-9 min-w-0 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="size-4 shrink-0" />
+              <span className="truncate">{prev.title}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+          {next ? (
+            <Link
+              href={`/c/${course.slug}/s/${next.slug}`}
+              className="inline-flex h-9 min-w-0 items-center gap-2 text-sm"
+            >
+              <span className="truncate">{next.title}</span>
+              <ArrowRight className="size-4 shrink-0" />
+            </Link>
+          ) : (
+            <Link href={`/c/${course.slug}/exam`} className="inline-flex h-9 items-center gap-2 text-sm">
+              Exam
+              <ArrowRight className="size-4" />
+            </Link>
+          )}
+        </div>
+
+        <nav aria-label="This station" className="mt-4 flex flex-wrap gap-2">
+          {parts.map((part) => (
+            <a
+              key={part.href}
+              href={part.href}
+              className="inline-flex h-8 items-center rounded-full border border-border bg-card px-3 text-xs hover:bg-secondary"
+            >
+              {part.label}
+            </a>
+          ))}
+        </nav>
+
+        <section id="clip" className="card mt-8 scroll-mt-24 space-y-4 p-5">
           <h2 className="h-section">Clip</h2>
           {mod.clips.map((clip) => (
             <YoutubeClip
@@ -125,7 +138,7 @@ export default function StationPage() {
           )}
         </section>
 
-        <section className="card px-5 py-5">
+        <section id="thesis" className="card mt-8 scroll-mt-24 px-5 py-5">
           <h2 className="h-section">Thesis</h2>
           <p className="mt-3 text-sm leading-relaxed">{mod.thesis}</p>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-muted-foreground">
@@ -135,8 +148,11 @@ export default function StationPage() {
           </ul>
         </section>
 
-        <GuestContinuity />
+        <div className="mt-8">
+          <GuestContinuity />
+        </div>
 
+        <div id="field-work" className="mt-8 scroll-mt-24">
         <AssignmentPanel
           module={mod}
           assignment={progress.assignment}
@@ -153,7 +169,9 @@ export default function StationPage() {
             }
           }}
         />
+        </div>
 
+        <div id="quiz" className="mt-8 scroll-mt-24">
         <QuizPanel
           questions={mod.quiz}
           ratio={course.passRatio}
@@ -179,15 +197,16 @@ export default function StationPage() {
             return next;
           }}
         />
+        </div>
 
-        <div className="flex flex-wrap justify-between gap-3">
+        <nav aria-label="Next station" className="mt-10 flex items-center justify-between gap-3 border-t border-border pt-4">
           {prev ? (
             <Link
               href={`/c/${course.slug}/s/${prev.slug}`}
-              className="inline-flex h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+              className="inline-flex h-11 min-w-0 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
             >
-              <ArrowLeft className="size-4" />
-              {prev.title}
+              <ArrowLeft className="size-4 shrink-0" />
+              <span className="truncate">{prev.title}</span>
             </Link>
           ) : (
             <span />
@@ -195,10 +214,10 @@ export default function StationPage() {
           {next ? (
             <Link
               href={`/c/${course.slug}/s/${next.slug}`}
-              className="inline-flex h-11 items-center gap-2 text-sm"
+              className="inline-flex h-11 min-w-0 items-center gap-2 text-sm"
             >
-              {next.title}
-              <ArrowRight className="size-4" />
+              <span className="truncate">{next.title}</span>
+              <ArrowRight className="size-4 shrink-0" />
             </Link>
           ) : (
             <Link
@@ -209,8 +228,7 @@ export default function StationPage() {
               <ArrowRight className="size-4" />
             </Link>
           )}
-        </div>
-      </main>
-    </div>
+        </nav>
+    </main>
   );
 }

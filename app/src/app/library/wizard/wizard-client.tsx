@@ -8,6 +8,7 @@ import { canTeach } from "@/lib/composer/rules";
 import { COLLECTIONS, traitsFromDrop } from "@/lib/evolution/collections";
 import { titleFromDrop } from "@/lib/library/teach-from-knowledge";
 import { Button } from "@/components/ui/button";
+import { DropWell } from "@/components/workspace/drop-well";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
@@ -353,25 +354,15 @@ export function WizardClient() {
                 comes after.
               </p>
 
-              <div
+              <DropWell
                 className="mt-6"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  addFiles(event.dataTransfer.files);
-                }}
+                label="Drop a file, or click to choose one"
+                hint="PDF, text, or a minute of audio."
+                accept=".pdf,.txt,.md,.docx,application/pdf,text/plain,audio/*"
+                multiple
+                inputRef={fileRef}
+                onFiles={addFiles}
               >
-                <input
-                  ref={fileRef}
-                  className="sr-only"
-                  type="file"
-                  multiple
-                  accept=".pdf,.txt,.md,.docx,application/pdf,text/plain,audio/*"
-                  onChange={(event) => {
-                    addFiles(event.target.files);
-                    event.target.value = "";
-                  }}
-                />
                 {pile.length ? (
                   <ul className="grid gap-3">
                     {pile.map((item) => (
@@ -389,11 +380,11 @@ export function WizardClient() {
                     ))}
                   </ul>
                 ) : (
-                  <p className="rounded-2xl border border-dashed border-border px-4 py-8 text-sm text-muted-foreground">
+                  <p className="mt-4 text-sm text-muted-foreground">
                     This document is empty. Insert text, an idea, a file, or a minute of audio.
                   </p>
                 )}
-              </div>
+              </DropWell>
 
               <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4">
                 <span className="text-sm text-muted-foreground">Insert</span>

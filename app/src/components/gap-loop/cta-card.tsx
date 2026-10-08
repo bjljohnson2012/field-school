@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { DropWell } from "@/components/workspace/drop-well";
 
 export function CtaCard({
   task,
@@ -19,7 +20,6 @@ export function CtaCard({
   busy: boolean;
   onRespond: (body: Record<string, unknown>) => void;
 }) {
-  const fileRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
   const [reason, setReason] = useState("");
   if (!task) {
@@ -92,32 +92,30 @@ export function CtaCard({
           </button>
         </form>
       )}
+      <div className="mt-4">
+        <DropWell
+          label="Drop notes, or click to upload"
+          hint="Text or a PDF."
+          accept="application/pdf,text/plain,.txt,.md"
+          onFiles={(files) => {
+            const file = files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+              const result = String(reader.result || "");
+              if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
+                const encoded = result.split(",")[1] || "";
+                onRespond({ kind: "pdf", filename: file.name, pdfBase64: encoded });
+              } else {
+                onRespond({ kind: "upload", filename: file.name, text: result });
+              }
+            };
+            if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) reader.readAsDataURL(file);
+            else reader.readAsText(file);
+          }}
+        />
+      </div>
       <div className="mt-4 flex flex-wrap gap-2">
-        <label className="rounded-full border border-border px-3 py-1 text-sm">
-          Upload notes
-          <input
-            ref={fileRef}
-            className="sr-only"
-            type="file"
-            accept="application/pdf,text/plain,.txt,.md"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (!file) return;
-              const reader = new FileReader();
-              reader.onload = () => {
-                const result = String(reader.result || "");
-                if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
-                  const encoded = result.split(",")[1] || "";
-                  onRespond({ kind: "pdf", filename: file.name, pdfBase64: encoded });
-                } else {
-                  onRespond({ kind: "upload", filename: file.name, text: result });
-                }
-              };
-              if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) reader.readAsDataURL(file);
-              else reader.readAsText(file);
-            }}
-          />
-        </label>
         <button type="button" className="text-sm underline underline-offset-2" disabled={busy} onClick={() => onRespond({ kind: "decline", text: reason })}>
           Decline
         </button>

@@ -1,4 +1,4 @@
-import { CourseSubnav } from "@/components/course-subnav";
+import { CourseFrame } from "@/components/course/course-frame";
 
 export default async function CourseLayout({
   children,
@@ -8,10 +8,5 @@ export default async function CourseLayout({
   params: Promise<{ courseSlug: string }>;
 }) {
   const { courseSlug } = await params;
-  return (
-    <>
-      <CourseSubnav courseSlug={courseSlug} />
-      {children}
-    </>
-  );
+  return <CourseFrame courseSlug={courseSlug}>{children}</CourseFrame>;
 }

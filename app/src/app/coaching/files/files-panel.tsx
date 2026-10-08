@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DropWell } from "@/components/workspace/drop-well";
 import { STORED_VISIBILITY } from "../../api/coaching/knowledge/visibility";
 
 const FILE_KINDS = [
@@ -149,7 +150,9 @@ export function FilesPanel({ initial, subject }: { initial: FileRow[]; subject: 
     <div className="mt-6 space-y-6">
       <section className="card p-4">
         <h2 className="text-sm font-semibold">Upload</h2>
-        <input className="input mt-3" type="file" onChange={(event) => void onFile(event.target.files?.[0] ?? null)} />
+        <div className="mt-3">
+          <DropWell label="Drop a file, or click to choose one" onFiles={(files) => void onFile(files[0] ?? null)} />
+        </div>
         <label className="mt-3 block text-sm font-semibold">
           Filename
           <input className="input mt-1" value={filename} onChange={(event) => setFilename(event.target.value)} />

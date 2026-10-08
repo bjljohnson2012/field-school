@@ -58,11 +58,33 @@ export default function TeachPage() {
   }
 
   useEffect(() => {
+    let cancelled = false;
     void fetch("/api/org/active", {
       method: "POST",
-      headers: headers(),
+      headers: { "Content-Type": "application/json", "x-fs-org": slug },
       body: JSON.stringify({ slug }),
-    }).then(() => load());
+    })
+      .then(async () => {
+        if (cancelled) return;
+        const res = await fetch("/api/composer/catalog", { headers: { "x-fs-org": slug } });
+        const json = (await res.json()) as Catalog;
+        if (cancelled) return;
+        if (!res.ok) {
+          setData({ error: json.error || "forbidden" });
+          return;
+        }
+        setData(json);
+        const openRes = await fetch("/api/library/candidates", { headers: { "x-fs-org": slug } });
+        if (!openRes.ok || cancelled) return;
+        const openJson = (await openRes.json()) as { lessons?: Lesson[] };
+        setWaiting(Array.isArray(openJson.lessons) ? openJson.lessons : []);
+      })
+      .catch(() => {
+        if (!cancelled) setData({ error: "forbidden" });
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
   async function generate(lessonId: string) {
@@ -131,15 +153,44 @@ export default function TeachPage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Composer</p>
-      <h1 className="mt-2 font-display text-4xl tracking-tight">Teach</h1>
-      <p className="mt-4 text-muted-foreground">
-        Text, upload, book, or link. Units come from the text you supply. Drafts stay hidden from
-        children.
+    <main className="mx-auto grid max-w-6xl gap-8 px-4 py-10 lg:grid-cols-[16rem_minmax(0,1fr)]">
+      <aside className="rounded-2xl border border-border bg-card/50 p-4 lg:sticky lg:top-14 lg:max-h-[calc(100vh-4.5rem)] lg:overflow-y-auto">
+        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Course builder</p>
+        <h1 className="mt-2 font-display text-3xl tracking-tight">Teach</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Drafts stay hidden from children until you publish.
+        </p>
+        <h2 className="mt-6 text-sm font-semibold">Lessons</h2>
+        <ul className="mt-2 space-y-1">
+          {data && (data.lessons ?? []).length === 0 ? (
+            <li className="px-2 py-2 text-sm text-muted-foreground">No drafts yet.</li>
+          ) : null}
+          {(data?.lessons ?? []).map((lesson) => (
+            <li key={lesson.id}>
+              <Link
+                href={`/o/${slug}/teach/${lesson.id}`}
+                className="block rounded-lg px-2 py-2 text-sm hover:bg-secondary"
+              >
+                <span className="block truncate font-medium">{lesson.title}</span>
+                <span className="text-xs text-muted-foreground">
+                  {lesson.kind} · {lesson.status}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-6 text-sm">
+          <Link href={`/o/${slug}`} className="underline underline-offset-4">
+            Back to org
+          </Link>
+        </p>
+      </aside>
+      <div className="min-w-0">
+      <p className="text-sm text-muted-foreground">
+        Text, upload, book, or link. Units come from the text you supply.
       </p>
 
-      <section className="mt-10 rounded-xl border border-border bg-card px-5 py-5">
+      <section className="mt-6 rounded-2xl border border-border bg-card px-5 py-5">
         <h2 className="font-display text-2xl">New lesson</h2>
         <div className="mt-4 grid gap-3">
           <input
@@ -209,39 +260,10 @@ export default function TeachPage() {
         )}
       </section>
 
-      <section className="mt-10">
-        <h2 className="font-display text-2xl">Lessons</h2>
-        <ul className="mt-4 grid gap-3">
-          {(data?.lessons ?? []).map((lesson) => (
-            <li key={lesson.id} className="rounded-xl border border-border bg-card px-5 py-4">
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                {lesson.kind} · {lesson.status}
-              </p>
-              <p className="mt-1 font-display text-xl">{lesson.title}</p>
-              <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
-                <Button type="button" variant="outline" onClick={() => void generate(lesson.id)}>
-                  Generate Lesson
-                </Button>
-                <Link
-                  href={`/o/${slug}/teach/${lesson.id}`}
-                  className="underline underline-offset-4"
-                >
-                  Open desk
-                </Link>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
       {note ? (
         <p className={note === NEEDS_MORE ? "mt-6 text-sm" : "mt-6 text-sm text-pass"}>{note}</p>
       ) : null}
-      <p className="mt-8 text-sm">
-        <Link href={`/o/${slug}`} className="underline underline-offset-4">
-          Back to org
-        </Link>
-      </p>
+      </div>
     </main>
   );
 }

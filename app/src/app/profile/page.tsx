@@ -40,6 +40,7 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [canAdmin, setCanAdmin] = useState(false);
   const [name, setName] = useState("");
   const [projects, setProjects] = useState("");
   const [skills, setSkills] = useState("");
@@ -68,6 +69,12 @@ export default function ProfilePage() {
       .catch(() => {
         if (!cancelled) setError("Could not reach the portal.");
       });
+    void fetch("/api/me")
+      .then(async (res) => {
+        const data = (await res.json()) as { canAdmin?: boolean };
+        if (!cancelled) setCanAdmin(Boolean(data.canAdmin));
+      })
+      .catch(() => undefined);
     return () => {
       cancelled = true;
     };
@@ -154,10 +161,15 @@ export default function ProfilePage() {
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Your profile</p>
           <h1 className="h-section truncate">{profile.displayName}</h1>
           <p className="text-xs text-muted-foreground">Only you see this page.</p>
-          <p className="mt-2 text-sm">
+          <p className="mt-2 flex flex-wrap gap-4 text-sm">
             <Link href="/knowledge/goals?scope=person" className="underline underline-offset-2">
               Set a learning goal
             </Link>
+            {canAdmin ? (
+              <Link href="/admin" className="underline underline-offset-2">
+                Admin
+              </Link>
+            ) : null}
           </p>
         </div>
       </section>
