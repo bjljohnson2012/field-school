@@ -108,7 +108,12 @@ test("public form API, admin tabs, and marketing forms are wired", () => {
   const coaching = readSrc("marketing-site/coaching.html");
   const about = readSrc("marketing-site/about.html");
 
-  assert.doesNotMatch(home, /data-form="saturday_note"/);
+  assert.match(home, /data-form="saturday_note"/);
+  assert.match(home, /\/js\/forms\.js/);
+  assert.match(home, /\$10/);
+  assert.match(home, /\$50/);
+  assert.match(home, /checkout\?plan=10/);
+  assert.match(home, /href="\/twelve"/);
   assert.doesNotMatch(home, /University/);
   assert.match(home, /We need to get better/);
   assert.match(home, /learning, developing, and AI-powered knowledge/);
