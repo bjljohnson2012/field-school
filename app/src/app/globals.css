@@ -209,6 +209,22 @@
   }
 }
 
+@keyframes drop-land {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.drop-land {
+  animation: drop-land 420ms ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

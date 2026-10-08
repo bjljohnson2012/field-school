@@ -7,6 +7,7 @@ import { SCOPE_QUESTION } from "@/lib/library/expand-knowledge";
 import { layoutRepository, type KnowledgePiece, type RepositoryModel } from "@/lib/library/knowledge-network";
 import { NEEDS_MORE } from "@/lib/library/teach-from-knowledge";
 import { cn } from "@/lib/utils";
+import { DropWell } from "@/components/workspace/drop-well";
 
 type Filter = "all" | "generated" | "waiting" | "published" | "unpublished";
 type Reading = { expansion: string; questions: string[]; note: string };
@@ -256,12 +257,14 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
           <p className="mt-1 text-sm text-muted-foreground">
             Paste one document, or several separated by a line that is only ---. A Notion link is stored as a link. Files land as documents too.
           </p>
+          <div className="mt-3 grid items-stretch gap-3 lg:grid-cols-[minmax(0,1fr)_16rem]">
+            <div>
           <textarea
             value={bulk}
             onChange={(event) => setBulk(event.target.value)}
             rows={5}
             placeholder="First document&#10;---&#10;Second document"
-            className="mt-3 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none ring-primary/30 focus:ring-2"
+            className="h-full min-h-36 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none ring-primary/30 focus:ring-2"
           />
           <label className="mt-3 block text-sm">
             Notion or other link
@@ -272,10 +275,9 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
               className="mt-1 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm"
             />
           </label>
-          <label className="mt-3 block text-sm">
-            Files
-            <input name="files" type="file" multiple className="mt-1 block w-full text-sm" />
-          </label>
+            </div>
+            <DropWell name="files" multiple retain label="Drop files here" hint="They are stored as documents." className="flex h-full min-h-40 flex-col justify-center" />
+          </div>
           <p className="mt-3 text-sm text-muted-foreground">
             A signed-in teacher can also POST documents to <span className="font-mono">/api/library/intake</span> from Grokbot or another MCP tool. Send JSON {"{ items: [{ text, kind }] }"}.
           </p>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { DropWell } from "@/components/workspace/drop-well";
 import { NEEDS_MORE, decodeLessonBody, lessonProse, spineBlocks } from "@/lib/library/teach-from-knowledge";
 
 type Unit = { id: string; title: string; body: string };
@@ -40,7 +41,22 @@ export default function TeachLessonPage() {
   }
 
   useEffect(() => {
-    void load();
+    let cancelled = false;
+    void fetch(`/api/composer/lessons?id=${lessonId}`, {
+      headers: { "x-fs-org": slug },
+    })
+      .then(async (res) => {
+        const json = (await res.json()) as Detail;
+        if (cancelled) return;
+        setData(json);
+        if (json.units?.[0]) setUnitId((current) => current || json.units?.[0]?.id || "");
+      })
+      .catch(() => {
+        if (!cancelled) setData({ error: "forbidden" });
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [slug, lessonId]);
 
   async function addUpload() {
@@ -154,7 +170,7 @@ export default function TeachLessonPage() {
 
   return (
     <main className="mx-auto grid max-w-6xl gap-8 px-4 py-12 lg:grid-cols-[220px_1fr]">
-      <nav aria-label="Course" className="lg:sticky lg:top-20 lg:self-start">
+      <nav aria-label="Course" className="rounded-2xl border border-border bg-card/50 p-3 lg:sticky lg:top-14 lg:max-h-[calc(100vh-4.5rem)] lg:self-start lg:overflow-y-auto">
         <p className="text-sm font-medium">{data.lesson.title}</p>
         <ul className="mt-3 space-y-1">
           {outline.map((item) => (
@@ -209,11 +225,13 @@ export default function TeachLessonPage() {
         <p className="mt-2 text-sm text-muted-foreground">
           200MB file, 2GB org. Units still come from the notes, not the file.
         </p>
-        <input
-          className="mt-4 block text-sm"
-          type="file"
-          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-        />
+        <div className="mt-4">
+          <DropWell
+            label={file ? file.name : "Drop a file, or click to choose one"}
+            hint="200MB file, 2GB org. The notes below still become the units."
+            onFiles={(files) => setFile(files[0] ?? null)}
+          />
+        </div>
         <textarea
           className="mt-3 min-h-24 w-full rounded-xl border border-border bg-background px-3 py-3 text-sm"
           placeholder="Notes that become units"

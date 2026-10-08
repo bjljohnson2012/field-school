@@ -33,10 +33,10 @@ export default function CourseHome() {
 
   return (
     <main>
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-6xl px-4 py-10 lg:py-14">
+      <section className="border-b border-border pb-8">
+        <div>
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            {course.kicker} · {course.modules.length} stations · exam
+            {course.kicker} · exam
           </p>
           <h1 className="mt-4 max-w-3xl font-display text-4xl leading-[1.1] tracking-tight sm:text-5xl">
             {course.title}
@@ -66,7 +66,7 @@ export default function CourseHome() {
       </section>
 
       {course.videoId ? (
-        <section className="mx-auto max-w-6xl px-4 py-12">
+        <section className="py-10">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Source tape
           </p>
@@ -82,7 +82,7 @@ export default function CourseHome() {
         </section>
       ) : null}
 
-      <section id="ladder" className="mx-auto max-w-6xl px-4 py-14">
+      <section id="ladder" className="py-10">
         <h2 className="font-display text-3xl tracking-tight">The ladder</h2>
         <p className="mt-3 max-w-2xl text-muted-foreground">
           Watch the clip, finish the required field work, score 75% on the

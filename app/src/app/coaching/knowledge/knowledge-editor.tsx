@@ -173,8 +173,8 @@ export function KnowledgeEditor({
   }
 
   return (
-    <div className="mt-6 grid gap-6 lg:grid-cols-[16rem_1fr]">
-      <section className="card p-4">
+    <div className="mt-6 grid items-start gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
+      <section className="card p-4 lg:sticky lg:top-14 lg:max-h-[calc(100vh-4.5rem)] lg:overflow-y-auto">
         <h2 className="text-sm font-semibold">Repositories</h2>
         {repos.length ? (
           <ul className="mt-3 space-y-2">
@@ -182,7 +182,11 @@ export function KnowledgeEditor({
               <li key={repo.id}>
                 <button
                   type="button"
-                  className={repositoryId === repo.id ? "btn-primary" : "text-sm font-semibold"}
+                  className={
+                    repositoryId === repo.id
+                      ? "w-full rounded-lg bg-secondary px-2 py-2 text-left text-sm font-medium"
+                      : "w-full rounded-lg px-2 py-2 text-left text-sm hover:bg-secondary/70"
+                  }
                   onClick={() => setRepositoryId(repo.id)}
                 >
                   {repo.name}
@@ -214,35 +218,61 @@ export function KnowledgeEditor({
           Add repository
         </button>
       </section>
-      <section className="card p-4">
-        <h2 className="text-sm font-semibold">Article editor</h2>
-        <label className="mt-3 block text-sm font-semibold">
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_17rem]">
+      <section className="card p-5">
+        <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Page</p>
+        <h2 className="mt-1 text-sm font-semibold">Article editor</h2>
+        <label className="mt-4 block text-sm font-semibold">
           Title
-          <input className="input mt-1" value={title} onChange={(event) => setTitle(event.target.value)} />
+          <input className="input mt-1 font-display text-lg" value={title} onChange={(event) => setTitle(event.target.value)} />
         </label>
         <label className="mt-3 block text-sm font-semibold">
           Body
-          <textarea className="input mt-1 min-h-32" value={body} onChange={(event) => setBody(event.target.value)} />
+          <textarea className="input mt-1 min-h-64 leading-6" value={body} onChange={(event) => setBody(event.target.value)} />
         </label>
-        <label className="mt-3 block text-sm font-semibold">
-          Tags
-          <input className="input mt-1" value={tags} onChange={(event) => setTags(event.target.value)} />
-        </label>
-        <label className="mt-3 block text-sm font-semibold">
-          Visibility
-          <select className="input mt-1" value={visibility} onChange={(event) => setVisibility(event.target.value)}>
-            {STORED_VISIBILITY.map((value) => (
-              <option key={value} value={value}>
-                {value}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <label className="block text-sm font-semibold">
+            Tags
+            <input className="input mt-1" value={tags} onChange={(event) => setTags(event.target.value)} />
+          </label>
+          <label className="block text-sm font-semibold">
+            Visibility
+            <select className="input mt-1" value={visibility} onChange={(event) => setVisibility(event.target.value)}>
+              {STORED_VISIBILITY.map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
         <div className="mt-3 flex flex-wrap gap-2">
           <button type="button" className="btn-primary" onClick={() => void saveArticle()}>
             Save article
           </button>
         </div>
+        {message ? <p className="mt-3 text-sm">{message}</p> : null}
+        <ul className="mt-6 space-y-3">
+          {units.filter((unit) => !repositoryId || unit.repositoryId === repositoryId).map((unit) => (
+            <li key={unit.id} className="card p-3">
+              <p className="font-semibold">{unit.title}</p>
+              <p className="text-xs text-gray-600">
+                {unit.status} · {unit.visibility}
+              </p>
+              <div className="mt-2 flex gap-2">
+                <button type="button" className="btn-primary" onClick={() => void setStatus(unit.id, "approved")}>
+                  Approve
+                </button>
+                <button type="button" className="btn-primary" onClick={() => void setStatus(unit.id, "rejected")}>
+                  Reject
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section className="card p-5">
+        <h2 className="text-sm font-semibold">Bring a source in</h2>
         <label className="mt-4 block text-sm font-semibold">
           URL
           <input className="input mt-1" value={url} onChange={(event) => setUrl(event.target.value)} />
@@ -264,26 +294,8 @@ export function KnowledgeEditor({
         <button type="button" className="btn-primary mt-2" onClick={() => void cleanup()}>
           Clean up
         </button>
-        {message ? <p className="mt-3 text-sm">{message}</p> : null}
-        <ul className="mt-6 space-y-3">
-          {units.filter((unit) => !repositoryId || unit.repositoryId === repositoryId).map((unit) => (
-            <li key={unit.id} className="card p-3">
-              <p className="font-semibold">{unit.title}</p>
-              <p className="text-xs text-gray-600">
-                {unit.status} · {unit.visibility}
-              </p>
-              <div className="mt-2 flex gap-2">
-                <button type="button" className="btn-primary" onClick={() => void setStatus(unit.id, "approved")}>
-                  Approve
-                </button>
-                <button type="button" className="btn-primary" onClick={() => void setStatus(unit.id, "rejected")}>
-                  Reject
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
       </section>
+      </div>
     </div>
   );
 }

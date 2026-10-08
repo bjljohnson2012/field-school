@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { readOrgLogoUrl } from "@/components/org-logo";
+import { isStaffEmail } from "@/lib/auth/staff";
 import { loadSession } from "@/lib/campus-runtime/identity";
 import { memberPlatformAdmin } from "@/lib/coaching/scores";
 import { DatabaseUnavailableError } from "@/lib/db/client";
@@ -39,6 +40,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     authenticated: true,
     platformAdmin,
+    canAdmin: platformAdmin || isStaffEmail(session.member.email) || active?.stance === "admin",
     logoUrl: readOrgLogoUrl(active?.features),
     profiles: profiles.map((kid) => ({ membershipId: kid.membershipId, displayName: kid.displayName })),
     member: {
