@@ -7,9 +7,12 @@ import { SCOPE_QUESTION } from "@/lib/library/expand-knowledge";
 import { layoutRepository, type KnowledgePiece, type RepositoryModel } from "@/lib/library/knowledge-network";
 import { NEEDS_MORE } from "@/lib/library/teach-from-knowledge";
 import { cn } from "@/lib/utils";
+import { KnowledgeDocument } from "@/components/knowledge/knowledge-document";
 import { KnowledgeTree } from "@/components/knowledge/knowledge-tree";
 import { Dialog } from "@/components/saas/dialog";
 import { DropWell } from "@/components/workspace/drop-well";
+
+const EXPAND_LABEL = "Expand with AI";
 
 type Filter = "all" | "generated" | "waiting" | "published" | "unpublished";
 type Reading = { expansion: string; questions: string[]; note: string };
@@ -316,65 +319,61 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
         ))}
       </div>
 
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <KnowledgeTree
-          pieces={visible}
-          focusId={focusId}
-          empty={model.pieces.length === 0 ? "Nothing is stored for this org yet." : "Nothing matches."}
-          onFocus={setFocus}
-        />
-        <aside className="rounded-xl border border-border bg-card p-5">
+      <div className="overflow-hidden border border-border bg-background lg:grid lg:min-h-[calc(100vh-8rem)] lg:grid-cols-[16.5rem_minmax(0,1fr)]">
+        <div className="max-h-80 overflow-y-auto border-b border-border bg-secondary/30 lg:max-h-none lg:border-b-0 lg:border-r">
+          <KnowledgeTree
+            pieces={visible}
+            focusId={focusId}
+            empty={model.pieces.length === 0 ? "Nothing is stored for this org yet." : "Nothing matches."}
+            onFocus={setFocus}
+          />
+        </div>
+        <div className="min-w-0 bg-background">
           {open ? (
-            <>
-              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                {open.statusLabel}
-                {open.sourceLabel ? ` · ${open.sourceLabel}` : ""}
-                {open.generated ? " · Generated" : " · Not generated yet"}
-              </p>
-              <h2 className="mt-2 font-display text-2xl tracking-tight">{open.title}</h2>
-              <p className="mt-3 text-sm text-muted-foreground">
-                {open.units.length} {open.units.length === 1 ? "part" : "parts"} of subknowledge
-              </p>
-              <div className="mt-4 flex flex-col items-start gap-3">
-                {open.href ? (
-                  <button
-                    type="button"
-                    onClick={() => void expand(open.id)}
-                    disabled={busy === open.id}
-                    className="h-9 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground"
-                  >
-                    {busy === open.id ? "Reading" : "Expand with AI"}
-                  </button>
-                ) : null}
-                {open.href ? (
-                  <Link href={open.href} className="text-sm font-medium text-primary">
-                    Open this lesson
-                  </Link>
-                ) : null}
-                <button type="button" className="text-sm font-medium text-primary" onClick={() => void openEdit(open)}>
-                  Edit
-                </button>
-              </div>
-            </>
+            <KnowledgeDocument
+              piece={open}
+              editing={editing === open.id}
+              draft={drafts[open.id] ?? null}
+              busy={busy}
+              reading={readings[open.id] ?? null}
+              answers={answers}
+              expandLabel={EXPAND_LABEL}
+              onExpand={() => void expand(open.id)}
+              onEdit={() => void openEdit(open)}
+              onSave={() => void saveEdit(open)}
+              onDraft={(next) => setDrafts((current) => ({ ...current, [open.id]: next }))}
+              onAnswer={(key, value) => setAnswers((current) => ({ ...current, [key]: value }))}
+              onSaveAnswer={(question) => void saveAnswer(open.id, question)}
+            />
           ) : (
-            <>
-              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">This org</p>
-              <h2 className="mt-2 font-display text-2xl tracking-tight">{model.orgName}</h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {model.pieces.length
-                  ? "Open a piece to read its subknowledge. Generated means a quiz was written from that knowledge."
-                  : "Drop a file, an idea, or a minute of audio. It lands here once it is stored."}
-              </p>
-              <Link href="/library/wizard" className="mt-5 inline-flex text-sm font-medium text-primary">
-                Open the wizard
-              </Link>
-            </>
+            <div>
+              <div className="flex h-11 items-center gap-2 border-b border-border px-4 text-xs text-muted-foreground">
+                <span>Knowledge</span>
+                <span aria-hidden="true">/</span>
+                <span className="truncate text-foreground">{model.orgName}</span>
+              </div>
+              <div className="mx-auto max-w-2xl px-5 py-12 sm:px-8">
+                <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">This org</p>
+                <h2 className="mt-2 font-display text-4xl tracking-tight sm:text-5xl">{model.orgName}</h2>
+                <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+                  {model.pieces.length
+                    ? "Choose a page. The document opens here, with its subknowledge as blocks. Generated means a quiz was written from that knowledge."
+                    : "Drop a file, an idea, or a minute of audio. It lands here once it is stored."}
+                </p>
+                <Link href="/library/wizard" className="mt-6 inline-flex text-sm font-medium text-primary">
+                  Open the wizard
+                </Link>
+              </div>
+            </div>
           )}
-        </aside>
+        </div>
       </div>
 
       <details className="mt-6 rounded-xl border border-border bg-card px-4 py-3">
-        <summary className="cursor-pointer text-sm font-medium">Map</summary>
+        <summary className="cursor-pointer text-sm font-medium">
+          Map
+          <span className="ml-2 font-normal text-muted-foreground">{map.edges.length} links</span>
+        </summary>
         <p className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
             <span className="size-2 rounded-full bg-primary" aria-hidden="true" />
@@ -524,152 +523,6 @@ export function NetworkBoard({ model }: { model: RepositoryModel }) {
         </p>
       ) : null}
       </details>
-
-      {open ? (
-      <div className="mt-6 grid gap-4" aria-label="All knowledge">
-          {[open].map((piece) => {
-            const reading = readings[piece.id];
-            return (
-              <article key={piece.id} className="rounded-2xl border border-border bg-card p-5 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
-                <p className="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                  <span>{piece.statusLabel}</span>
-                  {piece.sourceLabel ? <span>{piece.sourceLabel}</span> : null}
-                  <span>{piece.generated ? "Generated" : "Not generated yet"}</span>
-                </p>
-                <h3 className="mt-2 font-display text-2xl tracking-tight">{piece.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">The points of this document are in the list above. Expand writes a short reading. Edit changes the document.</p>
-                <div className="mt-4 flex flex-wrap items-center gap-4">
-                  {piece.href ? (
-                    <button
-                      type="button"
-                      onClick={() => void expand(piece.id)}
-                      disabled={busy === piece.id}
-                      className="h-9 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground"
-                    >
-                      {busy === piece.id ? "Reading" : "Expand with AI"}
-                    </button>
-                  ) : null}
-                  {piece.href ? (
-                    <Link href={piece.href} className="text-sm font-medium text-primary">
-                      Open this lesson
-                    </Link>
-                  ) : null}
-                  <button type="button" className="text-sm font-medium text-primary" onClick={() => void openEdit(piece)}>
-                    Edit
-                  </button>
-                </div>
-                {editing === piece.id && drafts[piece.id] ? (
-                  <form
-                    className="mt-4 grid gap-3 border-t border-border pt-4"
-                    onSubmit={(event) => {
-                      event.preventDefault();
-                      void saveEdit(piece);
-                    }}
-                  >
-                    <input
-                      value={drafts[piece.id]?.title ?? ""}
-                      onChange={(event) => {
-                        const title = event.target.value;
-                        setDrafts((current) => {
-                          const row = current[piece.id];
-                          if (!row) return current;
-                          return { ...current, [piece.id]: { ...row, title } };
-                        });
-                      }}
-                      className="h-11 rounded-xl border border-border bg-background px-3 text-sm"
-                    />
-                    <textarea
-                      value={drafts[piece.id]?.body ?? ""}
-                      onChange={(event) => {
-                        const body = event.target.value;
-                        setDrafts((current) => {
-                          const row = current[piece.id];
-                          if (!row) return current;
-                          return { ...current, [piece.id]: { ...row, body } };
-                        });
-                      }}
-                      rows={4}
-                      className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
-                    />
-                    {(drafts[piece.id]?.units ?? []).map((unit, index) => (
-                      <label key={unit.id} className="grid gap-1 text-sm">
-                        Point
-                        <input
-                          value={unit.title}
-                          onChange={(event) => {
-                            const title = event.target.value;
-                            setDrafts((current) => {
-                              const row = current[piece.id];
-                              if (!row) return current;
-                              const next = row.units.slice();
-                              next[index] = { ...unit, title };
-                              return { ...current, [piece.id]: { ...row, units: next } };
-                            });
-                          }}
-                          className="h-10 rounded-xl border border-border bg-background px-3"
-                        />
-                        <textarea
-                          value={unit.body}
-                          onChange={(event) => {
-                            const body = event.target.value;
-                            setDrafts((current) => {
-                              const row = current[piece.id];
-                              if (!row) return current;
-                              const next = row.units.slice();
-                              next[index] = { ...unit, body };
-                              return { ...current, [piece.id]: { ...row, units: next } };
-                            });
-                          }}
-                          rows={3}
-                          className="rounded-xl border border-border bg-background px-3 py-2"
-                        />
-                      </label>
-                    ))}
-                    <button type="submit" disabled={busy === `edit:${piece.id}`} className="h-10 justify-self-start rounded-xl bg-primary px-4 text-sm text-primary-foreground">
-                      Save document
-                    </button>
-                  </form>
-                ) : null}
-                {reading ? (
-                  <div className="mt-4 border-t border-border pt-4">
-                    <p className="text-sm leading-relaxed">{reading.expansion}</p>
-                    <div className="mt-4 grid gap-4">
-                      {reading.questions.map((question, index) => {
-                        const key = `${piece.id}:${question}`;
-                        const fieldId = `expand-${piece.id}-${index}`;
-                        return (
-                          <form
-                            key={question}
-                            onSubmit={(event) => {
-                              event.preventDefault();
-                              void saveAnswer(piece.id, question);
-                            }}
-                          >
-                            <label className="block text-sm font-medium" htmlFor={fieldId}>
-                              {question}
-                            </label>
-                            <textarea
-                              id={fieldId}
-                              value={answers[key] ?? ""}
-                              onChange={(event) => setAnswers((current) => ({ ...current, [key]: event.target.value }))}
-                              rows={3}
-                              className="mt-2 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none ring-primary/30 focus:ring-2"
-                            />
-                            <button type="submit" className="mt-2 text-sm font-medium text-primary" disabled={busy === key}>
-                              Save answer
-                            </button>
-                          </form>
-                        );
-                      })}
-                    </div>
-                    {reading.note ? <p className="mt-3 text-sm text-muted-foreground">{reading.note}</p> : null}
-                  </div>
-                ) : null}
-              </article>
-            );
-          })}
-      </div>
-      ) : null}
     </div>
   );
 }

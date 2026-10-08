@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -13,6 +14,7 @@ import { postLearningEvent } from "@/lib/campus-runtime/client";
 import { getCourse } from "@/lib/course/catalog";
 import { emptyProgress, passingScore } from "@/lib/course/content";
 import { saveQuizAnswers, upsertModule } from "@/lib/portal";
+import { cn } from "@/lib/utils";
 
 export default function StationPage() {
   const { courseSlug, slug } = useParams<{ courseSlug: string; slug: string }>();
@@ -20,6 +22,21 @@ export default function StationPage() {
   const { course: state } = useCoursePortal(courseSlug);
   const { data: authSession } = useSession();
   const signedIn = Boolean(authSession?.user?.email);
+  const endRef = useRef<HTMLElement>(null);
+  const [endVisible, setEndVisible] = useState(false);
+
+  useEffect(() => {
+    const node = endRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setEndVisible(entry.isIntersecting);
+      },
+      { threshold: 0.4 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [courseSlug, slug]);
 
   if (!course) {
     return (
@@ -48,63 +65,50 @@ export default function StationPage() {
   const passPct = Math.round(course.passRatio * 100);
 
   const parts = [
-    { href: "#clip", label: "Clip" },
-    { href: "#thesis", label: "Thesis" },
-    { href: "#field-work", label: "Field work" },
-    { href: "#quiz", label: "Quiz" },
+    { href: "#clip", label: "Clip", kind: "Video" },
+    { href: "#thesis", label: "Thesis", kind: "Document" },
+    { href: "#field-work", label: "Field work", kind: "Assignment" },
+    { href: "#quiz", label: "Quiz", kind: "Quiz" },
   ];
-
   return (
-    <main className="mx-auto max-w-3xl pb-8">
-        <div>
+    <main className="mx-auto max-w-3xl pb-24">
+        <p className="text-xs text-muted-foreground">
+          <Link href={`/c/${course.slug}`} className="hover:text-foreground">
+            {course.title}
+          </Link>
+          <span aria-hidden="true"> / </span>
+          <a href={`/c/${course.slug}#ladder`} className="hover:text-foreground">
+            The ladder
+          </a>
+          <span aria-hidden="true"> / </span>
+          <span className="text-foreground">{mod.title}</span>
+        </p>
+
+        <div className="activity-info-section mx-auto mt-6 max-w-2xl">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Station {mod.station} · pass at {passPct}%
           </p>
           <h1 className="h-page mt-2">{mod.title}</h1>
-          <p className="mt-3 max-w-2xl text-muted-foreground">{mod.summary}</p>
+          <p className="mt-3 text-muted-foreground">{mod.summary}</p>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
-          {prev ? (
-            <Link
-              href={`/c/${course.slug}/s/${prev.slug}`}
-              className="inline-flex h-9 min-w-0 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft className="size-4 shrink-0" />
-              <span className="truncate">{prev.title}</span>
-            </Link>
-          ) : (
-            <span />
-          )}
-          {next ? (
-            <Link
-              href={`/c/${course.slug}/s/${next.slug}`}
-              className="inline-flex h-9 min-w-0 items-center gap-2 text-sm"
-            >
-              <span className="truncate">{next.title}</span>
-              <ArrowRight className="size-4 shrink-0" />
-            </Link>
-          ) : (
-            <Link href={`/c/${course.slug}/exam`} className="inline-flex h-9 items-center gap-2 text-sm">
-              Exam
-              <ArrowRight className="size-4" />
-            </Link>
-          )}
-        </div>
-
-        <nav aria-label="This station" className="mt-4 flex flex-wrap gap-2">
-          {parts.map((part) => (
+        <nav aria-label="This station" className="mx-auto mt-6 grid max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4">
+          {parts.map((part, index) => (
             <a
               key={part.href}
               href={part.href}
-              className="inline-flex h-8 items-center rounded-full border border-border bg-card px-3 text-xs hover:bg-secondary"
+              className="rounded-lg border border-border bg-card px-3 py-2 hover:bg-secondary"
             >
-              {part.label}
+              <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                {index + 1} · {part.kind}
+              </span>
+              <span className="mt-0.5 block text-sm font-medium">{part.label}</span>
             </a>
           ))}
         </nav>
 
-        <section id="clip" className="card mt-8 scroll-mt-24 space-y-4 p-5">
+        <section id="clip" className="card mx-auto mt-8 max-w-2xl scroll-mt-24 space-y-4 border-l-2 border-l-primary p-5">
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">1 · Video</p>
           <h2 className="h-section">Clip</h2>
           {mod.clips.map((clip) => (
             <YoutubeClip
@@ -138,7 +142,8 @@ export default function StationPage() {
           )}
         </section>
 
-        <section id="thesis" className="card mt-8 scroll-mt-24 px-5 py-5">
+        <section id="thesis" className="card mx-auto mt-8 max-w-2xl scroll-mt-24 border-l-2 border-l-primary px-5 py-5">
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">2 · Document</p>
           <h2 className="h-section">Thesis</h2>
           <p className="mt-3 text-sm leading-relaxed">{mod.thesis}</p>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-muted-foreground">
@@ -152,7 +157,8 @@ export default function StationPage() {
           <GuestContinuity />
         </div>
 
-        <div id="field-work" className="mt-8 scroll-mt-24">
+        <div id="field-work" className="mx-auto mt-8 max-w-2xl scroll-mt-24">
+        <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">3 · Assignment</p>
         <AssignmentPanel
           module={mod}
           assignment={progress.assignment}
@@ -171,7 +177,8 @@ export default function StationPage() {
         />
         </div>
 
-        <div id="quiz" className="mt-8 scroll-mt-24">
+        <div id="quiz" className="mx-auto mt-8 max-w-2xl scroll-mt-24">
+        <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">4 · Quiz</p>
         <QuizPanel
           questions={mod.quiz}
           ratio={course.passRatio}
@@ -199,36 +206,101 @@ export default function StationPage() {
         />
         </div>
 
-        <nav aria-label="Next station" className="mt-10 flex items-center justify-between gap-3 border-t border-border pt-4">
+        <nav ref={endRef} aria-label="Next station" className="mt-10 grid grid-cols-3 items-center gap-2 border-t border-border pt-4">
           {prev ? (
             <Link
               href={`/c/${course.slug}/s/${prev.slug}`}
-              className="inline-flex h-11 min-w-0 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+              className="inline-flex min-w-0 items-center gap-2 rounded-lg px-2 py-2 text-muted-foreground hover:bg-secondary hover:text-foreground"
             >
               <ArrowLeft className="size-4 shrink-0" />
-              <span className="truncate">{prev.title}</span>
+              <span className="min-w-0">
+                <span className="block text-[10px] font-medium uppercase tracking-[0.12em]">Previous</span>
+                <span className="block truncate text-sm">{prev.title}</span>
+              </span>
             </Link>
           ) : (
             <span />
           )}
+          <p className="text-center text-xs text-muted-foreground">
+            Activity {idx + 1} of {course.modules.length}
+          </p>
           {next ? (
             <Link
               href={`/c/${course.slug}/s/${next.slug}`}
-              className="inline-flex h-11 min-w-0 items-center gap-2 text-sm"
+              className="inline-flex min-w-0 items-center justify-end gap-2 rounded-lg px-2 py-2 hover:bg-secondary"
             >
-              <span className="truncate">{next.title}</span>
+              <span className="min-w-0 text-right">
+                <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Next</span>
+                <span className="block truncate text-sm">{next.title}</span>
+              </span>
               <ArrowRight className="size-4 shrink-0" />
             </Link>
           ) : (
             <Link
               href={`/c/${course.slug}/exam`}
-              className="inline-flex h-11 items-center gap-2 text-sm"
+              className="inline-flex min-w-0 items-center justify-end gap-2 rounded-lg px-2 py-2 hover:bg-secondary"
             >
-              Exam
-              <ArrowRight className="size-4" />
+              <span className="min-w-0 text-right">
+                <span className="block text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Next</span>
+                <span className="block truncate text-sm">Exam</span>
+              </span>
+              <ArrowRight className="size-4 shrink-0" />
             </Link>
           )}
         </nav>
+
+        <div
+          className={cn(
+            "fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card/95 backdrop-blur transition-transform duration-300",
+            endVisible && "translate-y-full",
+          )}
+        >
+          <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-3">
+            <p className="hidden min-w-0 truncate text-sm font-medium sm:block">{course.title}</p>
+            <div className="ml-auto flex min-w-0 items-center gap-1 sm:gap-2">
+              {prev ? (
+                <Link
+                  href={`/c/${course.slug}/s/${prev.slug}`}
+                  className="inline-flex h-10 min-w-0 items-center gap-1 rounded-lg px-2 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                >
+                  <ArrowLeft className="size-4 shrink-0" />
+                  <span className="hidden min-w-0 sm:block">
+                    <span className="block text-[10px] uppercase tracking-[0.12em]">Previous</span>
+                    <span className="block max-w-36 truncate text-sm">{prev.title}</span>
+                  </span>
+                </Link>
+              ) : (
+                <span className="w-8" />
+              )}
+              <p className="shrink-0 px-1 text-xs text-muted-foreground">
+                Activity {idx + 1} of {course.modules.length}
+              </p>
+              {next ? (
+                <Link
+                  href={`/c/${course.slug}/s/${next.slug}`}
+                  className="inline-flex h-10 min-w-0 items-center gap-1 rounded-lg px-2 hover:bg-secondary"
+                >
+                  <span className="hidden min-w-0 text-right sm:block">
+                    <span className="block text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Next</span>
+                    <span className="block max-w-36 truncate text-sm">{next.title}</span>
+                  </span>
+                  <ArrowRight className="size-4 shrink-0" />
+                </Link>
+              ) : (
+                <Link
+                  href={`/c/${course.slug}/exam`}
+                  className="inline-flex h-10 items-center gap-1 rounded-lg px-2 hover:bg-secondary"
+                >
+                  <span className="hidden text-right sm:block">
+                    <span className="block text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Next</span>
+                    <span className="block text-sm">Exam</span>
+                  </span>
+                  <ArrowRight className="size-4 shrink-0" />
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
     </main>
   );
 }
