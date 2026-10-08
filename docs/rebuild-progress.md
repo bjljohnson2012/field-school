@@ -43,7 +43,15 @@ M13 is never merged. M14 stays not_started until #377 has a sealed brief posted 
 ## Log
 
 - 2026-10-08 4:47 PM ET dispatcher: Read the master plan, #363, and #362. Main is 34798e5 (PR 361). No rebuild PRs merged. Opened #379 for stream G. Claimed migration 0022 for M5. Started wave 1 (S0, M5, G).
+- 2026-10-08 4:50 PM ET dispatcher: Progress log is draft PR #380. Rebuild progress comment on #363 is 6068778012. Wave 1 agents are in isolated worktrees.
 
 ## Handoff
 
-Not stopping. Wave 1 agents are at work.
+Not stopping. Wave 1 is in progress. If this dispatcher stops, restart with: continue the master rebuild from docs/rebuild-progress.md
+
+Worktrees (do not delete while the agent is running):
+- S0: /Users/Owner/field-school-worktrees/s0 on feat/marketing-site-rebuild. Agent 01a11d48-02ef-7472-9a30-95ba3094e115. Status file /tmp/rebuild-status-S0.md
+- M5: /Users/Owner/field-school-worktrees/m5 on feat/portal-m5-tenancy. Agent 01a11d48-02f1-7e73-895a-48288dded7ea. Status file /tmp/rebuild-status-M5.md. Migration 0022 claimed.
+- G: /Users/Owner/field-school-worktrees/g on feat/portal-go-live. Agent 01a11d48-02f1-7e73-895a-483de816cb9c. Status file /tmp/rebuild-status-G.md
+
+Do not push these branches to main. They have no upstream on purpose.
