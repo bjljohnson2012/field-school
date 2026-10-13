@@ -141,6 +141,22 @@ test("migration 0023 does not backfill and keeps Individual unpublished", () => 
   assert.match(read("src/app/api/stripe/webhook/route.ts"), /webhookEffect/);
 });
 
+test("migration 0024 creates the missing M8 objects and does not touch coaching_plans", () => {
+  const sql = read("db/0024_m8_offer_tiers.sql");
+  assert.match(sql, /CREATE TABLE IF NOT EXISTS m8_offer_tiers/);
+  assert.match(sql, /CREATE TABLE IF NOT EXISTS coaching_records/);
+  assert.match(sql, /CREATE TABLE IF NOT EXISTS auth_session_revocations/);
+  assert.match(sql, /CREATE TABLE IF NOT EXISTS portal_form_submissions/);
+  assert.match(sql, /'individual', 10, 0, NULL, false/);
+  assert.doesNotMatch(sql, /coaching_plans/);
+  assert.doesNotMatch(sql, /DROP /);
+  assert.doesNotMatch(sql, /DELETE FROM/);
+  assert.match(read("src/lib/billing/m8-sql.ts"), /0024_m8_offer_tiers\.sql/);
+  assert.doesNotMatch(read("src/lib/billing/m8-sql.ts"), /0023_m8_identity_billing\.sql/);
+  assert.equal(read("src/lib/billing/checkout-destination.ts").includes("export const CHECKOUT_GO_LIVE = false"), true);
+  assert.equal(read("marketing-site/js/checkout-switch.mjs").includes("export const COACHING_GO_LIVE = false"), true);
+});
+
 test("README and LAW use the offer line and AUTH_URL stays on the portal", () => {
   const readme = readFileSync(join(repo, "README.md"), "utf8");
   const law = readFileSync(join(repo, "docs/LAW.md"), "utf8");

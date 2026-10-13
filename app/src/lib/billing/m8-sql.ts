@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseUnavailableError, getSql } from "@/lib/db/client";
 
-const FILE = "0023_m8_identity_billing.sql";
+const FILE = "0024_m8_offer_tiers.sql";
 
 function resolveM8Sql() {
   const here = dirname(fileURLToPath(import.meta.url));
