@@ -132,7 +132,7 @@ function footer(source) {
   </aside>`;
 }
 
-function page({ path, title, description, current, body, home = false }) {
+function page({ path, title, description, current, body, home = false, extraHead = "" }) {
   const sticky = home ? "" : "";
   return `<!DOCTYPE html>
 <html lang="en">
@@ -148,7 +148,7 @@ function page({ path, title, description, current, body, home = false }) {
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
   <meta property="og:image" content="https://fieldschool.ai/brand/png/og-1200x630.png">
-  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:card" content="summary_large_image">${extraHead}
 </head>
 <body>
   ${nav(current)}
@@ -608,14 +608,28 @@ const assessment = page({
   </section>`,
 });
 
-function legalPage({ path, title, ledeFile, dateFile, mainFile }) {
+const termsHead = `
+  <style>
+    @font-face {
+      font-family: "Legal Sans";
+      src: local("Arimo"), local("Liberation Sans"), local("Arial");
+      size-adjust: 102%;
+      line-gap-override: 0%;
+    }
+    body { font-family: "IBM Plex Sans", "Legal Sans", sans-serif; }
+    .wordmark-mark { width: calc(2rem * 640 / 192); height: 2rem; }
+  </style>`;
+
+function legalPage({ path, title, description, kicker, ledeFile, dateFile, mainFile, extraHead = "" }) {
   return page({
     path,
     title,
-    description: title,
+    description,
     current: "",
+    extraHead,
     body: `<section class="band">
       <div class="wrap legal">
+        <p class="kicker">${kicker}</p>
         <h1>${title.replace(" · Field School", "")}</h1>
         <p class="lede">${legal(ledeFile)}</p>
         <p class="date">${legal(dateFile)}</p>
@@ -639,6 +653,9 @@ const files = {
   "privacy.html": legalPage({
     path: "/privacy",
     title: "Privacy Policy · Field School",
+    description:
+      "How Field School collects, uses, and stores information on fieldschool.ai and portal.fieldschool.ai.",
+    kicker: "Privacy",
     ledeFile: "privacy-lede.html",
     dateFile: "privacy-date.html",
     mainFile: "privacy-main.html",
@@ -646,6 +663,10 @@ const files = {
   "terms.html": legalPage({
     path: "/terms",
     title: "Terms of Service · Field School",
+    description:
+      "Terms for using the Field School campus at fieldschool.ai and portal.fieldschool.ai.",
+    kicker: "Terms",
+    extraHead: termsHead,
     ledeFile: "terms-lede.html",
     dateFile: "terms-date.html",
     mainFile: "terms-main.html",
