@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { DatabaseUnavailableError } from "@/lib/db/client";
 import { kidEditRefusal, sanitizeKidPatch } from "@/lib/profile/model";
+import { roomOf } from "@/lib/tenancy/kind";
 import { isGuardianOf, loadKidProfile, updateKidProfile } from "@/lib/profile/store";
 
 export const dynamic = "force-dynamic";
@@ -13,12 +14,21 @@ async function parentScope(request: Request, childMembershipId: string) {
   if (!auth.ok) return { ok: false as const, status: auth.status, error: auth.error };
   const actor = auth.identity;
   const scope = { orgId: actor.orgId, parentMembershipId: actor.membershipId };
+  const familyRoom =
+    actor.orgSlug === "household" ||
+    (actor.orgSlug !== "sales" && roomOf(actor.orgKind) === "family");
   const guardian =
-    actor.kind !== "child" && actor.orgSlug === "household"
+    actor.kind !== "child" && familyRoom
       ? await isGuardianOf(scope, childMembershipId)
       : false;
   const refusal = kidEditRefusal(
-    { kind: actor.kind, stance: actor.stance, orgSlug: actor.orgSlug, membershipId: actor.membershipId },
+    {
+      kind: actor.kind,
+      stance: actor.stance,
+      orgSlug: actor.orgSlug,
+      membershipId: actor.membershipId,
+      orgKind: actor.orgKind,
+    },
     guardian,
   );
   if (refusal) return { ok: false as const, status: 403, error: refusal };
@@ -59,6 +69,7 @@ export async function PATCH(request: Request, { params }: Params) {
     const clean = sanitizeKidPatch(body);
     if (!clean.ok) return NextResponse.json({ ok: false, error: clean.error }, { status: 400 });
     const kid = await updateKidProfile(parent.scope, membershipId, clean.patch);
+    if (!kid) return NextResponse.json({ ok: false, error: "not_your_child" }, { status: 403 });
     return NextResponse.json({ ok: true, kid });
   } catch (error) {
     return unavailable(error);

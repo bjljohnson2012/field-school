@@ -155,19 +155,31 @@ test("switch and import ensure use learner and an empty capability set off field
   assert.deepEqual(operator.capabilities, ["platform_admin"]);
 });
 
-test("isGuardianOf is false for the household operator row and true when stance is admin", () => {
+test("isGuardianOf checks the org before an admin returns true", () => {
   const created = ensureOperatorMembership({ slug: "household" });
   const identity = {
-    stance: created.stance,
+    stance: "admin",
     orgId: household,
     membershipId: opHh,
   };
   assert.equal(created.stance, "learner");
   assert.deepEqual(created.capabilities, []);
   assert.equal(isGuardianOf(identity, child, []), false);
-  assert.equal(isGuardianOf({ ...identity, stance: "admin" }, child, []), true);
+  assert.equal(
+    isGuardianOf(identity, child, [
+      { orgId: sales, guardianMembershipId: "other", childMembershipId: child },
+    ]),
+    false,
+  );
+  assert.equal(
+    isGuardianOf(identity, child, [
+      { orgId: household, guardianMembershipId: "other", childMembershipId: child },
+    ]),
+    true,
+  );
   const profile = read("src/lib/pattern/profile.ts");
-  assert.match(profile, /if \(actor\.stance === "admin"\) return true/);
+  assert.match(profile, /membershipInOrg\(actor\.orgId, childMembershipId\)/);
+  assert.doesNotMatch(profile, /if \(actor\.stance === "admin"\) return true/);
 });
 
 test("stance backfill of admin does not satisfy memberHasPlatformAdmin", () => {

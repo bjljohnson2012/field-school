@@ -1,4 +1,5 @@
 import { COACHING_SKILLS } from "@/lib/campus-runtime/lessons";
+import { roomOf } from "../../../../lib/tenancy/kind.ts";
 
 const LEVEL_THRESHOLDS = [0, 100, 300, 600, 1000, 1500, 2200, 3000, 4000, 5500, 7500, 10000];
 const DAY_MS = 86_400_000;
@@ -49,8 +50,7 @@ export function scoreToPoints(aiScore: number): number {
 }
 
 export function drillsForOrg(orgKind: string): boolean {
-  const kind = orgKind.trim().toLowerCase();
-  return kind === "sales" || kind === "company";
+  return roomOf(orgKind) === "team";
 }
 
 export function drillShape(stance: string, capabilities: readonly string[]): DrillShape {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { syncHirePathBrain } from "@/lib/progress/hire-path-brain-sync";
+import { refuseClosedDesk } from "@/lib/progress/desk-gate";
 import { selectSupervisedIntent } from "@/lib/progress/supervised-intent";
 import { selectSupervisedPath } from "@/lib/progress/supervised-path";
 import {
@@ -38,11 +39,15 @@ function boundHint(childId: string | null) {
 }
 
 export async function GET(request: Request) {
+  const denied = await refuseClosedDesk(request);
+  if (denied) return denied;
   const childId = new URL(request.url).searchParams.get("child");
   return NextResponse.json(publicPortion(selectSupervisedPortion(childId, boundHint(childId))));
 }
 
 export async function POST(request: Request) {
+  const denied = await refuseClosedDesk(request);
+  if (denied) return denied;
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
   const childId = String(body.child || body.child_id || "").trim();
   const action = String(body.action || body.op || "").trim();

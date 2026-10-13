@@ -36,14 +36,14 @@ export async function POST(request: Request) {
       ? body.stance
       : defaultInviteStance(orgSlug);
   if (!email) return NextResponse.json({ ok: false, error: "email_required" }, { status: 400 });
-  if (!inviteStanceAllowed(orgSlug, stance)) {
+  const org = await getOrgBySlug(orgSlug);
+  if (!org) return NextResponse.json({ ok: false, error: "unknown_org" }, { status: 404 });
+  if (!inviteStanceAllowed(orgSlug, stance, org.kind)) {
     return NextResponse.json({ ok: false, error: "invalid_stance" }, { status: 400 });
   }
   if (!canMintInvite(auth.identity, orgSlug, isStaffEmail(auth.identity.email))) {
     return NextResponse.json({ ok: false, error: "cannot_invite" }, { status: 403 });
   }
-  const org = await getOrgBySlug(orgSlug);
-  if (!org) return NextResponse.json({ ok: false, error: "unknown_org" }, { status: 404 });
   const token = randomBytes(24).toString("hex");
   const db = getDb();
   const [row] = await db

@@ -119,7 +119,7 @@ export default function ApiDocsPage() {
                 </tr>
                 <tr className="border-t border-border">
                   <td className="px-3 py-2 text-foreground">household</td>
-                  <td className="px-3 py-2">homeschool</td>
+                  <td className="px-3 py-2">family</td>
                   <td className="px-3 py-2">strict</td>
                   <td className="px-3 py-2">family</td>
                 </tr>
@@ -144,7 +144,7 @@ export default function ApiDocsPage() {
           </p>
           <p className="text-foreground">organizations</p>
           <p>
-            id uuid PK, slug unique, name, kind, isolation, created_at.
+            id uuid PK, slug unique, name, kind, isolation, homeschool_mode, created_by, created_at.
           </p>
           <p className="text-foreground">members</p>
           <p>id uuid PK, email unique, name, created_at.</p>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { hirePathBrainHint } from "@/lib/progress/hire-path-brain-sync";
+import { refuseClosedDesk } from "@/lib/progress/desk-gate";
 import {
   selectSupervisedBrain,
   writeSupervisedBrain,
@@ -32,12 +33,16 @@ function publicBrain(evidence: ReturnType<typeof selectSupervisedBrain>) {
 }
 
 export async function GET(request: Request) {
+  const denied = await refuseClosedDesk(request);
+  if (denied) return denied;
   const childId = new URL(request.url).searchParams.get("child");
   const hint = hirePathBrainHint(childId);
   return NextResponse.json(publicBrain(selectSupervisedBrain(childId, hint)));
 }
 
 export async function POST(request: Request) {
+  const denied = await refuseClosedDesk(request);
+  if (denied) return denied;
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
   const childId = String(body.child || body.child_id || "").trim();
   const action = String(body.action || body.op || "").trim();
@@ -63,6 +68,8 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const denied = await refuseClosedDesk(request);
+  if (denied) return denied;
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
   const childId = String(body.child || body.child_id || "").trim();
   const action = String(body.action || body.op || "sync").trim() || "sync";

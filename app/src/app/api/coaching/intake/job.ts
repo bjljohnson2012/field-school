@@ -10,6 +10,7 @@ import {
 } from "@/lib/coaching/intercalate";
 import { SkillScoreError, applySkillScore, loadSubjectIdentity } from "@/lib/coaching/scores";
 import { getDb } from "@/lib/db/client";
+import { applyTenancySqlIfConfigured } from "@/lib/tenancy/sql";
 import {
   answerSets,
   answers,
@@ -64,8 +65,9 @@ export async function runIntakeSynthesis(answerSetId: string) {
   const started = Date.now();
   let model: string | null = null;
   try {
-    const subject = await loadSubjectIdentity(set.membershipId);
+    const subject = await loadSubjectIdentity(set.membershipId, set.orgId);
     if (!subject || subject.orgId !== set.orgId) throw new Error("missing_subject");
+    await applyTenancySqlIfConfigured();
     const [org] = await db
       .select()
       .from(organizations)

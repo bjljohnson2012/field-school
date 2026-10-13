@@ -8,6 +8,7 @@ import { lessonVisibleTo } from "@/lib/composer/rules";
 import { knowledgeUnits, lessons } from "@/lib/composer/schema";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import type { Room } from "@/lib/living-brain/model";
+import { roomOf as kindRoom } from "@/lib/tenancy/kind";
 import type { MediaDoc } from "@/lib/records/model";
 import { listMedia, loadFamily, loadFamilyMilestones, loadSelfMilestones } from "@/lib/records/store";
 import {
@@ -28,7 +29,11 @@ export type KnowledgeLoad =
 type Auth = Extract<Awaited<ReturnType<typeof identityFromRequest>>, { ok: true }>;
 
 function roomOf(identity: LearnerIdentity): Room | null {
-  return identity.orgSlug === "household" || identity.orgSlug === "sales" ? identity.orgSlug : null;
+  if (identity.orgSlug === "household" || identity.orgSlug === "sales") return identity.orgSlug;
+  const room = kindRoom(identity.orgKind);
+  if (room === "family") return "household";
+  if (room === "team") return "sales";
+  return null;
 }
 
 async function visibleLessons(identity: LearnerIdentity, ids: readonly string[]) {
@@ -80,7 +85,7 @@ async function brainLessons(auth: Auth, room: Room | null): Promise<Graph> {
 }
 
 async function familyGraph(identity: LearnerIdentity, only?: string): Promise<Graph | null> {
-  if (identity.kind === "child" || identity.orgSlug !== "household") return null;
+  if (identity.kind === "child" || roomOf(identity) !== "household") return null;
   const family = await loadFamily({ orgId: identity.orgId, parentMembershipId: identity.membershipId });
   const children = only ? family.children.filter((child) => child.person.membershipId === only) : family.children;
   if (only && !children.length) return null;
@@ -122,7 +127,7 @@ export async function loadKnowledge(focus: GraphFocus, request?: Request): Promi
     }
     const graph = await familyGraph(identity, focus.kind === "child" ? focus.membershipId : undefined);
     if (!graph) {
-      return { ok: false, status: 403, error: identity.orgSlug === "household" ? "not_your_child" : "household_only" };
+      return { ok: false, status: 403, error: roomOf(identity) === "household" ? "not_your_child" : "household_only" };
     }
     return { ok: true, room, graph, media: [] };
   } catch (error) {

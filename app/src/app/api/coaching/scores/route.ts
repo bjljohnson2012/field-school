@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "invalid_body" }, { status: 400 });
   }
 
-  const subject = await loadSubjectIdentity(membershipId);
+  const subject = await loadSubjectIdentity(membershipId, auth.identity.orgId);
   if (!subject) {
     return NextResponse.json({ ok: false, error: "unknown_member" }, { status: 404 });
   }

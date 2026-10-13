@@ -48,7 +48,7 @@ export default async function PersonPage({
   const auth = await identityFromRequest();
   if (!auth.ok) redirect(`/login?next=/people/${membershipId}`);
 
-  const subject = await loadSubjectIdentity(membershipId);
+  const subject = await loadSubjectIdentity(membershipId, auth.identity.orgId);
   const actor: Actor = {
     memberId: auth.identity.memberId,
     membershipId: auth.identity.membershipId,

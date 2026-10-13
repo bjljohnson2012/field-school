@@ -27,7 +27,7 @@ export async function GET(request: Request) {
   if (!profile) {
     return NextResponse.json({ ok: true, profile: null, revisions: [] });
   }
-  const revisions = await listRevisions(profile.id, 12);
+  const revisions = await listRevisions(profile.id, auth.identity.orgId, 12);
   return NextResponse.json({
     ok: true,
     profile: publicProfile(profile),

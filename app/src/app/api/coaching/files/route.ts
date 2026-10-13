@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
+import { and, eq } from "drizzle-orm";
 import { loadLibraryCoach } from "@/app/api/coaching/knowledge/access";
 import { isUuid } from "@/app/api/coaching/knowledge/visibility";
 import { writeCoachingAudit } from "@/lib/coaching/audit";
-import { DatabaseUnavailableError } from "@/lib/db/client";
+import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
+import { memberships } from "@/lib/db/schema";
 import { requireCoachingWrite } from "@/lib/coaching/writes";
 import { isResponse, jsonError, readJson } from "../tasks/session";
 import { FileError, listFiles, storeConfirmedFile } from "./library";
@@ -33,6 +35,14 @@ export async function GET(request: Request) {
   if (!loaded.ok) return loaded.response;
   const subject = new URL(request.url).searchParams.get("subject")?.trim() ?? "";
   if (subject && !isUuid(subject)) return jsonError("invalid_body", 400);
+  if (subject) {
+    const [member] = await getDb()
+      .select({ id: memberships.id })
+      .from(memberships)
+      .where(and(eq(memberships.id, subject), eq(memberships.orgId, loaded.actor.orgId)))
+      .limit(1);
+    if (!member) return jsonError("not_in_org", 403);
+  }
   try {
     const files = await listFiles(loaded.actor.orgId, subject || undefined);
     return NextResponse.json({ ok: true, name: loaded.name, files });
@@ -67,6 +77,14 @@ export async function POST(request: Request) {
   }
   if (!bytes.byteLength) return jsonError("invalid_body", 400);
   if (bytes.byteLength > 25 * 1024 * 1024) return jsonError("invalid_body", 400);
+  if (subjectMembershipId) {
+    const [subject] = await getDb()
+      .select({ id: memberships.id })
+      .from(memberships)
+      .where(and(eq(memberships.id, subjectMembershipId), eq(memberships.orgId, loaded.actor.orgId)))
+      .limit(1);
+    if (!subject) return jsonError("not_in_org", 403);
+  }
   try {
     const file = await storeConfirmedFile({
       orgId: loaded.actor.orgId,

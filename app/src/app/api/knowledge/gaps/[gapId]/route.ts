@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getSql } from "@/lib/db/client";
 import { gapContext, gapError, isUuid } from "@/lib/gap-loop/access";
 import { freshKeyForGap, rescoreOwned } from "@/lib/gap-loop/advance";
 import { GapFieldsError } from "@/lib/gap-loop/errors";
@@ -19,7 +20,13 @@ export async function PATCH(request: Request, { params }: Params) {
     const action = body.action === "reject" || body.action === "waive" || body.action === "reopen" ? body.action : "";
     if (!action) throw new GapFieldsError("gap_action_required");
     const reason = typeof body.reason === "string" ? body.reason.replace(/\s+/g, " ").trim().slice(0, 240) : "";
-    const freshKey = action === "reopen" ? await freshKeyForGap(gapId) : "";
+    let freshKey = "";
+    if (action === "reopen") {
+      const sql = getSql();
+      const owned = await sql`SELECT id FROM gap_findings WHERE id = ${gapId} AND org_id = ${gate.actor.orgId} LIMIT 1`;
+      if (!owned.length) return NextResponse.json({ ok: false, error: "unknown_gap" }, { status: 404 });
+      freshKey = await freshKeyForGap(gapId);
+    }
     const outcomeId = await patchGap(
       gate.actor,
       gate.staff,

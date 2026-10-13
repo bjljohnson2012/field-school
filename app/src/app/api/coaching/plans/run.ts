@@ -49,7 +49,7 @@ export function planDto(row: typeof coachingPlans.$inferSelect) {
 }
 
 async function buildInput(world: CoachingWorld, orgId: string, subjectMembershipId: string) {
-  const subject = await loadSubjectIdentity(subjectMembershipId);
+  const subject = await loadSubjectIdentity(subjectMembershipId, orgId);
   if (!subject || subject.orgId !== orgId) throw new PlanFlowError("not_found", 404);
   const db = getDb();
   const [profile] = await db

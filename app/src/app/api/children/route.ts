@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { and, desc, eq } from "drizzle-orm";
 import { identityFromRequest, ensureMembership } from "@/lib/campus-runtime/identity";
-import { HOUSEHOLD_SLUG, canCreateChild } from "@/lib/campus-runtime/org";
+import { HOUSEHOLD_SLUG, canCreateChild, canListChildren } from "@/lib/campus-runtime/org";
 import { isStaffEmail } from "@/lib/auth/staff";
 import { getDb } from "@/lib/db/client";
 import { noteUse } from "@/lib/living-brain/store";
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
   if (!auth.ok) {
     return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
   }
-  if (!canCreateChild(auth.identity, isStaffEmail(auth.identity.email))) {
+  if (!canListChildren(auth.identity, isStaffEmail(auth.identity.email))) {
     return NextResponse.json({ ok: false, error: "household_guardian_only" }, { status: 403 });
   }
   const db = getDb();
@@ -228,7 +228,7 @@ export async function POST(request: Request) {
     .insert(members)
     .values({ email, name, kind: "child" })
     .returning();
-  const { membership } = await ensureMembership(child.id, HOUSEHOLD_SLUG, "learner");
+  const { membership } = await ensureMembership(child.id, auth.identity.orgSlug, "learner");
   await db.insert(wards).values({
     orgId: auth.identity.orgId,
     guardianMembershipId: auth.identity.membershipId,

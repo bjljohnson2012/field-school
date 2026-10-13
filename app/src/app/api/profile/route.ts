@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { loadSession } from "@/lib/campus-runtime/identity";
 import { DatabaseUnavailableError } from "@/lib/db/client";
 import { sanitizeAdultPatch } from "@/lib/profile/model";
+import { roomOf } from "@/lib/tenancy/kind";
 import { listKidProfiles, loadAdultProfile, updateAdultProfile } from "@/lib/profile/store";
 
 export const dynamic = "force-dynamic";
@@ -33,8 +34,13 @@ export async function GET(request: Request) {
     if (!auth.ok) return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
     const profile = await loadAdultProfile(auth.owner);
     const household = auth.active?.orgSlug === "household" ? auth.active : null;
-    const kids = household
-      ? await listKidProfiles({ orgId: household.orgId, parentMembershipId: household.membershipId })
+    const familyOrg =
+      auth.active && auth.active.orgSlug !== "sales" && roomOf(auth.active.orgKind) === "family"
+        ? auth.active
+        : null;
+    const kidOrg = household ?? familyOrg;
+    const kids = kidOrg
+      ? await listKidProfiles({ orgId: kidOrg.orgId, parentMembershipId: kidOrg.membershipId })
       : [];
     return NextResponse.json({ ok: true, profile, kids, room: auth.active?.orgSlug ?? "" });
   } catch (error) {

@@ -12,6 +12,16 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
+export const members = pgTable("members", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull().unique(),
+  name: text("name").notNull(),
+  kind: text("kind").notNull().default("adult"),
+  authUserId: text("auth_user_id"),
+  mode: text("mode").notNull().default("none"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const organizations = pgTable("organizations", {
   id: uuid("id").primaryKey().defaultRandom(),
   slug: text("slug").notNull().unique(),
@@ -20,16 +30,8 @@ export const organizations = pgTable("organizations", {
   isolation: text("isolation").notNull(),
   host: text("host"),
   features: jsonb("features").notNull().default({}),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-});
-
-export const members = pgTable("members", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  email: text("email").notNull().unique(),
-  name: text("name").notNull(),
-  kind: text("kind").notNull().default("adult"),
-  authUserId: text("auth_user_id"),
-  mode: text("mode").notNull().default("none"),
+  homeschoolMode: boolean("homeschool_mode").notNull().default(false),
+  createdBy: uuid("created_by").references(() => members.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

@@ -5,9 +5,17 @@ import { usePortal } from "@/hooks/use-portal";
 import { formatDay } from "@/lib/utils";
 import type { AccessRequest } from "@/lib/members/types";
 
+type StaffOrg = { slug: string; name: string };
+type AccessRow = AccessRequest & { orgs?: StaffOrg[] };
+
+function orgLabel(orgs: StaffOrg[] | undefined) {
+  if (!orgs?.length) return "no org";
+  return orgs.map((org) => org.name).join(", ");
+}
+
 export default function AccessRequestsPage() {
   const { ready, isStaff } = usePortal();
-  const [requests, setRequests] = useState<AccessRequest[]>([]);
+  const [requests, setRequests] = useState<AccessRow[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -16,7 +24,7 @@ export default function AccessRequestsPage() {
     fetch("/api/admin/access-requests")
       .then(async (res) => {
         const data = (await res.json()) as {
-          requests?: AccessRequest[];
+          requests?: AccessRow[];
           error?: string;
         };
         if (cancelled) return;
@@ -80,6 +88,9 @@ export default function AccessRequestsPage() {
               </p>
             </div>
             <p className="mt-2 text-sm">{request.email}</p>
+            <p className="mt-1 text-sm text-muted-foreground" data-org-column>
+              {orgLabel(request.orgs)}
+            </p>
             <p className="mt-1 text-sm text-muted-foreground">
               {request.provider} · {formatDay(request.createdAt)}
             </p>

@@ -1,3 +1,6 @@
+import { isTemplateSlug } from "../tenancy/access.ts";
+import { roomOf } from "../tenancy/kind.ts";
+
 export const OPERATOR_SLUG = "field-school";
 export const HOUSEHOLD_SLUG = "household";
 export const SALES_SLUG = "sales";
@@ -16,11 +19,17 @@ export function pickActiveSlug(
   requested: string,
   slugs: string[],
   memberKind: string,
+  staff = false,
 ) {
   const allowed = memberKind === "child"
     ? slugs.filter((s) => s !== SALES_SLUG)
     : slugs;
   if (requested && allowed.includes(requested)) return requested;
+  const own = allowed.find(
+    (slug) => slug !== HOUSEHOLD_SLUG && slug !== SALES_SLUG && slug !== OPERATOR_SLUG,
+  );
+  if (own) return own;
+  if (staff && allowed.includes(OPERATOR_SLUG)) return OPERATOR_SLUG;
   if (allowed.includes(HOUSEHOLD_SLUG)) return HOUSEHOLD_SLUG;
   if (allowed.includes(SALES_SLUG)) return SALES_SLUG;
   return allowed[0] || "";
@@ -38,8 +47,13 @@ export function defaultInviteStance(orgSlug: string) {
   return "learner";
 }
 
-export function inviteStanceAllowed(orgSlug: string, stance: string) {
-  return (INVITE_STANCES[orgSlug] ?? ["learner"]).includes(stance);
+export function inviteStanceAllowed(orgSlug: string, stance: string, orgKind?: string) {
+  const listed = INVITE_STANCES[orgSlug];
+  if (listed) return listed.includes(stance);
+  const room = orgKind ? roomOf(orgKind) : null;
+  if (room === "family") return ["learner", "guardian", "owner"].includes(stance);
+  if (room === "team") return ["learner", "trainer", "owner"].includes(stance);
+  return stance === "learner" || stance === "owner";
 }
 
 export function canMintInvite(
@@ -48,18 +62,37 @@ export function canMintInvite(
   staff: boolean,
 ) {
   if (actor.kind === "child") return false;
-  if (staff) return true;
+  if (isTemplateSlug(targetOrg)) return false;
   if (actor.orgSlug !== targetOrg) return false;
-  return actor.stance === "admin" || actor.stance === "guardian" || actor.stance === "trainer";
+  void staff;
+  return (
+    actor.stance === "admin" ||
+    actor.stance === "guardian" ||
+    actor.stance === "trainer" ||
+    actor.stance === "owner"
+  );
+}
+
+export function canListChildren(
+  actor: { kind: string; stance: string; orgSlug: string; orgKind?: string },
+  staff: boolean,
+) {
+  if (actor.kind === "child") return false;
+  if (actor.orgSlug === SALES_SLUG || actor.orgSlug === OPERATOR_SLUG) return false;
+  if (actor.orgSlug === HOUSEHOLD_SLUG) {
+    return staff || actor.stance === "admin" || actor.stance === "guardian" || actor.stance === "owner";
+  }
+  return canCreateChild(actor, staff);
 }
 
 export function canCreateChild(
-  actor: { kind: string; stance: string; orgSlug: string },
+  actor: { kind: string; stance: string; orgSlug: string; orgKind?: string },
   staff: boolean,
 ) {
-  if (actor.orgSlug !== HOUSEHOLD_SLUG) return false;
   if (actor.kind === "child") return false;
-  return staff || actor.stance === "admin" || actor.stance === "guardian";
+  if (isTemplateSlug(actor.orgSlug) || actor.orgSlug === OPERATOR_SLUG) return false;
+  if (roomOf(actor.orgKind ?? "") !== "family") return false;
+  return staff || actor.stance === "admin" || actor.stance === "guardian" || actor.stance === "owner";
 }
 
 export function childCanAdmin() {
@@ -70,7 +103,6 @@ export function shouldForceOperatorOrg(opts: {
   staff: boolean;
   slugs: string[];
 }) {
-  if (opts.staff) return false;
-  const hasStudent = opts.slugs.some((slug) => slug === HOUSEHOLD_SLUG || slug === SALES_SLUG);
-  return !hasStudent && opts.slugs.length === 0;
+  void opts;
+  return false;
 }

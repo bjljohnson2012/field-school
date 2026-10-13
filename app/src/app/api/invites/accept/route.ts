@@ -8,6 +8,8 @@ import { syncFamilyMode } from "@/lib/intent/family-mode";
 import { applyIntentSqlIfConfigured } from "@/lib/intent/sql";
 import { invites, organizations } from "@/lib/db/schema";
 import { normalizeEmail } from "@/lib/members/policy";
+import { inviteTarget } from "@/lib/tenancy/orgs";
+import { applyTenancySqlIfConfigured } from "@/lib/tenancy/sql";
 
 export const dynamic = "force-dynamic";
 
@@ -16,9 +18,9 @@ export async function POST(request: Request) {
   if (!user) {
     return NextResponse.json({ ok: false, error: "sign_in_required" }, { status: 401 });
   }
-  let body: { token?: string };
+  let body: { token?: string; org?: string };
   try {
-    body = (await request.json()) as { token?: string };
+    body = (await request.json()) as { token?: string; org?: string };
   } catch {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
@@ -34,15 +36,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "wrong_account" }, { status: 403 });
   }
   const member = await upsertMember(user.email, user.name);
+  await applyTenancySqlIfConfigured();
   const [org] = await db
     .select()
     .from(organizations)
     .where(eq(organizations.id, invite.orgId))
     .limit(1);
   if (!org) return NextResponse.json({ ok: false, error: "unknown_org" }, { status: 404 });
-  await ensureMembership(member.id, org.slug, invite.stance);
+  const target = inviteTarget({ orgId: org.id, orgSlug: org.slug }, body.org);
+  await ensureMembership(member.id, target.orgSlug, invite.stance);
   if (
-    org.slug === HOUSEHOLD_SLUG &&
+    target.orgSlug === HOUSEHOLD_SLUG &&
     (invite.stance === "guardian" || invite.stance === "admin") &&
     member.kind !== "child"
   ) {
@@ -53,6 +57,6 @@ export async function POST(request: Request) {
     .update(invites)
     .set({ status: "accepted" })
     .where(and(eq(invites.id, invite.id), eq(invites.status, "pending")));
-  await setActiveOrgCookie(org.slug);
-  return NextResponse.json({ ok: true, org: org.slug });
+  await setActiveOrgCookie(target.orgSlug);
+  return NextResponse.json({ ok: true, org: target.orgSlug });
 }

@@ -19,12 +19,14 @@ import {
 import { knowledgeUnits } from "@/lib/composer/schema";
 import { brainBoard, chooseNextStep, type Room } from "@/lib/living-brain/model";
 import { toolRead } from "@/lib/living-brain/store";
+import { canRead, scopeSurface } from "@/lib/tenancy/access";
+import { roomOf as kindRoom } from "@/lib/tenancy/kind";
 import { buildInsights, type InsightInput, type InsightsModel } from "./aggregate";
 
-const HIRER_STANCES = new Set(["admin", "guardian", "trainer", "teacher"]);
+const HIRER_STANCES = new Set(["admin", "guardian", "trainer", "teacher", "owner"]);
 
 export type InsightsLoad =
-  | { ok: true; model: InsightsModel }
+  | { ok: true; room: Room | null; model: InsightsModel }
   | { ok: false; status: number; error: string };
 
 function finiteScore(value: string | null) {
@@ -45,9 +47,13 @@ export async function loadInsights(): Promise<InsightsLoad> {
     }
 
     const orgId = auth.identity.orgId;
+    const actor = { orgId, memberKind: auth.identity.kind };
+    if (!canRead(actor, { orgId })) {
+      return { ok: false, status: 403, error: "forbidden_org" };
+    }
     const db = getDb();
     const [org] = await db
-      .select({ name: organizations.name, slug: organizations.slug })
+      .select({ name: organizations.name, slug: organizations.slug, kind: organizations.kind })
       .from(organizations)
       .where(eq(organizations.id, orgId))
       .limit(1);
@@ -158,11 +164,25 @@ export async function loadInsights(): Promise<InsightsLoad> {
       .from(knowledgeUnits)
       .where(eq(knowledgeUnits.orgId, orgId));
 
+    const room: Room | null =
+      org.slug === "household" || org.slug === "sales"
+        ? org.slug
+        : kindRoom(org.kind) === "family"
+          ? "household"
+          : kindRoom(org.kind) === "team"
+            ? "sales"
+            : null;
+    const deskPeople = room === "sales" ? people.filter((person) => person.kind !== "child") : people;
+    const visiblePeople = scopeSurface(
+      actor,
+      "insights",
+      deskPeople.map((person) => ({ ...person, orgId })),
+    ).map(({ orgId: _orgId, ...person }) => person);
     const input: InsightInput = {
       orgSlug: org.slug,
       orgName: org.name,
       now: new Date().toISOString(),
-      people,
+      people: visiblePeople,
       events: events.map((row) => ({
         membershipId: row.membershipId,
         kind: row.kind,
@@ -190,7 +210,6 @@ export async function loadInsights(): Promise<InsightsLoad> {
     const model = buildInsights(input);
     let brainNext: InsightsModel["brainNext"] = null;
     let brainView: InsightsModel["brainBoard"] = null;
-    const room: Room | null = org.slug === "household" || org.slug === "sales" ? org.slug : null;
     if (room) {
       try {
         const brain = await toolRead(orgId);
@@ -204,7 +223,7 @@ export async function loadInsights(): Promise<InsightsLoad> {
         brainView = null;
       }
     }
-    return { ok: true, model: { ...model, brainNext, brainBoard: brainView } };
+    return { ok: true, room, model: { ...model, brainNext, brainBoard: brainView } };
   } catch (error) {
     if (error instanceof DatabaseUnavailableError) {
       return { ok: false, status: 503, error: "database_unavailable" };

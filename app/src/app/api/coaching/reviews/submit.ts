@@ -72,8 +72,8 @@ export async function submitMonthlyReview(input: {
     .where(and(eq(skillStates.orgId, review.orgId), eq(skillStates.membershipId, review.subjectMembershipId)));
   const knownSlugs = scoreRows.map((row) => row.slug);
   const priorBySlug = new Map(scoreRows.map((row) => [row.slug, Number(row.score)]));
-  const subjectIdentity = await loadSubjectIdentity(review.subjectMembershipId);
-  const coach = await loadSubjectIdentity(input.actor.membershipId);
+  const subjectIdentity = await loadSubjectIdentity(review.subjectMembershipId, review.orgId);
+  const coach = await loadSubjectIdentity(input.actor.membershipId, review.orgId);
   if (!subjectIdentity || !coach) throw new ReviewFlowError("not_found", 404);
 
   const summary = await summarizeMonthlyReview({
