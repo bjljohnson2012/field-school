@@ -7,6 +7,7 @@ import { authCanMintSessions } from "@/lib/auth/env";
 import { loginAllowed } from "@/lib/tenancy/access";
 
 type JwtArgs = Parameters<NonNullable<NonNullable<NextAuthConfig["callbacks"]>["jwt"]>>[0];
+type SessionArgs = Parameters<NonNullable<NonNullable<NextAuthConfig["callbacks"]>["session"]>>[0];
 
 function buildNodeAuthConfig() {
   const base = resolveAuthConfig();
@@ -22,6 +23,9 @@ function buildNodeAuthConfig() {
       }) {
         const allowed = edgeSignIn ? await edgeSignIn(args) : true;
         if (!allowed) return false;
+        const raw = args.profile?.email ?? args.user?.email ?? "";
+        const email = typeof raw === "string" ? raw.trim().toLowerCase() : "";
+        if (email && !loginAllowed(await memberRowForLogin(email), email)) return false;
         if (args.account?.provider && args.account.provider !== "credentials") {
           const { upsertOAuthMember } = await import("@/lib/members/store");
           await upsertOAuthMember({
@@ -36,7 +40,12 @@ function buildNodeAuthConfig() {
         const token =
           (base.callbacks?.jwt ? await base.callbacks.jwt(args) : args.token) ??
           args.token;
-        const email = typeof token.email === "string" ? token.email : "";
+        const email = typeof token.email === "string" ? token.email.trim().toLowerCase() : "";
+        if (email && !loginAllowed(await memberRowForLogin(email), email)) {
+          delete token.email;
+          delete token.name;
+          return token;
+        }
         if (email) {
           const { findMemberByEmail } = await import("@/lib/members/store");
           const { getSeat } = await import("@/lib/billing/seats");
@@ -46,6 +55,16 @@ function buildNodeAuthConfig() {
           token.seatLabel = seat.label;
         }
         return token;
+      },
+      async session(args: SessionArgs) {
+        const session = base.callbacks?.session
+          ? await base.callbacks.session(args)
+          : args.session;
+        if (!args.token?.email && session.user) {
+          session.user.email = "";
+          session.user.name = "";
+        }
+        return session;
       },
     },
     providers: [
@@ -64,8 +83,7 @@ function buildNodeAuthConfig() {
           const password =
             typeof credentials?.password === "string" ? credentials.password : "";
           if (!email || !password) return null;
-          const kind = await memberKindForLogin(email);
-          if (!loginAllowed({ kind })) return null;
+          if (!loginAllowed(await memberRowForLogin(email), email)) return null;
 
           const credentialMember = await matchMemberCredential(email, password);
           const { verifyMemberLogin } = await import("@/lib/members/store");
@@ -112,15 +130,20 @@ export function credentialSessionUser(input: {
   return null;
 }
 
-async function memberKindForLogin(email: string): Promise<string | null> {
+async function memberRowForLogin(
+  email: string,
+): Promise<{ kind: string | null } | null> {
+  const mail = email.trim().toLowerCase();
+  if (!mail) return null;
   try {
     const { databaseUrl, getSql } = await import("@/lib/db/client");
     if (!databaseUrl()) return null;
     const sql = getSql();
     const rows = await sql<{ kind: string | null }[]>`
-      SELECT kind FROM members WHERE lower(email) = ${email} LIMIT 1
+      SELECT kind FROM members WHERE lower(email) = ${mail} LIMIT 1
     `;
-    return rows[0]?.kind ?? null;
+    if (!rows.length) return null;
+    return { kind: rows[0]?.kind ?? null };
   } catch {
     return null;
   }

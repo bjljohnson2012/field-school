@@ -19,11 +19,17 @@ export function pickActiveSlug(
   requested: string,
   slugs: string[],
   memberKind: string,
+  staff = false,
 ) {
   const allowed = memberKind === "child"
     ? slugs.filter((s) => s !== SALES_SLUG)
     : slugs;
   if (requested && allowed.includes(requested)) return requested;
+  const own = allowed.find(
+    (slug) => slug !== HOUSEHOLD_SLUG && slug !== SALES_SLUG && slug !== OPERATOR_SLUG,
+  );
+  if (own) return own;
+  if (staff && allowed.includes(OPERATOR_SLUG)) return OPERATOR_SLUG;
   if (allowed.includes(HOUSEHOLD_SLUG)) return HOUSEHOLD_SLUG;
   if (allowed.includes(SALES_SLUG)) return SALES_SLUG;
   return allowed[0] || "";
@@ -97,7 +103,6 @@ export function shouldForceOperatorOrg(opts: {
   staff: boolean;
   slugs: string[];
 }) {
-  if (opts.staff) return false;
-  const hasStudent = opts.slugs.some((slug) => slug === HOUSEHOLD_SLUG || slug === SALES_SLUG);
-  return !hasStudent && opts.slugs.length === 0;
+  void opts;
+  return false;
 }

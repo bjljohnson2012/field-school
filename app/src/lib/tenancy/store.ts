@@ -1,6 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
-import { memberships, organizations } from "@/lib/db/schema";
+import { members, memberships, organizations } from "@/lib/db/schema";
+import { loginAllowed } from "./access.ts";
 import { planRoomOrg } from "./orgs.ts";
 import { applyTenancySqlIfConfigured } from "./sql.ts";
 
@@ -10,6 +11,15 @@ export async function ensureRoomOrg(
   opts?: { name?: string; homeschoolMode?: boolean },
 ) {
   await applyTenancySqlIfConfigured();
+  const db = getDb();
+  const [memberRow] = await db
+    .select({ id: members.id, kind: members.kind, email: members.email })
+    .from(members)
+    .where(eq(members.id, member.id))
+    .limit(1);
+  if (!memberRow || !loginAllowed(memberRow)) {
+    throw new Error("login_none");
+  }
   const plan = planRoomOrg({
     memberId: member.id,
     memberName: member.name,
@@ -17,7 +27,6 @@ export async function ensureRoomOrg(
     name: opts?.name,
     homeschoolMode: opts?.homeschoolMode,
   });
-  const db = getDb();
   const [existing] = await db
     .select()
     .from(organizations)
