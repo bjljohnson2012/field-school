@@ -183,6 +183,24 @@ test("Checkout Session posts omit payment_method_types and tag the plan only aft
   assert.doesNotMatch(source, /payment_method_types/);
 });
 
+test("a checkout plan href does not contain a live Payment Link while go-live is false", async () => {
+  const source = readFileSync(join(root, "src/lib/billing/checkout-destination.ts"), "utf8");
+  assert.equal(CHECKOUT_GO_LIVE, false);
+  assert.match(source, /export const CHECKOUT_GO_LIVE = false/);
+  for (const plan of Object.values(PAID_PLANS)) {
+    assert.equal(livePaymentLink(plan), null, plan.id);
+    for (const secretKey of ["", "sk_live_dummy", "sk_test_dummy"]) {
+      const dest = await resolveCheckoutDestination({
+        plan,
+        secretKey,
+        origin: "https://portal.fieldschool.ai",
+      });
+      assert.equal(dest.url.includes("buy.stripe.com"), false, `${plan.id} ${secretKey || "empty"}`);
+      assert.equal(isLiveUrl(dest.url), false, plan.id);
+    }
+  }
+});
+
 function isLiveUrl(url) {
   return url.startsWith("https://buy.stripe.com/");
 }
