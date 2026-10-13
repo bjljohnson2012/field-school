@@ -1,3 +1,4 @@
+import { isStaffEmail } from "@/lib/auth/staff";
 import { roomOf } from "./kind.ts";
 
 export type Surface = "people" | "library" | "insights";
@@ -23,8 +24,17 @@ export function isTemplateSlug(slug: string): boolean {
   return TEMPLATES.has(slug);
 }
 
-export function loginAllowed(member: { kind?: string | null }): boolean {
-  return (member.kind ?? "adult") !== "child";
+export function loginAllowed(
+  member: { kind?: string | null; email?: string | null } | null | undefined,
+  email?: string | null,
+): boolean {
+  const kind = member == null ? null : member.kind;
+  if (kind === "child") return false;
+  const mail = email ?? (member == null ? null : member.email);
+  if (isStaffEmail(mail)) return true;
+  if (member == null) return false;
+  if (typeof kind !== "string" || kind.trim() === "") return false;
+  return true;
 }
 
 export function canRead(actor: ReadActor, row: { orgId: string }): boolean {

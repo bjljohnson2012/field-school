@@ -13,7 +13,7 @@ export async function ensureRoomOrg(
   await applyTenancySqlIfConfigured();
   const db = getDb();
   const [memberRow] = await db
-    .select({ id: members.id, kind: members.kind })
+    .select({ id: members.id, kind: members.kind, email: members.email })
     .from(members)
     .where(eq(members.id, member.id))
     .limit(1);

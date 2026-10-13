@@ -1,11 +1,34 @@
 import assert from "node:assert/strict";
+import { register } from "node:module";
 import test from "node:test";
-import {
-  canRead,
-  canWrite,
-  loginAllowed,
-  scopeSurface,
-} from "../src/lib/tenancy/access.ts";
+import { dirname, join } from "node:path";
+import { pathToFileURL } from "node:url";
+
+const root = join(dirname(new URL(import.meta.url).pathname), "..");
+const src = join(root, "src");
+register(
+  "data:text/javascript," +
+    encodeURIComponent(`
+import { pathToFileURL } from "node:url";
+const src = ${JSON.stringify(src)};
+export async function resolve(specifier, context, nextResolve) {
+  if (specifier.startsWith("@/")) {
+    let target = src + "/" + specifier.slice(2);
+    if (!/\\.(ts|tsx|js|mjs|cjs|json)$/.test(target)) target += ".ts";
+    return nextResolve(pathToFileURL(target).href, context);
+  }
+  return nextResolve(specifier, context);
+}
+`),
+);
+
+const { canRead, canWrite, loginAllowed, scopeSurface } = await import(
+  pathToFileURL(join(src, "lib/tenancy/access.ts")).href,
+);
+const { pickActiveSlug } = await import(
+  pathToFileURL(join(src, "lib/campus-runtime/rules.ts")).href,
+);
+const { DEAN_EMAIL } = await import(pathToFileURL(join(src, "lib/campus.ts")).href);
 
 function adult(over) {
   return {
@@ -78,7 +101,7 @@ test("two teams cannot read each other on People, Library, or Insights", () => {
 test("a person in development has no login and only an accountable adult in the same org can edit them", () => {
   assert.equal(loginAllowed({ kind: "child" }), false);
   assert.equal(loginAllowed({ kind: "adult" }), true);
-  assert.equal(loginAllowed({ kind: null }), true);
+  assert.equal(loginAllowed({ kind: null }), false);
 
   const child = { orgId: "org-a", memberKind: "child", login: "none", memberId: "kid" };
   const guardian = adult({ stance: "guardian" });
@@ -94,6 +117,43 @@ test("a person in development has no login and only an accountable adult in the 
   assert.equal(canWrite(otherOrg, child), false);
   assert.equal(canWrite(childActor, child), false);
   assert.equal(canWrite(adult({ orgKind: "team", orgSlug: "team-a", stance: "trainer" }), child), false);
+});
+
+test("a null kind cannot log in", () => {
+  assert.equal(loginAllowed({ kind: null }), false);
+  assert.equal(loginAllowed({ kind: null, email: "person@example.com" }), false);
+  assert.equal(loginAllowed({ kind: "" }), false);
+});
+
+test("a missing members row cannot log in", () => {
+  assert.equal(loginAllowed(null), false);
+  assert.equal(loginAllowed(undefined), false);
+  assert.equal(loginAllowed(null, "person@example.com"), false);
+});
+
+test("allowlisted staff can log in when kind is null or the members row is missing", () => {
+  assert.equal(loginAllowed({ kind: null, email: DEAN_EMAIL }), true);
+  assert.equal(loginAllowed(null, DEAN_EMAIL), true);
+  assert.equal(loginAllowed({ kind: "child", email: DEAN_EMAIL }), false);
+});
+
+test("staff with no personal org land on the operator org", () => {
+  assert.equal(
+    pickActiveSlug("", ["field-school", "household", "sales"], "adult", true),
+    "field-school",
+  );
+  assert.equal(
+    pickActiveSlug("", ["field-school", "family-ada", "household", "sales"], "adult", true),
+    "family-ada",
+  );
+  assert.equal(
+    pickActiveSlug("household", ["field-school", "household", "sales"], "adult", true),
+    "household",
+  );
+  assert.equal(
+    pickActiveSlug("", ["field-school", "household", "sales"], "adult", false),
+    "household",
+  );
 });
 
 test("household and sales templates are readable by a member and not writable", () => {

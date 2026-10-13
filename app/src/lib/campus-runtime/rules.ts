@@ -19,6 +19,7 @@ export function pickActiveSlug(
   requested: string,
   slugs: string[],
   memberKind: string,
+  staff = false,
 ) {
   const allowed = memberKind === "child"
     ? slugs.filter((s) => s !== SALES_SLUG)
@@ -28,6 +29,7 @@ export function pickActiveSlug(
     (slug) => slug !== HOUSEHOLD_SLUG && slug !== SALES_SLUG && slug !== OPERATOR_SLUG,
   );
   if (own) return own;
+  if (staff && allowed.includes(OPERATOR_SLUG)) return OPERATOR_SLUG;
   if (allowed.includes(HOUSEHOLD_SLUG)) return HOUSEHOLD_SLUG;
   if (allowed.includes(SALES_SLUG)) return SALES_SLUG;
   return allowed[0] || "";

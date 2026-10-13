@@ -155,6 +155,7 @@ export async function loadSession(request?: Request) {
     requested,
     rows.map((r) => r.orgSlug),
     member.kind ?? "adult",
+    staff,
   );
   const active = rows.find((r) => r.orgSlug === slug) ?? null;
   const synced = await syncFamilyMode(member);
