@@ -48,7 +48,7 @@ export function switcherOrgs<T extends { memberId?: string; org: string }>(
   const seen = new Set<string>();
   const out: Array<T & { readOnly: boolean }> = [];
   for (const row of rows) {
-    if (row.memberId && row.memberId !== memberId) continue;
+    if (row.memberId !== memberId) continue;
     if (!row.org || seen.has(row.org)) continue;
     seen.add(row.org);
     out.push({ ...row, readOnly: row.org === "household" || row.org === "sales" });

@@ -29,6 +29,7 @@ export function loginAllowed(member: { kind?: string | null }): boolean {
 
 export function canRead(actor: ReadActor, row: { orgId: string }): boolean {
   if (actor.memberKind === "child") return false;
+  if (!actor.orgId || !row.orgId) return false;
   return actor.orgId === row.orgId;
 }
 
