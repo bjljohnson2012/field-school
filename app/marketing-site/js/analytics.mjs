@@ -69,7 +69,6 @@ export function writeLog(storage, log) {
   try {
     storage.setItem(STORAGE_KEY, JSON.stringify(log));
   } catch {
-    // sessionStorage can throw when the browser blocks it. Drop the write.
   }
 }
 
