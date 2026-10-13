@@ -1,6 +1,6 @@
 # Rebuild progress
 
-Updated: 2026-10-13 3:15 PM ET by Grok Build
+Updated: 2026-10-13 3:27 PM ET by Grok Build
 Main at: 34798e56529489424f7c1b067e166b10a8570578 (PR 361)
 Active agents: none
 
@@ -56,16 +56,16 @@ A checked row is met by the page, commit, or test named. An unchecked row is par
 | 5 | Show the product | [ ] | Deferred. `app/marketing-site/img/` has the seal, the lockup, Ben, and `og.png`. Hero, problem, and lesson areas are text cards. No 2x portal captures. Pages check on PR #389 recorded this as fail. |
 | 6 | Thirteen homepage sections | [ ] | Partial. The thirteen sections are in `index.html` in the specified order, and the homepage test asserts that order. Commit `0a39714`. The twelve-rules block is not a homepage section. Deferred: height is still over target. PR #389 measured 8241px at 1440 and 10385px at 390, against about 6,500px desktop and under about 9,000px mobile. |
 | 7 | New nav | [x] | Header links are How it works, Families, Teams, Pricing, Ben, Sign in, Start free. Homepage test. Brand pages use that chrome in `6144794` (`app/marketing-site/brand/index.html`, `brand/options/index.html`). `app/scripts/brand.test.mjs` on that commit. |
-| 8 | One path | [x] | Start free goes to `https://portal.fieldschool.ai/signup?plan=course`. Test `signup for the free course names the same headline`. Saturday email is the one-field form on `index.html`. Paid buttons stay mailto while `COACHING_GO_LIVE` is `false` in `checkout-switch.mjs`. Test `go-live switch defaults to Email Ben and flips only coaching`. Consulting stays Email Ben either way. The flag stays off. Public pages do not open Stripe. Test-mode Stripe only: M8 `decideStripeKey` refuses a live key (`47d7178`). `/checkout?plan=` can still open a live Payment Link in `plans.ts`. That route is unlinked from the public pages and was left outside the pricing slice. |
+| 8 | One path | [x] | Start free goes to `https://portal.fieldschool.ai/signup?plan=course`. Test `signup for the free course names the same headline`. Saturday email is the one-field form on `index.html`. Paid buttons stay mailto while `COACHING_GO_LIVE` is `false` in `checkout-switch.mjs`. Test `go-live switch defaults to Email Ben and flips only coaching`. Consulting stays Email Ben either way. The flag stays off. Public pages do not open Stripe. Draft #393 at `7312c44` sets `CHECKOUT_GO_LIVE` false in `app/src/lib/billing/checkout-destination.ts`. `livePaymentLink` and `livePriceId` return null unless the caller passes true, so live Payment Links and live price ids stay unreachable while the flag is false. Tests `the go-live flag stays off and live Payment Links stay unreachable` and `live price ids stay unreachable while the go-live flag is off` in `app/scripts/checkout-destination.test.mjs`. |
 | 9 | Proof stays honest | [x] | `index.html` `#credential` is a text strip (Euna, Ministry Brands) and `#voice` is one Ben quote. Commit `0a39714`. No logo strip and no carousel. |
 | 10 | Ben on the homepage and at `/ben` | [x] | Homepage portrait and "Ben built Field School for the hours he cannot be there." `ben.html`. Commit `0a39714`. Prepared 301 `/founder` to `/ben` is in `app/deploy/caddy/fieldschool-301.caddy`. Test `prepared fieldschool.ai caddy map returns 301s and is not wired into deploy`. The map is not applied. This log does not deploy. |
 | 11 | Type | [x] | `app/marketing-site/css/fonts.css` and `css/site.css` at `0a39714`. Fraunces 500 and 600, IBM Plex Sans, IBM Plex Mono for kickers. H1 40px / 64px, H2 30px / 40px, H3 22px, lede 19px, body 17px. Header image is `img/lockup-wide-cream.png`. The slogan is in the footer, not on the lockup. |
 | 12 | Color | [x] | `site.css` tokens: cream `#F6F3EC`, ink `#1A1916`, UI blue `#1E4E8C`, stone `#7A746A`, muted `#5C5850`, hairline `#D8D2C6`. Brand blue `#1F5EFF` is only `.brand-card.blue`. Contrast measured 8.32 on white and 7.51 on cream in the marketing test pass. That contrast check is not its own committed test. |
-| 13 | Layout and motion | [ ] | Partial. `site.css` has a 72rem wrap, 24px gutters, a 672px measure, 72px / 120px section padding, 12px corners, fade-up 8px over 200ms, reduced motion, and a darker hover on the primary button. Deferred: there is no 12-column grid. Tracks are 1fr, two, three, and four columns. |
+| 13 | Layout and motion | [ ] | Partial. `site.css` has a 72rem wrap, 24px gutters, a 672px measure, 72px / 120px section padding, 12px corners, fade-up 8px over 200ms, reduced motion, and a darker hover on the primary button. Open on draft #389: a 12-column grid is being added there. Tracks today are 1fr, two, three, and four columns. |
 | 14 | Voice | [x] | Locked lines are on `index.html`, `principles.html` ("Reality over hope", "Read the room"), and the services page. Commit `0a39714`. The public-page test rejects an em dash. The homepage has no sentence that starts with "I". |
 | 15 | Mobile first | [ ] | Partial. `index.html` has the slim sticky Start free bar. On PR #389 the first 844px screen holds the headline, the subhead, Start free, and the top of the product card. Deferred: the hero headline is 5 lines at 40px on a 390px screen, and the locked sentence does not wrap to 3. The homepage is 10385px tall at 390, over the about 9,000px target. |
 
-Ten rows are met. Five are partial or deferred: 2, 5, 6, 13, and 15. S0 stays blocked. This map does not accept the stream.
+Ten rows are met. Five stay open: 2, 5, 6, 13, and 15. Rows 2, 5, 6, and 15 close when #389 lands. Row 13 is the 12-column grid being added on #389. S0 stays blocked. This map does not accept the stream.
 
 ## Log
 
@@ -75,6 +75,7 @@ Ten rows are met. Five are partial or deferred: 2, 5, 6, 13, and 15. S0 stays bl
 - 2026-10-08 evening: S0 agent 01a11d48-02ef-7472-9a30-95ba3094e115 and M5 agent 01a11d48-02f1-7e73-895a-48288dded7ea failed with HTTP 402, usage balance exhausted. No status files were written. Working trees were later committed as WIP and pushed.
 - 2026-10-13 2:20 PM ET dispatcher: Halt. No merge. No deploy. WIP draft PR #382 (S0, 0a39714) and #383 (M5, 54f3855). Both stay blocked so M6 and M8 are not spawned. G stays #381 and still merges only after M8.
 - 2026-10-13 3:15 PM ET: Stream 0 recommendation map added on this branch. Ten met, five partial or deferred. Offer keys are diy, coaching assess/model/build, and consulting. Go-live stays off. No merge. No deploy.
+- 2026-10-13 3:27 PM ET: Row 8 now matches draft #393 at 7312c44. Live Payment Links and live price ids stay unreachable while CHECKOUT_GO_LIVE is false. Rows 2, 5, 6, 13, and 15 stay open. No merge.
 
 ## Handoff
 
