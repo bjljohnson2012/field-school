@@ -54,6 +54,15 @@ function buildNodeAuthConfig() {
           token.seatKind = seat.kind;
           token.seatLabel = seat.label;
         }
+        const jti = typeof token.sub === "string" ? token.sub : "";
+        if (jti) {
+          const { isRevokedJti } = await import("@/lib/billing/m8-session");
+          if (await isRevokedJti(jti)) {
+            delete token.email;
+            delete token.name;
+            return token;
+          }
+        }
         return token;
       },
       async session(args: SessionArgs) {

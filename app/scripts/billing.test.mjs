@@ -141,7 +141,7 @@ test("paid seats, webhook, and claim login are wired", () => {
   assert.match(destination, /STRIPE_SECRET_KEY/);
   assert.match(destination, /payment_link/);
   assert.doesNotMatch(destination, /payment_method_types/);
-  assert.match(cartPage, /CartClient/);
+  assert.match(cartPage, /redirect\("\/pricing"\)/);
   assert.match(sessionApi, /resolveCheckoutDestination/);
 });
 

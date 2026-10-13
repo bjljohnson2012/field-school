@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CHECKOUT_GO_LIVE } from "@/lib/billing/checkout-destination";
+import { coachingAction } from "@/lib/billing/m8-prep";
 import {
-  coachingMailto,
   coachingTiers,
+  consultingMailto,
   freeCourseHref,
   individualOffer,
 } from "@/lib/billing/offer-names";
@@ -12,6 +14,15 @@ export const metadata: Metadata = {
   description:
     "Coaching is $300, $600, or $1,500 a month. One course is free. Email Ben to start. No card on the free course.",
 };
+
+function coachingButton(tier: "assess" | "model" | "build") {
+  const action = coachingAction({
+    tier,
+    mode: CHECKOUT_GO_LIVE ? "test" : "off",
+  });
+  if (action.kind === "email") return action.href;
+  return "/pricing";
+}
 
 export default function PricingPage() {
   const hidden = individualOffer();
@@ -67,7 +78,7 @@ export default function PricingPage() {
               {tier.line}
             </p>
             <a
-              href={coachingMailto}
+              href={coachingButton(tier.key)}
               className="mt-6 inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
             >
               Email Ben
@@ -76,6 +87,19 @@ export default function PricingPage() {
         ))}
       </div>
       {hidden}
+
+      <article className="mt-8 rounded-2xl border border-border bg-card px-5 py-6">
+        <h2 className="font-display text-2xl tracking-tight">Consulting</h2>
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+          Scoped work. No public price.
+        </p>
+        <a
+          href={consultingMailto}
+          className="mt-6 inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
+        >
+          Email Ben
+        </a>
+      </article>
 
       <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
         Not ready? Start with one free course or the{" "}

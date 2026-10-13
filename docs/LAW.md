@@ -53,6 +53,7 @@ Wave files, `CURRENT_RUN.md`, `CURSOR_WAVES_1_5_SPEC.md`, `03-waves.md`, and `PL
 - Guest Grok Bot stays.
 - Frozen TanStack `src/` stays frozen.
 - CNC vault `2.24.64.248` off limits.
+- Offers are Do It Yourself, Coaching (three tiers), and Consulting; the Individual plan stays unpublished until billing runs clean 30 days. New offers need Ben.
 - No fourth SKU. No live card. No public flip. No market count.
 
 ## Agent rule

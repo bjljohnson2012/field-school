@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { resolveCheckoutDestination } from "@/lib/billing/checkout-destination";
+import {
+  CHECKOUT_GO_LIVE,
+  resolveCheckoutDestination,
+} from "@/lib/billing/checkout-destination";
 import { getPaidPlan } from "@/lib/billing/plans";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +21,8 @@ export default async function CheckoutPage({
 }: {
   searchParams: Promise<CheckoutSearch>;
 }) {
+  if (!CHECKOUT_GO_LIVE) redirect("/pricing");
+
   const plan = getPaidPlan(firstValue((await searchParams).plan));
   if (!plan) redirect("/pricing");
 
