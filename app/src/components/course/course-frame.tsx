@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Check } from "lucide-react";
 import { useCoursePortal } from "@/hooks/use-portal";
-import { getCourse } from "@/lib/course/catalog";
+import { useCourseRecord } from "@/components/course/course-catalog";
 import { cn } from "@/lib/utils";
 
 export function CourseFrame({ courseSlug, children }: { courseSlug: string; children: ReactNode }) {
-  const course = getCourse(courseSlug);
+  const course = useCourseRecord(courseSlug);
   const { tally } = useCoursePortal(courseSlug);
 
   if (!course) return <>{children}</>;
@@ -60,7 +60,7 @@ export function CourseFrame({ courseSlug, children }: { courseSlug: string; chil
 }
 
 function StationList({ courseSlug }: { courseSlug: string }) {
-  const course = getCourse(courseSlug);
+  const course = useCourseRecord(courseSlug);
   const pathname = usePathname();
   const { course: state, tally } = useCoursePortal(courseSlug);
   if (!course) return null;

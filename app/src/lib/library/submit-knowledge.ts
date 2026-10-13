@@ -3,6 +3,7 @@ import { completeWithConfiguredAi } from "@/lib/living-brain/ai";
 import type { LearnerIdentity } from "@/lib/campus-runtime/identity";
 import { getDb } from "@/lib/db/client";
 import { lessons, quizItems } from "@/lib/composer/schema";
+import { parseBlocks, replaceTextBlock } from "@/lib/collections/content-model";
 import { addQuizItem, createLesson, getLessonDetail, listLessons } from "@/lib/composer/store";
 import {
   NEEDS_MORE,
@@ -49,9 +50,18 @@ export type WizardSubmitInput = {
 
 async function writeLessonBody(identity: LearnerIdentity, lessonId: string, body: string) {
   const db = getDb();
+  const [existing] = await db
+    .select({ blocks: lessons.blocks })
+    .from(lessons)
+    .where(and(eq(lessons.id, lessonId), eq(lessons.orgId, identity.orgId)))
+    .limit(1);
+  const parsed = parseBlocks(existing?.blocks ?? []);
+  const blocks = replaceTextBlock(parsed.ok ? parsed.blocks : [], body);
+  const checked = parseBlocks(blocks);
+  if (!checked.ok) return null;
   const [row] = await db
     .update(lessons)
-    .set({ body, updatedAt: new Date() })
+    .set({ body, blocks: checked.blocks, updatedAt: new Date() })
     .where(and(eq(lessons.id, lessonId), eq(lessons.orgId, identity.orgId)))
     .returning({ id: lessons.id });
   return row ?? null;
@@ -72,6 +82,7 @@ export async function submitWizardKnowledge(identity: LearnerIdentity, input: Wi
     body: text,
     url: input.kind === "link" ? input.detail.trim() : "",
   });
+  if ("error" in created) return { error: created.error };
   const units = unitsOf(created.units);
   const audience = (input.audience ?? []).map((name) => name.trim()).filter(Boolean).slice(0, 20);
   const asked = await completeWithConfiguredAi(
@@ -115,6 +126,7 @@ export async function intakeKnowledge(
       body: text,
       url: item.kind === "link" ? text : "",
     });
+    if ("error" in created) continue;
     const stored = await writeLessonBody(
       identity,
       created.lesson.id,

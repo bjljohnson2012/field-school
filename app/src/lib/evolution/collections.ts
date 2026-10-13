@@ -5,12 +5,9 @@
  * the sealed adult profile store.
  */
 
-export const COLLECTIONS = [
-  { slug: "families", label: "Families", hint: "The home this person belongs to." },
-  { slug: "profiles", label: "Profiles", hint: "Traits of one person." },
-  { slug: "milestones", label: "Milestones", hint: "The next thing they can do." },
-  { slug: "media", label: "Media", hint: "Files, audio, and documents." },
-] as const;
+import { EVOLUTION_COLLECTIONS } from "../collections/registry.ts";
+
+export const COLLECTIONS = EVOLUTION_COLLECTIONS;
 
 export type CollectionSlug = (typeof COLLECTIONS)[number]["slug"];
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { getCourse } from "@/lib/course/catalog";
+import { useCourseRecord } from "@/components/course/course-catalog";
 import { submitCourseNote } from "@/lib/portal";
 
 export function CourseFeedback({
@@ -13,7 +13,7 @@ export function CourseFeedback({
   courseSlug: string;
   defaultStation?: string;
 }) {
-  const course = getCourse(courseSlug);
+  const course = useCourseRecord(courseSlug);
   const [kind, setKind] = useState<"feedback" | "message">("feedback");
   const [stationSlug, setStationSlug] = useState(defaultStation ?? "");
   const [body, setBody] = useState("");

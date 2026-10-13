@@ -3,6 +3,14 @@ import { getDb } from "@/lib/db/client";
 import { canRead } from "@/lib/tenancy/access";
 import type { LearnerIdentity } from "@/lib/campus-runtime/identity";
 import {
+  lessonFromComposer,
+  parseBlocks,
+  publishLesson as publishContentLesson,
+  replaceTextBlock,
+  type Block,
+} from "@/lib/collections/content-model";
+import { applyContentModelSql } from "@/lib/collections/sql";
+import {
   courses,
   knowledgeUnits,
   lessons,
@@ -97,6 +105,52 @@ export async function getLessonDetail(identity: LearnerIdentity, lessonId: strin
   };
 }
 
+async function gateStoredLesson(lesson: LessonRow): Promise<
+  { ok: true; blocks: Block[] } | { ok: false; error: string }
+> {
+  const db = getDb();
+  const quiz = await db
+    .select()
+    .from(quizItems)
+    .where(and(eq(quizItems.lessonId, lesson.id), eq(quizItems.orgId, lesson.orgId)));
+  const parsed = parseBlocks(lesson.blocks);
+  let blocks: Block[] = parsed.ok ? parsed.blocks : [];
+  if (!blocks.some((block) => block.kind === "text")) {
+    blocks = replaceTextBlock(blocks, lesson.body);
+  }
+  if (!blocks.some((block) => block.kind === "quiz") && quiz.length > 0) {
+    blocks = [
+      ...blocks,
+      {
+        kind: "quiz",
+        questions: quiz.map((item) => ({
+          id: item.id,
+          prompt: item.prompt,
+          choices: Array.isArray(item.choices)
+            ? item.choices.filter((choice): choice is string => typeof choice === "string")
+            : [],
+          answer: item.answer,
+          why: item.why,
+          sourceUnitId: item.sourceUnitId,
+        })),
+      },
+    ];
+  }
+  const checked = parseBlocks(blocks);
+  if (!checked.ok) return checked;
+  const gated = publishContentLesson({
+    orgId: lesson.orgId,
+    moduleSlug: "composer",
+    slug: lesson.slug,
+    title: lesson.title,
+    status: "draft",
+    blocks: checked.blocks,
+    outcomeIds: Array.isArray(lesson.outcomeIds) ? lesson.outcomeIds : [],
+  });
+  if (!gated.ok) return gated;
+  return { ok: true, blocks: gated.lesson.blocks };
+}
+
 export async function createLesson(
   identity: LearnerIdentity,
   input: {
@@ -107,6 +161,7 @@ export async function createLesson(
     bookTitle?: string;
   },
 ) {
+  await applyContentModelSql();
   const db = getDb();
   const title = input.title.trim() || "Untitled lesson";
   let slug = slugify(title);
@@ -122,6 +177,15 @@ export async function createLesson(
       break;
     }
   }
+  const drafted = lessonFromComposer({
+    orgId: identity.orgId,
+    moduleSlug: "composer",
+    slug,
+    title,
+    body: input.body,
+    quizItems: [],
+  });
+  if (!drafted.ok) return { error: drafted.error };
   const [course] = await db
     .insert(courses)
     .values({
@@ -130,6 +194,8 @@ export async function createLesson(
       title,
       kind: input.kind,
       status: "draft",
+      statusMarker: "draft",
+      blocks: [],
       createdByMembershipId: identity.membershipId,
     })
     .returning();
@@ -142,6 +208,8 @@ export async function createLesson(
       title,
       body: input.body,
       status: "draft",
+      statusMarker: "draft",
+      blocks: drafted.lesson.blocks,
       createdByMembershipId: identity.membershipId,
     })
     .returning();
@@ -182,6 +250,7 @@ export async function updateLessonCopy(
   identity: LearnerIdentity,
   input: { lessonId: string; title?: string; body?: string; status?: "published" | "draft" },
 ) {
+  await applyContentModelSql();
   const db = getDb();
   const [lesson] = await db
     .select()
@@ -192,16 +261,23 @@ export async function updateLessonCopy(
   const title = input.title?.replace(/\s+/g, " ").trim().slice(0, 180) || lesson.title;
   const body = typeof input.body === "string" ? input.body.slice(0, 20000) : lesson.body;
   const status = input.status === "published" || input.status === "draft" ? input.status : lesson.status;
+  const parsed = parseBlocks(lesson.blocks);
+  let blocks = replaceTextBlock(parsed.ok ? parsed.blocks : [], body);
+  if (status === "published") {
+    const gate = await gateStoredLesson({ ...lesson, title, body, blocks });
+    if (!gate.ok) return { error: gate.error };
+    blocks = gate.blocks;
+  }
   const now = new Date();
   const [updated] = await db
     .update(lessons)
-    .set({ title, body, status, updatedAt: now })
+    .set({ title, body, status, statusMarker: status, blocks, updatedAt: now })
     .where(and(eq(lessons.id, lesson.id), eq(lessons.orgId, identity.orgId)))
     .returning();
   if (!updated) return { error: "unknown_lesson" as const };
   await db
     .update(courses)
-    .set({ title, status, updatedAt: now })
+    .set({ title, status, statusMarker: status, updatedAt: now })
     .where(and(eq(courses.id, lesson.courseId), eq(courses.orgId, identity.orgId)));
   return { lesson: updated };
 }
@@ -336,6 +412,7 @@ export async function addQuizItem(
 }
 
 export async function publishLesson(identity: LearnerIdentity, lessonId: string) {
+  await applyContentModelSql();
   const db = getDb();
   const [lesson] = await db
     .select()
@@ -346,15 +423,17 @@ export async function publishLesson(identity: LearnerIdentity, lessonId: string)
   if (!canRead({ orgId: identity.orgId, memberKind: identity.kind }, { orgId: lesson.orgId })) {
     return { error: "unknown_lesson" as const };
   }
+  const gate = await gateStoredLesson(lesson);
+  if (!gate.ok) return { error: gate.error };
   const now = new Date();
   const [updated] = await db
     .update(lessons)
-    .set({ status: "published", updatedAt: now })
+    .set({ status: "published", statusMarker: "published", blocks: gate.blocks, updatedAt: now })
     .where(and(eq(lessons.id, lesson.id), eq(lessons.orgId, identity.orgId)))
     .returning();
   await db
     .update(courses)
-    .set({ status: "published", updatedAt: now })
+    .set({ status: "published", statusMarker: "published", updatedAt: now })
     .where(and(eq(courses.id, lesson.courseId), eq(courses.orgId, identity.orgId)));
   const [request] = await db
     .insert(publishRequests)

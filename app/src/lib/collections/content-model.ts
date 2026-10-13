@@ -12,13 +12,39 @@ export type ClipBlock = {
   why: string;
 };
 
-export type AssignmentItem = { id: string; label: string; required: boolean };
+export type AssignmentItem = {
+  id: string;
+  label: string;
+  required: boolean;
+  hint?: string;
+};
 
 export type AssignmentBlock = {
   kind: "assignment";
   title: string;
   brief: string;
+  notesPlaceholder: string;
   items: AssignmentItem[];
+};
+
+export type StationBlock = {
+  kind: "station";
+  station: string;
+  kicker: string;
+  durationLabel: string;
+  summary: string;
+};
+
+export type CourseBlock = {
+  kind: "course";
+  tagline: string;
+  kicker: string;
+  videoId: string;
+  videoUrl: string;
+  videoTitle: string;
+  passRatio: number;
+  examPassRatio: number;
+  updatedAt: string;
 };
 
 export type QuizQuestion = {
@@ -38,7 +64,9 @@ export type Block =
   | QuoteBlock
   | ClipBlock
   | AssignmentBlock
-  | QuizBlock;
+  | QuizBlock
+  | StationBlock
+  | CourseBlock;
 
 export type PublishStatus = "draft" | "published";
 
@@ -207,6 +235,10 @@ export function collectionField(
   return { type: field.type, required: field.required === true };
 }
 
+export function replaceTextBlock(blocks: readonly Block[], text: string): Block[] {
+  return [{ kind: "text", text }, ...blocks.filter((block) => block.kind !== "text")];
+}
+
 export function courseOrgRefusal(orgId: string): string | null {
   if (orgId.trim().length === 0) return "course_org_required";
   return null;
@@ -293,6 +325,10 @@ function parseAssignmentItem(value: unknown): AssignmentItem | string {
   }
   const html = rejectHtml(id) ?? rejectHtml(label);
   if (html) return html;
+  const hint = readString(value.hint);
+  if (value.hint !== undefined && hint === null) return "assignment_item_required";
+  if (hint && rejectHtml(hint)) return "html_not_allowed";
+  if (hint) return { id, label, required: value.required, hint };
   return { id, label, required: value.required };
 }
 
@@ -302,7 +338,11 @@ function parseAssignment(value: Record<string, unknown>): Block | string {
   if (title === null || brief === null || !Array.isArray(value.items)) {
     return "assignment_required";
   }
-  const html = rejectHtml(title) ?? rejectHtml(brief);
+  const notesPlaceholder = readString(value.notesPlaceholder) ?? "";
+  if (value.notesPlaceholder !== undefined && readString(value.notesPlaceholder) === null) {
+    return "assignment_required";
+  }
+  const html = rejectHtml(title) ?? rejectHtml(brief) ?? rejectHtml(notesPlaceholder);
   if (html) return html;
   const items: AssignmentItem[] = [];
   for (const item of value.items) {
@@ -310,7 +350,7 @@ function parseAssignment(value: Record<string, unknown>): Block | string {
     if (typeof parsed === "string") return parsed;
     items.push(parsed);
   }
-  return { kind: "assignment", title, brief, items };
+  return { kind: "assignment", title, brief, notesPlaceholder, items };
 }
 
 function parseQuestion(value: unknown): QuizQuestion | string {
@@ -350,6 +390,51 @@ function parseQuiz(value: Record<string, unknown>): Block | string {
   return { kind: "quiz", questions };
 }
 
+function parseStation(value: Record<string, unknown>): Block | string {
+  const station = readString(value.station);
+  const kicker = readString(value.kicker);
+  const durationLabel = readString(value.durationLabel);
+  const summary = readString(value.summary);
+  if (station === null || kicker === null || durationLabel === null || summary === null) {
+    return "station_required";
+  }
+  const html = rejectHtml(station) ?? rejectHtml(kicker) ?? rejectHtml(durationLabel) ?? rejectHtml(summary);
+  if (html) return html;
+  return { kind: "station", station, kicker, durationLabel, summary };
+}
+
+function parseCourse(value: Record<string, unknown>): Block | string {
+  const tagline = readString(value.tagline);
+  const kicker = readString(value.kicker);
+  const videoId = readString(value.videoId);
+  const videoUrl = readString(value.videoUrl);
+  const videoTitle = readString(value.videoTitle);
+  const updatedAt = readString(value.updatedAt);
+  const passRatio = readNumber(value.passRatio);
+  const examPassRatio = readNumber(value.examPassRatio);
+  if (
+    tagline === null ||
+    kicker === null ||
+    videoId === null ||
+    videoUrl === null ||
+    videoTitle === null ||
+    updatedAt === null ||
+    passRatio === null ||
+    examPassRatio === null
+  ) {
+    return "course_required";
+  }
+  const html =
+    rejectHtml(tagline) ??
+    rejectHtml(kicker) ??
+    rejectHtml(videoId) ??
+    rejectHtml(videoUrl) ??
+    rejectHtml(videoTitle) ??
+    rejectHtml(updatedAt);
+  if (html) return html;
+  return { kind: "course", tagline, kicker, videoId, videoUrl, videoTitle, passRatio, examPassRatio, updatedAt };
+}
+
 function parseBlock(value: unknown): Block | string {
   if (!isRecord(value) || typeof value.kind !== "string") return "block_not_object";
   if (value.kind === "text") return parseText(value);
@@ -358,6 +443,8 @@ function parseBlock(value: unknown): Block | string {
   if (value.kind === "clip") return parseClip(value);
   if (value.kind === "assignment") return parseAssignment(value);
   if (value.kind === "quiz") return parseQuiz(value);
+  if (value.kind === "station") return parseStation(value);
+  if (value.kind === "course") return parseCourse(value);
   return "unknown_block_kind";
 }
 
@@ -387,6 +474,8 @@ function requiredBlockRefusal(blocks: readonly Block[]): string | null {
       case "bullets":
       case "quote":
       case "clip":
+      case "station":
+      case "course":
         break;
       case "quiz":
         if (block.questions.length === 0) return "required_quiz_block_empty";
@@ -452,6 +541,7 @@ export function lessonFromStation(input: {
     kind: "assignment",
     title: station.assignment.title,
     brief: station.assignment.brief,
+    notesPlaceholder: "",
     items: station.assignment.items,
   });
   if (station.quiz.length > 0) {

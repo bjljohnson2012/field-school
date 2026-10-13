@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ShareLink } from "@/components/share-link";
 import { useCoursePortal } from "@/hooks/use-portal";
-import { getCourse } from "@/lib/course/catalog";
+import { useCourseRecord } from "@/components/course/course-catalog";
 import { deskToMarkdown } from "@/lib/course/desk-md";
 import type { StaffDesk } from "@/lib/course/types";
 import { saveDesk } from "@/lib/portal";
@@ -35,7 +35,7 @@ const blankDesk = (): StaffDesk => ({
 
 export default function DeskPage() {
   const { courseSlug } = useParams<{ courseSlug: string }>();
-  const course = getCourse(courseSlug);
+  const course = useCourseRecord(courseSlug);
   const { course: state, session } = useCoursePortal(courseSlug);
   const [desk, setDesk] = useState<StaffDesk | null>(null);
   const [copied, setCopied] = useState(false);

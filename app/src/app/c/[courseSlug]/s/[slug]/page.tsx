@@ -11,14 +11,14 @@ import { QuizPanel } from "@/components/quiz-panel";
 import { YoutubeClip } from "@/components/youtube-clip";
 import { useCoursePortal } from "@/hooks/use-portal";
 import { postLearningEvent } from "@/lib/campus-runtime/client";
-import { getCourse } from "@/lib/course/catalog";
+import { useCourseRecord } from "@/components/course/course-catalog";
 import { emptyProgress, passingScore } from "@/lib/course/content";
 import { saveQuizAnswers, upsertModule } from "@/lib/portal";
 import { cn } from "@/lib/utils";
 
 export default function StationPage() {
   const { courseSlug, slug } = useParams<{ courseSlug: string; slug: string }>();
-  const course = getCourse(courseSlug);
+  const course = useCourseRecord(courseSlug);
   const { course: state } = useCoursePortal(courseSlug);
   const { data: authSession } = useSession();
   const signedIn = Boolean(authSession?.user?.email);

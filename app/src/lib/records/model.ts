@@ -1,11 +1,7 @@
 import { ADULT_GATES, type AdultGateId, type GateMarks } from "../profile/model.ts";
+import { RECORD_COLLECTIONS } from "../collections/registry.ts";
 
-export const COLLECTIONS = [
-  { slug: "families", label: "Families", owner: "wards + memberships (household)" },
-  { slug: "student-profiles", label: "Student Profiles", owner: "user_profiles + kid_profiles" },
-  { slug: "milestones", label: "Milestones", owner: "derived from user_profiles, tool_results, kid_profiles, progress_ledger_units" },
-  { slug: "media", label: "Media", owner: "composer sources" },
-] as const;
+export const COLLECTIONS = RECORD_COLLECTIONS;
 export type CollectionSlug = (typeof COLLECTIONS)[number]["slug"];
 
 /** A login learner is the signed-in User; a tracked child has no login. The two never share a variant. */
