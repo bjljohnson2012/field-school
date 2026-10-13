@@ -639,6 +639,25 @@ h3 {
   .footer-grid { grid-template-columns: 1.4fr 1fr; align-items: start; }
 }
 
+.room-seal {
+  width: min(100%, 18rem);
+  height: auto;
+  justify-self: center;
+}
+
+.offer-tier + .offer-tier {
+  margin-top: 1.15rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 800px) {
+  .tier-stack { grid-template-columns: 1fr; }
+  .seal-first .room-seal { order: -1; }
+  .hero-grid > .kicker,
+  .hero-grid > h1 { grid-column: 1 / -1; }
+}
+
 .brand-kicker {
   margin: 0 0 0.75rem;
   color: var(--muted-foreground);
