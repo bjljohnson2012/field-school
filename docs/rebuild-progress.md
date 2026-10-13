@@ -1,6 +1,6 @@
 # Rebuild progress
 
-Updated: 2026-10-13 3:27 PM ET by Grok Build
+Updated: 2026-10-13 3:34 PM ET by Grok Build
 Main at: 34798e56529489424f7c1b067e166b10a8570578 (PR 361)
 Active agents: none
 
@@ -43,29 +43,29 @@ M13 is never merged. M14 stays not_started until #377 has a sealed brief posted 
 
 Issue #362, "The 15 recommendations". Offer keys are the M8 prep keys in `app/src/lib/billing/m8-prep.ts` (`47d7178`, draft PR #386): `diy`, coaching `assess` / `model` / `build`, and `consulting`. Prices are $300, $600, and $1,500 a month. Consulting is Email Ben (`mailto:ben@fieldschool.ai?subject=Consulting`). Learn with Ben and the $100, $200, and $1,000 tiers are retired on `app/marketing-site`. `COACHING_GO_LIVE` stays `false`. Stripe stays in test mode. Launch stays CLOSED 0/8.
 
-The page and test rows are on `feat/marketing-site-rebuild` (draft PR #382) unless a later slice is named. The branch tip is `6144794` on top of the WIP `0a39714`. Page polish `0236574` is draft PR #389 and is not in #382. Portal cart commits `3a058c9` and `627212a` are draft PR #390 and are not in #382. The stale repo-root `marketing-site/pricing.html` still shows $100, $200, and $1,000. Issue #362 says not to edit that copy. Deploy uses `app/marketing-site/`.
+The page and test rows are on `feat/marketing-site-rebuild` (draft PR #382) unless a later slice is named. The branch tip is `6144794` on top of the WIP `0a39714`. Draft #389 is at `fad3568` and is not in #382. Portal cart commits `3a058c9` and `627212a` are draft PR #390 and are not in #382. The stale repo-root `marketing-site/pricing.html` still shows $100, $200, and $1,000. Issue #362 says not to edit that copy. Deploy uses `app/marketing-site/`.
 
 A checked row is met by the page, commit, or test named. An unchecked row is partial or deferred, and the cell says why.
 
 | # | Recommendation | Met | Where |
 | --- | --- | --- | --- |
 | 1 | Lead with one category | [x] | `app/marketing-site/index.html` kicker "Knowledge brains", the definition in `#how`, and the "Who starts here" chips. Commit `0a39714`. Test `homepage has the thirteen sections, hero, and nav` in `app/scripts/marketing-site-rebuild.test.mjs`. |
-| 2 | Rebuild the hero | [ ] | Partial. Headline, subhead, Start free, See pricing, the risk line, the Family and Org toggle, and the seal are in `index.html` at `0a39714`. One filled blue in the first view was checked on `feat/s0-marketing-pages` at `0236574`. Deferred: the right side is a text card (Hale household / Hale team), not a captured portal screenshot. |
+| 2 | Rebuild the hero | [x] | Draft #389 at `fad3568`. The phone hero is 4 lines at 32px. Desktop stays 3 lines at 64px. Portal WebP shots replaced the text cards on `index.html`. |
 | 3 | Coaching, named by the result | [x] | Keys `diy`, `assess`, `model`, `build`, `consulting`. Cards Assess $300, Model $600, Build $1,500 with Email Ben on `index.html` `#coaching`, `pricing.html`, and `teams/services.html` (`data-offer` `diy` / `coaching` / `consulting`, `data-tier` on the three buttons). `app/marketing-site/js/checkout-switch.mjs` and `app/src/lib/billing/offer-names.ts` at `0a39714`. Same keys and prices in M8 prep `47d7178`. Tests `coaching buttons on the site are the three tiers`, `portal pricing renders coaching prices and an empty individual slot`, and `services are linked only from teams and consulting has no dollar amount`. Dayton is on `/pricing` only. The Individual slot renders nothing. Consulting has no dollar amount. |
 | 4 | Two rooms, one school | [x] | `index.html` `#rooms` uses the locked family and team sentences. `families.html` and `teams.html`. Commit `0a39714`. No child photos in `app/marketing-site/img/`. |
-| 5 | Show the product | [ ] | Deferred. `app/marketing-site/img/` has the seal, the lockup, Ben, and `og.png`. Hero, problem, and lesson areas are text cards. No 2x portal captures. Pages check on PR #389 recorded this as fail. |
-| 6 | Thirteen homepage sections | [ ] | Partial. The thirteen sections are in `index.html` in the specified order, and the homepage test asserts that order. Commit `0a39714`. The twelve-rules block is not a homepage section. Deferred: height is still over target. PR #389 measured 8241px at 1440 and 10385px at 390, against about 6,500px desktop and under about 9,000px mobile. |
+| 5 | Show the product | [x] | Draft #389 at `fad3568`. Local demo portal WebPs at 1440 and 390: `portal-path`, `portal-lesson`, and `portal-brain`, each with alt text. |
+| 6 | Thirteen homepage sections | [x] | The thirteen sections stay in `index.html` in order. Draft #389 at `fad3568` measures homepage scrollHeight 6938px at 1440 and 8697px at 390. |
 | 7 | New nav | [x] | Header links are How it works, Families, Teams, Pricing, Ben, Sign in, Start free. Homepage test. Brand pages use that chrome in `6144794` (`app/marketing-site/brand/index.html`, `brand/options/index.html`). `app/scripts/brand.test.mjs` on that commit. |
 | 8 | One path | [x] | Start free goes to `https://portal.fieldschool.ai/signup?plan=course`. Test `signup for the free course names the same headline`. Saturday email is the one-field form on `index.html`. Paid buttons stay mailto while `COACHING_GO_LIVE` is `false` in `checkout-switch.mjs`. Test `go-live switch defaults to Email Ben and flips only coaching`. Consulting stays Email Ben either way. The flag stays off. Public pages do not open Stripe. Draft #393 at `7312c44` sets `CHECKOUT_GO_LIVE` false in `app/src/lib/billing/checkout-destination.ts`. `livePaymentLink` and `livePriceId` return null unless the caller passes true, so live Payment Links and live price ids stay unreachable while the flag is false. Tests `the go-live flag stays off and live Payment Links stay unreachable` and `live price ids stay unreachable while the go-live flag is off` in `app/scripts/checkout-destination.test.mjs`. |
 | 9 | Proof stays honest | [x] | `index.html` `#credential` is a text strip (Euna, Ministry Brands) and `#voice` is one Ben quote. Commit `0a39714`. No logo strip and no carousel. |
 | 10 | Ben on the homepage and at `/ben` | [x] | Homepage portrait and "Ben built Field School for the hours he cannot be there." `ben.html`. Commit `0a39714`. Prepared 301 `/founder` to `/ben` is in `app/deploy/caddy/fieldschool-301.caddy`. Test `prepared fieldschool.ai caddy map returns 301s and is not wired into deploy`. The map is not applied. This log does not deploy. |
 | 11 | Type | [x] | `app/marketing-site/css/fonts.css` and `css/site.css` at `0a39714`. Fraunces 500 and 600, IBM Plex Sans, IBM Plex Mono for kickers. H1 40px / 64px, H2 30px / 40px, H3 22px, lede 19px, body 17px. Header image is `img/lockup-wide-cream.png`. The slogan is in the footer, not on the lockup. |
 | 12 | Color | [x] | `site.css` tokens: cream `#F6F3EC`, ink `#1A1916`, UI blue `#1E4E8C`, stone `#7A746A`, muted `#5C5850`, hairline `#D8D2C6`. Brand blue `#1F5EFF` is only `.brand-card.blue`. Contrast measured 8.32 on white and 7.51 on cream in the marketing test pass. That contrast check is not its own committed test. |
-| 13 | Layout and motion | [ ] | Partial. `site.css` has a 72rem wrap, 24px gutters, a 672px measure, 72px / 120px section padding, 12px corners, fade-up 8px over 200ms, reduced motion, and a darker hover on the primary button. Open on draft #389: a 12-column grid is being added there. Tracks today are 1fr, two, three, and four columns. |
+| 13 | Layout and motion | [x] | Draft #389 at `fad3568`. `site.css` sets `--grid-columns: 12` and `.grid`. Tracks span 12, 6, 4, and 3. `prefers-reduced-motion` sets `.reveal` animation to none. |
 | 14 | Voice | [x] | Locked lines are on `index.html`, `principles.html` ("Reality over hope", "Read the room"), and the services page. Commit `0a39714`. The public-page test rejects an em dash. The homepage has no sentence that starts with "I". |
-| 15 | Mobile first | [ ] | Partial. `index.html` has the slim sticky Start free bar. On PR #389 the first 844px screen holds the headline, the subhead, Start free, and the top of the product card. Deferred: the hero headline is 5 lines at 40px on a 390px screen, and the locked sentence does not wrap to 3. The homepage is 10385px tall at 390, over the about 9,000px target. |
+| 15 | Mobile first | [x] | Draft #389 at `fad3568`. The hero is 4 lines on the phone. Homepage scrollHeight is 8697px at 390, under 9,000px. scrollWidth 390 equals clientWidth 390. |
 
-Ten rows are met. Five stay open: 2, 5, 6, 13, and 15. Rows 2, 5, 6, and 15 close when #389 lands. Row 13 is the 12-column grid being added on #389. S0 stays blocked. This map does not accept the stream.
+All 15 rows are met. S0 stays blocked. This map does not accept the stream.
 
 ## Log
 
@@ -76,6 +76,7 @@ Ten rows are met. Five stay open: 2, 5, 6, 13, and 15. Rows 2, 5, 6, and 15 clos
 - 2026-10-13 2:20 PM ET dispatcher: Halt. No merge. No deploy. WIP draft PR #382 (S0, 0a39714) and #383 (M5, 54f3855). Both stay blocked so M6 and M8 are not spawned. G stays #381 and still merges only after M8.
 - 2026-10-13 3:15 PM ET: Stream 0 recommendation map added on this branch. Ten met, five partial or deferred. Offer keys are diy, coaching assess/model/build, and consulting. Go-live stays off. No merge. No deploy.
 - 2026-10-13 3:27 PM ET: Row 8 now matches draft #393 at 7312c44. Live Payment Links and live price ids stay unreachable while CHECKOUT_GO_LIVE is false. Rows 2, 5, 6, 13, and 15 stay open. No merge.
+- 2026-10-13 3:34 PM ET: Rows 2, 5, 6, 13, and 15 are met from draft #389 at fad3568. S0 stays blocked. This map does not accept the stream. No merge.
 
 ## Handoff
 
