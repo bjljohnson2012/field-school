@@ -1,162 +1,89 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { cartPath, checkoutPath } from "@/lib/billing/plans";
-import { PORTAL_NAME } from "@/lib/brand";
+import {
+  coachingMailto,
+  coachingTiers,
+  freeCourseHref,
+  individualOffer,
+} from "@/lib/billing/offer-names";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: `Newsletter is free. One course is free. Paid ${PORTAL_NAME} seats and coaching. Pay with a card.`,
+  description:
+    "Coaching is $300, $600, or $1,500 a month. One course is free. Email Ben to start. No card on the free course.",
 };
 
-const portalPlans = [
-  {
-    name: "One course",
-    price: "Free",
-    cadence: "",
-    body: "Enroll and take one training portal course at your pace.",
-    href: "/signup?plan=course",
-    label: "Enroll free",
-  },
-  {
-    name: "Up to three courses",
-    price: "$10",
-    cadence: "per month",
-    body: "Keep up to three courses open on your portal.",
-    href: cartPath("10"),
-    label: "Enroll $10",
-  },
-  {
-    name: "More than three courses",
-    price: "$50",
-    cadence: "per month",
-    body: "Open as many courses as you want.",
-    href: cartPath("50"),
-    label: "Enroll $50",
-  },
-  {
-    name: "Certification",
-    price: "$1,059",
-    cadence: "one time",
-    body: "Earn a Field School certificate. Take as long as you need.",
-    href: cartPath("1059"),
-    label: "Enroll $1,059",
-  },
-];
-
-const coaching = [
-  {
-    name: "Online cohort",
-    price: "$100",
-    cadence: "per month",
-    body: "One hour a week online. Coaching, direct feedback, and a room you can join from anywhere. Includes the newsletter and unlimited access to the training portal.",
-    href: checkoutPath("100"),
-  },
-  {
-    name: "In the room",
-    price: "$200",
-    cadence: "per month",
-    body: "The same hour, in person in Dayton, Ohio and the towns around it. If you live farther away, you cover your own travel and stay. Includes the newsletter and unlimited access to the training portal.",
-    href: checkoutPath("200"),
-  },
-  {
-    name: "One-on-one hour",
-    price: "$1,000",
-    cadence: "per month",
-    body: "One hour a week with Ben. Coaching, direct feedback, and help on the work you are actually doing. Includes the newsletter and unlimited access to the training portal.",
-    href: checkoutPath("1000"),
-  },
-];
-
 export default function PricingPage() {
+  const hidden = individualOffer();
   return (
     <main className="mx-auto max-w-6xl px-4 py-12 lg:py-16">
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
         Pricing
       </p>
       <h1 className="mt-3 max-w-[16ch] font-display text-5xl leading-[1.02] tracking-[-0.035em] sm:text-6xl">
-        Start free. Pay when you want more.
+        Coaching
       </h1>
       <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-        The newsletter is free. One course is free. Paid seats take a card on
-        Stripe. Enroll signs you in. After you join, you are already on the campus.
+        $300, $600, or $1,500 a month. Every plan includes the portal, the
+        Saturday email, and your knowledge brain.
+      </p>
+      <p className="mt-4 text-sm leading-relaxed">One course is free. No card.</p>
+      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        A leader buys the same seat. The work is the team&apos;s standard, not a
+        different price.
+      </p>
+      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        In person in Dayton is available when you are both there.
+      </p>
+      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        Short on time? One Saturday email a week still keeps your people moving.
       </p>
 
-      <section className="mt-10 rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
-        <h2 className="font-display text-2xl tracking-tight">Newsletter</h2>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          One email a week. Free.
+      <article className="mt-10 rounded-2xl border border-border bg-card px-5 py-6">
+        <h2 className="font-display text-2xl tracking-tight">One course</h2>
+        <p className="mt-4 font-display text-4xl tracking-tight">Free</p>
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+          One course is free. No card.
         </p>
         <Link
-          href="https://fieldschool.ai/newsletter"
-          className="mt-5 inline-flex h-12 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
+          href={freeCourseHref}
+          className="mt-6 inline-flex h-11 items-center rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
         >
-          Join our Newsletter
+          Start free
         </Link>
-      </section>
+      </article>
 
-      <h2 className="mt-12 font-display text-2xl tracking-tight">
-        Training portal
-      </h2>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
-        {portalPlans.map((plan) => (
-          <article
-            key={plan.name}
-            className="flex flex-col rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]"
-          >
-            <h3 className="font-display text-2xl tracking-tight">{plan.name}</h3>
-            <p className="mt-4 font-display text-4xl tracking-tight">
-              {plan.price}
-              {plan.cadence ? (
-                <span className="ml-1 text-base text-muted-foreground">
-                  {plan.cadence}
-                </span>
-              ) : null}
-            </p>
-            <p className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">
-              {plan.body}
-            </p>
-            <Link
-              href={plan.href}
-              className="mt-6 inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
-            >
-              {plan.label}
-            </Link>
-          </article>
-        ))}
-      </div>
-
-      <h2 className="mt-12 font-display text-2xl tracking-tight">
-        Learn with Ben
-      </h2>
-      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-        Each of these seats includes the newsletter, unlimited access to the
-        training portal, coaching, direct feedback, and help getting better.
-      </p>
+      <h2 className="mt-12 font-display text-2xl tracking-tight">Coaching</h2>
       <div className="mt-4 grid gap-4 md:grid-cols-3">
-        {coaching.map((plan) => (
+        {coachingTiers.map((tier) => (
           <article
-            key={plan.name}
-            className="flex flex-col rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]"
+            key={tier.key}
+            className="flex flex-col rounded-2xl border border-border bg-card px-5 py-6"
           >
-            <h3 className="font-display text-2xl tracking-tight">{plan.name}</h3>
-            <p className="mt-4 font-display text-4xl tracking-tight">
-              {plan.price}
-              <span className="ml-1 text-base text-muted-foreground">
-                {plan.cadence}
-              </span>
-            </p>
+            <h3 className="font-display text-2xl tracking-tight">
+              {tier.name}. {tier.priceLabel} {tier.cadence}.
+            </h3>
             <p className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">
-              {plan.body}
+              {tier.line}
             </p>
-            <Link
-              href={plan.href}
+            <a
+              href={coachingMailto}
               className="mt-6 inline-flex h-11 w-fit items-center rounded-xl border border-border px-4 text-sm"
             >
-              Enroll {plan.price}
-            </Link>
+              Email Ben
+            </a>
           </article>
         ))}
       </div>
+      {hidden}
+
+      <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
+        Not ready? Start with one free course or the{" "}
+        <a className="underline" href="https://fieldschool.ai/assessment">
+          free assessment
+        </a>
+        .
+      </p>
     </main>
   );
 }

@@ -55,9 +55,10 @@ test("Learn with Ben Stripe links stay 100 / 200 / 1000", () => {
   assert.match(plans, /checkoutUrl: "https:\/\/buy\.stripe\.com\/8x25kCa9j6nF4Ze8F08g006"/);
   assert.match(plans, /id: "1000"/);
   assert.match(plans, /checkoutUrl: "https:\/\/buy\.stripe\.com\/aFa8wOgxHeUbcrG5sO8g007"/);
-  assert.match(pricing, /Learn with Ben/);
-  assert.match(pricing, /checkoutPath\("100"\)/);
-  assert.match(pricing, /checkoutPath\("200"\)/);
-  assert.match(pricing, /checkoutPath\("1000"\)/);
+  assert.match(pricing, /\$300/);
+  assert.match(pricing, /Email Ben/);
+  assert.doesNotMatch(pricing, /checkoutPath\("100"\)/);
+  assert.doesNotMatch(pricing, /checkoutPath\("200"\)/);
+  assert.doesNotMatch(pricing, /checkoutPath\("1000"\)/);
   assert.doesNotMatch(flip, /price_1U8SW/);
 });

@@ -1,0 +1,17 @@
+# Prepared 301 map for the fieldschool.ai site block.
+# Not applied. Paste the redir lines into the existing
+# fieldschool.ai, www.fieldschool.ai block. Do not replace that file.
+# Do not reload Caddy from this repository.
+
+fieldschool.ai, www.fieldschool.ai {
+	redir /about /how-it-works permanent
+	redir /portal /how-it-works permanent
+	redir /community /how-it-works permanent
+	redir /twelve /principles permanent
+	redir /coaching /teams permanent
+	redir /founder /ben permanent
+	redir /tools /assessment permanent
+	redir /shop / permanent
+	redir /branding / permanent
+	redir /branding/ / permanent
+}
