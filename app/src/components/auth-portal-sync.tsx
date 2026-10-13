@@ -6,9 +6,9 @@ import {
   activateMemberFromAuth,
   activateStaffFromOAuth,
 } from "@/lib/auth/portal-bridge";
-import { fetchProgress } from "@/lib/campus-runtime/client";
+import { importServerProgress } from "@/lib/campus-runtime/client";
 import { isStaffSession } from "@/lib/members/policy";
-import { applyServerCourse } from "@/lib/portal";
+import { importableCourseSnapshot } from "@/lib/portal";
 
 /** Keep the browser portal in step with the Auth.js session. */
 export function AuthPortalSync() {
@@ -21,11 +21,10 @@ export function AuthPortalSync() {
     } else {
       activateMemberFromAuth(session.user.email, session.user.name);
     }
-    void fetchProgress("grok-bot").then((data) => {
-      if (data.authenticated && data.modules) {
-        applyServerCourse("grok-bot", data.modules);
-      }
-    });
+    const snapshot = importableCourseSnapshot("grok-bot");
+    if (snapshot) {
+      void importServerProgress("grok-bot", snapshot);
+    }
   }, [status, session]);
 
   return null;

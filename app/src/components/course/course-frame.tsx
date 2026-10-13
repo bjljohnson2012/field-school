@@ -4,25 +4,25 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Check } from "lucide-react";
-import { useCoursePortal } from "@/hooks/use-portal";
+import { useDisplayedCourse } from "@/hooks/use-displayed-course";
 import { useCourseRecord } from "@/components/course/course-catalog";
 import { cn } from "@/lib/utils";
 
 export function CourseFrame({ courseSlug, children }: { courseSlug: string; children: ReactNode }) {
   const course = useCourseRecord(courseSlug);
-  const { tally } = useCoursePortal(courseSlug);
+  const view = useDisplayedCourse(courseSlug);
 
   if (!course) return <>{children}</>;
 
-  const total = tally.total || course.modules.length;
-  const pct = total ? Math.round((tally.passed / total) * 100) : 0;
+  const total = view.total || course.modules.length;
+  const pct = total ? Math.round((view.passed / total) * 100) : 0;
 
   const progress = (
     <div className="mb-4">
       <p className="truncate text-sm font-medium">{course.title}</p>
       <p className="mt-1 flex items-baseline justify-between gap-3 text-xs text-muted-foreground">
         <span>
-          {tally.passed} of {total} stations passed
+          {view.passed} of {total} stations passed
         </span>
         <span className="tabular-nums">{pct}%</span>
       </p>
@@ -45,7 +45,7 @@ export function CourseFrame({ courseSlug, children }: { courseSlug: string; chil
           <summary className="cursor-pointer text-sm font-medium">
             Course outline
             <span className="ml-2 text-muted-foreground">
-              {tally.passed}/{total}
+              {view.passed}/{total}
             </span>
           </summary>
           <div className="mt-3">
@@ -62,7 +62,7 @@ export function CourseFrame({ courseSlug, children }: { courseSlug: string; chil
 function StationList({ courseSlug }: { courseSlug: string }) {
   const course = useCourseRecord(courseSlug);
   const pathname = usePathname();
-  const { course: state, tally } = useCoursePortal(courseSlug);
+  const view = useDisplayedCourse(courseSlug);
   if (!course) return null;
 
   function on(href: string, exact = false) {
@@ -90,7 +90,7 @@ function StationList({ courseSlug }: { courseSlug: string }) {
                 active={on(`/c/${course.slug}/s/${mod.slug}`)}
                 label={mod.title}
                 meta={`Station ${mod.station} · ${mod.durationLabel}`}
-                done={Boolean(state?.modules[mod.slug]?.passed)}
+                done={Boolean(view.modules[mod.slug]?.passed)}
               />
             </li>
           ))}
@@ -99,7 +99,7 @@ function StationList({ courseSlug }: { courseSlug: string }) {
       <div className="mt-3 border-t border-border pt-2">
         <OutlineLink href={`/c/${course.slug}/desk`} active={on(`/c/${course.slug}/desk`)} label="Desk" />
         <OutlineLink href={`/c/${course.slug}/exam`} active={on(`/c/${course.slug}/exam`)} label="Exam" />
-        {tally.certified ? (
+        {view.certified ? (
           <OutlineLink href={`/c/${course.slug}/certificate`} active={on(`/c/${course.slug}/certificate`)} label="Certificate" done />
         ) : null}
       </div>

@@ -3,25 +3,21 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { AssignmentPanel } from "@/components/assignment-panel";
 import { GuestContinuity } from "@/components/guest-continuity";
 import { QuizPanel } from "@/components/quiz-panel";
 import { YoutubeClip } from "@/components/youtube-clip";
-import { useCoursePortal } from "@/hooks/use-portal";
-import { postLearningEvent } from "@/lib/campus-runtime/client";
 import { useCourseRecord } from "@/components/course/course-catalog";
-import { emptyProgress, passingScore } from "@/lib/course/content";
+import { emptyProgress } from "@/lib/course/content";
+import { useDisplayedCourse } from "@/hooks/use-displayed-course";
 import { saveQuizAnswers, upsertModule } from "@/lib/portal";
 import { cn } from "@/lib/utils";
 
 export default function StationPage() {
   const { courseSlug, slug } = useParams<{ courseSlug: string; slug: string }>();
   const course = useCourseRecord(courseSlug);
-  const { course: state } = useCoursePortal(courseSlug);
-  const { data: authSession } = useSession();
-  const signedIn = Boolean(authSession?.user?.email);
+  const view = useDisplayedCourse(courseSlug);
   const endRef = useRef<HTMLElement>(null);
   const [endVisible, setEndVisible] = useState(false);
 
@@ -61,7 +57,7 @@ export default function StationPage() {
   const idx = course.modules.findIndex((m) => m.slug === mod.slug);
   const prev = idx > 0 ? course.modules[idx - 1] : null;
   const next = idx < course.modules.length - 1 ? course.modules[idx + 1] : null;
-  const progress = state?.modules[mod.slug] ?? emptyProgress();
+  const progress = view.modules[mod.slug] ?? emptyProgress();
   const passPct = Math.round(course.passRatio * 100);
 
   const parts = [
@@ -124,14 +120,11 @@ export default function StationPage() {
             <button
               type="button"
               onClick={() => {
-                upsertModule(course.slug, mod.slug, { watched: true });
-                if (signedIn) {
-                  void postLearningEvent({
-                    kind: "watch",
-                    course: course.slug,
-                    station: mod.slug,
-                  });
+                if (view.writeTarget === "server") {
+                  void view.submit({ kind: "watch", station: mod.slug });
+                  return;
                 }
+                upsertModule(course.slug, mod.slug, { watched: true });
               }}
               className="btn-primary"
             >
@@ -164,15 +157,11 @@ export default function StationPage() {
           assignment={progress.assignment}
           notes={progress.notes}
           onSave={(assignment, notes) => {
-            upsertModule(course.slug, mod.slug, { assignment, notes });
-            if (signedIn) {
-              void postLearningEvent({
-                kind: "assignment",
-                course: course.slug,
-                station: mod.slug,
-                raw: { assignment, notes },
-              });
+            if (view.writeTarget === "server") {
+              void view.submit({ kind: "practice", station: mod.slug, assignment, notes });
+              return;
             }
+            upsertModule(course.slug, mod.slug, { assignment, notes });
           }}
         />
         </div>
@@ -186,22 +175,11 @@ export default function StationPage() {
           priorPassed={progress.quizPassed}
           shareTitle={`${course.title} · ${mod.title}`}
           onSubmit={(answers) => {
-            const next = saveQuizAnswers(course.slug, mod.slug, answers);
-            if (signedIn) {
-              let score = 0;
-              for (const q of mod.quiz) {
-                if (answers[q.id] === q.answer) score += 1;
-              }
-              const need = passingScore(mod.quiz.length, course.passRatio);
-              void postLearningEvent({
-                kind: "quiz",
-                course: course.slug,
-                station: mod.slug,
-                score,
-                raw: { answers, passed: score >= need },
-              });
+            if (view.writeTarget === "server") {
+              void view.submit({ kind: "check", station: mod.slug, answers });
+              return;
             }
-            return next;
+            saveQuizAnswers(course.slug, mod.slug, answers);
           }}
         />
         </div>

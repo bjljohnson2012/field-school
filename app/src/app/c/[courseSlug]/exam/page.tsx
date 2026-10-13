@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { QuizPanel } from "@/components/quiz-panel";
-import { useCoursePortal } from "@/hooks/use-portal";
 import { useCourseRecord } from "@/components/course/course-catalog";
+import { useDisplayedCourse } from "@/hooks/use-displayed-course";
 import { saveExamAnswers } from "@/lib/portal";
 
 export default function ExamPage() {
   const { courseSlug } = useParams<{ courseSlug: string }>();
   const course = useCourseRecord(courseSlug);
-  const { tally } = useCoursePortal(courseSlug);
+  const view = useDisplayedCourse(courseSlug);
 
   if (!course) {
     return (
@@ -31,7 +31,7 @@ export default function ExamPage() {
         certificate also needs every station cleared.
       </p>
       <p className="mt-2 text-sm text-muted-foreground">
-        Stations passed {tally.passed}/{tally.total}.
+        Stations passed {view.passed}/{view.total}.
       </p>
       <div className="mt-8">
         <QuizPanel
@@ -39,13 +39,19 @@ export default function ExamPage() {
           questions={course.examQuestions}
           ratio={course.examPassRatio}
           showProgress
-          priorScore={tally.exam?.score ?? null}
-          priorPassed={Boolean(tally.exam?.passed)}
+          priorScore={view.exam?.score ?? null}
+          priorPassed={Boolean(view.exam?.passed)}
           shareTitle={`${course.title} exam`}
-          onSubmit={(answers) => saveExamAnswers(course.slug, answers)}
+          onSubmit={(answers) => {
+            if (view.writeTarget === "server") {
+              void view.submit({ kind: "exam", station: "exam", answers });
+              return;
+            }
+            saveExamAnswers(course.slug, answers);
+          }}
         />
       </div>
-      {tally.certified ? (
+      {view.certified ? (
         <Link
           href={`/c/${course.slug}/certificate`}
           className="mt-6 inline-flex h-12 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"

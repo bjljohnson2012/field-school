@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { ShareLink } from "@/components/share-link";
-import { useCoursePortal } from "@/hooks/use-portal";
+import { useDisplayedCourse } from "@/hooks/use-displayed-course";
 import { UNI_NAME } from "@/lib/brand";
 import { useCourseRecord } from "@/components/course/course-catalog";
 
@@ -12,17 +12,17 @@ export default function CertificatePage() {
   const { courseSlug } = useParams<{ courseSlug: string }>();
   const router = useRouter();
   const course = useCourseRecord(courseSlug);
-  const { session, tally, ready } = useCoursePortal(courseSlug);
-  const name = session?.name && session.name !== "Guest" ? session.name : "Field operator";
+  const view = useDisplayedCourse(courseSlug);
+  const name = view.session?.name && view.session.name !== "Guest" ? view.session.name : "Field operator";
 
   useEffect(() => {
-    if (!ready || !course) return;
-    if (!tally.certified) {
+    if (!view.ready || !course) return;
+    if (!view.certified) {
       router.replace(`/c/${course.slug}/exam`);
     }
-  }, [ready, course, tally.certified, router]);
+  }, [view.ready, view.certified, course, router]);
 
-  if (!course || !ready || !tally.certified) {
+  if (!course || !view.ready || !view.certified) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-16 text-sm text-muted-foreground">
         Checking the ladder…
@@ -42,11 +42,11 @@ export default function CertificatePage() {
         <p className="mt-6 text-center text-lg">{name}</p>
         <p className="mx-auto mt-4 max-w-md text-center text-sm leading-relaxed text-muted-foreground">
           {course.title}
-          {tally.exam ? ` · exam ${tally.exam.score}/${course.examQuestions.length}` : ""}.
+          {view.exam ? ` · exam ${view.exam.score}/${course.examQuestions.length}` : ""}.
           A Field School training credential. Not a vendor certification.
         </p>
         <p className="mx-auto mt-4 max-w-md text-center text-sm leading-relaxed text-muted-foreground">
-          Certificate requires 8/10 on the exam.
+          Certificate requires 8/10 on the exam and every lesson done on the server.
         </p>
         <p className="mt-8 text-center font-mono text-xs text-faint">
           {new Date().toISOString().slice(0, 10)} · {course.kicker || course.slug}

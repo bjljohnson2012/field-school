@@ -6,14 +6,14 @@ import { ArrowRight, Check } from "lucide-react";
 import { CourseFeedback } from "@/components/course-feedback";
 import { ShareLink } from "@/components/share-link";
 import { YoutubeClip } from "@/components/youtube-clip";
-import { useCoursePortal } from "@/hooks/use-portal";
+import { useDisplayedCourse } from "@/hooks/use-displayed-course";
 import { useCourseRecord } from "@/components/course/course-catalog";
 import { cn } from "@/lib/utils";
 
 export default function CourseHome() {
   const { courseSlug } = useParams<{ courseSlug: string }>();
   const course = useCourseRecord(courseSlug);
-  const { course: state, tally } = useCoursePortal(courseSlug);
+  const view = useDisplayedCourse(courseSlug);
 
   if (!course) {
     return (
@@ -90,11 +90,11 @@ export default function CourseHome() {
           station quiz. Then 8/10 on the exam for a Field School certificate.
         </p>
         <p className="mt-4 text-sm text-muted-foreground">
-          {tally.passed} of {course.modules.length} activities passed
+          {view.passed} of {course.modules.length} activities passed
         </p>
         <ol className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
           {course.modules.map((mod) => {
-            const p = state?.modules[mod.slug];
+            const p = view.modules[mod.slug];
             return (
               <li key={mod.slug} className="border-b border-border last:border-b-0">
                 <Link
@@ -150,9 +150,9 @@ export default function CourseHome() {
             href={`/c/${course.slug}/exam`}
             className="inline-flex h-12 items-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground"
           >
-            {tally.exam?.passed ? "Exam passed" : "Take the exam"}
+            {view.exam?.passed ? "Exam passed" : "Take the exam"}
           </Link>
-          {tally.certified ? (
+          {view.certified ? (
             <Link
               href={`/c/${course.slug}/certificate`}
               className="inline-flex h-12 items-center rounded-xl border border-pass/40 px-5 text-sm text-pass"

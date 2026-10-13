@@ -3,6 +3,8 @@ import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { SkillCard, type SkillCardSkill } from "@/components/skill-card";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
+import { courseAllowedInOrg } from "@/lib/campus-runtime/org";
+import { readCourseProgress } from "@/lib/progress/store";
 import {
   cardSkillsForOrg,
   personSurface,
@@ -162,6 +164,28 @@ export default async function PersonPage({
       hiddenNoteCount: noteRows.filter((row) => !row.visibleToLearner).length,
     },
   );
+  let progressLine = "";
+  if (courseAllowedInOrg(subject.orgSlug, "grok-bot")) {
+    try {
+      const summary = await readCourseProgress(
+        {
+          orgId: subject.orgId,
+          orgSlug: subject.orgSlug,
+          membershipId: subject.membershipId,
+          stance: subject.stance,
+        },
+        "grok-bot",
+      );
+      if (summary) {
+        progressLine = summary.certified
+          ? `Grok Bot certificate is on the server. Exam ${summary.exam?.score ?? 0} of ${summary.examTotal}.`
+          : `Grok Bot lessons done on the server: ${summary.passed} of ${summary.total}.`;
+      }
+    } catch {
+      progressLine = "";
+    }
+  }
+
   const hints: string[] =
     surface === "coach" && "hints" in dto && Array.isArray(dto.hints)
       ? dto.hints.filter((item): item is string => typeof item === "string")
@@ -214,6 +238,11 @@ export default async function PersonPage({
       <div className="mt-6">
         <SkillCard skills={scoreTiles} />
       </div>
+      {progressLine ? (
+        <p className="mt-6 text-sm text-muted-foreground" data-m7-progress="person">
+          {progressLine}
+        </p>
+      ) : null}
       {hints.length ? (
         <section className="mt-8">
           <h2 className="h-section">Hints</h2>

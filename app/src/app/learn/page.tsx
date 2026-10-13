@@ -94,6 +94,7 @@ export default function LearnPage() {
   const [loadedFor, setLoadedFor] = useState("");
   const [nextStep, setNextStep] = useState<NextStep | null>(null);
   const [brainContext, setBrainContext] = useState({ aim: "", confidence: "", personId: "" });
+  const [serverLessons, setServerLessons] = useState("");
 
   useEffect(() => {
     if (!email) return;
@@ -161,6 +162,22 @@ export default function LearnPage() {
         setNextStep(next);
         if (slug !== "household" && slug !== "sales") {
           setBrainContext({ aim: "", confidence: "", personId: "" });
+          try {
+            const progressResponse = await fetch("/api/progress?course=grok-bot", { credentials: "same-origin" });
+            const progressData = await progressResponse.json();
+            if (
+              !cancelled &&
+              progressData?.authenticated &&
+              typeof progressData.passed === "number" &&
+              typeof progressData.total === "number"
+            ) {
+              setServerLessons(`${progressData.passed} of ${progressData.total}`);
+            }
+          } catch {
+            // Learn still opens when the progress read is down.
+          }
+        } else if (!cancelled) {
+          setServerLessons("");
         }
         setLoadedFor(email);
       })
@@ -227,6 +244,11 @@ export default function LearnPage() {
           <p className="mt-2 text-sm text-muted-foreground">{card.about}</p>
           <h3 className="mt-6 text-sm font-medium">What it will do</h3>
           <p className="mt-2 text-sm text-muted-foreground">{card.willDo}</p>
+          {serverLessons ? (
+            <p className="mt-4 text-sm text-muted-foreground" data-m7-progress={serverLessons}>
+              Lessons done on the server: {serverLessons}.
+            </p>
+          ) : null}
           {card.org === "household" || card.org === "sales" ? (
             <>
               {signedIn && card.aim ? (
