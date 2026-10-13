@@ -65,7 +65,7 @@ export async function runIntakeSynthesis(answerSetId: string) {
   const started = Date.now();
   let model: string | null = null;
   try {
-    const subject = await loadSubjectIdentity(set.membershipId);
+    const subject = await loadSubjectIdentity(set.membershipId, set.orgId);
     if (!subject || subject.orgId !== set.orgId) throw new Error("missing_subject");
     await applyTenancySqlIfConfigured();
     const [org] = await db

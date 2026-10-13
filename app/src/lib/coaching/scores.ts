@@ -124,7 +124,10 @@ export async function loadCoachingWorld(actor: { memberId: string; orgId: string
   };
 }
 
-export async function loadSubjectIdentity(membershipId: string): Promise<LearnerIdentity | null> {
+export async function loadSubjectIdentity(
+  membershipId: string,
+  orgId: string,
+): Promise<LearnerIdentity | null> {
   const db = getDb();
   const [row] = await db
     .select({
@@ -143,7 +146,7 @@ export async function loadSubjectIdentity(membershipId: string): Promise<Learner
     .from(memberships)
     .innerJoin(members, eq(members.id, memberships.memberId))
     .innerJoin(organizations, eq(organizations.id, memberships.orgId))
-    .where(eq(memberships.id, membershipId))
+    .where(and(eq(memberships.id, membershipId), eq(memberships.orgId, orgId)))
     .limit(1);
   if (!row) return null;
   return {

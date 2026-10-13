@@ -176,6 +176,7 @@ async function wardChildren(scope: KidScope) {
     .where(
       and(
         eq(wards.orgId, scope.orgId),
+        eq(memberships.orgId, scope.orgId),
         eq(wards.guardianMembershipId, scope.parentMembershipId),
         eq(members.kind, "child"),
       ),
@@ -234,6 +235,7 @@ export async function updateKidProfile(
   childMembershipId: string,
   patch: { displayName: string },
 ) {
+  if (!(await isGuardianOf(scope, childMembershipId))) return null;
   await applyProfileSql();
   const db = getDb();
   const now = new Date();

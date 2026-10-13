@@ -74,6 +74,7 @@ export async function getLessonDetail(identity: LearnerIdentity, lessonId: strin
     .where(and(eq(lessons.id, lessonId), eq(lessons.orgId, identity.orgId)))
     .limit(1);
   if (!row) return null;
+  if (!canRead({ orgId: identity.orgId, memberKind: identity.kind }, { orgId: row.lesson.orgId })) return null;
   if (row.lesson.status !== "published" && !canSeeDrafts(identity)) return null;
   const sourceRows = await db
     .select()
@@ -342,16 +343,19 @@ export async function publishLesson(identity: LearnerIdentity, lessonId: string)
     .where(and(eq(lessons.id, lessonId), eq(lessons.orgId, identity.orgId)))
     .limit(1);
   if (!lesson) return { error: "unknown_lesson" as const };
+  if (!canRead({ orgId: identity.orgId, memberKind: identity.kind }, { orgId: lesson.orgId })) {
+    return { error: "unknown_lesson" as const };
+  }
   const now = new Date();
   const [updated] = await db
     .update(lessons)
     .set({ status: "published", updatedAt: now })
-    .where(eq(lessons.id, lesson.id))
+    .where(and(eq(lessons.id, lesson.id), eq(lessons.orgId, identity.orgId)))
     .returning();
   await db
     .update(courses)
     .set({ status: "published", updatedAt: now })
-    .where(eq(courses.id, lesson.courseId));
+    .where(and(eq(courses.id, lesson.courseId), eq(courses.orgId, identity.orgId)));
   const [request] = await db
     .insert(publishRequests)
     .values({

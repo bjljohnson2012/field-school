@@ -1,13 +1,42 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { courseTally, impersonate, workspaceFor } from "@/lib/portal";
 import { usePortal } from "@/hooks/use-portal";
 
+type StaffOrg = { slug: string; name: string };
+
+function orgLabel(orgs: StaffOrg[] | undefined) {
+  if (!orgs?.length) return "no org";
+  return orgs.map((org) => org.name).join(", ");
+}
+
 export default function UsersPage() {
   const { users, user, isAdmin, impersonating, ready, isStaff } = usePortal();
   const router = useRouter();
+  const [orgs, setOrgs] = useState<Record<string, StaffOrg[]>>({});
+
+  useEffect(() => {
+    if (!ready || !isStaff) return;
+    const emails = users.map((person) => person.email).filter(Boolean);
+    if (!emails.length) return;
+    let cancelled = false;
+    const query = emails.map((email) => encodeURIComponent(email)).join(",");
+    fetch(`/api/admin/member-orgs?emails=${query}`)
+      .then(async (res) => {
+        if (!res.ok) return;
+        const data = (await res.json()) as { orgs?: Record<string, StaffOrg[]> };
+        if (!cancelled) setOrgs(data.orgs ?? {});
+      })
+      .catch(() => {
+        if (!cancelled) setOrgs({});
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ready, isStaff, users]);
 
   if (!ready || !isStaff) return null;
 
@@ -42,6 +71,9 @@ export default function UsersPage() {
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {person.email || "no email"} · {person.role} · {person.title}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground" data-org-column>
+                  {orgLabel(orgs[person.email.trim().toLowerCase()])}
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Grok Bot {tally.passed}/{tally.total} stations

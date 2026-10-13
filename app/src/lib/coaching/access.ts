@@ -210,7 +210,10 @@ export function isGuardianOf(
   childMembershipId: string,
   wards: WardRow[] = [],
 ) {
-  if (actor.stance === "admin") return true;
+  const sameOrg = wards.some(
+    (row) => row.orgId === actor.orgId && row.childMembershipId === childMembershipId,
+  );
+  if (actor.stance === "admin") return sameOrg;
   return wards.some(
     (row) =>
       row.orgId === actor.orgId &&

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { DatabaseUnavailableError } from "@/lib/db/client";
 import { isStaffSession, isValidEmail, normalizeEmail } from "@/lib/members/policy";
+import { orgsForEmails } from "@/lib/members/staff-orgs";
 import { countAdultAssessments } from "@/lib/tools/results-store";
 
 export const dynamic = "force-dynamic";
@@ -18,8 +19,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ ok: false, error: "bad_email" }, { status: 400 });
   }
   try {
-    const count = await countAdultAssessments(normalizeEmail(email));
-    return NextResponse.json({ ok: true, count });
+    const mail = normalizeEmail(email);
+    const count = await countAdultAssessments(mail);
+    const orgs = await orgsForEmails([mail]);
+    return NextResponse.json({ ok: true, count, orgs: orgs.get(mail) ?? [] });
   } catch (error) {
     if (error instanceof DatabaseUnavailableError) {
       return NextResponse.json({ ok: false, error: "database_unavailable" }, { status: 503 });

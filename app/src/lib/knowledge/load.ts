@@ -85,7 +85,7 @@ async function brainLessons(auth: Auth, room: Room | null): Promise<Graph> {
 }
 
 async function familyGraph(identity: LearnerIdentity, only?: string): Promise<Graph | null> {
-  if (identity.kind === "child" || identity.orgSlug !== "household") return null;
+  if (identity.kind === "child" || roomOf(identity) !== "household") return null;
   const family = await loadFamily({ orgId: identity.orgId, parentMembershipId: identity.membershipId });
   const children = only ? family.children.filter((child) => child.person.membershipId === only) : family.children;
   if (only && !children.length) return null;
@@ -127,7 +127,7 @@ export async function loadKnowledge(focus: GraphFocus, request?: Request): Promi
     }
     const graph = await familyGraph(identity, focus.kind === "child" ? focus.membershipId : undefined);
     if (!graph) {
-      return { ok: false, status: 403, error: identity.orgSlug === "household" ? "not_your_child" : "household_only" };
+      return { ok: false, status: 403, error: roomOf(identity) === "household" ? "not_your_child" : "household_only" };
     }
     return { ok: true, room, graph, media: [] };
   } catch (error) {

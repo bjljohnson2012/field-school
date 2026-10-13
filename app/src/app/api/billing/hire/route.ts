@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   const mine = sessionId ? findHireBySession(sessionId) : null;
   return NextResponse.json({
     ...evidence,
-    rows: evidence.rows.map(publicHireRow),
+    rows: evidence.rows.map((row) => ({ activated: true as const, plan_id: row.plan_id })),
     mine: mine ? publicHireRow(mine) : null,
     signed_in: Boolean(email),
   });

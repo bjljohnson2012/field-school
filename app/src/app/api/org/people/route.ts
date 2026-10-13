@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { isStaffEmail } from "@/lib/auth/staff";
 import { getDb } from "@/lib/db/client";
@@ -41,9 +41,10 @@ export async function GET(request: Request) {
     })
     .from(memberships)
     .innerJoin(members, eq(members.id, memberships.memberId))
-    .innerJoin(organizations, eq(organizations.id, memberships.orgId));
+    .innerJoin(organizations, eq(organizations.id, memberships.orgId))
+    .where(eq(memberships.orgId, actor.orgId));
   const people = staff
-    ? rows
+    ? rows.filter((row) => row.orgId === actor.orgId && canRead(actor, { orgId: row.orgId }))
     : rows.filter((row) => allowedOrgs.has(row.org) && canRead(actor, { orgId: row.orgId }));
   return NextResponse.json({
     ok: true,
@@ -86,7 +87,6 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
   const updates = Array.isArray(body.updates) ? body.updates.slice(0, 40) : [];
-  const allowedOrgs = new Set(auth.memberships.map((row) => row.orgSlug));
   const db = getDb();
   let saved = 0;
   for (const item of updates) {
@@ -105,7 +105,7 @@ export async function PATCH(request: Request) {
       .from(memberships)
       .innerJoin(members, eq(members.id, memberships.memberId))
       .innerJoin(organizations, eq(organizations.id, memberships.orgId))
-      .where(eq(memberships.id, membershipId))
+      .where(and(eq(memberships.id, membershipId), eq(memberships.orgId, actor.orgId)))
       .limit(1);
     if (!membership) continue;
     const subject = {
@@ -115,7 +115,6 @@ export async function PATCH(request: Request) {
       login: membership.kind === "child" ? "none" : "member",
     };
     if (!canWrite(actor, subject)) continue;
-    if (!staff && !allowedOrgs.has(membership.org)) continue;
     await db.update(members).set({ name }).where(eq(members.id, membership.memberId));
     saved += 1;
   }

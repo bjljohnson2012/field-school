@@ -65,7 +65,7 @@ export default async function InsightsPage() {
     );
   }
 
-  const household = result.model.orgSlug === "household";
+  const household = result.room === "household";
   const people = household ? await loadKnowledge({ kind: "family" }) : null;
   return (
     <Shell>

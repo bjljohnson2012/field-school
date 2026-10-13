@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import {
   ProfileLockedError,
+  WardOrgScopeError,
   ProfileMissingError,
   ingestArtifact,
   publicProfile,
@@ -77,6 +78,9 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof ProfileLockedError) {
       return NextResponse.json({ ok: false, error: "profile_locked" }, { status: 403 });
+    }
+    if (error instanceof WardOrgScopeError) {
+      return NextResponse.json({ ok: false, error: "child_not_in_org" }, { status: 403 });
     }
     if (error instanceof ProfileMissingError) {
       return NextResponse.json({ ok: false, error: "profile_required" }, { status: 409 });

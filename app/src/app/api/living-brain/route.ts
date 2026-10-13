@@ -1,13 +1,29 @@
 import { NextResponse } from "next/server";
+import { and, eq } from "drizzle-orm";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
-import { DatabaseUnavailableError } from "@/lib/db/client";
+import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
+import { memberships } from "@/lib/db/schema";
 import { actorMayWrite, type Room } from "@/lib/living-brain/model";
 import { toolRead, writeAssist, writeConfidence, writeFactsAssist, writeOrgOutcome, writeOutcome } from "@/lib/living-brain/store";
+import { roomOf as kindRoom } from "@/lib/tenancy/kind";
 
 export const dynamic = "force-dynamic";
 
-function roomOf(slug: string): Room | null {
-  return slug === "household" || slug === "sales" ? slug : null;
+function roomOf(identity: { orgSlug: string; orgKind: string }): Room | null {
+  if (identity.orgSlug === "household" || identity.orgSlug === "sales") return identity.orgSlug;
+  const room = kindRoom(identity.orgKind);
+  if (room === "family") return "household";
+  if (room === "team") return "sales";
+  return null;
+}
+
+async function membershipInOrg(orgId: string, membershipId: string) {
+  const [row] = await getDb()
+    .select({ id: memberships.id })
+    .from(memberships)
+    .where(and(eq(memberships.id, membershipId), eq(memberships.orgId, orgId)))
+    .limit(1);
+  return Boolean(row);
 }
 
 export async function GET(request: Request) {
@@ -16,7 +32,7 @@ export async function GET(request: Request) {
   if (auth.identity.kind === "child") {
     return NextResponse.json({ ok: false, error: "child_has_no_login" }, { status: 403 });
   }
-  const room = roomOf(auth.identity.orgSlug);
+  const room = roomOf(auth.identity);
   if (!room) return NextResponse.json({ ok: false, error: "wrong_desk" }, { status: 403 });
   try {
     const brain = await toolRead(auth.identity.orgId);
@@ -39,7 +55,7 @@ export async function POST(request: Request) {
   if (auth.identity.kind === "child") {
     return NextResponse.json({ ok: false, error: "child_has_no_login" }, { status: 403 });
   }
-  const room = roomOf(auth.identity.orgSlug);
+  const room = roomOf(auth.identity);
   if (!room) return NextResponse.json({ ok: false, error: "wrong_desk" }, { status: 403 });
   const actor = {
     kind: auth.identity.kind,
@@ -101,6 +117,9 @@ export async function POST(request: Request) {
   const login = body.login === "none" || body.login === "member" ? body.login : room === "household" ? "none" : "member";
   const kind = typeof body.kind === "string" && body.kind.trim() ? body.kind.trim() : room === "household" ? "child" : "adult";
   if (!membershipId) return NextResponse.json({ ok: false, error: "not_on_desk" }, { status: 400 });
+  if (!(await membershipInOrg(auth.identity.orgId, membershipId))) {
+    return NextResponse.json({ ok: false, error: "not_in_org" }, { status: 403 });
+  }
   try {
     if (typeof body.confidence === "string") {
       const result = await writeConfidence({

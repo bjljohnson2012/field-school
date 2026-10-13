@@ -21,7 +21,7 @@ export default async function NotesPage({
   const { membershipId } = await params;
   const auth = await identityFromRequest();
   if (!auth.ok) redirect(`/login?next=/people/${membershipId}/notes`);
-  const subject = await loadSubjectIdentity(membershipId);
+  const subject = await loadSubjectIdentity(membershipId, auth.identity.orgId);
   const actor: Actor = {
     memberId: auth.identity.memberId,
     membershipId: auth.identity.membershipId,

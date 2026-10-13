@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
+import { refuseClosedDesk } from "@/lib/progress/desk-gate";
 import { selectSupervisedChild } from "@/lib/progress/supervised";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
+  const denied = await refuseClosedDesk(request);
+  if (denied) return denied;
   const childId = new URL(request.url).searchParams.get("child");
   const evidence = selectSupervisedChild(childId);
   return NextResponse.json({
