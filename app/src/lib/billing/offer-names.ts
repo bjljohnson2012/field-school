@@ -42,6 +42,12 @@ export function individualOffer(): null {
   return null;
 }
 
+const retiredCartPlanIds = ["10", "50", "1059", "100", "200", "1000"] as const;
+
+export function isRetiredCartPlan(plan: string | null | undefined): boolean {
+  return Boolean(plan && (retiredCartPlanIds as readonly string[]).includes(plan));
+}
+
 export function pricingVisibleText() {
   const hidden = individualOffer();
   const lines = [

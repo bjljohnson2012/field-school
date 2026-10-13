@@ -32,12 +32,19 @@ export const COACHING_TIERS = [
   },
 ];
 
+function publicHref(href) {
+  if (href.includes("buy.stripe.com")) {
+    throw new Error("checkout switch refuses a live card link");
+  }
+  return href;
+}
+
 export function coachingHref(goLive = COACHING_GO_LIVE) {
-  return goLive ? COACHING_PRICING_URL : COACHING_MAILTO;
+  return publicHref(goLive ? COACHING_PRICING_URL : COACHING_MAILTO);
 }
 
 export function consultingHref() {
-  return CONSULTING_MAILTO;
+  return publicHref(CONSULTING_MAILTO);
 }
 
 export function individualSlotMarkup() {

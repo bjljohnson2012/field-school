@@ -49,13 +49,12 @@ export function SignupForm({ oauth }: Props) {
           "One course is free. No card. Ten lessons, then the next step waits."
         ) : (
           <>
-            Enroll in the training portal. Learn at your pace. The first course
-            is free. Paid seats take a card on{" "}
+            Join the Field School training portal. One course is free. No card.
+            Coaching is on{" "}
             <Link href="/pricing" className="underline underline-offset-2">
               pricing
             </Link>
-            . Enroll signs you in. After you join, you are already on the campus.
-            {plan ? ` This sign-up is for the ${plan} seat.` : ""}
+            . Email Ben to start a paid seat.
           </>
         )}
       </p>
@@ -156,7 +155,7 @@ export function SignupForm({ oauth }: Props) {
           />
         </div>
         <Button className="h-12 w-full rounded-xl" type="submit" disabled={pending}>
-          {pending ? "Joining…" : "Join the free beta"}
+          {pending ? "Joining…" : courseStart ? "Start free" : "Join the free beta"}
         </Button>
       </form>
 

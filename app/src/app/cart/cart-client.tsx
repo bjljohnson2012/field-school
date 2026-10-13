@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-
-const BLOCKED = new Set(["10", "50", "1059"]);
+import { coachingMailto, isRetiredCartPlan } from "@/lib/billing/offer-names";
 
 export function CartClient() {
   const requested = useSearchParams().get("plan");
-  const blocked = requested != null && BLOCKED.has(requested);
+  const blocked = isRetiredCartPlan(requested);
 
   return (
     <main className="mx-auto max-w-lg px-4 py-16">
@@ -28,7 +27,7 @@ export function CartClient() {
           See pricing
         </Link>
         <a
-          href="mailto:ben@fieldschool.ai?subject=Coaching"
+          href={coachingMailto}
           className="inline-flex h-12 items-center justify-center rounded-xl border border-border px-5 text-sm"
         >
           Email Ben
