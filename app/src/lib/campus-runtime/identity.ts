@@ -6,6 +6,7 @@ import { members, memberships, organizations } from "@/lib/db/schema";
 import { normalizeEmail } from "@/lib/members/policy";
 import { syncFamilyMode } from "@/lib/intent/family-mode";
 import { applyTenancySqlIfConfigured } from "@/lib/tenancy/sql";
+import { loginAllowed } from "@/lib/tenancy/access";
 import { ensureRoomOrg } from "@/lib/tenancy/store";
 import {
   ensureTenantOrgs,
@@ -94,15 +95,11 @@ export async function ensureMembership(
   return { org, membership };
 }
 
-/** Wave 1 helper. Does not auto-join household or sales. */
-export async function ensureLearner(
-  email: string,
-  name: string,
-  orgSlug = ORG0_SLUG,
-): Promise<LearnerIdentity> {
-  const member = await upsertMember(email, name);
-  const stance = isStaffEmail(email) ? "admin" : "learner";
-  const { org, membership } = await ensureMembership(member.id, orgSlug, stance);
+function toLearnerIdentity(
+  member: { id: string; email: string; name: string; kind: string | null; mode: string | null },
+  org: { id: string; slug: string; kind: string; isolation: string },
+  membership: { id: string; stance: string },
+): LearnerIdentity {
   return {
     memberId: member.id,
     email: member.email,
@@ -118,19 +115,38 @@ export async function ensureLearner(
   };
 }
 
+export async function ensureLearner(
+  email: string,
+  name: string,
+  orgSlug?: string,
+): Promise<LearnerIdentity> {
+  const member = await upsertMember(email, name);
+  if (!loginAllowed(member)) throw new Error("login_none");
+  const requested = orgSlug?.trim() || "";
+  if (!requested) {
+    const created = await ensureRoomOrg({ id: member.id, name: member.name }, "family");
+    const { org, membership } = await ensureMembership(member.id, created.slug, "owner");
+    return toLearnerIdentity(member, org, membership);
+  }
+  const stance = isStaffEmail(email) ? "admin" : "learner";
+  const { org, membership } = await ensureMembership(member.id, requested, stance);
+  return toLearnerIdentity(member, org, membership);
+}
+
 export async function loadSession(request?: Request) {
   const user = await getAuthUser();
   if (!user) return null;
   await ensureTenantOrgs();
   const member = await upsertMember(user.email, user.name);
+  if (!loginAllowed(member)) return null;
   let rows = await membershipsForMember(member.id);
   const staff = isStaffEmail(user.email);
-  if (staff && (member.kind ?? "adult") !== "child") {
+  if (staff) {
     await ensureMembership(member.id, ORG0_SLUG, "admin");
     await ensureMembership(member.id, HOUSEHOLD_SLUG, "guardian");
     await ensureMembership(member.id, SALES_SLUG, "trainer");
     rows = await membershipsForMember(member.id);
-  } else if ((member.kind ?? "adult") !== "child" && rows.length === 0) {
+  } else if (rows.length === 0) {
     await ensureRoomOrg({ id: member.id, name: member.name }, "family");
     rows = await membershipsForMember(member.id);
   }
@@ -156,7 +172,9 @@ export async function identityFromRequest(request?: Request): Promise<
     if (!rows.length) {
       return { ok: false, status: 403, error: "no_membership" };
     }
-    if (!active) return { ok: false, status: 403, error: "forbidden_org" };
+    if (!active || !active.orgId || !active.membershipId) {
+      return { ok: false, status: 403, error: "no_membership" };
+    }
     if (requested && !rows.some((r) => r.orgSlug === requested)) {
       if (requested === "does-not-exist" || !(await orgExists(requested))) {
         return { ok: false, status: 404, error: "unknown_org" };
