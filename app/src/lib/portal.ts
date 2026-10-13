@@ -21,6 +21,7 @@ import {
   emptyProgress,
   passingScore,
 } from "@/lib/course/content";
+import { importableSnapshot } from "@/lib/progress/rules";
 import { getCourse } from "@/lib/course/catalog";
 import type {
   ModuleProgress,
@@ -331,6 +332,26 @@ function pushUserInbox(
 
 export function loadPortal() {
   return read();
+}
+
+const LOCAL_SEED_IDS = [ADMIN_ID, STUDENT_ID, STUDENT_B_ID];
+
+/** Read guest or member course progress for a one-time server import. Does not write. */
+export function importableCourseSnapshot(courseSlug: string) {
+  if (typeof window === "undefined") return null;
+  const state = read();
+  return importableSnapshot(
+    state.users.map((user) => ({
+      userId: user.id,
+      course: state.workspaces[user.id]?.courses[courseSlug]
+        ? {
+            modules: state.workspaces[user.id].courses[courseSlug].modules,
+            exam: state.workspaces[user.id].courses[courseSlug].exam,
+          }
+        : null,
+    })),
+    LOCAL_SEED_IDS,
+  );
 }
 
 export function subscribePortal(cb: () => void) {

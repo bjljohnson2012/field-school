@@ -37,9 +37,9 @@ export function GuestContinuity() {
           to own the hire session.
         </li>
         <li>
-          An account keeps saved station progress for that membership: a
-          watched clip, saved field work, and a submitted station quiz. The
-          desk and the exam still do not sync to the account.
+          An account keeps saved station progress and the exam for that
+          membership: a watched clip, saved field work, a submitted station
+          quiz, and the exam. The desk stays on this browser.
         </li>
       </ul>
     </section>
