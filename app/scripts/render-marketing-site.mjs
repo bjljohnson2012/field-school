@@ -608,14 +608,15 @@ const assessment = page({
   </section>`,
 });
 
-function legalPage({ path, title, ledeFile, dateFile, mainFile }) {
+function legalPage({ path, title, description, kicker, ledeFile, dateFile, mainFile }) {
   return page({
     path,
     title,
-    description: title,
+    description,
     current: "",
     body: `<section class="band">
       <div class="wrap legal">
+        <p class="kicker">${kicker}</p>
         <h1>${title.replace(" · Field School", "")}</h1>
         <p class="lede">${legal(ledeFile)}</p>
         <p class="date">${legal(dateFile)}</p>
@@ -639,6 +640,9 @@ const files = {
   "privacy.html": legalPage({
     path: "/privacy",
     title: "Privacy Policy · Field School",
+    description:
+      "How Field School collects, uses, and stores information on fieldschool.ai and portal.fieldschool.ai.",
+    kicker: "Privacy",
     ledeFile: "privacy-lede.html",
     dateFile: "privacy-date.html",
     mainFile: "privacy-main.html",
@@ -646,6 +650,9 @@ const files = {
   "terms.html": legalPage({
     path: "/terms",
     title: "Terms of Service · Field School",
+    description:
+      "Terms for using the Field School campus at fieldschool.ai and portal.fieldschool.ai.",
+    kicker: "Terms",
     ledeFile: "terms-lede.html",
     dateFile: "terms-date.html",
     mainFile: "terms-main.html",
