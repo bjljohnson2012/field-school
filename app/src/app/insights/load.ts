@@ -26,7 +26,7 @@ import { buildInsights, type InsightInput, type InsightsModel } from "./aggregat
 const HIRER_STANCES = new Set(["admin", "guardian", "trainer", "teacher", "owner"]);
 
 export type InsightsLoad =
-  | { ok: true; model: InsightsModel }
+  | { ok: true; room: Room | null; model: InsightsModel }
   | { ok: false; status: number; error: string };
 
 function finiteScore(value: string | null) {
@@ -164,10 +164,19 @@ export async function loadInsights(): Promise<InsightsLoad> {
       .from(knowledgeUnits)
       .where(eq(knowledgeUnits.orgId, orgId));
 
+    const room: Room | null =
+      org.slug === "household" || org.slug === "sales"
+        ? org.slug
+        : kindRoom(org.kind) === "family"
+          ? "household"
+          : kindRoom(org.kind) === "team"
+            ? "sales"
+            : null;
+    const deskPeople = room === "sales" ? people.filter((person) => person.kind !== "child") : people;
     const visiblePeople = scopeSurface(
       actor,
       "insights",
-      people.map((person) => ({ ...person, orgId })),
+      deskPeople.map((person) => ({ ...person, orgId })),
     ).map(({ orgId: _orgId, ...person }) => person);
     const input: InsightInput = {
       orgSlug: org.slug,
@@ -201,14 +210,6 @@ export async function loadInsights(): Promise<InsightsLoad> {
     const model = buildInsights(input);
     let brainNext: InsightsModel["brainNext"] = null;
     let brainView: InsightsModel["brainBoard"] = null;
-    const room: Room | null =
-      org.slug === "household" || org.slug === "sales"
-        ? org.slug
-        : kindRoom(org.kind) === "family"
-          ? "household"
-          : kindRoom(org.kind) === "team"
-            ? "sales"
-            : null;
     if (room) {
       try {
         const brain = await toolRead(orgId);
@@ -222,7 +223,7 @@ export async function loadInsights(): Promise<InsightsLoad> {
         brainView = null;
       }
     }
-    return { ok: true, model: { ...model, brainNext, brainBoard: brainView } };
+    return { ok: true, room, model: { ...model, brainNext, brainBoard: brainView } };
   } catch (error) {
     if (error instanceof DatabaseUnavailableError) {
       return { ok: false, status: 503, error: "database_unavailable" };
