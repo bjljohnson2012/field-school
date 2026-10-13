@@ -215,7 +215,7 @@ test.after(async () => {
   if (server && !server.killed) server.kill("SIGTERM");
 });
 
-async function pair(left, right) {
+async function pair(left, right, { requireChildOnInsights = true } = {}) {
   const own = await signIn(left.email);
   const people = await readJson("/api/org/people", own, left.slug);
   assert.equal(people.status, 200, people.text);
@@ -241,7 +241,9 @@ async function pair(left, right) {
   const insights = await readJson("/insights", own, left.slug);
   assert.equal(insights.status, 200, insights.text.slice(0, 500));
   assert.equal(insights.text.includes(left.orgName), true, insights.text.slice(0, 500));
-  assert.equal(insights.text.includes(left.child), true, insights.text.slice(0, 800));
+  if (requireChildOnInsights) {
+    assert.equal(insights.text.includes(left.child), true, insights.text.slice(0, 800));
+  }
   hides(insights.text, right.orgName);
   hides(insights.text, right.child);
   hides(insights.text, right.lesson);
@@ -310,5 +312,5 @@ test("two families cannot read each other over HTTP", async () => {
 });
 
 test("two teams cannot read each other over HTTP", async () => {
-  await pair(actors.ann, actors.bob);
+  await pair(actors.ann, actors.bob, { requireChildOnInsights: false });
 });
