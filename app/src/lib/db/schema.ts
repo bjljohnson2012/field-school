@@ -31,7 +31,7 @@ export const organizations = pgTable("organizations", {
   host: text("host"),
   features: jsonb("features").notNull().default({}),
   homeschoolMode: boolean("homeschool_mode").notNull().default(false),
-  createdBy: uuid("created_by").references(() => members.id),
+  createdBy: uuid("created_by").references(() => members.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
