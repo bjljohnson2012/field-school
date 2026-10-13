@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { syncHirePathBrain } from "@/lib/progress/hire-path-brain-sync";
+import { refuseClosedDesk } from "@/lib/progress/desk-gate";
 import {
   parseSupervisedIntentFields,
   selectSupervisedIntent,
@@ -27,11 +28,15 @@ function publicIntent(evidence: ReturnType<typeof selectSupervisedIntent>) {
 }
 
 export async function GET(request: Request) {
+  const denied = await refuseClosedDesk(request);
+  if (denied) return denied;
   const childId = new URL(request.url).searchParams.get("child");
   return NextResponse.json(publicIntent(selectSupervisedIntent(childId)));
 }
 
 export async function POST(request: Request) {
+  const denied = await refuseClosedDesk(request);
+  if (denied) return denied;
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
   const childId = String(body.child || body.child_id || "").trim();
   const written = writeSupervisedIntent(childId, parseSupervisedIntentFields(body));

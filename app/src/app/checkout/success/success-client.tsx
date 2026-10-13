@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 type StatusResponse =
   | { status: "pending" }
   | { status: "missing" }
+  | { status: "forbidden" }
       | {
       status: "granted";
       email: string;
@@ -47,6 +48,10 @@ export function CheckoutSuccessClient() {
         );
         const data = (await res.json()) as StatusResponse;
         if (cancelled) return;
+        if (res.status === 401 || res.status === 403) {
+          setStatus({ status: "forbidden" });
+          return;
+        }
         if (data.status === "granted") {
           setStatus(data);
           return;
@@ -80,6 +85,12 @@ export function CheckoutSuccessClient() {
       {!status || (status.status === "pending" && !granted) ? (
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
           Stripe took the card. We are opening your seat now.
+        </p>
+      ) : null}
+
+      {status?.status === "forbidden" ? (
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+          Sign in with the buyer account for this org before this page can show the seat.
         </p>
       ) : null}
 

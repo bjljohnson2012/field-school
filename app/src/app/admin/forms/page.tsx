@@ -4,12 +4,20 @@ import { useEffect, useMemo, useState } from "react";
 import { usePortal } from "@/hooks/use-portal";
 import { FORM_LABELS } from "@/lib/members/forms";
 import type { FormKind, FormSubmission } from "@/lib/members/types";
+
+type StaffOrg = { slug: string; name: string };
+type FormRow = FormSubmission & { orgs?: StaffOrg[] };
+
+function orgLabel(orgs: StaffOrg[] | undefined) {
+  if (!orgs?.length) return "no org";
+  return orgs.map((org) => org.name).join(", ");
+}
 import { FORM_KINDS } from "@/lib/members/types";
 import { cn, formatDay } from "@/lib/utils";
 
 export default function AdminFormsPage() {
   const { ready, isStaff } = usePortal();
-  const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
+  const [submissions, setSubmissions] = useState<FormRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<FormKind>("saturday_note");
 
@@ -19,7 +27,7 @@ export default function AdminFormsPage() {
     fetch("/api/admin/forms")
       .then(async (res) => {
         const data = (await res.json()) as {
-          submissions?: FormSubmission[];
+          submissions?: FormRow[];
           error?: string;
         };
         if (cancelled) return;
@@ -110,6 +118,9 @@ export default function AdminFormsPage() {
               </p>
             </div>
             <p className="mt-2 text-sm">{row.email}</p>
+            <p className="mt-1 text-sm text-muted-foreground" data-org-column>
+              {orgLabel(row.orgs)}
+            </p>
             {row.source ? (
               <p className="mt-1 text-sm text-muted-foreground">{row.source}</p>
             ) : null}

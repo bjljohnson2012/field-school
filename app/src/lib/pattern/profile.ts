@@ -68,7 +68,7 @@ export async function isGuardianOf(
   actor: LearnerIdentity,
   childMembershipId: string,
 ) {
-  if (actor.stance === "admin") return true;
+  if (actor.stance === "admin") return membershipInOrg(actor.orgId, childMembershipId);
   const db = getDb();
   const rows = await db
     .select({ id: wards.id })
@@ -92,10 +92,7 @@ export async function assertCanWrite(
 ) {
   const self = profile.membershipId === actor.membershipId;
   const guardian = await isGuardianOf(actor, profile.membershipId);
-  if (profile.locked && !guardian && actor.stance !== "admin") {
-    throw new ProfileLockedError();
-  }
-  if (!self && !guardian && actor.stance !== "admin") {
+  if (!self && !guardian) {
     throw new ProfileLockedError();
   }
 }
