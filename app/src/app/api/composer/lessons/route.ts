@@ -86,6 +86,7 @@ export async function POST(request: Request) {
     url: typeof body.url === "string" ? body.url : "",
     bookTitle: typeof body.book_title === "string" ? body.book_title : "",
   });
+  if ("error" in created && typeof created.error === "string") return deny(400, created.error);
   return NextResponse.json({
     ok: true,
     lesson: {

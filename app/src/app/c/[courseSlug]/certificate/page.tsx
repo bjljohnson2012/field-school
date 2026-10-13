@@ -6,12 +6,12 @@ import { useEffect } from "react";
 import { ShareLink } from "@/components/share-link";
 import { useCoursePortal } from "@/hooks/use-portal";
 import { UNI_NAME } from "@/lib/brand";
-import { getCourse } from "@/lib/course/catalog";
+import { useCourseRecord } from "@/components/course/course-catalog";
 
 export default function CertificatePage() {
   const { courseSlug } = useParams<{ courseSlug: string }>();
   const router = useRouter();
-  const course = getCourse(courseSlug);
+  const course = useCourseRecord(courseSlug);
   const { session, tally, ready } = useCoursePortal(courseSlug);
   const name = session?.name && session.name !== "Guest" ? session.name : "Field operator";
 

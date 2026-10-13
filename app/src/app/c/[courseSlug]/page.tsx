@@ -7,12 +7,12 @@ import { CourseFeedback } from "@/components/course-feedback";
 import { ShareLink } from "@/components/share-link";
 import { YoutubeClip } from "@/components/youtube-clip";
 import { useCoursePortal } from "@/hooks/use-portal";
-import { getCourse } from "@/lib/course/catalog";
+import { useCourseRecord } from "@/components/course/course-catalog";
 import { cn } from "@/lib/utils";
 
 export default function CourseHome() {
   const { courseSlug } = useParams<{ courseSlug: string }>();
-  const course = getCourse(courseSlug);
+  const course = useCourseRecord(courseSlug);
   const { course: state, tally } = useCoursePortal(courseSlug);
 
   if (!course) {

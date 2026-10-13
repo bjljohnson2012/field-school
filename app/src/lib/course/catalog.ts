@@ -3,7 +3,7 @@ import {
   COURSE_TAGLINE,
   examQuestions,
   modules,
-} from "@/lib/course/content";
+} from "./content.ts";
 import {
   EXAM_PASS_RATIO,
   GROK_BOT_SLUG,
@@ -13,7 +13,7 @@ import {
   VIDEO_URL,
   type CourseRecord,
   type CourseSummary,
-} from "@/lib/course/types";
+} from "./types.ts";
 
 export const publishedCourses: CourseRecord[] = [
   {

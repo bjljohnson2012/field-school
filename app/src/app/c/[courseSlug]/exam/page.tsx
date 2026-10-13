@@ -4,12 +4,12 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { QuizPanel } from "@/components/quiz-panel";
 import { useCoursePortal } from "@/hooks/use-portal";
-import { getCourse } from "@/lib/course/catalog";
+import { useCourseRecord } from "@/components/course/course-catalog";
 import { saveExamAnswers } from "@/lib/portal";
 
 export default function ExamPage() {
   const { courseSlug } = useParams<{ courseSlug: string }>();
-  const course = getCourse(courseSlug);
+  const course = useCourseRecord(courseSlug);
   const { tally } = useCoursePortal(courseSlug);
 
   if (!course) {
