@@ -3,6 +3,9 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { CHECKOUT_GO_LIVE, livePaymentLink, livePriceId } from "../src/lib/billing/checkout-destination.ts";
+import { coachingTiers, consultingMailto, offerDisplayNames } from "../src/lib/billing/offer-names.ts";
+import { PAID_PLANS } from "../src/lib/billing/plans.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const readSrc = (rel) => readFileSync(join(root, rel), "utf8");
@@ -44,21 +47,32 @@ test("AUTH_URL flip points at portal and 301s university", () => {
   assert.match(deployMd, /portal\.fieldschool\.ai/);
 });
 
-test("Learn with Ben Stripe links stay 100 / 200 / 1000", () => {
-  const plans = readSrc("src/lib/billing/plans.ts");
+test("coaching offers are Assess $300, Model $600, and Build $1,500", () => {
   const pricing = readSrc("src/app/pricing/page.tsx");
-  const flip = readSrc("deploy/flip-auth-url.sh");
+  const checkout = readSrc("src/lib/billing/checkout-destination.ts");
 
-  assert.match(plans, /id: "100"/);
-  assert.match(plans, /checkoutUrl: "https:\/\/buy\.stripe\.com\/28EbJ0dlvaDVcrGcVg8g005"/);
-  assert.match(plans, /id: "200"/);
-  assert.match(plans, /checkoutUrl: "https:\/\/buy\.stripe\.com\/8x25kCa9j6nF4Ze8F08g006"/);
-  assert.match(plans, /id: "1000"/);
-  assert.match(plans, /checkoutUrl: "https:\/\/buy\.stripe\.com\/aFa8wOgxHeUbcrG5sO8g007"/);
+  assert.deepEqual(Object.keys(offerDisplayNames), [
+    "diy",
+    "coaching",
+    "assess",
+    "model",
+    "build",
+    "consulting",
+  ]);
+  assert.deepEqual(
+    coachingTiers.map((tier) => [tier.key, tier.name, tier.priceLabel]),
+    [
+      ["assess", "Assess", "$300"],
+      ["model", "Model", "$600"],
+      ["build", "Build", "$1,500"],
+    ],
+  );
+  assert.equal(consultingMailto, "mailto:ben@fieldschool.ai?subject=Consulting");
+  assert.equal(CHECKOUT_GO_LIVE, false);
+  assert.match(checkout, /export const CHECKOUT_GO_LIVE = false/);
+  assert.equal(livePaymentLink(PAID_PLANS["100"]), null);
+  assert.equal(livePriceId(PAID_PLANS["100"]), null);
   assert.match(pricing, /\$300/);
   assert.match(pricing, /Email Ben/);
-  assert.doesNotMatch(pricing, /checkoutPath\("100"\)/);
-  assert.doesNotMatch(pricing, /checkoutPath\("200"\)/);
-  assert.doesNotMatch(pricing, /checkoutPath\("1000"\)/);
-  assert.doesNotMatch(flip, /price_1U8SW/);
+  assert.doesNotMatch(pricing, /Learn with Ben/);
 });
