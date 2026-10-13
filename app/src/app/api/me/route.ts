@@ -6,6 +6,8 @@ import { memberPlatformAdmin } from "@/lib/coaching/scores";
 import { DatabaseUnavailableError } from "@/lib/db/client";
 import { featureMode } from "@/lib/intent/family-mode";
 import { listKidProfiles } from "@/lib/profile/store";
+import { roomOf } from "@/lib/tenancy/kind";
+import { switcherOrgs } from "@/lib/tenancy/orgs";
 
 export const dynamic = "force-dynamic";
 
@@ -14,23 +16,36 @@ export async function GET(request: Request) {
   if (!session) {
     return NextResponse.json({ authenticated: false, guest: true });
   }
-  const memberships = session.rows
-    .filter((row) => session.member.kind !== "child" || row.orgSlug !== "sales")
-    .map((row) => ({
-      id: row.membershipId,
-      stance: row.stance,
-      org: row.orgSlug,
-      name: row.orgName,
-      kind: row.orgKind,
-      isolation: row.isolation,
-    }));
+  const memberships = switcherOrgs(
+    session.member.id,
+    session.rows
+      .filter((row) => session.member.kind !== "child" || row.orgSlug !== "sales")
+      .map((row) => ({
+        memberId: session.member.id,
+        id: row.membershipId,
+        stance: row.stance,
+        org: row.orgSlug,
+        name: row.orgName,
+        kind: row.orgKind,
+        isolation: row.isolation,
+      })),
+  ).map(({ memberId: _memberId, ...row }) => row);
   const active = session.active && memberships.some((m) => m.org === session.active?.orgSlug)
     ? session.active
     : null;
   const platformAdmin = await memberPlatformAdmin(session.member.id);
   const household = active?.orgSlug === "household" && session.member.kind !== "child" ? active : null;
-  const profiles = household
-    ? await listKidProfiles({ orgId: household.orgId, parentMembershipId: household.membershipId }).catch(
+  const familyOrg =
+    !household &&
+    active &&
+    session.member.kind !== "child" &&
+    active.orgSlug !== "sales" &&
+    roomOf(active.orgKind) === "family"
+      ? active
+      : null;
+  const kidOrg = household ?? familyOrg;
+  const profiles = kidOrg
+    ? await listKidProfiles({ orgId: kidOrg.orgId, parentMembershipId: kidOrg.membershipId }).catch(
         (error: unknown) => {
           if (error instanceof DatabaseUnavailableError) return [];
           throw error;

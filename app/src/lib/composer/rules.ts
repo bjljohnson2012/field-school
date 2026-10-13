@@ -1,7 +1,7 @@
 export const SOURCE_KINDS = ["text", "upload", "book", "link"] as const;
 export type SourceKind = (typeof SOURCE_KINDS)[number];
 
-export const TEACH_STANCES = ["admin", "guardian", "trainer", "teacher"] as const;
+export const TEACH_STANCES = ["admin", "guardian", "trainer", "teacher", "owner"] as const;
 
 export const MAX_FILE_BYTES = 200 * 1024 * 1024;
 export const MAX_ORG_BYTES = 2 * 1024 * 1024 * 1024;

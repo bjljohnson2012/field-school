@@ -4,6 +4,8 @@
  * M1 has no public share URL, no resume or LinkedIn ingest, and no nudge.
  */
 
+import { roomOf } from "../tenancy/kind.ts";
+
 export const PROFILE_COPY = {
   incomplete: "Finish setting up your profile",
   complete: "Your profile is done",
@@ -268,12 +270,23 @@ export function sanitizeKidPatch(body: unknown): PatchResult<{ displayName: stri
   return { ok: true, patch: { displayName: input.displayName.trim().slice(0, NAME_MAX) } };
 }
 
-export type KidActor = { kind: string; stance: string; orgSlug: string; membershipId: string };
+export type KidActor = {
+  kind: string;
+  stance: string;
+  orgSlug: string;
+  membershipId: string;
+  orgKind?: string;
+};
 
-/** Parent-only edit. A child never edits, and the sales room never sees a child. */
+export function familyKidRoom(actor: { orgSlug: string; orgKind?: string }): boolean {
+  if (actor.orgSlug === "household") return true;
+  if (actor.orgSlug === "sales") return false;
+  return roomOf(actor.orgKind ?? "") === "family";
+}
+
 export function kidEditRefusal(actor: KidActor, guardianOfChild: boolean): string | null {
   if (actor.kind === "child") return "child_cannot_edit";
-  if (actor.orgSlug !== "household") return "household_only";
+  if (!familyKidRoom(actor)) return "household_only";
   if (!guardianOfChild) return "not_your_child";
   return null;
 }

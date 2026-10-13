@@ -5,12 +5,13 @@ import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import { members, memberships, organizations } from "@/lib/db/schema";
 import { normalizeEmail } from "@/lib/members/policy";
 import { syncFamilyMode } from "@/lib/intent/family-mode";
+import { applyTenancySqlIfConfigured } from "@/lib/tenancy/sql";
+import { ensureRoomOrg } from "@/lib/tenancy/store";
 import {
   ensureTenantOrgs,
   membershipsForMember,
   pickActiveSlug,
   requestedOrgSlug,
-  shouldForceOperatorOrg,
 } from "./org";
 
 export const ORG0_SLUG = "field-school";
@@ -26,6 +27,7 @@ export type LearnerIdentity = {
   membershipId: string;
   orgId: string;
   orgSlug: string;
+  orgKind: string;
   orgIsolation: string;
   stance: string;
 };
@@ -69,6 +71,7 @@ export async function ensureMembership(
   orgSlug: string,
   stance: string,
 ) {
+  await applyTenancySqlIfConfigured();
   const db = getDb();
   const [org] = await db
     .select()
@@ -109,6 +112,7 @@ export async function ensureLearner(
     membershipId: membership.id,
     orgId: org.id,
     orgSlug: org.slug,
+    orgKind: org.kind,
     orgIsolation: org.isolation,
     stance: membership.stance,
   };
@@ -126,13 +130,8 @@ export async function loadSession(request?: Request) {
     await ensureMembership(member.id, HOUSEHOLD_SLUG, "guardian");
     await ensureMembership(member.id, SALES_SLUG, "trainer");
     rows = await membershipsForMember(member.id);
-  } else if (
-    shouldForceOperatorOrg({
-      staff: false,
-      slugs: rows.map((r) => r.orgSlug),
-    })
-  ) {
-    await ensureMembership(member.id, ORG0_SLUG, "learner");
+  } else if ((member.kind ?? "adult") !== "child" && rows.length === 0) {
+    await ensureRoomOrg({ id: member.id, name: member.name }, "family");
     rows = await membershipsForMember(member.id);
   }
   const requested = await requestedOrgSlug(request);
@@ -176,6 +175,7 @@ export async function identityFromRequest(request?: Request): Promise<
         membershipId: active.membershipId,
         orgId: active.orgId,
         orgSlug: active.orgSlug,
+        orgKind: active.orgKind,
         orgIsolation: active.isolation,
         stance: active.stance,
       },

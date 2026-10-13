@@ -4,6 +4,7 @@ import { applyWave2SqlIfConfigured } from "@/lib/db/apply-wave2-sql";
 import { applyIntentSqlIfConfigured } from "@/lib/intent/sql";
 import { getDb } from "@/lib/db/client";
 import { memberships, organizations } from "@/lib/db/schema";
+import { applyTenancySqlIfConfigured } from "@/lib/tenancy/sql";
 import {
   HOUSEHOLD_SLUG,
   OPERATOR_SLUG,
@@ -16,6 +17,7 @@ import {
 export { HOUSEHOLD_SLUG, OPERATOR_SLUG, SALES_SLUG, courseAllowedInOrg, pickActiveSlug, studentOrgs };
 export {
   canCreateChild,
+  canListChildren,
   canMintInvite,
   childCanAdmin,
   defaultInviteStance,
@@ -26,6 +28,7 @@ export {
 export const ORG_COOKIE = "fs_org";
 
 export async function getOrgBySlug(slug: string) {
+  await applyTenancySqlIfConfigured();
   const db = getDb();
   const [org] = await db
     .select()
@@ -79,6 +82,7 @@ export async function setActiveOrgCookie(slug: string) {
 
 export async function ensureTenantOrgs() {
   await applyWave2SqlIfConfigured();
+  await applyTenancySqlIfConfigured();
   await applyIntentSqlIfConfigured();
   const db = getDb();
   await db
@@ -87,8 +91,9 @@ export async function ensureTenantOrgs() {
       {
         slug: HOUSEHOLD_SLUG,
         name: "Household",
-        kind: "homeschool",
+        kind: "family",
         isolation: "strict",
+        homeschoolMode: true,
         features: { cap: false, mode: "family" },
       },
       {
@@ -96,6 +101,7 @@ export async function ensureTenantOrgs() {
         name: "Sales team",
         kind: "company",
         isolation: "platform_plus",
+        homeschoolMode: false,
         features: { cap: false },
       },
     ])

@@ -8,6 +8,7 @@ import { lessonVisibleTo } from "@/lib/composer/rules";
 import { knowledgeUnits, lessons } from "@/lib/composer/schema";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import type { Room } from "@/lib/living-brain/model";
+import { roomOf as kindRoom } from "@/lib/tenancy/kind";
 import type { MediaDoc } from "@/lib/records/model";
 import { listMedia, loadFamily, loadFamilyMilestones, loadSelfMilestones } from "@/lib/records/store";
 import {
@@ -28,7 +29,11 @@ export type KnowledgeLoad =
 type Auth = Extract<Awaited<ReturnType<typeof identityFromRequest>>, { ok: true }>;
 
 function roomOf(identity: LearnerIdentity): Room | null {
-  return identity.orgSlug === "household" || identity.orgSlug === "sales" ? identity.orgSlug : null;
+  if (identity.orgSlug === "household" || identity.orgSlug === "sales") return identity.orgSlug;
+  const room = kindRoom(identity.orgKind);
+  if (room === "family") return "household";
+  if (room === "team") return "sales";
+  return null;
 }
 
 async function visibleLessons(identity: LearnerIdentity, ids: readonly string[]) {

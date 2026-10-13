@@ -4,6 +4,7 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { inactiveAuthConfig, resolveAuthConfig } from "@/lib/auth/config";
 import { authCanMintSessions } from "@/lib/auth/env";
+import { loginAllowed } from "@/lib/tenancy/access";
 
 type JwtArgs = Parameters<NonNullable<NonNullable<NextAuthConfig["callbacks"]>["jwt"]>>[0];
 
@@ -63,6 +64,8 @@ function buildNodeAuthConfig() {
           const password =
             typeof credentials?.password === "string" ? credentials.password : "";
           if (!email || !password) return null;
+          const kind = await memberKindForLogin(email);
+          if (!loginAllowed({ kind })) return null;
 
           const credentialMember = await matchMemberCredential(email, password);
           const { verifyMemberLogin } = await import("@/lib/members/store");
@@ -107,6 +110,20 @@ export function credentialSessionUser(input: {
     return { ...input.credentialMember, role, provider: "credentials" };
   }
   return null;
+}
+
+async function memberKindForLogin(email: string): Promise<string | null> {
+  try {
+    const { databaseUrl, getSql } = await import("@/lib/db/client");
+    if (!databaseUrl()) return null;
+    const sql = getSql();
+    const rows = await sql<{ kind: string | null }[]>`
+      SELECT kind FROM members WHERE lower(email) = ${email} LIMIT 1
+    `;
+    return rows[0]?.kind ?? null;
+  } catch {
+    return null;
+  }
 }
 
 async function matchMemberCredential(

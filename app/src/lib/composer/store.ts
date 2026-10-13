@@ -1,5 +1,6 @@
 import { and, eq, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
+import { canRead } from "@/lib/tenancy/access";
 import type { LearnerIdentity } from "@/lib/campus-runtime/identity";
 import {
   courses,
@@ -45,7 +46,9 @@ export async function listLessons(identity: LearnerIdentity) {
     .innerJoin(courses, eq(courses.id, lessons.courseId))
     .where(eq(lessons.orgId, identity.orgId));
   const drafts = canSeeDrafts(identity);
+  const actor = { orgId: identity.orgId, memberKind: identity.kind };
   return rows
+    .filter((row) => canRead(actor, { orgId: row.lesson.orgId }))
     .filter((row) => drafts || row.lesson.status === "published")
     .map((row) => ({
       id: row.lesson.id,

@@ -137,6 +137,7 @@ export async function loadSubjectIdentity(membershipId: string): Promise<Learner
       stance: memberships.stance,
       orgId: organizations.id,
       orgSlug: organizations.slug,
+      orgKind: organizations.kind,
       orgIsolation: organizations.isolation,
     })
     .from(memberships)
@@ -154,6 +155,7 @@ export async function loadSubjectIdentity(membershipId: string): Promise<Learner
     membershipId: row.membershipId,
     orgId: row.orgId,
     orgSlug: row.orgSlug,
+    orgKind: row.orgKind,
     orgIsolation: row.orgIsolation,
     stance: row.stance,
   };

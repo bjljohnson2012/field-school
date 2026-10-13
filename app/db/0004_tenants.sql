@@ -15,15 +15,20 @@ VALUES
   ('sales', 'Sales team', 'company', 'platform_plus', '{"cap": false}'::jsonb)
 ON CONFLICT (slug) DO UPDATE
   SET kind = EXCLUDED.kind,
-      isolation = EXCLUDED.isolation;
+      isolation = EXCLUDED.isolation
+  WHERE organizations.kind IS DISTINCT FROM EXCLUDED.kind
+     OR organizations.isolation IS DISTINCT FROM EXCLUDED.isolation;
 
 UPDATE organizations
 SET features = coalesce(features, '{}'::jsonb) || '{"cap": false}'::jsonb
-WHERE slug = 'household';
+WHERE slug = 'household'
+  AND features IS DISTINCT FROM coalesce(features, '{}'::jsonb) || '{"cap": false}'::jsonb;
 
 UPDATE organizations
 SET kind = 'homeschool', isolation = 'strict'
-WHERE slug = 'household';
+WHERE slug = 'household'
+  AND kind IS DISTINCT FROM 'homeschool'
+  AND kind IS DISTINCT FROM 'family';
 
 CREATE TABLE IF NOT EXISTS invites (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

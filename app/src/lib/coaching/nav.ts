@@ -1,3 +1,5 @@
+import { roomOf } from "../tenancy/kind.ts";
+
 export type NavItem = {
   label: string;
   href: string;
@@ -80,9 +82,9 @@ function myTeam(): NavItem {
 }
 
 function family(orgKind: string): "sales" | "household" | "other" {
-  const kind = orgKind.trim().toLowerCase();
-  if (kind === "sales" || kind === "company") return "sales";
-  if (kind === "household" || kind === "homeschool") return "household";
+  const room = roomOf(orgKind);
+  if (room === "team") return "sales";
+  if (room === "family") return "household";
   return "other";
 }
 

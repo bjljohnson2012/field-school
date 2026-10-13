@@ -19,9 +19,11 @@ import {
 import { knowledgeUnits } from "@/lib/composer/schema";
 import { brainBoard, chooseNextStep, type Room } from "@/lib/living-brain/model";
 import { toolRead } from "@/lib/living-brain/store";
+import { canRead, scopeSurface } from "@/lib/tenancy/access";
+import { roomOf as kindRoom } from "@/lib/tenancy/kind";
 import { buildInsights, type InsightInput, type InsightsModel } from "./aggregate";
 
-const HIRER_STANCES = new Set(["admin", "guardian", "trainer", "teacher"]);
+const HIRER_STANCES = new Set(["admin", "guardian", "trainer", "teacher", "owner"]);
 
 export type InsightsLoad =
   | { ok: true; model: InsightsModel }
@@ -45,9 +47,13 @@ export async function loadInsights(): Promise<InsightsLoad> {
     }
 
     const orgId = auth.identity.orgId;
+    const actor = { orgId, memberKind: auth.identity.kind };
+    if (!canRead(actor, { orgId })) {
+      return { ok: false, status: 403, error: "forbidden_org" };
+    }
     const db = getDb();
     const [org] = await db
-      .select({ name: organizations.name, slug: organizations.slug })
+      .select({ name: organizations.name, slug: organizations.slug, kind: organizations.kind })
       .from(organizations)
       .where(eq(organizations.id, orgId))
       .limit(1);
@@ -158,11 +164,16 @@ export async function loadInsights(): Promise<InsightsLoad> {
       .from(knowledgeUnits)
       .where(eq(knowledgeUnits.orgId, orgId));
 
+    const visiblePeople = scopeSurface(
+      actor,
+      "insights",
+      people.map((person) => ({ ...person, orgId })),
+    ).map(({ orgId: _orgId, ...person }) => person);
     const input: InsightInput = {
       orgSlug: org.slug,
       orgName: org.name,
       now: new Date().toISOString(),
-      people,
+      people: visiblePeople,
       events: events.map((row) => ({
         membershipId: row.membershipId,
         kind: row.kind,
@@ -190,7 +201,14 @@ export async function loadInsights(): Promise<InsightsLoad> {
     const model = buildInsights(input);
     let brainNext: InsightsModel["brainNext"] = null;
     let brainView: InsightsModel["brainBoard"] = null;
-    const room: Room | null = org.slug === "household" || org.slug === "sales" ? org.slug : null;
+    const room: Room | null =
+      org.slug === "household" || org.slug === "sales"
+        ? org.slug
+        : kindRoom(org.kind) === "family"
+          ? "household"
+          : kindRoom(org.kind) === "team"
+            ? "sales"
+            : null;
     if (room) {
       try {
         const brain = await toolRead(orgId);

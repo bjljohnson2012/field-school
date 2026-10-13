@@ -9,6 +9,7 @@ import {
 import { HOUSEHOLD_SKILLS, SALES_SKILLS } from "@/lib/campus-runtime/lessons";
 import { HOUSEHOLD_SLUG, SALES_SLUG } from "@/lib/campus-runtime/org";
 import { applyWave2SqlIfConfigured } from "@/lib/db/apply-wave2-sql";
+import { applyTenancySqlIfConfigured } from "@/lib/tenancy/sql";
 import { fp50Items, INSTRUMENT_SLUG, primaryDim } from "./items";
 
 export async function ensureInstrument() {
@@ -85,6 +86,7 @@ function keywordsFor(prompt: string, slug: string) {
 }
 
 export async function ensureOrgSkills(orgId: string) {
+  await applyTenancySqlIfConfigured();
   const db = getDb();
   const [org] = await db
     .select()
