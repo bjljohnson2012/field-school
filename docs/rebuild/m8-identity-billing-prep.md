@@ -1,6 +1,6 @@
 # M8 identity and billing prep
 
-This file is the spec and the test plan for [issue 367](https://github.com/bjljohnson2012/field-school/issues/367). It is prep. M8 is not implemented on this branch.
+This file is the spec and the test plan for [issue 367](https://github.com/bjljohnson2012/field-school/issues/367). The branch now implements that spec. `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay false. Stripe setup does not call the network. Migration `0023` is not applied from this change.
 
 M8 depends on M5 ([issue 364](https://github.com/bjljohnson2012/field-school/issues/364), draft PR 383, branch `feat/portal-m5-tenancy`) and S0 ([issue 362](https://github.com/bjljohnson2012/field-school/issues/362), draft PR 382, branch `feat/marketing-site-rebuild`). `docs/rebuild-progress.md` on `chore/rebuild-progress` marks both blocked as of 2026-10-13 2:20 PM ET. This branch is cut from `origin/main` at `34798e56529489424f7c1b067e166b10a8570578`. It does not merge those branches.
 

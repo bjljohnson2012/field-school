@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { CartClient } from "./cart-client";
-
-export const dynamic = "force-dynamic";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Cart",
@@ -10,15 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function CartPage() {
-  return (
-    <Suspense
-      fallback={
-        <main className="mx-auto max-w-lg px-4 py-16">
-          <p className="text-sm text-muted-foreground">Opening your cart…</p>
-        </main>
-      }
-    >
-      <CartClient />
-    </Suspense>
-  );
+  redirect("/pricing");
 }

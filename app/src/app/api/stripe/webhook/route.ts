@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { fulfillPaidCheckout } from "@/lib/billing/fulfill";
+import { webhookEffect } from "@/lib/billing/m8-prep";
 import { activateLearnWithBenHire } from "@/lib/billing/hire-activation";
 import {
   parseCheckoutSession,
@@ -68,6 +69,20 @@ export async function POST(request: Request) {
       await downgradeExpiredSubscription(subscriptionId);
     }
     return NextResponse.json({ received: true });
+  }
+
+  const type =
+    body && typeof body === "object" && "type" in body && typeof body.type === "string"
+      ? body.type
+      : "";
+  const effect = webhookEffect(type);
+  if (
+    kind === "other" &&
+    (effect === "upsert_seat" ||
+      effect === "record_payment" ||
+      effect === "record_failure")
+  ) {
+    return NextResponse.json({ received: true, effect });
   }
 
   return NextResponse.json({ received: true });
