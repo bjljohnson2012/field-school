@@ -4,6 +4,17 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import {
+  COACHING_GO_LIVE,
+  applyCoachingSwitch,
+  coachingHref,
+  consultingHref,
+} from "../marketing-site/js/checkout-switch.mjs";
+import {
+  individualOffer,
+  isRetiredCartPlan,
+  pricingVisibleText,
+} from "../src/lib/billing/offer-names.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const readSrc = (rel) => readFileSync(join(root, rel), "utf8");
@@ -48,7 +59,9 @@ test("checkout, pricing, and marketing paid seats point at Stripe", () => {
   assert.match(pricing, /Email Ben/);
   assert.match(pricing, /\$300/);
   assert.doesNotMatch(pricing, /invoice/i);
-  assert.match(signup, /if \(paid\) redirect/);
+  assert.match(signup, /if \(paid\) redirect\("\/pricing"\)/);
+  assert.doesNotMatch(signup, /checkoutPath/);
+  assert.doesNotMatch(signup, /buy\.stripe\.com/);
   assert.match(pricing, /In person in Dayton is available when you are both there/);
   assert.match(marketing, /In person in Dayton is available when you are both there/);
   assert.doesNotMatch(marketing, /Invoice later/);
@@ -209,4 +222,62 @@ test("coaching seats outrank portal seats and stay unlimited", () => {
   assert.equal(rank.coach_online >= rank.portal_unlimited, true);
   assert.equal(rank.coach_room >= rank.portal_3, true);
   assert.equal(rank.course < rank.portal_3, true);
+});
+
+test("checkout switch emails Ben until go-live, then only the coaching href moves", () => {
+  assert.equal(COACHING_GO_LIVE, false);
+  assert.equal(coachingHref(false), "mailto:ben@fieldschool.ai?subject=Coaching");
+  assert.equal(coachingHref(true), "https://portal.fieldschool.ai/pricing");
+  assert.equal(consultingHref(), "mailto:ben@fieldschool.ai?subject=Consulting");
+  assert.equal(coachingHref(true).includes("buy.stripe.com"), false);
+
+  const coaching = [{ href: "" }, { href: "" }, { href: "" }];
+  const consulting = { href: "" };
+  const doc = {
+    querySelectorAll(selector) {
+      const list = selector === "[data-coaching-cta]" ? coaching : [consulting];
+      return list.map((node) => ({
+        setAttribute(_key, value) {
+          node.href = value;
+        },
+      }));
+    },
+  };
+
+  applyCoachingSwitch(doc, false);
+  assert.deepEqual(
+    coaching.map((node) => node.href),
+    [
+      "mailto:ben@fieldschool.ai?subject=Coaching",
+      "mailto:ben@fieldschool.ai?subject=Coaching",
+      "mailto:ben@fieldschool.ai?subject=Coaching",
+    ],
+  );
+  assert.equal(consulting.href, "mailto:ben@fieldschool.ai?subject=Consulting");
+
+  applyCoachingSwitch(doc, true);
+  assert.deepEqual(
+    coaching.map((node) => node.href),
+    [
+      "https://portal.fieldschool.ai/pricing",
+      "https://portal.fieldschool.ai/pricing",
+      "https://portal.fieldschool.ai/pricing",
+    ],
+  );
+  assert.equal(consulting.href, "mailto:ben@fieldschool.ai?subject=Consulting");
+});
+
+test("retired cart plans and the hidden individual seat stay off the offer", () => {
+  for (const id of ["10", "50", "1059", "100", "200", "1000"]) {
+    assert.equal(isRetiredCartPlan(id), true, id);
+  }
+  assert.equal(isRetiredCartPlan("course"), false);
+  assert.equal(isRetiredCartPlan(null), false);
+  assert.equal(individualOffer(), null);
+  const text = pricingVisibleText();
+  assert.equal(text.includes("$300"), true);
+  assert.equal(text.includes("$600"), true);
+  assert.equal(text.includes("$1,500"), true);
+  assert.equal(text.includes("Email Ben"), true);
+  assert.equal(/\$10(?!\d)|\$50(?!\d)|\$1,059|buy\.stripe\.com|Learn with Ben/.test(text), false);
 });
