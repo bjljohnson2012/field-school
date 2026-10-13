@@ -36,7 +36,7 @@ type PersistResult = { answerSetId: string } | "closed";
 export type SubmitDeps = {
   requireWrite?: () => Response | null;
   findQuiz: (tokenHash: string) => Promise<QuizRecord | null>;
-  questionsFor: (ids: string[]) => Promise<PublicQuestion[]>;
+  questionsFor: (ids: string[], orgId: string) => Promise<PublicQuestion[]>;
   persist: (
     quiz: QuizRecord,
     orderedIds: string[],
@@ -115,7 +115,7 @@ export async function loadPublicQuizView(token: string): Promise<PublicQuizView>
   if (quizIsRefused(quiz)) return { refused: statusOf(quiz.status) };
   if (quizIsDone(quiz)) return { done: true, title: quiz.title, status: "completed" };
   const ids = questionIdsOf(quiz.questionIds);
-  const questions = orderQuestions(ids, await questionsForIds(ids));
+  const questions = orderQuestions(ids, await questionsForIds(ids, quiz.orgId));
   return { done: false, id: quiz.id, title: quiz.title, status: quiz.status, questions };
 }
 
@@ -151,7 +151,7 @@ export async function handleQuizSubmit(token: string, body: unknown, deps: Submi
   const ids = questionIdsOf(quiz.questionIds);
   const parsed = parseSubmitAnswers(body, ids);
   if (!parsed.ok) return json({ error: "invalid_body" }, 400);
-  const known = new Set((await deps.questionsFor(ids)).map((row) => row.id));
+  const known = new Set((await deps.questionsFor(ids, quiz.orgId)).map((row) => row.id));
   const rows = parsed.answers.filter((row) => known.has(row.questionId));
   if (!rows.length) return json({ error: "invalid_body" }, 400);
   const saved = await deps.persist(quiz, ids, rows);
@@ -160,10 +160,10 @@ export async function handleQuizSubmit(token: string, body: unknown, deps: Submi
 }
 
 async function coachingDb() {
-  const { and, desc, eq, inArray, isNull, notInArray } = await import("drizzle-orm");
+  const { and, desc, eq, inArray, isNull, notInArray, or } = await import("drizzle-orm");
   const { getDb } = await import("../db/client");
   const schema = await import("../db/schema");
-  return { and, desc, eq, inArray, isNull, notInArray, db: getDb(), ...schema };
+  return { and, desc, eq, inArray, isNull, notInArray, or, db: getDb(), ...schema };
 }
 
 async function findQuizByHash(tokenHash: string): Promise<QuizRecord | null> {
@@ -185,9 +185,9 @@ async function findQuizByHash(tokenHash: string): Promise<QuizRecord | null> {
   return row ?? null;
 }
 
-async function questionsForIds(ids: string[]): Promise<PublicQuestion[]> {
+async function questionsForIds(ids: string[], orgId: string): Promise<PublicQuestion[]> {
   if (!ids.length) return [];
-  const { db, inArray, questions } = await coachingDb();
+  const { and, db, eq, inArray, isNull, or, questions } = await coachingDb();
   const rows = await db
     .select({
       id: questions.id,
@@ -197,7 +197,7 @@ async function questionsForIds(ids: string[]): Promise<PublicQuestion[]> {
       category: questions.category,
     })
     .from(questions)
-    .where(inArray(questions.id, ids));
+    .where(and(inArray(questions.id, ids), or(eq(questions.orgId, orgId), isNull(questions.orgId))));
   return orderQuestions(ids, rows);
 }
 
@@ -214,7 +214,7 @@ async function persistQuiz(quiz: QuizRecord, orderedIds: string[], rows: SubmitA
   const [member] = await db
     .select({ stance: memberships.stance })
     .from(memberships)
-    .where(eq(memberships.id, quiz.subjectMembershipId))
+    .where(and(eq(memberships.id, quiz.subjectMembershipId), eq(memberships.orgId, quiz.orgId)))
     .limit(1);
   const [last] = await db
     .select({ version: answerSets.version })

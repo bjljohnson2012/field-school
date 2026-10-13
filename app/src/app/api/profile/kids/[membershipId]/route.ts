@@ -69,6 +69,7 @@ export async function PATCH(request: Request, { params }: Params) {
     const clean = sanitizeKidPatch(body);
     if (!clean.ok) return NextResponse.json({ ok: false, error: clean.error }, { status: 400 });
     const kid = await updateKidProfile(parent.scope, membershipId, clean.patch);
+    if (!kid) return NextResponse.json({ ok: false, error: "not_your_child" }, { status: 403 });
     return NextResponse.json({ ok: true, kid });
   } catch (error) {
     return unavailable(error);

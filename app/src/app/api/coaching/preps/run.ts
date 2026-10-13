@@ -60,7 +60,7 @@ export function prepDto(row: typeof oneOnOnePreps.$inferSelect) {
 }
 
 async function buildInput(orgId: string, subjectMembershipId: string, prepDocText: string) {
-  const subject = await loadSubjectIdentity(subjectMembershipId);
+  const subject = await loadSubjectIdentity(subjectMembershipId, orgId);
   if (!subject || subject.orgId !== orgId) throw new PrepFlowError("not_found", 404);
   const db = getDb();
   const [profile] = await db

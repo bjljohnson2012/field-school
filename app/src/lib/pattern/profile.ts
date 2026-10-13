@@ -54,6 +54,16 @@ function dimsFromProfile(profile: ProfileRow): BearingMap {
   return asBearing(blob);
 }
 
+async function membershipInOrg(orgId: string, membershipId: string) {
+  const db = getDb();
+  const rows = await db
+    .select({ id: memberships.id })
+    .from(memberships)
+    .where(and(eq(memberships.id, membershipId), eq(memberships.orgId, orgId)))
+    .limit(1);
+  return rows.length > 0;
+}
+
 export async function isGuardianOf(
   actor: LearnerIdentity,
   childMembershipId: string,
@@ -156,12 +166,12 @@ export async function getLiveProfile(orgId: string, membershipId: string) {
   return findProfile(orgId, membershipId);
 }
 
-export async function listRevisions(profileId: string, limit = 20) {
+export async function listRevisions(profileId: string, orgId: string, limit = 20) {
   const db = getDb();
   return db
     .select()
     .from(memberProfileRevisions)
-    .where(eq(memberProfileRevisions.profileId, profileId))
+    .where(and(eq(memberProfileRevisions.profileId, profileId), eq(memberProfileRevisions.orgId, orgId)))
     .orderBy(desc(memberProfileRevisions.createdAt))
     .limit(limit);
 }
@@ -173,6 +183,7 @@ export async function runInstrument(opts: {
   answers: Record<string, number>;
 }) {
   await ensureInstrument();
+  if (!(await membershipInOrg(opts.actor.orgId, opts.membershipId))) throw new WardOrgScopeError();
   const profile = await loadOrCreate(opts.actor.orgId, opts.membershipId);
   await assertCanWrite(opts.actor, profile);
   const result = scoreAnswers(opts.answers, opts.subset);
@@ -199,6 +210,7 @@ export async function ingestArtifact(opts: {
   kind: "paper" | "verbal" | "video";
   transcript: string;
 }) {
+  if (!(await membershipInOrg(opts.actor.orgId, opts.membershipId))) throw new WardOrgScopeError();
   const profile = await requireProfile(opts.actor.orgId, opts.membershipId);
   await assertCanWrite(opts.actor, profile);
   const inferred = inferBearingFromTranscript(opts.transcript);
