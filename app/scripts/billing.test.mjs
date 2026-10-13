@@ -4,6 +4,17 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import {
+  COACHING_GO_LIVE,
+  applyCoachingSwitch,
+  coachingHref,
+  consultingHref,
+} from "../marketing-site/js/checkout-switch.mjs";
+import {
+  individualOffer,
+  isRetiredCartPlan,
+  pricingVisibleText,
+} from "../src/lib/billing/offer-names.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const readSrc = (rel) => readFileSync(join(root, rel), "utf8");
@@ -28,34 +39,33 @@ test("checkout, pricing, and marketing paid seats point at Stripe", () => {
   const pricing = readSrc("src/app/pricing/page.tsx");
   const signup = readSrc("src/app/signup/page.tsx");
   const marketing = readSrc("marketing-site/pricing.html");
-  const coaching = readSrc("marketing-site/coaching.html");
 
   for (const id of PAID_PLAN_IDS) {
     assert.match(plans, new RegExp(`"${id}"`));
     assert.match(plans, /buy\.stripe\.com/);
     assert.match(plans, new RegExp(`price_1U8SW`));
-    assert.match(marketing, new RegExp(`/checkout\\?plan=${id}`));
+    assert.doesNotMatch(marketing, new RegExp(`/checkout\\?plan=${id}`));
   }
   assert.match(checkout, /getPaidPlan/);
   assert.match(checkout, /resolveCheckoutDestination/);
   assert.match(success, /CheckoutSuccessClient/);
   assert.match(success, /You're in/);
-  assert.match(pricing, /cartPath\("10"\)/);
-  assert.match(pricing, /cartPath\("50"\)/);
-  assert.match(pricing, /cartPath\("1059"\)/);
-  assert.match(pricing, /checkoutPath\("100"\)/);
-  assert.match(pricing, /checkoutPath\("200"\)/);
-  assert.match(pricing, /checkoutPath\("1000"\)/);
-  assert.match(pricing, /Stripe/);
+  assert.doesNotMatch(pricing, /cartPath\("10"\)/);
+  assert.doesNotMatch(pricing, /cartPath\("50"\)/);
+  assert.doesNotMatch(pricing, /cartPath\("1059"\)/);
+  assert.doesNotMatch(pricing, /checkoutPath\("100"\)/);
+  assert.doesNotMatch(pricing, /checkoutPath\("200"\)/);
+  assert.doesNotMatch(pricing, /checkoutPath\("1000"\)/);
+  assert.match(pricing, /Email Ben/);
+  assert.match(pricing, /\$300/);
   assert.doesNotMatch(pricing, /invoice/i);
-  assert.match(signup, /if \(paid\) redirect/);
-  assert.match(coaching, /checkout\?plan=100/);
-  assert.match(pricing, /Dayton, Ohio/);
-  assert.match(marketing, /Dayton, Ohio/);
-  assert.match(coaching, /Dayton, Ohio/);
-  assert.match(pricing, /travel and stay/);
+  assert.match(signup, /if \(paid\) redirect\("\/pricing"\)/);
+  assert.doesNotMatch(signup, /checkoutPath/);
+  assert.doesNotMatch(signup, /buy\.stripe\.com/);
+  assert.match(pricing, /In person in Dayton is available when you are both there/);
+  assert.match(marketing, /In person in Dayton is available when you are both there/);
   assert.doesNotMatch(marketing, /Invoice later/);
-  assert.doesNotMatch(coaching, /Invoice later/);
+  assert.doesNotMatch(marketing, /buy\.stripe\.com/);
 });
 
 test("portal cart reviews $10 / $50 / $1,059 and Learn with Ben stays $100 / $200 / $1,000", () => {
@@ -64,7 +74,6 @@ test("portal cart reviews $10 / $50 / $1,059 and Learn with Ben stays $100 / $20
   const cart = readSrc("src/app/cart/cart-client.tsx");
   const header = readSrc("src/components/site-header.tsx");
   const marketing = readSrc("marketing-site/pricing.html");
-  const coaching = readSrc("marketing-site/coaching.html");
 
   assert.match(plans, /priceLabel: "\$10"/);
   assert.match(plans, /priceLabel: "\$50"/);
@@ -72,20 +81,22 @@ test("portal cart reviews $10 / $50 / $1,059 and Learn with Ben stays $100 / $20
   assert.match(plans, /priceLabel: "\$100"/);
   assert.match(plans, /priceLabel: "\$200"/);
   assert.match(plans, /priceLabel: "\$1,000"/);
-  assert.match(pricing, /price: "\$10"/);
-  assert.match(pricing, /price: "\$50"/);
-  assert.match(pricing, /price: "\$1,059"/);
-  assert.match(pricing, /price: "\$100"/);
-  assert.match(pricing, /price: "\$200"/);
-  assert.match(pricing, /price: "\$1,000"/);
-  assert.match(cart, /checkoutPath\(plan\.id\)/);
-  assert.match(cart, /Pay \{plan\.priceLabel\}/);
+  assert.match(pricing, /\$300/);
+  assert.match(pricing, /\$600/);
+  assert.match(pricing, /\$1,500/);
+  assert.match(pricing, /Email Ben/);
+  assert.doesNotMatch(pricing, /\$10/);
+  assert.doesNotMatch(pricing, /\$50/);
+  assert.doesNotMatch(pricing, /\$1,059/);
+  assert.doesNotMatch(cart, /checkoutPath/);
+  assert.doesNotMatch(cart, /Pay /);
+  assert.match(cart, /See pricing/);
+  assert.match(cart, /Email Ben/);
   assert.doesNotMatch(header, /label: "Cart"/);
   assert.doesNotMatch(readSrc("src/components/site-footer.tsx"), /href="\/cart"/);
-  assert.match(marketing, /checkout\?plan=100/);
-  assert.match(marketing, /checkout\?plan=200/);
-  assert.match(marketing, /checkout\?plan=1000/);
-  assert.match(coaching, /checkout\?plan=100/);
+  assert.match(marketing, /\$300/);
+  assert.match(marketing, /mailto:ben@fieldschool.ai\?subject=Coaching/);
+  assert.doesNotMatch(marketing, /checkout\?plan=/);
 });
 
 test("paid seats, webhook, and claim login are wired", () => {
@@ -123,7 +134,9 @@ test("paid seats, webhook, and claim login are wired", () => {
   assert.match(notify, /api\.resend\.com\/emails/);
   assert.match(successClient, /Set password and enter/);
   assert.match(claimPage, /Set your password/);
-  assert.match(dashboard, /seatLabel/);
+  assert.match(dashboard, /redirect\(destination\)/);
+  assert.match(dashboard, /\/insights/);
+  assert.match(dashboard, /\/learn/);
   assert.match(auth, /seatKind/);
   assert.match(destination, /STRIPE_SECRET_KEY/);
   assert.match(destination, /payment_link/);
@@ -209,4 +222,62 @@ test("coaching seats outrank portal seats and stay unlimited", () => {
   assert.equal(rank.coach_online >= rank.portal_unlimited, true);
   assert.equal(rank.coach_room >= rank.portal_3, true);
   assert.equal(rank.course < rank.portal_3, true);
+});
+
+test("checkout switch emails Ben until go-live, then only the coaching href moves", () => {
+  assert.equal(COACHING_GO_LIVE, false);
+  assert.equal(coachingHref(false), "mailto:ben@fieldschool.ai?subject=Coaching");
+  assert.equal(coachingHref(true), "https://portal.fieldschool.ai/pricing");
+  assert.equal(consultingHref(), "mailto:ben@fieldschool.ai?subject=Consulting");
+  assert.equal(coachingHref(true).includes("buy.stripe.com"), false);
+
+  const coaching = [{ href: "" }, { href: "" }, { href: "" }];
+  const consulting = { href: "" };
+  const doc = {
+    querySelectorAll(selector) {
+      const list = selector === "[data-coaching-cta]" ? coaching : [consulting];
+      return list.map((node) => ({
+        setAttribute(_key, value) {
+          node.href = value;
+        },
+      }));
+    },
+  };
+
+  applyCoachingSwitch(doc, false);
+  assert.deepEqual(
+    coaching.map((node) => node.href),
+    [
+      "mailto:ben@fieldschool.ai?subject=Coaching",
+      "mailto:ben@fieldschool.ai?subject=Coaching",
+      "mailto:ben@fieldschool.ai?subject=Coaching",
+    ],
+  );
+  assert.equal(consulting.href, "mailto:ben@fieldschool.ai?subject=Consulting");
+
+  applyCoachingSwitch(doc, true);
+  assert.deepEqual(
+    coaching.map((node) => node.href),
+    [
+      "https://portal.fieldschool.ai/pricing",
+      "https://portal.fieldschool.ai/pricing",
+      "https://portal.fieldschool.ai/pricing",
+    ],
+  );
+  assert.equal(consulting.href, "mailto:ben@fieldschool.ai?subject=Consulting");
+});
+
+test("retired cart plans and the hidden individual seat stay off the offer", () => {
+  for (const id of ["10", "50", "1059", "100", "200", "1000"]) {
+    assert.equal(isRetiredCartPlan(id), true, id);
+  }
+  assert.equal(isRetiredCartPlan("course"), false);
+  assert.equal(isRetiredCartPlan(null), false);
+  assert.equal(individualOffer(), null);
+  const text = pricingVisibleText();
+  assert.equal(text.includes("$300"), true);
+  assert.equal(text.includes("$600"), true);
+  assert.equal(text.includes("$1,500"), true);
+  assert.equal(text.includes("Email Ben"), true);
+  assert.equal(/\$10(?!\d)|\$50(?!\d)|\$1,059|buy\.stripe\.com|Learn with Ben/.test(text), false);
 });

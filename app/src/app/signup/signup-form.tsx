@@ -23,6 +23,7 @@ export function SignupForm({ oauth }: Props) {
   const searchParams = useSearchParams();
   const next = safeMemberNext(searchParams.get("next"));
   const plan = searchParams.get("plan") || "";
+  const courseStart = plan === "course";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,19 +39,24 @@ export function SignupForm({ oauth }: Props) {
     <main className="mx-auto grid max-w-6xl gap-10 px-4 py-12 lg:grid-cols-[0.85fr_1fr] lg:items-start lg:py-16">
       <div>
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
-        Free beta
+        {courseStart ? "Free course" : "Join the free beta"}
       </p>
       <h1 className="mt-3 font-display text-5xl leading-[1.02] tracking-[-0.035em]">
-        Join the Field School training portal
+        {courseStart ? "Start your free course" : "Join the Field School training portal"}
       </h1>
       <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
-        Enroll in the training portal. Learn at your pace. The first course
-        is free. Paid seats take a card on{" "}
-        <Link href="/pricing" className="underline underline-offset-2">
-          pricing
-        </Link>
-        . Enroll signs you in. After you join, you are already on the campus.
-        {plan ? ` This sign-up is for the ${plan} seat.` : ""}
+        {courseStart ? (
+          "One course is free. No card. Ten lessons, then the next step waits."
+        ) : (
+          <>
+            Join the Field School training portal. One course is free. No card.
+            Coaching is on{" "}
+            <Link href="/pricing" className="underline underline-offset-2">
+              pricing
+            </Link>
+            . Email Ben to start a paid seat.
+          </>
+        )}
       </p>
       </div>
       <div className="rounded-2xl border border-border bg-card px-5 py-6 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)] sm:px-8">
@@ -149,7 +155,7 @@ export function SignupForm({ oauth }: Props) {
           />
         </div>
         <Button className="h-12 w-full rounded-xl" type="submit" disabled={pending}>
-          {pending ? "Joining…" : "Join the free beta"}
+          {pending ? "Joining…" : courseStart ? "Start free" : "Join the free beta"}
         </Button>
       </form>
 

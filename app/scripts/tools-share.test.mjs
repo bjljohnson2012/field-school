@@ -76,7 +76,7 @@ test("assessments are free to take, export, and email", () => {
   const api = readSrc("src/app/api/tools/email/route.ts");
   const pdf = readSrc("src/lib/tools/pdf.ts");
   const quiz = readSrc("src/components/quiz-panel.tsx");
-  const marketing = readSrc("marketing-site/tools.html");
+  const marketing = readSrc("marketing-site/assessment.html");
 
   assert.match(tools, /Start this assessment/);
   assert.doesNotMatch(tools, /Sign in to start/);

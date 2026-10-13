@@ -68,7 +68,7 @@ test("Field School logo set exists and never says University", () => {
   assert.equal(existsSync(join(root, "public/brand/png/og-1200x630.png")), true);
   assert.equal(existsSync(join(root, "src/app/favicon.ico")), false);
   assert.equal(existsSync(join(root, "public/favicon.svg")), false);
-  assert.match(read("marketing-site/index.html"), /branding\/assets\/square-cream\.png/);
+  assert.match(read("marketing-site/index.html"), /favicon\.ico/);
   assert.match(read("marketing-site/brand/index.html"), /Lead yourself\. Learn yourself\. Do the Work\./);
   assert.match(read("marketing-site/brand/index.html"), /lockup-wide-slogan-cream\.png/);
   assert.match(read("marketing-site/brand/index.html"), /brand\/options/);
@@ -81,14 +81,15 @@ test("Field School logo set exists and never says University", () => {
   const home = read("marketing-site/index.html");
   const wordmark = home.match(/<a class="wordmark"[^>]*>[\s\S]*?<\/a>/);
   assert.ok(wordmark, "homepage wordmark");
-  assert.match(wordmark[0], /branding\/assets\/lockup-wide-cream-slogan\.png/);
+  assert.match(wordmark[0], /\/img\/lockup-wide-cream\.png/);
+  assert.doesNotMatch(wordmark[0], /slogan/);
   assert.doesNotMatch(wordmark[0], /isolated-seal/);
   assert.doesNotMatch(wordmark[0], />Field School</);
   assert.doesNotMatch(home, /brand\/mark-color\.svg/);
   const header = read("src/components/site-header.tsx");
   assert.match(header, /branding\/assets\/isolated-seal\.png/);
   assert.doesNotMatch(header, /mark-color/);
-  assert.doesNotMatch(header, />\s*Field School\s*</);
+  assert.match(header, /sm:inline/);
   const layout = read("src/app/layout.tsx");
   assert.match(layout, /og-1200x630\.png/);
   assert.match(layout, /branding\/assets\/square-cream\.png/);
@@ -99,4 +100,56 @@ test("Field School logo set exists and never says University", () => {
   assert.match(read("scripts/build-brand.py"), /Lead yourself\. Learn yourself\. Do the Work\./);
   assert.equal(statSync(join(root, "marketing-site/brand/png/lockup-wide-color.png")).size > 20000, true);
   assert.equal(statSync(join(root, "marketing-site/brand/png/og-2400x1260.png")).size > 20000, true);
+});
+
+const OLD_NAV = [
+  ["Community", /<a\b[^>]*>\s*Community\s*<\/a>/],
+  ["Enroll", /<a\b[^>]*>\s*Enroll\s*<\/a>/],
+  ["/coaching", /href=["']\/coaching["'#?]/],
+  ["/twelve", /href=["']\/twelve["'#?]/],
+  ["/portal", /href=["']\/portal["'#?]/],
+];
+
+const PUBLIC_CHROME = [
+  'href="/how-it-works">How it works',
+  'href="/families">Families',
+  'href="/teams">Teams',
+  'href="/pricing">Pricing',
+  'href="/ben">Ben',
+  'href="https://portal.fieldschool.ai/login">Sign in',
+  'href="https://portal.fieldschool.ai/signup?plan=course">Start free',
+  'src="/img/lockup-wide-cream.png"',
+  'href="/principles">The twelve rules',
+];
+
+function htmlPages(dir, out = []) {
+  for (const name of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, name.name);
+    if (name.isDirectory()) htmlPages(path, out);
+    else if (name.name.endsWith(".html")) out.push(path);
+  }
+  return out;
+}
+
+test("public marketing pages omit the old nav", () => {
+  const pages = htmlPages(join(root, "marketing-site"));
+  assert.equal(pages.length > 0, true);
+  for (const path of pages) {
+    const text = readFileSync(path, "utf8");
+    const rel = path.slice(root.length + 1);
+    for (const [label, pattern] of OLD_NAV) {
+      assert.doesNotMatch(text, pattern, `${rel} still links ${label}`);
+    }
+  }
+});
+
+test("brand pages use the public marketing chrome", () => {
+  assert.equal(existsSync(join(root, "marketing-site/branding")), false);
+  for (const rel of ["marketing-site/brand/index.html", "marketing-site/brand/options/index.html"]) {
+    const text = read(rel);
+    for (const bit of PUBLIC_CHROME) {
+      assert.equal(text.includes(bit), true, `${rel} missing ${bit}`);
+    }
+    assert.equal(text.includes("/branding/"), false, rel);
+  }
 });

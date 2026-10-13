@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Cart",
-  description: "Review a Field School training portal seat, then pay on Stripe.",
+  description: "That seat is not offered. See pricing, or email Ben.",
 };
 
 export default function CartPage() {
