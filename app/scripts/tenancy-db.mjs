@@ -1,4 +1,3 @@
-import postgres from "postgres";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -20,6 +19,7 @@ function ident(name) {
 }
 
 export async function openCampus(url) {
+  const { default: postgres } = await import("postgres");
   const sql = postgres(url, { max: 1 });
   const orgs = await sql`SELECT id, slug, name, kind FROM organizations`;
   const members = await sql`SELECT id, email, name, kind, auth_user_id FROM members`;
