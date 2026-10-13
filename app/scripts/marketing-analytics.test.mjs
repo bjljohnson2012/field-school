@@ -31,12 +31,33 @@ const publicPages = [
   "terms.html",
 ];
 
+function canonicalHref(rel) {
+  if (rel === "index.html") return "https://fieldschool.ai/";
+  return `https://fieldschool.ai/${rel.replace(/\.html$/, "")}`;
+}
+
 test("every public marketing page loads the visit log next to the checkout switch", () => {
   for (const rel of publicPages) {
     const html = readFileSync(join(site, rel), "utf8");
     assert.equal(html.includes(beside), true, rel);
     assert.equal(html.split(tag).length - 1, 1, rel);
   }
+});
+
+test("every public marketing page has one self-referencing canonical", () => {
+  for (const rel of publicPages) {
+    const html = readFileSync(join(site, rel), "utf8");
+    const href = canonicalHref(rel);
+    const line = `<link rel="canonical" href="${href}">`;
+    assert.equal(html.split(line).length - 1, 1, rel);
+    assert.equal(html.split('rel="canonical"').length - 1, 1, rel);
+  }
+});
+
+test("robots.txt disallows /brand", () => {
+  const robots = readFileSync(join(site, "robots.txt"), "utf8");
+  assert.equal(robots.includes("Disallow: /brand\n"), true);
+  assert.equal(robots.includes("Sitemap: https://fieldschool.ai/sitemap.xml"), true);
 });
 
 test("the visit log has no vendor, cookie, or gtag", () => {

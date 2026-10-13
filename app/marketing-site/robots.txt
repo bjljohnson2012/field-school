@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /brand
 
 Sitemap: https://fieldschool.ai/sitemap.xml
