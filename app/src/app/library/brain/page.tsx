@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LibraryBrainBoard } from "@/components/library/brain-board";
 import { LibraryWorkspace } from "@/components/library/workspace";
 import { brainPages } from "@/lib/library/m10";
 
@@ -18,6 +19,7 @@ export default function LibraryBrainPage() {
           </li>
         ))}
       </ul>
+      <LibraryBrainBoard />
     </LibraryWorkspace>
   );
 }

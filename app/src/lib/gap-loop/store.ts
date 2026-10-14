@@ -1,4 +1,6 @@
 import { getSql } from "@/lib/db/client";
+import { applyM11SqlIfConfigured } from "@/lib/brains/sql";
+import { isEdgeOrigin, requireSharedEdgeScope, scopeOfRow, statusForOrigin, type EdgeOrigin } from "@/lib/brains/kinds";
 import { assertEvidence, type Citation } from "./citations.ts";
 import { GapAccessError, GapFieldsError } from "./errors.ts";
 import { lessonPaths } from "./inputs.ts";
@@ -544,7 +546,10 @@ export async function loadBundle(outcomeId: string) {
     SELECT * FROM knowledge_nodes WHERE org_id = ${text(outcome, "org_id")} AND growth_unit_id = ${text(outcome, "growth_unit_id")} AND status = 'active'
   `) as Row[];
   const edges = (await sql`
-    SELECT * FROM knowledge_edges WHERE org_id = ${text(outcome, "org_id")} AND growth_unit_id = ${text(outcome, "growth_unit_id")}
+    SELECT * FROM knowledge_edges
+    WHERE org_id = ${text(outcome, "org_id")}
+      AND growth_unit_id = ${text(outcome, "growth_unit_id")}
+      AND status <> 'rejected'
   `) as Row[];
   const members = (await sql`
     SELECT member_id FROM memberships WHERE id = ${text(outcome, "owner_membership_id")} LIMIT 1
@@ -628,6 +633,7 @@ export async function ensureEdge(input: {
   rel: "supports" | "requires" | "part_of" | "contradicts";
   because: string;
   evidence: Citation[];
+  origin?: EdgeOrigin;
 }) {
   let evidence: Citation[];
   try {
@@ -635,20 +641,38 @@ export async function ensureEdge(input: {
   } catch {
     throw new GapFieldsError("evidence_required");
   }
+  const origin = input.origin ?? "system";
+  if (!isEdgeOrigin(origin)) throw new GapFieldsError("edge_origin_invalid");
+  await applyM11SqlIfConfigured();
   const sql = getSql();
+  const endpoints = (await sql`
+    SELECT id, org_id, growth_unit_id, owner_kind, owner_membership_id, child_membership_id
+    FROM knowledge_nodes
+    WHERE id = ${input.from} OR id = ${input.to}
+  `) as Row[];
+  const fromNode = endpoints.find((row) => text(row, "id") === input.from) ?? null;
+  const toNode = endpoints.find((row) => text(row, "id") === input.to) ?? null;
+  let shared;
+  try {
+    shared = requireSharedEdgeScope(scopeOfRow(fromNode), scopeOfRow(toNode));
+  } catch (error) {
+    const code = error instanceof Error ? error.message : "edge_scope_mismatch";
+    throw new GapFieldsError(code === "edge_endpoint_missing" ? "edge_endpoint_missing" : "edge_scope_mismatch");
+  }
   const existing = (await sql`
     SELECT id FROM knowledge_edges
     WHERE from_node = ${input.from} AND to_node = ${input.to} AND rel = ${input.rel}
     LIMIT 1
   `) as Row[];
   if (existing[0]) return text(existing[0], "id");
+  const status = statusForOrigin(origin);
   const created = (await sql`
     INSERT INTO knowledge_edges (
       org_id, growth_unit_id, owner_kind, owner_membership_id, child_membership_id,
-      from_node, to_node, rel, because, evidence, origin
+      from_node, to_node, rel, because, evidence, origin, status
     ) VALUES (
-      ${input.scope.orgId}, ${input.scope.growthUnitId}, ${input.scope.ownerKind}, ${input.scope.ownerMembershipId}, ${input.scope.childMembershipId},
-      ${input.from}, ${input.to}, ${input.rel}, ${input.because}, ${sql.json(evidence)}, 'system'
+      ${shared.orgId}, ${shared.growthUnitId}, ${shared.ownerKind}, ${shared.ownerMembershipId}, ${shared.childMembershipId},
+      ${input.from}, ${input.to}, ${input.rel}, ${input.because}, ${sql.json(evidence)}, ${origin}, ${status}
     ) RETURNING id
   `) as Row[];
   return text(created[0], "id");

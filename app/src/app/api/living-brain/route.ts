@@ -3,6 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import { memberships } from "@/lib/db/schema";
+import { enrollmentNextFor, nextStepPayload } from "@/lib/brains/enrollment-next";
 import { actorMayWrite, type Room } from "@/lib/living-brain/model";
 import { toolRead, writeAssist, writeConfidence, writeFactsAssist, writeOrgOutcome, writeOutcome } from "@/lib/living-brain/store";
 import { roomOf as kindRoom } from "@/lib/tenancy/kind";
@@ -36,10 +37,23 @@ export async function GET(request: Request) {
   if (!room) return NextResponse.json({ ok: false, error: "wrong_desk" }, { status: 403 });
   try {
     const brain = await toolRead(auth.identity.orgId);
+    const visible = brain && brain.room === room ? brain : { orgId: auth.identity.orgId, room, facts: "", outcome: "", people: [] };
+    let enrollment: Awaited<ReturnType<typeof enrollmentNextFor>> = null;
+    try {
+      enrollment = await enrollmentNextFor(auth.identity);
+    } catch (error) {
+      if (!(error instanceof DatabaseUnavailableError)) throw error;
+    }
+    const nextStep = nextStepPayload({
+      enrollment,
+      people: visible.people.map((person) => ({ membershipId: person.membershipId, outcomes: person.outcomes })),
+      membershipId: auth.identity.membershipId,
+    });
     return NextResponse.json({
       ok: true,
       room,
-      brain: brain && brain.room === room ? brain : { orgId: auth.identity.orgId, room, facts: "", outcome: "", people: [] },
+      brain: visible,
+      nextStep,
     });
   } catch (error) {
     if (error instanceof DatabaseUnavailableError) {

@@ -15,7 +15,7 @@ type NextStep = {
   title: string;
   portion?: boolean;
   login?: "none" | "member";
-  from?: "outcomes" | "profile" | "stored";
+  from?: "outcomes" | "profile" | "stored" | "enrollments";
 };
 
 type LearnHome = {
@@ -114,6 +114,7 @@ export default function LearnPage() {
             const rows = Array.isArray(desk?.assignments) ? desk.assignments : [];
             const open = storedPortionForRoom(slug, rows);
             let brain: LivingBrain | null = null;
+            let enrolledTitle = "";
             try {
               const brainResponse = await fetch("/api/living-brain");
               if (brainResponse.ok) {
@@ -123,13 +124,30 @@ export default function LearnPage() {
             } catch {
               brain = null;
             }
+            try {
+              const stepResponse = await fetch("/api/brains/next-step", { credentials: "same-origin" });
+              if (stepResponse.ok) {
+                const stepData = (await stepResponse.json()) as { title?: string; from?: string };
+                if (stepData.from === "enrollments" && stepData.title) enrolledTitle = stepData.title;
+              }
+            } catch {
+              enrolledTitle = "";
+            }
             const home = learnHomeContext({
               room: slug,
               brain,
               storedTitle: open?.nextUnit,
               membershipId: open?.membershipId,
             });
-            if (home.nextStep && (home.login === "none" || home.login === "member")) {
+            if (enrolledTitle && (home.login === "none" || home.login === "member" || home.login === "")) {
+              next = {
+                href: "/c/grok-bot",
+                title: enrolledTitle,
+                portion: true,
+                login: home.login === "none" || home.login === "member" ? home.login : undefined,
+                from: "enrollments",
+              };
+            } else if (home.nextStep && (home.login === "none" || home.login === "member")) {
               const fromBrain = home.from === "outcomes" ? lessonSpineStep(home.nextStep) : null;
               next = {
                 href: fromBrain ? "/play/lesson-spine" : "/teach-live",
@@ -141,6 +159,19 @@ export default function LearnPage() {
             }
             if (!cancelled) {
               setBrainContext({ aim: home.aim, confidence: home.confidence, personId: home.membershipId });
+            }
+          } catch {
+            next = null;
+          }
+        }
+        if (!next && slug !== "household" && slug !== "sales") {
+          try {
+            const stepResponse = await fetch("/api/brains/next-step", { credentials: "same-origin" });
+            if (stepResponse.ok) {
+              const stepData = (await stepResponse.json()) as { title?: string; from?: string };
+              if (stepData.from === "enrollments" && stepData.title) {
+                next = { href: `/c/${course}`, title: stepData.title, from: "enrollments" };
+              }
             }
           } catch {
             next = null;
