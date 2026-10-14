@@ -1,24 +1,39 @@
 # Rebuild progress
 
-Updated: 2026-10-13 7:52 PM ET
-Main at: 9447e7ed63fb0d5035264be1bbee0a28cb5ac225 (PR 395)
+Updated: 2026-10-14 9:34 PM ET
+Main at: 4eaf464cfa19c2c7a1e0b552490a31f5515e79ef (PR 399, member rail)
 Production: campus 2.24.70.248 at that tip. Smoke passed.
 Active agents: none
 
 `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay `false`. `AUTH_URL` stays `https://portal.fieldschool.ai`. Launch stays CLOSED 0/8.
+
+`GROK_API_KEY` is set on production. Coaching health is ok. Do not read or print the key in agent logs.
+
+Member rail (Ben, 9:34 PM ET on 2026-10-14): members use the 240px Learn / Library / You rail. `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368` is the production build env. `docs/LAW.md` and `docs/staff/SHELLS.md` record that override. Learn and Me is only when that variable is `shells`.
 
 migrations on main:
 - M5: `app/db/0022_tenancy.sql` (merged in #383)
 - M6: `app/db/0023_content_model.sql` (merged in #391)
 - M8: `app/db/0023_m8_identity_billing.sql` (merged in #386)
 - M8 additive: `app/db/0024_m8_offer_tiers.sql` (merged in #394 at e3e10848ec410061a4e2232869ae1766bd71d904)
-- M7: `app/db/0025_m7_progress.sql` (merged in #395). Applied on campus.
+- M7: `app/db/0025_m7_progress.sql` (merged in #395)
 
-`app/deploy/deploy.sh` still applies only `0001_wave1.sql` through `0011_credits_byok.sql`. It does not apply `0005_coaching.sql` or `0012` through `0025`, including both `0023` files.
+Migration runner merged in #398 at 6a38436fadbdad670026e76e42c1e4c98b8790ff and deployed. `schema_migrations` on campus has 27 rows (`0001` through `0025`). Do not claim a new migration number from this log.
 
-Tenancy backfill and test-row cleanup already ran at 2026-10-13 4:43 PM ET. Do not schedule them again. Post-apply counts: 4 orgs, 6 members, 10 memberships, 2 wards.
+Tenancy backfill and test-row cleanup already ran at 2026-10-13 4:43 PM ET. Do not schedule them again.
 
-Next action: rebase and merge #381 only with `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` false and `AUTH_URL` unchanged. Fix `deploy.sh` so it applies every pending migration. M9 waits on the designer seal. Spec only. No UI ship. Do not deploy from this log. Do not merge #381 from this update.
+Read-only check against `campus-20261014T002029Z.dump` matched production:
+
+| table | count |
+| --- | ---: |
+| organizations | 4 |
+| members | 6 |
+| memberships | 10 |
+| wards | 2 |
+| learning_events | 2 |
+| enrollments | 0 |
+
+Next action: spec and test-plan prep. M10 (#369) and M12 (#371) have dependencies met but still need `designer_seal` before any UI merge. Do not deploy from this log. Do not flip `AUTH_URL`. No live Stripe.
 
 ```yaml
 streams:
@@ -27,23 +42,23 @@ streams:
   - {id: M6,  issue: 365, branch: feat/portal-m6-content-model,    depends_on: [M5],           base: main,                            merge_in: [],    needs_merge: false, gate: none, status: merged, pr: 391, sha: "4c06f1802da7711f3ae1778ec68b12c2255ff3a1", migration: "0023_content_model"}
   - {id: M7,  issue: 366, branch: feat/portal-m7-progress,         depends_on: [M6],           base: main,                            merge_in: [],    needs_merge: false, gate: none, status: merged, pr: 395, sha: "9447e7ed63fb0d5035264be1bbee0a28cb5ac225", migration: "0025", migration_applied: true}
   - {id: M8,  issue: 367, branch: feat/portal-m8-identity-billing, depends_on: [M5, S0],       base: main,                            merge_in: [],    needs_merge: false, gate: none, status: merged, pr: 386, sha: "d2c602be6ab458e49ec75405b57a441daf623546", migration: "0023_m8_identity_billing", additive_pr: 394, additive_sha: "e3e10848ec410061a4e2232869ae1766bd71d904", additive_migration: "0024"}
-  - {id: M9,  issue: 368, branch: feat/portal-m9-shell,            depends_on: [M5, M7, M8],   base: main,                            merge_in: [],    needs_merge: false, gate: designer_seal, status: not_started, pr: null, migration: null, ship: spec_only}
-  - {id: M10, issue: 369, branch: feat/portal-m10-library,         depends_on: [M6, M9],       base: feat/portal-m9-shell,            merge_in: [],    needs_merge: true,  gate: designer_seal, status: not_started, pr: null, migration: null}
+  - {id: G,   issue: 379, branch: feat/portal-go-live,             depends_on: [],             base: main,                            merge_in: [],    needs_merge: false, gate: flags_stay_false, status: merged, pr: 381, sha: "bb37accdd727800604d62b32d27af652f0a83ef5", migration: none}
+  - {id: M9,  issue: 368, branch: feat/portal-m9-shell,            depends_on: [M5, M7, M8],   base: main,                            merge_in: [],    needs_merge: false, gate: designer_seal, status: merged, pr: 397, sha: "d1aca02f433f20b7681d3dde3887983c570e0045", migration: null, member_rail_pr: 399, member_rail_sha: "4eaf464cfa19c2c7a1e0b552490a31f5515e79ef"}
+  - {id: M10, issue: 369, branch: feat/portal-m10-library,         depends_on: [M6, M9],       base: feat/portal-m9-shell,            merge_in: [],    needs_merge: true,  gate: designer_seal, status: not_started, pr: null, migration: null, deps_met: true}
   - {id: M11, issue: 370, branch: feat/portal-m11-brains,          depends_on: [M6, M10],      base: feat/portal-m10-library,         merge_in: [],    needs_merge: true,  gate: none, status: not_started, pr: null, migration: null}
-  - {id: M12, issue: 371, branch: feat/portal-m12-onboarding,      depends_on: [M5, M9],       base: feat/portal-m9-shell,            merge_in: [],    needs_merge: true,  gate: designer_seal, status: not_started, pr: null, migration: null}
+  - {id: M12, issue: 371, branch: feat/portal-m12-onboarding,      depends_on: [M5, M9],       base: feat/portal-m9-shell,            merge_in: [],    needs_merge: true,  gate: designer_seal, status: not_started, pr: null, migration: null, deps_met: true}
   - {id: PM3, issue: 372, branch: feat/profile-m3,                 depends_on: [M5, M9, M11],  base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: designer_seal, status: not_started, pr: null, migration: null}
   - {id: GL2, issue: 373, branch: feat/knowledge-gap-loop-m2,      depends_on: [M5, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: none, status: not_started, pr: null, migration: null}
   - {id: PM4, issue: 374, branch: feat/profile-m4,                 depends_on: [PM3],          base: feat/profile-m3,                 merge_in: [],    needs_merge: true,  gate: none, status: not_started, pr: null, migration: null}
   - {id: GL3, issue: 375, branch: feat/knowledge-gap-loop-m3,      depends_on: [M8, M12, GL2], base: feat/knowledge-gap-loop-m2,      merge_in: [M12], needs_merge: true,  gate: none, status: not_started, pr: null, migration: null}
   - {id: M13, issue: 376, branch: spike/payload-m13,               depends_on: [M6, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: never_merge_spike, status: not_started, pr: null, migration: null}
   - {id: M14, issue: 377, branch: feat/portal-m14-evolution,       depends_on: [M13],          base: set_by_sealed_brief,             merge_in: [],    needs_merge: true,  gate: sealed_brief_on_377, status: not_started, pr: null, migration: null}
-  - {id: M15, issue: 378, branch: feat/portal-m15-retire,          depends_on: [M9, M10, M11], base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: merge_after_m9_m11_deployed_and_soaked, status: not_started, pr: null, migration: null}
-  - {id: G,   issue: 379, branch: feat/portal-go-live,             depends_on: [],             base: main,                            merge_in: [],    needs_merge: false, gate: flags_stay_false, status: draft_pr, pr: 381, sha: "9e8526d7a89fa1dd5a64f58a75a3aa55d841e36b", migration: none}
+  - {id: M15, issue: 378, branch: feat/portal-m15-retire,          depends_on: [M9, M10, M11], base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: merge_after_m10_m11_deployed_and_soaked, status: not_started, pr: null, migration: null}
 walk_order: [S0, M5, G, M6, M7, M8, M9, M10, M11, M12, PM3, GL2, PM4, GL3, M13, M14, M15]
 ben_merge_order: [S0, M5, M6, M7, M8, G, M9, M10, M11, M12, PM3, GL2, PM4, GL3, M15]
 ```
 
-S0, M5, M6, M7, and M8 are merged and on the production tip. #381 is still an open draft (`mergeable_state: dirty`, head `9e8526d`, base recorded at `34798e5`). Rebase it onto current main before any merge. M13 is never merged. M14 stays not_started until #377 has a sealed brief posted after the M13 report. M15 is built when its depends_on are draft_pr. Ben merges M15 only after M9 to M11 are deployed and soaked.
+S0, M5, M6, M7, M8, G, and M9 are merged and deployed on the production tip. M13 is never merged. M14 stays `not_started` until #377 has a sealed brief posted after the M13 report. M15 waits until M10 and M11 are deployed and soaked (`merge_after_m10_m11_deployed_and_soaked`).
 
 ## Stream 0 recommendation map
 
@@ -90,19 +105,16 @@ All 15 rows are met. S0 is merged and deployed.
 - 2026-10-13 4:43 PM ET: Tenancy backfill and test-row cleanup applied. Post-apply counts: 4 orgs, 6 members, 10 memberships, 2 wards. Do not schedule either script again.
 - 2026-10-13 4:56 PM ET: #395 merged at 9447e7ed63fb0d5035264be1bbee0a28cb5ac225. Migration 0025 is applied on campus.
 - 2026-10-13 7:52 PM ET: Production tip is 9447e7ed63fb0d5035264be1bbee0a28cb5ac225 on campus 2.24.70.248. Smoke passed. S0, M5, M6, M7, M8, and #394 are merged and deployed. #381 stays an open draft. This update does not merge it, does not deploy, does not run tenancy-backfill or test-rows, and does not flip AUTH_URL.
+- 2026-10-14: #381 merged at bb37accdd727800604d62b32d27af652f0a83ef5 (stream G, flags stay false). #398 merged at 6a38436fadbdad670026e76e42c1e4c98b8790ff. Migration runner deployed. `schema_migrations` has 27 rows.
+- 2026-10-14: #397 merged at d1aca02f433f20b7681d3dde3887983c570e0045 (M9 shell). #399 merged at 4eaf464cfa19c2c7a1e0b552490a31f5515e79ef (member rail default). Production tip matches main.
+- 2026-10-14 9:34 PM ET: Ben chose the issue-368 member rail for production. `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368` on the prod build. Dump `campus-20261014T002029Z` counts verified read-only.
 
 ## Handoff
 
-S0 #382, M5 #383, M6 #391, M7 #395, M8 #386, and additive #394 are merged. The production tip is `9447e7ed63fb0d5035264be1bbee0a28cb5ac225` on campus `2.24.70.248`. Smoke passed. Migration `0025_m7_progress.sql` is applied.
+S0 #382, M5 #383, M6 #391, M7 #395, M8 #386, additive #394, G #381, M9 #397, migration runner #398, and member rail #399 are merged. The production tip is `4eaf464cfa19c2c7a1e0b552490a31f5515e79ef` on campus `2.24.70.248`.
 
-Tenancy backfill and test-row cleanup already ran at 2026-10-13 4:43 PM ET. Counts after that apply: 4 orgs, 6 members, 10 memberships, 2 wards. Do not schedule them again.
+`CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay false. `AUTH_URL` stays `https://portal.fieldschool.ai`. Coaching health is ok. Do not print `GROK_API_KEY`.
 
-#381 is still an open draft on `feat/portal-go-live` at `9e8526d7a89fa1dd5a64f58a75a3aa55d841e36b`. GitHub reports it dirty against main. This update does not merge it.
+M10 through M15, PM3, GL2, PM4, and GL3 are not started. M10 and M12 have dependencies met; both still need `designer_seal` before UI merge.
 
-Next:
-
-1. Rebase #381 onto main and merge it only while `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay false and `AUTH_URL` stays `https://portal.fieldschool.ai`.
-2. Fix `app/deploy/deploy.sh` so the apply loop covers every pending migration, including both `0023` files, `0024`, and `0025`.
-3. M9 (#368) waits on the designer seal. Spec only. No UI ship.
-
-Do not deploy from this log. Do not flip AUTH_URL. Do not run a live Stripe key. Launch stays CLOSED 0/8.
+Next: spec and test-plan prep for the open streams. Do not deploy from this log. Do not flip `AUTH_URL`. Do not run live Stripe. Launch stays CLOSED 0/8.
