@@ -7,7 +7,6 @@ import type { PlacementView, RunView } from "@/lib/assessments/model";
 import { NeuralWeb } from "@/components/profile-m2/neural-web";
 import type { TrackOverview } from "@/lib/assessments/store";
 import type { TrackId } from "@/lib/assessments/tracks";
-import { FlipText } from "@/components/m9/flip-text";
 import { PROFILE_COPY, type AdultSetup } from "@/lib/profile/model";
 
 type Copy = { name: string; estimate: string; unsettled: string; rerun: string };
@@ -195,7 +194,9 @@ export function AssessmentWizard() {
           </Link>
         </div>
         {setup.complete ? (
-          <FlipText text={PROFILE_COPY.complete} />
+          <h2 className="mt-1 font-display text-3xl tracking-tight" data-wizard-finish="plain">
+            {PROFILE_COPY.complete}
+          </h2>
         ) : (
           <p className="mt-1 text-sm text-foreground" role="status">
             {tracksDone} of 3 tracks done

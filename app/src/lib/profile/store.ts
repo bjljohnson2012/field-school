@@ -21,6 +21,7 @@ import {
   type AdultPatch,
   type GateMarks,
 } from "./model";
+import { applyPm3Sql } from "./pm3-sql.ts";
 import { applyProfileSql } from "./sql";
 
 export type ProfileOwner = { memberId: string; name: string };
@@ -84,6 +85,7 @@ async function personalityMark(memberId: string) {
 
 async function ensureRow(owner: ProfileOwner) {
   await applyProfileM2Sql();
+  await applyPm3Sql();
   const db = getDb();
   await db
     .insert(userProfiles)

@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ShareLink } from "@/components/share-link";
+import { PublicProfileView } from "@/components/profile/public-profile-view";
 import { getSharePage, sharePages } from "@/lib/share";
 import { UNI_NAME } from "@/lib/brand";
+import { loadPublicBySlug } from "@/lib/profile/public-store";
 
 export function generateStaticParams() {
   return sharePages.map((p) => ({ slug: p.slug }));
@@ -16,11 +18,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const page = getSharePage(slug);
-  if (!page) return { title: "Share" };
-  return {
-    title: page.title,
-    description: page.lede,
-  };
+  if (page) {
+    return {
+      title: page.title,
+      description: page.lede,
+    };
+  }
+  try {
+    const profile = await loadPublicBySlug(slug);
+    if (profile?.displayName) return { title: profile.displayName };
+  } catch {
+    return { title: "Share" };
+  }
+  return { title: "Share" };
 }
 
 export default async function SharePage({
@@ -30,7 +40,11 @@ export default async function SharePage({
 }) {
   const { slug } = await params;
   const page = getSharePage(slug);
-  if (!page) notFound();
+  if (!page) {
+    const profile = await loadPublicBySlug(slug).catch(() => null);
+    if (!profile) notFound();
+    return <PublicProfileView profile={profile} />;
+  }
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-14">

@@ -1,7 +1,7 @@
 /**
  * Profile M1. Adult profile is keyed by the signed-in User (members.id).
  * Kid profile is a subject under the parent User; only the parent edits it.
- * M1 has no public share URL, no resume or LinkedIn ingest, and no nudge.
+ * M1 edit fields stay locked. PM3 share, headline, and bio live outside this file.
  */
 
 import { roomOf } from "../tenancy/kind.ts";

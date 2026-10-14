@@ -8,6 +8,7 @@ import { AssessmentsLink } from "@/components/profile-m2/assessments-link";
 import { EnrichmentPanel } from "@/components/profile-m2/enrichment-panel";
 import { PhotoPanel } from "@/components/profile-m2/photo-panel";
 import { EnrollmentNext } from "@/components/profile/enrollment-next";
+import { PublicSharePanel } from "@/components/profile/public-share-panel";
 import { freshnessLabel, PROFILE_COPY, type AdultSetup, type KidSetup } from "@/lib/profile/model";
 
 type Profile = {
@@ -151,6 +152,7 @@ export default function ProfilePage() {
       </section>
 
       <EnrollmentNext />
+      <PublicSharePanel />
 
       <section className="flex items-center gap-4">
         {profile.photoSrc ? (

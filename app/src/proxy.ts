@@ -4,6 +4,7 @@ import { isAdminRoute, loginRedirectForAdmin } from "@/lib/admin-gate";
 import { edgeAuth } from "@/lib/auth/edge-auth";
 import { isStaffSession } from "@/lib/members/policy";
 import { libraryRedirect } from "@/lib/library/m10";
+import { kidProfileRedirect } from "@/lib/profile/routes";
 import { coachingRedirect } from "@/lib/shell/m9-shell";
 
 /**
@@ -14,6 +15,12 @@ import { coachingRedirect } from "@/lib/shell/m9-shell";
  */
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const kidProfile = kidProfileRedirect(pathname);
+  if (kidProfile) {
+    const url = request.nextUrl.clone();
+    url.pathname = kidProfile.href;
+    return NextResponse.redirect(url, kidProfile.status);
+  }
   const library = libraryRedirect(pathname);
   if (library) {
     const url = request.nextUrl.clone();
@@ -54,5 +61,6 @@ export const config = {
     "/networks",
     "/play/lesson-spine",
     "/operator/publish",
+    "/profile/kids/:path*",
   ],
 };
