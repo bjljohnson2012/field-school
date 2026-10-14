@@ -31,9 +31,14 @@ test("deploy applies every pending db sql file through the tracking table", () =
   assert.ok(files.includes("0012_plate_renders.sql"));
   assert.ok(files.includes("0022_tenancy.sql"));
   assert.ok(files.includes("0024_m8_offer_tiers.sql"));
-  assert.equal(files.at(-1), "0029_gl2_gap_loop.sql");
+  assert.equal(files.at(-1), "0033_m15_retire.sql");
   assert.equal(files.some((name) => name.startsWith("0026")), false);
-  assert.equal(files.some((name) => name.startsWith("0030")), false);
+  assert.equal(files.some((name) => name.startsWith("0032")), false);
+  assert.ok(files.includes("0030_pm3_profile.sql"));
+  assert.ok(files.includes("0031_pm4_profile.sql"));
+  assert.ok(files.indexOf("0029_gl2_gap_loop.sql") < files.indexOf("0030_pm3_profile.sql"));
+  assert.ok(files.indexOf("0030_pm3_profile.sql") < files.indexOf("0031_pm4_profile.sql"));
+  assert.ok(files.indexOf("0031_pm4_profile.sql") < files.indexOf("0033_m15_retire.sql"));
   assert.ok(files.indexOf("0005_coaching.sql") < files.indexOf("0005_composer.sql"));
   assert.ok(files.indexOf("0011_credits_byok.sql") < files.indexOf("0012_plate_renders.sql"));
   assert.ok(files.indexOf("0023_content_model.sql") < files.indexOf("0023_m8_identity_billing.sql"));
