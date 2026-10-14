@@ -189,6 +189,6 @@ test("guest Grok Bot, AUTH_URL, and frozen trees stay untouched", () => {
   assert.match(events, /guest: result.status === 401/);
   const prompt = readRepo("docs/campus-runtime/CURSOR_AGENT_PROMPT.md");
   assert.match(prompt, /AUTH_URL is https:\/\/university\.benjohnson\.ai|AUTH_URL is https:\/\/portal\.fieldschool\.ai/);
-  assert.match(read("deploy/deploy.sh"), /0007_curriculum_paths\.sql/);
-  assert.match(read("deploy/deploy.sh"), /0006_learning_intents\.sql/);
+  assert.match(read("deploy/deploy.sh"), /apply-migrations\.sh/);
+  assert.match(read("deploy/apply-migrations.sh"), /schema_migrations/);
 });

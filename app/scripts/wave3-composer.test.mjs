@@ -142,7 +142,8 @@ test("teach UI exists; guest Grok Bot and locks stay", () => {
   const events = read("src/app/api/events/route.ts");
   assert.match(events, /guest: result.status === 401/);
   const deploy = read("deploy/deploy.sh");
-  assert.match(deploy, /0005_composer\.sql/);
+  assert.match(deploy, /apply-migrations\.sh/);
+  assert.match(read("deploy/apply-migrations.sh"), /schema_migrations/);
   assert.match(deploy, /! -name uploads/);
   assert.match(deploy, /chown 1001:1001/);
   const compose = read("deploy/docker-compose.yml");
