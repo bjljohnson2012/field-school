@@ -72,9 +72,9 @@ for i in \$(seq 1 40); do
   fi
   sleep 2
 done
-for f in 0001_wave1.sql 0002_field_pattern.sql 0003_pattern_weights.sql 0004_tenants.sql 0005_composer.sql 0006_learning_intents.sql 0007_curriculum_paths.sql 0008_next_portions.sql 0009_progress_ledgers.sql 0010_knowledge_brains.sql 0011_credits_byok.sql; do
-  docker exec -i field-school-campus-db psql -U campus -d campus < "$REMOTE_DIR/db/\$f"
-done
+# Every pending db/*.sql file, filename order. schema_migrations skips recorded files.
+bash "$REMOTE_DIR/deploy/apply-migrations.sh" "$REMOTE_DIR/db" -- \
+  docker exec -i field-school-campus-db psql -U campus -d campus
 docker compose --env-file "\$ENV_FILE" ps
 REMOTE
 
