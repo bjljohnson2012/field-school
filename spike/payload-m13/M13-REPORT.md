@@ -2,7 +2,7 @@
 
 - Date (ET): 2026-10-14
 - Spike PR (draft, do not merge): https://github.com/bjljohnson2012/field-school/pull/424
-- Head SHA: `ba36579222f54545fe9a2f31cca906f3aee25745`
+- Experiment SHA: `ba36579222f54545fe9a2f31cca906f3aee25745`
 - Base SHA: `933f3ce21701a3d507a69ecd673cd1d77aacea04` (`origin/main`, after `9b478c6`)
 - Postgres copy source: local disposable Postgres 16. Schema loaded by `app/deploy/apply-migrations.sh` from `app/db/*.sql` into database `fs_payload_spike`. Fixture rows from `spike/payload-m13/local/seed.sql` (household `grok-bot` briefing, team org `spike-team`, three knowledge nodes, one edge, a tracked child membership with no credentials). Not a production dump. No production connection. Peer auth on a local socket. No database password in git.
 - M11 on this base: merged in #415 at `78d10b933e5d0a9b8bebfd22f870eec5e16f3d75`, migration `0028`. The spike did not implement M11 and did not add an edge scope column.
