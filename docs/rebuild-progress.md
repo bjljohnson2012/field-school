@@ -1,8 +1,8 @@
 # Rebuild progress
 
-Updated: 2026-10-14 (M14 live on campus)
-Main at: 66e4aef53290862f6f33a1a5fc8883bf145caa34 (PR 428 M14 Drizzle-only slice)
-Production: campus 2.24.70.248 at that tip. Smoke passed. Rollback was not used.
+Updated: 2026-10-14 (GL3 merged; campus deploy in flight)
+Main at: a47777a80985bc9205f8f5c4995d8e6a5b1ed370 (PR 432 GL3 individual plan)
+Production: campus 2.24.70.248 at `66e4aef53290862f6f33a1a5fc8883bf145caa34` (M14 #428) until the GL3 ship lands — not live at `a47777a` yet.
 Active agents: none
 
 `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay `false`. `AUTH_URL` stays `https://portal.fieldschool.ai`. Launch stays CLOSED 0/8.
@@ -22,14 +22,19 @@ migrations on main:
 - GL2: `app/db/0029_gl2_gap_loop.sql` (merged in #417, deployed)
 - PM3: `app/db/0030_pm3_profile.sql` (merged in #418, deployed on campus ship 1)
 - PM4: `app/db/0031_pm4_profile.sql` (merged in #423, deployed)
+- GL3: `app/db/0032_gl3_individual_plan.sql` (merged in #432; not applied on campus until GL3 deploy completes)
 
-Migration runner merged in #398 at 6a38436fadbdad670026e76e42c1e4c98b8790ff and deployed. Campus ledger after the M14 ship: `schema_migrations` has 32 rows (`0026` still absent; no `0032` file). M14 deploy: migrations applied 0, skipped 32. PM3 ship 1 applied `0030`; PM4 ship applied `0031`. Do not claim a new migration number from this log.
+Migration runner merged in #398 at 6a38436fadbdad670026e76e42c1e4c98b8790ff and deployed. Campus ledger after the M14 ship: `schema_migrations` has 32 rows (`0026` still absent). M14 deploy applied 0 / skipped 32. `0032` is on main via GL3 #432; campus has not applied it yet. PM3 ship 1 applied `0030`; PM4 ship applied `0031`. Do not claim a new migration number from this log.
 
 Campus GL2 notes: gap-loop embeddings use xAI model v1, N=1024. Cron sidecar `field-school-knowledge-loop-cron` runs a one-line POST then `sleep 900`. Cron command fix (#421) deployed on campus ship 2 at `9b478c6`.
 
 M13 spike report (#426, docs only): recommendation is Drizzle stays the runtime; Payload is not mounted in campus Next. Spike runtime PR #424 stays open and must not be merged.
 
-M14 (#428, Drizzle-only slice): deployed on campus at `66e4aef`. No migration (`0032` not claimed). Payload stays off campus Next. M15 retire delete is not on campus.
+GL3 (#432): merged on main at `a47777a`. Individual plan config in `app/src/lib/individual/config.ts`; `INDIVIDUAL_PLAN_ENABLED` defaults off. Campus deploy in progress — not `deployed`. M14 (#428) stays the campus tip until this ship completes.
+
+M14 (#428, Drizzle-only slice): deployed on campus at `66e4aef`. Payload stays off campus Next.
+
+M15 (#431, draft at `c85360a73d18b6a78c47d5cd1b70309908c12795`): retire plan targets `living_brains` 1, `living_profiles` 0, homeschool orgs 0. Not merged; retire delete is not on campus.
 
 Tenancy backfill and test-row cleanup already ran at 2026-10-13 4:43 PM ET. Do not schedule them again.
 
@@ -44,7 +49,7 @@ Read-only check against `campus-20261014T002029Z.dump` (pre-ship) matched produc
 | learning_events | 2 |
 | enrollments | 0 |
 
-Next action: GL3 (#375) is `building` — not merged, not deployed. M15 (#378) is not started; retire delete is not on campus. `sealed_brief_on_377` still applies for any follow-on M14 work. Do not merge spike runtime PR #424. Do not deploy from this log. Do not flip `AUTH_URL`. No live Stripe.
+Next action: GL3 (#375) is merged (#432); campus deploy is in progress — not `deployed`. M15 (#378) draft #431 is open — not merged, not on campus. `sealed_brief_on_377` still applies for any follow-on M14 work. Do not merge spike runtime PR #424. Do not deploy from this log. Do not flip `AUTH_URL`. No live Stripe.
 
 ```yaml
 streams:
@@ -61,15 +66,15 @@ streams:
   - {id: PM3, issue: 372, branch: feat/profile-m3,                 depends_on: [M5, M9, M11],  base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: designer_seal, status: deployed, pr: 418, sha: "cce07b3a00f61015fd9aa9e7a3973192d12dd57a", deploy_sha: "9b478c6b97fb5c43ff3edf1469e433e2a3ef460b", spec_pr: 408, spec_doc: docs/rebuild/pm3-profile-prep.md, spec_sha: "71665149c98c84ca05eb529226dc19134d1e9761", migration: "0030", deploy_ship_1_sha: "81049f9465e07d43d52f09cb2d87b4758f3c4f54", deploy_ship_2_sha: "9b478c6b97fb5c43ff3edf1469e433e2a3ef460b", cron_fix_pr: 421}
   - {id: GL2, issue: 373, branch: feat/knowledge-gap-loop-m2,      depends_on: [M5, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: none, status: deployed, pr: 417, sha: "338ddbc6ad2462c412161acd56bf6414d598f8de", spec_pr: 409, spec_doc: docs/rebuild/gl2-gap-loop-prep.md, spec_sha: "d0e71dc68979accd17a207572706282bfcb0f447", migration: "0029", embeddings: "xai-v1-1024", cron_sidecar: "field-school-knowledge-loop-cron", cron_command: "POST then sleep 900", cron_fix_pr: 421, cron_fix_deploy_sha: "9b478c6b97fb5c43ff3edf1469e433e2a3ef460b"}
   - {id: PM4, issue: 374, branch: feat/profile-m4,                 depends_on: [PM3],          base: feat/profile-m3,                 merge_in: [],    needs_merge: false, gate: none, status: deployed, pr: 423, sha: "0c0569165a1cad7de5aa7ec98164e4c8065d5972", spec_pr: 403, spec_doc: docs/rebuild/pm4-profile-prep.md, spec_sha: "0c83da3f240535b7296fbabd85ea03a6e755c2de", migration: "0031"}
-  - {id: GL3, issue: 375, branch: feat/knowledge-gap-loop-m3,      depends_on: [M8, M12, GL2], base: feat/knowledge-gap-loop-m2,      merge_in: [M12], needs_merge: true,  gate: none, status: building, pr: null, spec_pr: 410, spec_doc: docs/rebuild/gl3-gap-loop-prep.md, spec_sha: "c8fad4cf9adf0ff940a16a0f353620216a61edde", migration: null, build: in_progress, deps_met: true}
+  - {id: GL3, issue: 375, branch: feat/knowledge-gap-loop-m3,      depends_on: [M8, M12, GL2], base: feat/knowledge-gap-loop-m2,      merge_in: [M12], needs_merge: false, gate: none, status: merged, pr: 432, sha: "a47777a80985bc9205f8f5c4995d8e6a5b1ed370", spec_pr: 410, spec_doc: docs/rebuild/gl3-gap-loop-prep.md, spec_sha: "c8fad4cf9adf0ff940a16a0f353620216a61edde", migration: "0032", individual_plan_config: true, flag: INDIVIDUAL_PLAN_ENABLED, flag_default: off, deploy: in_progress, deps_met: true}
   - {id: M13, issue: 376, branch: spike/payload-m13,               depends_on: [M6, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: never_merge_spike, status: spike_report_merged, pr: null, spec_pr: 401, spec_doc: docs/rebuild/m13-payload-spike-prep.md, spec_sha: "e99850da4566abbd3846b202f6198a9f2c7f617c", report_pr: 426, report_sha: "a9e3aada05a78a78eab2245f4a1f3b79901a4b0f", report_doc: docs/rebuild/m13-payload-spike-report.md, spike_runtime_pr: 424, spike_runtime: open_do_not_merge, recommendation: "Drizzle runtime; Payload not mounted on campus Next", migration: null}
   - {id: M14, issue: 377, branch: feat/portal-m14-evolution,       depends_on: [M13],          base: set_by_sealed_brief,             merge_in: [],    needs_merge: false, gate: sealed_brief_on_377, status: deployed, pr: 428, sha: "66e4aef53290862f6f33a1a5fc8883bf145caa34", spec_pr: 402, spec_doc: docs/rebuild/m14-evolution-prep.md, spec_sha: "946b33516a02e95f14cc1086a08b51e303bc75f2", drizzle_slice: true, migration: none, payload_on_campus: false, m13_report_pr: 426, build_waits_on: [sealed_brief_on_377], cron_recreated: false}
-  - {id: M15, issue: 378, branch: feat/portal-m15-retire,          depends_on: [M9, M10, M11], base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: merge_after_m10_m11_deployed_and_soaked, status: spec_merged, pr: null, spec_pr: 406, spec_doc: docs/rebuild/m15-retire-prep.md, spec_sha: "5fea0b6da998369d17bef480573be30afae1693a", migration: none, build: not_started, retire_delete_on_campus: false}
+  - {id: M15, issue: 378, branch: feat/portal-m15-retire,          depends_on: [M9, M10, M11], base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: merge_after_m10_m11_deployed_and_soaked, status: spec_merged, pr: 431, sha: "c85360a73d18b6a78c47d5cd1b70309908c12795", draft: true, spec_pr: 406, spec_doc: docs/rebuild/m15-retire-prep.md, spec_sha: "5fea0b6da998369d17bef480573be30afae1693a", migration: none, build: in_progress, retire_plan: {living_brains: 1, living_profiles: 0, homeschool_orgs: 0}, retire_delete_on_campus: false}
 walk_order: [S0, M5, G, M6, M7, M8, M9, M10, M11, M12, PM3, GL2, PM4, GL3, M13, M14, M15]
 ben_merge_order: [S0, M5, M6, M7, M8, G, M9, M10, M11, M12, PM3, GL2, PM4, GL3, M15]
 ```
 
-S0, M5, M6, M7, M8, G, M9, M10, M11, M12, GL2, PM3, PM4, and M14 are merged and deployed on the campus tip (`66e4aef53290862f6f33a1a5fc8883bf145caa34`, #428 Drizzle slice). GL2 merge remains `338ddbc` (#417). GL3 is `building` and is not merged or deployed. M13 spike report is on main (#426); runtime PR #424 stays open. M14 Payload stays off campus. Sealed brief on #377 still required for follow-on work. M15 is not started; retire delete is not on campus. M15 has no migration in its spec; Ben merges M15 code only after M10 and M11 are deployed and soaked (`merge_after_m10_m11_deployed_and_soaked`).
+S0, M5, M6, M7, M8, G, M9, M10, M11, M12, GL2, PM3, PM4, and M14 are merged and deployed on the campus tip (`66e4aef53290862f6f33a1a5fc8883bf145caa34`, #428 Drizzle slice) until the in-flight GL3 ship lands. GL3 is merged (#432, `a47777a`) with campus deploy in progress — not `deployed`; `INDIVIDUAL_PLAN_ENABLED` stays off by default. GL2 merge remains `338ddbc` (#417). M13 spike report is on main (#426); runtime PR #424 stays open. M14 Payload stays off campus. Sealed brief on #377 still required for follow-on work. M15 draft #431 (`c85360a73d18b6a78c47d5cd1b70309908c12795`) is not merged; retire delete is not on campus. M15 has no migration in its spec; Ben merges M15 code only after M10 and M11 are deployed and soaked (`merge_after_m10_m11_deployed_and_soaked`).
 
 ## Stream 0 recommendation map
 
@@ -129,13 +134,15 @@ All 15 rows are met. S0 is merged and deployed.
 - 2026-10-14: #426 M13 spike report merged at `a9e3aada05a78a78eab2245f4a1f3b79901a4b0f` (`docs/rebuild/m13-payload-spike-report.md`, docs only). Drizzle runtime; Payload not on campus Next. #424 spike runtime stays open — do not merge.
 - 2026-10-14: #428 M14 Drizzle-only slice merged at `66e4aef53290862f6f33a1a5fc8883bf145caa34`. Tests passed. Campus deploy in progress; no migration; Payload off. Not marked `deployed`.
 - 2026-10-14: #428 M14 deployed on campus at `66e4aef53290862f6f33a1a5fc8883bf145caa34`. Dump `campus-20261014T150211Z`. Migrations applied 0 / skipped 32; ledger 32; no `0032` file. Smoke passed. Cron one-line command unchanged (not recreated). Rollback not used.
+- 2026-10-14: #432 GL3 merged at `a47777a80985bc9205f8f5c4995d8e6a5b1ed370`. Migration `0032` on main. Individual plan config; `INDIVIDUAL_PLAN_ENABLED` default off. Campus deploy in progress — not marked `deployed`. Campus tip remains `66e4aef` until ship completes.
+- 2026-10-14: M15 draft PR #431 at `c85360a73d18b6a78c47d5cd1b70309908c12795`. Retire plan: `living_brains` 1, `living_profiles` 0, homeschool orgs 0. Not merged; not on campus.
 
 ## Handoff
 
-S0 #382, M5 #383, M6 #391, M7 #395, M8 #386, additive #394, G #381, M9 #397, migration runner #398, member rail #399, M10 #413, M12 #412, M11 #415, GL2 #417, PM3 #418, PM4 #423, and M14 #428 are merged and deployed. The campus tip is `66e4aef53290862f6f33a1a5fc8883bf145caa34` on `2.24.70.248`.
+S0 #382, M5 #383, M6 #391, M7 #395, M8 #386, additive #394, G #381, M9 #397, migration runner #398, member rail #399, M10 #413, M12 #412, M11 #415, GL2 #417, PM3 #418, PM4 #423, and M14 #428 are merged and deployed on campus at `66e4aef53290862f6f33a1a5fc8883bf145caa34` on `2.24.70.248` until the GL3 ship completes.
 
 `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay false. `AUTH_URL` stays `https://portal.fieldschool.ai`. `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368` on the prod build. Coaching health is ok. Do not print `GROK_API_KEY`.
 
-GL3 (#375): `building`, not merged, not deployed. M13 (#376): report #426 on main; do not merge runtime #424. M14 (#377): `deployed` #428 Drizzle slice; Payload off; sealed brief on #377 still open for follow-on. M15: not started; retire delete not on campus.
+GL3 (#375): merged #432, deploy in progress — not `deployed`; flag default off. M13 (#376): report #426 on main; do not merge runtime #424. M14 (#377): `deployed` #428 on campus; Payload off; sealed brief on #377 still open for follow-on. M15: draft #431, not merged; retire delete not on campus.
 
-Next: finish GL3 build; M15 waits on soak gate. Do not deploy from this log. Do not flip `AUTH_URL`. Do not run live Stripe. Launch stays CLOSED 0/8.
+Next: finish GL3 campus deploy and smoke (then mark `deployed` in a later note); M15 draft #431 waits on soak gate. Do not deploy from this log. Do not flip `AUTH_URL`. Do not run live Stripe. Launch stays CLOSED 0/8.
