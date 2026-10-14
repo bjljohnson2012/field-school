@@ -58,6 +58,13 @@ export type QuizQuestion = {
 
 export type QuizBlock = { kind: "quiz"; questions: QuizQuestion[] };
 
+export type ReflectionBlock = {
+  kind: "reflection";
+  prompt: string;
+  response?: string;
+  tags?: string[];
+};
+
 export type Block =
   | TextBlock
   | BulletsBlock
@@ -66,7 +73,8 @@ export type Block =
   | AssignmentBlock
   | QuizBlock
   | StationBlock
-  | CourseBlock;
+  | CourseBlock
+  | ReflectionBlock;
 
 export type PublishStatus = "draft" | "published";
 
@@ -435,6 +443,31 @@ function parseCourse(value: Record<string, unknown>): Block | string {
   return { kind: "course", tagline, kicker, videoId, videoUrl, videoTitle, passRatio, examPassRatio, updatedAt };
 }
 
+function parseReflection(value: Record<string, unknown>): Block | string {
+  const prompt = readString(value.prompt);
+  if (prompt === null) return "reflection_prompt_required";
+  const promptHtml = rejectHtml(prompt);
+  if (promptHtml) return promptHtml;
+  let response: string | undefined;
+  if (value.response !== undefined && value.response !== null) {
+    const text = readString(value.response);
+    if (text === null) return "reflection_response_invalid";
+    const html = rejectHtml(text);
+    if (html) return html;
+    response = text;
+  }
+  let tags: string[] | undefined;
+  if (value.tags !== undefined) {
+    const parsed = parseStringList(value.tags);
+    if (typeof parsed === "string") return "reflection_tags_invalid";
+    tags = parsed;
+  }
+  const block: ReflectionBlock = { kind: "reflection", prompt };
+  if (response !== undefined) block.response = response;
+  if (tags) block.tags = tags;
+  return block;
+}
+
 function parseBlock(value: unknown): Block | string {
   if (!isRecord(value) || typeof value.kind !== "string") return "block_not_object";
   if (value.kind === "text") return parseText(value);
@@ -445,6 +478,7 @@ function parseBlock(value: unknown): Block | string {
   if (value.kind === "quiz") return parseQuiz(value);
   if (value.kind === "station") return parseStation(value);
   if (value.kind === "course") return parseCourse(value);
+  if (value.kind === "reflection") return parseReflection(value);
   return "unknown_block_kind";
 }
 
@@ -476,6 +510,10 @@ function requiredBlockRefusal(blocks: readonly Block[]): string | null {
       case "clip":
       case "station":
       case "course":
+        break;
+      case "reflection":
+        if (block.prompt.trim().length === 0 || hasHtml(block.prompt)) return "reflection_prompt_required";
+        if (block.response && hasHtml(block.response)) return "html_not_allowed";
         break;
       case "quiz":
         if (block.questions.length === 0) return "required_quiz_block_empty";

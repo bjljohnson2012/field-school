@@ -2,6 +2,21 @@
 
 This file is the spec and the test plan for [issue 370](https://github.com/bjljohnson2012/field-school/issues/370). It does not implement product code. The implementation pull request stays draft until CDM MERGE GO. No deploy from this stream.
 
+## CDM seal (2026-10-14)
+
+CDM sealed B1-B6 on 2026-10-14, delegated by Ben. The implementation uses migration `0028` only. It does not add `0026` and it does not edit `0027`.
+
+| # | Sealed decision |
+| --- | --- |
+| B1 | `knowledge_nodes.kind` adds `lesson`, `brain_page`, `reflection`, `skill`, `project`. The existing five stay: `goal`, `requirement`, `concept`, `cluster`, `evidence`. |
+| B2 | No edge scope column. An edge takes its scope from its endpoints, and both endpoints must share a scope. `ensureEdge` enforces that, and `knowledge_edges_scope_check` checks it in the database. |
+| B3 | `knowledge_edges.origin` is `system`, `derived`, `user` (manual link), and `ai` (suggested, shown as pending until a leader confirms). |
+| B4 | One brain per `knowledge_brains` row, defaulting to one per org. Growth units and desk children are filtered views inside that brain, not separate brains. |
+| B5 | Reflection block is `{kind:'reflection', prompt:string, response?:string, tags?:string[]}`. Reflection block to reflection node, quiz and assignment to evidence, text, bullets, quote, and clip to concept on the lesson, station to requirement, course to cluster. Each lesson also gets a lesson node. |
+| B6 | M7 `enrollments` and `progress_latest` are the source of truth. Living-brain next-step reads enrollments starting in M11. Dual-read the old living-brain tables only as a fallback through M14, and retire them in M15. Learn and You read enrollments. The Library brain reads nodes and edges. |
+
+Backfill kinds that follow B1: `brain_sources`, `brain_notes`, and `brain_artifacts` become `brain_page`. Composer `knowledge_units` become `skill`. `coaching_knowledge_units` become `project`. Derived edges use `origin = 'derived'`. Living-brain tables stay. `kind` homeschool stays.
+
 Launch stays CLOSED 0/8. `AUTH_URL` stays `https://portal.fieldschool.ai`. `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay `false`. No live Stripe. This prep does not edit `docs/rebuild-progress.md`, does not add SQL, and does not claim a migration number.
 
 ## Dependencies and build gate
@@ -195,7 +210,7 @@ Do not start M11 implementation until M10’s draft PR exists so `/library` shel
 | B5 | **Reflection block** JSON shape and which block kinds create which node kinds | No `reflection` block in `content-model.ts` on main today | Issue 370; `app/src/lib/collections/content-model.ts` on `origin/main` lists text, bullets, quote, clip, assignment, quiz, station, course only |
 | B6 | Cutover for **living_brains next step** vs M7 enrollments (dual-read duration, which UI reads which) | Issue 370 + Notion M11 bullet; M7 may not be on branch | Notion M11; `living_brains` / `living_profiles` in `0013_living_brain.sql`; M7 issue 366 |
 
-Until B1–B6 are answered in #370 or a CDM comment on #363, the implementation PR should list them under “Risks and open questions” and use feature flags or no-op defaults only where tests do not require a guess.
+B1-B6 were sealed by CDM on 2026-10-14, delegated by Ben. The seal table at the top of this file is the record. The implementation follows that table.
 
 ## What this prep does not change
 

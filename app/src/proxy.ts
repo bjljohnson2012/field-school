@@ -51,6 +51,7 @@ export const config = {
     "/o/:path*",
     "/knowledge",
     "/brain",
+    "/networks",
     "/play/lesson-spine",
     "/operator/publish",
   ],

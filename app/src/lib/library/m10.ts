@@ -95,6 +95,7 @@ const STATIC_REDIRECTS: Record<string, string> = {
   "/coaching/questions": "/library/practice",
   "/knowledge": "/library/brain",
   "/brain": "/library/brain",
+  "/networks": "/library/brain",
   "/operator/publish": "/library",
 };
 

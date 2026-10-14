@@ -7,6 +7,7 @@ import { AssessmentResults } from "@/components/profile-m2/assessment-results";
 import { AssessmentsLink } from "@/components/profile-m2/assessments-link";
 import { EnrichmentPanel } from "@/components/profile-m2/enrichment-panel";
 import { PhotoPanel } from "@/components/profile-m2/photo-panel";
+import { EnrollmentNext } from "@/components/profile/enrollment-next";
 import { freshnessLabel, PROFILE_COPY, type AdultSetup, type KidSetup } from "@/lib/profile/model";
 
 type Profile = {
@@ -148,6 +149,8 @@ export default function ProfilePage() {
           />
         </div>
       </section>
+
+      <EnrollmentNext />
 
       <section className="flex items-center gap-4">
         {profile.photoSrc ? (
