@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
+    "@onboardjs/core": "^1.0.0-rc.4",
+    "@onboardjs/react": "^1.0.0-rc.5",
     "@remotion/player": "^4.0.526",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",

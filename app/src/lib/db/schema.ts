@@ -1531,6 +1531,32 @@ export const auditLogs = pgTable(
   (t) => [index("audit_logs_org_created_idx").on(t.orgId, t.createdAt)],
 );
 
+export const onboardingFlows = pgTable("onboarding_flows", {
+  memberId: uuid("member_id")
+    .primaryKey()
+    .references(() => members.id, { onDelete: "cascade" }),
+  orgId: uuid("org_id").references(() => organizations.id, { onDelete: "set null" }),
+  invitingOrgId: uuid("inviting_org_id").references(() => organizations.id, { onDelete: "set null" }),
+  membershipId: uuid("membership_id").references(() => memberships.id, { onDelete: "set null" }),
+  entry: text("entry").notNull(),
+  stepId: text("step_id").notNull(),
+  brainNamed: boolean("brain_named").notNull().default(false),
+  brainName: text("brain_name").notNull().default(""),
+  room: text("room"),
+  orgName: text("org_name").notNull().default(""),
+  homeschoolMode: boolean("homeschool_mode"),
+  people: jsonb("people").notNull().default([]),
+  adultGates: jsonb("adult_gates").notNull().default({}),
+  kidIntakeDone: boolean("kid_intake_done").notNull().default(false),
+  aim: text("aim").notNull().default(""),
+  outcomeId: uuid("outcome_id"),
+  campusReady: boolean("campus_ready").notNull().default(false),
+  profileDone: boolean("profile_done").notNull().default(false),
+  createdOrgIds: jsonb("created_org_ids").notNull().default([]),
+  events: jsonb("events").notNull().default([]),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const legacyIds = pgTable(
   "legacy_ids",
   {

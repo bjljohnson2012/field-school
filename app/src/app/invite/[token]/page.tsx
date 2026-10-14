@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { inviteLanding } from "@/lib/onboarding/graph";
 
 export default function InvitePage() {
   const { token } = useParams<{ token: string }>();
@@ -23,7 +24,7 @@ export default function InvitePage() {
       setNote(data.error || "Could not accept.");
       return;
     }
-    router.push(`/o/${data.org}`);
+    router.push(inviteLanding());
   }
 
   return (
