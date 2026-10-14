@@ -1,0 +1,10 @@
+{
+  "living_brains": 1,
+  "living_profiles": 0,
+  "organizations_kind_homeschool": 0,
+  "organizations_by_kind": {
+    "company": 1,
+    "family": 2,
+    "gym": 1
+  }
+}

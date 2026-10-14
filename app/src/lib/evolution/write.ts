@@ -1,5 +1,5 @@
 /**
- * M14 evolution v1. A Drizzle hook on the existing living_profiles table.
+ * M14 evolution v1. The note hook stays. M15 retired the campus profile table it used to update.
  * A note that contains HTML is stored empty. Milestones and media are not
  * persisted. user_profiles (the sealed adult profile store) is not written.
  * A tracked child keeps login "none". A child is not a User.

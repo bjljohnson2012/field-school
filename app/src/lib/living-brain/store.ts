@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
-import { assignments, livingBrains, livingProfiles, members, memberships } from "@/lib/db/schema";
+import { assignments, members, memberships } from "@/lib/db/schema";
 import { completeWithConfiguredAi } from "./ai";
 import {
   actorMayWrite,
@@ -11,7 +11,6 @@ import {
   refreshFromUse,
   setConfidence,
   setOrgOutcome,
-  shapeBrain,
   stepAfterFinish,
   suggestForPerson,
   updateOutcome,
@@ -25,105 +24,13 @@ import {
 
 export class LivingBrainUnavailableError extends DatabaseUnavailableError {}
 
-function asRoom(value: string): Room | null {
-  return value === "household" || value === "sales" ? value : null;
+/** M15 retired the living-brain tables. Campus does not query them. */
+export async function loadLivingBrain(_orgId: string): Promise<LivingBrain | null> {
+  return null;
 }
 
-function asLogin(value: string): "none" | "member" | null {
-  return value === "none" || value === "member" ? value : null;
-}
-
-function parseHistory(value: string) {
-  try {
-    const parsed = JSON.parse(value) as unknown;
-    if (!Array.isArray(parsed)) return [];
-    return parsed.flatMap((mark) => {
-      if (!mark || typeof mark !== "object") return [];
-      const outcomes = (mark as { outcomes?: unknown }).outcomes;
-      if (typeof outcomes !== "string" || !outcomes.trim()) return [];
-      return [{ outcomes }];
-    });
-  } catch {
-    return [];
-  }
-}
-
-export async function loadLivingBrain(orgId: string): Promise<LivingBrain | null> {
-  const db = getDb();
-  const [head] = await db.select().from(livingBrains).where(eq(livingBrains.orgId, orgId)).limit(1);
-  if (!head) return null;
-  const room = asRoom(head.room);
-  if (!room) return null;
-  const rows = await db.select().from(livingProfiles).where(eq(livingProfiles.orgId, orgId));
-  const shaped = shapeBrain({
-    orgId,
-    room,
-    facts: head.facts,
-    outcome: head.outcome || "",
-    actorId: "",
-    people: rows.flatMap((row) => {
-      const login = asLogin(row.login);
-      if (!login || row.ownsOutcomes) return [];
-      return [
-        {
-          membershipId: row.membershipId,
-          name: row.name,
-          kind: row.kind,
-          login,
-          profile: row.profile,
-          outcomes: row.outcomes,
-          history: parseHistory(row.history),
-          confidence: row.confidence || "",
-        },
-      ];
-    }),
-  });
-  if (!shaped.ok) return null;
-  return shaped.brain;
-}
-
-export async function saveLivingBrain(brain: LivingBrain) {
-  const db = getDb();
-  const now = new Date();
-  await db
-    .insert(livingBrains)
-    .values({ orgId: brain.orgId, room: brain.room, facts: brain.facts, outcome: brain.outcome || "", updatedAt: now })
-    .onConflictDoUpdate({
-      target: livingBrains.orgId,
-      set: { room: brain.room, facts: brain.facts, outcome: brain.outcome || "", updatedAt: now },
-    });
-  for (const person of brain.people) {
-    await db
-      .insert(livingProfiles)
-      .values({
-        orgId: brain.orgId,
-        membershipId: person.membershipId,
-        name: person.name,
-        kind: person.kind,
-        login: person.login,
-        profile: person.profile,
-        outcomes: person.outcomes,
-        ownsOutcomes: false,
-        history: JSON.stringify(person.history ?? []),
-        confidence: person.confidence || "",
-        updatedAt: now,
-      })
-      .onConflictDoUpdate({
-        target: [livingProfiles.orgId, livingProfiles.membershipId],
-        set: {
-          name: person.name,
-          kind: person.kind,
-          login: person.login,
-          profile: person.profile,
-          outcomes: person.outcomes,
-          ownsOutcomes: false,
-          history: JSON.stringify(person.history ?? []),
-          confidence: person.confidence || "",
-          updatedAt: now,
-        },
-      });
-  }
-}
+/** Persistence moved off the retired tables. This call writes no rows. */
+export async function saveLivingBrain(_brain: LivingBrain) {}
 
 export async function writeOutcome(input: {
   orgId: string;

@@ -250,7 +250,7 @@ test("a mismatched subject does not write", async () => {
   assert.equal(store.rows[0].profile, "");
 });
 
-test("the slice keeps Drizzle, next-auth flags, and the existing tables", () => {
+test("the slice keeps Drizzle and the campus adapter does not query retired tables", () => {
   const write = readFileSync(new URL("../src/lib/evolution/write.ts", import.meta.url), "utf8");
   const store = readFileSync(new URL("../src/lib/evolution/store.ts", import.meta.url), "utf8");
   const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
@@ -259,10 +259,9 @@ test("the slice keeps Drizzle, next-auth flags, and the existing tables", () => 
   assert.equal(pkg.dependencies["@payloadcms/next"], undefined);
   assert.equal(CHECKOUT_GO_LIVE, false);
   assert.equal(COACHING_GO_LIVE, false);
-  assert.match(store, /livingProfiles/);
-  assert.match(store, /\.set\(\{ profile, updatedAt: new Date\(\) \}\)/);
+  assert.doesNotMatch(store, /livingProfiles|living_profiles|living_brains/);
+  assert.doesNotMatch(store, /\.set\(|\.update\(|\.insert\(|\.from\(/);
   assert.doesNotMatch(combined, /@payloadcms|payloadcms|userProfiles|kidProfiles|DROP TABLE|0032|0033|edge_scope|knowledge_edges|AUTH_URL\s*=/);
-  assert.doesNotMatch(store, /\.insert\(/);
   assert.doesNotMatch(combined, /living_brains/);
   assert.equal(EVOLUTION_PROFILE_TABLE, "living_profiles");
   assert.equal(SEALED_ADULT_PROFILE_STORE, "user_profiles");
