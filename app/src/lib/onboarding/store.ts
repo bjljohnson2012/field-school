@@ -93,7 +93,7 @@ function fromRow(row: Row): FlowSnapshot {
     stepId: text(row, "step_id") as FlowSnapshot["stepId"],
     brainNamed: bool(row, "brain_named"),
     brainName: text(row, "brain_name"),
-    room: room === "family" || room === "team" ? room : null,
+    room: room === "family" || room === "team" || room === "individual" ? room : null,
     orgName: text(row, "org_name"),
     homeschoolMode: nullableBool(row, "homeschool_mode"),
     people: peopleOf(row.people),

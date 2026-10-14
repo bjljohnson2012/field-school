@@ -6,6 +6,8 @@ import { pdfText } from "@/lib/enrichment/pdf-text";
 import { GapAccessError, GapFieldsError } from "@/lib/gap-loop/errors";
 import { outcomeWrite, parseOutcomeScope } from "@/lib/gap-loop/rules";
 import { cell, saveTaskResponse, taskResponse } from "@/lib/gap-loop/store";
+import { assertPersonUpload, selfRateGate } from "@/lib/individual/ledger";
+import { individualPlanEnabled } from "@/lib/individual/config";
 
 export const dynamic = "force-dynamic";
 
@@ -46,7 +48,12 @@ export async function POST(request: Request, { params }: Params) {
     if (kind === "pdf") {
       const encoded = typeof body.pdfBase64 === "string" ? body.pdfBase64 : "";
       const bytes = Buffer.from(encoded, "base64");
-      if (!bytes.length || bytes.length > BYTE_CAP) throw new GapFieldsError("upload_too_large");
+      if (!bytes.length) throw new GapFieldsError("upload_too_large");
+      if (individualPlanEnabled() && ownerKind === "person") {
+        await assertPersonUpload({ ownerKind, orgId: gate.actor.orgId, bytes: bytes.length });
+      } else if (bytes.length > BYTE_CAP) {
+        throw new GapFieldsError("upload_too_large");
+      }
       if (bytes.subarray(0, 5).toString() !== "%PDF-") throw new GapFieldsError("pdf_unreadable");
       try {
         const pdf = await getDocumentProxy(new Uint8Array(bytes));
@@ -66,6 +73,15 @@ export async function POST(request: Request, { params }: Params) {
     if (!digest) digest = sha(text);
     const rating = body.rating === "ready" || body.rating === "getting_there" || body.rating === "not_yet" ? body.rating : "";
     if (kind === "rating" && !rating) throw new GapFieldsError("rating_required");
+    if (kind === "rating") {
+      const rate = selfRateGate({
+        enabled: individualPlanEnabled(),
+        actorKind: gate.actor.kind,
+        ownerKind,
+        samePerson: cell(row, "owner_membership_id") === gate.actor.membershipId,
+      });
+      if (!rate.ok) throw new GapAccessError(403, rate.error);
+    }
     const evidenceKind =
       kind === "rating"
         ? rating === "ready"

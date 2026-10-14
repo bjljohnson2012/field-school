@@ -11,6 +11,9 @@ export const USAGE_EVENT_NAMES = [
   "curriculum_write",
   "portion_write",
   "ledger_write",
+  "loop_step",
+  "loop_research",
+  "plan_rebuild",
 ] as const;
 export const KEY_STATUSES = ["active", "revoked"] as const;
 export const BYOK_WRAP_ALG = "aes-256-gcm";

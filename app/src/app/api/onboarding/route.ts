@@ -4,6 +4,8 @@ import { identityFromRequest } from "@/lib/campus-runtime/identity";
 import { DatabaseUnavailableError, getDb } from "@/lib/db/client";
 import { organizations } from "@/lib/db/schema";
 import type { GapActor } from "@/lib/gap-loop/rules";
+import { individualPlanEnabled } from "@/lib/individual/config";
+import { roomLabelMap } from "@/lib/individual/surface";
 import {
   advance,
   homeLanding,
@@ -42,7 +44,8 @@ function payload(flow: FlowSnapshot, pathname: string) {
     resume: shouldResume(pathname, flow),
     switcher: switcherLabel(flow),
     progress: progressOf(flow),
-    rooms: individualBranch(),
+    rooms: individualBranch(individualPlanEnabled()),
+    roomLabels: roomLabelMap(),
     kidIntake: KID_INTAKE,
     starter: STARTER_LESSON,
     landing: homeLanding(flow),

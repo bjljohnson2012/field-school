@@ -4,7 +4,7 @@ import { OnboardingProvider, useOnboarding } from "@onboardjs/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { ADULT_GATES } from "@/lib/profile/model";
-import { branchOf, KID_INTAKE, ONBOARDING_COPY, type FlowAction, type FlowSnapshot, type RoomChoice } from "@/lib/onboarding/graph";
+import { branchOf, KID_INTAKE, ONBOARDING_COPY, type FlowAction, type FlowSnapshot } from "@/lib/onboarding/graph";
 import { m12EngineSteps } from "@/lib/onboarding/steps";
 import { ORG_SWITCH_EVENT } from "@/lib/shell/model";
 
@@ -12,10 +12,17 @@ type Payload = {
   flow: FlowSnapshot;
   progress: { index: number; total: number; percent: number };
   rooms: readonly string[];
+  roomLabels?: Record<string, string>;
   switcher: string;
   landing: string | null;
   kidIntake: { name: string; href: string };
 };
+
+function roomLabel(item: string, labels: Record<string, string> | undefined) {
+  if (item === "family") return ONBOARDING_COPY.family;
+  if (item === "team") return ONBOARDING_COPY.team;
+  return labels?.[item] ?? "";
+}
 
 const primary =
   "h-12 w-full rounded-xl bg-[#1E4E8C] text-sm font-medium text-white motion-safe:transition-opacity motion-safe:duration-[240ms] motion-reduce:transition-none disabled:opacity-60";
@@ -45,7 +52,7 @@ function Canvas({ payload, onPayload }: { payload: Payload; onPayload: (next: Pa
   const [pending, setPending] = useState(false);
   const [brainName, setBrainName] = useState(flow.brainName);
   const [orgName, setOrgName] = useState(flow.orgName);
-  const [room, setRoom] = useState<RoomChoice>(flow.room ?? "family");
+  const [room, setRoom] = useState(flow.room ?? "family");
   const [homeschool, setHomeschool] = useState(flow.homeschoolMode === true);
   const [person, setPerson] = useState(flow.people[0]?.name ?? "");
   const [gates, setGates] = useState(flow.adultGates);
@@ -122,20 +129,24 @@ function Canvas({ payload, onPayload }: { payload: Payload; onPayload: (next: Pa
         >
           <h1 className="font-display text-4xl tracking-tight">{ONBOARDING_COPY.roomTitle}</h1>
           <div className="grid grid-cols-2 gap-3" data-rooms={payload.rooms.join(",")}>
-            {payload.rooms.map((item) => (
-              <button
-                key={item}
-                type="button"
-                className={choice}
-                data-room={item}
-                aria-pressed={room === item}
-                onClick={() => {
-                  if (item === "family" || item === "team") setRoom(item);
-                }}
-              >
-                {item === "family" ? ONBOARDING_COPY.family : ONBOARDING_COPY.team}
-              </button>
-            ))}
+            {payload.rooms.map((item) => {
+              const label = roomLabel(item, payload.roomLabels);
+              if (!label) return null;
+              return (
+                <button
+                  key={item}
+                  type="button"
+                  className={choice}
+                  data-room={item}
+                  aria-pressed={room === item}
+                  onClick={() => {
+                    if (item === "family" || item === "team" || item === "individual") setRoom(item);
+                  }}
+                >
+                  {label}
+                </button>
+              );
+            })}
           </div>
           <button className={primary} type="submit" disabled={pending}>
             {ONBOARDING_COPY.continue}

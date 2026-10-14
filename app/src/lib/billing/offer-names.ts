@@ -28,6 +28,8 @@ export const coachingTiers = [
   },
 ];
 
+import { individualPlanEnabled } from "../individual/enabled.ts";
+
 export const offerDisplayNames = {
   diy: "Do It Yourself",
   coaching: "Coaching",
@@ -37,9 +39,22 @@ export const offerDisplayNames = {
   consulting: "Consulting",
 } as const;
 
-/** Held $10-a-month-plus-credits plan. Unpublished. Renders nothing. */
-export function individualOffer(): null {
-  return null;
+/** M8 plan-name config. Public offer keys stay in offerDisplayNames. */
+export const m8PlanNames = {
+  ...offerDisplayNames,
+  individual: "Individual",
+} as const;
+
+export function individualPlanName() {
+  return m8PlanNames.individual;
+}
+
+type FlagEnv = Record<string, string | undefined>;
+
+/** Null while the visibility flag is off. No public price in either state. */
+export function individualOffer(env?: FlagEnv): string | null {
+  if (!individualPlanEnabled(env)) return null;
+  return individualPlanName();
 }
 
 const retiredCartPlanIds = ["10", "50", "1059", "100", "200", "1000"] as const;

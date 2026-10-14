@@ -1,6 +1,8 @@
 # GL3 knowledge-gap loop prep
 
-This file is the spec and the test plan for [issue 375](https://github.com/bjljohnson2012/field-school/issues/375), Gap Loop M3: Individual self-learning plan (hidden). It is spec only. No product code, SQL, or deploy on this branch.
+This file is the spec and the test plan for [issue 375](https://github.com/bjljohnson2012/field-school/issues/375), Gap Loop M3: Individual self-learning plan (hidden).
+
+Implementation update, 2026-10-14: M12 and GL2 are on `origin/main` at `0c0569165a1cad7de5aa7ec98164e4c8065d5972`. The hold below is satisfied. CDM sealed the credit numbers in the seal section, delegated by Ben. Numbers live in config and are read at runtime. The plan stays hidden. This change does not deploy.
 
 Sources, in order when they disagree:
 
@@ -220,6 +222,23 @@ Run from `app/` after `npm ci`. Split into what this prep branch runs (none, doc
 | 5 | Caps: active outcomes at once, research tasks per month, upload size/count | PRD section 9: "Included vs limited ... TBD." |
 | 6 | BYOK on Individual: skip per-use burns or not | PRD: "whether BYOK skips credit burns on the $10 plan is open." |
 | 7 | Display name for Individual plan when flag is on | Issue 375 CDM: "Plan name comes from the plan-name config (M8)." Confirm string in `offer-names` vs new config key before implementation. |
+
+## Seal (2026-10-14)
+
+CDM sealed these credit numbers on 2026-10-14 as provisional config, delegated by Ben. The implementation reads them from `INDIVIDUAL_PLAN_CONFIG` at runtime. Loop and billing logic do not embed them.
+
+| Decision | Seal |
+| --- | --- |
+| Flag name | `INDIVIDUAL_PLAN_ENABLED`, in the same config. Default off. Production deploy templates default it to false. |
+| 1A monthly grant | 200 units |
+| 2A burns | `loop_step` 1, `loop_research` 5, plan rebuild 10 |
+| 3 caps | 3 active outcomes, 40 research tasks a month, 10 upload files, 10 MB each |
+| 4A BYOK | Skips per-use credit burns. The hidden base still applies. `usage_events` are still written. Added dollars stay 0. |
+| Display name | `m8PlanNames.individual` in the M8 plan-name config. `individualOffer()` stays null while the flag is off. `individualIsPublic()` stays false. No public price. |
+| Adult self-rating | Allowed on the adult's own requirements. The PRD lean says the same. Child self-rating stays off. |
+| Base branch | `origin/main` at `0c0569165a1cad7de5aa7ec98164e4c8065d5972` or later. M12 (`0027`) and GL2 (`0029`) are already there. Migration is `0032` only. |
+
+`CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay false. `AUTH_URL` stays `https://portal.fieldschool.ai`. No live charge. Member rail stays the 240px Learn, Library, You rail.
 
 ## What this prep does not change
 

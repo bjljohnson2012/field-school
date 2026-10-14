@@ -3,6 +3,7 @@ import { gapContext, gapError, isUuid } from "@/lib/gap-loop/access";
 import { actForRun } from "@/lib/gap-loop/advance";
 import { awaitingResponse, getWorkspace, stepStore } from "@/lib/gap-loop/store";
 import { runStep } from "@/lib/gap-loop/step";
+import { precheckPersonCredits, recordPersonUse } from "@/lib/individual/ledger";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,17 @@ export async function POST(request: Request, { params }: Params) {
         return NextResponse.json({ ok: false, error: "needs_response" }, { status: 409 });
       }
     }
+    const pre = await precheckPersonCredits({
+      ownerKind: workspace.outcome.ownerKind,
+      orgId: gate.actor.orgId,
+      membershipId: gate.actor.membershipId,
+      runId: workspace.run.id,
+      state: workspace.run.state,
+    });
+    if (pre.apply && pre.capped) {
+      const capped = await getWorkspace(gate.actor, gate.staff, outcomeId);
+      return NextResponse.json({ ok: true, summary: pre.summary, hold: true, state: "capped", ...capped });
+    }
     const result = await runStep(stepStore, {
       runId: workspace.run.id,
       idempotencyKey: key,
@@ -30,6 +42,14 @@ export async function POST(request: Request, { params }: Params) {
       act: actForRun,
     });
     if (!result.ok) return NextResponse.json({ ok: false, error: result.error }, { status: result.status });
+    if (!result.replay && result.state !== "capped") {
+      await recordPersonUse({
+        ownerKind: workspace.outcome.ownerKind,
+        orgId: gate.actor.orgId,
+        membershipId: gate.actor.membershipId,
+        state: workspace.run.state,
+      });
+    }
     const next = await getWorkspace(gate.actor, gate.staff, outcomeId);
     return NextResponse.json({ ok: true, replay: result.replay, summary: result.summary, hold: result.hold, ...next });
   } catch (error) {
