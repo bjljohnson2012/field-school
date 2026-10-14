@@ -1,6 +1,19 @@
 # M14 Evolution Engine prep
 
-This file is spec only for [issue 377](https://github.com/bjljohnson2012/field-school/issues/377). It does not implement Evolution. It does not post or invent the sealed brief. It records what that brief must contain before M14 code may start, and what Ben must decide after the M13 report.
+## Working brief (CDM continue, 2026-10-14)
+
+CDM ordered this slice to continue after the M13 report. The report is [`docs/rebuild/m13-payload-spike-report.md`](m13-payload-spike-report.md), merged in [PR 426](https://github.com/bjljohnson2012/field-school/pull/426) at `a9e3aada05a78a78eab2245f4a1f3b79901a4b0f` on 2026-10-14. This section is that working brief. The sections below stay the spec of what a brief must contain.
+
+- Drizzle stays the runtime. Do not add `@payloadcms/next`. Do not mount Payload in campus Next. Campus Next is 16.3.2 and Payload 3.90.2 does not resolve.
+- Same Postgres is allowed only with a separate schema or table prefix. Do not point Payload at campus public tables. This slice does not add Payload at all.
+- next-auth stays the learner login. No second operator app in this slice.
+- No edge scope column.
+- Labels if shown: Families, Profiles, Milestones, Media. Subject kind is Login learner or Tracked child. Child is not a User.
+- v1 is Drizzle hooks only: an evolution write path on existing profile tables (`living_profiles.profile`, scoped by `org_id` and `membership_id`). No operator admin. No milestone or media persistence beyond what already exists. No live Payload traffic. The sealed adult profile store (`user_profiles`) is not written. A note that contains HTML is stored empty.
+- Branch from `origin/main` at `a9e3aad` or later. If a migration is required, use 0033 only. Do not take 0032 (GL3 may use that). This slice does not add a migration.
+- Do not flip `AUTH_URL`. `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay false. No live Stripe. No tenancy scripts. Do not retire kind homeschool. Do not drop `living_brains` or `living_profiles`. Do not print secrets. Do not deploy. Do not merge [PR 424](https://github.com/bjljohnson2012/field-school/pull/424).
+
+This file is spec for [issue 377](https://github.com/bjljohnson2012/field-school/issues/377), plus the working brief above. It does not by itself post that brief to the issue. The sections below record what a brief must contain.
 
 `docs/rebuild-progress.md` on `chore/rebuild-progress` wins over Notion and over this file when they disagree on stream status or gates. As of the prep cut, M14 is `not_started` with gate `sealed_brief_on_377`, `depends_on: [M13]`, `base: set_by_sealed_brief`, and branch `feat/portal-m14-evolution`. M13 is `not_started`, `never_merge_spike`. This prep branches from `origin/main` at `4eaf464cfa19c2c7a1e0b552490a31f5515e79ef`. It does not stack on M6, M11, or M13.
 
@@ -18,11 +31,11 @@ All of the following must be true before an agent sets M14 to `in_progress` or o
 
 4. **No MERGE GO, no implementation merge.** Issue #377: draft PR, no merge without CDM MERGE GO, no deploy from the build run.
 
-Until the gate clears, treat M14 as blocked on `sealed_brief_on_377`, not as ready to build.
+Until a brief of the shape below is recorded, treat any wider M14 scope as blocked on `sealed_brief_on_377`. The working brief at the top of this file is the CDM continue order for the Drizzle-only v1 slice, including its merge. It does not authorize Payload, a second operator app, migration 0032, or a deploy.
 
 ## What the sealed brief on #377 must contain
 
-The sealed brief is the sole authority for M14 implementation scope. Issue #377 leaves **draft PR scope**, **branch** (`set at seal`), **acceptance**, and **migration** unset until seal. The brief must name each of the following explicitly. If any item is missing, agents hold M14 blocked and ask Ben or CDM; do not guess.
+The sections below say what a sealed brief must contain. The working brief at the top is the authority for the Drizzle-only v1 slice. Issue #377 leaves **draft PR scope**, **branch** (`set at seal`), **acceptance**, and **migration** unset until seal. The brief must name each of the following explicitly. If any item is missing, agents hold M14 blocked and ask Ben or CDM; do not guess.
 
 ### Identity and routing
 
