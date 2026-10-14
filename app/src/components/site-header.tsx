@@ -14,6 +14,7 @@ import { LeaveReturnNext } from "@/components/leave-return-next";
 import { OrgPicker } from "@/components/org-picker";
 import { TasksNavBadge } from "@/components/tasks-nav-badge";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { OnboardingProfileNudge } from "@/components/onboarding/profile-nudge";
 
 const LEADER_STANCES = new Set(["admin", "guardian", "trainer", "teacher"]);
 
@@ -362,6 +363,7 @@ export function SiteHeader({ viewer }: { viewer: ShellViewer | null }) {
                 >
                   View Profile
                 </Link>
+                <OnboardingProfileNudge />
                 <details className="rounded-lg">
                   <summary className="flex h-11 cursor-pointer list-none items-center rounded-lg px-2 text-sm text-foreground hover:bg-secondary">
                     Settings

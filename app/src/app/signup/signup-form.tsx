@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { OAuthProviderStatus } from "@/lib/auth/env";
 import { safeMemberNext } from "@/lib/admin-gate";
+import { signupLanding } from "@/lib/onboarding/graph";
 import { authErrorMessage } from "@/lib/members/policy";
 import { continueAsGuest } from "@/lib/portal";
 
@@ -70,7 +71,7 @@ export function SignupForm({ oauth }: Props) {
       ) : null}
 
       <div className="mt-8">
-        <OAuthSignInButtons oauth={oauth} nextPath={next} tone="member" />
+        <OAuthSignInButtons oauth={oauth} nextPath={signupLanding(next)} tone="member" />
       </div>
 
       <form
@@ -99,7 +100,7 @@ export function SignupForm({ oauth }: Props) {
               setError(authErrorMessage(signed.error));
               return;
             }
-            router.push(next);
+            router.push(signupLanding(next));
           } catch {
             setError("Could not reach the campus. Try again.");
           } finally {

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState, type ReactNode } from "react";
 import { CommandPalette } from "@/components/command-palette";
+import { OnboardingResume } from "@/components/onboarding/resume";
 import { ImpersonationBanner } from "@/components/impersonation-banner";
 import { M9Shell } from "@/components/m9/shell";
 import { isLeader, navLinks, NEW_DOORS } from "@/components/site-header";
@@ -58,6 +59,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-full flex-1 flex-col" data-room={room ?? undefined}>
       <M9Shell viewer={viewer} signedIn={signedIn} pathname={pathname}>
+      {signedIn ? <OnboardingResume pathname={pathname} /> : null}
       <ImpersonationBanner />
       <div className="flex-1" data-learn-zone={learnZone(pathname) ?? undefined}>
         {room === "sales" ? (

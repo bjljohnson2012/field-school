@@ -2,7 +2,20 @@
 
 This file is the spec and the test plan for [issue 371](https://github.com/bjljohnson2012/field-school/issues/371), Portal rebuild: M12 Onboarding with OnboardJS.
 
-`docs/rebuild-progress.md` names stream M12 with `depends_on: [M5, M9]`, `base: feat/portal-m9-shell`, `gate: designer_seal`, and branch `feat/portal-m12-onboarding`. This prep assumes M5 tenancy and the M9 shell are deployed on the target environment before the M12 UI pull request ships. The designer seal is not given. This pull request is the spec only. It does not implement product code. It does not merge the UI stream. It does not deploy.
+`docs/rebuild-progress.md` names stream M12 with `depends_on: [M5, M9]`, `base: feat/portal-m9-shell`, `gate: designer_seal`, and branch `feat/portal-m12-onboarding`. This prep assumes M5 tenancy and the M9 shell are deployed on the target environment before the M12 UI pull request ships. CDM sealed this flow on 2026-10-14, delegated by Ben. The UI stream follows that seal. It does not deploy.
+
+| Decision | Seal |
+| --- | --- |
+| Step order | `brain-name`, `room`, `org-name`, `homeschool-mode`, `people`, `adult-gates`, `kid-intake`, `first-goal`, `home-lesson` |
+| Kid intake form | Name is Kid profile. Href is `/onboarding/kid-profile`. Gate id stays `G-intake`. |
+| `campus_ready` | Flips when `home-lesson` completes. |
+| `profile_done` | Flips when the required gates are done. Kid intake counts when a child was added. |
+| Learn | Not hard-gated between `campus_ready` and `profile_done`. |
+| Chrome | M9 shell. The 240px Learn, Library, You rail stays visible. |
+| Invite entry | `brain-name` or `people`, not `room`. Invitees do not create a second org. |
+| First goal | Reuses the gap-loop aim store (`outcomes` through `createOutcome`). |
+| Individual | Off in public. |
+| Migration | `0027_m12_onboarding.sql` only. `0026` stays unclaimed. |
 
 Launch stays CLOSED 0/8. `AUTH_URL` stays `https://portal.fieldschool.ai`. `CHECKOUT_GO_LIVE` stays `false` in `app/src/lib/billing/checkout-destination.ts`. `COACHING_GO_LIVE` stays `false` in `app/marketing-site/js/checkout-switch.mjs`. No live Stripe. No production data scripts.
 
@@ -45,9 +58,9 @@ Resume: any signed-in return before `campus_ready` and before `profile_done` rou
 
 Learners may use Learn before `profile_done` unless Ben overrides (packet Q8). Do not hard-block the starter lesson behind all three adult gates unless the seal says otherwise.
 
-## Proposed step list (needs Designer seal)
+## Proposed step list
 
-The UI pull request posts this table in the PR body as **Proposed, needs Designer seal**. Ben or Designer edits the sealed column; until then builders follow the Proposed column.
+CDM sealed this table on 2026-10-14, delegated by Ben. Builders follow these ids in this order.
 
 | Order | Step id (proposed) | Leader / accountable | Member invitee | Required | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -127,28 +140,28 @@ The diff adds `docs/rebuild/m12-onboarding-prep.md` only. No `app/src` or `app/d
 
 ## Designer seal checklist
 
-Seal is **not given**. The UI pull request stays draft and notes **Awaiting Designer seal** until Ben or Designer signs each row. Attach screenshots at 1440 and 390 for the sealed steps.
+CDM sealed every row on 2026-10-14, delegated by Ben.
 
 | # | Item | Proposed | Seal status | Evidence when sealing |
 | --- | --- | --- | --- | --- |
-| 1 | Step list order and ids | Table in **Proposed step list** | Open | Click-through recording on phone and desktop; PR lists final ids. |
-| 2 | Required vs skippable for `people` and optional adult photo | People required; adult photo skippable | Open | Designer confirms drop-off risk on family signup. |
-| 3 | Onboarding chrome | M9 shell with focused canvas; rail visible | Open | Screenshots: shell vs full-screen mock. |
-| 4 | Progress UI | Step X of Y plus percent; FS motion only | Open | Screenshot plus reduced-motion capture. |
-| 5 | `campus_ready` moment | Set completing step `home-lesson` | Open | State diagram in PR; test log showing flag flip. |
-| 6 | `profile_done` moment | All required gates (and kid G-intake if child added) | Open | Profile page screenshot; API fixture. |
-| 7 | First goal copy and control | Single aim line feeding `/learn/goals` | Open | Screenshot of step; empty-state Home after. |
-| 8 | Starter lesson CTA on Home | grok-bot next step | Open | Home at 390 after flow. |
-| 9 | Member rail during flow | 240px Learn, Library, You unchanged | Locked | `m9-shell.ts` and Ben 9:34 PM ET Oct 14, 2026; no seal change needed unless Designer disagrees. |
-| 10 | Kid intake UI | Parent-facing; no photo; G-intake stub label | Open | Screenshot; confirm no public URL fields. |
-| 11 | Analytics | `learning_events` only | Open | Sample rows from test DB; no vendor script tags. |
-| 12 | Typography and color | FS tokens, UI blue `#1E4E8C`, cream bar | Open | Match M9 sealed packet; side-by-side with shell. |
+| 1 | Step list order and ids | Table in **Proposed step list** | Sealed | Ids in the seal table at the top of this file. |
+| 2 | Required vs skippable for `people` and optional adult photo | People required; adult photo skippable | Sealed | Leaders must add a person. Invitees may skip people. Adult photo stays skippable. |
+| 3 | Onboarding chrome | M9 shell with focused canvas; rail visible | Sealed | M9 shell. 240px rail stays visible. |
+| 4 | Progress UI | Step X of Y plus percent; FS motion only | Sealed | Step X of Y and percent. 240ms and 300ms caps. Reduced motion respected. |
+| 5 | `campus_ready` moment | Set completing step `home-lesson` | Sealed | Flag flips at `home-lesson`. |
+| 6 | `profile_done` moment | All required gates (and kid G-intake if child added) | Sealed | Flag flips when the gates are done. |
+| 7 | First goal copy and control | Single aim line feeding `/learn/goals` | Sealed | One aim line. Writes the gap-loop `outcomes` store. |
+| 8 | Starter lesson CTA on Home | grok-bot next step | Sealed | Home CTA is `/c/grok-bot` after `home-lesson`. |
+| 9 | Member rail during flow | 240px Learn, Library, You unchanged | Sealed | `m9-shell.ts` and Ben 9:34 PM ET Oct 14, 2026. |
+| 10 | Kid intake UI | Parent-facing; no photo; G-intake stub label | Sealed | Form name Kid profile. Href `/onboarding/kid-profile`. No photo. No public URL. Gate id `G-intake`. |
+| 11 | Analytics | `learning_events` only | Sealed | Kind `onboarding_step`. Object type `onboarding_flow`. No vendor. |
+| 12 | Typography and color | FS tokens, UI blue `#1E4E8C`, cream bar | Sealed | One filled `#1E4E8C` button per step. Rail stays unfilled. |
 
 ---
 
-## Open design choices (evidence for Ben)
+## Design choices closed by the seal
 
-Do not guess. Each row needs a Ben or Designer decision before the seal closes.
+CDM closed B1 through B10 on 2026-10-14, delegated by Ben. The seal table at the top of this file wins.
 
 | # | Question | Evidence | Proposed default (not sealed) |
 | --- | --- | --- | --- |
@@ -163,4 +176,4 @@ Do not guess. Each row needs a Ben or Designer decision before the seal closes.
 | B9 | First goal data model | M9 route table merges `/intent` to onboarding goal step; Gap Loop M1 owns goals | Reuse gap-loop outcome shape where possible; do not fork a second aim store without Ben. |
 | B10 | Hard-gate Learn behind profile? | Packet Q8: learner can use Field School before profile done | Do not hard-gate starter lesson; nudge only. |
 
-**Designer seal:** not given. **MERGE GO** for the implementation stream is separate and is not part of this spec pull request.
+**Designer seal:** given 2026-10-14 by CDM, delegated by Ben. The UI stream may merge when its tests pass. This file does not deploy.
