@@ -21,7 +21,7 @@ Launch stays CLOSED 0/8.
 ## Locks
 
 AUTH_URL is `https://portal.fieldschool.ai`. `university.benjohnson.ai` 301s to `https://portal.fieldschool.ai`.
-Offers are Do It Yourself, Coaching (three tiers), and Consulting; the Individual plan stays unpublished until billing runs clean 30 days. New offers need Ben.
+Offers are Do It Yourself, Coaching (three tiers), and Consulting. The Individual plan exists and stays hidden. No public price. No live card. No public flip. New offers need Ben.
 Just (`27pn9xs0zk8a73g`) locked. Family LIVE `bc-4765f2f0` untouched. Dest hash untouched.
 CNC vault `2.24.64.248` off limits. Deploy to `2.24.70.248` only.
 

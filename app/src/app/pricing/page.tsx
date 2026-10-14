@@ -86,7 +86,7 @@ export default function PricingPage() {
           </article>
         ))}
       </div>
-      {hidden}
+      <p className="sr-only" data-individual-slot={hidden ? "held" : "empty"} />
 
       <article className="mt-8 rounded-2xl border border-border bg-card px-5 py-6">
         <h2 className="font-display text-2xl tracking-tight">Consulting</h2>

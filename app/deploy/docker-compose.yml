@@ -37,6 +37,7 @@ services:
       PORT: "3000"
       HOSTNAME: 0.0.0.0
       MEMBER_STORE_PATH: /app/data/campus-store.json
+      INDIVIDUAL_PLAN_ENABLED: "${INDIVIDUAL_PLAN_ENABLED:-false}"
       DATABASE_URL: postgres://campus:${CAMPUS_POSTGRES_PASSWORD}@campus-db:5432/campus
       COMPOSER_UPLOAD_ROOT: /opt/field-school/uploads
     expose:

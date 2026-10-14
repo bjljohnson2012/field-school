@@ -8,6 +8,8 @@ import { assertEvidence, type Citation } from "./citations.ts";
 import { GapAccessError, GapFieldsError } from "./errors.ts";
 import { lessonPaths } from "./inputs.ts";
 import { transition, type LoopEventName, type LoopState } from "./machine.ts";
+import { individualPlanEnabled } from "@/lib/individual/config";
+import { assertPersonOutcomeCap } from "@/lib/individual/ledger";
 import { canReadOutcome, outcomeWrite, parseOutcomeScope, writableScopes, type GapActor, type OutcomeScope } from "./rules.ts";
 import { outcomeSignals } from "./signals.ts";
 import type { StepCommit, StepStore, StoredEvent } from "./step.ts";
@@ -316,6 +318,7 @@ export async function createOutcome(
   const ownerKind: OutcomeScope = parseOutcomeScope(body.ownerKind || "person");
   const gate = outcomeWrite(actor, ownerKind, staff);
   if (!gate.ok) throw new GapAccessError(403, gate.error);
+  await assertPersonOutcomeCap({ enabled: individualPlanEnabled(), orgId: actor.orgId, ownerKind });
   const statement = (body.statement || "").replace(/\s+/g, " ").trim();
   if (statement.length < 3) throw new GapFieldsError("statement_required");
   const title = (body.title || statement).replace(/\s+/g, " ").trim().slice(0, 140);

@@ -41,6 +41,7 @@ import {
 } from "./store.ts";
 import { parseOutcomeScope } from "./rules.ts";
 import { getSql } from "@/lib/db/client";
+import { assertPersonResearchCap } from "@/lib/individual/ledger";
 
 type Bundle = NonNullable<Awaited<ReturnType<typeof loadBundle>>>;
 
@@ -357,6 +358,8 @@ async function researchAct(outcomeId: string): Promise<StepAction> {
       ? await childNames(scope.orgId, scope.childMembershipId)
       : { name: "", identifiers: [] as string[] };
   const identifiers = scope.ownerKind === "child" ? [names.name, ...names.identifiers].filter(Boolean) : [];
+  const researchCap = await assertPersonResearchCap({ ownerKind: scope.ownerKind, orgId: scope.orgId });
+  if (!researchCap.ok) return { event: "research_failed", detail: { reason: researchCap.error } };
   const spent = await researchSpendMicros(taskId);
   if (cell(task, "status") === "approved") await setTaskStatus(taskId, "running", null);
   const result = await runApprovedSearch({

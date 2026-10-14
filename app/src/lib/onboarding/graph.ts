@@ -3,6 +3,7 @@
  * Postgres is the resume store. This module is the pure transition table.
  */
 
+import { individualPlanEnabled } from "../individual/enabled.ts";
 import { PROFILE_COPY } from "../profile/model.ts";
 
 export const STEP_IDS = [
@@ -18,7 +19,7 @@ export const STEP_IDS = [
 ] as const;
 
 export type StepId = (typeof STEP_IDS)[number];
-export type RoomChoice = "family" | "team";
+export type RoomChoice = "family" | "team" | "individual";
 export type Entry = "signup" | "invite";
 
 /** Public default. The Individual branch stays off. */
@@ -210,6 +211,7 @@ export function brainSlug(memberId: string) {
 /** A homeschool kind stays homeschool. Room choice does not retire it. */
 export function nextOrgKind(currentKind: string, room: RoomChoice) {
   if (currentKind.trim().toLowerCase() === "homeschool") return currentKind;
+  if (room === "individual") return currentKind;
   return room;
 }
 
@@ -228,6 +230,7 @@ export function stepApplies(id: StepId, ctx: BranchContext) {
   }
   if (ctx.entry === "invite" && id === "brain-name" && ctx.brainNamed) return false;
   if (id === "homeschool-mode") return ctx.room === "family";
+  if (id === "people" && ctx.room === "individual") return false;
   if (id === "kid-intake") return ctx.room === "family" && ctx.childAdded;
   return true;
 }
@@ -319,7 +322,14 @@ function cleanName(value: string, max = 80) {
   return value.replace(/\s+/g, " ").trim().slice(0, max);
 }
 
-export function advance(flow: FlowSnapshot, action: FlowAction, at = new Date().toISOString()): FlowResult {
+export type AdvanceOptions = { individualEnabled?: boolean };
+
+export function advance(
+  flow: FlowSnapshot,
+  action: FlowAction,
+  at = new Date().toISOString(),
+  options?: AdvanceOptions,
+): FlowResult {
   if (flow.campusReady && action.type === "home-lesson") return { ok: true, flow };
   if (flow.entry === "invite" && action.type === "room") return fail("invite_skips_room");
   if (flow.entry === "invite" && action.type === "org-name") return fail("invite_skips_org");
@@ -334,8 +344,10 @@ export function advance(flow: FlowSnapshot, action: FlowAction, at = new Date().
 
   if (action.type === "room") {
     if (flow.entry === "invite") return fail("invite_skips_room");
-    if (action.room === "individual" || !INDIVIDUAL_PLAN_ENABLED && action.room !== "family" && action.room !== "team") {
-      return fail("individual_off");
+    const enabled = options?.individualEnabled ?? individualPlanEnabled();
+    if (action.room === "individual") {
+      if (!enabled) return fail("individual_off");
+      return { ok: true, flow: move({ ...flow, room: "individual" }, at) };
     }
     if (action.room !== "family" && action.room !== "team") return fail("individual_off");
     return { ok: true, flow: move({ ...flow, room: action.room }, at) };
@@ -362,6 +374,7 @@ export function advance(flow: FlowSnapshot, action: FlowAction, at = new Date().
     }
     const room = flow.room ?? (flow.entry === "invite" ? "team" : null);
     if (!room) return fail("room_required");
+    if (room === "individual") return fail("individual_off");
     const people = action.people ?? [];
     if (!people.length) return fail("people_required");
     const cleaned: PersonDraft[] = [];

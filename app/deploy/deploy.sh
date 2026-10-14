@@ -63,6 +63,9 @@ if ! grep -q '^CAMPUS_POSTGRES_PASSWORD=' "\$ENV_FILE"; then
   echo "CAMPUS_POSTGRES_PASSWORD=\$(openssl rand -hex 18)" >> "\$ENV_FILE"
   chmod 600 "\$ENV_FILE"
 fi
+if ! grep -q '^INDIVIDUAL_PLAN_ENABLED=' "\$ENV_FILE"; then
+  echo 'INDIVIDUAL_PLAN_ENABLED=false' >> "\$ENV_FILE"
+fi
 cd "$REMOTE_DIR/deploy"
 docker compose --env-file "\$ENV_FILE" up -d --build
 echo "==> waiting for campus-db"
