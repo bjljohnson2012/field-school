@@ -1,0 +1,949 @@
+{
+  "database": "fs_payload_spike",
+  "schema": "payload",
+  "tablePrefix": "m13_",
+  "operators": 1,
+  "operatorsUnchangedByProfiles": true,
+  "crud": {
+    "course": "grok-bot",
+    "lessonEdited": true,
+    "quizKind": true,
+    "practiceDeleted": true,
+    "edgeCopiedOwner": true,
+    "edgeIgnoredCallerScope": true,
+    "crossRoomRejected": true,
+    "nodeCitation": true
+  },
+  "hooks": {
+    "traitsMatch": true,
+    "expected": [
+      {
+        "collection": "families",
+        "field": "name",
+        "value": "Spike Household"
+      },
+      {
+        "collection": "profiles",
+        "field": "note",
+        "value": "The learner can explain a knowledge brain in one sentence.",
+        "relatesTo": "families"
+      },
+      {
+        "collection": "milestones",
+        "field": "next",
+        "value": "The learner can explain a knowledge brain in one sentence.",
+        "relatesTo": "profiles"
+      }
+    ],
+    "storedTraits": [
+      {
+        "field": "name",
+        "value": "Spike Household",
+        "collection": "families"
+      },
+      {
+        "field": "note",
+        "value": "The learner can explain a knowledge brain in one sentence.",
+        "relatesTo": "families",
+        "collection": "profiles"
+      },
+      {
+        "field": "next",
+        "value": "The learner can explain a knowledge brain in one sentence.",
+        "relatesTo": "profiles",
+        "collection": "milestones"
+      }
+    ],
+    "htmlStripped": true,
+    "trackedChildDryRun": "tracked-child",
+    "function": "traitsFromDrop",
+    "keyOrderOnly": true
+  },
+  "naming": {
+    "labels": [
+      {
+        "slug": "operators",
+        "singular": "Operator",
+        "plural": "Operators"
+      },
+      {
+        "slug": "organizations",
+        "singular": "Organization",
+        "plural": "Organizations"
+      },
+      {
+        "slug": "courses",
+        "singular": "Course",
+        "plural": "Courses"
+      },
+      {
+        "slug": "modules",
+        "singular": "Module",
+        "plural": "Modules"
+      },
+      {
+        "slug": "lessons",
+        "singular": "Lesson",
+        "plural": "Lessons"
+      },
+      {
+        "slug": "practice",
+        "singular": "Practice",
+        "plural": "Practice"
+      },
+      {
+        "slug": "course-versions",
+        "singular": "Course version",
+        "plural": "Course versions"
+      },
+      {
+        "slug": "lesson-versions",
+        "singular": "Lesson version",
+        "plural": "Lesson versions"
+      },
+      {
+        "slug": "growth-units",
+        "singular": "Growth unit",
+        "plural": "Growth units"
+      },
+      {
+        "slug": "knowledge-nodes",
+        "singular": "Knowledge node",
+        "plural": "Knowledge nodes"
+      },
+      {
+        "slug": "knowledge-edges",
+        "singular": "Knowledge edge",
+        "plural": "Knowledge edges"
+      },
+      {
+        "slug": "families",
+        "singular": "Family",
+        "plural": "Families"
+      },
+      {
+        "slug": "profiles",
+        "singular": "Profile",
+        "plural": "Profiles"
+      },
+      {
+        "slug": "milestones",
+        "singular": "Milestone",
+        "plural": "Milestones"
+      },
+      {
+        "slug": "media-files",
+        "singular": "Media",
+        "plural": "Media"
+      },
+      {
+        "slug": "trait-dry-runs",
+        "singular": "Trait dry run",
+        "plural": "Trait dry runs"
+      },
+      {
+        "slug": "payload-kv",
+        "singular": "Payload Kv",
+        "plural": "Payload Kvs"
+      },
+      {
+        "slug": "payload-locked-documents",
+        "singular": "Payload Locked Document",
+        "plural": "Payload Locked Documents"
+      },
+      {
+        "slug": "payload-preferences",
+        "singular": "Payload Preference",
+        "plural": "Payload Preferences"
+      },
+      {
+        "slug": "payload-migrations",
+        "singular": "Payload Migration",
+        "plural": "Payload Migrations"
+      }
+    ],
+    "studentLabelPresent": false,
+    "recordStudentSlug": "Student Profiles",
+    "evolutionLabels": [
+      {
+        "slug": "families",
+        "label": "Families",
+        "hint": "The home this person belongs to."
+      },
+      {
+        "slug": "profiles",
+        "label": "Profiles",
+        "hint": "Traits of one person."
+      },
+      {
+        "slug": "milestones",
+        "label": "Milestones",
+        "hint": "The next thing they can do."
+      },
+      {
+        "slug": "media",
+        "label": "Media",
+        "hint": "Files, audio, and documents."
+      }
+    ]
+  },
+  "mapping": {
+    "content": [
+      {
+        "slug": "courses",
+        "fields": [
+          {
+            "name": "org_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "slug",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "_status",
+            "type": "select",
+            "required": true
+          },
+          {
+            "name": "example",
+            "type": "checkbox"
+          }
+        ]
+      },
+      {
+        "slug": "modules",
+        "fields": [
+          {
+            "name": "org_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "course_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "slug",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "order",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "_status",
+            "type": "select",
+            "required": true
+          }
+        ]
+      },
+      {
+        "slug": "lessons",
+        "fields": [
+          {
+            "name": "org_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "course_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "module_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "slug",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "order",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "_status",
+            "type": "select",
+            "required": true
+          },
+          {
+            "name": "blocks",
+            "type": "json",
+            "required": true
+          },
+          {
+            "name": "outcome_ids",
+            "type": "json",
+            "required": true
+          }
+        ]
+      },
+      {
+        "slug": "practice",
+        "fields": [
+          {
+            "name": "org_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "lesson_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "kind",
+            "type": "select",
+            "required": true
+          },
+          {
+            "name": "order",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "block_index",
+            "type": "number",
+            "required": true
+          }
+        ]
+      },
+      {
+        "slug": "course_versions",
+        "fields": [
+          {
+            "name": "org_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "parent_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "version",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "snapshot",
+            "type": "json",
+            "required": true
+          }
+        ]
+      },
+      {
+        "slug": "lesson_versions",
+        "fields": [
+          {
+            "name": "org_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "parent_id",
+            "type": "relationship",
+            "required": true
+          },
+          {
+            "name": "version",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "snapshot",
+            "type": "json",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "gap": [
+      {
+        "slug": "knowledge_nodes",
+        "fields": [
+          "org_id",
+          "growth_unit_id",
+          "owner_kind",
+          "owner_membership_id",
+          "child_membership_id",
+          "requirement_id",
+          "kind",
+          "label",
+          "body",
+          "sha256",
+          "filename",
+          "ref_table",
+          "ref_id",
+          "evidence",
+          "status"
+        ]
+      },
+      {
+        "slug": "knowledge_edges",
+        "fields": [
+          "org_id",
+          "growth_unit_id",
+          "owner_kind",
+          "owner_membership_id",
+          "child_membership_id",
+          "from_node",
+          "to_node",
+          "rel",
+          "because",
+          "evidence",
+          "weight",
+          "status",
+          "origin"
+        ]
+      }
+    ]
+  },
+  "edgeFieldNames": [
+    "org",
+    "growthUnit",
+    "ownerKind",
+    "ownerMembershipId",
+    "childMembershipId",
+    "fromNode",
+    "toNode",
+    "rel",
+    "because",
+    "evidence",
+    "weight",
+    "status",
+    "origin",
+    "updatedAt",
+    "createdAt"
+  ],
+  "scopeColumn": false,
+  "drizzleGrokBotRows": 1,
+  "tables": [
+    {
+      "table_schema": "payload",
+      "table_name": "m13_course_versions"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_courses"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_families"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_growth_units"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_knowledge_edges"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_knowledge_nodes"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_lesson_versions"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_lessons"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_media_files"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_milestones"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_modules"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_operators"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_operators_sessions"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_organizations"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_practice"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_profiles"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "m13_trait_dry_runs"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "payload_kv"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "payload_locked_documents"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "payload_locked_documents_rels"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "payload_migrations"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "payload_preferences"
+    },
+    {
+      "table_schema": "payload",
+      "table_name": "payload_preferences_rels"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "ad_hoc_quizzes"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "answer_sets"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "answers"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "assessment_placements"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "assessment_runs"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "assignments"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "audit_logs"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "auth_session_revocations"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "brain_artifacts"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "brain_notes"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "brain_sources"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "coaching_knowledge_units"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "coaching_links"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "coaching_notes"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "coaching_plans"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "coaching_profiles"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "coaching_records"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "coaching_sources"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "course_versions"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "courses"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "credit_ledger"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "credits"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "curriculum_path_items"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "curriculum_paths"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "customer_api_keys"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "drill_attempts"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "enrollments"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "gap_findings"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "group_memberships"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "groups"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "growth_units"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "instrument_items"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "instrument_runs"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "instruments"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "invites"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "kid_profiles"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "knowledge_brains"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "knowledge_edges"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "knowledge_nodes"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "knowledge_repos"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "knowledge_research_spend"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "knowledge_units"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "learning_events"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "learning_intents"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "legacy_ids"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "lesson_versions"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "lessons"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "living_brains"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "living_profiles"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "loop_events"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "loop_runs"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "m8_offer_tiers"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "media"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "member_credentials"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "member_profile_revisions"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "member_profiles"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "members"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "membership_capabilities"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "memberships"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "modules"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "next_portion_items"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "next_portions"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "onboarding_flows"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "one_on_one_preps"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "organizations"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "outcome_requirements"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "outcomes"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "performance_snapshots"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "plate_renders"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "portal_form_submissions"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "practice"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "products"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "profile_artifacts"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "profile_entries"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "profile_project_links"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "profile_projects"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "profile_skill_links"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "profile_skills"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "progress_attempts"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "progress_ledger_units"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "progress_ledgers"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "publish_requests"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "questions"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "quiz_items"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "quiz_schedules"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "recommendations"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "research_tasks"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "retake_requests"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "review_answers"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "reviews"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "schema_migrations"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "skill_items"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "skill_observations"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "skill_states"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "skills"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "source_mappings"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "sources"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "tool_results"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "usage_events"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "user_profiles"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "wards"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "work_items"
+    }
+  ]
+}

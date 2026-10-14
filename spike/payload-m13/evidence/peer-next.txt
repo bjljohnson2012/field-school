@@ -1,0 +1,23 @@
+
+added 24 packages in 6s
+npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error
+npm error While resolving: m13-peer-check@undefined
+npm error Found: next@16.3.2
+npm error node_modules/next
+npm error   next@"16.3.2" from the root project
+npm error
+npm error Could not resolve dependency:
+npm error peer next@">=15.2.9 <15.3.0 || >=15.3.9 <15.4.0 || >=15.4.11 <15.5.0 || >=16.3.3 <17.0.0" from @payloadcms/next@3.90.2
+npm error node_modules/@payloadcms/next
+npm error   @payloadcms/next@"3.90.2" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error /home/ubuntu/.npm/_logs/2026-10-14T14_38_51_026Z-eresolve-report.txt
+npm error A complete log of this run can be found in: /home/ubuntu/.npm/_logs/2026-10-14T14_38_51_026Z-debug-0.log

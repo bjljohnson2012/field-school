@@ -1,0 +1,33 @@
+{
+  "mode": "etl",
+  "source": "fs_payload_spike public.courses",
+  "targetDatabase": "postgresql:///fs_payload_b?host=/var/run/postgresql",
+  "sourceCourse": {
+    "slug": "grok-bot",
+    "title": "Grok Bot",
+    "_status": "draft",
+    "org_slug": "household"
+  },
+  "sourceNodes": [
+    {
+      "label": "Briefing concept",
+      "kind": "concept",
+      "ref_table": "lessons",
+      "status": "active"
+    },
+    {
+      "label": "Briefing lesson",
+      "kind": "lesson",
+      "ref_table": "lessons",
+      "status": "active"
+    },
+    {
+      "label": "Team pipeline",
+      "kind": "concept",
+      "ref_table": null,
+      "status": "active"
+    }
+  ],
+  "copiedSlug": "grok-bot",
+  "targetCount": 1
+}

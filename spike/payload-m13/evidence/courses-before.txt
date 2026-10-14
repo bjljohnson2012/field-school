@@ -1,0 +1,28 @@
+                                     Table "public.courses"
+          Column          |           Type           | Collation | Nullable |      Default      
+--------------------------+--------------------------+-----------+----------+-------------------
+ id                       | uuid                     |           | not null | gen_random_uuid()
+ org_id                   | uuid                     |           | not null | 
+ slug                     | text                     |           | not null | 
+ title                    | text                     |           | not null | 
+ kind                     | text                     |           | not null | 'text'::text
+ status                   | text                     |           | not null | 'draft'::text
+ created_by_membership_id | uuid                     |           |          | 
+ created_at               | timestamp with time zone |           | not null | now()
+ updated_at               | timestamp with time zone |           | not null | now()
+ example                  | boolean                  |           | not null | false
+ _status                  | text                     |           | not null | 'draft'::text
+ blocks                   | jsonb                    |           | not null | '[]'::jsonb
+ outcome_ids              | jsonb                    |           | not null | '[]'::jsonb
+Indexes:
+    "courses_pkey" PRIMARY KEY, btree (id)
+    "courses_org_id_slug_key" UNIQUE CONSTRAINT, btree (org_id, slug)
+    "courses_org_status_idx" btree (org_id, status)
+Foreign-key constraints:
+    "courses_created_by_membership_id_fkey" FOREIGN KEY (created_by_membership_id) REFERENCES memberships(id)
+    "courses_org_id_fkey" FOREIGN KEY (org_id) REFERENCES organizations(id)
+Referenced by:
+    TABLE "course_versions" CONSTRAINT "course_versions_parent_id_fkey" FOREIGN KEY (parent_id) REFERENCES courses(id)
+    TABLE "lessons" CONSTRAINT "lessons_course_id_fkey" FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+    TABLE "modules" CONSTRAINT "modules_course_id_fkey" FOREIGN KEY (course_id) REFERENCES courses(id)
+

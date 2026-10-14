@@ -1,0 +1,4 @@
+status 200
+cookie-name payload-token
+httpOnly true
+campus-cookie next-auth default authjs.session-token (app/src/lib/auth/config.ts sets no cookies block)
