@@ -1,39 +1,43 @@
 import React from "react";
 import {Audio} from "@remotion/media";
 import type {Caption} from "@remotion/captions";
-import {Sequence, staticFile, useVideoConfig} from "remotion";
-import type {Episode, LessonCue} from "../../schema/episode";
+import {interpolate, Sequence, staticFile, useVideoConfig} from "remotion";
+import type {LessonProps} from "../../schema/lessonProps";
+import {OUTRO_FRAMES, SCENE_START} from "../../lesson/timeline";
 
-const OPEN = 0.12;
-const DUCK = OPEN * 10 ** (-6 / 20);
-const SFX = 10 ** (-24 / 20);
-const ATTACK_SEC = 0.15;
-const RELEASE_SEC = 0.4;
+const WHOOSH = "lesson60/sfx-whoosh.wav";
+const DING = "lesson60/sfx-ding.wav";
+const SWITCH = "lesson60/sfx-switch.wav";
 
-function isOpen(mode: string): boolean {
-  return mode === "sting" || mode === "slate" || mode === "next";
+const clamp = {
+  extrapolateLeft: "clamp" as const,
+  extrapolateRight: "clamp" as const,
+};
+
+function endFade(frame: number, duration: number, fadeFrames: number): number {
+  return interpolate(frame, [duration - fadeFrames, duration - 1], [1, 0], clamp);
 }
 
-/** 0.12 on sting, slate, and outro. Another −6 dB under speech, with a 150 ms attack and 400 ms release. */
-function bedVolume(frame: number, fps: number, episode: Episode): number {
-  const sec = frame / fps;
-  const index = episode.chapters.findIndex((item) => sec >= item.inSec && sec < item.outSec);
-  const cursor = index === -1 ? episode.chapters.length - 1 : index;
-  const chapter = episode.chapters[cursor];
-  const previous = cursor > 0 ? episode.chapters[cursor - 1] : undefined;
-  const into = sec - chapter.inSec;
-  if (isOpen(chapter.mode)) {
-    if (previous && !isOpen(previous.mode)) {
-      const t = Math.min(1, Math.max(0, into / RELEASE_SEC));
-      return DUCK + (OPEN - DUCK) * t;
+function speechGain(frame: number, fps: number, captions: Caption[], open: number, duck: number): number {
+  const ms = (frame / fps) * 1000;
+  let gain = open;
+  for (const caption of captions) {
+    const attackStart = caption.startMs - 150;
+    const releaseEnd = caption.endMs + 400;
+    if (ms < attackStart || ms > releaseEnd) {
+      continue;
     }
-    return OPEN;
+    if (ms < caption.startMs) {
+      const t = (ms - attackStart) / 150;
+      gain = Math.min(gain, open + (duck - open) * t);
+    } else if (ms > caption.endMs) {
+      const t = (ms - caption.endMs) / 400;
+      gain = Math.min(gain, duck + (open - duck) * t);
+    } else {
+      gain = Math.min(gain, duck);
+    }
   }
-  if (previous && isOpen(previous.mode)) {
-    const t = Math.min(1, Math.max(0, into / ATTACK_SEC));
-    return OPEN + (DUCK - OPEN) * t;
-  }
-  return DUCK;
+  return gain;
 }
 
 function underSpeech(captions: Caption[], startMs: number, durMs: number): boolean {
@@ -41,60 +45,74 @@ function underSpeech(captions: Caption[], startMs: number, durMs: number): boole
   return captions.some((caption) => caption.endMs > startMs && caption.startMs < end);
 }
 
-/** Whoosh on card takeovers and a tick on pill entries, both at −24 dB, and silent while a word is active. */
+/** Suno bed under speech, Suno sting on the intro and outro, Remotion SFX on the cuts. */
 export const LessonAudio: React.FC<{
-  episode: Episode;
+  props: LessonProps;
   captions: Caption[];
-  cues: LessonCue[];
-  stingMs: number[];
-  whooshMs: number[];
-}> = ({episode, captions, cues, stingMs, whooshMs}) => {
+  pillMs: number[];
+}> = ({props, captions, pillMs}) => {
   const {fps, durationInFrames} = useVideoConfig();
+  const transitions = [SCENE_START.cam, SCENE_START.teach, SCENE_START.show, SCENE_START.do, SCENE_START.outro];
+  const tail = endFade(durationInFrames - 1, durationInFrames, props.fadeOutFrames);
+
   return (
     <>
       <Audio
-        src={staticFile("lesson60/bed.mp3")}
-        volume={(frame) => bedVolume(frame, fps, episode)}
-        loop
+        src={staticFile(props.musicSting)}
         premountFor={fps}
+        trimAfter={Math.round(3.2 * fps)}
+        volume={(frame) => {
+          const inn = interpolate(frame, [0, 8], [0, 0.46], clamp);
+          const out = interpolate(frame, [50, 90], [1, 0], clamp);
+          return inn * out * endFade(frame, durationInFrames, props.fadeOutFrames);
+        }}
       />
-      {stingMs.map((ms) => (
-        <Sequence
-          key={`sting-${ms}`}
-          from={Math.max(0, Math.round((ms / 1000) * fps))}
-          durationInFrames={Math.round(1.1 * fps)}
-        >
-          <Audio src={staticFile("lesson60/sting.wav")} volume={0.42} premountFor={fps} />
-        </Sequence>
-      ))}
-      {whooshMs.map((ms) => (
-        <Sequence
-          key={`whoosh-${ms}`}
-          from={Math.max(0, Math.round((ms / 1000) * fps))}
-          durationInFrames={Math.round(0.6 * fps)}
-        >
-          <Audio
-            src={staticFile("lesson60/whoosh.wav")}
-            volume={underSpeech(captions, ms, 600) ? 0 : SFX}
-            premountFor={fps}
-          />
-        </Sequence>
-      ))}
-      {cues.map((cue) => {
-        if (!cue.vox) {
-          return null;
-        }
-        const from = Math.max(0, Math.round((cue.fromMs / 1000) * fps));
-        if (from >= durationInFrames) {
-          return null;
-        }
+      <Audio
+        src={staticFile(props.musicBed)}
+        premountFor={fps}
+        volume={(frame) => {
+          const inn = interpolate(frame, [SCENE_START.cam - 8, SCENE_START.cam + 20], [0, 1], clamp);
+          const out = interpolate(frame, [SCENE_START.outro - 12, SCENE_START.outro + 18], [1, 0], clamp);
+          const duck = speechGain(frame, fps, captions, props.bedOpen, props.bedDuck);
+          return inn * out * duck * endFade(frame, durationInFrames, props.fadeOutFrames);
+        }}
+      />
+      <Sequence from={SCENE_START.outro} durationInFrames={OUTRO_FRAMES} premountFor={fps}>
+        <Audio
+          src={staticFile(props.musicSting)}
+          premountFor={fps}
+          volume={(frame) => {
+            const inn = interpolate(frame, [0, 12], [0, 0.42], clamp);
+            const out = interpolate(frame, [OUTRO_FRAMES - props.fadeOutFrames, OUTRO_FRAMES - 1], [1, 0], clamp);
+            return inn * out;
+          }}
+        />
+      </Sequence>
+      <Audio src={staticFile("lesson60/vo.wav")} premountFor={fps} volume={1} />
+      {transitions.map((start) => {
+        const ms = (start / fps) * 1000;
+        const quiet = underSpeech(captions, ms, 500);
         return (
-          <Sequence key={cue.id} from={from} durationInFrames={Math.round(0.45 * fps)}>
-            <Audio
-              src={staticFile("lesson60/switch.wav")}
-              volume={underSpeech(captions, cue.fromMs, 450) ? 0 : SFX}
-              premountFor={fps}
-            />
+          <Sequence key={`whoosh-${start}`} from={start} durationInFrames={24} premountFor={fps}>
+            <Audio src={staticFile(WHOOSH)} premountFor={fps} volume={quiet ? 0.02 : 0.12 * (start > durationInFrames - props.fadeOutFrames ? tail : 1)} />
+          </Sequence>
+        );
+      })}
+      {transitions.map((start) => {
+        const ms = (start / fps) * 1000;
+        const quiet = underSpeech(captions, ms, 450);
+        return (
+          <Sequence key={`ding-${start}`} from={start} durationInFrames={30} premountFor={fps}>
+            <Audio src={staticFile(DING)} premountFor={fps} volume={quiet ? 0.015 : 0.1} />
+          </Sequence>
+        );
+      })}
+      {pillMs.map((ms) => {
+        const start = Math.round((ms / 1000) * fps);
+        const quiet = underSpeech(captions, ms, 280);
+        return (
+          <Sequence key={`switch-${ms}`} from={start} durationInFrames={18} premountFor={fps}>
+            <Audio src={staticFile(SWITCH)} premountFor={fps} volume={quiet ? 0.012 : 0.07} />
           </Sequence>
         );
       })}

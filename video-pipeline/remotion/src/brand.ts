@@ -2,7 +2,27 @@ import {continueRender, delayRender} from "remotion";
 import {loadFont as loadFraunces} from "@remotion/google-fonts/Fraunces";
 import {loadFont as loadPlex} from "@remotion/google-fonts/IBMPlexSans";
 import {loadFont as loadSerif} from "@remotion/google-fonts/SourceSerif4";
-import {bg, charcoal, cream, gold, ink, olive, paper, stone} from "./brand/tokens";
+import {
+  bg,
+  captionActive,
+  captionBg,
+  captionFg,
+  card,
+  charcoal,
+  cream,
+  gold,
+  indigo,
+  indigoDeep,
+  ink,
+  muted,
+  navy,
+  olive,
+  orange,
+  paper,
+  primary,
+  primaryFg,
+  stone,
+} from "./brand/tokens";
 
 const fraunces = loadFraunces("normal", {
   weights: ["600", "700"],
@@ -28,5 +48,25 @@ export const displayFace = fraunces.fontFamily;
 export const sansFace = plex.fontFamily;
 export const serifFace = serif.fontFamily;
 
-export {bg, charcoal, cream, gold, ink, olive, paper, stone};
+export {
+  bg,
+  captionActive,
+  captionBg,
+  captionFg,
+  card,
+  charcoal,
+  cream,
+  gold,
+  indigo,
+  indigoDeep,
+  ink,
+  muted,
+  navy,
+  olive,
+  orange,
+  paper,
+  primary,
+  primaryFg,
+  stone,
+};
 export const INTRO_SEC = 0;

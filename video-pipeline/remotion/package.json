@@ -5,15 +5,20 @@
   "description": "FieldSchoolLesson edit-stack compositions. SceneMotion: spring | interpolate | glide | takeover.",
   "license": "UNLICENSED",
   "dependencies": {
-    "@remotion/captions": "^4.0.526",
+    "@remotion/captions": "4.0.526",
     "@remotion/cli": "4.0.526",
+    "@remotion/effects": "4.0.526",
     "@remotion/google-fonts": "4.0.526",
-    "@remotion/layout-utils": "^4.0.526",
-    "@remotion/media": "^4.0.526",
-    "@remotion/rounded-text-box": "^4.0.526",
+    "@remotion/layout-utils": "4.0.526",
+    "@remotion/media": "4.0.526",
+    "@remotion/motion-blur": "4.0.526",
+    "@remotion/rounded-text-box": "4.0.526",
+    "@remotion/shapes": "4.0.526",
+    "@remotion/transitions": "4.0.526",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "remotion": "4.0.526"
+    "remotion": "4.0.526",
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@types/react": "19.2.7",

@@ -16,12 +16,11 @@
     "org": "Field School"
   },
   "music": {
-    "title": "Long Note Four",
-    "artist": "Kevin MacLeod (incompetech.com)",
-    "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Long%20Note%20Four.mp3",
-    "license": "Creative Commons Attribution 4.0 International (CC BY 4.0). Commercial use with attribution. Lowpassed at 140 Hz so the pad stays under the voice.",
-    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
-    "volume": 0.12
+    "title": "Upbeat Marimba",
+    "artist": "bjljohnson2012",
+    "bed": "lesson60/upbeat-marimba.mp3",
+    "sting": "lesson60/marimba-intro-v3.mp3",
+    "volume": 0.14
   },
   "silenceRuleMs": 400,
   "lufsTarget": -16,

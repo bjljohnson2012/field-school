@@ -3,7 +3,7 @@ import {createTikTokStyleCaptions, type Caption, type TikTokPage, type TikTokTok
 import {measureText} from "@remotion/layout-utils";
 import {createRoundedTextBox} from "@remotion/rounded-text-box";
 import {interpolate, useCurrentFrame, useVideoConfig} from "remotion";
-import {gold, ink, paper, sansFace} from "../../brand";
+import {captionActive, captionBg, captionFg, sansFace} from "../../brand";
 
 const clamp = {
   extrapolateLeft: "clamp" as const,
@@ -71,7 +71,7 @@ function linesOf(tokens: TikTokToken[]): TikTokToken[][] {
   return lines.filter((lineTokens) => lineTokens.length > 0);
 }
 
-/** One caption band. Ink chip, paper type, gold active word. */
+/** TikTok pages on a paper chip. Active word is navy. There is no blue fallback. */
 export const KaraokePlate: React.FC<{captions: Caption[]}> = ({captions}) => {
   const frame = useCurrentFrame();
   const {fps, width} = useVideoConfig();
@@ -131,7 +131,7 @@ export const KaraokePlate: React.FC<{captions: Caption[]}> = ({captions}) => {
         height={plate.box.boundingBox.height}
         style={{position: "absolute", left: 0, top: 0}}
       >
-        <path d={plate.box.d} fill={ink} fillOpacity={0.9} />
+        <path d={plate.box.d} fill={captionBg} />
       </svg>
       <div
         style={{
@@ -162,7 +162,7 @@ export const KaraokePlate: React.FC<{captions: Caption[]}> = ({captions}) => {
                   key={`${token.fromMs}-${index}`}
                   style={{
                     opacity: fade,
-                    color: active ? gold : paper,
+                    color: active ? captionActive : captionFg,
                     scale: active ? 1.06 : 1,
                     display: "inline-block",
                   }}

@@ -36,9 +36,8 @@ export type Episode = {
   music: {
     title: string;
     artist: string;
-    url: string;
-    license: string;
-    licenseUrl: string;
+    bed: string;
+    sting: string;
     volume: number;
   };
   silenceRuleMs: number;
