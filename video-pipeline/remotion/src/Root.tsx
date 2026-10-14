@@ -1,6 +1,11 @@
 import React from "react";
 import {Composition} from "remotion";
 import {FieldSchoolLesson, durationFrames} from "./FieldSchoolLesson";
+import {LessonFlow} from "./LessonFlow";
+import episodeJson from "./lesson/episode.json";
+import type {Episode} from "./schema/episode";
+
+const episode = episodeJson as Episode;
 
 export const Root: React.FC = () => {
   return (
@@ -56,6 +61,14 @@ export const Root: React.FC = () => {
         calculateMetadata={({props}) => ({
           durationInFrames: durationFrames(props),
         })}
+      />
+      <Composition
+        id="LessonFlow60"
+        component={LessonFlow}
+        durationInFrames={episode.durationFrames}
+        fps={episode.fps}
+        width={episode.width}
+        height={episode.height}
       />
     </>
   );

@@ -1,0 +1,379 @@
+{
+  "sourceVideoId": "4wvyy9085kbf5he",
+  "silenceRuleMs": 400,
+  "voxEnterMs": 800,
+  "sentenceBreak": {
+    "text": "yourself.",
+    "sourceSec": 63.78
+  },
+  "excerptSec": 63.78,
+  "speechSec": 41.269,
+  "kept": [
+    {
+      "in": 1.164,
+      "out": 5.007,
+      "editedIn": 0,
+      "editedOut": 3.843
+    },
+    {
+      "in": 5.567,
+      "out": 6.128,
+      "editedIn": 3.843,
+      "editedOut": 4.404
+    },
+    {
+      "in": 7.749,
+      "out": 8.209,
+      "editedIn": 4.404,
+      "editedOut": 4.864
+    },
+    {
+      "in": 8.85,
+      "out": 10.19,
+      "editedIn": 4.864,
+      "editedOut": 6.204
+    },
+    {
+      "in": 11.131,
+      "out": 12.732,
+      "editedIn": 6.204,
+      "editedOut": 7.805
+    },
+    {
+      "in": 13.213,
+      "out": 15.714,
+      "editedIn": 7.805,
+      "editedOut": 10.306
+    },
+    {
+      "in": 16.295,
+      "out": 16.895,
+      "editedIn": 10.306,
+      "editedOut": 10.906
+    },
+    {
+      "in": 17.275,
+      "out": 18.156,
+      "editedIn": 10.906,
+      "editedOut": 11.787
+    },
+    {
+      "in": 18.776,
+      "out": 19.997,
+      "editedIn": 11.787,
+      "editedOut": 13.008
+    },
+    {
+      "in": 21.498,
+      "out": 22.479,
+      "editedIn": 13.008,
+      "editedOut": 13.989
+    },
+    {
+      "in": 23.199,
+      "out": 23.74,
+      "editedIn": 13.989,
+      "editedOut": 14.53
+    },
+    {
+      "in": 24.1,
+      "out": 24.52,
+      "editedIn": 14.53,
+      "editedOut": 14.95
+    },
+    {
+      "in": 25.541,
+      "out": 26.401,
+      "editedIn": 14.95,
+      "editedOut": 15.81
+    },
+    {
+      "in": 27.462,
+      "out": 28.383,
+      "editedIn": 15.81,
+      "editedOut": 16.731
+    },
+    {
+      "in": 29.103,
+      "out": 30.044,
+      "editedIn": 16.731,
+      "editedOut": 17.672
+    },
+    {
+      "in": 30.796,
+      "out": 31.216,
+      "editedIn": 17.672,
+      "editedOut": 18.092
+    },
+    {
+      "in": 31.596,
+      "out": 33.877,
+      "editedIn": 18.092,
+      "editedOut": 20.373
+    },
+    {
+      "in": 34.557,
+      "out": 35.417,
+      "editedIn": 20.373,
+      "editedOut": 21.233
+    },
+    {
+      "in": 36.578,
+      "out": 36.898,
+      "editedIn": 21.233,
+      "editedOut": 21.553
+    },
+    {
+      "in": 38.618,
+      "out": 41.959,
+      "editedIn": 21.553,
+      "editedOut": 24.894
+    },
+    {
+      "in": 42.799,
+      "out": 45.16,
+      "editedIn": 24.894,
+      "editedOut": 27.255
+    },
+    {
+      "in": 46.02,
+      "out": 47.6,
+      "editedIn": 27.255,
+      "editedOut": 28.835
+    },
+    {
+      "in": 47.901,
+      "out": 48.561,
+      "editedIn": 28.835,
+      "editedOut": 29.495
+    },
+    {
+      "in": 49.221,
+      "out": 51.101,
+      "editedIn": 29.495,
+      "editedOut": 31.375
+    },
+    {
+      "in": 51.742,
+      "out": 53.162,
+      "editedIn": 31.375,
+      "editedOut": 32.795
+    },
+    {
+      "in": 53.782,
+      "out": 57.643,
+      "editedIn": 32.795,
+      "editedOut": 36.656
+    },
+    {
+      "in": 58.503,
+      "out": 60.604,
+      "editedIn": 36.656,
+      "editedOut": 38.757
+    },
+    {
+      "in": 61.008,
+      "out": 62.229,
+      "editedIn": 38.757,
+      "editedOut": 39.978
+    },
+    {
+      "in": 62.589,
+      "out": 63.88,
+      "editedIn": 39.978,
+      "editedOut": 41.269
+    }
+  ],
+  "removed": [
+    {
+      "in": 0.774,
+      "out": 1.174,
+      "reason": "filler",
+      "text": "Okay,"
+    },
+    {
+      "in": 0,
+      "out": 1.164,
+      "reason": "leading-silence"
+    },
+    {
+      "in": 5.007,
+      "out": 5.567,
+      "reason": "silence-400",
+      "rawGap": 0.68
+    },
+    {
+      "in": 6.128,
+      "out": 7.749,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 1.741
+    },
+    {
+      "in": 8.209,
+      "out": 8.85,
+      "reason": "silence-400",
+      "rawGap": 0.761
+    },
+    {
+      "in": 10.19,
+      "out": 11.131,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 1.061
+    },
+    {
+      "in": 12.732,
+      "out": 13.213,
+      "reason": "silence-400",
+      "rawGap": 0.601
+    },
+    {
+      "in": 15.714,
+      "out": 16.295,
+      "reason": "silence-400",
+      "rawGap": 0.701
+    },
+    {
+      "in": 16.895,
+      "out": 17.275,
+      "reason": "silence-400",
+      "rawGap": 0.5
+    },
+    {
+      "in": 18.156,
+      "out": 18.776,
+      "reason": "silence-400",
+      "rawGap": 0.74
+    },
+    {
+      "in": 19.997,
+      "out": 21.498,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 1.621
+    },
+    {
+      "in": 22.479,
+      "out": 23.199,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 0.84
+    },
+    {
+      "in": 23.74,
+      "out": 24.1,
+      "reason": "silence-400",
+      "rawGap": 0.48
+    },
+    {
+      "in": 24.52,
+      "out": 25.541,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 1.141
+    },
+    {
+      "in": 26.401,
+      "out": 27.462,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 1.181
+    },
+    {
+      "in": 28.383,
+      "out": 29.103,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 0.84
+    },
+    {
+      "in": 30.044,
+      "out": 30.796,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 0.872
+    },
+    {
+      "in": 31.216,
+      "out": 31.596,
+      "reason": "silence-400",
+      "rawGap": 0.5
+    },
+    {
+      "in": 33.877,
+      "out": 34.557,
+      "reason": "silence-400",
+      "rawGap": 0.8
+    },
+    {
+      "in": 35.417,
+      "out": 36.578,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 1.281
+    },
+    {
+      "in": 36.898,
+      "out": 38.618,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 1.84
+    },
+    {
+      "in": 41.959,
+      "out": 42.799,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 0.96
+    },
+    {
+      "in": 45.16,
+      "out": 46.02,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 0.98
+    },
+    {
+      "in": 47.6,
+      "out": 47.901,
+      "reason": "silence-400",
+      "rawGap": 0.421
+    },
+    {
+      "in": 48.561,
+      "out": 49.221,
+      "reason": "silence-400",
+      "rawGap": 0.78
+    },
+    {
+      "in": 51.101,
+      "out": 51.742,
+      "reason": "silence-400",
+      "rawGap": 0.761
+    },
+    {
+      "in": 53.162,
+      "out": 53.782,
+      "reason": "silence-400",
+      "rawGap": 0.74
+    },
+    {
+      "in": 57.643,
+      "out": 58.503,
+      "reason": "silence-800-vox-enter",
+      "rawGap": 0.98
+    },
+    {
+      "in": 60.604,
+      "out": 61.008,
+      "reason": "silence-400",
+      "rawGap": 0.524
+    },
+    {
+      "in": 62.229,
+      "out": 62.589,
+      "reason": "silence-400",
+      "rawGap": 0.48
+    },
+    {
+      "in": 63.78,
+      "out": null,
+      "reason": "excerpt-end-sentence",
+      "text": "yourself."
+    }
+  ],
+  "notes": [
+    "Pads of 50ms before and 70ms after each cut keep consonants. Yap: ASR times are candidates; do not zero the room tone.",
+    "The repeated line 'rule yourself before leading others' is an intentional restatement, not a false start.",
+    "No um/uh tokens in this window. Leading 'Okay' is the only filler cut. Breaths inside gaps >= 400ms leave with those gaps."
+  ]
+}
