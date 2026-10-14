@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     if (!json.ok) return refuse(400, "invalid_json");
     const accepted = parseAcceptance(json.body);
     if (!accepted) return refuse(400, "import_invalid");
-    const result = await acceptImport(auth.actor.owner, accepted.profileUrl, accepted.items);
+    const result = await acceptImport(auth.actor.owner, accepted.profileUrl, accepted.items, accepted.origin);
     return NextResponse.json({ ok: true, ...result });
   } catch (error) {
     return unavailable(error);

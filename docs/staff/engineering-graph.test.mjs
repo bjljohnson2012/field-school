@@ -23,7 +23,7 @@ test("the outcome is done and launch stays closed", () => {
   }
 });
 
-test("passed nodes cite commits, and the atomic merge stays held", () => {
+test("passed nodes cite commits, and the atomic merge is pass", () => {
   for (const node of graph.nodes) {
     assert.match(markdown, new RegExp(`\\| ${node.id} \\|`));
     assert.match(markdown, new RegExp(`\\| ${node.status} \\|`));
@@ -32,7 +32,7 @@ test("passed nodes cite commits, and the atomic merge stays held", () => {
       execFileSync("git", ["cat-file", "-e", `${node.sha}^{commit}`], {cwd: repo});
     }
   }
-  assert.equal(graph.nodes.find((node) => node.id === "E4").status, "HELD");
+  assert.equal(graph.nodes.find((node) => node.id === "E4").status, "PASS");
   assert.equal(graph.nodes.find((node) => node.id === "E5").status, "PASS");
   assert.equal(graph.nodes.find((node) => node.id === "E6").status, "PASS");
   assert.equal(graph.nodes.find((node) => node.id === "E7").status, "PASS");
@@ -41,24 +41,24 @@ test("passed nodes cite commits, and the atomic merge stays held", () => {
   }
 });
 
-test("the pick is idle, with the atomic merge held", () => {
+test("the pick is idle, with the atomic merge passed", () => {
   const pick = pickEngineering(graph);
   assert.deepEqual(pick.ready.map((node) => node.id), []);
   assert.deepEqual(pick.human.map((node) => node.id), []);
   assert.deepEqual(pick.blocked.map((node) => node.id), []);
-  assert.deepEqual(pick.held.map((node) => node.id), ["E4"]);
+  assert.deepEqual(pick.held.map((node) => node.id), []);
   assert.equal(pick.done, true);
   const text = formatEngineering(graph, pick);
   assert.match(text, /^OUTCOME done/m);
   assert.match(text, /^CODE none/m);
   assert.match(text, /^HUMAN none/m);
-  assert.match(text, /^HELD E4/m);
+  assert.match(text, /^HELD none/m);
   assert.match(text, /Launch stays CLOSED 0\/8/);
 });
 
-test("a goal with a held node stays open", () => {
+test("fresh gates are on main with the atomic merge", () => {
   const text = formatEngineering(graph);
   assert.match(text, /^G5 Staff count — on main/m);
-  assert.match(text, /^G6 Fresh gates — open/m);
+  assert.match(text, /^G6 Fresh gates — on main/m);
   assert.match(text, /^G7 One gate write — on main/m);
 });

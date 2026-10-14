@@ -15,12 +15,13 @@ import {
   adultSetup,
   kidSetup,
   listOfStrings,
-  markGate,
   readGateMarks,
   type AdultGateId,
   type AdultPatch,
   type GateMarks,
 } from "./model";
+import { writeGateMerge } from "./gate-merge";
+import { mergeGateSpan } from "./gate-mark";
 import { applyPm3Sql } from "./pm3-sql.ts";
 import { applyProfileSql } from "./sql";
 
@@ -121,22 +122,30 @@ export type AdultProfile = ReturnType<typeof shapeAdult>;
 
 /** Reads the profile and stores completeness the first time every required gate is met. */
 export async function loadAdultProfile(owner: ProfileOwner, now = new Date()): Promise<AdultProfile> {
-  const row = await ensureRow(owner);
-  let marks = readGateMarks(row.gates);
+  let row = await ensureRow(owner);
   const personality = await personalityMark(owner.memberId);
-  if (personality) marks = { ...marks, "G-personality": personality };
+  if (personality) {
+    const marks = readGateMarks(row.gates);
+    const merged = mergeGateSpan(marks, "G-personality", personality);
+    const prior = JSON.stringify(marks["G-personality"] ?? null);
+    const next = JSON.stringify(merged["G-personality"] ?? null);
+    if (prior !== next) {
+      await writeGateMerge(owner.memberId, "G-personality", personality.firstAt, personality.lastAt, now);
+      const [fresh] = await getDb()
+        .select()
+        .from(userProfiles)
+        .where(eq(userProfiles.memberId, owner.memberId))
+        .limit(1);
+      if (fresh) row = fresh;
+    }
+  }
+  let marks = readGateMarks(row.gates);
+  if (personality) marks = mergeGateSpan(marks, "G-personality", personality);
   const shaped = shapeAdult(row, owner, marks, now);
-  const storedGates = JSON.stringify(readGateMarks(row.gates));
-  const needsCompleted = shaped.setup.completedAt && !row.completedAt;
-  if (needsCompleted || storedGates !== JSON.stringify(marks)) {
-    const db = getDb();
-    await db
+  if (shaped.setup.completedAt && !row.completedAt) {
+    await getDb()
       .update(userProfiles)
-      .set({
-        gates: marks,
-        completedAt: row.completedAt ?? (shaped.setup.completedAt ? new Date(shaped.setup.completedAt) : null),
-        updatedAt: now,
-      })
+      .set({ completedAt: new Date(shaped.setup.completedAt), updatedAt: now })
       .where(eq(userProfiles.memberId, owner.memberId));
   }
   return shaped;
@@ -154,15 +163,11 @@ export async function updateAdultProfile(owner: ProfileOwner, patch: AdultPatch)
   return loadAdultProfile(owner);
 }
 
-/** Server write for Tools Skill / Intelligence saves. A re-run moves freshness only. */
+/** Server write for Tools Skill / Intelligence saves. One atomic merge; a re-run moves freshness only. */
 export async function recordAdultGate(owner: ProfileOwner, gate: AdultGateId, now = new Date()) {
-  const row = await ensureRow(owner);
-  const marks = markGate(readGateMarks(row.gates), gate, now);
-  const db = getDb();
-  await db
-    .update(userProfiles)
-    .set({ gates: marks, updatedAt: now })
-    .where(eq(userProfiles.memberId, owner.memberId));
+  await ensureRow(owner);
+  const iso = now.toISOString();
+  await writeGateMerge(owner.memberId, gate, iso, iso, now);
   return loadAdultProfile(owner, now);
 }
 

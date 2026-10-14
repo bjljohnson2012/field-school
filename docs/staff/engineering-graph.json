@@ -41,7 +41,7 @@
       "id": "G6",
       "name": "Fresh gates",
       "serves": "C7",
-      "statement": "A retake moves lastAt. The atomic JSONB merge stays with the Profile M1 owner."
+      "statement": "A retake moves lastAt. recordAdultGate and the personality mark in loadAdultProfile merge gates in one JSONB update."
     },
     {
       "id": "G7",
@@ -91,13 +91,13 @@
       "id": "E4",
       "name": "Atomic gate merge",
       "goals": ["G6"],
-      "status": "HELD",
+      "status": "PASS",
       "needs": [],
       "pr": null,
-      "branch": null,
+      "branch": "cursor/pm4-profile-a40a",
       "sha": null,
       "room": "team",
-      "done": "recordAdultGate writes the gates JSON in one atomic update. The M1 owner opens that seal."
+      "done": "recordAdultGate and loadAdultProfile merge one gate id with earliest firstAt and latest lastAt in a single UPDATE."
     },
     {
       "id": "E5",

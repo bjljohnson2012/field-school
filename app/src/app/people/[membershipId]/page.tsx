@@ -246,7 +246,7 @@ export default async function PersonPage({
       <div className="mt-6">
         <SkillCard skills={scoreTiles} />
       </div>
-      {progressLine ? (
+      {progressLine && (surface === "card" || subject.kind === "child") ? (
         <p className="mt-6 text-sm text-muted-foreground" data-m7-progress="person">
           {progressLine}
         </p>

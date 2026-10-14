@@ -114,10 +114,11 @@ export async function completeChat(input: {
   messages: ChatMessage[];
   temperature?: number;
   json?: boolean;
+  maxTokens?: number;
   jobId: string;
   orgId?: string | null;
   env?: Env;
-}): Promise<{ content: string }> {
+}): Promise<{ content: string; usage: TokenUsage | null }> {
   const env = input.env ?? process.env;
   const key = resolveApiKey(env);
   const started = Date.now();
@@ -146,6 +147,7 @@ export async function completeChat(input: {
         messages: input.messages,
         temperature: input.temperature ?? 0.3,
         ...(input.json ? { response_format: { type: "json_object" } } : {}),
+        ...(input.maxTokens ? { max_tokens: input.maxTokens } : {}),
       }),
     });
     if (!res.ok) {
@@ -158,7 +160,7 @@ export async function completeChat(input: {
     };
     usage = tokenUsage(data.usage);
     status = "ok";
-    return { content: data.choices?.[0]?.message?.content ?? "" };
+    return { content: data.choices?.[0]?.message?.content ?? "", usage };
   } finally {
     logAiJob({
       jobId: input.jobId,
@@ -176,6 +178,7 @@ export async function completeJson<T>(input: {
   system: string;
   user: unknown;
   temperature?: number;
+  maxTokens?: number;
   jobId: string;
   orgId?: string | null;
   env?: Env;
@@ -188,6 +191,7 @@ export async function completeJson<T>(input: {
     ],
     temperature: input.temperature,
     json: true,
+    maxTokens: input.maxTokens,
     jobId: input.jobId,
     orgId: input.orgId,
     env: input.env,

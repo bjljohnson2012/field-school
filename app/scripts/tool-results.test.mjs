@@ -156,7 +156,7 @@ test("admin snapshot counts saved tools from tool_results, one per tool", async 
   const valid = route.indexOf("isValidEmail");
   const call = route.indexOf("countAdultAssessments");
   assert.ok(staff >= 0 && staff < valid && valid < call);
-  assert.match(route, /NextResponse\.json\(\{ ok: true, count \}\)/);
+  assert.match(route, /NextResponse\.json\(\{ ok: true, count, orgs: orgs\.get\(mail\) \?\? \[\] \}\)/);
   assert.doesNotMatch(route, /answers|scores|summary|labels/);
 
   const page = read("src/app/admin/users/[id]/page.tsx");

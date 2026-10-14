@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { adultOnly, refuse, unavailable } from "@/lib/assessments/actor";
+import { linkedInReviewList } from "@/lib/enrichment/import-plan";
 import { LINKEDIN_COPY, LINKEDIN_PDF_MAX_BYTES, parseProfileUrl } from "@/lib/enrichment/linkedin";
 import { pdfText } from "@/lib/enrichment/pdf-text";
-import { reviewImport } from "@/lib/enrichment/store";
+import { proposeResumeForMember } from "@/lib/enrichment/resume-run";
+import { reviewCandidates } from "@/lib/enrichment/store";
 
 export const dynamic = "force-dynamic";
 
@@ -33,8 +35,37 @@ export async function POST(request: Request) {
     if (file.size > LINKEDIN_PDF_MAX_BYTES) return refuse(413, "pdf_too_large");
     const text = await pdfText(new Uint8Array(await file.arrayBuffer()));
     if (text === null) return refuse(422, "pdf_unreadable");
-    const items = await reviewImport(auth.actor.owner, text);
-    return NextResponse.json({ ok: true, kind: "review", profileUrl, items, hint: LINKEDIN_COPY.reviewHint });
+    const linked = linkedInReviewList(text);
+    if (linked) {
+      const items = await reviewCandidates(auth.actor.owner, linked);
+      return NextResponse.json({
+        ok: true,
+        kind: "review",
+        source: "linkedin",
+        profileUrl,
+        items,
+        hint: LINKEDIN_COPY.reviewHint,
+      });
+    }
+    const proposed = await proposeResumeForMember({
+      memberId: auth.actor.owner.memberId,
+      orgSlug: auth.actor.orgSlug,
+      adult: auth.actor.kind !== "child",
+      text,
+    });
+    if (!proposed.ok) {
+      const status = proposed.error === "task_cap" || proposed.error === "month_cap" ? 429 : 422;
+      return refuse(status, proposed.error);
+    }
+    const items = await reviewCandidates(auth.actor.owner, proposed.items);
+    return NextResponse.json({
+      ok: true,
+      kind: "review",
+      source: "resume",
+      profileUrl,
+      items,
+      hint: LINKEDIN_COPY.reviewHint,
+    });
   } catch (error) {
     return unavailable(error);
   }
