@@ -140,7 +140,7 @@ export function IntakeWizard({ kind }: { kind: "intake" | "director_intake" }) {
     <section className="card mt-6 p-6">
       <p className="text-sm text-gray-500">Question {index + 1} of {total}</p>
       <div className="mt-2 h-1 overflow-hidden rounded-full bg-gray-200">
-        <div className="h-full bg-brand-orange" style={{ width: `${progress}%` }} />
+        <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
       </div>
       <div className="mt-6">
         <WizardStep

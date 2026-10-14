@@ -43,7 +43,7 @@ export function SynthesisStatusBanner() {
 
   if (status === "generating") {
     return (
-      <section className="card mb-6 border-l-4 border-brand-orange px-5 py-4" aria-live="polite">
+      <section className="card mb-6 border-l-4 border-primary px-5 py-4" aria-live="polite">
         <div className="font-display font-semibold">Generating your profile</div>
         <p className="mt-1 text-sm text-gray-600">
           Your answers are saved. This page checks again every few seconds.

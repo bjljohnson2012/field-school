@@ -1,31 +1,32 @@
 # M9 shell prep
 
-This file is the spec and the test plan for [issue 368](https://github.com/bjljohnson2012/field-school/issues/368), Portal rebuild: M9 Shell, nav, Home, and brand. `docs/rebuild-progress.md` names the same shell: stream M9, gate `designer_seal`, branch name `feat/portal-m9-shell` for the later UI work.
+This file is the spec and the test plan for [issue 368](https://github.com/bjljohnson2012/field-school/issues/368). The sealed packet in this section wins over earlier sentences further down.
 
-The designer seal is not given. This pull request is the spec. It leaves the M9 UI unbuilt. It does not merge. It does not deploy.
+The designer seal is sealed, except the member rail. Ben has not chosen that rail. LAW.md holds, so the shipped member layout is SHELLS.md: Learn and Me. The 240px Learn, Library, and You rail stays behind `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368`. That variant is not the shipped default.
 
-Launch stays CLOSED 0/8. `AUTH_URL` stays `https://portal.fieldschool.ai`. `CHECKOUT_GO_LIVE` stays `false` in `app/src/lib/billing/checkout-destination.ts`. `COACHING_GO_LIVE` stays `false` in `app/marketing-site/js/checkout-switch.mjs`. This prep does not run tenancy-backfill or test-rows.
+Launch stays CLOSED 0/8. `AUTH_URL` stays `https://portal.fieldschool.ai`. The flag name is `CHECKOUT_GO_LIVE`. It stays `false`. `COACHING_GO_LIVE` stays `false`. No live Stripe. This change does not deploy, does not run tenancy-backfill, and does not run test-rows. Retiring org kind `homeschool` is M15, not this change. The base branch is `main`.
 
-Main at the branch point is `9447e7ed63fb0d5035264be1bbee0a28cb5ac225` (PR 395). That tree already has `app/db/0022_tenancy.sql`, `0023_content_model.sql`, `0023_m8_identity_billing.sql`, `0024_m8_offer_tiers.sql`, and `0025_m7_progress.sql`. `docs/rebuild-progress.md` on the same commit still lists M5, M6, M7, and M8 as unaccepted. This prep follows the tree and branches from this main. It does not stack on `feat/portal-m8-identity-billing`.
+`docs/staff/SHELLS.md` is superseded by issue 368 for the shell, except the member rail.
 
-## Decisions that still need Ben
+## Sealed packet
 
-The UI pull request waits on these. This spec records the issue 368 shell and names each place the sources disagree.
+Locked numbers: radius 8, 12, and 16, and pill 9999. Cards are 16. 14 and 20 are retired. State motion is at most 240ms. Layout motion is at most 300ms. Easing is `cubic-bezier(0.22, 1, 0.36, 1)`. No springs. Flip Text is at most 900ms total, at most 200ms stagger, once, CSS keyframes only, on the Wizard finish heading only. Reduced motion uses no transforms and no blur, and Flip Text is plain. The Discover Button is 48px tall, with a 44px circle, a 20px icon, and IBM Plex Sans 16/600. It is the only filled blue. Nav is IBM Plex Sans 14/500, 36px rows, and a 240px rail. The mobile bar is 56px plus the safe area. Input border is `#8A8478`.
 
-1. **Designer seal.** Not given. Issue 368 and `docs/rebuild-progress.md` set `gate: designer_seal`. The proposed measures in the 9 Oct 2026 ObsidianUI comment ride with that seal: buttons at 12px radius, cards at 16px, state changes at 240ms, layout moves at 300ms, Discover Button at 48px tall with a 240ms fill, nav rows at 36px. Until the seal, those numbers stay proposed.
-2. **Which chrome law the UI builds.** `docs/staff/SHELLS.md` (21 Sep 2026) and issue 368 (8 Oct 2026) both use the five words Learn, People, Library, Insights, New. They disagree on four points. `docs/LAW.md` says SHELLS wins on chrome. The M9 ticket names the issue 368 shell. Ben picks one side for each row.
+Exact `/coaching` returns 301 to `/teams/services`. Each `/coaching/*` page returns 301 to its Team practice page under `/teams/practice/`. Reviews and compare are not Keep. `/api/coaching` is not in this map. `coaching_*` table names stay until M15.
 
-| Point | SHELLS.md | Issue 368 |
-| --- | --- | --- |
-| Member rail | Learn and Me. No Library. No People. No Insights unless the stance is trainer or admin. | Learn, Library, and You. Leaders and accountable people also see People, Insights, and New. |
-| New menu | Long-form video, Wizard, Connect AI. | Lesson, Course, Brain page, Goal, Person in development, Member invite, Import video. |
-| Credits | A credits control in the bar. | Billing, credits, and AI keys inside Settings. |
-| Mobile | Seal, current shell, New, and avatar. The rest in a sheet. | Bottom bar with the five words. New is a plus. A drawer holds the brain switcher and You. |
+New is a quiet ghost rail row, leaders only, never blue, at most 6 items, filtered by brain type. Family includes Person in development and leaves out Member invite. Team includes Member invite and leaves out Person in development. Connect AI is Settings, then AI. Credits live in Settings, then Billing. No money in the bar. Mobile is a bottom bar plus a drawer.
 
-3. **Guest home sentences (hero C).** Issue 368 says the portal home echoes hero C. This checkout has no hero C source file. The signed guest home on main is the campus ladder in `app/src/app/campus-home.tsx` ("Lead yourself. Learn yourself. Do the Work." and "Start Grok Bot" in `#1F5EFF`). The marketing homepage on this main is the knowledge-brains hero in `app/marketing-site/index.html`. The 9 Oct comment places a Discover Button on "marketing hero option C, below the two brains and the seal." Ben supplies the sentences, or the file that holds them, before the UI pull request writes guest-home copy.
-4. **Flip Text.** The 9 Oct comment marks Flip Text optional, and only on the Assessment Wizard finish heading. Ben says install or skip. Wizard behavior and Wizard tests stay as they are either way.
-5. **Team practice paths.** The 9 Oct changelog renames the team coaching room to "Team practice" in UI and routes, in this stream. Portal pages under `app/src/app/coaching/` still exist (`reviews`, `compare`, and the team-room routes the 8 Oct table keeps). The marketing site maps `/coaching` to `/teams` (`app/scripts/marketing-site-rebuild.test.mjs`). `coaching_*` table names stay until M15. Ben says whether the UI pull request renames portal paths or changes the visible label only.
-6. **UI branch base.** `docs/rebuild-progress.md` bases M9 on `feat/portal-m8-identity-billing` and merges M7 in. Issue 368 says the base is latest main. This prep uses main at `9447e7e`, which already contains the tenancy, content-model, M8, and M7 SQL named above. Ben confirms the UI pull request builds on this main.
+Hero C, verbatim. Kicker: Knowledge brains. H1: The knowledge brain for families and teams who cannot be in the room every hour. Subhead: Field School builds a knowledge brain for your family or your team, so the people you are responsible for keep learning on the days you cannot be there. Risk line: One course is free. No card. Buttons: Start free (filled) and See pricing (outline to `https://fieldschool.ai/pricing`).
+
+Copy uses the offer names Do It Yourself, Coaching, and Consulting.
+
+Active Sessions stays hidden until M8 device rows exist.
+
+Tests cover Flip Text under reduced motion, no Radix and no duo-icons, the motion module imported only by the shell and Active Sessions, and the 390px bar for each role. The member bar test covers both variants. The default assertion is Learn and Me.
+
+## Decision still open
+
+The member rail. Shipped default is SHELLS.md (Learn, Me) because LAW.md holds. The issue 368 member rail (240px, Learn, Library, You) is implemented and unselected. Ben flips `NEXT_PUBLIC_MEMBER_RAIL_VARIANT` to `issue-368` later. This spec does not pick that variant as the default.
 
 ## The shell issue 368 names
 
@@ -226,8 +227,9 @@ The remaining rows are the M9 contract. A move keeps the old path as a redirect.
 | People | `/assign` | Merge | Assign action on a lesson and on a person page | |
 | People | `/teach-live` | Merge | Lesson "Teach live" mode | M10 |
 | People | `/skills` | Merge | Person page skills (team room) | |
-| People | `/coaching/reviews` | Keep | Team practice room | Path rename is decision 5 |
-| People | `/coaching/compare` | Keep | Team practice room | Decision 5 |
+| People | `/coaching` | 301 | `/teams/services` | Exact path. Not a prefix match |
+| People | `/coaching/reviews` | 301 | `/teams/practice/reviews` | No longer Keep |
+| People | `/coaching/compare` | 301 | `/teams/practice/compare` | No longer Keep |
 | People | `/tasks` | Keep | Team practice room | |
 | People | `/card` | Keep | Team practice room | |
 | People | `/improve` | Keep | Team practice room | |

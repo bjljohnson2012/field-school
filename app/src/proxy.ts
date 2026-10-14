@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { isAdminRoute, loginRedirectForAdmin } from "@/lib/admin-gate";
 import { edgeAuth } from "@/lib/auth/edge-auth";
 import { isStaffSession } from "@/lib/members/policy";
+import { coachingRedirect } from "@/lib/shell/m9-shell";
 
 /**
  * A real staff session is required for /admin in every deploy shape,
@@ -12,6 +13,12 @@ import { isStaffSession } from "@/lib/members/policy";
  */
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const practice = coachingRedirect(pathname);
+  if (practice) {
+    const url = request.nextUrl.clone();
+    url.pathname = practice;
+    return NextResponse.redirect(url, 301);
+  }
   if (!isAdminRoute(pathname)) return NextResponse.next();
 
   const session = await edgeAuth();
@@ -29,5 +36,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*"],
+  matcher: ["/admin", "/admin/:path*", "/coaching", "/coaching/:path*"],
 };

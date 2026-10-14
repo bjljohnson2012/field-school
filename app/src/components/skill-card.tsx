@@ -38,7 +38,7 @@ export function SkillCard({ skills }: { skills: SkillCardSkill[] }) {
               {skill.score == null ? "—" : skill.score}
             </p>
             <div className="mt-3 h-2 rounded-full bg-muted" aria-hidden="true">
-              <div className="h-2 rounded-full bg-brand-orange" style={{ width: `${width}%` }} />
+              <div className="h-2 rounded-full bg-primary" style={{ width: `${width}%` }} />
             </div>
             {source ? <p className="meta mt-2">{source}</p> : null}
           </article>

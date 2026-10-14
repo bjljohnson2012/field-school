@@ -56,20 +56,19 @@
   --radius-2xl: 28px;
   --radius-3xl: 32px;
   --radius-4xl: 36px;
-  --color-brand-navy: #0b1f3a;
   --color-brand-indigo: #1f3c88;
   --color-brand-indigo-deep: #172e6b;
-  --color-brand-orange: #ff6a1a;
-  --color-brand-orange-deep: #e55a15;
   --color-brand-emerald: #0e9f6e;
   --color-brand-amber: #f59e0b;
   --color-brand-red: #dc2626;
-  --radius-brand: 0.875rem;
-  --radius-card: 1.25rem;
+  --radius-brand: 12px;
+  --radius-card: 16px;
+  --radius-pill: 9999px;
   --shadow-card: 0 8px 24px rgba(26, 25, 22, 0.06);
   --shadow-card-hover: 0 12px 30px rgba(26, 25, 22, 0.1);
-  --shadow-orange-glow: 0 10px 22px rgba(255, 106, 26, 0.28);
-  --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+  --m9-state: 240ms;
+  --m9-layout: 300ms;
 }
 
 :root {
@@ -89,7 +88,7 @@
   --accent-foreground: #f7f4ee;
   --destructive: #c05621;
   --border: #d8d2c6;
-  --input: #d8d2c6;
+  --input: #8a8478;
   --ring: #1e4e8c;
   --faint: #8a8478;
   --pass: #2f6b3a;
@@ -222,7 +221,173 @@
 }
 
 .drop-land {
-  animation: drop-land 420ms ease-out;
+  animation: drop-land 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.m9-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 16px;
+  background: #f6f3ec;
+  border-bottom: 1px solid var(--border);
+}
+.m9-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.m9-wordmark {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 600;
+  font-size: 18px;
+}
+.m9-guest-actions,
+.m9-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.m9-ghost,
+.m9-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  min-height: 36px;
+  padding: 0 12px;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+.m9-avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+}
+.m9-frame {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+}
+.m9-rail {
+  width: 240px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 12px 88px;
+  background: #f6f3ec;
+  border-right: 1px solid var(--border);
+}
+.m9-rail-link,
+.m9-mobile-link,
+.m9-new-menu a {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 8px;
+  font-family: var(--font-ibm-sans), "IBM Plex Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  background: transparent;
+  color: inherit;
+}
+.m9-new-row {
+  width: 100%;
+  border: 0;
+  text-align: left;
+}
+.m9-brain {
+  font-weight: 600;
+}
+.m9-you-label {
+  margin: 12px 8px 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.m9-canvas {
+  min-width: 0;
+  flex: 1;
+}
+.m9-drawer-button,
+.m9-mobile-bar {
+  display: none;
+}
+.m9-mobile-bar {
+  position: sticky;
+  bottom: 0;
+  height: calc(56px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: #f6f3ec;
+  border-top: 1px solid var(--border);
+}
+.m9-discover {
+  display: inline-flex;
+  align-items: center;
+  height: 48px;
+  padding-left: 18px;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--card);
+  color: var(--foreground);
+  font-family: var(--font-ibm-sans), "IBM Plex Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background var(--m9-state) var(--ease-brand), color var(--m9-state) var(--ease-brand);
+}
+.m9-discover:hover {
+  background: #1e4e8c;
+  color: var(--primary-foreground);
+}
+.m9-discover-circle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-left: 12px;
+  margin-right: 2px;
+  border-radius: 9999px;
+  background: #1e4e8c;
+  color: #fff;
+}
+.m9-motion {
+  display: block;
+  transition: transform var(--m9-layout) var(--ease-brand);
+}
+.m9-flip-char {
+  display: inline-block;
+  animation-name: m9-flip;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+@keyframes m9-flip {
+  from { transform: rotateX(90deg); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@media (max-width: 800px) {
+  .m9-rail { display: none; }
+  .m9-drawer-button { display: inline-flex; }
+  .m9-mobile-bar { display: flex; align-items: center; justify-content: space-around; }
+  .m9-wordmark { display: inline; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .m9-flip-char,
+  .m9-motion,
+  .m9-discover {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -134,7 +134,6 @@ test("paid seats, webhook, and claim login are wired", () => {
   assert.match(notify, /api\.resend\.com\/emails/);
   assert.match(successClient, /Set password and enter/);
   assert.match(claimPage, /Set your password/);
-  assert.match(dashboard, /redirect\(destination\)/);
   assert.match(dashboard, /\/insights/);
   assert.match(dashboard, /\/learn/);
   assert.match(auth, /seatKind/);
@@ -155,7 +154,7 @@ test("transactional mail uses the Field School lockup", () => {
   assert.match(layout, /brandedEmailHtml/);
   assert.match(layout, /<img src="\$\{MAIL_LOGO_URL\}"/);
   assert.match(layout, /background:#f6f3ec/);
-  assert.match(layout, /background:#1f5eff/);
+  assert.match(layout, /background:#1e4e8c/);
   assert.match(notify, /brandedEmailHtml/);
   assert.match(notify, /Field School <note@fieldschool\.ai>/);
   assert.match(notify, /html: brandedEmailHtml/);

@@ -18,8 +18,8 @@ export default function BillingSettingsPage() {
     <main className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="font-display text-4xl tracking-tight">Billing</h1>
       <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-        Coaching buttons stay on Email Ben while checkout is off. Credits stay
-        on AI settings.
+        Offers are Do It Yourself, Coaching, and Consulting. Credits for this brain live on this page.
+        Coaching stays on Email Ben while checkout is off.
       </p>
       <p className="mt-6">
         <Link className="underline" href="/settings/ai">

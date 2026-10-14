@@ -61,8 +61,8 @@ test("S1 sole fill and S3 exam ratios stay put", () => {
   const exam = readSrc("src/app/c/[courseSlug]/exam/page.tsx");
   const types = readSrc("src/lib/course/types.ts");
   const spine = readSrc("src/app/play/lesson-spine/page.tsx");
-  assert.match(home, /bg-\[#1f5eff\]/);
-  assert.match(home, /Start Grok Bot/);
+  assert.match(home, /Start free/);
+  assert.match(home, /See pricing/);
   assert.match(exam, /Pass at 8\/10/);
   assert.match(types, /export const PASS_RATIO = 0\.75;/);
   assert.match(types, /export const EXAM_PASS_RATIO = 0\.8;/);
