@@ -1,5 +1,5 @@
 import React from "react";
-import {Img, spring, staticFile, useCurrentFrame, useVideoConfig} from "remotion";
+import {spring, useCurrentFrame, useVideoConfig} from "remotion";
 import {displayFace, gold, ink, paper, serifFace} from "../../brand";
 
 export const LowerThird: React.FC<{
@@ -19,17 +19,6 @@ export const LowerThird: React.FC<{
 
   return (
     <>
-      <Img
-        src={staticFile("brand/mark-color-512.png")}
-        style={{
-          position: "absolute",
-          left: 1576,
-          top: 24,
-          width: 80,
-          height: 64,
-          objectFit: "contain",
-        }}
-      />
       <div
         style={{
           position: "absolute",

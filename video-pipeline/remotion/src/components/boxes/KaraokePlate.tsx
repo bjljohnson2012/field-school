@@ -161,7 +161,7 @@ export const KaraokePlate: React.FC<{captions: Caption[]}> = ({captions}) => {
                 <span
                   key={`${token.fromMs}-${index}`}
                   style={{
-                    opacity: fade * (active ? 1 : 0.7),
+                    opacity: fade,
                     color: active ? gold : paper,
                     scale: active ? 1.06 : 1,
                     display: "inline-block",

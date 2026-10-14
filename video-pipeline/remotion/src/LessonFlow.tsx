@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig} from "remotion";
 import type {Caption} from "@remotion/captions";
-import {bg, paper, sansFace} from "./brand";
+import {bg, gold, paper, sansFace} from "./brand";
 import {KaraokePlate} from "./components/boxes/KaraokePlate";
 import {LowerThird} from "./components/boxes/LowerThird";
 import {TalkingHead} from "./components/head/TalkingHead";
@@ -82,6 +82,18 @@ export const LessonFlow: React.FC = () => {
           />
         }
       />
+      {chapter.id === "next-up" || chapter.id === "sting-tail" ? (
+        <div
+          style={{
+            position: "absolute",
+            left: 1576,
+            top: 44,
+            width: 80,
+            height: 4,
+            backgroundColor: gold,
+          }}
+        />
+      ) : null}
       {chapter.id === "sting-tail" ? (
         <div
           style={{
@@ -90,6 +102,7 @@ export const LessonFlow: React.FC = () => {
             top: 900,
             width: 980,
             color: paper,
+            opacity: 0.7,
             fontFamily: sansFace,
             fontWeight: 600,
             fontSize: 18,
