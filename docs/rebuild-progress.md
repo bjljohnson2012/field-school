@@ -1,8 +1,8 @@
 # Rebuild progress
 
-Updated: 2026-10-14 (post GL2 ship)
-Main at: cce07b3a00f61015fd9aa9e7a3973192d12dd57a (includes in-flight PM3; not deployed)
-Production: campus 2.24.70.248 at `338ddbc6ad2462c412161acd56bf6414d598f8de` (PR 417 GL2). Smoke passed. Rollback was not used.
+Updated: 2026-10-14 (PM3 merged; campus deploy in flight)
+Main at: 81049f9465e07d43d52f09cb2d87b4758f3c4f54 (docs tip; PM3 code at `cce07b3` via #418)
+Production: campus 2.24.70.248 at `338ddbc6ad2462c412161acd56bf6414d598f8de` (PR 417 GL2). PM3 campus deploy in flight — not smoked yet.
 Active agents: none
 
 `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay `false`. `AUTH_URL` stays `https://portal.fieldschool.ai`. Launch stays CLOSED 0/8.
@@ -20,8 +20,9 @@ migrations on main:
 - M12: `app/db/0027_m12_onboarding.sql` (merged in #412, deployed with M10 ship)
 - M11: `app/db/0028_m11_brains.sql` (merged in #415, deployed)
 - GL2: `app/db/0029_gl2_gap_loop.sql` (merged in #417, deployed)
+- PM3: `app/db/0030_pm3_profile.sql` (merged in #418; campus apply in flight)
 
-Migration runner merged in #398 at 6a38436fadbdad670026e76e42c1e4c98b8790ff and deployed. Campus after the GL2 ship: `0029` applied; `schema_migrations` has 30 rows (`0026` still absent on the M10/M12 ship). Do not claim a new migration number from this log.
+Migration runner merged in #398 at 6a38436fadbdad670026e76e42c1e4c98b8790ff and deployed. Campus after the GL2 ship: `0029` applied; `schema_migrations` has 30 rows (`0026` still absent on the M10/M12 ship). PM3 `0030` not yet confirmed on campus. Do not claim a new migration number from this log.
 
 Campus GL2 notes: gap-loop embeddings use xAI model v1, N=1024. Cron sidecar `field-school-knowledge-loop-cron` is running. A folded-`curl` bug was patched on the server; the matching git fix is in flight — do not mark that fix deployed.
 
@@ -38,7 +39,7 @@ Read-only check against `campus-20261014T002029Z.dump` (pre-ship) matched produc
 | learning_events | 2 |
 | enrollments | 0 |
 
-Next action: PM3 (#372) is building on main; do not mark it deployed. GL3 (#375) dependencies on GL2 are now met on campus; stay `spec_merged` until the lane opens — do not mark GL3 building. M13 spike is not started and is never merged. Do not deploy from this log. Do not flip `AUTH_URL`. No live Stripe.
+Next action: PM3 (#372) is merged on main (#418); campus deploy is in flight and has not been smoked — keep `merged`, not `deployed`. GL3 (#375) stays `spec_merged` until its lane opens — do not mark GL3 building. M13 spike is not started and is never merged. Do not deploy from this log. Do not flip `AUTH_URL`. No live Stripe.
 
 ```yaml
 streams:
@@ -52,7 +53,7 @@ streams:
   - {id: M10, issue: 369, branch: feat/portal-m10-library,         depends_on: [M6, M9],       base: feat/portal-m9-shell,            merge_in: [],    needs_merge: false, gate: designer_seal, status: deployed, pr: 413, sha: "51a4e448bcb45540a01b93d996909d32b4b5bad4", spec_pr: 407, spec_doc: docs/rebuild/m10-library-prep.md, spec_sha: "4c6710f7663ccd9a31306ed70ef7cdc72d0a4809", migration: null, deploy_ship_with: [M12]}
   - {id: M11, issue: 370, branch: feat/portal-m11-brains,          depends_on: [M6, M10],      base: feat/portal-m10-library,         merge_in: [],    needs_merge: false, gate: none, status: deployed, pr: 415, sha: "78d10b933e5d0a9b8bebfd22f870eec5e16f3d75", spec_pr: 404, spec_doc: docs/rebuild/m11-brains-prep.md, spec_sha: "009475056dc86cc0ca10f8eac2fa14234a5dbf81", migration: "0028"}
   - {id: M12, issue: 371, branch: feat/portal-m12-onboarding,      depends_on: [M5, M9],       base: feat/portal-m9-shell,            merge_in: [],    needs_merge: false, gate: designer_seal, status: deployed, pr: 412, sha: "c9ea1e8f654ab15f4c84dfb42e33eb7ae17d1521", deploy_sha: "51a4e448bcb45540a01b93d996909d32b4b5bad4", spec_pr: 405, spec_doc: docs/rebuild/m12-onboarding-prep.md, spec_sha: "c6bd7007f2ee8afa5dfe64971bcfe5ce835c78b6", migration: "0027", deploy_ship_with: [M10]}
-  - {id: PM3, issue: 372, branch: feat/profile-m3,                 depends_on: [M5, M9, M11],  base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: designer_seal, status: building, pr: null, spec_pr: 408, spec_doc: docs/rebuild/pm3-profile-prep.md, spec_sha: "71665149c98c84ca05eb529226dc19134d1e9761", migration: "0030", build: in_progress, deps_met: true}
+  - {id: PM3, issue: 372, branch: feat/profile-m3,                 depends_on: [M5, M9, M11],  base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: designer_seal, status: merged, pr: 418, sha: "cce07b3a00f61015fd9aa9e7a3973192d12dd57a", spec_pr: 408, spec_doc: docs/rebuild/pm3-profile-prep.md, spec_sha: "71665149c98c84ca05eb529226dc19134d1e9761", migration: "0030", deploy: in_flight, smoke: pending}
   - {id: GL2, issue: 373, branch: feat/knowledge-gap-loop-m2,      depends_on: [M5, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: none, status: deployed, pr: 417, sha: "338ddbc6ad2462c412161acd56bf6414d598f8de", spec_pr: 409, spec_doc: docs/rebuild/gl2-gap-loop-prep.md, spec_sha: "d0e71dc68979accd17a207572706282bfcb0f447", migration: "0029", embeddings: "xai-v1-1024", cron_sidecar: "field-school-knowledge-loop-cron", server_patch: folded_curl_hotfix_not_in_git_deploy}
   - {id: PM4, issue: 374, branch: feat/profile-m4,                 depends_on: [PM3],          base: feat/profile-m3,                 merge_in: [],    needs_merge: true,  gate: none, status: spec_merged, pr: null, spec_pr: 403, spec_doc: docs/rebuild/pm4-profile-prep.md, spec_sha: "0c83da3f240535b7296fbabd85ea03a6e755c2de", migration: null, build: not_started, build_waits_on: [PM3]}
   - {id: GL3, issue: 375, branch: feat/knowledge-gap-loop-m3,      depends_on: [M8, M12, GL2], base: feat/knowledge-gap-loop-m2,      merge_in: [M12], needs_merge: true,  gate: none, status: spec_merged, pr: null, spec_pr: 410, spec_doc: docs/rebuild/gl3-gap-loop-prep.md, spec_sha: "c8fad4cf9adf0ff940a16a0f353620216a61edde", migration: null, build: not_started, deps_met: true}
@@ -63,7 +64,7 @@ walk_order: [S0, M5, G, M6, M7, M8, M9, M10, M11, M12, PM3, GL2, PM4, GL3, M13, 
 ben_merge_order: [S0, M5, M6, M7, M8, G, M9, M10, M11, M12, PM3, GL2, PM4, GL3, M15]
 ```
 
-S0, M5, M6, M7, M8, G, M9, M10, M11, M12, and GL2 are merged and deployed on the campus tip (`338ddbc6ad2462c412161acd56bf6414d598f8de`, #417). PM3 is `building` on main and is not deployed. GL3 has `deps_met: true` on campus but stays `spec_merged` until its lane opens. M13 through M15 and PM4 remain `spec_merged` until their lanes open. M13 spike is not started; the spike branch is never merged. M14 code waits on the M13 report and a sealed brief on #377. M15 has no migration in its spec; Ben merges M15 code only after M10 and M11 are deployed and soaked (`merge_after_m10_m11_deployed_and_soaked`).
+S0, M5, M6, M7, M8, G, M9, M10, M11, M12, and GL2 are merged and deployed on the campus tip (`338ddbc6ad2462c412161acd56bf6414d598f8de`, #417). PM3 is merged on main (#418, `cce07b3`) with campus deploy in flight — not `deployed` until smoke passes. GL3 has `deps_met: true` on campus but stays `spec_merged` until its lane opens. M13 through M15 and PM4 remain `spec_merged` until their lanes open. M13 spike is not started; the spike branch is never merged. M14 code waits on the M13 report and a sealed brief on #377. M15 has no migration in its spec; Ben merges M15 code only after M10 and M11 are deployed and soaked (`merge_after_m10_m11_deployed_and_soaked`).
 
 ## Stream 0 recommendation map
 
@@ -117,13 +118,16 @@ All 15 rows are met. S0 is merged and deployed.
 - 2026-10-14: #412 M12 merged at c9ea1e8f654ab15f4c84dfb42e33eb7ae17d1521. #413 M10 merged at 51a4e448bcb45540a01b93d996909d32b4b5bad4. One campus ship. Migration `0027` applied; `0026` absent; `schema_migrations` 28 rows. Dump `campus-20261014T125024Z`. Smoke passed. Rollback not used.
 - 2026-10-14: #415 M11 merged and deployed at 78d10b933e5d0a9b8bebfd22f870eec5e16f3d75. Migration `0028` applied; `schema_migrations` 29 rows. Dump `campus-20261014T132931Z`. Smoke passed. Rollback not used. Living-brain tables not dropped.
 - 2026-10-14: #417 GL2 merged and deployed at 338ddbc6ad2462c412161acd56bf6414d598f8de. Migration `0029` applied; `schema_migrations` 30 rows. Dump `campus-20261014T140056Z`. Embeddings xAI v1 N=1024; cron sidecar running. Folded-`curl` server hotfix only — git fix not deployed.
+- 2026-10-14: #418 PM3 merged at cce07b3a00f61015fd9aa9e7a3973192d12dd57a. Campus deploy in flight; smoke not run yet. GL2 campus tip unchanged at `338ddbc`.
 
 ## Handoff
 
-S0 #382, M5 #383, M6 #391, M7 #395, M8 #386, additive #394, G #381, M9 #397, migration runner #398, member rail #399, M10 #413, M12 #412, M11 #415, and GL2 #417 are merged and deployed. The campus tip is `338ddbc6ad2462c412161acd56bf6414d598f8de` on `2.24.70.248`. Main may be ahead with PM3 work not yet deployed.
+S0 #382, M5 #383, M6 #391, M7 #395, M8 #386, additive #394, G #381, M9 #397, migration runner #398, member rail #399, M10 #413, M12 #412, M11 #415, and GL2 #417 are merged and deployed. The campus tip is `338ddbc6ad2462c412161acd56bf6414d598f8de` on `2.24.70.248`.
+
+PM3 #418 is merged on main at `cce07b3a00f61015fd9aa9e7a3973192d12dd57a`. Campus deploy is in flight — not smoked; do not mark `deployed` yet.
 
 `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay false. `AUTH_URL` stays `https://portal.fieldschool.ai`. `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368` on the prod build. Coaching health is ok. Do not print `GROK_API_KEY`.
 
-PM3 (#372): `status: building` — not deployed. PM4 waits on PM3. GL3: `deps_met: true`, `spec_merged`, not building. M13 spike not started; never merge the spike. M14 code waits on M13 report and sealed brief. M15 waits on M10 and M11 soak.
+PM4 waits on PM3 (merged; deploy pending). GL3: `deps_met: true`, `spec_merged`, not building. M13 spike not started; never merge the spike. M14 code waits on M13 report and sealed brief. M15 waits on M10 and M11 soak.
 
-Next: finish PM3 build and deploy when ready. Do not deploy from this log. Do not flip `AUTH_URL`. Do not run live Stripe. Launch stays CLOSED 0/8.
+Next: complete PM3 campus deploy and smoke; then mark `deployed`. Do not deploy from this log. Do not flip `AUTH_URL`. Do not run live Stripe. Launch stays CLOSED 0/8.
