@@ -93,8 +93,11 @@ test("the route drains a researching run once under the lease", async () => {
   assert.deepEqual(await second.json(), { ok: true, rowsChanged: 0 });
   assert.equal(runs, 1);
   const compose = readFileSync(new URL("../deploy/docker-compose.yml", import.meta.url), "utf8");
-  assert.match(compose, /knowledge-loop-cron/);
-  assert.match(compose, /sleep 900/);
-  assert.match(compose, /\/api\/cron\/knowledge-loop/);
-  assert.doesNotMatch(compose, /echo[^\\n]*CRON_SECRET/);
+  const service = compose.slice(compose.indexOf("\n  knowledge-loop-cron:"));
+  const command = service.split("\n").find((line) => line.includes("command:"));
+  assert.equal(typeof command, "string");
+  assert.match(command, /curl -sS -X POST -H \\"Authorization: Bearer \$\$CRON_SECRET\\" http:\/\/field-school-app:3000\/api\/cron\/knowledge-loop/);
+  assert.match(command, /sleep 900/);
+  assert.doesNotMatch(command, /\\\s*$/);
+  assert.doesNotMatch(command, /echo \\"[^"]*CRON_SECRET/);
 });
