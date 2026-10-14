@@ -1,0 +1,23 @@
+[⣷] Pulling schema from database...
+[2K[1G[⣯] Pulling schema from database...
+[2K[1G[✓] Pulling schema from database...
+[?25l
+Is payload.courses table created or renamed from another table?
+❯ + payload.courses                                  create table
+  ~ payload.m13_families › payload.courses           rename table
+  ~ payload.m13_modules › payload.courses            rename table
+  ~ payload.m13_milestones › payload.courses         rename table
+  ~ payload.m13_operators › payload.courses          rename table
+  ~ payload.m13_trait_dry_runs › payload.courses     rename table
+  ~ payload.m13_organizations › payload.courses      rename table
+  ~ payload.m13_practice › payload.courses           rename table
+  ~ payload.m13_growth_units › payload.courses       rename table
+  ~ payload.m13_media_files › payload.courses        rename table
+  ~ payload.m13_course_versions › payload.courses    rename table
+  ~ payload.m13_lesson_versions › payload.courses    rename table
+  ~ payload.m13_knowledge_edges › payload.courses    rename table
+  ~ payload.m13_operators_sessions › payload.courses rename table
+  ~ payload.m13_courses › payload.courses            rename table
+  ~ payload.m13_lessons › payload.courses            rename table
+  ~ payload.m13_profiles › payload.courses           rename table
+  ~ payload.m13_knowledge_nodes › payload.courses    rename table

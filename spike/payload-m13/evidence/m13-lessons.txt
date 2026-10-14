@@ -1,0 +1,31 @@
+                               Table "payload.m13_lessons"
+   Column    |              Type               | Collation | Nullable |      Default      
+-------------+---------------------------------+-----------+----------+-------------------
+ id          | uuid                            |           | not null | gen_random_uuid()
+ org_id      | uuid                            |           | not null | 
+ course_id   | uuid                            |           | not null | 
+ module_id   | uuid                            |           | not null | 
+ slug        | character varying               |           | not null | 
+ title       | character varying               |           | not null | 
+ order       | numeric                         |           | not null | 
+ _status     | payload.enum_m13_lessons_status |           | not null | 
+ blocks      | jsonb                           |           | not null | 
+ outcome_ids | jsonb                           |           | not null | 
+ updated_at  | timestamp(3) with time zone     |           | not null | now()
+ created_at  | timestamp(3) with time zone     |           | not null | now()
+Indexes:
+    "m13_lessons_pkey" PRIMARY KEY, btree (id)
+    "m13_lessons_course_idx" btree (course_id)
+    "m13_lessons_created_at_idx" btree (created_at)
+    "m13_lessons_module_idx" btree (module_id)
+    "m13_lessons_org_idx" btree (org_id)
+    "m13_lessons_updated_at_idx" btree (updated_at)
+Foreign-key constraints:
+    "m13_lessons_course_id_m13_courses_id_fk" FOREIGN KEY (course_id) REFERENCES payload.m13_courses(id) ON DELETE SET NULL
+    "m13_lessons_module_id_m13_modules_id_fk" FOREIGN KEY (module_id) REFERENCES payload.m13_modules(id) ON DELETE SET NULL
+    "m13_lessons_org_id_m13_organizations_id_fk" FOREIGN KEY (org_id) REFERENCES payload.m13_organizations(id) ON DELETE SET NULL
+Referenced by:
+    TABLE "payload.m13_lesson_versions" CONSTRAINT "m13_lesson_versions_parent_id_m13_lessons_id_fk" FOREIGN KEY (parent_id) REFERENCES payload.m13_lessons(id) ON DELETE SET NULL
+    TABLE "payload.m13_practice" CONSTRAINT "m13_practice_lesson_id_m13_lessons_id_fk" FOREIGN KEY (lesson_id) REFERENCES payload.m13_lessons(id) ON DELETE SET NULL
+    TABLE "payload.payload_locked_documents_rels" CONSTRAINT "payload_locked_documents_rels_lessons_fk" FOREIGN KEY (m13_lessons_id) REFERENCES payload.m13_lessons(id) ON DELETE CASCADE
+

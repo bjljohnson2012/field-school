@@ -1,0 +1,10 @@
+campus next 16.3.2 http://127.0.0.1:43141/ 200 title Field School
+campus /login 200
+campus /api/me with Cookie payload-token (invalid) -> {"authenticated":false,"guest":true}
+campus /api/me with no cookie -> {"authenticated":false,"guest":true}
+payload admin http://127.0.0.1:4321/admin 200
+payload POST /api/operators/login 200 Set-Cookie name payload-token HttpOnly
+AUTH_URL process env for the campus dev process was https://portal.fieldschool.ai
+CHECKOUT_GO_LIVE source constant false
+COACHING_GO_LIVE source constant false
+Campus HTML does not mount /admin Payload routes.

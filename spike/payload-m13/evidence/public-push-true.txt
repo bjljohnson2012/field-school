@@ -1,0 +1,60 @@
+[⣷] Pulling schema from database...
+[2K[1G[⣯] Pulling schema from database...
+[2K[1G[⣟] Pulling schema from database...
+[2K[1G[⡿] Pulling schema from database...
+[2K[1G[⢿] Pulling schema from database...
+[2K[1G[⣻] Pulling schema from database...
+[2K[1G[⣽] Pulling schema from database...
+[2K[1G[⣷] Pulling schema from database...
+[2K[1G[⣯] Pulling schema from database...
+[2K[1G[⣟] Pulling schema from database...
+[2K[1G[⡿] Pulling schema from database...
+/workspace/spike/payload-m13/node_modules/src/pg-core/session.ts:73
+				throw new DrizzleQueryError(queryString, params, e as Error);
+				      ^
+
+
+DrizzleQueryError: Failed query: SELECT conname AS primary_key
+            FROM   pg_constraint join pg_class on (pg_class.oid = conrelid)
+            WHERE  contype = 'p' 
+            AND    connamespace = $1::regnamespace  
+            AND    pg_class.relname = $2;
+params: 
+    at NodePgPreparedQuery.queryWithCache (/workspace/spike/payload-m13/node_modules/src/pg-core/session.ts:73:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Object.query (/workspace/spike/payload-m13/node_modules/drizzle-kit/api.js:166296:19)
+    at async /workspace/spike/payload-m13/node_modules/drizzle-kit/api.js:44742:46 {
+  query: 'SELECT conname AS primary_key\n' +
+    '            FROM   pg_constraint join pg_class on (pg_class.oid = conrelid)\n' +
+    "            WHERE  contype = 'p' \n" +
+    '            AND    connamespace = $1::regnamespace  \n' +
+    '            AND    pg_class.relname = $2;',
+  params: [],
+  cause: error: there is no parameter $1
+      at /workspace/spike/payload-m13/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async <anonymous> (/workspace/spike/payload-m13/node_modules/src/node-postgres/session.ts:149:14)
+      at async NodePgPreparedQuery.queryWithCache (/workspace/spike/payload-m13/node_modules/src/pg-core/session.ts:71:12)
+      at async Object.query (/workspace/spike/payload-m13/node_modules/drizzle-kit/api.js:166296:19)
+      at async /workspace/spike/payload-m13/node_modules/drizzle-kit/api.js:44742:46 {
+    length: 95,
+    severity: 'ERROR',
+    code: '42P02',
+    detail: undefined,
+    hint: undefined,
+    position: '175',
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'parse_expr.c',
+    line: '864',
+    routine: 'transformParamRef'
+  }
+}
+
+Node.js v22.14.0
