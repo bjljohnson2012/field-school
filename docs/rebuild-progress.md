@@ -1,8 +1,8 @@
 # Rebuild progress
 
-Updated: 2026-10-14 (post PM4 ship)
-Main at: 0c0569165a1cad7de5aa7ec98164e4c8065d5972 (PR 423 PM4)
-Production: campus 2.24.70.248 at that tip. Smoke passed. Rollback was not used.
+Updated: 2026-10-14 (M13 spike report on main)
+Main at: a9e3aada05a78a78eab2245f4a1f3b79901a4b0f (PR 426 M13 spike report, docs only)
+Production: campus 2.24.70.248 at `0c0569165a1cad7de5aa7ec98164e4c8065d5972` (PM4 #423). Smoke passed. Rollback was not used.
 Active agents: none
 
 `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay `false`. `AUTH_URL` stays `https://portal.fieldschool.ai`. Launch stays CLOSED 0/8.
@@ -27,6 +27,8 @@ Migration runner merged in #398 at 6a38436fadbdad670026e76e42c1e4c98b8790ff and 
 
 Campus GL2 notes: gap-loop embeddings use xAI model v1, N=1024. Cron sidecar `field-school-knowledge-loop-cron` runs a one-line POST then `sleep 900`. Cron command fix (#421) deployed on campus ship 2 at `9b478c6`.
 
+M13 spike report (#426, docs only): recommendation is Drizzle stays the runtime; Payload is not mounted in campus Next. Spike runtime PR #424 stays open and must not be merged.
+
 Tenancy backfill and test-row cleanup already ran at 2026-10-13 4:43 PM ET. Do not schedule them again.
 
 Read-only check against `campus-20261014T002029Z.dump` (pre-ship) matched production. Post M10/M12 dump: `/var/backups/field-school/campus-20261014T125024Z.dump`. Post M11 dump: `/var/backups/field-school/campus-20261014T132931Z.dump`. Post GL2 dump: `/var/backups/field-school/campus-20261014T140056Z.dump`. PM3 ship 1 dump: `/var/backups/field-school/campus-20261014T141006Z.dump`. PM3 ship 2 dump: `/var/backups/field-school/campus-20261014T141405Z.dump`. Post PM4 dump: `/var/backups/field-school/campus-20261014T144145Z.dump`.
@@ -40,7 +42,7 @@ Read-only check against `campus-20261014T002029Z.dump` (pre-ship) matched produc
 | learning_events | 2 |
 | enrollments | 0 |
 
-Next action: GL3 (#375) is `building` — not deployed. M13 (#376) spike is `running` — never merge the spike branch. M14 stays blocked on the M13 report and sealed brief. Do not deploy from this log. Do not flip `AUTH_URL`. No live Stripe.
+Next action: GL3 (#375) is `building` — not deployed. M14 (#377) code is `building` from the M13 report — not deployed; `sealed_brief_on_377` still applies. Do not merge spike runtime PR #424. Do not deploy from this log. Do not flip `AUTH_URL`. No live Stripe.
 
 ```yaml
 streams:
@@ -58,14 +60,14 @@ streams:
   - {id: GL2, issue: 373, branch: feat/knowledge-gap-loop-m2,      depends_on: [M5, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: none, status: deployed, pr: 417, sha: "338ddbc6ad2462c412161acd56bf6414d598f8de", spec_pr: 409, spec_doc: docs/rebuild/gl2-gap-loop-prep.md, spec_sha: "d0e71dc68979accd17a207572706282bfcb0f447", migration: "0029", embeddings: "xai-v1-1024", cron_sidecar: "field-school-knowledge-loop-cron", cron_command: "POST then sleep 900", cron_fix_pr: 421, cron_fix_deploy_sha: "9b478c6b97fb5c43ff3edf1469e433e2a3ef460b"}
   - {id: PM4, issue: 374, branch: feat/profile-m4,                 depends_on: [PM3],          base: feat/profile-m3,                 merge_in: [],    needs_merge: false, gate: none, status: deployed, pr: 423, sha: "0c0569165a1cad7de5aa7ec98164e4c8065d5972", spec_pr: 403, spec_doc: docs/rebuild/pm4-profile-prep.md, spec_sha: "0c83da3f240535b7296fbabd85ea03a6e755c2de", migration: "0031"}
   - {id: GL3, issue: 375, branch: feat/knowledge-gap-loop-m3,      depends_on: [M8, M12, GL2], base: feat/knowledge-gap-loop-m2,      merge_in: [M12], needs_merge: true,  gate: none, status: building, pr: null, spec_pr: 410, spec_doc: docs/rebuild/gl3-gap-loop-prep.md, spec_sha: "c8fad4cf9adf0ff940a16a0f353620216a61edde", migration: null, build: in_progress, deps_met: true}
-  - {id: M13, issue: 376, branch: spike/payload-m13,               depends_on: [M6, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: never_merge_spike, status: spec_merged, pr: null, spec_pr: 401, spec_doc: docs/rebuild/m13-payload-spike-prep.md, spec_sha: "e99850da4566abbd3846b202f6198a9f2c7f617c", migration: null, spike: running}
-  - {id: M14, issue: 377, branch: feat/portal-m14-evolution,       depends_on: [M13],          base: set_by_sealed_brief,             merge_in: [],    needs_merge: true,  gate: sealed_brief_on_377, status: spec_merged, pr: null, spec_pr: 402, spec_doc: docs/rebuild/m14-evolution-prep.md, spec_sha: "946b33516a02e95f14cc1086a08b51e303bc75f2", migration: null, build: not_started, build_waits_on: [M13_report, sealed_brief_on_377]}
+  - {id: M13, issue: 376, branch: spike/payload-m13,               depends_on: [M6, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: never_merge_spike, status: spike_report_merged, pr: null, spec_pr: 401, spec_doc: docs/rebuild/m13-payload-spike-prep.md, spec_sha: "e99850da4566abbd3846b202f6198a9f2c7f617c", report_pr: 426, report_sha: "a9e3aada05a78a78eab2245f4a1f3b79901a4b0f", report_doc: docs/rebuild/m13-payload-spike-report.md, spike_runtime_pr: 424, spike_runtime: open_do_not_merge, recommendation: "Drizzle runtime; Payload not mounted on campus Next", migration: null}
+  - {id: M14, issue: 377, branch: feat/portal-m14-evolution,       depends_on: [M13],          base: set_by_sealed_brief,             merge_in: [],    needs_merge: true,  gate: sealed_brief_on_377, status: building, pr: null, spec_pr: 402, spec_doc: docs/rebuild/m14-evolution-prep.md, spec_sha: "946b33516a02e95f14cc1086a08b51e303bc75f2", migration: null, build: in_progress, m13_report_pr: 426, build_waits_on: [sealed_brief_on_377]}
   - {id: M15, issue: 378, branch: feat/portal-m15-retire,          depends_on: [M9, M10, M11], base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: merge_after_m10_m11_deployed_and_soaked, status: spec_merged, pr: null, spec_pr: 406, spec_doc: docs/rebuild/m15-retire-prep.md, spec_sha: "5fea0b6da998369d17bef480573be30afae1693a", migration: none, build: not_started}
 walk_order: [S0, M5, G, M6, M7, M8, M9, M10, M11, M12, PM3, GL2, PM4, GL3, M13, M14, M15]
 ben_merge_order: [S0, M5, M6, M7, M8, G, M9, M10, M11, M12, PM3, GL2, PM4, GL3, M15]
 ```
 
-S0, M5, M6, M7, M8, G, M9, M10, M11, M12, GL2, PM3, and PM4 are merged and deployed on the campus tip (`0c0569165a1cad7de5aa7ec98164e4c8065d5972`, #423). GL2 merge remains `338ddbc` (#417); earlier campus ships carried PM3 and cron fix #421. GL3 is `building` and is not deployed. M13 spike is `running` and is never merged. M14 and M15 stay `spec_merged` until their lanes open. M14 code waits on the M13 report and a sealed brief on #377. M15 has no migration in its spec; Ben merges M15 code only after M10 and M11 are deployed and soaked (`merge_after_m10_m11_deployed_and_soaked`).
+S0, M5, M6, M7, M8, G, M9, M10, M11, M12, GL2, PM3, and PM4 are merged and deployed on the campus tip (`0c0569165a1cad7de5aa7ec98164e4c8065d5972`, #423). GL2 merge remains `338ddbc` (#417). GL3 is `building` and is not deployed. M13 spike report is on main (#426, docs only); runtime PR #424 stays open and must not merge. M14 code is `building` from that report and is not deployed; sealed brief on #377 still required. M15 stays `spec_merged`. M15 has no migration in its spec; Ben merges M15 code only after M10 and M11 are deployed and soaked (`merge_after_m10_m11_deployed_and_soaked`).
 
 ## Stream 0 recommendation map
 
