@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
 import { and, asc, eq, ne } from "drizzle-orm";
+import { applyPm4Sql } from "@/lib/profile/pm4-sql";
 import { applyProfileM2Sql } from "@/lib/assessments/sql";
-import { getDb } from "@/lib/db/client";
+import { getDb, getSql } from "@/lib/db/client";
+import { photoVisibleTo } from "@/lib/profile/peer";
 import { userProfiles } from "@/lib/db/schema";
 import {
   media,
@@ -12,6 +14,7 @@ import {
   profileSkills,
 } from "@/lib/db/schema-profile-m2";
 import { candidatesFromText, type ImportCandidate } from "./linkedin";
+import { entryKey, experienceProject, importTarget, proposeCertificationSkills, type ImportOrigin } from "./import-plan";
 import { readPhoto, type PhotoRefusal } from "./media";
 import { listOfAliases, mediaPath, type ProjectInput, type SkillInput } from "./model";
 import { findExact, matchKey, suggest, type Known } from "./names";
@@ -20,7 +23,7 @@ import { fetchPhoto, type FetchRefusal } from "./photo-fetch";
 export type Owner = { memberId: string; name: string };
 
 async function ready(owner: Owner) {
-  await applyProfileM2Sql();
+  await applyPm4Sql();
   await getDb()
     .insert(userProfiles)
     .values({ memberId: owner.memberId, displayName: owner.name })
@@ -88,7 +91,7 @@ export async function removePhoto(owner: Owner) {
   });
 }
 
-/** Only the owner can read their stored image. */
+/** Only the owner can read their stored image through this path. */
 export async function readMedia(owner: Owner, id: string) {
   await applyProfileM2Sql();
   const [row] = await getDb()
@@ -97,6 +100,36 @@ export async function readMedia(owner: Owner, id: string) {
     .where(and(eq(media.id, id), eq(media.ownerMemberId, owner.memberId)))
     .limit(1);
   return row ?? null;
+}
+
+/** Profile photo for the owner, or for an adult peer in the same org. Child photos stay private. */
+export async function readProfilePhoto(viewer: Owner, viewerKind: string, id: string) {
+  await applyProfileM2Sql();
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT m.mime_type, m.bytes, m.sha256, owner.kind AS owner_kind,
+      (m.owner_member_id = ${viewer.memberId}) AS is_owner,
+      EXISTS (
+        SELECT 1 FROM memberships viewer_ms
+        JOIN memberships owner_ms ON owner_ms.org_id = viewer_ms.org_id
+        WHERE viewer_ms.member_id = ${viewer.memberId}
+          AND owner_ms.member_id = m.owner_member_id
+      ) AS same_org
+    FROM media m
+    JOIN members owner ON owner.id = m.owner_member_id
+    WHERE m.id = ${id} AND m.purpose = 'profile_photo'
+    LIMIT 1
+  `) as { mime_type: string; bytes: Buffer; sha256: string; owner_kind: string; is_owner: boolean; same_org: boolean }[];
+  const row = rows[0];
+  if (!row) return null;
+  const visible = photoVisibleTo({
+    viewerKind,
+    ownerKind: row.owner_kind,
+    sameOrg: row.same_org === true,
+    isOwner: row.is_owner === true,
+  });
+  if (!visible) return null;
+  return { mimeType: row.mime_type, bytes: row.bytes, sha256: row.sha256 };
 }
 
 async function skillCatalog(): Promise<Known[]> {
@@ -234,17 +267,13 @@ export async function removeItem(owner: Owner, kind: "skill" | "project" | "entr
   return enrichmentView(owner);
 }
 
-function entryKey(candidate: Pick<ImportCandidate, "title" | "organization">) {
-  return matchKey(`${candidate.title} ${candidate.organization}`);
-}
-
 export type ReviewItem = ImportCandidate & {
   existing: { id: string; name: string } | null;
   onProfile: boolean;
 };
 
-/** Reads the export into a review list. Nothing is written here. */
-export async function reviewImport(owner: Owner, text: string): Promise<ReviewItem[]> {
+/** Reads a candidate list into a review. Nothing is written here. */
+export async function reviewCandidates(owner: Owner, candidates: readonly ImportCandidate[]): Promise<ReviewItem[]> {
   await ready(owner);
   const db = getDb();
   const catalog = await skillCatalog();
@@ -254,7 +283,12 @@ export async function reviewImport(owner: Owner, text: string): Promise<ReviewIt
     .from(profileEntries)
     .where(eq(profileEntries.memberId, owner.memberId));
   const entryKeys = new Set(entries.map((entry) => `${entry.kind}|${entry.matchKey}`));
-  return candidatesFromText(text).map((candidate) => {
+  const projectRows = await db
+    .select({ matchKey: profileProjectLinks.matchKey })
+    .from(profileProjectLinks)
+    .where(eq(profileProjectLinks.memberId, owner.memberId));
+  const projectKeys = new Set(projectRows.map((row) => row.matchKey));
+  return candidates.map((candidate) => {
     if (candidate.kind === "skill") {
       const exact = findExact(matchKey(candidate.title), catalog);
       return {
@@ -263,8 +297,21 @@ export async function reviewImport(owner: Owner, text: string): Promise<ReviewIt
         onProfile: exact ? linked.has(exact.id) : false,
       };
     }
+    if (importTarget(candidate) === "project") {
+      const project = experienceProject(candidate);
+      return {
+        ...candidate,
+        existing: null,
+        onProfile: project ? projectKeys.has(project.matchKey) : false,
+      };
+    }
     return { ...candidate, existing: null, onProfile: entryKeys.has(`${candidate.kind}|${entryKey(candidate)}`) };
   });
+}
+
+/** Reads the export into a review list. Nothing is written here. */
+export async function reviewImport(owner: Owner, text: string): Promise<ReviewItem[]> {
+  return reviewCandidates(owner, proposeCertificationSkills(candidatesFromText(text)));
 }
 
 export type AcceptedItem = { candidate: ImportCandidate; useId: string | null };
@@ -275,15 +322,54 @@ export type AcceptResult = { added: string[]; linkedExisting: string[]; alreadyO
  * Writes only what the User accepted, all at once. Imported skills go through the same exact
  * match as typed ones: a name already in the catalog links that skill and never makes a copy.
  */
-export async function acceptImport(owner: Owner, profileUrl: string | null, items: readonly AcceptedItem[]): Promise<AcceptResult> {
+export async function acceptImport(
+  owner: Owner,
+  profileUrl: string | null,
+  items: readonly AcceptedItem[],
+  importOrigin: ImportOrigin = "linkedin",
+): Promise<AcceptResult> {
   await ready(owner);
   const importedAt = new Date();
   const catalog = await skillCatalog();
+  const sourceName = importOrigin === "resume" ? "resume" : "linkedin";
   const result = { added: [] as string[], linkedExisting: [] as string[], alreadyOnProfile: [] as string[] };
   await getDb().transaction(async (tx) => {
     for (const { candidate, useId } of items) {
-      const source = { source: "linkedin", sourceUrl: profileUrl, importedAt };
-      if (candidate.kind !== "skill") {
+      const source = { source: sourceName, sourceUrl: profileUrl, importedAt };
+      const target = importTarget(candidate);
+      if (target === "project") {
+        const project = experienceProject(candidate);
+        if (!project) continue;
+        const [existing] = await tx
+          .select({ id: profileProjectLinks.id })
+          .from(profileProjectLinks)
+          .where(and(eq(profileProjectLinks.memberId, owner.memberId), eq(profileProjectLinks.matchKey, project.matchKey)))
+          .limit(1);
+        if (existing) {
+          result.alreadyOnProfile.push(candidate.title);
+          continue;
+        }
+        const [created] = await tx
+          .insert(profileProjects)
+          .values({ name: project.name, createdByMemberId: owner.memberId })
+          .returning({ id: profileProjects.id });
+        const [link] = await tx
+          .insert(profileProjectLinks)
+          .values({
+            memberId: owner.memberId,
+            projectId: created.id,
+            matchKey: project.matchKey,
+            role: project.role,
+            startedOn: candidate.startedOn,
+            endedOn: candidate.endedOn,
+            ...source,
+          })
+          .onConflictDoNothing()
+          .returning({ id: profileProjectLinks.id });
+        (link ? result.added : result.alreadyOnProfile).push(candidate.title);
+        continue;
+      }
+      if (target === "entry") {
         const [row] = await tx
           .insert(profileEntries)
           .values({
@@ -301,6 +387,7 @@ export async function acceptImport(owner: Owner, profileUrl: string | null, item
         (row ? result.added : result.alreadyOnProfile).push(candidate.title);
         continue;
       }
+      if (target !== "skill") continue;
       const key = matchKey(candidate.title);
       const exact = findExact(key, catalog);
       const chosen = exact ?? (useId ? catalog.find((item) => item.id === useId) ?? null : null);
@@ -308,7 +395,12 @@ export async function acceptImport(owner: Owner, profileUrl: string | null, item
       if (!skillId) {
         const [created] = await tx
           .insert(profileSkills)
-          .values({ name: candidate.title, matchKey: key, origin: "linkedin", createdByMemberId: owner.memberId })
+          .values({
+            name: candidate.title,
+            matchKey: key,
+            origin: sourceName === "resume" ? "member" : "linkedin",
+            createdByMemberId: owner.memberId,
+          })
           .onConflictDoNothing()
           .returning({ id: profileSkills.id });
         const [row] = created

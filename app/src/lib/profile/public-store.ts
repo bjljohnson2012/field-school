@@ -23,6 +23,7 @@ import {
   type FinishPlacement,
   type HomeCourse,
 } from "./outcomes.ts";
+import { buildPeerProfile, type PeerEntry, type PeerPlacement, type PeerProject, type PeerSkill } from "./peer.ts";
 import { isShareSlug, mintShareSlug, nextShareState, type ShareAction, type ShareState } from "./share.ts";
 
 type Row = Record<string, unknown>;
@@ -358,8 +359,10 @@ export type PeopleStrip = {
   label: string;
   displayName: string;
   photo: string;
-  skills: string[];
-  projects: PublicProject[];
+  skills: PeerSkill[];
+  projects: PeerProject[];
+  entries: PeerEntry[];
+  placements: PeerPlacement[];
   headline: string;
   bio: string;
   shareHref: string | null;
@@ -376,8 +379,10 @@ export async function loadPeopleStrip(input: {
   const blank = {
     displayName: input.displayName,
     photo: "",
-    skills: [] as string[],
-    projects: [] as PublicProject[],
+    skills: [] as PeerSkill[],
+    projects: [] as PeerProject[],
+    entries: [] as PeerEntry[],
+    placements: [] as PeerPlacement[],
     headline: "",
     bio: "",
     shareHref: null as string | null,
@@ -425,6 +430,74 @@ export async function loadPeopleStrip(input: {
     } catch {
       brain = [];
     }
+    const sql = getSql();
+    const skillRows = (await sql`
+      SELECT s.name, l.level FROM profile_skill_links l
+      JOIN profile_skills s ON s.id = l.skill_id
+      WHERE l.member_id = ${input.memberId}
+      ORDER BY s.name
+    `) as Row[];
+    const projectRows = (await sql`
+      SELECT p.name, p.link, l.role FROM profile_project_links l
+      JOIN profile_projects p ON p.id = l.project_id
+      WHERE l.member_id = ${input.memberId}
+      ORDER BY p.name
+    `) as Row[];
+    const entryRows = (await sql`
+      SELECT kind, title, organization, started_on, ended_on
+      FROM profile_entries WHERE member_id = ${input.memberId}
+      ORDER BY kind, created_at
+    `) as Row[];
+    const placementRows = (await sql`
+      SELECT DISTINCT ON (track, taxonomy)
+        track, taxonomy, category, confidence_pct, locked, unsettled
+      FROM assessment_placements
+      WHERE member_id = ${input.memberId}
+      ORDER BY track, taxonomy, created_at DESC
+    `) as Row[];
+    const peer = buildPeerProfile({
+      kind: "adult",
+      sameOrg: true,
+      viewerAdult: true,
+      displayName: view?.displayName || input.displayName,
+      photo: profile && text(profile, "photo_media_id") ? mediaPath(text(profile, "photo_media_id")) : "",
+      headline: profile ? text(profile, "headline") : "",
+      bio: profile ? text(profile, "bio") : "",
+      skills: skillRows.map((row) => ({ name: text(row, "name"), level: text(row, "level") || null })),
+      projects: projectRows.map((row) => ({ name: text(row, "name"), role: text(row, "role"), link: text(row, "link") })),
+      entries: entryRows.map((row) => ({
+        kind: text(row, "kind"),
+        title: text(row, "title"),
+        organization: text(row, "organization"),
+        startedOn: text(row, "started_on") || null,
+        endedOn: text(row, "ended_on") || null,
+      })),
+      placements: placementRows.map((row) => {
+        const track = text(row, "track");
+        const taxonomy = text(row, "taxonomy");
+        const category = text(row, "category");
+        const confidence = Number(row.confidence_pct);
+        let label = taxonomy;
+        let categoryLabel = category;
+        if (isTrackId(track)) {
+          const def = trackDef(track);
+          const tax = def.taxonomies.find((item) => item.id === taxonomy);
+          const cat = tax?.categories.find((item) => item.id === category);
+          label = tax?.label || taxonomy;
+          categoryLabel = cat?.label || category;
+        }
+        return {
+          track,
+          taxonomy,
+          category,
+          label,
+          categoryLabel,
+          confidencePct: Number.isFinite(confidence) ? confidence : 0,
+          locked: row.locked === true,
+          unsettled: row.unsettled === true,
+        };
+      }),
+    });
     const slug = profile ? text(profile, "share_slug") : "";
     const panel = peoplePanel({
       kind: "adult",
@@ -438,16 +511,18 @@ export async function loadPeopleStrip(input: {
       slug,
       membershipId: input.membershipId,
     });
-    if (panel.kind !== "adult") return { ...blank, kind: "adult", label: "" };
+    if (panel.kind !== "adult" || !peer) return { ...blank, kind: "adult", label: "" };
     return {
       kind: "adult",
       label: "",
-      displayName: panel.displayName,
-      photo: panel.photo,
-      skills: panel.skills,
-      projects: panel.projects,
-      headline: panel.headline,
-      bio: panel.bio,
+      displayName: peer.displayName || panel.displayName,
+      photo: peer.photo || panel.photo,
+      skills: peer.skills,
+      projects: peer.projects,
+      entries: peer.entries,
+      placements: peer.placements,
+      headline: peer.headline,
+      bio: peer.bio,
       shareHref: panel.shareHref,
       brain,
     };

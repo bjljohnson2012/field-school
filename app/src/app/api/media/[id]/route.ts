@@ -1,19 +1,19 @@
 import { adultOnly, refuse, unavailable } from "@/lib/assessments/actor";
 import { isUuid } from "@/lib/enrichment/model";
-import { readMedia } from "@/lib/enrichment/store";
+import { readProfilePhoto } from "@/lib/enrichment/store";
 
 export const dynamic = "force-dynamic";
 
 type Params = { params: Promise<{ id: string }> };
 
-/** A stored profile photo, for its owner only. */
+/** A stored profile photo for its owner, or an adult peer in the same org. */
 export async function GET(request: Request, ctx: Params) {
   try {
     const auth = await adultOnly(request);
     if (!auth.ok) return auth.response;
     const { id } = await ctx.params;
     if (!isUuid(id)) return refuse(404, "media_not_found");
-    const row = await readMedia(auth.actor.owner, id);
+    const row = await readProfilePhoto(auth.actor.owner, auth.actor.kind, id);
     if (!row) return refuse(404, "media_not_found");
     return new Response(new Uint8Array(row.bytes), {
       headers: {

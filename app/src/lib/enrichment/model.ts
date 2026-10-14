@@ -1,3 +1,4 @@
+import type { ImportOrigin } from "./import-plan.ts";
 import { readCandidate, parseProfileUrl, type ImportCandidate } from "./linkedin.ts";
 import { PROJECT_NAME_MAX, SKILL_NAME_MAX, cleanName } from "./names.ts";
 
@@ -64,10 +65,18 @@ const MAX_ACCEPT = 80;
 /** What the User accepted from the review list, re-checked field by field. */
 export function parseAcceptance(
   body: unknown,
-): { profileUrl: string | null; items: { candidate: ImportCandidate; useId: string | null }[] } | null {
+): { profileUrl: string | null; origin: ImportOrigin; items: { candidate: ImportCandidate; useId: string | null }[] } | null {
   const rawUrl = field(body, "profileUrl");
   const profileUrl = rawUrl === undefined || rawUrl === null || rawUrl === "" ? null : parseProfileUrl(rawUrl);
   if (rawUrl && !profileUrl) return null;
+  const originRaw = field(body, "origin");
+  const origin: ImportOrigin | null =
+    originRaw === undefined || originRaw === null || originRaw === "linkedin"
+      ? "linkedin"
+      : originRaw === "resume"
+        ? "resume"
+        : null;
+  if (!origin) return null;
   const items = field(body, "items");
   if (!Array.isArray(items) || items.length === 0 || items.length > MAX_ACCEPT) return null;
   const out: { candidate: ImportCandidate; useId: string | null }[] = [];
@@ -77,7 +86,7 @@ export function parseAcceptance(
     if (!candidate || use === undefined) return null;
     out.push({ candidate, useId: candidate.kind === "skill" ? use : null });
   }
-  return { profileUrl, items: out };
+  return { profileUrl, origin, items: out };
 }
 
 export function mediaPath(id: string) {

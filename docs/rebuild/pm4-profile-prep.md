@@ -2,6 +2,15 @@
 
 This file is the spec and the test plan for [issue 374](https://github.com/bjljohnson2012/field-school/issues/374). Issue 374 and the CDM notes on that issue win over this table when they disagree.
 
+## CDM seal (2026-10-14)
+
+CDM sealed PM4 on 2026-10-14, delegated by Ben. These choices close the decision table.
+
+1. Imported education and certification rows stay profile entries, never projects. Certifications can also propose skills through the existing dedupe ("already in the system").
+2. Peers in the same org, adults only, see display name, photo, headline, and bio in addition to skills, projects, entries, and placement tracks. They never see contact info, children, raw assessment answers, coaching records, or progress.
+3. The atomic gate merge covers both `recordAdultGate` and the personality-derived writes in `loadAdultProfile`.
+4. Parse non-LinkedIn resume PDFs. Output is proposed entries the person reviews and confirms. Nothing auto-writes. Use the existing `GROK_API_KEY` within the existing GL2 cost caps ($0.25 per task and $10 per month, hard stop). Adults only. Never print the key.
+
 Launch stays CLOSED 0/8. `AUTH_URL` stays `https://portal.fieldschool.ai`. `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay `false`. No live Stripe. This prep does not deploy, does not run production scripts, and does not flip flags.
 
 ## Stream placement

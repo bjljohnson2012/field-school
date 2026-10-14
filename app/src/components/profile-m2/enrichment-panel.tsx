@@ -20,6 +20,9 @@ function sourceLabel(item: { source: string; importedAt: string | null }) {
   if (item.source === "linkedin" && item.importedAt) {
     return `${ENRICHMENT_COPY.imported} · ${new Date(item.importedAt).toLocaleDateString()}`;
   }
+  if (item.source === "resume" && item.importedAt) {
+    return `Imported from a resume · ${new Date(item.importedAt).toLocaleDateString()}`;
+  }
   return "Added by you";
 }
 
@@ -204,6 +207,7 @@ function ImportReview({ onSaved }: { onSaved: (view: EnrichmentView) => void }) 
   const [items, setItems] = useState<ReviewItem[] | null>(null);
   const [chosen, setChosen] = useState<Set<string>>(new Set());
   const [source, setSource] = useState<string | null>(null);
+  const [origin, setOrigin] = useState<"linkedin" | "resume">("linkedin");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -217,6 +221,7 @@ function ImportReview({ onSaved }: { onSaved: (view: EnrichmentView) => void }) 
       const res = await fetch("/api/profile/import/review", { method: "POST", body: form });
       const data = (await res.json()) as {
         kind?: "pdf_required" | "review";
+        source?: "linkedin" | "resume";
         items?: ReviewItem[];
         profileUrl?: string | null;
         message?: string;
@@ -239,6 +244,7 @@ function ImportReview({ onSaved }: { onSaved: (view: EnrichmentView) => void }) 
       const list = data.items ?? [];
       setItems(list);
       setSource(data.profileUrl ?? null);
+      setOrigin(data.source === "resume" ? "resume" : "linkedin");
       setChosen(new Set(list.filter((item) => !item.onProfile).map((item) => item.id)));
     } catch {
       setStatus("Could not reach the portal.");
@@ -264,7 +270,11 @@ function ImportReview({ onSaved }: { onSaved: (view: EnrichmentView) => void }) 
         };
         return { candidate, useId: item.existing?.id ?? null };
       });
-      const { data } = await post<Partial<AcceptResult>>("/api/profile/import/accept", { profileUrl: source, items: payload });
+      const { data } = await post<Partial<AcceptResult>>("/api/profile/import/accept", {
+        profileUrl: source,
+        origin,
+        items: payload,
+      });
       if (!data.view) {
         setStatus("Could not save those.");
         return;
@@ -295,6 +305,9 @@ function ImportReview({ onSaved }: { onSaved: (view: EnrichmentView) => void }) 
     <div className="space-y-3" data-import>
       <h3 className="text-sm font-semibold">Import from LinkedIn</h3>
       <p className="text-xs text-muted-foreground">{LINKEDIN_COPY.pdfRequired}</p>
+      <p className="text-xs text-muted-foreground">
+        A resume PDF that is not a LinkedIn export becomes a list for you to confirm. Nothing is saved until you accept.
+      </p>
       {items ? (
         <div className="space-y-3">
           <p className="text-xs text-muted-foreground">{LINKEDIN_COPY.reviewHint}</p>
@@ -356,7 +369,7 @@ function ImportReview({ onSaved }: { onSaved: (view: EnrichmentView) => void }) 
           </div>
           <div>
             <label className="label" htmlFor="import-pdf">
-              LinkedIn PDF export
+              LinkedIn PDF or resume PDF
             </label>
             <input
               id="import-pdf"
