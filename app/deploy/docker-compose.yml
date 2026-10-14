@@ -92,18 +92,7 @@ services:
       CRON_SECRET: ${CRON_SECRET:-}
     networks:
       - campus
-    command: >
-      sh -c "
-        apk add --no-cache curl > /dev/null;
-        while true; do
-          echo \"[cron] $$(date -u +%Y-%m-%dT%H:%M:%SZ) POST /api/cron/knowledge-loop\";
-          curl -sS -X POST \
-            -H \"Authorization: Bearer $$CRON_SECRET\" \
-            http://field-school-app:3000/api/cron/knowledge-loop || echo \"[cron] knowledge loop failed\";
-          echo;
-          sleep 900;
-        done
-      "
+    command: ["sh", "-c", "apk add --no-cache curl >/dev/null; while true; do echo \"[cron] $$(date -u +%Y-%m-%dT%H:%M:%SZ) POST /api/cron/knowledge-loop\"; curl -sS -X POST -H \"Authorization: Bearer $$CRON_SECRET\" http://field-school-app:3000/api/cron/knowledge-loop || echo \"[cron] knowledge loop failed\"; echo; sleep 900; done"]
 
 volumes:
   field-school-data:
