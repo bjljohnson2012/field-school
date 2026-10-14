@@ -1,51 +1,26 @@
 import React from "react";
-import {Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from "remotion";
-import {displayFace, gold, ink, paper, sansFace} from "../../brand";
-
-const clamp = {
-  extrapolateLeft: "clamp" as const,
-  extrapolateRight: "clamp" as const,
-};
+import {Img, spring, staticFile, useCurrentFrame, useVideoConfig} from "remotion";
+import {displayFace, gold, ink, paper, serifFace} from "../../brand";
 
 export const LowerThird: React.FC<{
   name: string;
   org: string;
-  title: string;
   visible: boolean;
-}> = ({name, org, title, visible}) => {
+}> = ({name, org, visible}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const enter = spring({
-    frame: Math.max(0, frame - 36),
+    frame: Math.max(0, frame - 18),
     fps,
-    config: {damping: 200, mass: 0.7},
-    durationInFrames: 16,
+    config: {damping: 200},
+    durationInFrames: 14,
   });
   const opacity = visible ? enter : 0;
 
   return (
     <>
-      <div
-        style={{
-          position: "absolute",
-          left: 1148,
-          top: 24,
-          width: 400,
-          height: 64,
-          opacity,
-          fontFamily: displayFace,
-          fontWeight: 700,
-          fontSize: 22,
-          letterSpacing: "-0.02em",
-          lineHeight: "64px",
-          color: paper,
-          textAlign: "right",
-        }}
-      >
-        {title}
-      </div>
       <Img
-        src={staticFile("isolated-seal.svg")}
+        src={staticFile("brand/mark-color-512.png")}
         style={{
           position: "absolute",
           left: 1576,
@@ -58,17 +33,15 @@ export const LowerThird: React.FC<{
       <div
         style={{
           position: "absolute",
-          left: 1142,
-          bottom: 78,
-          width: 700,
+          left: 96,
+          top: 900,
           opacity,
-          translate: `${interpolate(enter, [0, 1], [24, 0], clamp)}px 0px`,
           backgroundColor: paper,
-          borderRadius: 16,
-          padding: "16px 22px",
+          borderRadius: 14,
+          padding: "10px 18px 10px 14px",
           display: "flex",
           alignItems: "center",
-          gap: 16,
+          gap: 14,
         }}
       >
         <div style={{width: 8, alignSelf: "stretch", borderRadius: 4, backgroundColor: gold}} />
@@ -76,8 +49,8 @@ export const LowerThird: React.FC<{
           <div
             style={{
               fontFamily: displayFace,
-              fontWeight: 700,
-              fontSize: 34,
+              fontWeight: 600,
+              fontSize: 32,
               color: ink,
               letterSpacing: "-0.02em",
               lineHeight: 1.05,
@@ -87,14 +60,11 @@ export const LowerThird: React.FC<{
           </div>
           <div
             style={{
-              fontFamily: sansFace,
-              fontWeight: 500,
-              fontSize: 20,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
+              fontFamily: serifFace,
+              fontWeight: 400,
+              fontSize: 22,
               color: ink,
-              opacity: 0.75,
-              marginTop: 4,
+              marginTop: 2,
             }}
           >
             {org}

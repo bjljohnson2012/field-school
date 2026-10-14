@@ -3,8 +3,8 @@
   "fps": 30,
   "width": 1920,
   "height": 1080,
-  "durationSec": 50.169,
-  "durationFrames": 1505,
+  "durationSec": 44.469,
+  "durationFrames": 1334,
   "voOffsetSec": 0.7,
   "speechSec": 41.269,
   "course": "Field School",
@@ -16,10 +16,10 @@
     "org": "Field School"
   },
   "music": {
-    "title": "Deliberate Thought",
+    "title": "Long Note Four",
     "artist": "Kevin MacLeod (incompetech.com)",
-    "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Deliberate%20Thought.mp3",
-    "license": "Creative Commons Attribution 4.0 International (CC BY 4.0). Commercial use with attribution.",
+    "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Long%20Note%20Four.mp3",
+    "license": "Creative Commons Attribution 4.0 International (CC BY 4.0). Commercial use with attribution. Lowpassed at 140 Hz so the pad stays under the voice.",
     "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
     "volume": 0.12
   },
@@ -35,7 +35,7 @@
       "outSec": 0.7,
       "motion": "takeover",
       "showHead": false,
-      "letterbox": 108,
+      "letterbox": 0,
       "mode": "sting"
     },
     {
@@ -65,8 +65,19 @@
       "kicker": "THE RULE",
       "text": "Rule yourself before leading others.",
       "inSec": 12.017,
-      "outSec": 25.864,
+      "outSec": 18,
       "motion": "glide",
+      "showHead": true,
+      "letterbox": 0,
+      "mode": "card"
+    },
+    {
+      "id": "hook-b",
+      "kicker": "THE RULE",
+      "text": "Rule yourself before leading others.",
+      "inSec": 18,
+      "outSec": 25.864,
+      "motion": "takeover",
       "showHead": true,
       "letterbox": 0,
       "mode": "card"
@@ -77,7 +88,7 @@
       "text": "Invest in the people you lead.",
       "inSec": 25.864,
       "outSec": 31.775,
-      "motion": "glide",
+      "motion": "takeover",
       "showHead": true,
       "letterbox": 0,
       "mode": "card"
@@ -88,7 +99,7 @@
       "text": "Your actions influence the people around you.",
       "inSec": 31.775,
       "outSec": 39.497,
-      "motion": "glide",
+      "motion": "takeover",
       "showHead": true,
       "letterbox": 0,
       "mode": "show"
@@ -105,58 +116,25 @@
       "mode": "card"
     },
     {
-      "id": "recap-1",
-      "kicker": "RECAP",
-      "text": "Self-government.",
-      "inSec": 41.969,
-      "outSec": 43.769,
-      "motion": "glide",
-      "showHead": true,
-      "letterbox": 36,
-      "mode": "recap"
-    },
-    {
-      "id": "recap-2",
-      "kicker": "RECAP",
-      "text": "Invest in people.",
-      "inSec": 43.769,
-      "outSec": 45.569,
-      "motion": "glide",
-      "showHead": true,
-      "letterbox": 36,
-      "mode": "recap"
-    },
-    {
-      "id": "recap-3",
-      "kicker": "RECAP",
-      "text": "Lead yourself.",
-      "inSec": 45.569,
-      "outSec": 47.369,
-      "motion": "glide",
-      "showHead": true,
-      "letterbox": 36,
-      "mode": "recap"
-    },
-    {
       "id": "next-up",
       "kicker": "NEXT UP",
       "text": "Seven statements that build the rule.",
-      "inSec": 47.369,
-      "outSec": 49.169,
+      "inSec": 41.969,
+      "outSec": 43.469,
       "motion": "glide",
       "showHead": true,
-      "letterbox": 72,
+      "letterbox": 0,
       "mode": "next"
     },
     {
       "id": "sting-tail",
       "kicker": "FIELD SCHOOL",
       "text": "Rule yourself first.",
-      "inSec": 49.169,
-      "outSec": 50.169,
+      "inSec": 43.469,
+      "outSec": 44.469,
       "motion": "takeover",
       "showHead": false,
-      "letterbox": 108,
+      "letterbox": 0,
       "mode": "sting"
     }
   ],
@@ -165,7 +143,7 @@
       "id": "one",
       "text": "One rule",
       "fromMs": 3192,
-      "sfx": "hit",
+      "sfx": "tick",
       "emphasis": true,
       "vox": true
     },
@@ -259,27 +237,27 @@
   ],
   "stingMs": [
     0,
-    49169
+    43469
   ],
   "whooshMs": [
-    31775
+    3192,
+    18000,
+    25864,
+    31775,
+    41969
   ],
   "stills": [
     {
-      "id": "sting",
-      "frame": 8
+      "id": "00-05",
+      "frame": 150
     },
     {
-      "id": "slate",
-      "frame": 72
+      "id": "00-20",
+      "frame": 600
     },
     {
-      "id": "teach",
-      "frame": 794
-    },
-    {
-      "id": "next-up",
-      "frame": 1433
+      "id": "00-44",
+      "frame": 1320
     }
   ],
   "anchors": {

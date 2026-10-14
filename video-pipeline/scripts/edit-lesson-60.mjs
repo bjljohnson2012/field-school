@@ -19,7 +19,7 @@ const VOX_ENTER_SEC = 0.8;
 const PAD_BEFORE = 0.05;
 const PAD_AFTER = 0.07;
 const VO_OFFSET_SEC = 0.7;
-const OUTRO_SEC = 8.2;
+const OUTRO_SEC = 2.5;
 const FPS = 30;
 
 const FILLERS = new Set(["um", "uh", "er", "erm", "ah", "hmm", "mm", "mhm", "uhh", "umm"]);
@@ -196,6 +196,8 @@ function assemble({video, wav, pieces, aroll, bedIn, whoosh, ding, tick, publicD
     "-t",
     "90",
     "-vn",
+    "-af",
+    "lowpass=f=140:poles=2,lowpass=f=140:poles=2",
     "-c:a",
     "libmp3lame",
     "-q:a",
@@ -274,12 +276,13 @@ function buildEpisode({pieces, kept, voxEnters, speechSec}) {
     ["teach", tInvest],
     ["show", Math.max(tInvest + 0.8, tInfluence - 0.35)],
     ["do", Math.max(tInfluence + 0.8, tLead - 0.25)],
-    ["recap-1", speechEnd],
-    ["recap-2", speechEnd + 1.8],
-    ["recap-3", speechEnd + 3.6],
-    ["next-up", speechEnd + 5.4],
-    ["sting-tail", speechEnd + 7.2],
+    ["next-up", speechEnd],
+    ["sting-tail", speechEnd + 1.5],
   ];
+  const hookAt = anchors.findIndex((anchor) => anchor[0] === "hook");
+  if (hookAt >= 0 && anchors[hookAt + 1][1] > 18.4) {
+    anchors.splice(hookAt + 1, 0, ["hook-b", 18]);
+  }
   for (let i = 1; i < anchors.length; i += 1) {
     if (anchors[i][1] <= anchors[i - 1][1] + 0.35) {
       anchors[i][1] = anchors[i - 1][1] + 0.8;
@@ -290,18 +293,16 @@ function buildEpisode({pieces, kept, voxEnters, speechSec}) {
   }
 
   const copy = {
-    sting: ["FIELD SCHOOL", "Self-government", "sting", "takeover", false, 108],
+    sting: ["FIELD SCHOOL", "Self-government", "sting", "takeover", false, 0],
     slate: ["COURSE  ·  MODULE", "Rule yourself before leading others", "slate", "glide", true, 0],
     objective: ["YOU WILL BE ABLE TO", "State the rule of self-government.", "objective", "takeover", true, 0],
     hook: ["THE RULE", "Rule yourself before leading others.", "card", "glide", true, 0],
-    teach: ["TEACH", "Invest in the people you lead.", "card", "glide", true, 0],
-    show: ["SHOW", "Your actions influence the people around you.", "show", "glide", true, 0],
+    "hook-b": ["THE RULE", "Rule yourself before leading others.", "card", "takeover", true, 0],
+    teach: ["TEACH", "Invest in the people you lead.", "card", "takeover", true, 0],
+    show: ["SHOW", "Your actions influence the people around you.", "show", "takeover", true, 0],
     do: ["DO", "Lead yourself and think for yourself.", "card", "glide", true, 0],
-    "recap-1": ["RECAP", "Self-government.", "recap", "glide", true, 36],
-    "recap-2": ["RECAP", "Invest in people.", "recap", "glide", true, 36],
-    "recap-3": ["RECAP", "Lead yourself.", "recap", "glide", true, 36],
-    "next-up": ["NEXT UP", "Seven statements that build the rule.", "next", "glide", true, 72],
-    "sting-tail": ["FIELD SCHOOL", "Rule yourself first.", "sting", "takeover", false, 108],
+    "next-up": ["NEXT UP", "Seven statements that build the rule.", "next", "glide", true, 0],
+    "sting-tail": ["FIELD SCHOOL", "Rule yourself first.", "sting", "takeover", false, 0],
   };
 
   const chapters = anchors.map((anchor, index) => {
@@ -327,7 +328,7 @@ function buildEpisode({pieces, kept, voxEnters, speechSec}) {
   };
 
   const cues = [
-    cue("one", "One rule", at("one"), "hit", true, true),
+    cue("one", "One rule", at("one"), "tick", true, true),
     cue("work", "Work", at("work"), "tick", false, true),
     cue("life", "Life", at("life"), "tick", false, true),
     cue("leadership", "Leadership", at("leadership"), "tick", true, true),
@@ -339,7 +340,6 @@ function buildEpisode({pieces, kept, voxEnters, speechSec}) {
     cue("lead", "Lead yourself", at("lead", leads.length - 1), "tick", true, true),
   ];
 
-  const show = chapters.find((chapter) => chapter.id === "show");
   const tail = chapters.find((chapter) => chapter.id === "sting-tail");
   const teach = chapters.find((chapter) => chapter.id === "teach");
   const next = chapters.find((chapter) => chapter.id === "next-up");
@@ -359,10 +359,10 @@ function buildEpisode({pieces, kept, voxEnters, speechSec}) {
     objective: "You will be able to state the rule of self-government.",
     lowerThird: {name: "Benjamin Johnson", org: "Field School"},
     music: {
-      title: "Deliberate Thought",
+      title: "Long Note Four",
       artist: "Kevin MacLeod (incompetech.com)",
-      url: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Deliberate%20Thought.mp3",
-      license: "Creative Commons Attribution 4.0 International (CC BY 4.0). Commercial use with attribution.",
+      url: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Long%20Note%20Four.mp3",
+      license: "Creative Commons Attribution 4.0 International (CC BY 4.0). Commercial use with attribution. Lowpassed at 140 Hz so the pad stays under the voice.",
       licenseUrl: "https://creativecommons.org/licenses/by/4.0/",
       volume: 0.12,
     },
@@ -373,7 +373,10 @@ function buildEpisode({pieces, kept, voxEnters, speechSec}) {
     cues,
     voxEnterMs: voxEnters.map((ms) => Math.round(ms)),
     stingMs: [0, Math.round(tail.inSec * 1000)],
-    whooshMs: [Math.round(show.inSec * 1000)],
+    whooshMs: chapters
+      .filter((chapter) => chapter.motion === "takeover" && chapter.showHead)
+      .map((chapter) => Math.round(chapter.inSec * 1000))
+      .concat([Math.round(next.inSec * 1000)]),
     stills: [
       {id: "sting", frame: 8},
       {id: "slate", frame: Math.round(2.4 * FPS)},

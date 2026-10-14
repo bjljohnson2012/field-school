@@ -1,7 +1,7 @@
 import React from "react";
 import {AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig} from "remotion";
 import type {Caption} from "@remotion/captions";
-import {bg} from "./brand";
+import {bg, paper, sansFace} from "./brand";
 import {KaraokePlate} from "./components/boxes/KaraokePlate";
 import {LowerThird} from "./components/boxes/LowerThird";
 import {TalkingHead} from "./components/head/TalkingHead";
@@ -54,14 +54,13 @@ export const LessonFlow: React.FC = () => {
             durationInFrames={Math.max(1, durationInFrames - voFrame)}
             layout="none"
           >
-            <TalkingHead offsetFrames={voFrame} cues={episode.cues} />
+            <TalkingHead offsetFrames={voFrame} />
           </Sequence>
         }
         lowerThird={
           <LowerThird
             name={episode.lowerThird.name}
             org={episode.lowerThird.org}
-            title={episode.module}
             visible={chapter.showHead}
           />
         }
@@ -75,13 +74,32 @@ export const LessonFlow: React.FC = () => {
         }
         audio={
           <LessonAudio
-            musicVolume={episode.music.volume}
+            episode={episode}
+            captions={captions}
             cues={episode.cues}
             stingMs={episode.stingMs}
             whooshMs={episode.whooshMs}
           />
         }
       />
+      {chapter.id === "sting-tail" ? (
+        <div
+          style={{
+            position: "absolute",
+            left: 96,
+            top: 900,
+            width: 980,
+            color: paper,
+            fontFamily: sansFace,
+            fontWeight: 600,
+            fontSize: 18,
+            letterSpacing: "0.08em",
+            lineHeight: 1.4,
+          }}
+        >
+          Music: {episode.music.title} by Kevin MacLeod (incompetech.com), CC BY 4.0
+        </div>
+      ) : null}
     </AbsoluteFill>
   );
 };
