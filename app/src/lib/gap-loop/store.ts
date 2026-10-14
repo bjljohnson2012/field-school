@@ -1,11 +1,14 @@
 import { getSql } from "@/lib/db/client";
 import { applyM11SqlIfConfigured } from "@/lib/brains/sql";
+import { vectorLiteral } from "./embedding.ts";
+import { applyGl2SqlIfConfigured } from "./gl2-sql.ts";
+import { embeddingModelName } from "./research.ts";
 import { isEdgeOrigin, requireSharedEdgeScope, scopeOfRow, statusForOrigin, type EdgeOrigin } from "@/lib/brains/kinds";
 import { assertEvidence, type Citation } from "./citations.ts";
 import { GapAccessError, GapFieldsError } from "./errors.ts";
 import { lessonPaths } from "./inputs.ts";
 import { transition, type LoopEventName, type LoopState } from "./machine.ts";
-import { canReadOutcome, outcomeWrite, type GapActor, type OutcomeScope } from "./rules.ts";
+import { canReadOutcome, outcomeWrite, parseOutcomeScope, writableScopes, type GapActor, type OutcomeScope } from "./rules.ts";
 import { outcomeSignals } from "./signals.ts";
 import type { StepCommit, StepStore, StoredEvent } from "./step.ts";
 import type { EventView, GapView, OutcomeView, RequirementView, RunView, TaskView, WorkspaceView } from "./view.ts";
@@ -20,7 +23,7 @@ export type LoopScope = {
 };
 type Scope = LoopScope;
 
-const COUNTED = ["start", "scored", "asked", "respond", "decline", "integrated", "rescored"];
+const COUNTED = ["start", "scored", "asked", "respond", "decline", "approve", "research_done", "research_failed", "integrated", "rescored"];
 
 function text(row: Row, key: string) {
   const value = row[key];
@@ -40,7 +43,7 @@ function when(row: Row, key: string) {
   return typeof value === "string" ? value : "";
 }
 function asScope(row: Row): Scope {
-  const kind = text(row, "owner_kind") === "child" ? "child" : "person";
+  const kind = parseOutcomeScope(text(row, "owner_kind"));
   return {
     orgId: text(row, "org_id"),
     growthUnitId: text(row, "growth_unit_id"),
@@ -262,19 +265,21 @@ async function ensureGrowthUnit(actor: GapActor, scope: OutcomeScope, childMembe
     `) as Row[];
     return text(created[0], "id");
   }
+  const unitKind = scope === "person" ? "person" : scope;
+  const unitTitle = scope === "family" ? "Family" : scope === "team" ? "Team" : scope === "org" ? "Org" : "Self";
   const existing = (await sql`
     SELECT id FROM growth_units
-    WHERE org_id = ${actor.orgId} AND kind = 'person'
+    WHERE org_id = ${actor.orgId} AND kind = ${unitKind}
       AND parent_membership_id = ${actor.membershipId} AND child_membership_id IS NULL
     LIMIT 1
   `) as Row[];
   if (existing[0]) return text(existing[0], "id");
   const created = (await sql`
     INSERT INTO growth_units (org_id, parent_membership_id, child_membership_id, kind, title, status)
-    SELECT ${actor.orgId}, ${actor.membershipId}, NULL, 'person', 'Self', 'current'
+    SELECT ${actor.orgId}, ${actor.membershipId}, NULL, ${unitKind}, ${unitTitle}, 'current'
     WHERE NOT EXISTS (
       SELECT 1 FROM growth_units
-      WHERE org_id = ${actor.orgId} AND kind = 'person'
+      WHERE org_id = ${actor.orgId} AND kind = ${unitKind}
         AND parent_membership_id = ${actor.membershipId} AND child_membership_id IS NULL
     )
     RETURNING id
@@ -282,7 +287,7 @@ async function ensureGrowthUnit(actor: GapActor, scope: OutcomeScope, childMembe
   if (created[0]) return text(created[0], "id");
   const again = (await sql`
     SELECT id FROM growth_units
-    WHERE org_id = ${actor.orgId} AND kind = 'person'
+    WHERE org_id = ${actor.orgId} AND kind = ${unitKind}
       AND parent_membership_id = ${actor.membershipId} AND child_membership_id IS NULL
     LIMIT 1
   `) as Row[];
@@ -308,7 +313,7 @@ export async function createOutcome(
   staff: boolean,
   body: { ownerKind?: string; statement?: string; title?: string; horizon?: string; childMembershipId?: string },
 ) {
-  const ownerKind: OutcomeScope = body.ownerKind === "child" ? "child" : "person";
+  const ownerKind: OutcomeScope = parseOutcomeScope(body.ownerKind || "person");
   const gate = outcomeWrite(actor, ownerKind, staff);
   if (!gate.ok) throw new GapAccessError(403, gate.error);
   const statement = (body.statement || "").replace(/\s+/g, " ").trim();
@@ -352,7 +357,7 @@ export async function listOutcomes(actor: GapActor, staff: boolean) {
       return canReadOutcome(actor, scope, staff);
     })
     .map(mapOutcome);
-  return { outcomes, childGoals: outcomeWrite(actor, "child", staff).ok };
+  return { outcomes, childGoals: outcomeWrite(actor, "child", staff).ok, scopes: writableScopes(actor, staff) };
 }
 
 async function requirementRows(outcomeId: string) {
@@ -475,6 +480,7 @@ function mapTask(row: Row, extra: { href: string; label: string }[]): TaskView {
     question: text(row, "question"),
     channel,
     requestCopy: text(row, "request_copy"),
+    queryText: text(row, "query_text"),
     status: text(row, "status"),
     links,
   };
@@ -518,7 +524,7 @@ async function move(runId: string, event: LoopEventName, key: string, summaryDet
     kind: event,
     summary: moved.summary,
     detail: summaryDetail ?? {},
-    stepCount: run.stepCount,
+    stepCount: moved.counted ? run.stepCount + 1 : run.stepCount,
     noProgressCycles: moved.noProgressCycles,
     lastScore: run.lastScore,
     stopReason: moved.stopReason,
@@ -747,9 +753,10 @@ export async function openTask(input: {
   question: string;
   channel: string;
   requestCopy: string;
+  queryText?: string | null;
   leaveStatus?: boolean;
 }) {
-  if (input.channel === "web") throw new GapFieldsError("web_research_not_in_m1");
+  if (input.channel === "web" && !(input.queryText || "").trim()) throw new GapFieldsError("query_required");
   const sql = getSql();
   const existing = (await sql`
     SELECT id FROM research_tasks WHERE gap_id = ${input.gapId} AND status = 'awaiting_user' LIMIT 1
@@ -758,10 +765,10 @@ export async function openTask(input: {
   const created = (await sql`
     INSERT INTO research_tasks (
       org_id, growth_unit_id, owner_kind, owner_membership_id, child_membership_id,
-      gap_id, question, channel, request_copy, status
+      gap_id, question, channel, request_copy, query_text, status
     ) VALUES (
       ${input.scope.orgId}, ${input.scope.growthUnitId}, ${input.scope.ownerKind}, ${input.scope.ownerMembershipId}, ${input.scope.childMembershipId},
-      ${input.gapId}, ${input.question}, ${input.channel}, ${input.requestCopy}, 'awaiting_user'
+      ${input.gapId}, ${input.question}, ${input.channel}, ${input.requestCopy}, ${input.queryText || null}, 'awaiting_user'
     ) RETURNING id
   `) as Row[];
   if (!input.leaveStatus) {
@@ -926,7 +933,7 @@ export async function taskResponse(taskId: string, actor: GapActor) {
 }
 
 export async function saveTaskResponse(row: Row, response: { kind: string; text: string; sha256: string; filename: string; rating: string; evidenceKind: string; provesUse: boolean }) {
-  if (text(row, "channel") === "web") throw new GapFieldsError("web_research_not_in_m1");
+  if (text(row, "channel") === "web" && response.kind !== "decline") throw new GapFieldsError("web_needs_approval");
   if (text(row, "status") !== "awaiting_user") throw new GapFieldsError("task_closed");
   const sql = getSql();
   const status = response.kind === "decline" ? "declined" : "done";
@@ -1079,6 +1086,83 @@ export async function markIntegrated(taskId: string) {
   await sql`
     UPDATE research_tasks SET response = ${sql.json({ ...response, integrated: true })}, updated_at = now() WHERE id = ${taskId}
   `;
+}
+
+export async function researchSpendMicros(taskId: string) {
+  await applyGl2SqlIfConfigured();
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT
+      coalesce(sum(usd_micros) FILTER (WHERE task_id = ${taskId}), 0)::int AS task_micros,
+      coalesce(sum(usd_micros) FILTER (WHERE created_at >= date_trunc('month', timezone('utc', now()))), 0)::int AS month_micros
+    FROM knowledge_research_spend
+  `) as Row[];
+  return { task: num(rows[0] || {}, "task_micros"), month: num(rows[0] || {}, "month_micros") };
+}
+
+export async function recordResearchSpend(orgId: string, taskId: string, usdMicros: number, reason: string) {
+  const amount = Math.max(0, Math.round(usdMicros));
+  if (!amount) return;
+  await applyGl2SqlIfConfigured();
+  const sql = getSql();
+  await sql`
+    INSERT INTO knowledge_research_spend (org_id, task_id, usd_micros, reason)
+    VALUES (${orgId}, ${taskId}, ${amount}, ${reason.slice(0, 80)})
+  `;
+}
+
+export function logResearchCap(input: { taskId: string | null; stop: string | null; usdMicros: number }) {
+  console.info(
+    JSON.stringify({
+      event: "knowledge.research.cap",
+      taskId: input.taskId,
+      stop: input.stop,
+      usdMicros: input.usdMicros,
+    }),
+  );
+}
+
+export async function logSameStateEvent(runId: string, kind: string, summary: string) {
+  const sql = getSql();
+  const fresh = await loadRun(runId);
+  if (!fresh) return;
+  const key = `${runId}:${kind}:${fresh.nextSeq}`;
+  await sql`
+    INSERT INTO loop_events (
+      org_id, growth_unit_id, owner_kind, owner_membership_id, child_membership_id,
+      run_id, seq, idempotency_key, from_state, to_state, kind, summary, detail, model, tokens_in, tokens_out
+    )
+    SELECT org_id, growth_unit_id, owner_kind, owner_membership_id, child_membership_id,
+      id, ${fresh.nextSeq}, ${key}, ${fresh.state}, ${fresh.state}, ${kind}, ${summary}, ${sql.json({ blocked: true })}, NULL, NULL, NULL
+    FROM loop_runs WHERE id = ${runId}
+    ON CONFLICT (idempotency_key) DO NOTHING
+  `;
+}
+
+export async function setTaskStatus(taskId: string, status: string, approvedBy: string | null) {
+  const sql = getSql();
+  if (status === "approved") {
+    await sql`
+      UPDATE research_tasks
+      SET status = 'approved', approved_by_membership_id = ${approvedBy}, approved_at = now(), updated_at = now()
+      WHERE id = ${taskId}
+    `;
+    return;
+  }
+  await sql`UPDATE research_tasks SET status = ${status}, updated_at = now() WHERE id = ${taskId}`;
+}
+
+export async function saveNodeEmbedding(nodeId: string, values: readonly number[]) {
+  const literal = vectorLiteral(values);
+  if (!literal) return false;
+  await applyGl2SqlIfConfigured();
+  const sql = getSql();
+  await sql`
+    UPDATE knowledge_nodes
+    SET embedding = ${literal}::vector, embedded_at = now(), embedding_model = ${embeddingModelName()}
+    WHERE id = ${nodeId}
+  `;
+  return true;
 }
 
 export async function topOpenGap(outcomeId: string) {

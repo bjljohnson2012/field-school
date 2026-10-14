@@ -4,7 +4,7 @@ import { getDocumentProxy } from "unpdf";
 import { gapContext, gapError, isUuid } from "@/lib/gap-loop/access";
 import { pdfText } from "@/lib/enrichment/pdf-text";
 import { GapAccessError, GapFieldsError } from "@/lib/gap-loop/errors";
-import { outcomeWrite } from "@/lib/gap-loop/rules";
+import { outcomeWrite, parseOutcomeScope } from "@/lib/gap-loop/rules";
 import { cell, saveTaskResponse, taskResponse } from "@/lib/gap-loop/store";
 
 export const dynamic = "force-dynamic";
@@ -26,10 +26,10 @@ export async function POST(request: Request, { params }: Params) {
     if (!isUuid(taskId)) return NextResponse.json({ ok: false, error: "unknown_task" }, { status: 404 });
     const body = (await request.json().catch(() => null)) as Record<string, unknown> | null;
     if (!body) return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
-    if (body.channel === "web" || body.kind === "web") throw new GapFieldsError("web_research_not_in_m1");
+    if (body.channel === "web" || body.kind === "web") throw new GapFieldsError("web_needs_approval");
     const row = await taskResponse(taskId, gate.actor);
     if (!row) throw new GapAccessError(404, "unknown_task");
-    const ownerKind = cell(row, "owner_kind") === "child" ? "child" : "person";
+    const ownerKind = parseOutcomeScope(cell(row, "owner_kind"));
     const allowed = outcomeWrite(gate.actor, ownerKind, gate.staff);
     if (!allowed.ok) throw new GapAccessError(403, allowed.error);
     if (!gate.staff && cell(row, "owner_membership_id") !== gate.actor.membershipId) {

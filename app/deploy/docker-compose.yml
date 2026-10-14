@@ -77,6 +77,34 @@ services:
         done
       "
 
+  # Knowledge-loop cron. Profile knowledge-loop-cron is off. A normal deploy
+  # does not create this container and does not print CRON_SECRET.
+  # When an operator starts the profile, it POSTs every 15 minutes.
+  knowledge-loop-cron:
+    image: alpine:3.20
+    container_name: field-school-knowledge-loop-cron
+    profiles:
+      - knowledge-loop-cron
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      CRON_SECRET: ${CRON_SECRET:-}
+    networks:
+      - campus
+    command: >
+      sh -c "
+        apk add --no-cache curl > /dev/null;
+        while true; do
+          echo \"[cron] $$(date -u +%Y-%m-%dT%H:%M:%SZ) POST /api/cron/knowledge-loop\";
+          curl -sS -X POST \
+            -H \"Authorization: Bearer $$CRON_SECRET\" \
+            http://field-school-app:3000/api/cron/knowledge-loop || echo \"[cron] knowledge loop failed\";
+          echo;
+          sleep 900;
+        done
+      "
+
 volumes:
   field-school-data:
 

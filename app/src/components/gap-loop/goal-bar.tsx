@@ -5,6 +5,7 @@ export function runStatus(state: string) {
     analyze: { icon: "…", word: "Scoring" },
     formulate: { icon: "…", word: "Writing a request" },
     waiting_on_user: { icon: "!", word: "Waiting on you" },
+    researching: { icon: "…", word: "Searching" },
     integrate: { icon: "…", word: "Adding material" },
     rescore: { icon: "…", word: "Scoring again" },
     paused: { icon: "❚❚", word: "Paused" },

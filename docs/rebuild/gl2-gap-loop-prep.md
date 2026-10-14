@@ -1,6 +1,17 @@
 # GL2 Gap Loop M2 prep
 
-This file is the spec and the test plan for [issue 373](https://github.com/bjljohnson2012/field-school/issues/373) (stream **GL2**, branch `feat/knowledge-gap-loop-m2`). It is spec only. No product code ships in the prep pull request.
+## CDM seal (2026-10-14)
+
+Delegated by Ben. These choices are sealed for the implementation on `main`:
+
+- Embeddings: the xAI API behind `GROK_API_KEY` has `POST /v1/embeddings`. Use model `v1`. N is **1024**, the dimension that call is sent with, stored in `EMBEDDING_CONFIG` so it can be swapped. No Qdrant. No new paid vendor.
+- Web research: xAI Grok live web search through the existing `GROK_API_KEY`. No new vendor. Hard caps are $0.25 per task and $10 per month, enforced in code with a hard stop and a spend log. Kid data never goes into queries. Generic parent-approved queries are allowed. Kid identifiers are blocked.
+- Cron: approved. Sidecar `knowledge-loop-cron` calls `POST /api/cron/knowledge-loop` every 15 minutes with `Authorization: Bearer` from `CRON_SECRET`, the same secret pattern as the coaching cron. The route is idempotent and respects the cost caps. The compose profile stays off, so this change does not start the sidecar and does not deploy.
+- Graph is hand-rolled SVG. No new graph dependency. Proposed edges have half weight until the owner accepts. Web research steps count toward `stepsPerRun` and `stepsPerOwnerPerDay`.
+- GL2 does not write `credits`, `usage_events`, or `customer_api_keys`. No Stripe. No new dollar strings in the UI.
+- Migration is `0029_gl2_gap_loop.sql` only.
+
+This file is the spec and the test plan for [issue 373](https://github.com/bjljohnson2012/field-school/issues/373) (stream **GL2**, branch `feat/knowledge-gap-loop-m2`). The prep text below is the original spec. The seal above is the implementation record.
 
 Authority order:
 

@@ -16,6 +16,7 @@ export const LOOP_STATES = [
   "analyze",
   "formulate",
   "waiting_on_user",
+  "researching",
   "integrate",
   "rescore",
   "paused",
@@ -35,6 +36,9 @@ export const LOOP_EVENTS = [
   "asked",
   "respond",
   "decline",
+  "approve",
+  "research_done",
+  "research_failed",
   "integrated",
   "rescored",
   "pause",
@@ -65,7 +69,18 @@ export type Transition =
 
 const TERMINAL = new Set<LoopState>(["done", "capped", "stalled", "cancelled"]);
 
-const SYSTEM = new Set<LoopEventName>(["start", "scored", "asked", "respond", "decline", "integrated", "rescored"]);
+const SYSTEM = new Set<LoopEventName>([
+  "start",
+  "scored",
+  "asked",
+  "respond",
+  "decline",
+  "approve",
+  "research_done",
+  "research_failed",
+  "integrated",
+  "rescored",
+]);
 
 export function isTerminal(state: LoopState) {
   return TERMINAL.has(state);
@@ -73,7 +88,14 @@ export function isTerminal(state: LoopState) {
 
 /** States the client may advance by itself. Confirm, pause, and a user request wait. */
 export function clientShouldStep(state: LoopState) {
-  return state === "draft" || state === "analyze" || state === "formulate" || state === "integrate" || state === "rescore";
+  return (
+    state === "draft" ||
+    state === "analyze" ||
+    state === "formulate" ||
+    state === "integrate" ||
+    state === "rescore" ||
+    state === "researching"
+  );
 }
 
 function capped(ctx: TransitionCtx): Transition {
@@ -144,6 +166,15 @@ export function transition(state: LoopState, event: LoopEventName, ctx: Transiti
   }
   if (state === "waiting_on_user" && event === "decline") {
     return ok("rescore", "Request declined. Scoring again.", ctx, { counted: true });
+  }
+  if (state === "waiting_on_user" && event === "approve") {
+    return ok("researching", "Search approved. Looking it up.", ctx, { counted: true });
+  }
+  if (state === "researching" && event === "research_done") {
+    return ok("integrate", "Search is in. Adding what it found.", ctx, { counted: true });
+  }
+  if (state === "researching" && event === "research_failed") {
+    return ok("rescore", "Search did not finish. Scoring again.", ctx, { counted: true });
   }
   if (state === "integrate" && event === "integrated") {
     return ok("rescore", "Material is in. Scoring again.", ctx, { counted: true });

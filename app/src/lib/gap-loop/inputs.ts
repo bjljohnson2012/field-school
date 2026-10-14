@@ -15,7 +15,7 @@ export type PoolItem = {
 };
 
 type Scope = {
-  ownerKind: "person" | "child";
+  ownerKind: string;
   orgId: string;
   growthUnitId: string;
   memberId: string;

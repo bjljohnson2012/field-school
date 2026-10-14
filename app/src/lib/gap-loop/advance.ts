@@ -2,14 +2,18 @@ import { decomposeOutcome, formulateRequest, judgeCoverage } from "../ai/prompts
 import { GapAccessError } from "./errors.ts";
 import { loadEvidence, type PoolItem } from "./inputs.ts";
 import { LOOP_LIMITS } from "./machine.ts";
+import { embedPassage } from "./embed-text.ts";
+import { parseVector } from "./embedding.ts";
+import { grokWebSearch } from "./web-search.ts";
+import { genericWebQuery, queryHitsIdentifier, runApprovedSearch } from "./research.ts";
 import {
+  coverageMatch,
   coverageOf,
   detectGap,
   evidenceKey,
   gapPriority,
   gapSummary,
   systemConfidence,
-  wordMatch,
   type GapKind,
   type ScoreEvidence,
 } from "./score.ts";
@@ -22,19 +26,26 @@ import {
   ensureEdge,
   loadBundle,
   loadRun,
+  logResearchCap,
+  logSameStateEvent,
   markIntegrated,
   openTask,
+  recordResearchSpend,
   replaceRequirements,
+  researchSpendMicros,
   saveAssessment,
+  saveNodeEmbedding,
+  setTaskStatus,
   topOpenGap,
   type LoopScope,
 } from "./store.ts";
+import { parseOutcomeScope } from "./rules.ts";
 import { getSql } from "@/lib/db/client";
 
 type Bundle = NonNullable<Awaited<ReturnType<typeof loadBundle>>>;
 
 function scopeOf(bundle: Bundle): LoopScope {
-  const kind = cell(bundle.outcome, "owner_kind") === "child" ? "child" : "person";
+  const kind = parseOutcomeScope(cell(bundle.outcome, "owner_kind"));
   return {
     orgId: cell(bundle.outcome, "org_id"),
     growthUnitId: cell(bundle.outcome, "growth_unit_id"),
@@ -63,11 +74,18 @@ async function promptScope(bundle: Bundle) {
   };
 }
 
-function matchedPool(requirementId: string, label: string, pool: PoolItem[], forced: string[]): ScoreEvidence[] {
+function matchedPool(
+  requirementId: string,
+  label: string,
+  pool: PoolItem[],
+  forced: string[],
+  embeddings: Map<string, number[]>,
+): ScoreEvidence[] {
   const items: ScoreEvidence[] = [];
+  const requirementVector = embeddings.get(requirementId) || null;
   for (const item of pool) {
     const pinned = item.requirementId === requirementId || forced.includes(item.id);
-    const match = pinned ? 1 : wordMatch(label, `${item.label} ${item.text}`);
+    const match = pinned ? 1 : coverageMatch(label, `${item.label} ${item.text}`, requirementVector, embeddings.get(item.id) || null);
     if (match <= 0) continue;
     items.push({
       id: item.id,
@@ -106,6 +124,15 @@ export async function assessOutcome(outcomeId: string) {
     pool.map((item) => ({ id: item.id, table: item.table, label: item.label, text: item.text })),
   );
   const forced = new Map(judged.matches.map((match) => [match.requirementId, match.evidenceIds]));
+  const embeddings = new Map<string, number[]>();
+  for (const node of bundle.nodes) {
+    const vector = parseVector(node.embedding);
+    const id = cell(node, "id");
+    const requirementId = cell(node, "requirement_id");
+    if (!vector) continue;
+    if (id) embeddings.set(id, vector);
+    if (requirementId) embeddings.set(requirementId, vector);
+  }
   const goal = bundle.nodes.find((row) => cell(row, "kind") === "goal");
   const rows = bundle.requirements.map((row) => {
     const id = cell(row, "id");
@@ -114,7 +141,7 @@ export async function assessOutcome(outcomeId: string) {
     if (cell(row, "status") === "waived") {
       return { id, coverage: Number(row.coverage) || 0, systemConfidence: "Low", status: "waived", gap: null, evidenceKey: "" };
     }
-    const evidence = matchedPool(id, label, pool, forced.get(id) || []);
+    const evidence = matchedPool(id, label, pool, forced.get(id) || [], embeddings);
     const coverage = coverageOf(evidence);
     const reqNode = bundle.nodes.find((node) => cell(node, "kind") === "requirement" && cell(node, "requirement_id") === id);
     const linked = bundle.edges.some((edge) => {
@@ -205,6 +232,7 @@ export async function actForRun(run: { id: string; lastScore: number; state: str
   if (run.state === "analyze") return analyzeAct(outcomeId, run.lastScore);
   if (run.state === "formulate") return formulateAct(outcomeId);
   if (run.state === "waiting_on_user") return waitingAct(outcomeId);
+  if (run.state === "researching") return researchAct(outcomeId);
   if (run.state === "integrate") return integrateAct(outcomeId);
   if (run.state === "rescore") return analyzeAct(outcomeId, run.lastScore, true);
   throw new GapAccessError(409, "not_a_system_step");
@@ -257,6 +285,22 @@ async function formulateAct(outcomeId: string): Promise<StepAction> {
   if (!open) return { event: "asked", detail: { empty: true } };
   const kind = (cell(open, "kind") || "missing_knowledge") as GapKind;
   const label = cell(open, "label") || "this requirement";
+  if (kind === "missing_knowledge") {
+    const blocked = scope.ownerKind === "child" ? [text.childName || "", ...(text.identifiers || [])] : [];
+    const query = genericWebQuery(label);
+    if (query && !queryHitsIdentifier(query, blocked)) {
+      const taskId = await openTask({
+        scope,
+        gapId: cell(open, "id"),
+        question: query,
+        channel: "web",
+        requestCopy: "Approve this search, or decline it.",
+        queryText: query,
+        leaveStatus: cell(open, "status") === "rejected",
+      });
+      return { event: "asked", detail: { taskId, channel: "web", model: null } };
+    }
+  }
   const cited = bundle.nodes
     .filter((row) => cell(row, "requirement_id") === cell(open, "requirement_id"))
     .slice(0, 4)
@@ -298,6 +342,57 @@ async function waitingAct(outcomeId: string): Promise<StepAction> {
   });
   await markIntegrated(response.taskId);
   return { event: "respond", detail: { taskId: response.taskId, model: null } };
+}
+
+async function researchAct(outcomeId: string): Promise<StepAction> {
+  const bundle = await loadBundle(outcomeId);
+  if (!bundle) throw new GapAccessError(404, "unknown_outcome");
+  const scope = scopeOf(bundle);
+  const task = bundle.tasks.find((row) => cell(row, "channel") === "web" && ["approved", "running", "done"].includes(cell(row, "status")));
+  if (!task) return { event: "research_failed", detail: { reason: "no_task" } };
+  const taskId = cell(task, "id");
+  if (cell(task, "status") === "done") return { event: "research_done", detail: { taskId, replay: true } };
+  const names =
+    scope.ownerKind === "child" && scope.childMembershipId
+      ? await childNames(scope.orgId, scope.childMembershipId)
+      : { name: "", identifiers: [] as string[] };
+  const identifiers = scope.ownerKind === "child" ? [names.name, ...names.identifiers].filter(Boolean) : [];
+  const spent = await researchSpendMicros(taskId);
+  if (cell(task, "status") === "approved") await setTaskStatus(taskId, "running", null);
+  const result = await runApprovedSearch({
+    query: cell(task, "query_text"),
+    identifiers,
+    taskSpentMicros: spent.task,
+    monthSpentMicros: spent.month,
+    search: (query) => grokWebSearch(query, { block: identifiers }),
+  });
+  if (!result.ok) {
+    if ("event" in result && result.event) await logSameStateEvent(cell(bundle.run, "id"), result.event.kind, result.event.summary);
+    if (result.error === "task_cap" || result.error === "month_cap") {
+      logResearchCap({ taskId, stop: result.error, usdMicros: 0 });
+    }
+    return { event: "research_failed", detail: { reason: result.error } };
+  }
+  await recordResearchSpend(scope.orgId, taskId, result.usdMicros, "web");
+  if (result.hardStop) logResearchCap({ taskId, stop: "task_cap", usdMicros: result.usdMicros });
+  const citation = result.node.evidence[0];
+  const gap = bundle.gaps.find((row) => cell(row, "id") === cell(task, "gap_id"));
+  const nodeId = await ensureCitedNode({
+    scope,
+    requirementId: cell(gap, "requirement_id") || null,
+    kind: "evidence",
+    label: result.node.label,
+    body: result.node.body,
+    sha256: null,
+    filename: null,
+    refTable: "web",
+    refId: taskId,
+    evidence: [citation],
+  });
+  const vector = await embedPassage(result.node.label);
+  if (vector) await saveNodeEmbedding(nodeId, vector);
+  await setTaskStatus(taskId, "done", null);
+  return { event: "research_done", detail: { taskId, citation: { table: citation.table, id: citation.id, label: citation.label } } };
 }
 
 async function integrateAct(outcomeId: string): Promise<StepAction> {

@@ -121,6 +121,10 @@ If Field School has been the write path long enough that discarding those rows l
 
 When an operator later starts it with `--profile coaching-cron`, the sidecar POSTs `http://field-school-app:3000/api/cron/coaching` once an hour. That hostname is the app container on the campus network. The request sends `Authorization: Bearer` from `CRON_SECRET`. An empty body is job `all`. The route returns 401 when the secret is missing or does not match. Do not copy the AE fail-open. Put `CRON_SECRET` in `/opt/field-school.env` only at that operator step. Do not export `COMPOSE_PROFILES`. Do not start the sidecar from this change.
 
+## Knowledge-loop cron sidecar
+
+`deploy/docker-compose.yml` defines service `knowledge-loop-cron` behind compose profile `knowledge-loop-cron`. The profile is off. `deploy/deploy.sh` does not pass that profile, so a normal deploy does not start it and does not set `CRON_SECRET`. When an operator later starts it with `--profile knowledge-loop-cron`, the sidecar POSTs `http://field-school-app:3000/api/cron/knowledge-loop` every 15 minutes with `Authorization: Bearer` from `CRON_SECRET`. The route returns 401 when the secret is missing or does not match. Do not print the secret. Do not export `COMPOSE_PROFILES`.
+
 ## Coaching cutover checklist
 
 Docs only. Merging does not flip production. Do not enable the compose profile. Do not set `CRON_SECRET`. Do not set `AE_WRITES_FROZEN`. Do not stop the AE sidecar from this change. Do not flip `AUTH_URL`. Do not edit live Caddy. Do not flip `COACHING_WRITES` or `COACHING_IMPORT`. Do not run an import.

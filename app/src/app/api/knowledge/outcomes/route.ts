@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const gate = await gapContext(request);
     if (!gate.ok) return gate.response;
     const listed = await listOutcomes(gate.actor, gate.staff);
-    return NextResponse.json({ ok: true, outcomes: listed.outcomes, childGoals: listed.childGoals });
+    return NextResponse.json({ ok: true, outcomes: listed.outcomes, childGoals: listed.childGoals, scopes: listed.scopes });
   } catch (error) {
     return gapError(error);
   }
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     const childMembershipId = typeof body.childMembershipId === "string" ? body.childMembershipId : "";
     if (body.ownerKind === "child" && !isUuid(childMembershipId)) throw new GapFieldsError("child_membership_id_required");
     const outcome = await createOutcome(gate.actor, gate.staff, {
-      ownerKind: body.ownerKind === "child" ? "child" : "person",
+      ownerKind: typeof body.ownerKind === "string" ? body.ownerKind : "person",
       statement: typeof body.statement === "string" ? body.statement : "",
       title: typeof body.title === "string" ? body.title : "",
       horizon: typeof body.horizon === "string" ? body.horizon : "",
