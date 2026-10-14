@@ -93,7 +93,7 @@
       "goals": ["G6"],
       "status": "PASS",
       "needs": [],
-      "pr": null,
+      "pr": 423,
       "branch": "cursor/pm4-profile-a40a",
       "sha": "a718a73c14eee97ea7cf9e7191e1b7b6b1c719e8",
       "room": "team",
