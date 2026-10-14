@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { isAdminRoute, loginRedirectForAdmin } from "@/lib/admin-gate";
 import { edgeAuth } from "@/lib/auth/edge-auth";
 import { isStaffSession } from "@/lib/members/policy";
+import { libraryRedirect } from "@/lib/library/m10";
 import { coachingRedirect } from "@/lib/shell/m9-shell";
 
 /**
@@ -13,6 +14,12 @@ import { coachingRedirect } from "@/lib/shell/m9-shell";
  */
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const library = libraryRedirect(pathname);
+  if (library) {
+    const url = request.nextUrl.clone();
+    url.pathname = library;
+    return NextResponse.redirect(url, 301);
+  }
   const practice = coachingRedirect(pathname);
   if (practice) {
     const url = request.nextUrl.clone();
@@ -36,5 +43,15 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/coaching", "/coaching/:path*"],
+  matcher: [
+    "/admin",
+    "/admin/:path*",
+    "/coaching",
+    "/coaching/:path*",
+    "/o/:path*",
+    "/knowledge",
+    "/brain",
+    "/play/lesson-spine",
+    "/operator/publish",
+  ],
 };

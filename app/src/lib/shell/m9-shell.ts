@@ -96,15 +96,17 @@ export type BrainType = "family" | "team";
 
 export type NewItem = { id: string; label: string; href: string; brains: readonly BrainType[] };
 
-/** Connect AI is Settings > AI, not a New row. Max 6 after the brain filter. */
+/**
+ * M10 seal, 2026-10-14, CDM delegated by Ben.
+ * Five destinations, same list for every leader brain. Quiet ghost. Never blue.
+ * Connect AI stays Settings > AI, not a New row.
+ */
 export const NEW_ITEMS: readonly NewItem[] = [
-  { id: "lesson", label: "Lesson", href: "/library", brains: ["family", "team"] },
-  { id: "course", label: "Course", href: "/library", brains: ["family", "team"] },
-  { id: "page", label: "Brain page", href: "/library/brain", brains: ["family", "team"] },
-  { id: "goal", label: "Goal", href: "/learn/goals", brains: ["family", "team"] },
-  { id: "person", label: "Person in development", href: "/people", brains: ["family"] },
-  { id: "invite", label: "Member invite", href: "/signup", brains: ["team"] },
-  { id: "video", label: "Import video", href: "/library/video", brains: ["family", "team"] },
+  { id: "lesson", label: "Lesson", href: "/library/lessons/new", brains: ["family", "team"] },
+  { id: "course", label: "Course", href: "/library/courses/new", brains: ["family", "team"] },
+  { id: "page", label: "Brain page", href: "/library/brain/new", brains: ["family", "team"] },
+  { id: "video", label: "Video", href: "/library/video", brains: ["family", "team"] },
+  { id: "wizard", label: "Wizard", href: "/library/wizard", brains: ["family", "team"] },
 ];
 
 export function newMenu(brain: BrainType): readonly NewItem[] {
