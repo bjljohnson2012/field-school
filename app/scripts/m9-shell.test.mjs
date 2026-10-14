@@ -34,10 +34,14 @@ function walk(dir, out = []) {
   return out;
 }
 
-test("member rail ships SHELLS and keeps the issue 368 variant behind the switch", () => {
-  assert.equal(MEMBER_RAIL_DEFAULT, "shells");
-  assert.equal(resolveMemberRail(undefined), "shells");
+test("member rail defaults to issue 368 and keeps SHELLS behind an explicit switch", () => {
+  assert.equal(MEMBER_RAIL_DEFAULT, "issue-368");
+  assert.equal(resolveMemberRail(undefined), "issue-368");
+  assert.equal(resolveMemberRail(null), "issue-368");
+  assert.equal(resolveMemberRail(""), "issue-368");
   assert.equal(resolveMemberRail("issue-368"), "issue-368");
+  assert.equal(resolveMemberRail("learn-me"), "issue-368");
+  assert.equal(resolveMemberRail("shells"), "shells");
   assert.deepEqual(
     memberDoors("shells").map((door) => door.label),
     ["Learn", "Me"],
@@ -55,14 +59,14 @@ test("member rail ships SHELLS and keeps the issue 368 variant behind the switch
 test("390px bar is 56px plus safe area for each role", () => {
   const leader = mobileBar("leader");
   const member = mobileBar("member");
-  const switched = mobileBar("member", "issue-368");
+  const switched = mobileBar("member", "shells");
   assert.equal(leader.heightPx, 56);
   assert.equal(leader.safeArea, true);
   assert.deepEqual(leader.labels, ["Learn", "People", "Library", "Insights", "New"]);
-  assert.deepEqual(member.labels, ["Learn", "Me"]);
-  assert.equal(member.variant, "shells");
-  assert.deepEqual(switched.labels, ["Learn", "Library", "You"]);
-  assert.equal(switched.variant, "issue-368");
+  assert.deepEqual(member.labels, ["Learn", "Library", "You"]);
+  assert.equal(member.variant, "issue-368");
+  assert.deepEqual(switched.labels, ["Learn", "Me"]);
+  assert.equal(switched.variant, "shells");
   const css = read("src/app/globals.css");
   assert.match(css, /height: calc\(56px \+ env\(safe-area-inset-bottom\)\)/);
   assert.deepEqual(

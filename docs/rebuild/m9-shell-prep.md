@@ -2,11 +2,11 @@
 
 This file is the spec and the test plan for [issue 368](https://github.com/bjljohnson2012/field-school/issues/368). The sealed packet in this section wins over earlier sentences further down.
 
-The designer seal is sealed, except the member rail. Ben has not chosen that rail. LAW.md holds, so the shipped member layout is SHELLS.md: Learn and Me. The 240px Learn, Library, and You rail stays behind `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368`. That variant is not the shipped default.
+The designer seal is sealed. Ben chose the member rail at 9:34 PM ET on Oct 14, 2026. Members get the 240px Learn, Library, and You rail with no env var. `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368` is the explicit on value. Learn and Me is only `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=shells`.
 
 Launch stays CLOSED 0/8. `AUTH_URL` stays `https://portal.fieldschool.ai`. The flag name is `CHECKOUT_GO_LIVE`. It stays `false`. `COACHING_GO_LIVE` stays `false`. No live Stripe. This change does not deploy, does not run tenancy-backfill, and does not run test-rows. Retiring org kind `homeschool` is M15, not this change. The base branch is `main`.
 
-`docs/staff/SHELLS.md` is superseded by issue 368 for the shell, except the member rail.
+`docs/staff/SHELLS.md` is superseded by issue 368 for the shell, including the member rail after Ben's override at 9:34 PM ET on Oct 14, 2026.
 
 ## Sealed packet
 
@@ -22,11 +22,11 @@ Copy uses the offer names Do It Yourself, Coaching, and Consulting.
 
 Active Sessions stays hidden until M8 device rows exist.
 
-Tests cover Flip Text under reduced motion, no Radix and no duo-icons, the motion module imported only by the shell and Active Sessions, and the 390px bar for each role. The member bar test covers both variants. The default assertion is Learn and Me.
+Tests cover Flip Text under reduced motion, no Radix and no duo-icons, the motion module imported only by the shell and Active Sessions, and the 390px bar for each role. The member bar test covers both variants. The default assertion is Learn, Library, and You.
 
-## Decision still open
+## Member rail, decided
 
-The member rail. Shipped default is SHELLS.md (Learn, Me) because LAW.md holds. The issue 368 member rail (240px, Learn, Library, You) is implemented and unselected. Ben flips `NEXT_PUBLIC_MEMBER_RAIL_VARIANT` to `issue-368` later. This spec does not pick that variant as the default.
+Ben decided at 9:34 PM ET on Oct 14, 2026. The shipped default is the issue 368 member rail: 240px, Learn, Library, You. Unset and `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368` both select it. The SHELLS.md layout (Learn, Me) is selectable only when that variable is `shells`.
 
 ## The shell issue 368 names
 
@@ -69,7 +69,7 @@ MOBILE 390
 | Top bar | Cream `#F6F3EC`, 28px seal, Fraunces wordmark, Cmd-K, help, avatar. No filled blue. The wordmark stays visible at 390. |
 | Brain switcher | Top of the rail. One click switches the brain. The name always shows. Kinds in copy are Family or Team. Homeschool is a small tag on a family brain, never a nav item. Clicking the name opens `/dashboard`. |
 | Rail, leader or accountable person | Switcher, then exactly Learn, People, Library, Insights, New. Then You. |
-| Rail, member | Learn, Library, You, once Ben resolves decision 2. Until then the spec records the issue 368 row. |
+| Rail, member | Learn, Library, You. Same 240px rail. Ben, 9:34 PM ET on Oct 14, 2026. Learn, Me only when `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=shells`. |
 | New | Quiet row. No filled blue. The menu contents wait on decision 2. Contextual quiet pluses inside Library are M10. |
 | You | Profile (`/profile`), Assessments (`/profile/assessments`), Settings (`/settings`). Billing is a Settings section. |
 | Filled blue | One filled `#1E4E8C` action per view. None in the bar or the rail. Active nav is a muted pill, blue text, or a 2px blue left bar. |
@@ -308,7 +308,7 @@ Run the UI pull request's cases from `app/` after `npm ci`. This spec pull reque
 
 1. `node --experimental-strip-types --test scripts/m9-shell.test.mjs`. The file snapshots every redirect in the table above, including the four superseded money rows that M9 must leave alone. It fails if a signed-in fixture still contains "What a guest keeps", if rendered copy contains `skill_states`, or if a copy module contains an em dash, Gym, Foundry, Retainer, or Learn with Ben.
 2. One copy module per page. The test imports each module and checks the language lock. Parent-only titles and the seed labels in the copy table are absent from rendered strings.
-3. Rail fixture, leader: the switcher plus exactly Learn, People, Library, Insights, New, then You. Member rail matches Ben's choice in decision 2.
+3. Rail fixture, leader: the switcher plus exactly Learn, People, Library, Insights, New, then You. Member rail is Learn, Library, You unless `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=shells`.
 4. Switching brain is one click and changes the desk. A family fixture shows people in development and no team members. A team fixture shows members and no people in development.
 5. No filled blue in the bar or the rail. One filled blue on Home.
 6. `/dashboard` renders the next-step empty state when progress rows are absent, and renders the next lesson when a fixture provides one.

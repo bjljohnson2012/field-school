@@ -25,6 +25,8 @@ The loop exists so Grok Bot and Field School PM do not wait on a chat to keep mo
 
 If two files disagree: ethos wins on identity and locks. LOOP.md wins on how to pick and when to stop. COMPANY_GRAPH wins on which function. BUILD_GRAPH wins on which Dev node. SHELLS wins on chrome. GRAPH.md wins on who messages whom. `state.json` wins on what is PASS this hour.
 
+Ben overrode the SHELLS member layout at 9:34 PM ET on Oct 14, 2026. Members use the same 240px left rail as issue 368: Learn, Library, You. `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368` is the explicit on value. The SHELLS member layout (Learn, Me) is selectable only when that variable is `shells`.
+
 ## What is already PASS (do not resume)
 
 | Proof | Status |
