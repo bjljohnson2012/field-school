@@ -2,7 +2,7 @@
 Dated 21 Sep 2026. Field School PM (`bc-882e8bdf`).
 Read with `THREE_LOOPS.md`. This file is the chrome spec. Launch stays CLOSED.
 
-Issue 368 supersedes this file for the shell: cream bar, left rail, quiet New, credits inside Settings, and a mobile bottom bar plus a drawer. The member rail is the exception. LAW.md still holds, so the shipped member layout is the one below (Learn and Me). The 240px Learn / Library / You rail is a config switch, not the default.
+Issue 368 supersedes this file for the shell: cream bar, left rail, quiet New, credits inside Settings, and a mobile bottom bar plus a drawer. Ben overrode the member layout below at 9:34 PM ET on Oct 14, 2026. Members use the same 240px left rail: Learn, Library, You. `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368` is the explicit on value. Learn and Me stays only when that variable is `shells`.
 
 The live header in `app/src/components/site-header.tsx` lists Dashboard, Lesson, Tools, Cart, Children, Progress, Intent, Path, Portion, Brain, Admin. That is a ticket log, not navigation.
 The live dashboard in `app/src/app/dashboard/page.tsx` fetches `/api/children` if the user has **any** household membership, even when Org is Sales team. That is why a child named Test appears on the sales desk.
@@ -33,11 +33,19 @@ Nielsen: recognition over recall, stay under 7, current location marked. Linear/
 
 ### Login learner (salesperson)
 
+Default after Ben's override at 9:34 PM ET on Oct 14, 2026. Same 240px rail: Learn, Library, You.
+
+```
+[seal] Field School     Learn    Library    You
+```
+
+The layout this file shipped before that override is the explicit switch `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=shells`:
+
 ```
 [seal] Field School     Learn    Me     Org ▾  Avatar ▾
 ```
 
-No Library. No People. No Insights unless stance is trainer/admin.
+No People. No Insights unless stance is trainer/admin. Library is on the default member rail. The `shells` switch has no Library.
 
 ### Parent acting in household
 

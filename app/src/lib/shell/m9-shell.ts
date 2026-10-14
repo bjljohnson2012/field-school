@@ -1,10 +1,11 @@
 /**
- * M9 shell rules. The member rail ships as SHELLS.md (Learn, Me) because LAW.md holds.
- * `issue-368` is the unshipped Learn / Library / You rail. Flip it later with
- * NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368. Do not treat that variant as the default.
+ * M9 shell rules. Ben overrode the SHELLS member layout at 9:34 PM ET on Oct 14, 2026.
+ * Members get the 240px Learn / Library / You rail (issue 368) with no env var.
+ * NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368 is the explicit on value.
+ * Learn / Me is only NEXT_PUBLIC_MEMBER_RAIL_VARIANT=shells.
  */
 
-export const MEMBER_RAIL_DEFAULT = "shells" as const;
+export const MEMBER_RAIL_DEFAULT = "issue-368" as const;
 
 export type MemberRailVariant = "shells" | "issue-368";
 
@@ -60,10 +61,10 @@ export function isM9Leader(stance: string) {
 }
 
 export function resolveMemberRail(value: string | undefined | null): MemberRailVariant {
-  return value === "issue-368" ? "issue-368" : MEMBER_RAIL_DEFAULT;
+  return value === "shells" ? "shells" : MEMBER_RAIL_DEFAULT;
 }
 
-/** SHELLS default, or the isolated 240px Learn / Library / You rail. */
+/** Issue 368 default (Learn / Library / You), or the explicit SHELLS Learn / Me switch. */
 export function memberDoors(variant: MemberRailVariant): readonly M9Door[] {
   if (variant === "issue-368") {
     return [
