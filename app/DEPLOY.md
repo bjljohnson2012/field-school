@@ -29,6 +29,8 @@ bash deploy/deploy.sh
 
 `deploy/deploy.sh` packs this source (no `node_modules`, no `.next`), **wipes** `/opt/field-school` on the VPS, extracts, and runs `docker compose up -d --build` in `deploy/`. The wipe stops leftover Vite/TanStack files (`vite.config.ts`) from breaking `next build`. Keep container name `field-school-app` so Caddy keeps serving `portal.fieldschool.ai`. The AUTH_URL + university 301 ship uses `flip-auth-url.sh` instead of this wipe.
 
+`deploy/apply-migrations.sh` then applies every pending `db/*.sql` file in filename order. Each applied file is recorded in `schema_migrations`. A filename already in that table is skipped. A second run on the same database applies nothing.
+
 OAuth secrets live at durable `/opt/field-school.env` **outside** that wipe. Compose mounts that file via `env_file`. Do not delete it. After a wipe, confirm the live compose still has `env_file: /opt/field-school.env` on the app service.
 
 Member passwords, staff access requests, and public form submissions live in a Docker named volume (`field-school-data` → `/app/data/campus-store.json`). That volume is **not** inside `/opt/field-school`, so the source wipe does not delete it. There is no `field-school-db` Postgres service on this compose file.
