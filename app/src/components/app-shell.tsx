@@ -5,7 +5,8 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState, type ReactNode } from "react";
 import { CommandPalette } from "@/components/command-palette";
 import { ImpersonationBanner } from "@/components/impersonation-banner";
-import { isLeader, navLinks, NEW_DOORS, SiteHeader } from "@/components/site-header";
+import { M9Shell } from "@/components/m9/shell";
+import { isLeader, navLinks, NEW_DOORS } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SynthesisStatusBanner } from "@/components/synthesis-status-banner";
 import { ORG_SWITCH_EVENT, parseShellViewer, roomOf, shellCommands, type ShellViewer } from "@/lib/shell/model";
@@ -56,7 +57,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-full flex-1 flex-col" data-room={room ?? undefined}>
-      <SiteHeader viewer={viewer} />
+      <M9Shell viewer={viewer} signedIn={signedIn} pathname={pathname}>
       <ImpersonationBanner />
       <div className="flex-1" data-learn-zone={learnZone(pathname) ?? undefined}>
         {room === "sales" ? (
@@ -66,6 +67,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         ) : null}
         {children}
       </div>
+      </M9Shell>
       {signedIn ? null : <SiteFooter />}
       <CommandPalette commands={commands} />
     </div>

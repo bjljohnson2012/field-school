@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { CampusLadder } from "@/components/campus-ladder";
+import { DiscoverButton } from "@/components/m9/discover-button";
 import { ShareLink } from "@/components/share-link";
 import { usePortal } from "@/hooks/use-portal";
 import { listPublishedCourses } from "@/lib/course/catalog";
@@ -21,34 +22,30 @@ export function CampusHome() {
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:py-20">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
-              Field School training portal
+              Knowledge brains
             </p>
-            <h1 className="mt-4 max-w-[14ch] font-display text-5xl leading-[1.02] tracking-[-0.035em] sm:text-6xl">
-              Lead yourself. Learn yourself. Do the Work.
+            <h1 className="mt-4 max-w-[18ch] font-display text-5xl leading-[1.02] tracking-[-0.035em] sm:text-6xl">
+              The knowledge brain for families and teams who cannot be in the room every hour.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              This is the Field School training portal. AI. Sales. Go-to-market.
-              Leadership. Small moves you can make with your family. Pull in a
-              tape, walk the stations, keep a dashboard, or start as a guest
-              and share a normal link.
+              Field School builds a knowledge brain for your family or your team, so the people you are responsible for keep learning on the days you cannot be there.
             </p>
-            <div className="mt-8">
-              <Link
-                href="/c/grok-bot"
-                onClick={() => guest()}
-                className="inline-flex h-12 items-center gap-2 rounded-xl bg-[#1f5eff] px-5 text-sm font-medium text-white shadow-[0_12px_28px_-16px_rgba(31,94,255,0.9)]"
-              >
-                Start Grok Bot
-                <ArrowRight className="size-4" />
-              </Link>
+            <p className="mt-3 text-sm">One course is free. No card.</p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <span onClick={() => guest()}>
+                <DiscoverButton href="/signup?plan=course">Start free</DiscoverButton>
+              </span>
+              <a className="m9-outline inline-flex items-center" href="https://fieldschool.ai/pricing">
+                See pricing
+              </a>
               <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
                 Open the free campus course. Watch, work, and clear as a guest.
               </p>
             </div>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-              Three rails on this portal: campus ladder to start; Learn with Ben
+              Three rails on this portal: campus ladder to start; Coaching
               for LessonSpine, progress, and metering; Org for household and
-              sales desks.
+              sales desks. Lead yourself. Learn yourself. Do the Work.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
@@ -90,7 +87,7 @@ export function CampusHome() {
         <div className="mx-auto grid max-w-6xl gap-4 px-4 pb-14 md:grid-cols-2">
           <div className="rounded-2xl border border-border bg-card px-5 py-5 shadow-[0_16px_36px_-24px_rgba(26,25,22,0.55)]">
             <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
-              Learn with Ben
+              Coaching
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Link

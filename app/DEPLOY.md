@@ -4,6 +4,8 @@ Production campus: [https://portal.fieldschool.ai](https://portal.fieldschool.ai
 
 `university.benjohnson.ai` 301s to portal. AUTH_URL is `https://portal.fieldschool.ai`. Apply that flip with [deploy/flip-auth-url.sh](deploy/flip-auth-url.sh). Do not wipe the live Next tree from a `main`-only branch.
 
+Dry-run is `bash deploy/flip-auth-url.sh --dry-run`. `--apply` is Ben's step. Live Stripe env names are in `docs/GO-LIVE.md`.
+
 This Next.js portal **replaces** the older TanStack container. Caddy sends `portal.fieldschool.ai` to `field-school-app:3000` on Docker network `ae-coach_default`. Keep that container name.
 
 ## Source of truth
@@ -28,6 +30,8 @@ bash deploy/deploy.sh
 ```
 
 `deploy/deploy.sh` packs this source (no `node_modules`, no `.next`), **wipes** `/opt/field-school` on the VPS, extracts, and runs `docker compose up -d --build` in `deploy/`. The wipe stops leftover Vite/TanStack files (`vite.config.ts`) from breaking `next build`. Keep container name `field-school-app` so Caddy keeps serving `portal.fieldschool.ai`. The AUTH_URL + university 301 ship uses `flip-auth-url.sh` instead of this wipe.
+
+`deploy/apply-migrations.sh` then applies every pending `db/*.sql` file in filename order. Each applied file is recorded in `schema_migrations`. A filename already in that table is skipped. A second run on the same database applies nothing.
 
 OAuth secrets live at durable `/opt/field-school.env` **outside** that wipe. Compose mounts that file via `env_file`. Do not delete it. After a wipe, confirm the live compose still has `env_file: /opt/field-school.env` on the app service.
 

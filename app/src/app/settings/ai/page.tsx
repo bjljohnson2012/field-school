@@ -11,6 +11,7 @@ export default async function AiKeysPage() {
   const auth = await identityFromRequest();
   return (
     <main className="mx-auto max-w-5xl px-4 py-10">
+      <p className="mb-6 text-sm text-muted-foreground">Connect AI lives in Settings, under AI.</p>
       <AiKeysPanel initialError={auth.ok ? null : auth.error} />
     </main>
   );

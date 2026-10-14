@@ -1,18 +1,17 @@
-import { redirect } from "next/navigation";
-import { identityFromRequest } from "@/lib/campus-runtime/identity";
+import Link from "next/link";
+import { DiscoverButton } from "@/components/m9/discover-button";
 
-const HIRER_STANCES = new Set(["admin", "guardian", "trainer", "teacher"]);
-
-/** Leaders open on Insights. Everyone else opens on Learn. */
-export default async function DashboardPage() {
-  let destination = "/learn";
-  try {
-    const auth = await identityFromRequest();
-    if (auth.ok && auth.identity.kind !== "child" && HIRER_STANCES.has(auth.identity.stance)) {
-      destination = "/insights";
-    }
-  } catch {
-    destination = "/learn";
-  }
-  redirect(destination);
+export default function DashboardPage() {
+  return (
+    <main className="mx-auto max-w-3xl px-4 py-10" data-home="m9">
+      <h1 className="font-display text-4xl tracking-tight">What is next</h1>
+      <p className="mt-4 text-sm text-muted-foreground">No next step in this brain yet.</p>
+      <div className="mt-6">
+        <DiscoverButton href="/learn">Continue</DiscoverButton>
+      </div>
+      <p className="mt-6 text-sm">
+        <Link href="/insights">Insights</Link> keeps the longer report.
+      </p>
+    </main>
+  );
 }

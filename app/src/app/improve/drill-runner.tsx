@@ -131,7 +131,7 @@ export function DrillRunner({
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Streak</p>
-            <p className="font-display text-3xl font-bold text-brand-orange">
+            <p className="font-display text-3xl font-bold text-primary">
               {live.currentStreak}
               <span className="ml-1 text-sm font-normal text-gray-500">
                 day{live.currentStreak === 1 ? "" : "s"}
@@ -148,7 +148,7 @@ export function DrillRunner({
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-gray-200">
             <div
-              className="h-full bg-brand-orange"
+              className="h-full bg-primary"
               style={{ width: `${live.progress.pct}%` }}
             />
           </div>

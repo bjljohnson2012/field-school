@@ -74,12 +74,12 @@ export function NeuralWeb({ title, placements }: { title: string; placements: re
           strokeWidth={1.25}
           style={{ animationDelay: "200ms" }}
         />
-        <circle className="neural-pulse" r="4.5" fill="#ff6a1a">
+        <circle className="neural-pulse" r="4.5" fill="#1E4E8C">
           <animateMotion dur="1.7s" repeatCount="1" path={ring} />
         </circle>
         <g className="neural-node" style={{ animationDelay: "120ms" }}>
-          <circle cx={CX} cy={CY} r="26" fill="none" stroke="#ff6a1a" strokeOpacity={0.45} />
-          <circle cx={CX} cy={CY} r="16" fill="#ff6a1a" />
+          <circle cx={CX} cy={CY} r="26" fill="none" stroke="#1E4E8C" strokeOpacity={0.45} />
+          <circle cx={CX} cy={CY} r="16" fill="#1E4E8C" />
           <text x={CX} y={CY} textAnchor="middle" dominantBaseline="middle" fontSize="11" fontWeight="600" fill="#fff">
             You
           </text>
@@ -95,7 +95,7 @@ export function NeuralWeb({ title, placements }: { title: string; placements: re
                 cx={point.x}
                 cy={point.y}
                 r="7"
-                fill={node.state === "locked" ? "#ff6a1a" : "none"}
+                fill={node.state === "locked" ? "#1E4E8C" : "none"}
                 stroke="currentColor"
                 strokeWidth={1.5}
                 strokeDasharray={node.state === "unsettled" ? "2 2" : undefined}

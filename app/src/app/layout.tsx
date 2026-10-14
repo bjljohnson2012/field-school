@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans, Inter, Space_Grotesk } from "next/font/google";
+import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { AuthSessionProvider } from "@/components/auth-session-provider";
 import { AppShell } from "@/components/app-shell";
 import { ThemeScript } from "@/components/theme-script";
@@ -23,16 +23,6 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
   weight: ["500", "600"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -69,7 +59,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${ibmSans.variable} ${ibmMono.variable} ${fraunces.variable} ${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
+      className={`${ibmSans.variable} ${ibmMono.variable} ${fraunces.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

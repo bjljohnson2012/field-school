@@ -135,6 +135,7 @@ test("stripe-setup.mjs exits 2 for a live key and 0 for a test key", () => {
 test("migration 0023 does not backfill and keeps Individual unpublished", () => {
   const sql = read("db/0023_m8_identity_billing.sql");
   assert.match(sql, /CREATE TABLE IF NOT EXISTS coaching_plans/);
+  assert.match(sql, /column_name = 'tier'/);
   assert.match(sql, /'individual', 10, 0, NULL, false/);
   assert.doesNotMatch(sql, /DELETE FROM/);
   assert.doesNotMatch(sql, /UPDATE members/);

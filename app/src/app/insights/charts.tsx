@@ -477,7 +477,7 @@ export function InsightsBoard({ model }: { model: InsightsModel }) {
         <ChartFrame id="assignments" title="Assignments" hint="Open and completed." empty={model.empty}>
           <Bars points={model.assignments} scale="count" onOpen={onOpen} />
         </ChartFrame>
-        <ChartFrame id="skills" title="Skills" hint="skill_states for this org." empty={model.empty}>
+        <ChartFrame id="skills" title="Skills" hint="Skills in this org." empty={model.empty}>
           {model.skills.columns.length && model.skills.people.length ? (
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left text-sm">

@@ -162,8 +162,8 @@ test("guest Grok Bot, AUTH_URL, metering, and frozen trees stay untouched", () =
   assert.doesNotMatch(billing, /credits|BYOK|customer_api_keys|growth_unit/);
   const prompt = readRepo("docs/campus-runtime/CURSOR_AGENT_PROMPT.md");
   assert.match(prompt, /AUTH_URL is https:\/\/university\.benjohnson\.ai|AUTH_URL is https:\/\/portal\.fieldschool\.ai/);
-  assert.match(read("deploy/deploy.sh"), /0010_knowledge_brains\.sql/);
-  assert.match(read("deploy/deploy.sh"), /0009_progress_ledgers\.sql/);
+  assert.match(read("deploy/deploy.sh"), /apply-migrations\.sh/);
+  assert.match(read("deploy/apply-migrations.sh"), /schema_migrations/);
   assert.doesNotMatch(read("db/0010_knowledge_brains.sql"), /2\.24\.64\.248|27pn9xs0zk8a73g/);
   assert.doesNotMatch(read("src/lib/brain/store.ts"), /vite\.config|migrations\/0001/);
 });

@@ -1,11 +1,16 @@
-import Link from "next/link";
+"use client";
 
-/** Guest continuity contract. Copy only. No new persistence store. */
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+
+/** Guest continuity contract. Copy only. Hidden once someone is signed in. */
 export function GuestContinuity() {
+  const { status } = useSession();
+  if (status !== "unauthenticated") return null;
   return (
     <section
       data-guest-continuity="s2"
-      className="rounded-xl border border-border px-5 py-5 text-sm leading-relaxed text-[#7a746a]"
+      className="rounded-xl border border-border px-5 py-5 text-sm leading-relaxed text-muted-foreground"
     >
       <h2 className="font-display text-xl tracking-tight text-foreground">
         What a guest keeps

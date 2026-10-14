@@ -25,7 +25,7 @@ export function brandedEmailHtml(input: {
     .join("");
 
   const button = input.action
-    ? `<p style="margin:24px 0 8px;"><a href="${escapeHtml(input.action.href)}" style="display:inline-block;background:#1f5eff;color:#ffffff;font-family:IBM Plex Sans,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;text-decoration:none;padding:12px 18px;border-radius:10px;">${escapeHtml(input.action.label)}</a></p>`
+    ? `<p style="margin:24px 0 8px;"><a href="${escapeHtml(input.action.href)}" style="display:inline-block;background:#1e4e8c;color:#ffffff;font-family:IBM Plex Sans,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;text-decoration:none;padding:12px 18px;border-radius:10px;">${escapeHtml(input.action.label)}</a></p>`
     : "";
 
   return `<!doctype html>
