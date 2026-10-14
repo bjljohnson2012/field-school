@@ -1,7 +1,8 @@
 # Rebuild progress
 
-Updated: 2026-10-14 9:34 PM ET
-Main at: 4eaf464cfa19c2c7a1e0b552490a31f5515e79ef (PR 399, member rail)
+Updated: 2026-10-15 (docs dispatcher)
+Main at: d0e71dc68979accd17a207572706282bfcb0f447 (spec prep wave merged)
+Production tip: 4eaf464cfa19c2c7a1e0b552490a31f5515e79ef (PR 399, member rail). Unchanged by spec PRs.
 Production: campus 2.24.70.248 at that tip. Smoke passed.
 Active agents: none
 
@@ -33,7 +34,7 @@ Read-only check against `campus-20261014T002029Z.dump` matched production:
 | learning_events | 2 |
 | enrollments | 0 |
 
-Next action: spec and test-plan prep. M10 (#369) and M12 (#371) have dependencies met but still need `designer_seal` before any UI merge. Do not deploy from this log. Do not flip `AUTH_URL`. No live Stripe.
+Next action: implementation prep and build lanes. Spec and test-plan docs for M10 through M15, PM3, GL2, PM4, and GL3 are on main (`status: spec_merged`). No stream below is built or deployed from those doc PRs. M10 (#369) and M12 (#371) still need `designer_seal` before any UI merge. M13 spike is not started and is never merged. Do not deploy from this log. Do not flip `AUTH_URL`. No live Stripe.
 
 ```yaml
 streams:
@@ -44,21 +45,21 @@ streams:
   - {id: M8,  issue: 367, branch: feat/portal-m8-identity-billing, depends_on: [M5, S0],       base: main,                            merge_in: [],    needs_merge: false, gate: none, status: merged, pr: 386, sha: "d2c602be6ab458e49ec75405b57a441daf623546", migration: "0023_m8_identity_billing", additive_pr: 394, additive_sha: "e3e10848ec410061a4e2232869ae1766bd71d904", additive_migration: "0024"}
   - {id: G,   issue: 379, branch: feat/portal-go-live,             depends_on: [],             base: main,                            merge_in: [],    needs_merge: false, gate: flags_stay_false, status: merged, pr: 381, sha: "bb37accdd727800604d62b32d27af652f0a83ef5", migration: none}
   - {id: M9,  issue: 368, branch: feat/portal-m9-shell,            depends_on: [M5, M7, M8],   base: main,                            merge_in: [],    needs_merge: false, gate: designer_seal, status: merged, pr: 397, sha: "d1aca02f433f20b7681d3dde3887983c570e0045", migration: null, member_rail_pr: 399, member_rail_sha: "4eaf464cfa19c2c7a1e0b552490a31f5515e79ef"}
-  - {id: M10, issue: 369, branch: feat/portal-m10-library,         depends_on: [M6, M9],       base: feat/portal-m9-shell,            merge_in: [],    needs_merge: true,  gate: designer_seal, status: not_started, pr: null, migration: null, deps_met: true}
-  - {id: M11, issue: 370, branch: feat/portal-m11-brains,          depends_on: [M6, M10],      base: feat/portal-m10-library,         merge_in: [],    needs_merge: true,  gate: none, status: not_started, pr: null, migration: null}
-  - {id: M12, issue: 371, branch: feat/portal-m12-onboarding,      depends_on: [M5, M9],       base: feat/portal-m9-shell,            merge_in: [],    needs_merge: true,  gate: designer_seal, status: not_started, pr: null, migration: null, deps_met: true}
-  - {id: PM3, issue: 372, branch: feat/profile-m3,                 depends_on: [M5, M9, M11],  base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: designer_seal, status: not_started, pr: null, migration: null}
-  - {id: GL2, issue: 373, branch: feat/knowledge-gap-loop-m2,      depends_on: [M5, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: none, status: not_started, pr: null, migration: null}
-  - {id: PM4, issue: 374, branch: feat/profile-m4,                 depends_on: [PM3],          base: feat/profile-m3,                 merge_in: [],    needs_merge: true,  gate: none, status: not_started, pr: null, migration: null}
-  - {id: GL3, issue: 375, branch: feat/knowledge-gap-loop-m3,      depends_on: [M8, M12, GL2], base: feat/knowledge-gap-loop-m2,      merge_in: [M12], needs_merge: true,  gate: none, status: not_started, pr: null, migration: null}
-  - {id: M13, issue: 376, branch: spike/payload-m13,               depends_on: [M6, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: never_merge_spike, status: not_started, pr: null, migration: null}
-  - {id: M14, issue: 377, branch: feat/portal-m14-evolution,       depends_on: [M13],          base: set_by_sealed_brief,             merge_in: [],    needs_merge: true,  gate: sealed_brief_on_377, status: not_started, pr: null, migration: null}
-  - {id: M15, issue: 378, branch: feat/portal-m15-retire,          depends_on: [M9, M10, M11], base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: merge_after_m10_m11_deployed_and_soaked, status: not_started, pr: null, migration: null}
+  - {id: M10, issue: 369, branch: feat/portal-m10-library,         depends_on: [M6, M9],       base: feat/portal-m9-shell,            merge_in: [],    needs_merge: true,  gate: designer_seal, status: spec_merged, pr: null, spec_pr: 407, spec_doc: docs/rebuild/m10-library-prep.md, spec_sha: "4c6710f7663ccd9a31306ed70ef7cdc72d0a4809", migration: null, build: not_started, designer_seal: open}
+  - {id: M11, issue: 370, branch: feat/portal-m11-brains,          depends_on: [M6, M10],      base: feat/portal-m10-library,         merge_in: [],    needs_merge: true,  gate: none, status: spec_merged, pr: null, spec_pr: 404, spec_doc: docs/rebuild/m11-brains-prep.md, spec_sha: "009475056dc86cc0ca10f8eac2fa14234a5dbf81", migration: null, build: not_started, build_waits_on: [M10]}
+  - {id: M12, issue: 371, branch: feat/portal-m12-onboarding,      depends_on: [M5, M9],       base: feat/portal-m9-shell,            merge_in: [],    needs_merge: true,  gate: designer_seal, status: spec_merged, pr: null, spec_pr: 405, spec_doc: docs/rebuild/m12-onboarding-prep.md, spec_sha: "c6bd7007f2ee8afa5dfe64971bcfe5ce835c78b6", migration: null, build: not_started, designer_seal: open}
+  - {id: PM3, issue: 372, branch: feat/profile-m3,                 depends_on: [M5, M9, M11],  base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: designer_seal, status: spec_merged, pr: null, spec_pr: 408, spec_doc: docs/rebuild/pm3-profile-prep.md, spec_sha: "71665149c98c84ca05eb529226dc19134d1e9761", migration: null, build: not_started, build_waits_on: [M11]}
+  - {id: GL2, issue: 373, branch: feat/knowledge-gap-loop-m2,      depends_on: [M5, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: none, status: spec_merged, pr: null, spec_pr: 409, spec_doc: docs/rebuild/gl2-gap-loop-prep.md, spec_sha: "d0e71dc68979accd17a207572706282bfcb0f447", migration: null, build: not_started, build_waits_on: [M11]}
+  - {id: PM4, issue: 374, branch: feat/profile-m4,                 depends_on: [PM3],          base: feat/profile-m3,                 merge_in: [],    needs_merge: true,  gate: none, status: spec_merged, pr: null, spec_pr: 403, spec_doc: docs/rebuild/pm4-profile-prep.md, spec_sha: "0c83da3f240535b7296fbabd85ea03a6e755c2de", migration: null, build: not_started, build_waits_on: [PM3]}
+  - {id: GL3, issue: 375, branch: feat/knowledge-gap-loop-m3,      depends_on: [M8, M12, GL2], base: feat/knowledge-gap-loop-m2,      merge_in: [M12], needs_merge: true,  gate: none, status: spec_merged, pr: null, spec_pr: 410, spec_doc: docs/rebuild/gl3-gap-loop-prep.md, spec_sha: "c8fad4cf9adf0ff940a16a0f353620216a61edde", migration: null, build: not_started, build_waits_on: [M12, GL2]}
+  - {id: M13, issue: 376, branch: spike/payload-m13,               depends_on: [M6, M11],      base: feat/portal-m11-brains,          merge_in: [],    needs_merge: false, gate: never_merge_spike, status: spec_merged, pr: null, spec_pr: 401, spec_doc: docs/rebuild/m13-payload-spike-prep.md, spec_sha: "e99850da4566abbd3846b202f6198a9f2c7f617c", migration: null, spike: not_started}
+  - {id: M14, issue: 377, branch: feat/portal-m14-evolution,       depends_on: [M13],          base: set_by_sealed_brief,             merge_in: [],    needs_merge: true,  gate: sealed_brief_on_377, status: spec_merged, pr: null, spec_pr: 402, spec_doc: docs/rebuild/m14-evolution-prep.md, spec_sha: "946b33516a02e95f14cc1086a08b51e303bc75f2", migration: null, build: not_started, build_waits_on: [M13_report, sealed_brief_on_377]}
+  - {id: M15, issue: 378, branch: feat/portal-m15-retire,          depends_on: [M9, M10, M11], base: feat/portal-m11-brains,          merge_in: [],    needs_merge: true,  gate: merge_after_m10_m11_deployed_and_soaked, status: spec_merged, pr: null, spec_pr: 406, spec_doc: docs/rebuild/m15-retire-prep.md, spec_sha: "5fea0b6da998369d17bef480573be30afae1693a", migration: none, build: not_started}
 walk_order: [S0, M5, G, M6, M7, M8, M9, M10, M11, M12, PM3, GL2, PM4, GL3, M13, M14, M15]
 ben_merge_order: [S0, M5, M6, M7, M8, G, M9, M10, M11, M12, PM3, GL2, PM4, GL3, M15]
 ```
 
-S0, M5, M6, M7, M8, G, and M9 are merged and deployed on the production tip. M13 is never merged. M14 stays `not_started` until #377 has a sealed brief posted after the M13 report. M15 waits until M10 and M11 are deployed and soaked (`merge_after_m10_m11_deployed_and_soaked`).
+S0, M5, M6, M7, M8, G, and M9 are merged and deployed on the production tip. M10 through M15, PM3, GL2, PM4, and GL3 have spec docs merged on main (`spec_merged`). That is not build or deploy. M13 spike is not started; the spike branch is never merged. M14 code waits on the M13 report and a sealed brief on #377. M15 has no migration in its spec; Ben merges M15 code only after M10 and M11 are deployed and soaked (`merge_after_m10_m11_deployed_and_soaked`).
 
 ## Stream 0 recommendation map
 
@@ -108,13 +109,14 @@ All 15 rows are met. S0 is merged and deployed.
 - 2026-10-14: #381 merged at bb37accdd727800604d62b32d27af652f0a83ef5 (stream G, flags stay false). #398 merged at 6a38436fadbdad670026e76e42c1e4c98b8790ff. Migration runner deployed. `schema_migrations` has 27 rows.
 - 2026-10-14: #397 merged at d1aca02f433f20b7681d3dde3887983c570e0045 (M9 shell). #399 merged at 4eaf464cfa19c2c7a1e0b552490a31f5515e79ef (member rail default). Production tip matches main.
 - 2026-10-14 9:34 PM ET: Ben chose the issue-368 member rail for production. `NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368` on the prod build. Dump `campus-20261014T002029Z` counts verified read-only.
+- 2026-10-15: Spec prep wave merged on main: #401 M13, #402 M14, #403 PM4, #404 M11, #405 M12, #406 M15, #407 M10, #408 PM3, #409 GL2, #410 GL3. Dispatcher marks each stream `spec_merged` only. Production tip unchanged.
 
 ## Handoff
 
-S0 #382, M5 #383, M6 #391, M7 #395, M8 #386, additive #394, G #381, M9 #397, migration runner #398, and member rail #399 are merged. The production tip is `4eaf464cfa19c2c7a1e0b552490a31f5515e79ef` on campus `2.24.70.248`.
+S0 #382, M5 #383, M6 #391, M7 #395, M8 #386, additive #394, G #381, M9 #397, migration runner #398, and member rail #399 are merged and deployed. The production tip is `4eaf464cfa19c2c7a1e0b552490a31f5515e79ef` on campus `2.24.70.248`.
 
 `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay false. `AUTH_URL` stays `https://portal.fieldschool.ai`. Coaching health is ok. Do not print `GROK_API_KEY`.
 
-M10 through M15, PM3, GL2, PM4, and GL3 are not started. M10 and M12 have dependencies met; both still need `designer_seal` before UI merge.
+M10–M15, PM3, GL2, PM4, and GL3: spec docs are on main (`spec_merged`). Implementation `build: not_started` for each. M10 and M12: `designer_seal` still open. M11 build waits on M10. PM3 and GL2 wait on M11. PM4 waits on PM3. GL3 waits on M12 and GL2. M13 spike not started; never merge the spike. M14 code waits on M13 report and sealed brief. M15 waits on M10 and M11 soak.
 
-Next: spec and test-plan prep for the open streams. Do not deploy from this log. Do not flip `AUTH_URL`. Do not run live Stripe. Launch stays CLOSED 0/8.
+Next: open implementation lanes from the prep docs. Do not deploy from this log. Do not flip `AUTH_URL`. Do not run live Stripe. Launch stays CLOSED 0/8.
