@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PeopleProfilePanel } from "@/components/profile/people-profile-panel";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { SkillCard, type SkillCardSkill } from "@/components/skill-card";
@@ -195,6 +196,13 @@ export default async function PersonPage({
     <main data-surface={surface}>
       <p className="eyebrow">{subject.stance}</p>
       <h1 className="font-display text-3xl tracking-tight">{dto.displayName}</h1>
+      <PeopleProfilePanel
+        kind={subject.kind}
+        displayName={dto.displayName}
+        memberId={subject.memberId}
+        membershipId={subject.membershipId}
+        orgId={subject.orgId}
+      />
       {surface === "coach" ? (
         <div className="mt-4 flex flex-wrap gap-2" role="tablist" aria-label="Person">
           <span

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DiscoverButton } from "@/components/m9/discover-button";
+import { HomeCourseCta } from "@/components/profile/home-course-cta";
 import { STARTER_LESSON } from "@/lib/onboarding/graph";
 
 export default async function DashboardPage({
@@ -12,6 +13,7 @@ export default async function DashboardPage({
   return (
     <main className="mx-auto max-w-3xl px-4 py-10" data-home="m9">
       <h1 className="font-display text-4xl tracking-tight">What is next</h1>
+      <HomeCourseCta />
       {starter ? (
         <p className="mt-4 text-sm">
           <Link href={STARTER_LESSON.href} data-starter-lesson={STARTER_LESSON.courseSlug}>

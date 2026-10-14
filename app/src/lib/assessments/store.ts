@@ -16,6 +16,7 @@ import {
   runView,
   type RunView,
 } from "./model";
+import { recordWizardBrain } from "@/lib/profile/public-store";
 import { applyProfileM2Sql } from "./sql";
 import { TRACK_IDS, isTrackId, trackDef, type TrackId } from "./tracks";
 
@@ -199,7 +200,13 @@ export async function readRun(owner: Owner, runId: string): Promise<RunView | nu
  * device has answered in between; a repeat of the last stored answer returns the same view.
  * Finishing stores every placement, hashes and drops the raw answers, then sets the gate.
  */
-export async function answerRun(owner: Owner, runId: string, answer: Answer, now = new Date()): Promise<AnswerResult> {
+export async function answerRun(
+  owner: Owner,
+  runId: string,
+  answer: Answer,
+  now = new Date(),
+  orgSlug = "",
+): Promise<AnswerResult> {
   await applyProfileM2Sql();
   const row = await ownRun(owner, runId);
   if (!row) return { ok: false, error: "run_not_found" };
@@ -255,7 +262,10 @@ export async function answerRun(owner: Owner, runId: string, answer: Answer, now
     const latest = await readRun(owner, runId);
     return latest ? { ok: true, view: latest } : { ok: false, error: "run_not_found" };
   }
-  if (finished) await finishGate(owner, written, answers);
+  if (finished) {
+    await finishGate(owner, written, answers);
+    await recordWizardBrain({ memberId: owner.memberId, orgSlug, runId: row.id });
+  }
   return { ok: true, view: runView(def, row.id, after) };
 }
 

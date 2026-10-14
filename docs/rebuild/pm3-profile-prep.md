@@ -1,6 +1,21 @@
 # Profile M3 prep
 
-This file is the spec and the test plan for [issue 372](https://github.com/bjljohnson2012/field-school/issues/372). It does not implement product code. The implementation branch is `feat/profile-m3`, cut from `feat/portal-m11-brains` after M11 lands, with `needs_merge: true` per `docs/rebuild-progress.md`.
+## CDM seal (2026-10-14)
+
+CDM sealed these choices on 2026-10-14, delegated by Ben. This note is the merge go. Designer seal and CDM MERGE GO are recorded here. The build run does not deploy.
+
+| Decision | Sealed choice |
+| --- | --- |
+| D1 Public allowlist | Display name, photo, headline, bio, public skills, public projects, LinkedIn URL. Never email, phone, org or family members, children, assessments, personality results, coaching records, or progress. |
+| D2 Share slug | Opaque random slug, at least 10 characters, URL-safe. Never the membership id. Sharing is off by default and opted in per person. Revoking kills the slug immediately. Re-enabling mints a new slug. Adults only. Never children. No person in development appears in a public URL or photo upload UI. |
+| D3 Outcomes | Personality placements are outcomes. Skills and Profile are evidence-only until a later refinement. |
+| D4 Home | Home shows a first-course CTA that links to an existing enrollment or catalog slug. |
+| D5 Label | Keep the label "Person in development". |
+| D6 Wizard finish | Plain heading. Not Flip Text. |
+
+PM3 is the profile and share surface. It does not own the GL2 cron, embeddings, or web-research client. Migration is `app/db/0030_pm3_profile.sql` only. 0029 stays free for GL2. 0028 is not edited.
+
+This file is the spec and the test plan for [issue 372](https://github.com/bjljohnson2012/field-school/issues/372). The implementation lands on a branch cut from current `origin/main` after M11.
 
 **Build assumption (PM directive, Oct 14, 2026):** M5 tenancy and M9 shell are deployed. M11 brains unified is not started. The dispatcher log on `chore/rebuild-progress` may still list earlier streams as blocked or `not_started`; this prep follows the PM directive for dependency readiness, not that halt state.
 

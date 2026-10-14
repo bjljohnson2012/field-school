@@ -124,10 +124,11 @@ test("Flip Text is CSS only, once, and plain under reduced motion", () => {
   assert.equal(flipStaggerMs(0, 4), 0);
   assert.ok(flipStaggerMs(3, 4) <= 200);
   const wizard = read("src/components/profile-m2/assessment-wizard.tsx");
-  assert.match(wizard, /FlipText/);
+  assert.match(wizard, /data-wizard-finish="plain"/);
+  assert.doesNotMatch(wizard, /FlipText/);
   assert.equal(
     walk(join(root, "src")).filter((abs) => readFileSync(abs, "utf8").includes("<FlipText")).length,
-    1,
+    0,
   );
 });
 

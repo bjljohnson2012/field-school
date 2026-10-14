@@ -24,7 +24,7 @@ export async function POST(request: Request, ctx: Params) {
     if (!current) return refuse(404, "run_not_found");
     const refusal = wizardRefusal(auth.actor, current.track);
     if (refusal) return refuse(403, refusal);
-    const result = await answerRun(auth.actor.owner, runId, answer);
+    const result = await answerRun(auth.actor.owner, runId, answer, new Date(), auth.actor.orgSlug);
     if (!result.ok) {
       return NextResponse.json({ ok: false, error: result.error, run: result.view ?? null }, { status: STATUS[result.error] });
     }
