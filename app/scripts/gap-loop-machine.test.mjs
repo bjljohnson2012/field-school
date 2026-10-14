@@ -15,8 +15,9 @@ function move(state, event, extra = {}) {
 }
 
 test("every named state and event exists", () => {
-  assert.equal(LOOP_STATES.length, 12);
-  assert.equal(LOOP_EVENTS.length, 12);
+  assert.equal(LOOP_STATES.length, 13);
+  assert.equal(LOOP_EVENTS.length, 15);
+  assert.equal(LOOP_STATES.includes("researching"), true);
   assert.equal(LOOP_LIMITS.stepsPerRun, 12);
   assert.equal(LOOP_LIMITS.stepsPerOwnerPerDay, 40);
   assert.equal(LOOP_LIMITS.stallCycles, 3);
@@ -33,6 +34,12 @@ test("the happy path transitions", () => {
   assert.equal(move("formulate", "asked").state, "waiting_on_user");
   assert.equal(move("waiting_on_user", "respond").state, "integrate");
   assert.equal(move("waiting_on_user", "decline").state, "rescore");
+  assert.equal(move("waiting_on_user", "approve").state, "researching");
+  assert.equal(move("waiting_on_user", "approve").counted, true);
+  assert.equal(move("researching", "research_done").state, "integrate");
+  assert.equal(move("researching", "research_done").counted, true);
+  assert.equal(move("researching", "research_failed").state, "rescore");
+  assert.equal(move("researching", "research_failed").counted, true);
   assert.equal(move("integrate", "integrated").state, "rescore");
   const again = move("rescore", "rescored", { scoreDelta: 5 });
   assert.equal(again.state, "analyze");
@@ -49,7 +56,7 @@ test("illegal transitions stay refused", () => {
 });
 
 test("pause and resume", () => {
-  for (const state of ["draft", "decompose", "analyze", "formulate", "waiting_on_user", "integrate", "rescore"]) {
+  for (const state of ["draft", "decompose", "analyze", "formulate", "waiting_on_user", "researching", "integrate", "rescore"]) {
     const paused = move(state, "pause");
     assert.equal(paused.state, "paused", state);
     assert.equal(paused.summary, "Paused. Nothing runs until you resume.");
@@ -66,6 +73,8 @@ test("step cap and day cap stop a system step", () => {
   assert.equal(runCap.summary, "Paused at your limit.");
   const dayCap = move("formulate", "asked", { stepsToday: LOOP_LIMITS.stepsPerOwnerPerDay });
   assert.equal(dayCap.state, "capped");
+  const researchCap = move("researching", "research_done", { stepsThisRun: LOOP_LIMITS.stepsPerRun });
+  assert.equal(researchCap.state, "capped");
   assert.equal(move("analyze", "scored", { stepsThisRun: LOOP_LIMITS.stepsPerRun - 1 }).state, "formulate");
   assert.equal(move("analyze", "pause", { stepsThisRun: LOOP_LIMITS.stepsPerRun }).state, "paused");
 });

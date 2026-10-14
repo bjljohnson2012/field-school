@@ -6,11 +6,32 @@ import { Suspense, useEffect, useState, type FormEvent } from "react";
 
 type Outcome = { id: string; title: string; statement: string; status: string; ownerKind: string };
 type Child = { membershipId: string; name: string };
+type ScopeName = "person" | "child" | "family" | "team" | "org";
+
+const SCOPE_COPY: Record<ScopeName, string> = {
+  person: "Me",
+  child: "A child in this household",
+  family: "This family",
+  team: "This team",
+  org: "This organization",
+};
+
+function goalKind(kind: string) {
+  if (kind === "child") return "Child goal";
+  if (kind === "family") return "Family goal";
+  if (kind === "team") return "Team goal";
+  if (kind === "org") return "Organization goal";
+  return "Your goal";
+}
 
 const ERRORS: Record<string, string> = {
   sign_in_required: "Sign in to set a goal.",
   child_cannot_write: "A child membership cannot write a goal.",
   sales_room_cannot_create_child_goal: "The sales room cannot create a child goal.",
+  sales_room_cannot_create_family_goal: "The sales room cannot create a family goal.",
+  household_cannot_create_team_goal: "A household cannot create a team goal.",
+  team_leader_only: "A team leader sets a team goal.",
+  org_leader_only: "A leader sets an organization goal.",
   household_guardian_only: "A household guardian sets a child goal.",
   statement_required: "Write the goal in a sentence.",
   child_membership_id_required: "Choose a child.",
@@ -27,7 +48,8 @@ function GoalsPage() {
   const [statement, setStatement] = useState("");
   const [horizon, setHorizon] = useState("");
   const [childId, setChildId] = useState(params.get("child") || "");
-  const [scope, setScope] = useState(params.get("scope") === "child" ? "child" : "person");
+  const [scopes, setScopes] = useState<ScopeName[]>(["person"]);
+  const [scope, setScope] = useState<ScopeName>(params.get("scope") === "child" ? "child" : "person");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -35,7 +57,7 @@ function GoalsPage() {
     let gone = false;
     fetch("/api/knowledge/outcomes")
       .then((res) => res.json())
-      .then((data: { ok?: boolean; error?: string; outcomes?: Outcome[]; childGoals?: boolean }) => {
+      .then((data: { ok?: boolean; error?: string; outcomes?: Outcome[]; childGoals?: boolean; scopes?: ScopeName[] }) => {
         if (gone) return;
         if (!data.ok) {
           setError(ERRORS[data.error || ""] || "Could not load goals.");
@@ -43,7 +65,9 @@ function GoalsPage() {
         }
         setOutcomes(data.outcomes || []);
         setChildGoals(Boolean(data.childGoals));
-        if (!data.childGoals) setScope("person");
+        const allowed = (data.scopes || ["person"]).filter((item): item is ScopeName => item in SCOPE_COPY);
+        setScopes(allowed.length ? allowed : ["person"]);
+        if (!data.childGoals && scope === "child") setScope("person");
       })
       .catch(() => {
         if (!gone) setError("Could not load goals.");
@@ -81,7 +105,7 @@ function GoalsPage() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          ownerKind: scope === "child" ? "child" : "person",
+          ownerKind: scope,
           statement,
           horizon,
           childMembershipId: scope === "child" ? childId : undefined,
@@ -107,17 +131,15 @@ function GoalsPage() {
       <p className="mt-3 text-sm text-muted-foreground">Set a goal. The loop finds what is missing and asks for one thing at a time.</p>
       <form onSubmit={createGoal} className="mt-6 space-y-3 rounded-2xl border border-border bg-card px-4 py-4">
         <h2 className="text-sm font-semibold">Set a goal</h2>
-        {childGoals ? (
+        {scopes.length > 1 ? (
           <fieldset className="space-y-2">
             <legend className="text-xs text-muted-foreground">Who is this for?</legend>
-            <label className="flex items-center gap-2 text-sm">
-              <input type="radio" name="scope" checked={scope === "person"} onChange={() => setScope("person")} />
-              Me
-            </label>
-            <label className="flex items-center gap-2 text-sm">
-              <input type="radio" name="scope" checked={scope === "child"} onChange={() => setScope("child")} />
-              A child in this household
-            </label>
+            {scopes.map((item) => (
+              <label key={item} className="flex items-center gap-2 text-sm">
+                <input type="radio" name="scope" checked={scope === item} onChange={() => setScope(item)} />
+                {SCOPE_COPY[item]}
+              </label>
+            ))}
           </fieldset>
         ) : null}
         {scope === "child" && childGoals ? (
@@ -167,7 +189,7 @@ function GoalsPage() {
               {outcome.title}
             </Link>
             <p className="mt-1 text-xs text-muted-foreground">
-              {outcome.ownerKind === "child" ? "Child goal" : "Your goal"} · {outcome.status}
+              {goalKind(outcome.ownerKind)} · {outcome.status}
             </p>
           </li>
         ))}

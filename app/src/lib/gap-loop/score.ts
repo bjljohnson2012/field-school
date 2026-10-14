@@ -1,3 +1,4 @@
+import { cosineSimilarity } from "./embedding.ts";
 import { LOOP_LIMITS } from "./machine.ts";
 
 export const EVIDENCE_STRENGTH = {
@@ -119,6 +120,28 @@ export function suppressRejected<T extends { requirementId: string; evidenceKey:
   return next.filter((row) => !blocked.has(`${row.requirementId}:${row.evidenceKey}`));
 }
 
+/** Accepted edges keep their weight. Proposed edges count half until the owner accepts. */
+export function scoredEdgeWeight(status: string, weight: number) {
+  const base = Number.isFinite(weight) ? Math.max(0, weight) : 0;
+  if (status === "accepted") return base;
+  if (status === "proposed") return base / 2;
+  return 0;
+}
+
+/** Similarity when both embeddings exist. Otherwise the M1 word match. */
+export function coverageMatch(
+  requirement: string,
+  text: string,
+  left: readonly number[] | null | undefined,
+  right: readonly number[] | null | undefined,
+) {
+  if (left && right) {
+    const similar = cosineSimilarity(left, right);
+    if (similar != null) return similar;
+  }
+  return wordMatch(requirement, text);
+}
+
 export function wordMatch(requirement: string, text: string) {
   const words = requirement.toLowerCase().split(/\W+/).filter((word) => word.length > 3);
   if (!words.length) return 0.4;
@@ -176,7 +199,7 @@ export function clampRequirements(rows: readonly RequirementDraft[]) {
   return padded.slice(0, LOOP_LIMITS.requirementsMax);
 }
 
-export function requestForGap(kind: GapKind, label: string, ownerKind: "person" | "child") {
+export function requestForGap(kind: GapKind, label: string, ownerKind: string) {
   if (kind === "missing_knowledge") {
     return {
       channel: "upload" as const,

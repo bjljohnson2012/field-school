@@ -28,6 +28,7 @@ export type TaskView = {
   question: string;
   channel: string;
   requestCopy: string;
+  queryText: string;
   status: string;
   links: { href: string; label: string }[];
 };

@@ -10,7 +10,7 @@ import { LoopTimeline } from "@/components/gap-loop/loop-timeline";
 import { RequirementEditor, type DraftRequirement } from "@/components/gap-loop/requirement-editor";
 import type { WorkspaceView } from "@/lib/gap-loop/view";
 
-const SYSTEM = new Set(["draft", "analyze", "formulate", "integrate", "rescore"]);
+const SYSTEM = new Set(["draft", "analyze", "formulate", "integrate", "rescore", "researching"]);
 
 const ERRORS: Record<string, string> = {
   sign_in_required: "Sign in to open this goal.",
@@ -22,6 +22,11 @@ const ERRORS: Record<string, string> = {
   upload_too_large: "That upload is too large.",
   rejected_without_new_evidence: "That finding stays closed until new evidence arrives.",
   database_unavailable: "Goals are not reachable right now.",
+  query_mismatch: "That search text does not match the request.",
+  kid_identifier_blocked: "That search was blocked.",
+  task_cap: "Search is paused for now.",
+  month_cap: "Search is paused for now.",
+  web_needs_approval: "Approve the search before it runs.",
 };
 
 function runnerId() {
@@ -40,6 +45,7 @@ function emptyCopy(state: string) {
   if (state === "done") return "This goal is met.";
   if (state === "cancelled") return "Archived. Saved material stays.";
   if (state === "waiting_on_user") return "No request right now. Waive a requirement, or add material when a request returns.";
+  if (state === "researching") return "Searching public sources.";
   return "Working on the next step.";
 }
 
@@ -197,6 +203,10 @@ export default function GoalWorkspacePage() {
         <Link href="/knowledge/goals" className="underline underline-offset-2">
           All goals
         </Link>
+        <span className="px-2 text-muted-foreground">/</span>
+        <Link href={`/knowledge/goals/${outcomeId}/graph`} className="underline underline-offset-2">
+          Graph
+        </Link>
       </p>
       <GoalBar
         title={workspace.outcome.title}
@@ -240,6 +250,14 @@ export default function GoalWorkspacePage() {
               task={workspace.task}
               emptyCopy={emptyCopy(workspace.run.state)}
               busy={busy}
+              onApprove={async (queryText) => {
+                if (!workspace.task) return;
+                const saved = await send(`/api/knowledge/tasks/${workspace.task.id}/approve`, "POST", { queryText });
+                if (!saved) return;
+                tokenRef.current = "";
+                const fresh = await load();
+                if (fresh && fresh.run.state === "researching") await step(fresh.run);
+              }}
               onRespond={async (body) => {
                 if (!workspace.task) return;
                 const saved = await send(`/api/knowledge/tasks/${workspace.task.id}/respond`, "POST", body);

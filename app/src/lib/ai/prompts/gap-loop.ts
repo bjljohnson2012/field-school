@@ -3,7 +3,7 @@ import { clampRequirements, fallbackRequirements, requestForGap, type GapKind, t
 import { modelUserPayload, redactChildForPrompt } from "../../gap-loop/rules.ts";
 
 type ScopeText = {
-  ownerKind: "person" | "child";
+  ownerKind: string;
   statement: string;
   horizon: string;
   childName?: string;
