@@ -22,7 +22,10 @@ export function isLeader(stance: string) {
 }
 
 export const NEW_DOORS: readonly { href: string; label: string; hint?: string }[] = [
-  { href: "/library/video", label: "Long-form video" },
+  { href: "/library/lessons/new", label: "Lesson" },
+  { href: "/library/courses/new", label: "Course" },
+  { href: "/library/brain/new", label: "Brain page" },
+  { href: "/library/video", label: "Video" },
   { href: "/library/wizard", label: "Wizard", hint: "One branched flow" },
 ];
 
@@ -90,6 +93,18 @@ const linkClass =
 const currentClass = "flex h-11 items-center px-2 text-foreground underline underline-offset-8 sm:px-2.5";
 
 const NEW_DELIVERY: Record<string, { delivers: string; body: string }> = {
+  "/library/lessons/new": {
+    delivers: "New lesson",
+    body: "This opens a lesson with nine blocks. It stays a draft until you publish it.",
+  },
+  "/library/courses/new": {
+    delivers: "New course",
+    body: "This opens a course in the library. Lessons in the course stay drafts until you publish them.",
+  },
+  "/library/brain/new": {
+    delivers: "New page",
+    body: "This opens a simple brain page. The list stays here. The graph comes later.",
+  },
   "/library/wizard": {
     delivers: "New knowledge",
     body: "This stores a new piece of knowledge. Drop a file, an idea, or a minute of audio. Submit adds it to the knowledge repository. Generate Lesson writes the lesson after, and only from what you stored.",
@@ -110,7 +125,7 @@ export function NewMenu() {
     <>
       <button
         type="button"
-        className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-primary px-3.5 text-sm font-medium text-primary-foreground"
+        className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-border bg-transparent px-3.5 text-sm font-medium"
         onClick={() => {
           setPicked(null);
           setOpen(true);

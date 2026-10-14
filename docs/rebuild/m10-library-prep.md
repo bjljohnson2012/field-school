@@ -4,7 +4,7 @@ This file is the spec and the test plan for [issue 369](https://github.com/bjljo
 
 **Depends on (deployed).** M6 content model ([issue 365](https://github.com/bjljohnson2012/field-school/issues/365)) and M9 shell ([issue 368](https://github.com/bjljohnson2012/field-school/issues/368)) are live on production as of the Oct 13 to Oct 14 rebuild brief. M10 implementation stacks on `feat/portal-m9-shell` (or `origin/main` after that branch merges). This prep is cut from `origin/main` at `4eaf464cfa19c2c7a1e0b552490a31f5515e79ef` or later.
 
-**Gate.** `designer_seal` is required before Ben treats the implementation stream as acceptance-green. The seal is **not** given for M10. The implementation pull request attaches screenshots at 1440px and 390px wide and states **Awaiting Designer seal**. M9 shell seal (Ben, 9:34 PM ET on Oct 14, 2026) does not substitute for M10.
+**Gate.** `designer_seal` is required before Ben treats the implementation stream as acceptance-green. CDM sealed M10 on 2026-10-14, delegated by Ben. The sealed choices are recorded in this file. M9 shell seal (Ben, 9:34 PM ET on Oct 14, 2026) does not substitute for this M10 seal.
 
 Launch stays CLOSED 0/8. `AUTH_URL` stays `https://portal.fieldschool.ai`. `CHECKOUT_GO_LIVE` and `COACHING_GO_LIVE` stay `false`. No live Stripe. This prep does not deploy and does not run production scripts.
 
@@ -183,7 +183,7 @@ Run from `app/` after `npm ci` on the **implementation** branch at its draft pul
 | Library workspace | 1440 and 390 screenshots of tree plus canvas |
 | Sessions list | Screenshot with row layout; no recap for child context |
 | Version restore | Short recording or before and after screenshots |
-| Awaiting Designer seal | Label on PR; screenshots attached |
+| Designer seal | CDM on 2026-10-14, delegated by Ben. Recorded in this file. |
 
 ### Out of scope for M10 tests
 
@@ -191,35 +191,36 @@ Deploy, `AUTH_URL` flip, live Stripe, production backfill, M11 brain backfill co
 
 ## Designer seal checklist
 
-Seal **not** given. Ben or Designer checks each item when reviewing the implementation pull request. Do not mark sealed without signed approval.
+Sealed on 2026-10-14 by CDM, delegated by Ben. The six choices below are the seal. Implementation follows them.
 
 | # | Item | Spec source | Evidence required | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Library workspace layout: tree plus canvas, quiet pluses, no filled blue in tree | Rec 8, issue 369 | 1440 and 390 screenshots | Open |
-| 2 | Sidebar sections Brain, Courses, Sessions, Media | Issue 369, route table | Screenshot with all four | Open |
-| 3 | Lesson player one step at a time, eight steps from nine blocks | #363 section 7 | 1440 and 390 per step | Open |
-| 4 | Outline rail desktop; drawer on mobile | #363 section 7, Designer finding 8 | 390 screenshot with drawer | Open |
-| 5 | Thin `#1E4E8C` meter; pass rule at top | Rec 9, Q6 | Screenshot | Open |
-| 6 | One filled blue per step on main action only | #363 section 5 | Screenshot per step type | Open |
-| 7 | Video: one player, one button, no overlap | Designer finding 3, L6 | Screenshot Worked example | Open |
-| 8 | Sessions list row layout (ObsidianUI borrow) | Issue 369 comment, #363 ObsidianUI | Screenshot Sessions | Open |
-| 9 | Member rail unchanged: 240px Learn, Library, You | Ben Oct 14 9:34 PM ET, `4eaf464` | 390 member screenshot | Open |
-| 10 | Typography and tokens match M9 shell | M9 prep sealed packet | Side by side with Home | Open |
-| 11 | Block editor UX (typed JSON, not HTML) | Q8, M6 | Screenshot editor plus PR names library | Open |
-| 12 | No draft or recap text for person in development | CDM notes, Q21 | Test log plus screenshot | Open |
+| 1 | Library workspace layout: tree plus canvas, quiet pluses, no filled blue in tree | Rec 8, issue 369 | 1440 and 390 screenshots | Sealed 2026-10-14 |
+| 2 | Sidebar sections Brain, Courses, Sessions, Media | Issue 369, route table | Screenshot with all four | Sealed 2026-10-14 |
+| 3 | Lesson player one step at a time, eight steps from nine blocks | #363 section 7 | 1440 and 390 per step | Sealed 2026-10-14 |
+| 4 | Outline rail desktop; drawer on mobile | #363 section 7, Designer finding 8 | 390 screenshot with drawer | Sealed 2026-10-14 |
+| 5 | Thin `#1E4E8C` meter; pass rule at top | Rec 9, Q6 | Screenshot | Sealed 2026-10-14 |
+| 6 | One filled blue per step on main action only | #363 section 5 | Screenshot per step type | Sealed 2026-10-14 |
+| 7 | Video: one player, one button, no overlap | Designer finding 3, L6 | Screenshot Worked example | Sealed 2026-10-14 |
+| 8 | Sessions list row layout (ObsidianUI borrow) | Issue 369 comment, #363 ObsidianUI | Screenshot Sessions | Sealed 2026-10-14 |
+| 9 | Member rail unchanged: 240px Learn, Library, You | Ben Oct 14 9:34 PM ET, `4eaf464` | 390 member screenshot | Sealed 2026-10-14 |
+| 10 | Typography and tokens match M9 shell | M9 prep sealed packet | Side by side with Home | Sealed 2026-10-14 |
+| 11 | Block editor UX (typed JSON, not HTML) | Q8, M6 | Screenshot editor plus PR names library | Sealed 2026-10-14 |
+| 12 | No draft or recap text for person in development | CDM notes, Q21 | Test log plus screenshot | Sealed 2026-10-14 |
 
-## Open design choices (need a person)
+## Sealed design choices
 
-Do not guess. Record the decision on the implementation pull request or issue when Ben or Designer answers.
+CDM sealed these on 2026-10-14, delegated by Ben.
 
-| # | Choice | Why it is open | Evidence |
-| --- | --- | --- | --- |
-| 1 | **Q8: block editor library** (Tiptap vs other MIT typed-JSON editor) | [#363 Q8](https://github.com/bjljohnson2012/field-school/issues/363): "CTO picks in M10". No pick is recorded in repo or Notion. | Decision log row Q8; no `tiptap` dependency in `app/package.json` on main at `4eaf464` |
-| 2 | **New menu contents** (paths for wizard, video, brain page, lesson, course) | M9 prep: "menu contents wait on **decision 2**". Route table marks wizard and video "Menu contents are decision 2". | `docs/rebuild/m9-shell-prep.md`; [#363 route comment](https://github.com/bjljohnson2012/field-school/issues/363#issuecomment-6068076420) |
-| 3 | **Sessions row layout detail** | Borrow Active Sessions layout only; Field School tokens and recap fields differ from Settings security devices | [Issue 369 comment](https://github.com/bjljohnson2012/field-school/issues/369#issuecomment-6086685586) |
-| 4 | **Member visibility of Library catalog** | Issue 369: members see published lessons in Learn; optional read-only Library browse for members is not explicit | Issue 369 acceptance ("a member sees it in Learn") |
-| 5 | **Film / Yap workflow in Worked example** | Ben added Yap to lesson video workflow Oct 13; Notion brief: "No Yap-cut lesson is visible to Grok Bot yet" | [Notion brief Oct 13 to 14](https://app.notion.com/p/3f9fe86f6dee817f9143fe9d831b0edd) |
-| 6 | **M10 vs M11 split for `/library/brain` depth** | Issue 369 lists moving `/knowledge` and `/brain`; route table annotates brain unification as M11 | Issue 369 body vs route table M11 column |
+| # | Choice | Seal |
+| --- | --- | --- |
+| 1 | **Q8: block editor library** | Tiptap. Headless, ProseMirror-based. The dependency is in `app/package.json`. Storage stays JSON in Postgres, not editor HTML. |
+| 2 | **New menu contents** | Lesson, Course, Brain page, Video, Wizard. Five items, in that order. Leaders only. Quiet ghost. Never blue. |
+| 3 | **Sessions row layout detail** | Session rows borrow the Active Sessions layout and Field School tokens. |
+| 4 | **Member visibility of Library catalog** | Members see published lessons in Learn. Drafts stay off the member Learn catalog. |
+| 5 | **Film / Yap workflow in Worked example** | No Yap-cut lesson until one exists. |
+| 6 | **M10 vs M11 split for `/library/brain` depth** | `/library/brain` in M10 is a list and a simple page. The graph is M11. |
+| 7 | **Member rail** | The member rail stays the 240px Learn, Library, You rail (`NEXT_PUBLIC_MEMBER_RAIL_VARIANT=issue-368`). |
 
 ## Acceptance summary (issue 369)
 
@@ -228,6 +229,6 @@ Do not guess. Record the decision on the implementation pull request or issue wh
 - Version restore works.
 - Tree: keyboard and screen reader checks pass.
 - Person in development: never drafts or recap text.
-- Screenshots at 1440 and 390 on implementation PR; **Awaiting Designer seal** until checklist is signed.
+- Screenshots at 1440 and 390 on implementation PR. Designer seal: CDM on 2026-10-14, delegated by Ben.
 
 Implementation branch name per epic: `feat/portal-m10-library`. Base: latest `feat/portal-m9-shell` with M6 on main. Part of #363. Closes #369 when the implementation merges, not when this prep merges.

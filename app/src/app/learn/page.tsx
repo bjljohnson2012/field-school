@@ -7,6 +7,7 @@ import { lessonForOrg } from "@/lib/campus-runtime/lessons";
 import { COURSE_NAME, COURSE_TAGLINE } from "@/lib/course/content";
 import { storedPortionForRoom } from "@/app/assign/next-portion";
 import { learnHomeContext, type LivingBrain } from "@/lib/living-brain/model";
+import { PublishedLearnList } from "@/components/library/published-learn-list";
 import { lessonSpineConfidence, lessonSpineStep } from "@/lib/player/play-rail-write";
 
 type NextStep = {
@@ -366,6 +367,7 @@ export default function LearnPage() {
         </aside>
         </div>
       )}
+      <PublishedLearnList />
     </main>
   );
 }

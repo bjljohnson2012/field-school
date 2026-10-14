@@ -163,13 +163,13 @@ test("locked shell numbers and New stays a quiet leader menu", () => {
   assert.equal(M9_METRICS.inputBorder, "#8A8478");
   const family = newMenu("family");
   const team = newMenu("team");
+  const sealed = ["Lesson", "Course", "Brain page", "Video", "Wizard"];
   assert.ok(family.length <= 6);
   assert.ok(team.length <= 6);
-  assert.equal(family.some((item) => item.label === "Person in development"), true);
-  assert.equal(family.some((item) => item.label === "Member invite"), false);
-  assert.equal(team.some((item) => item.label === "Member invite"), true);
-  assert.equal(team.some((item) => item.label === "Person in development"), false);
-  assert.equal([...family, ...team].some((item) => item.id === "connect-ai"), false);
+  assert.deepEqual(family.map((item) => item.label), sealed);
+  assert.deepEqual(team.map((item) => item.label), sealed);
+  assert.equal(family.some((item) => item.id === "connect-ai"), false);
+  assert.equal(team.some((item) => item.id === "connect-ai"), false);
   const shell = read("src/components/m9/shell.tsx");
   assert.match(shell, /m9-new-row/);
   assert.doesNotMatch(shell, /\/metering|Credits|\/pricing/);

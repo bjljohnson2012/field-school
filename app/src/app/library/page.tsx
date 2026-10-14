@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { LibraryWorkspace } from "@/components/library/workspace";
 
 export const metadata: Metadata = { title: "Library" };
 
 export default function LibraryPage() {
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="font-display text-4xl tracking-tight">Library</h1>
-      <p className="mt-4 text-sm text-muted-foreground">The workspace for this brain opens here.</p>
-    </main>
+    <LibraryWorkspace>
+      <h1 className="m10-title">Library</h1>
+      <p className="m10-quiet-copy">The workspace for this brain. Pick a section, or use New to add a lesson.</p>
+    </LibraryWorkspace>
   );
 }

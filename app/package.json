@@ -14,6 +14,10 @@
   "dependencies": {
     "@base-ui/react": "^1.7.0",
     "@remotion/player": "^4.0.526",
+    "@tiptap/core": "^3.32.0",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/react": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
