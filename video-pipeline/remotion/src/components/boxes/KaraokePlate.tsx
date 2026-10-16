@@ -2,13 +2,8 @@ import React, {useMemo} from "react";
 import {createTikTokStyleCaptions, type Caption, type TikTokPage, type TikTokToken} from "@remotion/captions";
 import {measureText} from "@remotion/layout-utils";
 import {createRoundedTextBox} from "@remotion/rounded-text-box";
-import {interpolate, useCurrentFrame, useVideoConfig} from "remotion";
+import {useCurrentFrame, useVideoConfig} from "remotion";
 import {captionActive, captionBg, captionFg, sansFace} from "../../brand";
-
-const clamp = {
-  extrapolateLeft: "clamp" as const,
-  extrapolateRight: "clamp" as const,
-};
 
 const FONT = 44;
 const LINE_CHARS = 32;
@@ -71,8 +66,12 @@ function linesOf(tokens: TikTokToken[]): TikTokToken[][] {
   return lines.filter((lineTokens) => lineTokens.length > 0);
 }
 
-/** TikTok pages on a paper chip. Active word is navy. There is no blue fallback. */
-export const KaraokePlate: React.FC<{captions: Caption[]}> = ({captions}) => {
+/** TikTok pages in a lower band. The chip is the measured text. Cards pass no window. */
+export const KaraokePlate: React.FC<{
+  captions: Caption[];
+  fromFrame: number;
+  untilFrame: number;
+}> = ({captions, fromFrame, untilFrame}) => {
   const frame = useCurrentFrame();
   const {fps, width} = useVideoConfig();
   const ms = (frame / fps) * 1000;
@@ -95,24 +94,23 @@ export const KaraokePlate: React.FC<{captions: Caption[]}> = ({captions}) => {
         fontFamily: sansFace,
         fontSize: FONT,
         fontWeight: "600",
-        letterSpacing: "0.08em",
+        letterSpacing: "0px",
         validateFontIsLoaded: true,
       }),
     );
     const box = createRoundedTextBox({
       textMeasurements,
       textAlign: "center",
-      horizontalPadding: 22,
+        horizontalPadding: 36,
       borderRadius: 16,
     });
     return {rows, box};
   }, [page]);
 
-  if (!page || !plate) {
+  if (!page || !plate || frame < fromFrame || frame >= untilFrame) {
     return null;
   }
 
-  const top = 960 - plate.box.boundingBox.height / 2;
   const left = (width - plate.box.boundingBox.width) / 2;
   const rowTokens = linesOf(page.tokens);
 
@@ -121,7 +119,7 @@ export const KaraokePlate: React.FC<{captions: Caption[]}> = ({captions}) => {
       style={{
         position: "absolute",
         left,
-        top,
+        bottom: 48,
         width: plate.box.boundingBox.width,
         height: plate.box.boundingBox.height,
       }}
@@ -147,24 +145,20 @@ export const KaraokePlate: React.FC<{captions: Caption[]}> = ({captions}) => {
           fontFamily: sansFace,
           fontWeight: 600,
           fontSize: FONT,
-          letterSpacing: "0.08em",
+          letterSpacing: "0px",
           lineHeight: 1.15,
         }}
       >
         {rowTokens.map((tokens, row) => (
           <div key={row} style={{whiteSpace: "pre", textAlign: "center"}}>
             {tokens.map((token, index) => {
-              const local = ((ms - token.fromMs) / 1000) * fps;
-              const fade = interpolate(local, [0, 3], [0, 1], clamp);
               const active = ms >= token.fromMs && ms < token.toMs;
               return (
                 <span
                   key={`${token.fromMs}-${index}`}
                   style={{
-                    opacity: fade,
                     color: active ? captionActive : captionFg,
-                    scale: active ? 1.06 : 1,
-                    display: "inline-block",
+                    display: "inline",
                   }}
                 >
                   {token.text}

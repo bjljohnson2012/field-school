@@ -1,29 +1,27 @@
 /**
- * Live Field School palette.
- * fieldschool.ai/css/site.css and app/src/app/globals.css.
+ * Navy tokens from the Notion page
+ * "Field School Lesson Video: House Rules (Remotion)" (2026-10-14).
+ * Deep navy is the video background. Logo blue is the active caption word.
  */
 
-export const navy = "#0b1f3a";
-export const indigo = "#1f3c88";
-export const indigoDeep = "#172e6b";
-export const primary = "#1e4e8c";
-export const orange = "#ff6a1a";
-export const paper = "#f6f3ec";
-export const ink = "#1a1916";
-export const card = "#ffffff";
-export const muted = "#5c5850";
-export const stone = "#7a746a";
-export const primaryFg = "#f7f4ee";
+export const primary = "#1E4E8C";
+export const indigo = "#1F3C88";
+export const navy = "#172E6B";
+export const logoBlue = "#1F5EFF";
+export const tint = "#D7E3FF";
+export const paper = "#F6F3EC";
+export const ink = "#1A1916";
+export const stone = "#7A746A";
+export const border = "#D8D2C6";
 
 export const bg = navy;
 export const cream = paper;
 export const charcoal = navy;
 
-/** Caption chip. Paper ground, ink type, navy active word. No blue fallback. */
-export const captionBg = "#f6f3ec";
-export const captionFg = "#1a1916";
-export const captionActive = "#0b1f3a";
+export const captionBg = "#F6F3EC";
+export const captionFg = "#1A1916";
+export const captionActive = "#1F5EFF";
 
-/** Fixture names. Values are the navy palette. */
-export const gold = orange;
+/** Fixture names. Values are documented navy tokens. */
+export const gold = logoBlue;
 export const olive = indigo;

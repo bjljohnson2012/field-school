@@ -8,9 +8,10 @@ const root = join(here, "..");
 const tokensPath = join(root, "video-pipeline/remotion/src/brand/tokens.ts");
 const master = process.argv[2] ?? "/opt/cursor/artifacts/lesson-flow-60-1080p.mp4";
 const stills = {
-  "00-05": process.argv[3] ?? "/opt/cursor/artifacts/lesson-flow-60-still-00-05.png",
-  "00-20": process.argv[4] ?? "/opt/cursor/artifacts/lesson-flow-60-still-00-20.png",
-  "00-40": process.argv[5] ?? "/opt/cursor/artifacts/lesson-flow-60-still-00-40.png",
+  "00-03": process.argv[3] ?? "/opt/cursor/artifacts/lesson-flow-60-still-00-03.png",
+  "00-15": process.argv[4] ?? "/opt/cursor/artifacts/lesson-flow-60-still-00-15.png",
+  "00-30": process.argv[5] ?? "/opt/cursor/artifacts/lesson-flow-60-still-00-30.png",
+  "00-45": process.argv[6] ?? "/opt/cursor/artifacts/lesson-flow-60-still-00-45.png",
 };
 
 const tokens = readFileSync(tokensPath, "utf8");
@@ -25,7 +26,6 @@ function token(name) {
 const navy = token("navy");
 const paper = token("paper");
 const ink = token("ink");
-const orange = token("orange");
 const captionBg = token("captionBg");
 const captionFg = token("captionFg");
 const captionActive = token("captionActive");
@@ -150,11 +150,10 @@ function pngRgb(path) {
   return run("ffmpeg", ["-hide_banner", "-nostats", "-i", path, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], true);
 }
 
-const banned = [hex("#C4A35A"), hex("#6B7F4F")];
+const banned = [hex("#C4A35A"), hex("#6B7F4F"), hex("#0b1f3a")];
 const navyRgb = hex(navy);
 const paperRgb = hex(paper);
 const inkRgb = hex(ink);
-const orangeRgb = hex(orange);
 
 function paletteOf(path) {
   const rgb = pngRgb(path);
@@ -166,7 +165,7 @@ function paletteOf(path) {
   for (let i = 0; i < rgb.length; i += 3) {
     const px = [rgb[i], rgb[i + 1], rgb[i + 2]];
     if (dist(px, navyRgb) < 38) navyHits++;
-    if (dist(px, paperRgb) < 30 || dist(px, inkRgb) < 28 || dist(px, orangeRgb) < 36) paperHits++;
+    if (dist(px, paperRgb) < 30 || dist(px, inkRgb) < 28) paperHits++;
     if (banned.some((color) => dist(px, color) < 16)) bannedHits++;
     if (dist(px, hex("#1e4e8c")) < 18 && px[2] > px[0] + 30) blueHits++;
   }
@@ -182,7 +181,7 @@ const palette = {};
 for (const [id, path] of Object.entries(stills)) {
   palette[id] = paletteOf(path);
 }
-const paletteBad = palette["00-40"].navyShare < 0.35
+const paletteBad = ["00-30", "00-45"].some((id) => palette[id].navyShare < 0.35)
   || Object.values(palette).some((item) => item.bannedShare > 0.01);
 if (paletteBad) {
   fail("palette", palette);
@@ -204,7 +203,7 @@ for path in sys.argv[1:]:
 sys.exit(0 if ok else 1)
 `;
 const python = [process.env.FACE_PYTHON, "/tmp/cv/bin/python", "python3"].find((bin) => bin && (bin === "python3" || existsSync(bin)));
-const face = spawnSync(python, ["-c", faceScript, stills["00-05"], stills["00-20"]], {encoding: "utf8"});
+const face = spawnSync(python, ["-c", faceScript, stills["00-03"], stills["00-15"]], {encoding: "utf8"});
 if (face.status !== 0) {
   fail("face", {stdout: face.stdout, stderr: face.stderr});
 } else {

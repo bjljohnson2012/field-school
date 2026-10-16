@@ -4,24 +4,22 @@ import {loadFont as loadPlex} from "@remotion/google-fonts/IBMPlexSans";
 import {loadFont as loadSerif} from "@remotion/google-fonts/SourceSerif4";
 import {
   bg,
+  border,
   captionActive,
   captionBg,
   captionFg,
-  card,
   charcoal,
   cream,
   gold,
   indigo,
-  indigoDeep,
   ink,
-  muted,
+  logoBlue,
   navy,
   olive,
-  orange,
   paper,
   primary,
-  primaryFg,
   stone,
+  tint,
 } from "./brand/tokens";
 
 const fraunces = loadFraunces("normal", {
@@ -50,23 +48,21 @@ export const serifFace = serif.fontFamily;
 
 export {
   bg,
+  border,
   captionActive,
   captionBg,
   captionFg,
-  card,
   charcoal,
   cream,
   gold,
   indigo,
-  indigoDeep,
   ink,
-  muted,
+  logoBlue,
   navy,
   olive,
-  orange,
   paper,
   primary,
-  primaryFg,
   stone,
+  tint,
 };
 export const INTRO_SEC = 0;
