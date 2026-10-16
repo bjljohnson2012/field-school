@@ -1,0 +1,271 @@
+{
+  "id": "lesson-flow-60",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationSec": 44.469,
+  "durationFrames": 1334,
+  "voOffsetSec": 0.7,
+  "speechSec": 41.269,
+  "course": "Field School",
+  "module": "Self-government",
+  "title": "Rule yourself before leading others",
+  "objective": "You will be able to state the rule of self-government.",
+  "lowerThird": {
+    "name": "Benjamin Johnson",
+    "org": "Field School"
+  },
+  "music": {
+    "title": "Upbeat Marimba",
+    "artist": "bjljohnson2012",
+    "bed": "lesson60/upbeat-marimba.mp3",
+    "sting": "lesson60/marimba-intro-v3.mp3",
+    "volume": 0.14
+  },
+  "silenceRuleMs": 400,
+  "lufsTarget": -16,
+  "dockWidth": 0.38,
+  "chapters": [
+    {
+      "id": "sting",
+      "kicker": "FIELD SCHOOL",
+      "text": "Self-government",
+      "inSec": 0,
+      "outSec": 0.7,
+      "motion": "takeover",
+      "showHead": false,
+      "letterbox": 0,
+      "mode": "sting"
+    },
+    {
+      "id": "slate",
+      "kicker": "COURSE  ·  MODULE",
+      "text": "Rule yourself before leading others",
+      "inSec": 0.7,
+      "outSec": 3.192,
+      "motion": "glide",
+      "showHead": true,
+      "letterbox": 0,
+      "mode": "slate"
+    },
+    {
+      "id": "objective",
+      "kicker": "YOU WILL BE ABLE TO",
+      "text": "State the rule of self-government.",
+      "inSec": 3.192,
+      "outSec": 12.017,
+      "motion": "takeover",
+      "showHead": true,
+      "letterbox": 0,
+      "mode": "objective"
+    },
+    {
+      "id": "hook",
+      "kicker": "THE RULE",
+      "text": "Rule yourself before leading others.",
+      "inSec": 12.017,
+      "outSec": 18,
+      "motion": "glide",
+      "showHead": true,
+      "letterbox": 0,
+      "mode": "card"
+    },
+    {
+      "id": "hook-b",
+      "kicker": "THE RULE",
+      "text": "Rule yourself before leading others.",
+      "inSec": 18,
+      "outSec": 25.864,
+      "motion": "takeover",
+      "showHead": true,
+      "letterbox": 0,
+      "mode": "card"
+    },
+    {
+      "id": "teach",
+      "kicker": "TEACH",
+      "text": "Invest in the people you lead.",
+      "inSec": 25.864,
+      "outSec": 31.775,
+      "motion": "takeover",
+      "showHead": true,
+      "letterbox": 0,
+      "mode": "card"
+    },
+    {
+      "id": "show",
+      "kicker": "SHOW",
+      "text": "Your actions influence the people around you.",
+      "inSec": 31.775,
+      "outSec": 39.497,
+      "motion": "takeover",
+      "showHead": true,
+      "letterbox": 0,
+      "mode": "show"
+    },
+    {
+      "id": "do",
+      "kicker": "DO",
+      "text": "Lead yourself and think for yourself.",
+      "inSec": 39.497,
+      "outSec": 41.969,
+      "motion": "glide",
+      "showHead": true,
+      "letterbox": 0,
+      "mode": "card"
+    },
+    {
+      "id": "next-up",
+      "kicker": "NEXT UP",
+      "text": "Seven statements that build the rule.",
+      "inSec": 41.969,
+      "outSec": 43.469,
+      "motion": "glide",
+      "showHead": true,
+      "letterbox": 0,
+      "mode": "next"
+    },
+    {
+      "id": "sting-tail",
+      "kicker": "FIELD SCHOOL",
+      "text": "Rule yourself first.",
+      "inSec": 43.469,
+      "outSec": 44.469,
+      "motion": "takeover",
+      "showHead": false,
+      "letterbox": 0,
+      "mode": "sting"
+    }
+  ],
+  "cues": [
+    {
+      "id": "one",
+      "text": "One rule",
+      "fromMs": 3192,
+      "sfx": "tick",
+      "emphasis": true,
+      "vox": true
+    },
+    {
+      "id": "work",
+      "text": "Work",
+      "fromMs": 5154,
+      "sfx": "tick",
+      "emphasis": false,
+      "vox": true
+    },
+    {
+      "id": "life",
+      "text": "Life",
+      "fromMs": 5614,
+      "sfx": "tick",
+      "emphasis": false,
+      "vox": true
+    },
+    {
+      "id": "leadership",
+      "text": "Leadership",
+      "fromMs": 6234,
+      "sfx": "tick",
+      "emphasis": true,
+      "vox": true
+    },
+    {
+      "id": "dominion",
+      "text": "Dominion",
+      "fromMs": 7975,
+      "sfx": "tick",
+      "emphasis": false,
+      "vox": true
+    },
+    {
+      "id": "self",
+      "text": "Self-government",
+      "fromMs": 9575,
+      "sfx": "tick",
+      "emphasis": true,
+      "vox": true
+    },
+    {
+      "id": "rule",
+      "text": "Rule yourself",
+      "fromMs": 12537,
+      "sfx": "tick",
+      "emphasis": true,
+      "vox": true
+    },
+    {
+      "id": "invest",
+      "text": "Invest",
+      "fromMs": 25864,
+      "sfx": "tick",
+      "emphasis": true,
+      "vox": true
+    },
+    {
+      "id": "influence",
+      "text": "Influence",
+      "fromMs": 32125,
+      "sfx": "tick",
+      "emphasis": true,
+      "vox": true
+    },
+    {
+      "id": "lead",
+      "text": "Lead yourself",
+      "fromMs": 39747,
+      "sfx": "tick",
+      "emphasis": true,
+      "vox": true
+    }
+  ],
+  "voxEnterMs": [
+    5104,
+    6904,
+    13708,
+    14689,
+    15650,
+    16510,
+    17431,
+    18372,
+    21933,
+    22253,
+    25594,
+    27955,
+    37356
+  ],
+  "stingMs": [
+    0,
+    43469
+  ],
+  "whooshMs": [
+    3192,
+    18000,
+    25864,
+    31775,
+    41969
+  ],
+  "stills": [
+    {
+      "id": "00-05",
+      "frame": 150
+    },
+    {
+      "id": "00-20",
+      "frame": 600
+    },
+    {
+      "id": "00-44",
+      "frame": 1320
+    }
+  ],
+  "anchors": {
+    "one": 3.192,
+    "self": 9.575,
+    "phrase": 12.017,
+    "rule": 12.537,
+    "invest": 25.864,
+    "influence": 32.125,
+    "lead": 39.747
+  }
+}

@@ -1,6 +1,9 @@
 import React from "react";
 import {Composition} from "remotion";
 import {FieldSchoolLesson, durationFrames} from "./FieldSchoolLesson";
+import {LessonFlow} from "./LessonFlow";
+import {lessonFrames} from "./lesson/timeline";
+import {defaultLessonProps, lessonPropsSchema} from "./schema/lessonProps";
 
 export const Root: React.FC = () => {
   return (
@@ -55,6 +58,19 @@ export const Root: React.FC = () => {
         }}
         calculateMetadata={({props}) => ({
           durationInFrames: durationFrames(props),
+        })}
+      />
+      <Composition
+        id="LessonFlow60"
+        component={LessonFlow}
+        schema={lessonPropsSchema}
+        defaultProps={defaultLessonProps}
+        durationInFrames={lessonFrames()}
+        fps={30}
+        width={1920}
+        height={1080}
+        calculateMetadata={() => ({
+          durationInFrames: lessonFrames(),
         })}
       />
     </>

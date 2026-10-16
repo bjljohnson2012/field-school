@@ -1,0 +1,751 @@
+[
+  {
+    "text": "so",
+    "startMs": 750,
+    "endMs": 951,
+    "timestampMs": 851,
+    "confidence": 0.92
+  },
+  {
+    "text": " what",
+    "startMs": 1031,
+    "endMs": 1211,
+    "timestampMs": 1121,
+    "confidence": 0.976
+  },
+  {
+    "text": " I'm",
+    "startMs": 1311,
+    "endMs": 1431,
+    "timestampMs": 1371,
+    "confidence": 0.908
+  },
+  {
+    "text": " gonna",
+    "startMs": 1451,
+    "endMs": 1611,
+    "timestampMs": 1531,
+    "confidence": 0.414
+  },
+  {
+    "text": " be",
+    "startMs": 1651,
+    "endMs": 1711,
+    "timestampMs": 1681,
+    "confidence": 0.761
+  },
+  {
+    "text": " talking",
+    "startMs": 1751,
+    "endMs": 2091,
+    "timestampMs": 1921,
+    "confidence": 0.916
+  },
+  {
+    "text": " about",
+    "startMs": 2131,
+    "endMs": 2331,
+    "timestampMs": 2231,
+    "confidence": 0.888
+  },
+  {
+    "text": " today",
+    "startMs": 2351,
+    "endMs": 2672,
+    "timestampMs": 2512,
+    "confidence": 0.727
+  },
+  {
+    "text": " is",
+    "startMs": 2972,
+    "endMs": 3072,
+    "timestampMs": 3022,
+    "confidence": 0.717
+  },
+  {
+    "text": " one",
+    "startMs": 3192,
+    "endMs": 3292,
+    "timestampMs": 3242,
+    "confidence": 0.808
+  },
+  {
+    "text": " of",
+    "startMs": 3312,
+    "endMs": 3352,
+    "timestampMs": 3332,
+    "confidence": 0.989
+  },
+  {
+    "text": " the",
+    "startMs": 3392,
+    "endMs": 3452,
+    "timestampMs": 3422,
+    "confidence": 0.995
+  },
+  {
+    "text": " key",
+    "startMs": 3532,
+    "endMs": 3852,
+    "timestampMs": 3692,
+    "confidence": 0.859
+  },
+  {
+    "text": " rules",
+    "startMs": 3993,
+    "endMs": 4473,
+    "timestampMs": 4233,
+    "confidence": 0.807
+  },
+  {
+    "text": " for",
+    "startMs": 4593,
+    "endMs": 5034,
+    "timestampMs": 4814,
+    "confidence": 0.684
+  },
+  {
+    "text": " work,",
+    "startMs": 5154,
+    "endMs": 5494,
+    "timestampMs": 5324,
+    "confidence": 0.862
+  },
+  {
+    "text": " life,",
+    "startMs": 5614,
+    "endMs": 5994,
+    "timestampMs": 5804,
+    "confidence": 0.925
+  },
+  {
+    "text": " leadership,",
+    "startMs": 6234,
+    "endMs": 6834,
+    "timestampMs": 6534,
+    "confidence": 0.898
+  },
+  {
+    "text": " presuppositional",
+    "startMs": 6954,
+    "endMs": 7915,
+    "timestampMs": 7435,
+    "confidence": 0.931
+  },
+  {
+    "text": " dominion,",
+    "startMs": 7975,
+    "endMs": 8435,
+    "timestampMs": 8205,
+    "confidence": 0.81
+  },
+  {
+    "text": " and",
+    "startMs": 8555,
+    "endMs": 8635,
+    "timestampMs": 8595,
+    "confidence": 0.959
+  },
+  {
+    "text": " that",
+    "startMs": 8675,
+    "endMs": 8875,
+    "timestampMs": 8775,
+    "confidence": 0.912
+  },
+  {
+    "text": " is",
+    "startMs": 9075,
+    "endMs": 9215,
+    "timestampMs": 9145,
+    "confidence": 0.709
+  },
+  {
+    "text": " self-government.",
+    "startMs": 9575,
+    "endMs": 10936,
+    "timestampMs": 10256,
+    "confidence": 0.873
+  },
+  {
+    "text": " So",
+    "startMs": 11056,
+    "endMs": 11196,
+    "timestampMs": 11126,
+    "confidence": 0.948
+  },
+  {
+    "text": " here's",
+    "startMs": 11216,
+    "endMs": 11536,
+    "timestampMs": 11376,
+    "confidence": 0.697
+  },
+  {
+    "text": " the",
+    "startMs": 11656,
+    "endMs": 11736,
+    "timestampMs": 11696,
+    "confidence": 0.977
+  },
+  {
+    "text": " key",
+    "startMs": 11776,
+    "endMs": 11956,
+    "timestampMs": 11866,
+    "confidence": 0.96
+  },
+  {
+    "text": " phrase,",
+    "startMs": 12017,
+    "endMs": 12417,
+    "timestampMs": 12217,
+    "confidence": 0.885
+  },
+  {
+    "text": " rule",
+    "startMs": 12537,
+    "endMs": 12958,
+    "timestampMs": 12748,
+    "confidence": 0.816
+  },
+  {
+    "text": " yourself",
+    "startMs": 12998,
+    "endMs": 13638,
+    "timestampMs": 13318,
+    "confidence": 0.836
+  },
+  {
+    "text": " before",
+    "startMs": 13758,
+    "endMs": 14619,
+    "timestampMs": 14189,
+    "confidence": 0.803
+  },
+  {
+    "text": " leading",
+    "startMs": 14739,
+    "endMs": 15160,
+    "timestampMs": 14950,
+    "confidence": 0.814
+  },
+  {
+    "text": " others.",
+    "startMs": 15280,
+    "endMs": 15580,
+    "timestampMs": 15430,
+    "confidence": 0.831
+  },
+  {
+    "text": " Rule",
+    "startMs": 15700,
+    "endMs": 15940,
+    "timestampMs": 15820,
+    "confidence": 0.912
+  },
+  {
+    "text": " yourself",
+    "startMs": 15960,
+    "endMs": 16440,
+    "timestampMs": 16200,
+    "confidence": 0.801
+  },
+  {
+    "text": " before",
+    "startMs": 16560,
+    "endMs": 17361,
+    "timestampMs": 16961,
+    "confidence": 0.845
+  },
+  {
+    "text": " leading",
+    "startMs": 17481,
+    "endMs": 17822,
+    "timestampMs": 17652,
+    "confidence": 0.824
+  },
+  {
+    "text": " others.",
+    "startMs": 18002,
+    "endMs": 18302,
+    "timestampMs": 18152,
+    "confidence": 0.908
+  },
+  {
+    "text": " Now,",
+    "startMs": 18422,
+    "endMs": 18722,
+    "timestampMs": 18572,
+    "confidence": 0.947
+  },
+  {
+    "text": " a",
+    "startMs": 18842,
+    "endMs": 18882,
+    "timestampMs": 18862,
+    "confidence": 0.81
+  },
+  {
+    "text": " key",
+    "startMs": 18942,
+    "endMs": 19162,
+    "timestampMs": 19052,
+    "confidence": 0.999
+  },
+  {
+    "text": " part",
+    "startMs": 19222,
+    "endMs": 19542,
+    "timestampMs": 19382,
+    "confidence": 0.904
+  },
+  {
+    "text": " when",
+    "startMs": 19662,
+    "endMs": 20003,
+    "timestampMs": 19833,
+    "confidence": 0.774
+  },
+  {
+    "text": " thinking",
+    "startMs": 20083,
+    "endMs": 20423,
+    "timestampMs": 20253,
+    "confidence": 0.894
+  },
+  {
+    "text": " through",
+    "startMs": 20463,
+    "endMs": 20683,
+    "timestampMs": 20573,
+    "confidence": 0.933
+  },
+  {
+    "text": " this",
+    "startMs": 20723,
+    "endMs": 21003,
+    "timestampMs": 20863,
+    "confidence": 0.832
+  },
+  {
+    "text": " fact",
+    "startMs": 21123,
+    "endMs": 21443,
+    "timestampMs": 21283,
+    "confidence": 0.842
+  },
+  {
+    "text": " of",
+    "startMs": 21483,
+    "endMs": 21563,
+    "timestampMs": 21523,
+    "confidence": 0.672
+  },
+  {
+    "text": " life",
+    "startMs": 21623,
+    "endMs": 21863,
+    "timestampMs": 21743,
+    "confidence": 0.875
+  },
+  {
+    "text": " is",
+    "startMs": 21983,
+    "endMs": 22183,
+    "timestampMs": 22083,
+    "confidence": 0.936
+  },
+  {
+    "text": " you're",
+    "startMs": 22303,
+    "endMs": 22583,
+    "timestampMs": 22443,
+    "confidence": 0.811
+  },
+  {
+    "text": " going",
+    "startMs": 22983,
+    "endMs": 23283,
+    "timestampMs": 23133,
+    "confidence": 0.835
+  },
+  {
+    "text": " to",
+    "startMs": 23383,
+    "endMs": 23503,
+    "timestampMs": 23443,
+    "confidence": 0.758
+  },
+  {
+    "text": " be",
+    "startMs": 23543,
+    "endMs": 23683,
+    "timestampMs": 23613,
+    "confidence": 0.904
+  },
+  {
+    "text": " in",
+    "startMs": 23703,
+    "endMs": 23763,
+    "timestampMs": 23733,
+    "confidence": 0.929
+  },
+  {
+    "text": " a",
+    "startMs": 23804,
+    "endMs": 23844,
+    "timestampMs": 23824,
+    "confidence": 0.981
+  },
+  {
+    "text": " position",
+    "startMs": 23864,
+    "endMs": 24384,
+    "timestampMs": 24124,
+    "confidence": 0.924
+  },
+  {
+    "text": " at",
+    "startMs": 24744,
+    "endMs": 24804,
+    "timestampMs": 24774,
+    "confidence": 0.836
+  },
+  {
+    "text": " some",
+    "startMs": 24944,
+    "endMs": 25184,
+    "timestampMs": 25064,
+    "confidence": 0.79
+  },
+  {
+    "text": " point",
+    "startMs": 25224,
+    "endMs": 25524,
+    "timestampMs": 25374,
+    "confidence": 0.76
+  },
+  {
+    "text": " to",
+    "startMs": 25644,
+    "endMs": 25804,
+    "timestampMs": 25724,
+    "confidence": 0.745
+  },
+  {
+    "text": " invest",
+    "startMs": 25864,
+    "endMs": 26444,
+    "timestampMs": 26154,
+    "confidence": 0.925
+  },
+  {
+    "text": " into",
+    "startMs": 26745,
+    "endMs": 27085,
+    "timestampMs": 26915,
+    "confidence": 0.86
+  },
+  {
+    "text": " other",
+    "startMs": 27265,
+    "endMs": 27465,
+    "timestampMs": 27365,
+    "confidence": 0.837
+  },
+  {
+    "text": " people.",
+    "startMs": 27565,
+    "endMs": 27885,
+    "timestampMs": 27725,
+    "confidence": 0.971
+  },
+  {
+    "text": " You're",
+    "startMs": 28005,
+    "endMs": 28225,
+    "timestampMs": 28115,
+    "confidence": 0.722
+  },
+  {
+    "text": " going",
+    "startMs": 28245,
+    "endMs": 28465,
+    "timestampMs": 28355,
+    "confidence": 0.745
+  },
+  {
+    "text": " to",
+    "startMs": 28505,
+    "endMs": 28565,
+    "timestampMs": 28535,
+    "confidence": 0.994
+  },
+  {
+    "text": " be",
+    "startMs": 28605,
+    "endMs": 28785,
+    "timestampMs": 28695,
+    "confidence": 0.799
+  },
+  {
+    "text": " in",
+    "startMs": 29085,
+    "endMs": 29185,
+    "timestampMs": 29135,
+    "confidence": 0.728
+  },
+  {
+    "text": " a",
+    "startMs": 29365,
+    "endMs": 29465,
+    "timestampMs": 29415,
+    "confidence": 0.996
+  },
+  {
+    "text": " position",
+    "startMs": 29585,
+    "endMs": 30125,
+    "timestampMs": 29855,
+    "confidence": 0.946
+  },
+  {
+    "text": " where",
+    "startMs": 30245,
+    "endMs": 30605,
+    "timestampMs": 30425,
+    "confidence": 0.803
+  },
+  {
+    "text": " your",
+    "startMs": 30845,
+    "endMs": 31205,
+    "timestampMs": 31025,
+    "confidence": 0.831
+  },
+  {
+    "text": " actions",
+    "startMs": 31465,
+    "endMs": 32005,
+    "timestampMs": 31735,
+    "confidence": 0.894
+  },
+  {
+    "text": " influence",
+    "startMs": 32125,
+    "endMs": 32625,
+    "timestampMs": 32375,
+    "confidence": 0.894
+  },
+  {
+    "text": " those",
+    "startMs": 32665,
+    "endMs": 32845,
+    "timestampMs": 32755,
+    "confidence": 0.785
+  },
+  {
+    "text": " around",
+    "startMs": 32885,
+    "endMs": 33185,
+    "timestampMs": 33035,
+    "confidence": 0.873
+  },
+  {
+    "text": " you",
+    "startMs": 33225,
+    "endMs": 33425,
+    "timestampMs": 33325,
+    "confidence": 0.866
+  },
+  {
+    "text": " and",
+    "startMs": 33545,
+    "endMs": 33645,
+    "timestampMs": 33595,
+    "confidence": 0.769
+  },
+  {
+    "text": " a",
+    "startMs": 33685,
+    "endMs": 33725,
+    "timestampMs": 33705,
+    "confidence": 0.987
+  },
+  {
+    "text": " key",
+    "startMs": 33765,
+    "endMs": 33945,
+    "timestampMs": 33855,
+    "confidence": 0.859
+  },
+  {
+    "text": " piece",
+    "startMs": 33965,
+    "endMs": 34285,
+    "timestampMs": 34125,
+    "confidence": 0.92
+  },
+  {
+    "text": " to",
+    "startMs": 34645,
+    "endMs": 34866,
+    "timestampMs": 34756,
+    "confidence": 0.798
+  },
+  {
+    "text": " remember",
+    "startMs": 34966,
+    "endMs": 35426,
+    "timestampMs": 35196,
+    "confidence": 0.944
+  },
+  {
+    "text": " when",
+    "startMs": 35806,
+    "endMs": 35966,
+    "timestampMs": 35886,
+    "confidence": 0.964
+  },
+  {
+    "text": " taking",
+    "startMs": 36006,
+    "endMs": 36246,
+    "timestampMs": 36126,
+    "confidence": 0.91
+  },
+  {
+    "text": " this",
+    "startMs": 36266,
+    "endMs": 36406,
+    "timestampMs": 36336,
+    "confidence": 0.678
+  },
+  {
+    "text": " into",
+    "startMs": 36446,
+    "endMs": 36606,
+    "timestampMs": 36526,
+    "confidence": 0.876
+  },
+  {
+    "text": " consideration",
+    "startMs": 36646,
+    "endMs": 37286,
+    "timestampMs": 36966,
+    "confidence": 0.881
+  },
+  {
+    "text": " is",
+    "startMs": 37406,
+    "endMs": 37506,
+    "timestampMs": 37456,
+    "confidence": 0.59
+  },
+  {
+    "text": " that",
+    "startMs": 37546,
+    "endMs": 37686,
+    "timestampMs": 37616,
+    "confidence": 0.82
+  },
+  {
+    "text": " you're",
+    "startMs": 37767,
+    "endMs": 37987,
+    "timestampMs": 37877,
+    "confidence": 0.879
+  },
+  {
+    "text": " going",
+    "startMs": 38027,
+    "endMs": 38247,
+    "timestampMs": 38137,
+    "confidence": 0.77
+  },
+  {
+    "text": " to",
+    "startMs": 38287,
+    "endMs": 38367,
+    "timestampMs": 38327,
+    "confidence": 0.748
+  },
+  {
+    "text": " have",
+    "startMs": 38427,
+    "endMs": 38647,
+    "timestampMs": 38537,
+    "confidence": 0.942
+  },
+  {
+    "text": " to",
+    "startMs": 38687,
+    "endMs": 38787,
+    "timestampMs": 38737,
+    "confidence": 0.76
+  },
+  {
+    "text": " be",
+    "startMs": 38827,
+    "endMs": 38967,
+    "timestampMs": 38897,
+    "confidence": 0.792
+  },
+  {
+    "text": " able",
+    "startMs": 39127,
+    "endMs": 39387,
+    "timestampMs": 39257,
+    "confidence": 0.873
+  },
+  {
+    "text": " to",
+    "startMs": 39507,
+    "endMs": 39627,
+    "timestampMs": 39567,
+    "confidence": 0.948
+  },
+  {
+    "text": " lead",
+    "startMs": 39747,
+    "endMs": 40027,
+    "timestampMs": 39887,
+    "confidence": 0.77
+  },
+  {
+    "text": " yourself",
+    "startMs": 40087,
+    "endMs": 40608,
+    "timestampMs": 40348,
+    "confidence": 0.876
+  },
+  {
+    "text": " and",
+    "startMs": 40728,
+    "endMs": 40848,
+    "timestampMs": 40788,
+    "confidence": 0.789
+  },
+  {
+    "text": " think",
+    "startMs": 40969,
+    "endMs": 41209,
+    "timestampMs": 41089,
+    "confidence": 0.949
+  },
+  {
+    "text": " for",
+    "startMs": 41289,
+    "endMs": 41409,
+    "timestampMs": 41349,
+    "confidence": 0.788
+  },
+  {
+    "text": " yourself.",
+    "startMs": 41449,
+    "endMs": 41869,
+    "timestampMs": 41659,
+    "confidence": 0.91
+  }
+]
